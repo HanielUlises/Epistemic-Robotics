@@ -1,0 +1,10 @@
+name = "epistemic"
+version = "0.1.0"
+defaultTargets = ["epistemic"]
+
+[[lean_lib]]
+name = "Epistemic"
+
+[[lean_exe]]
+name = "epistemic"
+root = "Main"
