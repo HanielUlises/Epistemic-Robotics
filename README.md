@@ -1,4 +1,9 @@
 # Epistemic-Robotics
+---
+## Preliminary Paper
+
+[View Latest PDF](https://HanielUlises.github.io/Epistemic-Robotics/paper.pdf)
+---
 
 **Formal multi-agent task planning under epistemic uncertainty**
 
