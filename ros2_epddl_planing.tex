@@ -1,6 +1,5 @@
 \documentclass[12pt,a4paper]{article}
 
-% ---- Packages ----
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
@@ -35,7 +34,6 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% ---- Color definitions ----
 \definecolor{darkblue}{RGB}{0,51,102}
 \definecolor{medblue}{RGB}{0,102,153}
 \definecolor{lightblue}{RGB}{173,216,230}
@@ -45,7 +43,6 @@
 \definecolor{codepurple}{RGB}{128,0,128}
 \definecolor{codered}{RGB}{160,0,0}
 
-% ---- Hyperref setup ----
 \hypersetup{
     colorlinks=true,
     linkcolor=darkblue,
@@ -55,7 +52,6 @@
     pdfauthor={Preliminary Research Document},
 }
 
-% ---- Header / Footer ----
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\textcolor{darkblue}{\textit{Preliminary Research: DEL-based Task Planning for Multi-Agent Robotics}}}
@@ -63,7 +59,6 @@
 \fancyfoot[C]{\small\textcolor{darkgray}{\hrule\vspace{2pt}ROS2 | PlanSys2 | EPDDL | Multi-Agent Systems}}
 \renewcommand{\headrulewidth}{0.5pt}
 
-% ---- Listings style ----
 \lstdefinestyle{ros2style}{
     backgroundcolor=\color{codegray},
     basicstyle=\ttfamily\footnotesize,
@@ -83,7 +78,6 @@
 }
 \lstset{style=ros2style}
 
-% ---- Theorem environments ----
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 \newtheorem{example}{Example}[section]
@@ -132,7 +126,7 @@ grounded in Dynamic Epistemic Logic and the EPDDL framework}
 
 \vspace{3cm}
 
-{\color{darkgray}\textit{Haniel Ulises}}
+{\color{darkgray}\textit{Haniel Ulises Vásquez Morales}}
 
 \vfill
 {\small\color{darkgray} This document is a preliminary academic survey compiled in preparation for research on DEL-based epistemic task planning using EPDDL for multi-agent robotic systems operating under partial observability. It is not a finished publication.}
@@ -187,12 +181,10 @@ The core communication abstractions in ROS2 are \textit{nodes}, \textit{topics},
 \node[block, below=2cm of nav] (bt) {Behavior\\Tree};
 \node[block, below=2cm of perc] (exec) {Executor\\Controller};
 \node[block, below=3.5cm of plan] (dds) {DDS Middleware\\(rmw layer)};
-
 \begin{scope}[on background layer]
 \node[layer, fit=(nav)(manip)(perc), label=above:{\textbf{Application Layer}}] (applayer) {};
 \node[layer, fit=(plan)(bt)(exec), label=above:{\textbf{Planning \& Control Layer}}] (planlayer) {};
 \end{scope}
-
 \draw[arrow] (plan) -- (bt);
 \draw[arrow] (bt) -- (nav);
 \draw[arrow] (bt) -- (manip);
@@ -244,7 +236,6 @@ PlanSys2 is the primary open-source framework for PDDL-based task planning in RO
     darr/.style={-{Stealth[length=6pt]}, thick, darkgray, dashed},
     lbl/.style={font=\tiny\itshape, darkgray}
 ]
-
 \node[box] (dm) {Domain\\Manager};
 \node[box, right=2cm of dm] (pm) {Problem\\Manager};
 \node[box, right=2cm of pm] (pl) {Planner\\Manager};
@@ -252,7 +243,6 @@ PlanSys2 is the primary open-source framework for PDDL-based task planning in RO
 \node[ext, left=1.5cm of dm] (client) {Client\\Terminal / API};
 \node[ext, right=1.5cm of pl] (solver) {POPF / TFD\\Solver};
 \node[ext, below=1.5cm of ex] (bt) {BehaviorTree.CPP\\Action Nodes};
-
 \draw[arr] (client) -- (dm) node[midway, above, lbl]{topics/srv};
 \draw[arr] (client) -- (pm);
 \draw[arr] (dm) -- (pm) node[midway, above, lbl]{domain};
@@ -287,6 +277,169 @@ Plan execution in PlanSys2 is mediated by the BehaviorTree.CPP library~\cite{fac
 
 The use of behavior trees for execution provides a structured approach to failure recovery: individual tree nodes can implement retry logic, fallback behaviors, and conditional execution. However, the behavior tree is constructed statically from the plan, and replanning must be explicitly triggered when execution deviates from expectations.
 
+\subsection{A Practical PlanSys2 Example}
+
+To ground the preceding architectural description, we present a concrete example of a PlanSys2 deployment for a logistics scenario in which a robot must transport packages between named locations. The PDDL domain defines types, predicates, and durative actions; the problem instance specifies objects, an initial state, and a goal; and the terminal session illustrates the runtime interaction with the system.
+
+\subsubsection{PDDL Domain}
+
+\begin{lstlisting}[language={}, caption={PDDL domain for a robot transport task compatible with PlanSys2.}, label=lst:pddldomain]
+(define (domain robot-transport)
+  (:requirements :strips :typing :durative-actions :negative-preconditions)
+
+  (:types
+    robot location package
+  )
+
+  (:predicates
+    (robot-at ?r - robot ?l - location)
+    (package-at ?p - package ?l - location)
+    (carrying ?r - robot ?p - package)
+    (free ?r - robot)
+    (connected ?l1 - location ?l2 - location)
+  )
+
+  (:durative-action navigate
+    :parameters (?r - robot ?from - location ?to - location)
+    :duration (= ?duration 10)
+    :condition (and
+      (at start (robot-at ?r ?from))
+      (at start (connected ?from ?to))
+      (over all (free ?r))
+    )
+    :effect (and
+      (at start (not (robot-at ?r ?from)))
+      (at end (robot-at ?r ?to))
+    )
+  )
+
+  (:durative-action pick-up
+    :parameters (?r - robot ?p - package ?l - location)
+    :duration (= ?duration 5)
+    :condition (and
+      (at start (robot-at ?r ?l))
+      (at start (package-at ?p ?l))
+      (at start (free ?r))
+    )
+    :effect (and
+      (at start (not (package-at ?p ?l)))
+      (at start (not (free ?r)))
+      (at end (carrying ?r ?p))
+    )
+  )
+
+  (:durative-action drop-off
+    :parameters (?r - robot ?p - package ?l - location)
+    :duration (= ?duration 5)
+    :condition (and
+      (at start (robot-at ?r ?l))
+      (at start (carrying ?r ?p))
+    )
+    :effect (and
+      (at start (not (carrying ?r ?p)))
+      (at end (package-at ?p ?l))
+      (at end (free ?r))
+    )
+  )
+)
+\end{lstlisting}
+
+\subsubsection{PDDL Problem Instance}
+
+\begin{lstlisting}[language={}, caption={PDDL problem instance for the robot transport scenario.}, label=lst:pddlproblem]
+(define (problem transport-task-1)
+  (:domain robot-transport)
+
+  (:objects
+    robot1 - robot
+    warehouse loading-bay storage - location
+    parcel1 parcel2 - package
+  )
+
+  (:init
+    (robot-at robot1 warehouse)
+    (package-at parcel1 warehouse)
+    (package-at parcel2 warehouse)
+    (free robot1)
+    (connected warehouse loading-bay)
+    (connected loading-bay warehouse)
+    (connected loading-bay storage)
+    (connected storage loading-bay)
+  )
+
+  (:goal (and
+    (package-at parcel1 storage)
+    (package-at parcel2 loading-bay)
+    (robot-at robot1 warehouse)
+  ))
+)
+\end{lstlisting}
+
+\subsubsection{PlanSys2 Terminal Session}
+
+Once the domain and problem are loaded into the running PlanSys2 system, a human operator or autonomous node can populate the world state via the terminal client and trigger planning. The following listing shows the full interaction sequence, the POPF solver output, and the executor's action dispatch log.
+
+\begin{lstlisting}[language={}, caption={PlanSys2 terminal session: instance and predicate setup, goal submission, plan generation, and execution with replanning.}, label=lst:plansys2run]
+$ ros2 run plansys2_terminal plansys2_terminal
+
+> set instance robot1 robot
+> set instance warehouse location
+> set instance loading-bay location
+> set instance storage location
+> set instance parcel1 package
+> set instance parcel2 package
+
+> set predicate (robot-at robot1 warehouse)
+> set predicate (package-at parcel1 warehouse)
+> set predicate (package-at parcel2 warehouse)
+> set predicate (free robot1)
+> set predicate (connected warehouse loading-bay)
+> set predicate (connected loading-bay warehouse)
+> set predicate (connected loading-bay storage)
+> set predicate (connected storage loading-bay)
+
+> set goal (and
+    (package-at parcel1 storage)
+    (package-at parcel2 loading-bay)
+    (robot-at robot1 warehouse))
+
+> run
+
+[plansys2][PlannerManager] Calling POPF solver...
+[plansys2][PlannerManager] Plan received:
+
+  0.000: (pick-up robot1 parcel1 warehouse)  [5.000]
+  5.001: (navigate robot1 warehouse loading-bay)  [10.000]
+  5.001: (pick-up robot1 parcel2 warehouse)  [5.000]
+ 15.002: (drop-off robot1 parcel2 loading-bay)  [5.000]
+ 20.003: (navigate robot1 loading-bay storage)  [10.000]
+ 30.004: (drop-off robot1 parcel1 storage)  [5.000]
+ 35.005: (navigate robot1 storage warehouse)  [10.000]
+
+[plansys2][Executor] Dispatching: pick-up robot1 parcel1 warehouse
+[plansys2][Executor] Action SUCCEEDED: pick-up robot1 parcel1 warehouse
+[plansys2][Executor] Dispatching: navigate robot1 warehouse loading-bay
+[plansys2][Executor] Action SUCCEEDED: navigate robot1 warehouse loading-bay
+[plansys2][Executor] Dispatching: drop-off robot1 parcel2 loading-bay
+[plansys2][Executor] Action ABORTED: drop-off robot1 parcel2 loading-bay
+[plansys2][Executor] Precondition failed: (carrying robot1 parcel2) not satisfied
+[plansys2][PlannerManager] Replanning triggered...
+[plansys2][PlannerManager] New plan received:
+
+  0.000: (navigate robot1 loading-bay warehouse)  [10.000]
+ 10.001: (pick-up robot1 parcel2 warehouse)  [5.000]
+ 15.002: (navigate robot1 warehouse loading-bay)  [10.000]
+ 25.003: (drop-off robot1 parcel2 loading-bay)  [5.000]
+ 30.004: (navigate robot1 loading-bay storage)  [10.000]
+ 40.005: (drop-off robot1 parcel1 storage)  [5.000]
+ 45.006: (navigate robot1 storage warehouse)  [10.000]
+
+[plansys2][Executor] Plan execution completed successfully.
+[plansys2][Executor] Goal achieved.
+\end{lstlisting}
+
+This session illustrates the full PlanSys2 loop: instance population, predicate assertion, goal submission, temporal plan generation by POPF, action-by-action dispatch to ROS2 action servers, and reactive replanning triggered by a precondition failure at runtime. The replanning event occurs entirely within the classical PDDL paradigm---no epistemic state is maintained, and the failure is resolved by regenerating a classical plan from the updated predicate set.
+
 \subsection{Known Limitations of PlanSys2}
 
 Despite its practical utility, PlanSys2 exhibits a number of limitations that are directly relevant to the goals of this research:
@@ -301,11 +454,9 @@ Despite its practical utility, PlanSys2 exhibits a number of limitations that ar
 
 These limitations motivate the core research objective: to develop a framework that integrates the engineering infrastructure of ROS2 and PlanSys2 with the expressive semantics of DEL-based epistemic planning.
 
-% =========================================================
 \newpage
 \section{Multi-Robot Systems in ROS2}
 \label{sec:multirobot}
-% =========================================================
 
 \subsection{Architectural Patterns for Multi-Robot Systems}
 
@@ -338,7 +489,6 @@ From an epistemic planning perspective, the problem of shared world modeling is 
     arr/.style={-{Stealth[length=5pt]}, thick},
     obs/.style={-{Stealth[length=5pt]}, dashed, gray}
 ]
-
 \node[robot] (r1) at (0,0) {R1};
 \node[robot] (r2) at (4,0) {R2};
 \node[robot] (r3) at (2,-2.5) {R3};
@@ -346,18 +496,15 @@ From an epistemic planning perspective, the problem of shared world modeling is 
 \node[kb] (kb1) at (-2,-0.3) {$K_{R1}$: local\\beliefs};
 \node[kb] (kb2) at (6,-0.3) {$K_{R2}$: local\\beliefs};
 \node[kb] (kb3) at (2,-4) {$K_{R3}$: local\\beliefs};
-
 \draw[arr, darkblue] (fm) -- (r1) node[midway, left, font=\tiny]{goal/plan};
 \draw[arr, darkblue] (fm) -- (r2) node[midway, right, font=\tiny]{goal/plan};
 \draw[arr, darkblue] (fm) -- (r3) node[midway, right, font=\tiny]{goal/plan};
 \draw[arr, gray] (r1) -- (fm) node[midway, left, font=\tiny]{obs};
 \draw[arr, gray] (r2) -- (fm);
 \draw[arr, gray] (r3) -- (fm);
-
 \draw[obs] (r1) -- (kb1);
 \draw[obs] (r2) -- (kb2);
 \draw[obs] (r3) -- (kb3);
-
 \draw[arr, dashed, codered!70] (r1) to[bend left=20] node[midway, above, font=\tiny]{comm.} (r2);
 \draw[arr, dashed, codered!70] (r2) to[bend left=20] (r1);
 \draw[arr, dashed, codered!70] (r1) to[bend right=15] (r3);
@@ -479,6 +626,113 @@ A \textbf{domain} specifies the instance-independent aspects: type declarations,
 
 An \textbf{action type library} defines multi-pointed abstract frames---the structural templates that characterize different patterns of observability. Each action type specifies a set of event variables, a set of observability types, abstract accessibility relations over event variables, and designated event variables.
 
+\subsection{EPDDL Syntax: A Concrete Example}
+
+To illustrate the structure of EPDDL concretely, we present a simplified domain and problem specification for a multi-robot sensing scenario. Two robots, \texttt{r1} and \texttt{r2}, operate in an environment with a single corridor whose blocked status is initially unknown to both. Robot \texttt{r1} can sense whether the corridor is blocked (a sensing action), and can announce its finding to \texttt{r2} (a public announcement action). The goal is for both robots to know whether the corridor is blocked.
+
+\subsubsection{EPDDL Domain}
+
+\begin{lstlisting}[language={}, caption={EPDDL domain for a two-robot sensing and announcement scenario.}, label=lst:epddldomain]
+(define (domain corridor-sensing)
+  (:requirements :typing :sensing :announcements :group-modalities)
+
+  (:types robot corridor)
+
+  (:predicates
+    (blocked ?c - corridor)
+    (adjacent ?r - robot ?c - corridor)
+  )
+
+  (:action sense-corridor
+    :type sensing
+    :actor ?r - robot
+    :parameters (?r - robot ?c - corridor)
+    :observability (
+      (full-obs ?r)
+      (no-obs All \ {?r})
+    )
+    :precondition (adjacent ?r ?c)
+    :sense-formula (blocked ?c)
+  )
+
+  (:action announce-blocked
+    :type public-announcement
+    :actor ?r - robot
+    :parameters (?r - robot ?c - corridor)
+    :precondition (and
+      (adjacent ?r ?c)
+      ([?r] (blocked ?c))
+    )
+    :announced-formula (blocked ?c)
+  )
+
+  (:action announce-clear
+    :type public-announcement
+    :actor ?r - robot
+    :parameters (?r - robot ?c - corridor)
+    :precondition (and
+      (adjacent ?r ?c)
+      ([?r] (not (blocked ?c)))
+    )
+    :announced-formula (not (blocked ?c))
+  )
+)
+\end{lstlisting}
+
+\subsubsection{EPDDL Problem}
+
+\begin{lstlisting}[language={}, caption={EPDDL problem instance using a finitary S5-theory to specify the initial epistemic state.}, label=lst:epddlproblem]
+(define (problem corridor-task-1)
+  (:domain corridor-sensing)
+
+  (:objects
+    r1 r2 - robot
+    c1 - corridor
+  )
+
+  (:agents r1 r2)
+
+  (:init
+    (:static
+      (adjacent r1 c1)
+      (adjacent r2 c1)
+    )
+    (:epistemic
+      (C All (Kw r1 (blocked c1)) false)
+      (C All (Kw r2 (blocked c1)) false)
+    )
+  )
+
+  (:goal (and
+    ([Kw. All] (blocked c1))
+  ))
+)
+\end{lstlisting}
+
+The \texttt{:epistemic} block in the \texttt{:init} section instantiates a finitary S5-theory: the formula \texttt{(C All (Kw r1 (blocked c1)) false)} asserts that it is common knowledge among all agents that robot \texttt{r1} does not currently know whether the corridor is blocked. The goal \texttt{([Kw. All] (blocked c1))} uses the group knowing-whether modality to require that all agents know whether the corridor is blocked upon plan completion. The key syntactic elements are summarized in Table~\ref{tab:epddlsyntax}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{EPDDL Construct} & \textbf{Logical Meaning} & \textbf{Usage Context} \\
+\midrule
+\texttt{([i] phi)} & $\Box_i \varphi$ --- agent $i$ knows $\varphi$ & preconditions, goals \\
+\texttt{(<i> phi)} & $\Diamond_i \varphi$ --- agent $i$ considers $\varphi$ possible & preconditions \\
+\texttt{([Kw. i] phi)} & $\mathrm{Kw}_i \varphi$ --- agent $i$ knows whether $\varphi$ & goals, init \\
+\texttt{([Kw. All] phi)} & $\mathrm{Kw}_\mathrm{All} \varphi$ --- all agents know whether $\varphi$ & goals \\
+\texttt{(C All phi)} & $C_\mathrm{All} \varphi$ --- common knowledge of $\varphi$ & init, goals \\
+\texttt{:type sensing} & sensing action type & action schema \\
+\texttt{:type public-announcement} & public announcement type & action schema \\
+\texttt{:sense-formula} & formula whose truth value is observed & sensing actions \\
+\texttt{:announced-formula} & formula publicly communicated & announcement actions \\
+\texttt{:observability} & per-type observability assignment & action schema \\
+\bottomrule
+\end{tabular}
+\caption{Key EPDDL syntactic constructs with their logical counterparts and usage contexts.}
+\label{tab:epddlsyntax}
+\end{table}
+
 \subsection{Abstract Event Models and Action Types}
 
 The key theoretical innovation underlying EPDDL's action representation is the notion of an \textit{abstract epistemic action}, which decouples the structural pattern of observability (the action type) from the specific preconditions, effects, and agent assignments (the domain action). An abstract event model replaces the per-agent accessibility relations of a standard event model with per-\textit{observability-type} relations, together with an observability function that maps each agent to an observability type given the current state.
@@ -542,7 +796,6 @@ Second, it provides a principled mechanism for comparing epistemic planners that
 \node[subfrag] (sensing) at (3, -2.5) {Sensing\\Actions};
 \node[subfrag] (pal) at (-1.5, -4.5) {PAL\\(Baseline)};
 \node[subfrag] (pall) at (1.5, -4.5) {PALL+\\Ontic};
-
 \draw[arr] (del) -- (po);
 \draw[arr] (del) -- (ontic);
 \draw[arr] (del) -- (sensing);
@@ -581,14 +834,12 @@ We propose a conceptual architecture organized around four principal components:
     darr/.style={-{Stealth[length=6pt]}, thick, darkgray, dashed},
     lbl/.style={font=\tiny, darkgray}
 ]
-
 \node[comp] (ewm) at (0, 0) {Epistemic World\\Model Manager};
 \node[comp] (epi) at (5, 0) {EPDDL Planner\\Interface};
 \node[ext] (solver) at (5, -2.2) {External\\Epistemic Solver};
 \node[comp] (ead) at (0, -2.2) {Epistemic Action\\Dispatcher};
 \node[comp] (ros2) at (-2.5, -4.2) {ROS2 Action\\Servers (Nav2 etc.)};
 \node[comp] (robots) at (2.5, -4.2) {Robot Fleet\\(sensors/actuators)};
-
 \draw[arr] (ewm) -- (epi) node[midway, above, lbl]{epistemic state};
 \draw[arr] (epi) -- (solver) node[midway, right, lbl]{EPDDL problem};
 \draw[arr] (solver) -- (epi) node[midway, left, lbl]{plan};
@@ -635,6 +886,19 @@ The integration outlined above raises a number of open research questions that d
 
 \textbf{Failure handling.} How should epistemic plan failures be handled? If an action's precondition fails, the epistemic state must be updated accordingly and a new plan generated. What recovery strategies are appropriate for epistemic plan failures in a ROS2 runtime?
 
+\newpage
+\section{Conclusion}
+\label{sec:conclusion}
+
+This document has surveyed the state of the art in task planning for ROS2 multi-robot systems and the theoretical foundations of DEL-based epistemic planning, with the goal of establishing a preliminary research basis for the development of a DEL-based task planning system for multi-agent robotic platforms operating in uncertain environments.
+
+We have established that ROS2 provides a mature and flexible middleware infrastructure for multi-robot systems, and that PlanSys2 offers a practical PDDL-based task planning framework that is already deployed in research and industrial contexts. However, PlanSys2 and the classical planning paradigm it implements are fundamentally limited in their ability to represent epistemic uncertainty, agent-relative knowledge states, and communication-as-action---all of which are essential for robust autonomous behavior in partially observable environments.
+
+DEL and its associated planning framework provide the theoretical machinery to address these limitations. The product update semantics captures both physical and epistemic effects of actions in a unified formal model. The EPDDL language operationalizes this theory in a standardized, PDDL-compatible syntax, with a rich modality language, a flexible action type library system, and tool support through the \texttt{plank} toolkit.
+
+The integration of these two pillars into a coherent robotic system architecture raises significant engineering and research challenges, particularly with respect to computational tractability, online replanning, and the perception-to-epistemic-state translation pipeline. These challenges define the research agenda for the next phase of work, which will involve prototype implementation, benchmark development using EPDDL, and experimental evaluation on multi-robot testbeds.
+
+The convergence of formal epistemic reasoning with practical robotic middleware represents a promising and largely unexplored direction in the field of autonomous multi-robot systems. This preliminary research positions the subsequent work at the frontier of this convergence.
 
 \newpage
 \bibliographystyle{plain}
