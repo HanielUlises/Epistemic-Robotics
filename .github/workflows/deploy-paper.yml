@@ -1,0 +1,29 @@
+name: Build and Deploy Paper
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-paper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: ros2_epddl_planing.tex
+          latexmk_use_lualatex: true
+
+      - name: Prepare site
+        run: |
+          mkdir public
+          mv ros2_epddl_planing.pdf public/paper.pdf
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
