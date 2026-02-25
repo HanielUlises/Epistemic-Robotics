@@ -1,0 +1,275 @@
+<?xml version="1.0" ?>
+<!--
+  MUNDO 3: Almacén con Pasillos (Depot/Warehouse)
+  ================================================
+  Propósito: Entorno estructurado tipo rejilla para validar
+             SLAM con obstáculos regulares y planning clásico (PDDL).
+  Características:
+    - 18m x 18m con estantes en filas (4 filas x 4 columnas)
+    - Pasillos regulares de 1.5m de ancho
+    - 2 zonas de carga/descarga en extremos opuestos
+    - Obstáculos de distintas alturas para sensor LiDAR 2D
+  Uso en proyecto:
+    - Geometría predecible: buena línea base para validar SLAM
+    - Fácil de representar en PDDL (precondiciones/acciones por pasillo)
+    - Permite probar coordinación: un agente por mitad del almacén
+    - Comparar rutas óptimas de planning vs rutas SLAM reactivas
+-->
+<sdf version="1.6">
+  <world name="warehouse_depot">
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <gravity>0 0 -9.8</gravity>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 20 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.3 0.1 -0.9</direction>
+    </light>
+
+    <!-- Suelo con textura diferenciada -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>30 30</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>30 30</size></plane></geometry>
+          <material><ambient>0.5 0.5 0.45 1</ambient><diffuse>0.5 0.5 0.45 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- MUROS EXTERIORES (18m x 18m)                                  -->
+    <!-- ============================================================ -->
+
+    <model name="wh_north"><static>true</static><pose>0 9 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>18 0.3 3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>18 0.3 3</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wh_south"><static>true</static><pose>0 -9 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>18 0.3 3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>18 0.3 3</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wh_east"><static>true</static><pose>9 0 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.3 18 3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.3 18 3</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wh_west"><static>true</static><pose>-9 0 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.3 18 3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.3 18 3</size></box></geometry>
+          <material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- ESTANTES EN REJILLA (4 filas x 4 columnas)                    -->
+    <!-- Cada estante: 3m largo x 0.6m ancho x 1.8m alto              -->
+    <!-- Espaciado: cada 4m en X, cada 3.5m en Y                       -->
+    <!-- ============================================================ -->
+
+    <!-- FILA 1 (Y = 6) -->
+    <model name="shelf_r1c1"><static>true</static><pose>-6 6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r1c2"><static>true</static><pose>-2 6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r1c3"><static>true</static><pose>2 6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r1c4"><static>true</static><pose>6 6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- FILA 2 (Y = 2) -->
+    <model name="shelf_r2c1"><static>true</static><pose>-6 2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r2c2"><static>true</static><pose>-2 2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r2c3"><static>true</static><pose>2 2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r2c4"><static>true</static><pose>6 2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- FILA 3 (Y = -2) -->
+    <model name="shelf_r3c1"><static>true</static><pose>-6 -2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r3c2"><static>true</static><pose>-2 -2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r3c3"><static>true</static><pose>2 -2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r3c4"><static>true</static><pose>6 -2 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- FILA 4 (Y = -6) -->
+    <model name="shelf_r4c1"><static>true</static><pose>-6 -6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r4c2"><static>true</static><pose>-2 -6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r4c3"><static>true</static><pose>2 -6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_r4c4"><static>true</static><pose>6 -6 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.6 3 1.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.6 3 1.8</size></box></geometry>
+          <material><ambient>0.4 0.3 0.2 1</ambient><diffuse>0.4 0.3 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- ZONAS DE CARGA / DESCARGA                                      -->
+    <!-- ============================================================ -->
+
+    <!-- Zona A (entrada oeste) -->
+    <model name="loading_zone_a"><static>true</static><pose>-8 0 0.02 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.5 3 0.04</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.5 3 0.04</size></box></geometry>
+          <material><ambient>0.1 0.8 0.1 1</ambient><diffuse>0.1 0.8 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Zona B (salida este) -->
+    <model name="loading_zone_b"><static>true</static><pose>8 0 0.02 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.5 3 0.04</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.5 3 0.04</size></box></geometry>
+          <material><ambient>0.8 0.1 0.1 1</ambient><diffuse>0.8 0.1 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Spawn sugerido:                                              -->
+    <!-- Agente 1: pose="-8  1.5 0.1 0 0 0"  (Zona de carga A)     -->
+    <!-- Agente 2: pose="-8 -1.5 0.1 0 0 0"  (Zona de carga A)     -->
+    <!-- Objetivo: pose=" 8  0   0.1 0 0 0"  (Zona de descarga B)  -->
+
+  </world>
+</sdf>
