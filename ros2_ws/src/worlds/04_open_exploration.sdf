@@ -1,0 +1,276 @@
+<?xml version="1.0" ?>
+<!--
+  MUNDO 4: Entorno Abierto con Obstáculos Dispersos
+  ==================================================
+  Propósito: Exploración libre sin estructura predefinida.
+             Maximiza la incertidumbre epistémica inicial:
+             los agentes no saben dónde están los obstáculos
+             ni cómo comunicarse antes de explorar.
+  Características:
+    - Área de 22m x 22m sin paredes internas
+    - 15 obstáculos de formas y tamaños variados (cilindros y cajas)
+    - Disposición pseudo-aleatoria pero balanceada
+    - 3 zonas de interés marcadas (puntos de reunión epistémica)
+    - Mapa completamente desconocido al inicio → SLAM necesario
+  Uso en proyecto:
+    - Escenario más complejo: sin estructura que guíe la exploración
+    - Ideal para evaluar frontier-based exploration con SLAM
+    - Las zonas de interés son "puntos de reunión" donde agentes
+      comparten su mapa y actualizan sus creencias (DEL announcement)
+    - Benchmark: comparar exploración cooperativa vs individual
+-->
+<sdf version="1.6">
+  <world name="open_exploration">
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <gravity>0 0 -9.8</gravity>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 20 0 0 0</pose>
+      <diffuse>0.85 0.85 0.85 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.4 0.2 -0.9</direction>
+    </light>
+
+    <!-- Suelo -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>35 35</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>35 35</size></plane></geometry>
+          <material><ambient>0.55 0.55 0.5 1</ambient><diffuse>0.55 0.55 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- PERÍMETRO EXTERIOR (22m x 22m)                                -->
+    <!-- ============================================================ -->
+
+    <model name="border_n"><static>true</static><pose>0 11 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>22 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>22 0.2 2</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="border_s"><static>true</static><pose>0 -11 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>22 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>22 0.2 2</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="border_e"><static>true</static><pose>11 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 22 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 22 2</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="border_w"><static>true</static><pose>-11 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 22 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 22 2</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- OBSTÁCULOS DISPERSOS (15 obstáculos variados)                 -->
+    <!-- Mezcla de cilindros (columnas) y cajas (muros cortos)         -->
+    <!-- ============================================================ -->
+
+    <!-- Cilindros (columnas) -->
+    <model name="cyl_1"><static>true</static><pose>-7 7 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.5 0.3 0.1 1</ambient><diffuse>0.5 0.3 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="cyl_2"><static>true</static><pose>2 8 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.6</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.6</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.5 0.3 0.1 1</ambient><diffuse>0.5 0.3 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="cyl_3"><static>true</static><pose>8 5 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.5</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.5</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.5 0.3 0.1 1</ambient><diffuse>0.5 0.3 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="cyl_4"><static>true</static><pose>-3 3 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.35</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.35</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.5 0.3 0.1 1</ambient><diffuse>0.5 0.3 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="cyl_5"><static>true</static><pose>5 -3 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.45</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.45</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.5 0.3 0.1 1</ambient><diffuse>0.5 0.3 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Muros cortos (cajas alargadas en distintos ángulos) -->
+    <model name="box_1"><static>true</static><pose>-5 -2 0.5 0 0 0.785</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>3 0.4 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3 0.4 1</size></box></geometry>
+          <material><ambient>0.2 0.4 0.6 1</ambient><diffuse>0.2 0.4 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_2"><static>true</static><pose>1 -5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>4 0.4 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>4 0.4 1</size></box></geometry>
+          <material><ambient>0.2 0.4 0.6 1</ambient><diffuse>0.2 0.4 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_3"><static>true</static><pose>-8 -5 0.5 0 0 0.3</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>2 0.4 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2 0.4 1</size></box></geometry>
+          <material><ambient>0.2 0.4 0.6 1</ambient><diffuse>0.2 0.4 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_4"><static>true</static><pose>7 -7 0.5 0 0 1.0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>3.5 0.4 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3.5 0.4 1</size></box></geometry>
+          <material><ambient>0.2 0.4 0.6 1</ambient><diffuse>0.2 0.4 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_5"><static>true</static><pose>-2 -8 0.5 0 0 0.523</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>2.5 0.4 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2.5 0.4 1</size></box></geometry>
+          <material><ambient>0.2 0.4 0.6 1</ambient><diffuse>0.2 0.4 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Bloques cuadrados (obstacles tipo roca) -->
+    <model name="block_1"><static>true</static><pose>4 2 0.5 0 0 0.4</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.2 1.2 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.2 1.2 1</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="block_2"><static>true</static><pose>-6 1 0.5 0 0 0.2</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.5 1 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.5 1 1</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="block_3"><static>true</static><pose>9 -2 0.5 0 0 0.6</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1 1.8 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1 1.8 1</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="block_4"><static>true</static><pose>-9 4 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.8 2.5 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.8 2.5 1</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="block_5"><static>true</static><pose>6 9 0.5 0 0 0.9</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>2 0.6 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2 0.6 1</size></box></geometry>
+          <material><ambient>0.4 0.4 0.4 1</ambient><diffuse>0.4 0.4 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- ZONAS DE INTERÉS / REUNIÓN EPISTÉMICA (3 puntos)              -->
+    <!-- Aquí los agentes se reencuentran y comparten mapa (DEL)       -->
+    <!-- ============================================================ -->
+
+    <!-- Punto de reunión 1 (Noroeste) - Azul -->
+    <model name="meeting_point_1"><static>true</static><pose>-8.5 8.5 0.03 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.7</radius><length>0.06</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.7</radius><length>0.06</length></cylinder></geometry>
+          <material><ambient>0.1 0.3 0.9 1</ambient><diffuse>0.1 0.3 0.9 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Punto de reunión 2 (Centro) - Magenta -->
+    <model name="meeting_point_2"><static>true</static><pose>0 0 0.03 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.7</radius><length>0.06</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.7</radius><length>0.06</length></cylinder></geometry>
+          <material><ambient>0.8 0.1 0.8 1</ambient><diffuse>0.8 0.1 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Punto de reunión 3 (Sureste) - Cian -->
+    <model name="meeting_point_3"><static>true</static><pose>8.5 -8.5 0.03 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.7</radius><length>0.06</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.7</radius><length>0.06</length></cylinder></geometry>
+          <material><ambient>0.1 0.8 0.8 1</ambient><diffuse>0.1 0.8 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Spawn sugerido:                                                 -->
+    <!-- Agente 1: pose="-10 -10 0.1 0 0 0"   (esquina Suroeste)       -->
+    <!-- Agente 2: pose="-10  10 0.1 0 0 0"   (esquina Noroeste)       -->
+    <!-- Objetivo: exploración total del mapa (100% celdas visitadas)   -->
+
+  </world>
+</sdf>
