@@ -32,4 +32,4 @@ plank validate \
   -d box-task-domain.epddl \
   -p box-task-problem.epddl \
   -l ~/plank/benchmarks/libraries/intermediate.epddl \
-  -a "observe-private-A_r1" "pickup-A-hold_r2" "pickup-A-clear_r2"
+  -a "observe-private-A_r1" "pickup-A-hold_r1" "pickup-A-clear_r1"
