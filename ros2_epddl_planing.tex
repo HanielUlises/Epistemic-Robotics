@@ -35,7 +35,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-% ---- Color definitions ----
+%  - Color definitions  -
 \definecolor{darkblue}{RGB}{0,51,102}
 \definecolor{medblue}{RGB}{0,102,153}
 \definecolor{lightblue}{RGB}{173,216,230}
@@ -126,7 +126,7 @@ grounded in Dynamic Epistemic Logic and the EPDDL framework}
 \textbf{Research Area:} & Autonomous Robotics \& Epistemic Planning \\
 \textbf{Keywords:}      & ROS2, PlanSys2, PDDL, DEL, EPDDL, Multi-Robot Systems \\
 \textbf{Document Type:} & Preliminary Research / State of the Art \\
-\textbf{Version:}       & 1.0 \\
+\textbf{Version:}       & 1.1 \\
 \end{tabular}
 
 \vspace{3cm}
@@ -154,13 +154,17 @@ by Burigana and Fabiano for IPC 2026. The ultimate motivation of this survey is 
 path toward a DEL-based multi-agent task planning system for heterogeneous robot fleets operating
 under epistemic uncertainty. We discuss the architecture of ROS2 multi-robot systems, the structure
 and limitations of existing PDDL-based planners in robotics, the semantics of epistemic states and
-actions in DEL, and the syntactic mechanisms of EPDDL. We conclude with an analysis of the
-integration challenges and open research questions at the intersection of these fields.
+actions in DEL, and the syntactic mechanisms of EPDDL. Special attention is given to recent applied
+work applying DEL to heterogeneous robotic fleets under communication
+restrictions~\cite{bramblett2023icra, bramblett2023frontiers, bramblett2025active}, and to the
+foundational treatment of DEL-based planning problems~\cite{lowe2010planning}. We conclude with an
+analysis of the integration challenges and open research questions at the intersection of these fields.
 \end{abstract}
 
 \vspace{1em}
 \noindent\textbf{Keywords:} ROS2, PlanSys2, PDDL, task planning, multi-robot systems, Dynamic
-Epistemic Logic, epistemic planning, EPDDL, partial observability, multi-agent systems.
+Epistemic Logic, epistemic planning, EPDDL, partial observability, multi-agent systems,
+active inference, theory of mind.
 
 \newpage
 \tableofcontents
@@ -172,8 +176,8 @@ Epistemic Logic, epistemic planning, EPDDL, partial observability, multi-agent s
 
 
 Modern autonomous robotic systems are increasingly expected to operate in environments that are
-shared with other agents---whether human operators, other autonomous robots, or dynamically
-changing physical conditions---where the state of the world is not fully and reliably observable.
+shared with other agents whether human operators, other autonomous robots, or dynamically
+changing physical conditions where the state of the world is not fully and reliably observable.
 A warehouse robot fleet, a team of search-and-rescue drones, or a collaborative assembly line all
 require their constituent agents to reason not only about what is true in the world, but also about
 what each agent \textit{knows}, what each agent \textit{believes}, and what each agent knows or
@@ -181,7 +185,7 @@ believes about the epistemic states of others. Classical task planning formalism
 (Planning Domain Definition Language), remain the de facto standard in practical robotic systems
 and are supported by major middleware frameworks such as ROS2 through tools like PlanSys2.
 However, classical planning fundamentally assumes a fully observable, deterministic environment
-and a single omniscient planning agent---assumptions that are routinely violated in realistic
+and a single omniscient planning agent assumptions that are routinely violated in realistic
 multi-robot deployments.
 
 The objective of this document is to establish a comprehensive preliminary understanding of two
@@ -198,7 +202,8 @@ model, multi-robot support, and lifecycle management. Section~\ref{sec:plansys2}
 the primary task planning framework for ROS2, including its PDDL integration, executor architecture,
 and a concrete worked example using ROS2 Humble/Jazzy C++. Section~\ref{sec:multirobot} surveys
 the state of the art in multi-robot coordination and planning within ROS2. Section~\ref{sec:del}
-provides an accessible but technically grounded introduction to Dynamic Epistemic Logic.
+provides an accessible but technically grounded introduction to Dynamic Epistemic Logic, including
+its application to robotics~\cite{bramblett2023icra,bramblett2023frontiers,bramblett2025active,lowe2010planning}.
 Section~\ref{sec:epddl} presents EPDDL, its syntax, and action type libraries.
 Section~\ref{sec:integration} analyzes the integration challenges and proposes a conceptual
 architecture for a DEL-based ROS2 planning system. Section~\ref{sec:conclusion} summarizes
@@ -277,7 +282,7 @@ trees and action servers, all underpinned by DDS.}
 \subsection{DDS and the Communication Model}
 
 DDS implements a data-centric publish-subscribe model where data flows between publishers and
-subscribers through a shared data space---the \textit{Global Data Space}---without a centralized
+subscribers through a shared data space the \textit{Global Data Space} without a centralized
 broker. Quality of Service (QoS) policies govern reliability, durability, deadline, and liveness.
 For multi-robot systems, DDS offers native distributed discovery: robots on the same network
 segment automatically discover each other without manual configuration, mediated through the
@@ -381,8 +386,8 @@ updated, or scaled.
 \subsection{Domain and Problem Management}
 
 The Domain Manager maintains the PDDL domain specification. The Problem Manager maintains the
-dynamic planning problem---the current set of ground predicates (the world state), instantiated
-objects, and the current goal specification---and is the primary interface through which the robot
+dynamic planning problem the current set of ground predicates (the world state), instantiated
+objects, and the current goal specification and is the primary interface through which the robot
 system updates its world model as perception events are received. Both managers expose ROS2
 services and topics, allowing any node to add/remove predicates, objects, and update goals.
 
@@ -413,7 +418,7 @@ PlanSys2 task package for ROS2 Humble (or Jazzy) targeting a logistics scenario:
 robot must transport two packages between three named locations in a warehouse. We cover the
 scenario, the package structure, the PDDL domain and problem files, the C++ action executor
 implementations, the CMake build configuration, the launch file, and the expected execution
-behavior---illustrated with diagrams.
+behavior illustrated with diagrams.
 
 \subsubsection{Scenario Description}
 
@@ -469,8 +474,8 @@ Warehouse. The goal is to deliver P1 to Storage and P2 to the Loading Bay.}
 \label{fig:scenario}
 \end{figure}
 
-The environment has three locations---\texttt{warehouse}, \texttt{loading\_bay}, and
-\texttt{storage}---connected bidirectionally. The robot begins at the warehouse. Both packages
+The environment has three locations \texttt{warehouse}, \texttt{loading\_bay}, and
+\texttt{storage} connected bidirectionally. The robot begins at the warehouse. Both packages
 begin at the warehouse. The plan requires picking up each package, navigating to its destination,
 dropping it off, and returning to the start.
 
@@ -848,10 +853,6 @@ and dispatched by the PlanSys2 Executor for this problem instance. Because the r
 carry one package at a time (\texttt{free} predicate prevents concurrent pick-up), the plan
 serializes the two delivery sub-tasks.
 
-% ------------------------------------------------------------------
-% FIGURE 4: Plan Execution Sequence  (FIXED — two clearly separated rows,
-%           wider boxes, explicit routing, goal marker beside last actions)
-% ------------------------------------------------------------------
 \begin{figure}[H]
 \centering
 \resizebox{\linewidth}{!}{%
@@ -875,13 +876,13 @@ serializes the two delivery sub-tasks.
     rlbl/.style={font=\tiny\itshape, darkgray},
 ]
 
-% ---- Row 1: Parcel 1 (y = 0) ----
+%  - Row 1: Parcel 1 (y = 0)  -
 \node[act] (pk1)  at ( 0.0,  0) {pick-up\\robot1 parcel1\\warehouse};
 \node[nav] (nav1) at ( 4.4,  0) {navigate\\warehouse$\to$\\loading-bay};
 \node[nav] (nav2) at ( 8.8,  0) {navigate\\loading-bay$\to$\\storage};
 \node[act] (dr1)  at (13.2,  0) {drop-off\\robot1 parcel1\\storage};
 
-% ---- Row 2: Parcel 2 (y = -2.8) ----
+%  - Row 2: Parcel 2 (y = -2.8)  -
 \node[act] (pk2)  at ( 0.0, -2.8) {pick-up\\robot1 parcel2\\warehouse};
 \node[nav] (nav3) at ( 4.4, -2.8) {navigate\\warehouse$\to$\\loading-bay};
 \node[act] (dr2)  at ( 8.8, -2.8) {drop-off\\robot1 parcel2\\loading-bay};
@@ -907,7 +908,6 @@ serializes the two delivery sub-tasks.
 \draw[arr] (dr2)  -- (nav4);
 
 % Cross-row link: after drop-off P1, go back to pick up P2
-% Route: dr1.south -> down -> left -> pk2.north
 \draw[arr] (dr1.south) -- ++(0,-0.6) -- ++(-13.2,0) -- (pk2.north)
            node[near start, below, rlbl]{reposition to warehouse};
 
@@ -925,9 +925,6 @@ The tick mark indicates goal achievement.}
 \label{fig:execflow}
 \end{figure}
 
-% ------------------------------------------------------------------
-% FIGURE 5: World State Sequence  (FIXED — grid layout, no overlapping arrows)
-% ------------------------------------------------------------------
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
@@ -1026,7 +1023,7 @@ patterns: \textit{centralized}, \textit{decentralized}, or \textit{hierarchical}
 architecture, a single master node maintains a global world model and generates plans for all
 robots. In a decentralized architecture, each robot operates as an independent planning agent,
 communicating with peers to resolve conflicts and share observations. A hierarchical
-architecture---arguably the most practically relevant for the target research---combines a
+architecture arguably the most practically relevant for the target research combines a
 fleet-level planner with robot-level planners, where the fleet planner decomposes high-level goals
 into sub-goals assigned to individual robots.
 
@@ -1055,9 +1052,6 @@ meaningful. An epistemic planner must represent and reason about individual pers
 actions that resolve epistemic differences, and formulate goals referring explicitly to agent
 knowledge states.
 
-% ------------------------------------------------------------------
-% FIGURE 6: Multi-Robot System  (FIXED — triangular layout, no overlapping nodes)
-% ------------------------------------------------------------------
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
@@ -1156,7 +1150,7 @@ A multi-agent epistemic model is a triple $M = (W, R, L)$ where:
 \item $W \neq \emptyset$ is a finite set of \textit{possible worlds};
 \item $R : \mathrm{Ag} \to 2^{W \times W}$ assigns to each agent $i$ an
       \textit{accessibility relation} $R_i \subseteq W \times W$; and
-\item $L : W \to 2^P$ assigns to each world a \textit{label}---the set of atoms true there.
+\item $L : W \to 2^P$ assigns to each world a \textit{label} the set of atoms true there.
 \end{itemize}
 An epistemic state is a pair $s = (M, W_d)$ where $W_d \subseteq W$ is a non-empty set of
 \textit{designated worlds}.
@@ -1183,7 +1177,7 @@ C_G \varphi = \bigwedge_{k > 0} \Box_G^k \varphi,
 
 Common knowledge is essential for robotic coordination: a team that must act in concert requires
 not only that each robot knows the plan, but that it is common knowledge among all robots that
-they know the plan---otherwise a robot might fail to act because it is uncertain whether its
+they know the plan otherwise a robot might fail to act because it is uncertain whether its
 teammates are aware of their roles.
 
 \subsection{Epistemic Actions and the Product Update}
@@ -1219,7 +1213,7 @@ simultaneously with a reflexive accessibility relation. It is the simplest DEL a
 the basis of the Public Announcement Logic (PAL) fragment.
 
 A \textit{private ontic action} is one where the actor moves a physical object while other agents
-are oblivious---modeled with a ``null event'' linked to the real event via non-actor accessibility.
+are oblivious modeled with a ``null event'' linked to the real event via non-actor accessibility.
 
 A \textit{sensing action} allows agents to observe a binary property, with two designated events
 for each outcome. After sensing, a fully observant agent knows whether the property holds.
@@ -1238,7 +1232,238 @@ in $s_0$ and $s_0 \otimes \pi \models \varphi_g$.
 
 Crucially, $\varphi_g$ may be an epistemic formula: for example,
 $\Box_{R_1}\mathrm{packageDelivered} \wedge \mathrm{Kw}_{R_2}\mathrm{corridorBlocked}$
-specifies knowledge states as goals---not expressible in classical PDDL.
+specifies knowledge states as goals not expressible in classical PDDL.
+
+\subsection{DEL in Robotics: From Theory to Application}
+\label{subsec:del_robotics}
+
+The transfer of DEL from its origins in philosophical logic and game theory to practical
+multi-robot systems has been one of the most active research directions of the past
+decade. While the theoretical framework of DEL was originally developed for studying
+abstract epistemic puzzles~\cite{baltag1998logic, vanditmarsch2007}, the modeling
+machinery it provides Kripke models, accessibility relations, product updates maps
+naturally onto the challenge of reasoning about a distributed robot fleet in which
+agents have heterogeneous, potentially inconsistent observations of a shared environment.
+
+The foundational insight is that a robot's \textit{epistemic state} is not merely a
+record of what it has sensed, but a structured representation of what it knows, what
+it does not know, and crucially in a multi-robot setting what it knows or believes
+about the epistemic states of its teammates. This higher-order structure, formalized
+through nested modal operators $\Box_i \Box_j \varphi$ and common knowledge $C_G \varphi$,
+has no counterpart in classical PDDL-based planning and therefore cannot be captured by
+conventional ROS2 task planners such as PlanSys2.
+
+An early and influential formalization of DEL for autonomous agents is provided
+by L{\"o}we, Pacuit, and Witzel~\cite{lowe2010planning}, who define the \emph{DEL
+planning problem} as the task of finding a sequence of event models $\sigma$ such that
+$M \otimes \sigma \models \varphi_g$, where $(M, w)$ is the initial pointed model and
+$\varphi_g$ is an epistemic goal formula. Their analysis of the \textit{Thief: The Dark
+Project} scenario demonstrates that a knowledge module maintaining the Kripke model
+throughout the execution of a plan can support rich, belief-aware scripted and autonomous
+behaviors without requiring explicit re-engineering of the agent's control logic every
+time epistemic assumptions change. They also establish structural properties \textit{self-absorption}
+and \textit{commutativity} of propositional almost-mutex event models that bound the growth of
+the Kripke model under iterated updates. Concretely, for the event library
+$\mathcal{E} = \{N_t, N_g, B_t, B_g, F\}$ (noise and facing actions in the stealth game scenario),
+the bisimulation contraction of $I \otimes \sigma$ has size at most 6 for any legal sequence
+$\sigma$, regardless of length. This is an important tractability result: it shows that for
+suitably restricted event libraries, the Kripke model does not grow without bound and can be
+maintained in real time.
+
+The framework of L{\"o}we et al.\ also formalizes three planning problem variants of increasing
+difficulty. In the \emph{absolute} problem, no agent assignment is specified and the planner
+searches for any legal sequence achieving the goal. In the \emph{single-agent} problem, all
+events must lie within the power set $\mathrm{power}(i)$ of a designated agent $i$. In the
+\emph{adversarial} problem most relevant to adversarial environments or unreliable
+communication the planner must find a partial strategy $\hat\sigma$ such that the goal is
+achieved under \emph{all} legal completions, forming a game-theoretic worst-case guarantee.
+These distinctions directly inform the design of epistemic planning modules for robotic systems,
+where the choice between cooperative and adversarial problem formulations determines the
+computational complexity of planning and the robustness guarantees that can be provided.
+
+\subsection{Belief and Empathy States in Multi-Robot DEL}
+\label{subsec:belief_empathy}
+
+A central design choice in applying DEL to robotics is how to represent epistemic states
+at runtime in a way that is both formally grounded and computationally tractable. Bramblett
+and Bezzo~\cite{bramblett2023frontiers} propose an elegant particle-based approximation
+in which each robot $i$ maintains a finite set of \textit{belief particles}
+$\mathcal{P}_i = \{p_{ij,k} \mid j \in \mathcal{A}, k \in \mathcal{A}\}$, where $p_{ij,k}$
+represents robot $i$'s second-order belief its belief about robot $j$'s belief about
+robot $k$'s state. The designated subset $C_i \subseteq \mathcal{P}_i$, called the
+\textit{common belief set}, corresponds to the last globally shared epistemic state; it
+is propagated forward in time using each robot's known dynamics and status propositions
+when communication is unavailable.
+
+This formulation instantiates the DEL epistemic state $(W, R_i, V, W_d)$ with a finite,
+tractable world set: worlds $w \in W$ are indexed by combinations of possible robot
+statuses $\sigma_i^t \in \{\text{exploring, gossiping, performing task, going home}\}$
+for all $i \in \mathcal{A}$. The accessibility relation $R_i$ then encodes robot $i$'s
+uncertainty about which status combination is currently true. Epistemic updates follow
+from two action types in the library $\mathcal{A} = \{\mathrm{perceive}(\varphi),
+\mathrm{announce}(\varphi)\}$: a \textit{perceive} action updates a robot's local belief
+when it directly observes a proposition $\varphi$ (e.g., task discovered or teammate
+absent from expected location), and an \textit{announce} action a DEL public
+announcement disseminates a state description to all locally connected robots,
+establishing common knowledge of the announced formula among them.
+
+The product update semantics govern rational belief revision in each case. When all
+robots are connected and robot $i$ announces the full system disposition
+$\Omega = (\Omega_j)_{j \in \mathcal{A}}$, the epistemic state from robot $i$'s
+perspective evolves as:
+\[
+s^i_{t-1} \otimes \mathrm{announce}(\Omega) = s^i_t \models
+K_i \sigma^i_t \wedge \bigwedge_{j \in \mathcal{A}} K_i K_j \sigma^j_t,
+\]
+establishing mutual knowledge of all robots' statuses the condition for a true world
+$w^*_t$ to exist in the Kripke model. When robots are disconnected, the perceive action
+produces a local, asymmetric belief update: if robot $i$ observes that robot $j$ is absent
+from its expected location, the world $w$ corresponding to $j$'s originally predicted status
+is removed from $R_i$'s accessible set, and the next most probable particle is activated.
+This selective pruning of the world set corresponds precisely to the DEL product update in
+the special case where the event model has two events ``$j$ is here'' and ``$j$ is not
+here'' and the precondition of the former is not satisfied.
+
+The companion paper by the same authors~\cite{bramblett2023icra} extends this framework
+to heterogeneous robot teams (mixed UGV/UAV fleets) and introduces the concept of
+\textit{empathy states}: a robot $i$ maintains, alongside its belief particles about
+others, a set of particles representing what other robots might currently believe about
+$i$ itself. Formally, $\mathcal{P}^e_{i} = \{p_{ii,b} \mid b \in B\}$ are robot $i$'s
+empathy particles, and they are equivalent to robot $j$'s belief particles about robot $i$
+under the assumption that all robots follow the same particle-propagation policy. This
+symmetry property enables a robot to proactively position itself so that at least
+one of its teammates' belief particles correctly predicts its location, ensuring future
+communicability without explicit signaling.
+
+The epistemic task allocation problem in this setting is formalized as a non-linear integer
+program over the epistemic state $s^i_t$, where each robot $i$ optimizes a joint
+utility function incorporating expected arrival times computed from the belief particles,
+capability constraints, and precedence constraints over task orderings. The solution,
+computed via a genetic algorithm with the initial population seeded by a greedy
+feasible-solution generator, produces a policy $\pi$ as a concatenation of gossip bundles
+(which robot communicates with whom) and task bundles (who performs what). A gossip protocol
+then propagates task assignments through the network of disconnected robots, exploiting
+the particle-based belief model to route messages efficiently through predicted teammate
+locations~\cite{bramblett2023icra, bramblett2023frontiers}.
+
+Simulation experiments over 15 randomized environments with two to eight robots demonstrated
+that the proposed DEL-based method achieves mission times close to an ideal fully-connected
+baseline and substantially outperforms a connectivity-constrained flock method across all
+team sizes. This provides strong empirical evidence that the particle-based DEL approximation
+is not merely a theoretical tool but a practically viable approach to runtime epistemic
+reasoning in robotic systems.
+
+\subsection{Theory of Mind, Higher-Order Reasoning, and Active Epistemic Inference}
+\label{subsec:tom_active_inference}
+
+A significant limitation of first-order epistemic planning where each robot reasons
+only about its own beliefs about the world is that it cannot resolve ambiguities
+arising from simultaneous actions of multiple agents without communication. If two
+robots observe each other moving toward the same task, neither can determine from
+its own first-order observations alone who is actually committed to that task, leading
+to convergence failures and duplicated effort. The epistemic solution is to elevate
+the depth of reasoning to second and third order: a robot $i$ reasons not only about
+what others know ($\Box_j \varphi$) but about what others know about what $i$ knows
+($\Box_j \Box_i \varphi$), capturing the ``I know that you know that I know''
+structure of Theory of Mind (ToM)~\cite{bramblett2025active}.
+
+Bramblett, Reasoner, and Bezzo formalize this in an \textit{active epistemic inference}
+framework that combines DEL-based higher-order belief maintenance with variational
+free energy minimization from active inference theory~\cite{bramblett2025active}. The
+epistemic state is represented as $s = (W, (R_i)_{i \in \mathcal{R}}, L, w)$, where
+the accessibility relation $R_i$ encodes robot $i$'s run-time uncertainty over world
+configurations each world $w \in W$ being an assignment of robots to task subsets.
+Composite accessibility relations $R_i \circ R_j$ encode second-order knowledge:
+$s \models K_i K_j \varphi$ iff $\varphi$ holds in all worlds jointly reachable through
+both $R_i$ and $R_j$. Plans for each robot are sequences $\pi_i = \langle a_{i1}, \ldots,
+a_{ip}\rangle$ leading from an initial epistemic state $s^0_i$ to a goal state
+$s^*_i \in \Gamma_i$, where the planning function incorporates the nested belief structure:
+$\pi_i = \mathrm{Plan}(s^0_i, \Gamma_i, \mathbf{B}_i)$, with $\mathbf{B}_i$ encoding
+robot $i$'s beliefs about the beliefs of all other robots.
+
+The active inference layer converts epistemic beliefs into motion policies by
+minimizing the \textit{variational free energy} (VFE):
+\[
+\mathcal{F}(x_i(t), u_i(t), \mathcal{G}, y_i(t), \omega_i) =
+H[q(\mathcal{G})] + D_{\mathrm{KL}}[q(\mathcal{G}) \,\|\,
+P(x_i(t) \mid y_i(t), \omega_i)],
+\]
+where $q(\mathcal{G})$ is the robot's approximate posterior over valid task-assignment
+configurations $\mathcal{G}$, and $\omega_i$ is its sensor configuration. The likelihood
+function that drives belief updates is computed using a hierarchical \textit{salience}
+function indexed by reasoning order $k$:
+\[
+e^{(k)}_i \leftarrow \upsilon^{(k)}_i(y_i, \Omega, \mathcal{G}) =
+\exp\!\left(-\tfrac{1}{\eta}\, h^{(k)}_i(y_i, \Omega, \mathcal{G})\right),
+\]
+where zero- and first-order evidence use each robot's own direct observations; second-order
+evidence abstracts the perspective of another robot by using its known sensor model $\omega_j$;
+and third-order evidence models what robot $j$ believes robot $k$ observes. The joint
+likelihood over all orders is shown to reduce the variance of the posterior belief distribution
+compared to first-order reasoning alone, by averaging out bounded, mean-zero observation errors
+across multiple reasoning layers~\cite{bramblett2025active}.
+
+In practice, robots execute a \textit{perception-policy loop}: update the posterior
+$q(\mathcal{G})$ from observations, compute the expected free energy for a set of
+candidate movement policies, and select the policy minimizing EFE. Policies that actively
+disambiguate goal assignments by taking ``exaggerated'' movements that are informative to
+observers are preferred over purely task-directed paths because they minimize the epistemic
+term of the EFE. This produces implicit coordination: robots signal intent through motion
+without any explicit communication, resolving assignment conflicts that would stalemate
+first-order reasoners. Experiments with Husarion ROSbot 2.0 UGVs and Crazyflie UAVs
+confirm that higher-order reasoning (up to third order) achieves substantially higher
+mission success rates across rendezvous, task allocation, and multi-task scenarios, with
+the advantage growing markedly as team size exceeds three robots~\cite{bramblett2025active}.
+
+\subsection{DEL Planning Problem Variants and Structural Properties}
+\label{subsec:del_planning_variants}
+
+The formal study of DEL-based planning admits several natural variants depending on the
+degree of agent autonomy and the nature of the environment. Following the framework
+of L{\"o}we et al.~\cite{lowe2010planning}, one distinguishes:
+
+\begin{itemize}[noitemsep]
+\item \textbf{Absolute DEL planning:} Find a sequence $\sigma \in T \subseteq LS$ of
+event models such that $M \otimes \sigma \models \varphi$, where $T$ is a subtree of
+legal sequences and $\varphi$ is an epistemic goal formula. This formulation is
+agent-agnostic.
+
+\item \textbf{Single-agent DEL planning:} As above, but additionally requiring
+$\sigma \in \mathrm{power}(i)$, where the function $\mathrm{power} : \mathcal{A}
+\to \wp(\mathcal{E})$ maps each agent to the set of event models it can instantiate.
+This corresponds to the classical planning assumption of a single omniscient planner.
+
+\item \textbf{Adversarial DEL planning:} Find a partial strategy function
+$\hat{\sigma} : \{0, \ldots, N\} \to \mathcal{E}$ such that (i) $\hat{\sigma} \in
+\mathrm{power}(i)$, (ii) there exists a completion $\sigma \in T$ with
+$\hat{\sigma} \subseteq \sigma$, and (iii) for \textit{all} such completions
+$M \otimes \sigma \models \varphi$. This is a worst-case game-theoretic problem in
+which the planning agent must achieve its epistemic goal regardless of the actions
+of opponents or environmental nondeterminism.
+\end{itemize}
+
+The adversarial formulation is the most directly relevant to multi-robot systems
+operating with unreliable communication channels or nondeterministic physical outcomes.
+Critically, the goal formula $\varphi$ in all three variants is drawn from the full
+epistemic language and may therefore specify goals such as
+$\Box_{R_1} \mathrm{taskComplete} \wedge C_{\mathcal{A}} \mathrm{rendezvousAgreed}$
+that cannot be reduced to classical propositional planning goals.
+
+Two structural properties identified by L{\"o}we et al.\ are directly relevant to
+the runtime tractability of DEL planning in robotics. An event model $\mathcal{E}$ is
+\textit{self-absorbing} if $M \otimes \mathcal{E} \otimes \mathcal{E} \simeq M \otimes
+\mathcal{E}$ for all models $M$ (applying the same event twice has the same effect as
+applying it once). Two event models $\mathcal{E}, \mathcal{E}'$ are \textit{commutative}
+if $M \otimes \mathcal{E} \otimes \mathcal{E}' \simeq M \otimes \mathcal{E}' \otimes
+\mathcal{E}$ for all $M$. Propositional event models are always commutative (Lemma 1
+in~\cite{lowe2010planning}), and almost-mutex event models with transitive accessibility
+relations are self-absorbing (Lemma 2 in~\cite{lowe2010planning}). When the event library
+$\mathcal{E}$ consists entirely of such event models, the Kripke model remains bounded in
+size under any sequence of updates, and the bisimulation contraction can be computed in
+linear time. This guarantees that the World Model Manager in the proposed architecture
+(Section~\ref{sec:integration}) remains computationally tractable for suitably restricted
+event libraries a property that should be treated as a design criterion when specifying
+EPDDL action schemas for concrete robotic domains.
 
 
 \newpage
@@ -1361,11 +1586,11 @@ Table~\ref{tab:epddlsyntax}.
 \toprule
 \textbf{EPDDL Construct} & \textbf{Logical Meaning} & \textbf{Context} \\
 \midrule
-\texttt{([i] phi)}           & $\Box_i \varphi$ --- agent $i$ knows $\varphi$        & preconditions, goals \\
-\texttt{(<i> phi)}           & $\Diamond_i \varphi$ --- agent $i$ considers possible  & preconditions \\
-\texttt{([Kw. i] phi)}       & $\mathrm{Kw}_i \varphi$ --- knows whether $\varphi$   & goals, init \\
-\texttt{([Kw. All] phi)}     & $\mathrm{Kw}_\mathrm{All} \varphi$ --- all know whether & goals \\
-\texttt{(C All phi)}         & $C_\mathrm{All} \varphi$ --- common knowledge          & init, goals \\
+\texttt{([i] phi)}           & $\Box_i \varphi$   agent $i$ knows $\varphi$        & preconditions, goals \\
+\texttt{(<i> phi)}           & $\Diamond_i \varphi$   agent $i$ considers possible  & preconditions \\
+\texttt{([Kw. i] phi)}       & $\mathrm{Kw}_i \varphi$   knows whether $\varphi$   & goals, init \\
+\texttt{([Kw. All] phi)}     & $\mathrm{Kw}_\mathrm{All} \varphi$   all know whether & goals \\
+\texttt{(C All phi)}         & $C_\mathrm{All} \varphi$   common knowledge          & init, goals \\
 \texttt{:type sensing}       & sensing action type                                    & action schema \\
 \texttt{:type public-announcement} & public announcement type                         & action schema \\
 \texttt{:sense-formula}      & formula whose truth is observed                        & sensing actions \\
@@ -1478,7 +1703,7 @@ mutual inconsistency and coverage of the logical space.
 Integrating DEL-based epistemic planning with a ROS2 multi-robot system requires bridging three
 conceptual gaps: (i) between the physical robot state and the epistemic state representation;
 (ii) between EPDDL action schemas and ROS2 action server implementations; and (iii) between the
-planner's output---a sequence of abstract epistemic actions---and the robot execution
+planner's output a sequence of abstract epistemic actions and the robot execution
 infrastructure.
 
 We propose a layered conceptual architecture composed of three interacting strata:
@@ -1493,7 +1718,9 @@ It contains:
 \begin{itemize}
 \item \textbf{Epistemic World Model Manager:} Maintains the Kripke model and applies
 product update semantics (or suitable approximations) upon perception events or
-action completion.
+action completion. In the spirit of the knowledge module proposed by L{\"o}we et
+al.~\cite{lowe2010planning}, this component acts as a persistent epistemic engine
+that any behavior module can query for truth values of epistemic formulas.
 
 \item \textbf{EPDDL Planner Interface:} Generates EPDDL problem instances from the
 current epistemic state, invokes an external epistemic planner, and translates the
@@ -1647,16 +1874,19 @@ epistemic updates applied via DEL product update semantics.}
 
 The number of possible worlds in a Kripke model can grow exponentially with the number of
 propositions and agents. Several approximation strategies have been explored: \textit{bounded
-world representations} limit the number of worlds using heuristic pruning; \textit{belief space
-planning} maintains probability distributions over worlds (POMDP-style), trading epistemic
-precision for tractability; and \textit{compiled classical planning
-approaches}~\cite{muise2015planning} transform epistemic problems into classical ones by encoding
-epistemic state as additional propositional atoms.
+world representations} limit the number of worlds using heuristic pruning; the particle-based
+approximation of Bramblett and Bezzo~\cite{bramblett2023frontiers} offers a computationally
+efficient alternative that preserves the essential DEL update structure while bounding world-set
+size; and \textit{compiled classical planning approaches}~\cite{muise2015planning} transform
+epistemic problems into classical ones by encoding epistemic state as additional propositional
+atoms. The structural tractability results of L{\"o}we et al.~\cite{lowe2010planning} for
+self-absorbing and commutative event libraries provide a formal basis for bounding model growth
+and should inform the choice of EPDDL action schemas in a deployed system.
 
 \subsection{Perception-to-Epistemic-State Translation}
 
 A critical engineering challenge is translating robot sensor data into Kripke model updates. A
-robot's observation---a camera image, a lidar scan---is a physical signal that must be interpreted
+robot's observation a camera image, a lidar scan is a physical signal that must be interpreted
 as an epistemic event. In the ROS2 context, this pipeline consists of a perception node
 (producing symbolic object detections or map assertions), a semantic interpretation layer
 (translating detections into PDDL-compatible ground atoms), and an epistemic update module
@@ -1666,27 +1896,68 @@ as an epistemic event. In the ROS2 context, this pipeline consists of a percepti
 
 Inter-robot communication is itself an epistemic event: when robot $R_1$ broadcasts that corridor
 $c_3$ is blocked, this constitutes a public announcement of $\Box_{R_1}\mathrm{corridorBlocked}(c_3)$,
-and the epistemic state changes via the DEL product update. In the proposed architecture, the
-Epistemic Action Dispatcher implements communication actions as ROS2 topic publications while
-simultaneously applying the corresponding product update.
+and the epistemic state changes via the DEL product update. In the applied systems of Bramblett
+et al.~\cite{bramblett2023icra, bramblett2023frontiers}, this is implemented via a gossip protocol
+in which robots route to the predicted locations of teammates and deliver task assignments,
+treating each successful rendezvous as a localized public announcement that updates both robots'
+belief states. In the proposed architecture, the Epistemic Action Dispatcher implements
+communication actions as ROS2 topic publications while simultaneously applying the corresponding
+product update to the World Model Manager's Kripke model.
 
 \subsection{Open Research Questions}
 
 \textbf{Tractable epistemic state representations.} What Kripke model representations are both
 expressive enough for EPDDL-level reasoning and compact enough for real-time multi-robot fleets?
-Are factored or compiled representations sufficient?
+Are factored or compiled representations sufficient? The particle-based approach
+of~\cite{bramblett2023frontiers} and the bisimulation bounding results of~\cite{lowe2010planning}
+offer complementary partial answers.
 
 \textbf{Online epistemic planning.} What are the performance characteristics of available
-epistemic planners (EFP, mGPT, MCEPlan) in online replanning settings?
+epistemic planners (EFP, mGPT, MCEPlan) in online replanning settings relevant to robotics?
 
 \textbf{EPDDL-to-ROS2 toolchain.} How should the \texttt{plank} toolkit integrate with the ROS2
 build and runtime systems? Can EPDDL problem files be auto-generated from ROS2 system state?
 
-\textbf{Epistemic goal specification.} What user interface abstractions allow operators to specify
-goals such as ``ensure all robots know whether the target room is occupied''?
+\textbf{Higher-order reasoning at scale.} The active epistemic inference results
+of~\cite{bramblett2025active} show that third-order reasoning significantly improves task
+allocation success rates, but the computational cost grows with the number of reasoning levels
+and robots. What is the optimal trade-off between reasoning depth and computational budget?
 
 \textbf{Failure handling.} When epistemic plan actions fail, the epistemic state must be updated
 and a new plan generated. What recovery strategies are appropriate in a ROS2 runtime?
+
+
+\newpage
+\section{Conclusion}
+\label{sec:conclusion}
+
+This document has surveyed the two pillars of a planned research program: the engineering
+infrastructure of ROS2 and PlanSys2 for task-level robot planning, and the theoretical
+framework of Dynamic Epistemic Logic and EPDDL for epistemic multi-agent planning. The
+limitations of classical PDDL-based planners no representation of agent knowledge,
+no epistemic goal language, no multi-agent coordination semantics motivate the adoption
+of DEL as the formal backbone of a next-generation planning system for heterogeneous robot
+fleets.
+
+Recent applied work has demonstrated the practical viability of DEL in robotic systems.
+Bramblett and Bezzo~\cite{bramblett2023icra, bramblett2023frontiers} show that a
+particle-based approximation of the Kripke model, combined with DEL product update
+semantics for belief revision, enables efficient multi-robot exploration and task
+allocation in communication-restricted environments, matching the performance of
+idealized fully-connected systems. Bramblett, Reasoner, and Bezzo~\cite{bramblett2025active}
+extend this to implicit coordination without any communication, using active inference
+over higher-order DEL belief structures to let robots signal intent through motion and
+resolve assignment ambiguities. L{\"o}we, Pacuit, and Witzel~\cite{lowe2010planning}
+provide the formal planning problem definitions and structural tractability results
+(self-absorption, commutativity, bounded model growth) that ground these applied
+approaches in rigorous theory.
+
+The integration path identified in this survey a Cognitive Layer maintaining the Kripke
+model, interfacing with an EPDDL planner, and dispatching epistemic actions via ROS2
+action servers provides a concrete architectural roadmap. The primary open challenges
+are the design of tractable epistemic state representations, the development of an
+EPDDL-to-ROS2 toolchain, and the scaling of higher-order reasoning to larger robot teams
+under real-time constraints.
 
 
 \newpage
@@ -1761,6 +2032,31 @@ Cornell University Press.
 \bibitem{ghallab2004automated}
 Ghallab, M., Nau, D.~S., \& Traverso, P. (2004).
 \textit{Automated Planning: Theory and Practice}. Elsevier.
+
+\bibitem{bramblett2023icra}
+Bramblett, L., Gao, S., \& Bezzo, N. (2023).
+\textit{Epistemic Planning for Heterogeneous Robotic Systems}.
+arXiv:2308.00579. In Proceedings of the IEEE International Conference on
+Robotics and Automation (ICRA).
+
+\bibitem{bramblett2023frontiers}
+Bramblett, L., \& Bezzo, N. (2023).
+\textit{Epistemic Planning for Multi-Robot Systems in
+Communication-Restricted Environments}.
+Frontiers in Robotics and AI, 10:1149439.
+doi:10.3389/frobt.2023.1149439.
+
+\bibitem{bramblett2025active}
+Bramblett, L., Reasoner, J., \& Bezzo, N. (2025).
+\textit{Implicit Coordination using Active Epistemic Inference
+for Multi-Robot Systems}.
+arXiv:2501.03907.
+
+\bibitem{lowe2010planning}
+L{\"o}we, B., Pacuit, E., \& Witzel, A. (2010).
+\textit{Planning Based on Dynamic Epistemic Logic}.
+In Proceedings of the Workshop on Logic and the Simulation of
+Interaction and Reasoning (LSIR), IJCAI 2009.
 
 \end{thebibliography}
 
