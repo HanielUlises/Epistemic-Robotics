@@ -1,0 +1,100 @@
+; =============================================================================
+; Problema EPDDL: warehouse-inspection-1
+; =============================================================================
+;
+; Estado inicial:
+;   - r_scout   está en Z1 (entrada)
+;   - r_carrier está en Z1 (entrada)
+;   - r_super   está en Z1 (entrada)
+;   - Hay un obstáculo en Z2 y una pieza dañada en Z3
+;   - Ningún robot ha inspeccionado ni reportado nada
+;   - La alarma NO está activa
+;
+; Creencias iniciales (S5-theory / conocimiento común):
+;   - Todos saben que hay algo en Z2 y Z3, pero ninguno conoce el detalle
+;   - Solo r_scout sabe que tiene sensores para inspección
+;
+; Meta:
+;   1. La pieza dañada de Z3 fue retirada           (hecho físico)
+;   2. r_super sabe que la pieza de Z3 fue retirada  (creencia modal)
+;   3. La alarma está activa                         (hecho físico)
+;   4. Todos saben que la alarma está activa         (conocimiento común)
+;
+; =============================================================================
+
+(define (problem warehouse-inspection-1)
+
+  (:domain robot-warehouse)
+
+  (:requirements
+    :finitary-S5-theories :modal-goals :negative-preconditions
+  )
+
+  (:agents r_scout r_carrier r_super)
+
+  (:init
+    (:and
+      ; --- Posiciones iniciales ---
+      (at-Z1 r_scout)
+      (at-Z1 r_carrier)
+      (at-Z1 r_super)
+
+      ; --- Estado del mundo ---
+      (obstacle-Z2)
+      (piece-damaged-Z3)
+      (not (obstacle-Z1))
+      (not (obstacle-Z3))
+      (not (piece-damaged-Z2))
+      (not (piece-carried r_scout))
+      (not (piece-carried r_carrier))
+      (not (piece-carried r_super))
+      (not (zone-clear-Z2))
+      (not (zone-clear-Z3))
+      (not (piece-removed-Z2))
+      (not (piece-removed-Z3))
+      (not (inspected-Z2 r_scout))
+      (not (inspected-Z2 r_carrier))
+      (not (inspected-Z2 r_super))
+      (not (inspected-Z3 r_scout))
+      (not (inspected-Z3 r_carrier))
+      (not (inspected-Z3 r_super))
+      (not (alarm-raised))
+      (not (report-sent r_scout))
+      (not (report-sent r_carrier))
+      (not (report-sent r_super))
+
+      ; --- Conocimiento común sobre posiciones ---
+      ([C. All] (and
+        (at-Z1 r_scout)
+        (at-Z1 r_carrier)
+        (at-Z1 r_super)
+      ))
+
+      ; --- r_scout sabe que hay obstáculo en Z2 (información de mapa) ---
+      ([C. All] (<Kw. r_scout> (obstacle-Z2)))
+
+      ; --- Ninguno sabe inicialmente si hay pieza dañada en Z3 ---
+      ; (r_scout necesita ir a inspeccionar para descubrirlo)
+
+      ; --- Conocimiento común: la alarma no está activa ---
+      ([C. All] (not (alarm-raised)))
+    )
+  )
+
+  (:goal
+    (and
+      ; Hecho físico: la pieza fue retirada de Z3
+      (piece-removed-Z3)
+
+      ; El supervisor sabe que la pieza fue retirada de Z3
+      ([r_super] (piece-removed-Z3))
+
+      ; La alarma está activa
+      (alarm-raised)
+
+      ; Conocimiento común: todos saben que la alarma está activa
+      ([C. All] (alarm-raised))
+    )
+  )
+
+)
