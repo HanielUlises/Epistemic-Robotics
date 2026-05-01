@@ -1,7 +1,12 @@
 ; Problema EPDDL: box-task-1
-; Estado inicial: la caja está en A, r1 está en A (lo sabe todo el mundo),
-;                 r2 puede estar en A o en B (incertidumbre sobre su posición)
+; Estado inicial: la caja está en A, r1 está en A (todo el mundo lo sabe),
+;                 r2 está en A o en B (incertidumbre epistémica)
 ; Meta: holding(r2) ∧ B_r1(holding(r2))
+;
+; Invariantes de exclusión mutua (modelados como common knowledge):
+;   - boxAt-A xor boxAt-B
+;   - at-A(r) xor at-B(r)  para cada r
+; Estos reemplazan la atomicidad que plank no soporta en efectos compuestos.
 
 (define (problem box-task-1)
 
@@ -22,27 +27,35 @@
       (not (holding r1))
       (not (holding r2))
 
-      ; La caja está exactamente en uno de los dos cuartos (siempre)
+      ; Invariante: la caja está en exactamente uno de los dos cuartos
       ([C. All] (and
-        (or (boxAt-A) (boxAt-B))
+        (or  (boxAt-A) (boxAt-B))
         (not (and (boxAt-A) (boxAt-B)))
       ))
 
-      ; r1 siempre está en A (todo el mundo lo sabe)
+      ; Invariante: cada robot está en exactamente uno de los dos cuartos
+      ([C. All] (and
+        (or  (at-A r1) (at-B r1))
+        (not (and (at-A r1) (at-B r1)))
+        (or  (at-A r2) (at-B r2))
+        (not (and (at-A r2) (at-B r2)))
+      ))
+
+      ; r1 siempre está en A — todo el mundo lo sabe
       ([C. All] (at-A r1))
 
-      ; r2 puede estar en A o en B — incertidumbre epistémica
-      ; (no hay [C.All](at-A r2) ni [C.All](at-B r2))
-
-      ; r1 sabe dónde está la caja
+      ; r1 sabe si la caja está en A
       ([C. All] (<Kw. r1> (boxAt-A)))
+
+      ; r2 puede estar en A o en B — sin common knowledge sobre su posición
+      ; (incertidumbre epistémica: el planificador debe navegar r2 si es necesario)
     )
   )
 
   (:goal
     (and
-      (holding r2)          ; hecho físico
-      ([r1] (holding r2))   ; creencia de r1
+      (holding r2)          ; hecho físico: r2 sostiene la caja
+      ([r1] (holding r2))   ; creencia de r1: r1 sabe que r2 sostiene la caja
     )
   )
 
