@@ -1,18 +1,18 @@
 (define (domain muddy-children)
 
-  (:requirements :partial-observability :modal-preconditions :knowing-whether)
+  (:requirements :partial-observability :modal-preconditions :knowing-whether :negative-preconditions)
   (:action-type-libraries intermediate)
 
   (:predicates (muddy ?i - agent))
 
   (:event e-ask-pos
     :parameters (?i - agent)
-    :precondition ([Kw. ?i] (muddy ?i))
+    :precondition (and (muddy ?i) (<Kw. ?i> (muddy ?i)))
   )
 
   (:event e-ask-neg
     :parameters (?i - agent)
-    :precondition (<Kw. ?i> (muddy ?i))
+    :precondition (and (not (muddy ?i)) (<Kw. ?i> (muddy ?i)))
   )
 
   (:action ask

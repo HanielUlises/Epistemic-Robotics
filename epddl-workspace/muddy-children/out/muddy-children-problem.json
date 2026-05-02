@@ -8,6 +8,7 @@
     "requirements": [
       ":common-knowledge",
       ":disjunctive-list-formulas",
+      ":disjunctive-preconditions",
       ":equality",
       ":events-conditions",
       ":finitary-S5-theories",
@@ -19,6 +20,7 @@
       ":modal-preconditions",
       ":multi-pointed-models",
       ":negative-list-formulas",
+      ":negative-preconditions",
       ":partial-observability",
       ":static-common-knowledge"
     ],
@@ -127,20 +129,35 @@
       "preconditions": {
         "e-ask-pos": {
           "formula": {
-            "modality-name": "Kw.box",
-            "modality-index": [
-              "c1"
-            ],
-            "formula": "muddy_c1"
+            "connective": "and",
+            "formulas": [
+              "muddy_c1",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "c1"
+                ],
+                "formula": "muddy_c1"
+              }
+            ]
           }
         },
         "e-ask-neg": {
           "formula": {
-            "modality-name": "Kw.diamond",
-            "modality-index": [
-              "c1"
-            ],
-            "formula": "muddy_c1"
+            "connective": "and",
+            "formulas": [
+              {
+                "connective": "not",
+                "formula": "muddy_c1"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "c1"
+                ],
+                "formula": "muddy_c1"
+              }
+            ]
           }
         }
       },
@@ -184,20 +201,35 @@
       "preconditions": {
         "e-ask-pos": {
           "formula": {
-            "modality-name": "Kw.box",
-            "modality-index": [
-              "c2"
-            ],
-            "formula": "muddy_c2"
+            "connective": "and",
+            "formulas": [
+              "muddy_c2",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "c2"
+                ],
+                "formula": "muddy_c2"
+              }
+            ]
           }
         },
         "e-ask-neg": {
           "formula": {
-            "modality-name": "Kw.diamond",
-            "modality-index": [
-              "c2"
-            ],
-            "formula": "muddy_c2"
+            "connective": "and",
+            "formulas": [
+              {
+                "connective": "not",
+                "formula": "muddy_c2"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "c2"
+                ],
+                "formula": "muddy_c2"
+              }
+            ]
           }
         }
       },
