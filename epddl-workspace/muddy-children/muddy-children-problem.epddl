@@ -1,47 +1,28 @@
-; Problema: muddy-children-2
-; 2 niños, ambos sucios.
-; Estado inicial: cada niño ve al otro pero no a sí mismo.
-; El padre anuncia [C.All](muddy c1 ∨ muddy c2).
-; Meta: ambos niños saben si están sucios.
-;   [c1](muddy c1) ∧ [c2](muddy c2)
-;
-; Solución esperada: después de 2 rondas de ask ambos niños lo saben.
-; Ronda 1: ninguno sabe → ambos responden "no sé"
-;          → common knowledge de que nadie supo en ronda 1
-; Ronda 2: ahora ambos deducen que están sucios → responden "sé"
-
 (define (problem muddy-children-2)
 
   (:domain muddy-children)
 
   (:requirements
-    :finitary-S5-theories :modal-goals :negative-preconditions
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals
   )
 
   (:agents c1 c2)
 
   (:init
     (:and
-      ; Hecho físico: ambos están sucios
       (muddy c1)
       (muddy c2)
-
-      ; Cada niño ve al otro — common knowledge de la suciedad ajena
-      ([C. All] (muddy c1))
-      ([C. All] (muddy c2))
-
-      ; Anuncio del padre: al menos uno está sucio
-      ([C. All] (or (muddy c1) (muddy c2)))
-
-      ; Ninguno sabe inicialmente si él mismo está sucio
-      ; (no hay [c1](muddy c1) ni [c2](muddy c2) en el estado inicial)
+      (:forall (?i ?j - agent | (/= ?i ?j))
+        ([C. All] ([Kw. ?i] (muddy ?j)))
+      )
     )
   )
 
   (:goal
     (and
-      ([c1] (muddy c1))
-      ([c2] (muddy c2))
+      ([Kw. c1] (muddy c1))
+      ([Kw. c2] (muddy c2))
     )
   )
 

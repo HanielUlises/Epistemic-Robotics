@@ -1,46 +1,23 @@
-; Dominio EPDDL: muddy-children
-; Agentes: los niños (c1, c2, ...)
-; Cada niño puede ver si los demás están sucios pero no a sí mismo.
-; El padre anuncia "al menos uno está sucio" y luego pregunta por rondas.
-; Tras k rondas (k = número de niños sucios), todos saben si están sucios.
-
 (define (domain muddy-children)
 
+  (:requirements :partial-observability :modal-preconditions :knowing-whether)
   (:action-type-libraries intermediate)
 
-  (:requirements
-    :lists :equality :list-comprehensions
-    :partial-observability :ontic-actions
-    :negative-preconditions :modal-preconditions
+  (:predicates (muddy ?i - agent))
+
+  (:event e-ask-pos
+    :parameters (?i - agent)
+    :precondition ([Kw. ?i] (muddy ?i))
   )
 
-  (:predicates
-    (muddy   ?c - agent)   ; el niño c está sucio
-    (stepped ?c - agent)   ; el niño c ya ha respondido "sí sé"
+  (:event e-ask-neg
+    :parameters (?i - agent)
+    :precondition (<Kw. ?i> (muddy ?i))
   )
 
-  (:event nil)
-
-  ; El padre anuncia "al menos uno está sucio" — restricción ya en :init
-  ; como common knowledge; no se necesita acción separada.
-
-  ; Evento positivo: el niño sabe que está sucio
-  (:event e-knows-muddy
-    :parameters (?c - agent)
-    :precondition ([?c] (muddy ?c))
-  )
-
-  ; Evento negativo: el niño no sabe (aún no puede afirmar)
-  (:event e-not-knows-muddy
-    :parameters (?c - agent)
-    :precondition (not ([?c] (muddy ?c)))
-  )
-
-  ; El niño anuncia si sabe o no sabe que está sucio.
-  ; Acción de sensing público: todos observan la respuesta.
   (:action ask
-    :parameters (?c - agent)
-    :action-type (public-sensing (e-knows-muddy ?c) (e-not-knows-muddy ?c))
+    :parameters (?i - agent)
+    :action-type (public-sensing (e-ask-pos ?i) (e-ask-neg ?i))
     :observability-conditions (default Fully)
   )
 
