@@ -1,0 +1,69 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+    Name epistemic_gbfs
+    Description Greedy Best-First Search epistemic planner for IPC 2026. Uses DEL product update with bisimulation contraction and a world-count heuristic.
+    Authors Haniel Ulises <hanielulises@gmail.com>
+    License MIT
+
+    # EPDDL feature support (yes / no / partially <description>)
+    typing                      yes
+    equality                    yes
+    list-comprehensions         partially supports ground lists
+    partial-observability       yes
+    ontic-actions               yes
+    modal-preconditions         yes
+    negative-preconditions      yes
+    modal-goals                 yes
+    finitary-S5-theories        yes
+    lists                       partially ground only
+
+    # Supported levels
+    basic-level                 yes
+    intermediate-level          yes
+    hard-level                  no
+
+%files
+    . /planner
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt-get update -y
+    apt-get install -y --no-install-recommends \
+        cmake \
+        g++ \
+        make \
+        git \
+        ca-certificates \
+        && rm -rf /var/lib/apt/lists/*
+
+    cd /planner
+    mkdir -p build && cd build
+    cmake .. -DCMAKE_BUILD_TYPE=Release
+    make -j$(nproc)
+
+    # Strip binary to keep image small
+    strip /planner/build/epistemic_gbfs
+
+%environment
+    export PATH=/planner/build:$PATH
+
+%runscript
+    exec /planner/build/epistemic_gbfs "$@"
+
+%help
+    Epistemic GBFS planner — IPC 2026 team-3.
+
+    Usage:
+      epistemic_gbfs --task <task.json> --plan <plan.json>
+      epistemic_gbfs --task <task.json> --plan <plan.json> --heuristic [wc|ug]
+      epistemic_gbfs --task <task.json> --plan <plan.json> --limit <max_nodes>
+
+    Arguments:
+      --task       Ground JSON task file (produced by plank export)
+      --plan       Output plan file (JSON array or null)
+      --heuristic  wc = world count (default)
+                   ug = unsatisfied goal conjuncts
+      --limit      Max nodes to expand before giving up (0 = unlimited)
