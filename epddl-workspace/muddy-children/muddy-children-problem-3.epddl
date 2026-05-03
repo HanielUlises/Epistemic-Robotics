@@ -1,4 +1,4 @@
-(define (problem muddy-children-3)
+(define (problem muddy-children-3-asym)
 
   (:domain muddy-children)
 
@@ -13,7 +13,7 @@
     (:and
       (muddy c1)
       (muddy c2)
-      (muddy c3)
+      (not (muddy c3))
       (:forall (?i ?j - agent | (/= ?i ?j))
         ([C. All] ([Kw. ?i] (muddy ?j)))
       )
