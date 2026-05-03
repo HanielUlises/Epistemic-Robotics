@@ -1,6 +1,6 @@
 {
   "planning-task-info": {
-    "problem": "muddy-children-3",
+    "problem": "muddy-children-3-asym",
     "domain": "muddy-children",
     "libraries": [
       "intermediate"
@@ -190,7 +190,7 @@
       ]
     },
     "designated": [
-      "w7"
+      "w6"
     ]
   },
   "actions": {

@@ -12,7 +12,7 @@
               "action": "ask_c3",
               "branches": [
                 {
-                  "event": 0,
+                  "event": 1,
                   "subtree": null
                 }
               ]
