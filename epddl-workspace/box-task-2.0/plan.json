@@ -1,0 +1,37 @@
+{
+  "action": "declare-position_r2",
+  "branches": [
+    {
+      "event": 1,
+      "subtree": {
+        "action": "move-B-to-A-arrive_r2",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "pickup-A-hold_r2",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "event": 0,
+      "subtree": {
+        "action": "pickup-A-hold_r2",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": null
+          }
+        ]
+      }
+    }
+  ]
+}

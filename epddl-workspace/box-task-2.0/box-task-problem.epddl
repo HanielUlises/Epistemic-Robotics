@@ -1,61 +1,41 @@
-; Problema EPDDL: box-task-1
-; Estado inicial: la caja está en A, r1 está en A (todo el mundo lo sabe),
-;                 r2 está en A o en B (incertidumbre epistémica)
-; Meta: holding(r2) ∧ B_r1(holding(r2))
-;
-; Invariantes de exclusión mutua (modelados como common knowledge):
-;   - boxAt-A xor boxAt-B
-;   - at-A(r) xor at-B(r)  para cada r
-; Estos reemplazan la atomicidad que plank no soporta en efectos compuestos.
+(define (problem box-task-2-1)
 
-(define (problem box-task-1)
-
-  (:domain box-task)
+  (:domain box-task-2)
 
   (:requirements
-    :finitary-S5-theories :modal-goals :negative-preconditions
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :negative-preconditions :knowing-whether
   )
 
   (:agents r1 r2)
 
   (:init
     (:and
-      ; Hechos físicos ciertos
       (boxAt-A)
       (at-A r1)
       (seen r1)
       (not (holding r1))
       (not (holding r2))
 
-      ; Invariante: la caja está en exactamente uno de los dos cuartos
       ([C. All] (and
         (or  (boxAt-A) (boxAt-B))
         (not (and (boxAt-A) (boxAt-B)))
-      ))
-
-      ; Invariante: cada robot está en exactamente uno de los dos cuartos
-      ([C. All] (and
         (or  (at-A r1) (at-B r1))
         (not (and (at-A r1) (at-B r1)))
         (or  (at-A r2) (at-B r2))
         (not (and (at-A r2) (at-B r2)))
       ))
 
-      ; r1 siempre está en A — todo el mundo lo sabe
       ([C. All] (at-A r1))
-
-      ; r1 sabe si la caja está en A
       ([C. All] (<Kw. r1> (boxAt-A)))
-
-      ; r2 puede estar en A o en B — sin common knowledge sobre su posición
-      ; (incertidumbre epistémica: el planificador debe navegar r2 si es necesario)
+      ([C. All] ([Kw. r2] (at-A r2)))
     )
   )
 
   (:goal
     (and
-      (holding r2)          ; hecho físico: r2 sostiene la caja
-      ([r1] (holding r2))   ; creencia de r1: r1 sabe que r2 sostiene la caja
+      (holding r2)
+      ([r1] (holding r2))
     )
   )
 

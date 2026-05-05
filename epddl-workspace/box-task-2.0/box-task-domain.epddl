@@ -1,33 +1,45 @@
-; Dominio EPDDL: box-task
+; Dominio EPDDL: box-task-2
 ; Robots: r1 (inspector), r2 (recolector)
 ; Habitaciones: A, B (:types + private-ontic = seg_fault!!)
-; Nota: efectos compuestos no soportados por plank — se usan acciones separadas
-;       por efecto. Los invariantes de exclusión mutua se modelan en el problema.
+; Novedad: acción de sensing de posición para r2 + acciones de movimiento
 
-(define (domain box-task)
+(define (domain box-task-2)
 
   (:action-type-libraries intermediate)
 
   (:requirements
     :lists :equality :list-comprehensions
     :partial-observability :ontic-actions
-    :negative-preconditions :modal-preconditions
+    :negative-preconditions :modal-preconditions :knowing-whether
   )
 
   (:predicates
-    (boxAt-A)              ; la caja está en A
-    (boxAt-B)              ; la caja está en B
-    (at-A    ?r - agent)   ; robot r está en A
-    (at-B    ?r - agent)   ; robot r está en B
-    (seen    ?r - agent)   ; r ha observado la caja
-    (holding ?r - agent)   ; r sostiene la caja
+    (boxAt-A)
+    (boxAt-B)
+    (at-A    ?r - agent)
+    (at-B    ?r - agent)
+    (seen    ?r - agent)
+    (holding ?r - agent)
   )
 
   (:event nil)
 
+  ;--------------------SENSING DE POSICIÓN------------------
+
+  ; r2 está en A y no sabe si está en A
+  (:event e-sense-at-A-pos
+    :parameters (?r - agent)
+    :precondition (and (at-A ?r) (<Kw. ?r> (at-A ?r)))
+  )
+
+  ; r2 está en B y no sabe si está en A
+  (:event e-sense-at-A-neg
+    :parameters (?r - agent)
+    :precondition (and (not (at-A ?r)) (<Kw. ?r> (at-A ?r)))
+  )
+
   ;--------------------OBSERVACIÓN------------------
 
-  ; r observa en A y registra que vio la caja
   (:event e-observe-A
     :parameters (?r - agent)
     :precondition (at-A ?r)
@@ -36,14 +48,12 @@
 
   ;--------------------PICKUP A------------------
 
-  ; r toma la caja en A —> efecto: holding
   (:event e-pickup-A-hold
     :parameters (?r - agent)
     :precondition (and (at-A ?r) (boxAt-A) (not (holding ?r)))
     :effects (holding ?r)
   )
 
-  ; r toma la caja en A —> efecto: quitar boxAt-A
   (:event e-pickup-A-clear
     :parameters (?r - agent)
     :precondition (and (at-A ?r) (boxAt-A) (not (holding ?r)))
@@ -52,14 +62,12 @@
 
   ;--------------------PICKUP B------------------
 
-  ; r toma la caja en B —> efecto: holding
   (:event e-pickup-B-hold
     :parameters (?r - agent)
     :precondition (and (at-B ?r) (boxAt-B) (not (holding ?r)))
     :effects (holding ?r)
   )
 
-  ; r toma la caja en B —> efecto: quitar boxAt-B
   (:event e-pickup-B-clear
     :parameters (?r - agent)
     :precondition (and (at-B ?r) (boxAt-B) (not (holding ?r)))
@@ -68,14 +76,12 @@
 
   ;--------------------MOVE A->B------------------
 
-  ; r se mueve de A a B —> efecto: quitar at-A
   (:event e-move-A-to-B-leave
     :parameters (?r - agent)
     :precondition (at-A ?r)
     :effects (not (at-A ?r))
   )
 
-  ; r se mueve de A a B —> efecto: poner at-B
   (:event e-move-A-to-B-arrive
     :parameters (?r - agent)
     :precondition (at-A ?r)
@@ -84,23 +90,36 @@
 
   ;--------------------MOVE B->A------------------
 
-  ; r se mueve de B a A —> efecto: quitar at-B
   (:event e-move-B-to-A-leave
     :parameters (?r - agent)
     :precondition (at-B ?r)
     :effects (not (at-B ?r))
   )
 
-  ; r se mueve de B a A —> efecto: poner at-A
   (:event e-move-B-to-A-arrive
     :parameters (?r - agent)
     :precondition (at-B ?r)
     :effects (at-A ?r)
   )
 
+     (:event e-at-A-pos
+    :parameters (?r - agent)
+    :precondition (at-A ?r)
+  )
+
+  (:event e-at-A-neg
+    :parameters (?r - agent)
+    :precondition (at-B ?r)
+  )
+
+  (:action declare-position
+    :parameters (?r - agent)
+    :action-type (public-sensing (e-at-A-pos ?r) (e-at-A-neg ?r))
+    :observability-conditions (default Fully)
+  )
+
   ;--------------------COMUNICACIÓN------------------
 
-  ; sender informa que el otro agente sostiene la caja
   (:event e-tell-holding
     :parameters (?sender - agent  ?about - agent)
     :precondition ([?sender] (holding ?about))
@@ -108,7 +127,13 @@
 
   ;--------------------ACCIONES------------------
 
-  ; r inspecciona A en privado —> solo r lo ve
+  ; r2 detecta su propia posición (sensing privado, solo r2 lo ve)
+  (:action sense-position
+    :parameters (?r - agent)
+    :action-type (public-sensing (e-sense-at-A-pos ?r) (e-sense-at-A-neg ?r))
+    :observability-conditions (default Fully)
+  )
+
   (:action observe-private-A
     :parameters (?r - agent)
     :action-type (private-ontic (e-observe-A ?r) (nil))
@@ -119,67 +144,59 @@
       )
   )
 
-  ; r toma la caja en A (holding) —> visible a todos
   (:action pickup-A-hold
     :parameters (?r - agent)
     :action-type (public-ontic (e-pickup-A-hold ?r))
     :observability-conditions (default Fully)
   )
 
-  ; r toma la caja en A (quitar boxAt-A) —> visible a todos
   (:action pickup-A-clear
     :parameters (?r - agent)
     :action-type (public-ontic (e-pickup-A-clear ?r))
     :observability-conditions (default Fully)
   )
 
-  ; r toma la caja en B (holding) —> visible a todos
   (:action pickup-B-hold
     :parameters (?r - agent)
     :action-type (public-ontic (e-pickup-B-hold ?r))
     :observability-conditions (default Fully)
   )
 
-  ; r toma la caja en B (quitar boxAt-B) —> visible a todos
   (:action pickup-B-clear
     :parameters (?r - agent)
     :action-type (public-ontic (e-pickup-B-clear ?r))
     :observability-conditions (default Fully)
   )
 
-  ; r se mueve de A a B (quitar at-A) —> visible a todos
   (:action move-A-to-B-leave
     :parameters (?r - agent)
     :action-type (public-ontic (e-move-A-to-B-leave ?r))
     :observability-conditions (default Fully)
   )
 
-  ; r se mueve de A a B (poner at-B) —> visible a todos
   (:action move-A-to-B-arrive
     :parameters (?r - agent)
     :action-type (public-ontic (e-move-A-to-B-arrive ?r))
     :observability-conditions (default Fully)
   )
 
-  ; r se mueve de B a A (quitar at-B) —> visible a todos
   (:action move-B-to-A-leave
     :parameters (?r - agent)
     :action-type (public-ontic (e-move-B-to-A-leave ?r))
     :observability-conditions (default Fully)
   )
 
-  ; r se mueve de B a A (poner at-A) —> visible a todos
   (:action move-B-to-A-arrive
     :parameters (?r - agent)
     :action-type (public-ontic (e-move-B-to-A-arrive ?r))
     :observability-conditions (default Fully)
   )
 
-  ; sender anuncia publicamente que el otro agente tiene la caja
   (:action tell-holding
     :parameters (?sender - agent  ?about - agent)
     :action-type (private-announcement (e-tell-holding ?sender ?about) (nil))
     :observability-conditions (default Fully)
   )
 
+ 
 )
