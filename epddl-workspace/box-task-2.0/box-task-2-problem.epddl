@@ -1,0 +1,50 @@
+(define (problem box-task-2-1)
+
+  (:domain box-task-2)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :negative-preconditions :knowing-whether
+  )
+
+  (:agents r1 r2)
+
+  (:init
+    (:and
+      (boxAt-A)
+      (at-A r1)
+      (seen r1)
+      (not (holding r1))
+      (not (holding r2))
+      (not (in-transit-A-to-B r1))
+      (not (in-transit-A-to-B r2))
+      (not (in-transit-B-to-A r1))
+      (not (in-transit-B-to-A r2))
+
+      ([C. All] (and
+        (or  (boxAt-A) (boxAt-B))
+        (not (and (boxAt-A) (boxAt-B)))
+        (or  (at-A r1) (at-B r1))
+        (not (and (at-A r1) (at-B r1)))
+        (or  (at-A r2) (at-B r2))
+        (not (and (at-A r2) (at-B r2)))
+        (not (and (in-transit-A-to-B r1) (at-A r1)))
+        (not (and (in-transit-A-to-B r2) (at-A r2)))
+        (not (and (in-transit-B-to-A r1) (at-B r1)))
+        (not (and (in-transit-B-to-A r2) (at-B r2)))
+      ))
+
+      ([C. All] (at-A r1))
+      ([C. All] (<Kw. r1> (boxAt-A)))
+      ([C. All] ([Kw. r2] (at-A r2)))
+    )
+  )
+
+  (:goal
+    (and
+      (holding r2)
+      ([r1] (holding r2))
+    )
+  )
+
+)

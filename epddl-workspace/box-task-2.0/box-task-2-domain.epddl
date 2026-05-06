@@ -1,0 +1,232 @@
+; Dominio EPDDL: box-task-2
+; Robots: r1 (inspector), r2 (recolector)
+; Habitaciones: A, B (:types + private-ontic = seg_fault!!)
+; moving flag: in-transit-A-to-B / in-transit-B-to-A fuerzan orden leave->arrive
+
+(define (domain box-task-2)
+
+  (:action-type-libraries intermediate)
+
+  (:requirements
+    :lists :equality :list-comprehensions
+    :partial-observability :ontic-actions
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:predicates
+    (boxAt-A)
+    (boxAt-B)
+    (at-A              ?r - agent)
+    (at-B              ?r - agent)
+    (seen              ?r - agent)
+    (holding           ?r - agent)
+    (in-transit-A-to-B ?r - agent)
+    (in-transit-B-to-A ?r - agent)
+  )
+
+  (:event nil)
+
+  ;--------------------SENSING DE POSICIÓN------------------
+
+  (:event e-at-A-pos
+    :parameters (?r - agent)
+    :precondition (at-A ?r)
+  )
+
+  (:event e-at-A-neg
+    :parameters (?r - agent)
+    :precondition (at-B ?r)
+  )
+
+  ;--------------------OBSERVACIÓN------------------
+
+  (:event e-observe-A
+    :parameters (?r - agent)
+    :precondition (at-A ?r)
+    :effects (seen ?r)
+  )
+
+  ;--------------------PICKUP A------------------
+
+  (:event e-pickup-A-hold
+    :parameters (?r - agent)
+    :precondition (and (at-A ?r) (boxAt-A) (not (holding ?r)))
+    :effects (holding ?r)
+  )
+
+  (:event e-pickup-A-clear
+    :parameters (?r - agent)
+    :precondition (and (at-A ?r) (boxAt-A) (not (holding ?r)))
+    :effects (not (boxAt-A))
+  )
+
+  ;--------------------PICKUP B------------------
+
+  (:event e-pickup-B-hold
+    :parameters (?r - agent)
+    :precondition (and (at-B ?r) (boxAt-B) (not (holding ?r)))
+    :effects (holding ?r)
+  )
+
+  (:event e-pickup-B-clear
+    :parameters (?r - agent)
+    :precondition (and (at-B ?r) (boxAt-B) (not (holding ?r)))
+    :effects (not (boxAt-B))
+  )
+
+  ;--------------------MOVE A->B------------------
+
+  (:event e-move-A-to-B-leave
+    :parameters (?r - agent)
+    :precondition (and (at-A ?r) (not (in-transit-A-to-B ?r)))
+    :effects (not (at-A ?r))
+  )
+
+  (:event e-move-A-to-B-transit
+    :parameters (?r - agent)
+    :precondition (and (at-A ?r) (not (in-transit-A-to-B ?r)))
+    :effects (in-transit-A-to-B ?r)
+  )
+
+  (:event e-move-A-to-B-arrive
+    :parameters (?r - agent)
+    :precondition (and (in-transit-A-to-B ?r) (not (at-A ?r)))
+    :effects (at-B ?r)
+  )
+
+  (:event e-move-A-to-B-clear-transit
+    :parameters (?r - agent)
+    :precondition (and (in-transit-A-to-B ?r) (not (at-A ?r)))
+    :effects (not (in-transit-A-to-B ?r))
+  )
+
+  ;--------------------MOVE B->A------------------
+
+  (:event e-move-B-to-A-leave
+    :parameters (?r - agent)
+    :precondition (and (at-B ?r) (not (in-transit-B-to-A ?r)))
+    :effects (not (at-B ?r))
+  )
+
+  (:event e-move-B-to-A-transit
+    :parameters (?r - agent)
+    :precondition (and (at-B ?r) (not (in-transit-B-to-A ?r)))
+    :effects (in-transit-B-to-A ?r)
+  )
+
+  (:event e-move-B-to-A-arrive
+    :parameters (?r - agent)
+    :precondition (and (in-transit-B-to-A ?r) (not (at-B ?r)))
+    :effects (at-A ?r)
+  )
+
+  (:event e-move-B-to-A-clear-transit
+    :parameters (?r - agent)
+    :precondition (and (in-transit-B-to-A ?r) (not (at-B ?r)))
+    :effects (not (in-transit-B-to-A ?r))
+  )
+
+  ;--------------------COMUNICACIÓN------------------
+
+  (:event e-tell-holding
+    :parameters (?sender - agent  ?about - agent)
+    :precondition ([?sender] (holding ?about))
+  )
+
+  ;--------------------ACCIONES------------------
+
+  (:action declare-position
+    :parameters (?r - agent)
+    :action-type (public-sensing (e-at-A-pos ?r) (e-at-A-neg ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action observe-private-A
+    :parameters (?r - agent)
+    :action-type (private-ontic (e-observe-A ?r) (nil))
+    :observability-conditions
+      (:and
+        (?r Fully)
+        (default Oblivious)
+      )
+  )
+
+  (:action pickup-A-hold
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-pickup-A-hold ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action pickup-A-clear
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-pickup-A-clear ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action pickup-B-hold
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-pickup-B-hold ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action pickup-B-clear
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-pickup-B-clear ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-A-to-B-leave
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-A-to-B-leave ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-A-to-B-transit
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-A-to-B-transit ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-A-to-B-arrive
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-A-to-B-arrive ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-A-to-B-clear-transit
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-A-to-B-clear-transit ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-B-to-A-leave
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-B-to-A-leave ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-B-to-A-transit
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-B-to-A-transit ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-B-to-A-arrive
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-B-to-A-arrive ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action move-B-to-A-clear-transit
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-move-B-to-A-clear-transit ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:action tell-holding
+    :parameters (?sender - agent  ?about - agent)
+    :action-type (private-announcement (e-tell-holding ?sender ?about) (nil))
+    :observability-conditions (default Fully)
+  )
+
+)
