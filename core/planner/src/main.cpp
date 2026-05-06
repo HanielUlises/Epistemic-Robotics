@@ -1,4 +1,5 @@
 #include "parser.hpp"
+#include "validator.hpp"
 #include "search.hpp"
 #include "heuristic.hpp"
 #include <iostream>
@@ -7,27 +8,6 @@
 #include <stdexcept>
 #include <memory>
 
-// Plan tree serialization
-//
-// Linear plan  -> JSON array:  ["a1", "a2", "a3"]
-//
-// Conditional plan -> JSON object tree:
-// {
-//   "action": "move-B-to-A-leave_r2",
-//   "branches": [
-//     {
-//       "event": 0,
-//       "subtree": {
-//         "action": "pickup-A-hold_r2",
-//         "branches": [
-//           { "event": 0, "subtree": null }
-//         ]
-//       }
-//     }
-//   ]
-// }
-// A null subtree means that branch already satisfies the goal.
-
 static void write_plan_tree(std::ostream& out,
                             const std::shared_ptr<PlanNode>& node,
                             int indent = 0) {
@@ -35,10 +15,7 @@ static void write_plan_tree(std::ostream& out,
     std::string pad2((indent + 1) * 2, ' ');
     std::string pad3((indent + 2) * 2, ' ');
 
-    if (!node) {
-        out << "null";
-        return;
-    }
+    if (!node) { out << "null"; return; }
 
     out << "{\n";
     out << pad2 << "\"action\": \"" << node->action << "\",\n";
@@ -66,7 +43,7 @@ static void usage(const char* prog) {
               << "Options:\n"
               << "  --task         Path to ground JSON task (from plank export)\n"
               << "  --plan         Output plan file\n"
-              << "  --heuristic    wc = world count (default), ug = unsatisfied goal\n"
+              << "  --heuristic    wc = world count (default), ug = unsatisfied goal, ed = epistemic distance\n"
               << "  --limit        Max nodes to expand / max depth (0 = unlimited)\n"
               << "  --conditional  Use AND-OR conditional planner (default: GBFS)\n";
 }
@@ -106,7 +83,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Load task
     PlanningTask task;
     try {
         task = load_task(task_path);
@@ -115,17 +91,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Select heuristic
+    // Heuristic selection — exactly one branch fires
     std::unique_ptr<Heuristic> h;
     if (heuristic_name == "ug") {
         h = std::make_unique<UnsatisfiedGoalHeuristic>();
         std::cerr << "[main] Heuristic: unsatisfied-goal\n";
+    } else if (heuristic_name == "ed") {
+        h = std::make_unique<EpistemicDistanceHeuristic>();
+        std::cerr << "[main] Heuristic: epistemic-distance\n";
     } else {
         h = std::make_unique<WorldCountHeuristic>();
         std::cerr << "[main] Heuristic: world-count\n";
     }
 
-    // Open output file early
     std::ofstream out(plan_path);
     if (!out.is_open()) {
         std::cerr << "Error: cannot open plan file for writing: " << plan_path << "\n";
@@ -146,6 +124,14 @@ int main(int argc, char* argv[]) {
         write_plan_tree(out, result->plan_tree);
         out << "\n";
         std::cerr << "[main] Conditional plan written to " << plan_path << "\n";
+
+        auto vr = validate(task, result->plan_tree);
+        if (vr.valid)
+            std::cerr << "[validator] OK — "
+                      << vr.leaves_reached << " leaves, "
+                      << vr.branches_checked << " branches checked\n";
+        else
+            std::cerr << "[validator] FAILED — " << vr.error << "\n";
 
     } else {
         std::cerr << "[main] Mode: GBFS (linear plan)\n";
