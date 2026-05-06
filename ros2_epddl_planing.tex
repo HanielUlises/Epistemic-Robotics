@@ -206,8 +206,9 @@ provides an accessible but technically grounded introduction to Dynamic Epistemi
 its application to robotics~\cite{bramblett2023icra,bramblett2023frontiers,bramblett2025active,lowe2010planning}.
 Section~\ref{sec:epddl} presents EPDDL, its syntax, and action type libraries.
 Section~\ref{sec:integration} analyzes the integration challenges and proposes a conceptual
-architecture for a DEL-based ROS2 planning system. Section~\ref{sec:conclusion} summarizes
-findings and outlines open research questions.
+architecture for a DEL-based ROS2 planning system. Section~\ref{sec:benchmark_comparison}
+presents empirical benchmark results from the companion planner implementation.
+Section~\ref{sec:conclusion} summarizes findings and outlines open research questions.
 
 
 \newpage
@@ -1927,6 +1928,231 @@ and robots. What is the optimal trade-off between reasoning depth and computatio
 and a new plan generated. What recovery strategies are appropriate in a ROS2 runtime?
 
 
+% ─────────────────────────────────────────────────────────────────────────────
+\newpage
+\section{Planner Performance: Benchmark Comparison}
+\label{sec:benchmark_comparison}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The DEL-based planner described in the companion technical report~\cite{ulises2026del}
+was evaluated on five benchmark instances spanning two domains: Box Task and Active Muddy
+Children. Table~\ref{tab:results_summary} and Figures~\ref{fig:perf_comparison}--\ref{fig:generated_comparison}
+summarise search performance across all problems, algorithms, and heuristics. Results are
+drawn directly from the experimental evaluation reported in that work.
+
+\begin{table}[H]
+\centering
+\caption{Search performance summary: nodes expanded and plan depth by problem, algorithm, and
+heuristic. \texttt{wc}~=~world count; \texttt{ug}~=~unsatisfied goal conjuncts;
+\texttt{ed}~=~epistemic distance. GBFS was used for Box Task 1 (linear plan); AO* with
+iterative-deepening AND-OR search was used for all remaining instances (conditional plans).}
+\label{tab:results_summary}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{llllrrr}
+\toprule
+\textbf{Problem} & \textbf{Worlds} & \textbf{Alg.} & \textbf{Heuristic} &
+\textbf{Expanded} & \textbf{Generated} & \textbf{Depth} \\
+\midrule
+Box Task 1   & 128 (8 des.)  & GBFS & wc & 1   & 6   & 1 \\
+Box Task 1   & 128 (8 des.)  & GBFS & ug & 1   & 6   & 1 \\
+Box Task 1   & 128 (8 des.)  & GBFS & ed & 1   & 6   & 1 \\
+\midrule
+Box Task 2   & 64 (4 des.)   & AO*  & wc & 163 & 177 & 3 \\
+Box Task 2   & 64 (4 des.)   & AO*  & ug & 139 & 153 & 3 \\
+Box Task 2   & 64 (4 des.)   & AO*  & ed & 139 & 153 & 3 \\
+\midrule
+Muddy-2      & 4 (1 des.)    & AO*  & wc & 7   & 4   & 2 \\
+Muddy-2      & 4 (1 des.)    & AO*  & ug & 7   & 4   & 2 \\
+Muddy-2      & 4 (1 des.)    & AO*  & ed & 7   & 4   & 2 \\
+\midrule
+Muddy-3      & 8 (1 des.)    & AO*  & wc & 19  & 15  & 3 \\
+Muddy-3      & 8 (1 des.)    & AO*  & ug & 19  & 15  & 3 \\
+Muddy-3      & 8 (1 des.)    & AO*  & ed & 19  & 15  & 3 \\
+\midrule
+Muddy-3-asym & 8 (1 des.)    & AO*  & wc & 19  & 15  & 3 \\
+Muddy-3-asym & 8 (1 des.)    & AO*  & ug & 19  & 15  & 3 \\
+Muddy-3-asym & 8 (1 des.)    & AO*  & ed & 19  & 15  & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=7pt,
+    width=\textwidth,
+    height=8cm,
+    enlarge x limits=0.14,
+    ylabel={Nodes Expanded},
+    xlabel={Benchmark Problem},
+    symbolic x coords={Box-1, Box-2, Muddy-2, Muddy-3, Muddy-3-asym},
+    xtick=data,
+    xticklabel style={font=\small},
+    ymin=0, ymax=195,
+    ytick={0,20,40,60,80,100,120,140,160,180},
+    legend style={
+        at={(0.5,-0.20)},
+        anchor=north,
+        legend columns=3,
+        font=\small,
+        draw=darkblue!40,
+        fill=blue!3,
+    },
+    legend cell align={left},
+    nodes near coords,
+    nodes near coords align={vertical},
+    every node near coord/.append style={font=\tiny, rotate=90, anchor=west},
+    grid=major,
+    grid style={dashed, gray!25},
+    axis background/.style={fill=blue!2},
+    title style={font=\small\bfseries\color{darkblue}},
+    title={Nodes Expanded by Problem and Heuristic},
+    tick label style={font=\small},
+    label style={font=\small, color=darkblue},
+]
+\addplot[fill=darkblue!75, draw=darkblue] coordinates {
+    (Box-1,      1)
+    (Box-2,    163)
+    (Muddy-2,    7)
+    (Muddy-3,   19)
+    (Muddy-3-asym, 19)
+};
+\addlegendentry{wc (world count)}
+
+\addplot[fill=medblue!65, draw=medblue] coordinates {
+    (Box-1,      1)
+    (Box-2,    139)
+    (Muddy-2,    7)
+    (Muddy-3,   19)
+    (Muddy-3-asym, 19)
+};
+\addlegendentry{ug (unsatisfied goals)}
+
+\addplot[fill=lightblue!80, draw=medblue!70] coordinates {
+    (Box-1,      1)
+    (Box-2,    139)
+    (Muddy-2,    7)
+    (Muddy-3,   19)
+    (Muddy-3-asym, 19)
+};
+\addlegendentry{ed (epistemic distance)}
+\end{axis}
+\end{tikzpicture}
+\caption{Grouped bar chart of nodes expanded for each benchmark problem and heuristic.
+Box Task 1 (GBFS) is trivially solved in one expansion regardless of heuristic.
+Box Task 2 (AO*) shows the largest search effort; goal-directed heuristics (\texttt{ug},
+\texttt{ed}) reduce expansions by 15\% relative to \texttt{wc} (163 $\to$ 139).
+Purely epistemic domains (Muddy Children) show no heuristic differentiation at these
+problem scales. Note the log-scale gap between Box Task 2 and the remaining instances.}
+\label{fig:perf_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=7pt,
+    width=\textwidth,
+    height=8cm,
+    enlarge x limits=0.14,
+    ylabel={Nodes Generated},
+    xlabel={Benchmark Problem},
+    symbolic x coords={Box-1, Box-2, Muddy-2, Muddy-3, Muddy-3-asym},
+    xtick=data,
+    xticklabel style={font=\small},
+    ymin=0, ymax=205,
+    ytick={0,25,50,75,100,125,150,175,200},
+    legend style={
+        at={(0.5,-0.20)},
+        anchor=north,
+        legend columns=3,
+        font=\small,
+        draw=darkblue!40,
+        fill=blue!3,
+    },
+    legend cell align={left},
+    nodes near coords,
+    nodes near coords align={vertical},
+    every node near coord/.append style={font=\tiny, rotate=90, anchor=west},
+    grid=major,
+    grid style={dashed, gray!25},
+    axis background/.style={fill=blue!2},
+    title style={font=\small\bfseries\color{darkblue}},
+    title={Nodes Generated by Problem and Heuristic},
+    tick label style={font=\small},
+    label style={font=\small, color=darkblue},
+]
+\addplot[fill=darkblue!75, draw=darkblue] coordinates {
+    (Box-1,      6)
+    (Box-2,    177)
+    (Muddy-2,    4)
+    (Muddy-3,   15)
+    (Muddy-3-asym, 15)
+};
+\addlegendentry{wc (world count)}
+
+\addplot[fill=medblue!65, draw=medblue] coordinates {
+    (Box-1,      6)
+    (Box-2,    153)
+    (Muddy-2,    4)
+    (Muddy-3,   15)
+    (Muddy-3-asym, 15)
+};
+\addlegendentry{ug (unsatisfied goals)}
+
+\addplot[fill=lightblue!80, draw=medblue!70] coordinates {
+    (Box-1,      6)
+    (Box-2,    153)
+    (Muddy-2,    4)
+    (Muddy-3,   15)
+    (Muddy-3-asym, 15)
+};
+\addlegendentry{ed (epistemic distance)}
+\end{axis}
+\end{tikzpicture}
+\caption{Nodes generated per benchmark problem and heuristic. The pattern mirrors the expansion
+counts: goal-directed heuristics offer meaningful reductions only on the mixed epistemic-ontic
+Box Task 2, where \texttt{ug} and \texttt{ed} generate 24 fewer nodes than \texttt{wc}
+(177 $\to$ 153). For GBFS on Box Task 1, generated nodes reflect the branching factor at the
+initial state rather than search effort.}
+\label{fig:generated_comparison}
+\end{figure}
+
+\paragraph{Interpretation.}
+The benchmark data reveals two distinct regimes of planner behaviour. In the
+\emph{trivial regime} (Box Task 1, Muddy-2), the problem is solved at or near the root
+of the search tree and heuristic quality is irrelevant. In the \emph{nontrivial regime}
+(Box Task 2), the search space is large enough for heuristic guidance to matter: the
+world-count heuristic (\texttt{wc}) generates 24 additional expansions compared to the
+goal-directed alternatives (\texttt{ug}, \texttt{ed}), corresponding to a 15\% overhead.
+This is consistent with the known weakness of world-count as a heuristic: it measures
+global epistemic uncertainty rather than proximity to the specific goal formula, causing
+it to rank actions that reduce uncertainty in irrelevant dimensions equally to
+goal-relevant ones.
+
+The equivalence of \texttt{ug} and \texttt{ed} on all tested instances suggests that for
+the domains examined, the finer-grained continuous measure provided by \texttt{ed} does
+not yet produce action orderings different from the coarser binary conjunct count of
+\texttt{ug}. This may change as problem complexity increases — in particular, on problems
+with many epistemic conjuncts of varying difficulty or with large initial world sets where
+the normalized counterexample ratio varies meaningfully between actions. These are open
+directions for future benchmark development within the EPDDL framework, and directly
+inform the design of more discriminating test cases for the IPC~2026 Epistemic Planning
+Track~\cite{burigana2026epddl}.
+
+On purely epistemic domains (Muddy Children, all sizes), all three heuristics yield
+identical search profiles. This reflects the fact that in these domains the branching
+factor is small and every applicable action is equally relevant to the goal, so
+heuristic ranking produces no differentiation. The practical implication for the ROS2
+integration architecture (Section~\ref{sec:integration}) is that richer heuristics are
+most valuable in mixed epistemic-ontic domains — precisely the setting most common in
+real robotic deployments — while simpler heuristics suffice for purely epistemic
+communication and sensing tasks.
+
+
 \newpage
 \section{Conclusion}
 \label{sec:conclusion}
@@ -1951,6 +2177,13 @@ resolve assignment ambiguities. L{\"o}we, Pacuit, and Witzel~\cite{lowe2010plann
 provide the formal planning problem definitions and structural tractability results
 (self-absorption, commutativity, bounded model growth) that ground these applied
 approaches in rigorous theory.
+
+The benchmark evaluation of the companion DEL planner~\cite{ulises2026del} provides
+concrete empirical grounding for the theoretical claims: goal-directed heuristics
+(\texttt{ug}, \texttt{ed}) reduce search effort by 15\% on mixed epistemic-ontic
+domains relative to a world-count baseline, while all heuristics are equivalent on
+purely epistemic domains at the scales tested. These results inform the heuristic
+selection strategy for the EPDDL Planner Interface component of the proposed architecture.
 
 The integration path identified in this survey a Cognitive Layer maintaining the Kripke
 model, interfacing with an EPDDL planner, and dispatching epistemic actions via ROS2
@@ -2057,6 +2290,13 @@ L{\"o}we, B., Pacuit, E., \& Witzel, A. (2010).
 \textit{Planning Based on Dynamic Epistemic Logic}.
 In Proceedings of the Workshop on Logic and the Simulation of
 Interaction and Reasoning (LSIR), IJCAI 2009.
+
+\bibitem{ulises2026del}
+Ulises, H. (2026).
+\textit{A DEL-Based Epistemic Planner for Multi-Agent Robotic Systems}.
+Technical Report, IPC 2026 Epistemic Planning Track.
+Instituto Polit\'ecnico Nacional -- ESCOM / Universidad Nacional
+Aut\'onoma de M\'exico -- FFyL.
 
 \end{thebibliography}
 
