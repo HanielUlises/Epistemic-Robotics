@@ -6,9 +6,9 @@
 #include <string>
 #include <memory>
 
-// Linear-plan search (GBFS) — unchanged interface
+// Linear-plan search (GBFS)
 struct SearchResult {
-    std::vector<std::string> plan;   // action names in order
+    std::vector<std::string> plan;
     size_t nodes_expanded{0};
     size_t nodes_generated{0};
 };
@@ -59,3 +59,15 @@ search(const PlanningTask& task,
        size_t max_depth = 30);
 
 } // namespace aostar
+
+// Enforced Hill Climbing.
+// Greedily follows any h-improving successor. When stuck on a plateau,
+// runs a BFS to escape to the nearest state with strictly lower h.
+// Complete on solvable problems. Faster than GBFS on well-guided domains.
+//
+// max_nodes: expansion limit across both greedy and BFS phases (0 = unlimited)
+namespace ehc {
+std::optional<SearchResult> search(const PlanningTask& task,
+                                   const Heuristic& h,
+                                   size_t max_nodes = 0);
+} // namespace ehc
