@@ -36,9 +36,6 @@ static void write_plan_tree(std::ostream& out,
     out << pad << "}";
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Automatic strategy selection
-// ─────────────────────────────────────────────────────────────────────────────
 
 enum class Strategy { GBFS, EHC, AOSTAR };
 
