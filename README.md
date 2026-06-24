@@ -1,39 +1,154 @@
 # Epistemic-Robotics
+
+Research framework for multi-agent task planning under epistemic uncertainty, combining Dynamic Epistemic Logic (DEL) with ROS2-based robot execution.
+
+The planning component (EHP — Epistemic Heuristic Planner) lives in a separate repository: [HanielUlises/Aletheia](https://github.com/HanielUlises/Aletheia). The execution layer (ePlanSys) lives in [HanielUlises/eplansys](https://github.com/HanielUlises/eplansys). This repository holds the ROS2 workspace, the µ-calculus path planner, and the DEL world manager that connect them.
+
 ---
-## Preliminary Paper
 
-[View Latest PDF](https://HanielUlises.github.io/Epistemic-Robotics/paper.pdf)
+## Repository structure
+
+```
+Epistemic-Robotics/
+├── core/
+│   └── planner/           # Standalone EHP binary (C++17, no ROS deps)
+│       ├── include/       # action, bisimulation, formula, heuristic,
+│       │                  # parser, product_update, search, state,
+│       │                  # task, types, validator
+│       └── src/
+├── ros2_ws/
+│   └── src/
+│       ├── epistemic_msgs/        # ROS2 message definitions
+│       ├── epistemic_state/       # EpistemicWorldManager node
+│       ├── epistemic_slam/        # SLAM → DEL event bridge (TT-II)
+│       └── mu_path_planner/       # µ-calculus path planner node
+├── epddl-workspace/       # EPDDL domain/problem files and solved plans
+└── lean/                  # Lean 4 formalisations (DEL, Kripke, planning)
+```
+
 ---
 
-**Formal multi-agent task planning under epistemic uncertainty**
+## Core components
 
-Epistemic-Robotics is a research-oriented framework for multi-agent task planning in partially observable and dynamically evolving environments. The project combines epistemic logic, symbolic planning, and robotic execution to bridge the gap between formal semantics and real-world autonomous systems.
+### `core/planner` — EHP (Epistemic Heuristic Planner)
 
-At its core, the system integrates **Dynamic Epistemic Logic (DEL)** with Kripke-based belief modeling to represent and update agents’ knowledge about the world and about each other. These epistemic models are connected to an EPDDL-inspired task planning layer, enabling reasoning over actions with epistemic preconditions and effects (e.g., sensing, announcements, information gain).
+Standalone C++ planner. Reads a ground JSON task (exported from plank/EPDDL) and writes a plan (linear or conditional JSON tree). No ROS2 dependency by design.
 
-The planning component is designed to interoperate with PDDL-style planners and SysPlan-like task planning pipelines, allowing epistemic planning problems to be compiled or coordinated with classical planners when appropriate. This supports hybrid workflows where symbolic task planning, epistemic reasoning, and robotic execution coexist within a unified architecture.
+```bash
+cd core/planner
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+./build/ehp --task problem.json --plan out.json
+```
 
-## Architecture Overview
+Strategies: `--gbfs`, `--ehc`, `--conditional` (AO*). Default: auto-selected from task structure.
 
-The system is structured in three conceptual layers:
+Heuristics: `--heuristic wc` (world count), `ug` (unsatisfied goal, default), `ed` (epistemic distance).
 
-**Cognitive Layer**  
-Implements the epistemic world model, DEL-based belief updates, task planner, and dispatcher. This layer handles symbolic reasoning, epistemic queries, and the generation of executable task plans under uncertainty.
+### `ros2_ws/src/mu_path_planner` — µ-calculus path planner
 
-**Execution Layer**  
-Built on ROS2, this layer coordinates multi-robot task execution. It translates high-level epistemic plans into concrete robotic behaviors, ensuring synchronization, communication, and distributed action execution.
+Computes backward reachability over the SLAM occupancy grid using least fixed-point iteration:
 
-**Perception Layer**  
-Connects SLAM and sensor-driven estimation modules to the epistemic model. Perceptual events (e.g., LIDAR observations) are lifted into epistemic events, enabling belief revision and information-aware planning in uncertain or partially known environments.
+```
+μZ. (at_goal ∨ (¬obstacle ∧ ⟨move⟩Z))
+```
 
-## Research Focus
+The `mu_calculus` library (`src/mu_calculus.cpp`) is independent of ROS2 and testable standalone via GTest. The ROS2 node wraps it, subscribing to `/map` and `/mu_planner/query`, publishing to `/mu_planner/path`.
 
-The project explores:
+When `require_epistemic_goal = true`, the formula lifts to:
 
-- Task planning under partial observability and knowledge constraints  
-- EPDDL-style modeling of epistemic actions  
-- Integration of symbolic planning with ROS2-based execution  
-- Event-based belief revision grounded in real sensor input  
-- Alignment between formal logic specifications and executable robotic systems  
+```
+μZ. (K_i(at_goal) ∨ (¬obstacle ∧ (⟨move⟩Z ∨ ⟨sense⟩Z)))
+```
 
-Epistemic-Robotics aims to serve both as a practical experimental platform and as a formal research artifact for studying epistemic task planning in autonomous multi-agent robotics.
+where `⟨sense⟩Z` introduces sensing waypoints derived from the current Kripke model.
+
+### `ros2_ws/src/epistemic_state` — EpistemicWorldManager
+
+Maintains the shared Kripke model M = (W, R₁..ₙ, V, W★). Applies DEL product updates triggered by EpistemicEvent messages. Publishes the current model as JSON on `/epistemic/state`.
+
+### `ros2_ws/src/epistemic_slam` — SLAM bridge (TT-II)
+
+Will convert LIDAR observations into EpistemicEvent messages, lifting sensor readings into private sensing actions. Currently a stub.
+
+---
+
+## Building the ROS2 workspace
+
+```bash
+cd ros2_ws
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install
+source install/setup.zsh
+```
+
+Build order is handled by colcon via `package.xml` dependencies:
+`epistemic_msgs` → `epistemic_state`, `mu_path_planner`, `epistemic_slam`.
+
+---
+
+## Running
+
+```bash
+# World manager
+ros2 run epistemic_state epistemic_world_manager --ros-args -p num_agents:=2
+
+# µ-calculus path planner
+ros2 run mu_path_planner mu_path_planner_node
+
+# Send a path query
+ros2 topic pub /mu_planner/query epistemic_msgs/msg/MuPathQuery \
+  "{agent_id: 0, goal_zone: 'zone_A', require_epistemic_goal: false}"
+```
+
+---
+
+## Testing the µ-calculus planner standalone
+
+The `mu_calculus` library has no ROS2 dependencies and can be tested without a ROS environment:
+
+```bash
+cd ros2_ws/src/mu_path_planner
+cmake -B build -DBUILD_TESTING=ON
+cmake --build build
+./build/test_mu_calculus
+```
+
+---
+
+## EPDDL workspace
+
+The `epddl-workspace/` directory contains domain and problem files for the benchmark domains used in IEPC 2026 development:
+
+- `muddy-children/` — classical DEL benchmark, multi-agent sensing
+- `coin-in-the-box/` — public/private announcement
+- `box-task/`, `box-task-2.0/` — multi-robot retrieval with partial observability
+- `Active-Muddy-Child/` — active sensing variant
+
+Solved plan trees (JSON) are included alongside each problem.
+
+---
+
+## Lean formalisations
+
+`lean/Epistemic/` contains Lean 4 formalisations of the core theoretical objects: Kripke semantics, DEL product update, and the planning problem. These are auxiliary to the main implementation and are not required to build or run the ROS2 stack.
+
+---
+
+## Dependencies
+
+| Component | Dependency |
+|---|---|
+| `core/planner` | C++17, nlohmann/json |
+| `mu_calculus` lib | C++17, STL only |
+| ROS2 packages | ROS2 Jazzy (or Humble), Nav2 |
+| EHP planner (external) | [Aletheia](https://github.com/HanielUlises/Aletheia) |
+| Execution layer (external) | [eplansys](https://github.com/HanielUlises/eplansys) |
+
+---
+
+## Status
+
+This repository is under active development as part of a B.Eng. thesis at IPN-ESCOM on epistemic planning for multi-robot systems. The EHP planner participated in the IEPC 2026 smoke tests at ICAPS 2026.
+
+Current state: ROS2 workspace bootstrapped, µ-calculus path planner operational, EpistemicWorldManager stub functional. SLAM bridge and full DEL integration are TT-II work.
