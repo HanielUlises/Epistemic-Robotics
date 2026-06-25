@@ -22,22 +22,25 @@ MathJax = {
 :root{
   --black:#111111; --red:#C8102E; --gray:#5A5A5A;
   --border:#D6D6D6; --code-bg:#F4F4F4;
+  --sg:'Space Grotesk',sans-serif;
+  --ss:'Source Serif 4',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
 }
 html{font-size:17px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
-  font-family:'Source Serif 4',Georgia,serif;
+  font-family:var(--ss);
   font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
 .container{max-width:800px;margin:0 auto;padding:0 2.2rem}
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
-.site-tag{font-family:'JetBrains Mono',monospace;font-size:.66rem;
+.site-tag{font-family:var(--mono);font-size:.66rem;
   color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
-header h1{font-family:'Space Grotesk',sans-serif;font-size:1.18rem;
+header h1{font-family:var(--sg);font-size:1.18rem;
   font-weight:500;letter-spacing:-.01em}
 .hero{padding:4.5rem 0 3.2rem;border-bottom:1px solid var(--border)}
-.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--gray);
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
   letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
-.hero h2{font-family:'Space Grotesk',sans-serif;
+.hero h2{font-family:var(--sg);
   font-size:clamp(2rem,4.5vw,2.85rem);font-weight:600;
   line-height:1.15;letter-spacing:-.035em;max-width:640px}
 .hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
@@ -45,9 +48,9 @@ header h1{font-family:'Space Grotesk',sans-serif;font-size:1.18rem;
 .hero-p{font-size:1.03rem;max-width:600px;color:#2C2C2C}
 section{padding:3.6rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
-.sec-label{font-family:'JetBrains Mono',monospace;font-size:.66rem;
+.sec-label{font-family:var(--mono);font-size:.66rem;
   color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6rem}
-h3{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:500;
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
   letter-spacing:-.02em;margin-bottom:.9rem}
 p{margin-bottom:1.05rem}
 p:last-child{margin-bottom:0}
@@ -70,7 +73,7 @@ p:last-child{margin-bottom:0}
 }
 .goal-slide.active{opacity:1;pointer-events:auto;}
 .goal-natural{
-  font-family:'Source Serif 4',serif;
+  font-family:var(--ss);
   font-size:.95rem;font-style:italic;color:#333;
   margin-bottom:.55rem;line-height:1.6;
 }
@@ -83,54 +86,74 @@ p:last-child{margin-bottom:0}
   overflow-x:auto;
   line-height:2.2;
 }
-
-.code-block{
-  font-family:'JetBrains Mono',monospace;font-size:.78rem;
-  background:var(--code-bg);
-  border-left:2.5px solid #888;
-  padding:.9rem 1.1rem;
-  margin:1.5rem 0;
-  line-height:1.9;
-  color:#222;
-}
-.code-block .kw{color:#1A52A0;font-weight:500}
-.code-block .op{color:var(--red);font-weight:500}
-.code-block .cm{color:#888}
 .pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
   margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
 .def-pair{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin:1.5rem 0}
 @media(max-width:520px){.def-pair{grid-template-columns:1fr}}
-.def-item h4{font-family:'Space Grotesk',sans-serif;font-size:.87rem;
+.def-item h4{font-family:var(--sg);font-size:.87rem;
   font-weight:500;margin-bottom:.35rem}
 .def-item p{font-size:.87rem;color:#444;margin:0}
+
+.action-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0;
+}
+@media(max-width:540px){.action-grid{grid-template-columns:1fr}}
+.action-card{
+  border:1px solid var(--border);
+  border-top:2.5px solid var(--red);
+  padding:1.1rem 1.1rem .9rem;
+  background:#FAFAFA;
+}
+.action-card h4{
+  font-family:var(--sg);font-size:.87rem;font-weight:600;
+  letter-spacing:-.01em;margin-bottom:.35rem;color:var(--black);
+}
+.action-card .action-formula{
+  font-family:var(--mono);font-size:.72rem;color:#555;
+  margin-bottom:.5rem;line-height:1.5;
+}
+.action-card p{font-size:.84rem;color:#444;margin:0;line-height:1.6}
+
+.feature-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.8rem 0;
+}
+@media(max-width:560px){.feature-row{grid-template-columns:1fr}}
+.feature-item{
+  border-left:2px solid var(--border);
+  padding:.5rem 0 .5rem .9rem;
+}
+.feature-item h5{
+  font-family:var(--sg);font-size:.8rem;font-weight:600;margin-bottom:.25rem;
+  color:var(--black);
+}
+.feature-item p{font-size:.78rem;color:#555;margin:0;line-height:1.55}
+
 .fig-block{margin:2.2rem 0}
 .fig-row{display:flex;gap:1.6rem;align-items:flex-start;flex-wrap:wrap}
 .fig-unit{display:flex;flex-direction:column;align-items:center;gap:.45rem}
-.fig-sub{font-family:'JetBrains Mono',monospace;font-size:.62rem;
-  color:var(--gray);letter-spacing:.04em;text-align:center}
-.fig-caption{font-family:'Source Serif 4',serif;font-size:.82rem;
+.fig-sub{font-family:var(--ss);font-size:.78rem;font-style:italic;
+  color:var(--gray);text-align:center}
+.fig-caption{font-family:var(--ss);font-size:.82rem;
   font-style:italic;color:var(--gray);margin-top:.8rem;line-height:1.6}
 canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
 .legend{display:flex;gap:.9rem;flex-wrap:wrap;margin:.45rem 0 .15rem;
-  font-family:'JetBrains Mono',monospace;font-size:.61rem;color:var(--gray)}
+  font-family:var(--ss);font-size:.75rem;color:var(--gray);font-style:italic}
 .legend span{display:flex;align-items:center;gap:.3rem}
 .lsq{width:9px;height:9px;display:inline-block;flex-shrink:0;
   border:1px solid rgba(0,0,0,.14)}
 .step-lbl-wrap{display:flex;align-items:center;gap:.6rem;margin-top:.45rem}
-.step-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--gray);flex:1}
+.step-lbl{font-family:var(--ss);font-size:.75rem;font-style:italic;color:var(--gray);flex:1}
 .btn-reset{
-  font-family:'JetBrains Mono',monospace;font-size:.75rem;
-  background:none;border:none;padding:.1rem .25rem;
-  cursor:pointer;color:var(--border);line-height:1;
-  transition:color .2s;
+  font-family:var(--sg);font-size:.72rem;
+  background:none;border:1px solid var(--border);
+  padding:.15rem .5rem;border-radius:2px;
+  cursor:pointer;color:var(--gray);line-height:1.4;
+  transition:color .2s,border-color .2s;
 }
-.btn-reset:hover{color:var(--gray)}
+.btn-reset:hover{color:var(--black);border-color:var(--black)}
 .canvas-pair{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-start;margin:.5rem 0}
 .canvas-pair .fig-unit{flex:1;min-width:220px}
 
-
-
-/* Kripke diagram SVG wrappers */
 .kripke-wrap{
   overflow-x:auto;
   margin:1.2rem 0;
@@ -139,10 +162,9 @@ canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
   border-radius:2px;
 }
 
-/* External link chip */
 .ext-chip{
   display:inline-flex;align-items:center;gap:.35rem;
-  font-family:'JetBrains Mono',monospace;font-size:.67rem;letter-spacing:.06em;
+  font-family:var(--mono);font-size:.67rem;letter-spacing:.06em;
   border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
   text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
   margin-left:.4rem;white-space:nowrap;
@@ -152,8 +174,8 @@ canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
 
 footer{border-top:2px solid var(--black);padding:2.2rem 0}
 .ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
-.ftr-l{font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:500}
-.ftr-r{font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--gray);letter-spacing:.07em}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);letter-spacing:.07em}
 footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
 footer a:hover{color:var(--red)}
 </style>
@@ -356,8 +378,7 @@ footer a:hover{color:var(--red)}
     </p>
 
     <p>
-      The deepest formal identification arises at the level of the planning problem
-      itself. Define the <em>epistemic transition system</em> \(\mathcal{K}_{\mathrm{plan}}\)
+      Define the <em>epistemic transition system</em> \(\mathcal{K}_{\mathrm{plan}}\)
       whose states are epistemic states and whose transitions are DEL product updates:
     </p>
 
@@ -382,16 +403,8 @@ footer a:hover{color:var(--red)}
     <p>
       Epistemic planning is therefore µ-calculus model checking on
       \(\mathcal{K}_{\mathrm{plan}}\), where each node in the structure being checked
-      is itself a Kripke model on which the goal formula \(\varphi_g\) is evaluated.
-      The two levels of Kripke structure — the object-level model \(M\) maintained
-      by the DEL update, and the meta-level \(\mathcal{K}_{\mathrm{plan}}\) through
-      which the planner searches — are connected precisely through the product update
-      operation, which acts as the transition relation of \(\mathcal{K}_{\mathrm{plan}}\)
-      while simultaneously transforming the objects that constitute its nodes.
-    </p>
-
-    <p>
-      When \(\varphi_g\) contains common knowledge (\(C_G\,\psi = \nu X.\,\psi \wedge \Box_G X\)),
+      is itself a Kripke model. When \(\varphi_g\) contains common knowledge
+      (\(C_G\,\psi = \nu X.\,\psi \wedge \Box_G X\)),
       the goal formula is itself a \(\nu\)-formula, so the full planning problem
       involves a \(\mu\)-formula on \(\mathcal{K}_{\mathrm{plan}}\) whose leaves
       require evaluating a \(\nu\)-formula on object-level models \(M\). This
@@ -406,133 +419,175 @@ footer a:hover{color:var(--red)}
 <section>
   <div class="container">
     <p class="sec-label">Occupancy Grid Semantics</p>
-    <h3>Four epistemic events rendered on belief-state maps</h3>
+    <h3>µ-calculus path planning rendered on belief-state maps</h3>
     <p>
-      The four maps below ground DEL product update semantics in 2D occupancy grids.
-      Each map visualises a distinct epistemic event class: fixed-point reachability
-      (µ-calculus iteration), private sensing (belief contraction), public announcement
-      (common knowledge expansion), and exploration frontier (knowledge boundary).
-      The robot's epistemic state is the grid itself; the event is the operator that
-      transforms it.
+      The maps below ground µ-calculus fixed-point semantics in 2D occupancy grids,
+      following the plan-extraction framework of Bárcenas et al. (2017): a plan is a tree
+      of nodes satisfying a formula together with its subformulas in a Kripke structure,
+      and the µ-calculus backward wavefront identifies precisely the set of worlds from
+      which the goal is reachable. Each map exercises a qualitatively distinct planning
+      scenario — multi-branch reachability, sensing-blocked propagation, dual-target
+      branching, and νX safety — to illustrate why fixed-point logic, rather than
+      classical graph search, is the appropriate specification language.
     </p>
 
-    <!-- MAP 1: µX reachability -->
+    <!-- MAP 0: Animated path-building on belief-state grid -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
-        \[\varphi_{\mathrm{reach}} = \mu X.\;\bigl(\mathit{goal} \vee (\mathit{free} \wedge \Diamond X)\bigr)\]
+        \[\pi^* = \arg\min_\pi |\pi| \text{ s.t. } s_0 \xrightarrow{\pi} s_g,\quad
+          s_g \models \mu X.\bigl(\mathit{goal} \vee (\mathit{free} \wedge \Diamond X)\bigr)\]
       </div>
       <div class="legend">
         <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
         <span><span class="lsq" style="background:#222"></span>blocked</span>
         <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
         <span><span class="lsq" style="background:#1A52A0"></span>goal</span>
-        <span><span class="lsq" style="background:#3D7A3D"></span>\(\in \mu X\)</span>
-        <span><span class="lsq" style="background:#C8A020"></span>certified path</span>
+        <span><span class="lsq" style="background:#3D7A3D"></span>∈ µX (wavefront)</span>
+        <span><span class="lsq" style="background:#C8102E"></span>certified path</span>
         <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot</span>
       </div>
-      <canvas id="cv-path" style="max-width:100%"></canvas>
+      <canvas id="cv-pathbuild" style="max-width:100%"></canvas>
       <div class="step-lbl-wrap">
-        <span class="step-lbl" id="step-lbl-path">S₀ — ∅</span>
-        <button class="btn-reset" id="btn-reset-path" title="restart">↺</button>
+        <span class="step-lbl" id="step-lbl-pathbuild">Phase 1 — backward wavefront from goal</span>
+        <button class="btn-reset" id="btn-reset-pathbuild">↺ replay</button>
       </div>
       <p class="fig-caption">
-        Least fixed-point iteration for reachability. The wavefront propagates backward
-        from the goal \(w_g = (12,10)\), entering \(\mu X\) one shell at a time. The
-        wall block at columns 5–6 (rows 6–10) forces the certified path to climb to
-        row 5 before turning right, then descend through column 7 — the only passage
-        through the obstacle corridor. Unknown cells are excluded from \(\mu X\): the
-        planner treats uncertainty as equivalent to blockage until resolved by sensing.
+        Three-phase animated plan extraction. <em>Phase 1:</em> the µ-calculus backward
+        wavefront propagates from the goal, flooding all reachable free cells — each shell
+        \(X_k\) is the set of worlds from which the goal is reachable in at most \(k\) steps.
+        Unknown cells block propagation until resolved. <em>Phase 2:</em> a private sensing
+        event at the unknown corridor reveals free space; the wavefront resumes and crosses
+        the previously blocked region. <em>Phase 3:</em> the certified path is extracted
+        by greedy descent through the µX shells from the robot's initial position, tracing
+        the unique shortest path to the goal through the saturated region.
       </p>
     </div>
 
-    <!-- MAP 2: private sensing -->
+    <!-- MAP 1: branching µX reachability — two targets, non-linear plan -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
-        \[s' = s \otimes E_{\mathrm{sense}(r)} \;\Rightarrow\; K_r\bigl(\mathit{blocked}(c)\bigr) \vee K_r\bigl(\mathit{free}(c)\bigr) \text{ for each } c \in \mathrm{nb}_4(r)\]
+        \[\varphi_{\mathrm{branch}} \;=\; \mu X.\;\bigl(\mathit{goal}_1 \vee \mathit{goal}_2 \vee (\mathit{free} \wedge \Diamond X)\bigr)
+          \qquad \text{non-linear plan: two branches from } w_0\]
+      </div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
+        <span><span class="lsq" style="background:#222"></span>blocked</span>
+        <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
+        <span><span class="lsq" style="background:#1A52A0"></span>goal₁</span>
+        <span><span class="lsq" style="background:#7B35A0"></span>goal₂</span>
+        <span><span class="lsq" style="background:#3D7A3D"></span>∈ µX</span>
+        <span><span class="lsq" style="background:#C8102E"></span>certified path</span>
+        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot</span>
+      </div>
+      <canvas id="cv-branch" style="max-width:100%"></canvas>
+      <div class="step-lbl-wrap">
+        <span class="step-lbl" id="step-lbl-branch">S₀ — ∅</span>
+        <button class="btn-reset" id="btn-reset-branch">↺ replay</button>
+      </div>
+      <p class="fig-caption">
+        Branching µX reachability with two disjoint targets. The wavefront propagates
+        backward from both \(\mathit{goal}_1\) (top-right) and \(\mathit{goal}_2\) (bottom-right)
+        simultaneously. Because the two goals lie on opposite sides of a central wall,
+        no linear path satisfies both; the plan is an irreducibly branching tree rooted at
+        \(w_0\), with one branch per target — a structure inexpressible in LTL but
+        natural in the µ-calculus (Bárcenas et al. 2017, Theorem 6). Unknown cells on
+        the upper corridor block propagation until resolved by a sensing action.
+      </p>
+    </div>
+
+    <!-- MAP 2: sensing-blocked µX — unknown corridor cuts the only path -->
+    <div class="fig-block">
+      <div class="math-block" style="margin-bottom:.9rem">
+        \[\varphi_{\mathrm{reach}} = \mu X.\;\bigl(\mathit{goal} \vee (\mathit{free} \wedge \Diamond X)\bigr)
+          \qquad \neg(\mathit{Kw}_r\,\mathit{free}(c)) \Rightarrow c \notin \mathit{free}\]
       </div>
       <div class="legend">
         <span><span class="lsq" style="background:#E8F0E8"></span>free (known)</span>
-        <span><span class="lsq" style="background:#222"></span>blocked (known)</span>
-        <span><span class="lsq" style="background:#A8A8A8"></span>unknown (\(\neg \mathrm{Kw}_r\))</span>
-        <span><span class="lsq" style="background:#C8A020"></span>newly revealed</span>
-        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot \(r\)</span>
+        <span><span class="lsq" style="background:#222"></span>blocked</span>
+        <span><span class="lsq" style="background:#A8A8A8"></span>unknown — excluded from µX</span>
+        <span><span class="lsq" style="background:#1A52A0"></span>goal</span>
+        <span><span class="lsq" style="background:#3D7A3D"></span>∈ µX</span>
+        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot</span>
       </div>
       <div class="canvas-pair">
         <div class="fig-unit">
           <canvas id="cv-sense-before" style="max-width:100%"></canvas>
-          <span class="fig-sub">before — \(s_0\), \(\neg \mathrm{Kw}_r\) on shaded region</span>
+          <span class="fig-sub">before sensing — µX halted at unknown corridor</span>
         </div>
         <div class="fig-unit">
           <canvas id="cv-sense-after" style="max-width:100%"></canvas>
-          <span class="fig-sub">after — \(s' = s_0 \otimes E_{\mathrm{sense}}\)</span>
+          <span class="fig-sub">after sensing — corridor resolved, µX reaches goal</span>
         </div>
       </div>
       <p class="fig-caption">
-        Private sensing event \(E_{\mathrm{sense}}\) at robot position \((8,8)\).
-        The sensing action resolves the four-neighborhood: \((9,8)\) is revealed blocked,
-        the remaining three neighbors free. In the product update, only worlds where
-        \(\mathrm{pre}(e)\) holds survive; the robot's accessibility relation \(R_r\)
-        contracts, establishing \(K_r(\mathit{blocked}(9,8))\). The remainder of the
-        unknown region is unchanged.
+        A narrow unknown corridor (rows 5–7, columns 6–8) is the only path to the goal.
+        Before sensing, the least fixed-point halts: unknown cells are excluded from
+        \(\mathit{free}\), so the wavefront cannot cross the corridor and the goal is
+        unreachable under the current epistemic state. After a private sensing event
+        \(E_{\mathrm{sense}}\) at the corridor entrance, the cells are revealed free,
+        the product update contracts \(R_r\), and µX propagates through — establishing
+        \(K_r(\mathit{free}(c))\) for each corridor cell and unlocking the plan.
       </p>
     </div>
 
-    <!-- MAP 3: public announcement -->
+    <!-- MAP 3: dual-branch patrol — µX ∧ µY two simultaneous tasks -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
-        \[s' = s \otimes E_{\mathrm{ann}(\varphi)} \;\Rightarrow\; C_{\{R_1,R_2\}}\bigl(\mathit{free}(\sigma)\bigr)\]
+        \[(\mu X.\;\mathit{goal}_A \vee (\mathit{free} \wedge \Diamond X))
+          \;\wedge\;
+          (\mu Y.\;\mathit{goal}_B \vee (\mathit{free} \wedge \Diamond Y))
+          \quad \text{agents } R_1,\, R_2 \text{ split at } w_0\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#1A52A0"></span>\(K_{R_1}\) only</span>
-        <span><span class="lsq" style="background:#3D7A3D"></span>\(K_{R_2}\) only</span>
-        <span><span class="lsq" style="background:#7B35A0"></span>\(C_{\{R_1,R_2\}}\) (after)</span>
-        <span><span class="lsq" style="background:#A8A8A8"></span>unknown to both</span>
+        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
         <span><span class="lsq" style="background:#222"></span>blocked</span>
+        <span><span class="lsq" style="background:#1A52A0"></span>goal A (R₁)</span>
+        <span><span class="lsq" style="background:#7B35A0"></span>goal B (R₂)</span>
+        <span><span class="lsq" style="background:#1A52A0;opacity:.45"></span>µX branch</span>
+        <span><span class="lsq" style="background:#7B35A0;opacity:.45"></span>µY branch</span>
+        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>split point</span>
       </div>
-      <div class="canvas-pair">
-        <div class="fig-unit">
-          <canvas id="cv-ann-before" style="max-width:100%"></canvas>
-          <span class="fig-sub">before announcement</span>
-        </div>
-        <div class="fig-unit">
-          <canvas id="cv-ann-after" style="max-width:100%"></canvas>
-          <span class="fig-sub">after \(E_{\mathrm{ann}(\sigma)}\) — common knowledge</span>
-        </div>
-      </div>
+      <canvas id="cv-dual" style="max-width:100%"></canvas>
       <p class="fig-caption">
-        Public announcement event. Robot \(R_1\) has previously sensed corridor \(\sigma\)
-        at row 6. After \(R_1\) broadcasts \(\mathrm{ann}(\mathit{free}(\sigma))\), both
-        agents' accessibility relations collapse for \(\sigma\): the event model's
-        postcondition establishes \(C_{\{R_1,R_2\}}(\mathit{free}(\sigma))\) in a single
-        product update step. The purple corridor in the right panel is the common knowledge
-        region — the fixed point of \(\nu X.\,\Box_{R_1}\Box_{R_2} X\) restricted to \(\sigma\).
+        Conjunction of two reachability formulas forces a two-branch plan. Agents \(R_1\)
+        and \(R_2\) share a common prefix from the origin to the split junction, then
+        diverge: \(R_1\) follows the µX branch to \(\mathit{goal}_A\) (top corridor),
+        \(R_2\) follows the µY branch to \(\mathit{goal}_B\) (bottom corridor). Because
+        the two goals are separated by an impassable wall, no single agent can satisfy
+        both conjuncts in sequence; the conjunction itself demands the branching structure.
+        Collision-freedom is guaranteed by the tree topology of the plan (Bárcenas et al. 2017, §2.2).
       </p>
     </div>
 
-    <!-- MAP 4: exploration frontier -->
+    <!-- MAP 4: νX safety — greatest fixed point / safe known region -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
-        \[\mathrm{Frontier} = \{\,c \in \mathrm{known\_free} \;\mid\; \exists\, c' \in \mathrm{nb}_4(c) : c' \in \mathrm{unknown}\,\}\]
+        \[\varphi_{\mathrm{safe}} = \nu X.\;\bigl(\mathit{known\_free} \wedge \Box X\bigr)
+          \qquad \text{frontier} = \{\,c \in \nu X \mid \exists\, c' \in \mathrm{nb}_4(c) : c' \notin \nu X\,\}\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#3D7A3D"></span>known free</span>
-        <span><span class="lsq" style="background:#C8A020"></span>frontier (next sense targets)</span>
-        <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
+        <span><span class="lsq" style="background:#3D7A3D"></span>∈ νX (safe known)</span>
+        <span><span class="lsq" style="background:#C8102E"></span>frontier — next sense targets</span>
+        <span><span class="lsq" style="background:#A8A8A8"></span>unknown — excluded from νX</span>
         <span><span class="lsq" style="background:#222"></span>blocked</span>
         <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot</span>
       </div>
-      <canvas id="cv-expl" style="max-width:100%"></canvas>
+      <canvas id="cv-safe" style="max-width:100%"></canvas>
       <p class="fig-caption">
-        Exploration frontier: the set of known-free cells with at least one unknown
-        neighbor. An epistemic planner selects frontier cells whose sensing events are
-        predicted to maximally contract the uncertainty region per step — the
-        information-theoretic dual of the reachability fixed point above.
+        Greatest fixed-point contraction to the maximal safe sub-model. The iteration
+        starts at \(S_0 = W\) and eliminates any cell failing \(\Box X\): cells with
+        unknown neighbors are expelled because no guarantee holds for their successors.
+        The surviving set is the maximal coherent known-free region; its boundary is
+        the exploration frontier — the set of νX cells with at least one unknown neighbor.
+        An epistemic planner selects frontier cells as sense targets, maximally expanding
+        νX per step. This νX contraction and the DEL bisimulation contraction are two
+        descriptions of the same canonical reduction on \(2^W\).
       </p>
     </div>
   </div>
 </section>
 
-<!-- ─── KRIPKE STRUCTURE VISUALIZATIONS (IMPROVED) ─────────────────────── -->
+<!-- ─── KRIPKE STRUCTURE VISUALIZATIONS ─────────────────────────────────── -->
 <section>
   <div class="container">
     <p class="sec-label">Formal Visualization</p>
@@ -541,14 +596,11 @@ footer a:hover{color:var(--red)}
       The following diagrams render the formal objects directly: worlds as labeled
       nodes, accessibility relations as directed edges, DEL events as explicit
       transformations, and µ-calculus fixed-point sets as color-coded membership.
-      Each diagram illustrates one step in the integration pipeline —
-      fixed-point computation, greatest-fixed-point elimination, and product update —
-      that connects µ-calculus specification to DEL-driven epistemic planning.
     </p>
 
-    <!-- FIG 1: µX reachability on Kripke graph — IMPROVED -->
+    <!-- FIG 1: µX reachability on Kripke graph -->
     <div class="fig-block">
-      <div class="math-block green" style="margin-bottom:.9rem">
+      <div class="math-block" style="margin-bottom:.9rem">
         \[\varphi_{\mathrm{reach}} \;=\; \mu X.\;\bigl(\mathit{goal} \;\vee\; (\mathit{free} \wedge \Diamond X)\bigr)\]
       </div>
       <div class="legend">
@@ -556,17 +608,14 @@ footer a:hover{color:var(--red)}
         <span><span class="lsq" style="background:#222;border-radius:50%"></span>blocked</span>
         <span><span class="lsq" style="background:#A8A8A8;border-radius:50%"></span>unknown</span>
         <span><span class="lsq" style="background:#1A52A0;border-radius:50%"></span>goal</span>
-        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>\(\in \mu X\)</span>
-        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot \(r\)</span>
-        <span><span class="lsq" style="background:#C8A020"></span>sense event</span>
+        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>∈ µX</span>
+        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot r</span>
       </div>
 
-      <!-- Improved SVG: bigger, better spaced, cleaner edges, iteration labels -->
       <div class="kripke-wrap">
         <svg id="svg-reach" viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg"
              style="width:100%;min-width:560px;display:block">
           <defs>
-            <!-- nav arrows -->
             <marker id="arr-nav" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
               <path d="M0,0 L8,4 L0,8 Z" fill="#AAAAAA"/>
             </marker>
@@ -574,131 +623,102 @@ footer a:hover{color:var(--red)}
               <path d="M0,0 L8,4 L0,8 Z" fill="#3D7A3D"/>
             </marker>
             <marker id="arr-evt" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <path d="M0,0 L8,4 L0,8 Z" fill="#C8A020"/>
+              <path d="M0,0 L8,4 L0,8 Z" fill="#888"/>
             </marker>
           </defs>
 
-          <!-- Background iteration shells (subtle) -->
-          <!-- Shell labels -->
-          <text x="14" y="24" font-family="'JetBrains Mono',monospace" font-size="9" fill="#DDD">S₁</text>
-          <text x="14" y="50" font-family="'JetBrains Mono',monospace" font-size="9" fill="#DDD">S₂</text>
-          <text x="14" y="76" font-family="'JetBrains Mono',monospace" font-size="9" fill="#DDD">S₃</text>
-
-          <!-- edges: w0↔w1 -->
           <path d="M96,200 Q148,185 190,200" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
           <path d="M190,216 Q148,231 96,216" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
-          <!-- w1 up to w2 -->
           <path d="M210,183 Q210,155 210,123" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
           <path d="M196,123 Q196,155 196,183" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
-          <!-- w2↔w3 (upper branch — goes through unknown) -->
           <path d="M228,100 Q278,85 318,100" fill="none" stroke="#AAA" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-nav)"/>
           <path d="M318,116 Q278,131 228,116" fill="none" stroke="#AAA" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-nav)"/>
-          <!-- w1↔w4 (lower branch blocked) -->
           <path d="M228,210 Q278,195 314,210" fill="none" stroke="#CCC" stroke-width="1.2" stroke-dasharray="3,3" marker-end="url(#arr-nav)"/>
-          <!-- w3↔w5 (after sense resolves w3) -->
           <path d="M358,100 Q408,85 448,100" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
           <path d="M448,116 Q408,131 358,116" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
-          <!-- w5↔w6 -->
           <path d="M478,100 Q528,85 568,100" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
           <path d="M568,116 Q528,131 478,116" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
-          <!-- w6↔w7 (goal) -->
           <path d="M598,100 Q648,85 688,100" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
           <path d="M688,116 Q648,131 598,116" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
 
-          <!-- sense event annotation at w3 -->
           <g id="sense-evt" opacity="0" style="transition:opacity .5s">
             <rect x="324" y="130" width="94" height="24" rx="3"
-                  fill="#FFFBE8" stroke="#C8A020" stroke-width="1.2"/>
+                  fill="#F8F8F8" stroke="#888" stroke-width="1.2"/>
             <text x="371" y="146" text-anchor="middle"
-                  font-family="'JetBrains Mono',monospace" font-size="9" fill="#C8A020">
-              sense(w₃)→free
+                  font-family="'Source Serif 4',serif" font-size="9" font-style="italic" fill="#555">
+              sense(w₃) → free
             </text>
-            <line x1="338" y1="122" x2="338" y2="130" stroke="#C8A020" stroke-width="1"
+            <line x1="338" y1="122" x2="338" y2="130" stroke="#888" stroke-width="1"
                   stroke-dasharray="2,2" marker-end="url(#arr-evt)"/>
           </g>
 
-          <!-- ── Nodes ─────────────────────────────── -->
-          <!-- w0: robot start -->
           <circle id="n0" cx="80" cy="208" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="80" y="203" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#333">w₀</text>
-          <text x="80" y="216" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">free</text>
-          <!-- robot dot -->
+          <text x="80" y="203" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₀</text>
+          <text x="80" y="216" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
           <circle cx="80" cy="178" r="6" fill="#C8102E"/>
 
-          <!-- w1 -->
           <circle id="n1" cx="208" cy="208" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="208" y="203" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#333">w₁</text>
-          <text x="208" y="216" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">free</text>
+          <text x="208" y="203" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₁</text>
+          <text x="208" y="216" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
 
-          <!-- w2 -->
           <circle id="n2" cx="208" cy="108" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="208" y="103" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#333">w₂</text>
-          <text x="208" y="116" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">free</text>
+          <text x="208" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₂</text>
+          <text x="208" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
 
-          <!-- w3: unknown (resolved by sense) -->
           <circle id="n3" cx="338" cy="108" r="26" fill="#A8A8A8" stroke="#888" stroke-width="1.8"/>
-          <text id="n3-lbl" x="338" y="103" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#FFF">w₃</text>
-          <text id="n3-sub" x="338" y="116" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#EEE">unknown</text>
+          <text id="n3-lbl" x="338" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#FFF">w₃</text>
+          <text id="n3-sub" x="338" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#EEE">unknown</text>
 
-          <!-- w4: blocked -->
           <circle id="n4" cx="338" cy="208" r="26" fill="#333" stroke="#111" stroke-width="1.8"/>
-          <text x="338" y="203" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#CCC">w₄</text>
-          <text x="338" y="216" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#999">blocked</text>
+          <text x="338" y="203" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#CCC">w₄</text>
+          <text x="338" y="216" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#999">blocked</text>
 
-          <!-- w5 -->
           <circle id="n5" cx="463" cy="108" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="463" y="103" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#333">w₅</text>
-          <text x="463" y="116" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">free</text>
+          <text x="463" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₅</text>
+          <text x="463" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
 
-          <!-- w6 -->
           <circle id="n6" cx="583" cy="108" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="583" y="103" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#333">w₆</text>
-          <text x="583" y="116" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">free</text>
+          <text x="583" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₆</text>
+          <text x="583" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
 
-          <!-- w7: goal -->
           <circle id="n7" cx="703" cy="108" r="26" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
-          <text x="703" y="103" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#FFF">w₇</text>
-          <text x="703" y="116" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#BCD0F0">goal</text>
+          <text x="703" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#FFF">w₇</text>
+          <text x="703" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#BCD0F0">goal</text>
 
-          <!-- µX wavefront shell indicators -->
           <text id="shell-7" x="703" y="80" text-anchor="middle"
-                font-family="'JetBrains Mono',monospace" font-size="8" fill="#3D7A3D" opacity="0">S₁</text>
+                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₁</text>
           <text id="shell-6" x="583" y="80" text-anchor="middle"
-                font-family="'JetBrains Mono',monospace" font-size="8" fill="#3D7A3D" opacity="0">S₂</text>
+                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₂</text>
           <text id="shell-5" x="463" y="80" text-anchor="middle"
-                font-family="'JetBrains Mono',monospace" font-size="8" fill="#3D7A3D" opacity="0">S₃</text>
+                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₃</text>
           <text id="shell-2" x="208" y="80" text-anchor="middle"
-                font-family="'JetBrains Mono',monospace" font-size="8" fill="#3D7A3D" opacity="0">S₄</text>
+                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₄</text>
 
-          <!-- step label -->
           <text id="reach-lbl" x="14" y="280"
-                font-family="'JetBrains Mono',monospace" font-size="9" fill="#AAA">S₀ — ∅</text>
+                font-family="'Source Serif 4',serif" font-size="9" font-style="italic" fill="#AAA">S₀ — ∅</text>
         </svg>
       </div>
 
       <div style="display:flex;justify-content:flex-end;margin-top:.3rem">
-        <button class="btn-reset" id="btn-reset-reach" title="restart animation">↺ replay</button>
+        <button class="btn-reset" id="btn-reset-reach">↺ replay</button>
       </div>
 
       <p class="fig-caption">
         Least fixed-point iteration on a Kripke navigation graph. Starting from
-        \(X_0 = \emptyset\), each step \(X_{k+1} = \mathit{goal} \cup (\mathit{free} \wedge \Diamond X_k)\)
-        propagates a wavefront backward from the goal world \(w_7\). At \(S_3\), a private
-        sensing event resolves \(w_3\) from <em>unknown</em> to <em>free</em> via a DEL product
-        update, unblocking propagation through the upper branch. The blocked world \(w_4\)
-        never satisfies \(\mathit{free} \wedge \Diamond X\) and is permanently excluded from
-        \(\mu X\). The fixed point is the set of worlds from which \(w_7\) is reachable
-        through free space — a µ-calculus formula evaluated on a DEL-maintained Kripke structure.
+        \(X_0 = \emptyset\), each step propagates a wavefront backward from the goal world \(w_7\).
+        At S₃, a private sensing event resolves \(w_3\) from <em>unknown</em> to <em>free</em>
+        via a DEL product update, unblocking propagation through the upper branch.
+        The blocked world \(w_4\) is permanently excluded from \(\mu X\).
       </p>
     </div>
 
-    <!-- FIG 2: νX safety — greatest fixed point — IMPROVED -->
+    <!-- FIG 2: νX safety — greatest fixed point -->
     <div class="fig-block">
-      <div class="math-block blue" style="margin-bottom:.9rem">
+      <div class="math-block" style="margin-bottom:.9rem">
         \[\varphi_{\mathrm{safe}} \;=\; \nu X.\;\bigl(\mathit{known} \wedge \Box X\bigr)\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>known — survives \(\nu X\)</span>
+        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>known — survives νX</span>
         <span><span class="lsq" style="background:#A8A8A8;border-radius:50%"></span>unknown</span>
         <span><span class="lsq" style="background:#eee;border-radius:50%;border:1px solid #C8102E"></span>eliminated</span>
       </div>
@@ -712,46 +732,42 @@ footer a:hover{color:var(--red)}
                   <path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/>
                 </marker>
               </defs>
-              <!-- edges -->
               <path d="M76,114 Q114,98 148,114" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-k2a)"/>
               <path d="M148,130 Q114,146 76,130" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-k2a)"/>
               <path d="M162,106 Q162,76 162,52" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-k2a)"/>
               <path d="M150,52 Q150,76 150,106" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-k2a)"/>
               <path d="M176,122 Q214,106 248,122" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-k2a)"/>
               <path d="M248,138 Q214,154 176,138" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-k2a)"/>
-              <!-- w5 dashed (unknown) -->
               <path d="M162,168 Q162,148 162,142" fill="none" stroke="#CCC" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arr-k2a)"/>
 
-              <!-- nodes -->
               <circle cx="60" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="60" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₀</text>
-              <text x="60" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">known</text>
+              <text x="60" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₀</text>
+              <text x="60" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
               <circle cx="162" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="162" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₁</text>
-              <text x="162" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">known</text>
+              <text x="162" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₁</text>
+              <text x="162" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
               <circle cx="162" cy="38" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="162" y="34" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₂</text>
-              <text x="162" y="46" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">known</text>
+              <text x="162" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₂</text>
+              <text x="162" y="46" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
               <circle cx="262" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="262" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₃</text>
-              <text x="262" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">known</text>
+              <text x="262" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₃</text>
+              <text x="262" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
-              <!-- unknown nodes -->
               <circle cx="262" cy="38" r="22" fill="#A8A8A8" stroke="#888" stroke-width="1.8"/>
-              <text x="262" y="34" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₄</text>
-              <text x="262" y="46" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#EEE">unk</text>
+              <text x="262" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₄</text>
+              <text x="262" y="46" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#EEE">unk</text>
 
               <circle cx="162" cy="190" r="22" fill="#A8A8A8" stroke="#888" stroke-width="1.8"/>
-              <text x="162" y="186" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₅</text>
-              <text x="162" y="198" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#EEE">unk</text>
+              <text x="162" y="186" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₅</text>
+              <text x="162" y="198" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#EEE">unk</text>
 
-              <text x="14" y="222" font-family="'JetBrains Mono',monospace" font-size="8" fill="#AAA">S₀ = W (before ν)</text>
+              <text x="14" y="222" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#AAA">S₀ = W (before ν)</text>
             </svg>
           </div>
-          <span class="fig-sub">before — \(S_0 = W\)</span>
+          <span class="fig-sub">before — S₀ = W</span>
         </div>
         <div class="fig-unit">
           <div class="kripke-wrap" style="border:none;background:none">
@@ -762,7 +778,6 @@ footer a:hover{color:var(--red)}
                   <path d="M0,0 L7,3.5 L0,7 Z" fill="#3D7A3D"/>
                 </marker>
               </defs>
-              <!-- surviving edges — green -->
               <path d="M76,114 Q114,98 148,114" fill="none" stroke="#3D7A3D" stroke-width="1.8" marker-end="url(#arr-k2b)"/>
               <path d="M148,130 Q114,146 76,130" fill="none" stroke="#3D7A3D" stroke-width="1.8" marker-end="url(#arr-k2b)"/>
               <path d="M162,106 Q162,76 162,52" fill="none" stroke="#3D7A3D" stroke-width="1.8" marker-end="url(#arr-k2b)"/>
@@ -770,66 +785,61 @@ footer a:hover{color:var(--red)}
               <path d="M176,122 Q214,106 248,122" fill="none" stroke="#3D7A3D" stroke-width="1.8" marker-end="url(#arr-k2b)"/>
               <path d="M248,138 Q214,154 176,138" fill="none" stroke="#3D7A3D" stroke-width="1.8" marker-end="url(#arr-k2b)"/>
 
-              <!-- surviving nodes -->
               <circle cx="60" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="60" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₀</text>
-              <text x="60" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">⊨ νX</text>
+              <text x="60" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₀</text>
+              <text x="60" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
               <circle cx="162" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="162" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₁</text>
-              <text x="162" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">⊨ νX</text>
+              <text x="162" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₁</text>
+              <text x="162" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
               <circle cx="162" cy="38" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="162" y="34" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₂</text>
-              <text x="162" y="46" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">⊨ νX</text>
+              <text x="162" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₂</text>
+              <text x="162" y="46" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
               <circle cx="262" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="262" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₃</text>
-              <text x="262" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#c8eec8">⊨ νX</text>
+              <text x="262" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₃</text>
+              <text x="262" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
-              <!-- eliminated nodes -->
               <circle cx="262" cy="38" r="22" fill="#FFF" stroke="#C8102E" stroke-width="1.5" opacity=".6"/>
-              <text x="262" y="34" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#C8102E" opacity=".6">w₄</text>
+              <text x="262" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#C8102E" opacity=".6">w₄</text>
               <line x1="244" y1="20" x2="280" y2="56" stroke="#C8102E" stroke-width="2" opacity=".5"/>
               <line x1="280" y1="20" x2="244" y2="56" stroke="#C8102E" stroke-width="2" opacity=".5"/>
 
               <circle cx="162" cy="190" r="22" fill="#FFF" stroke="#C8102E" stroke-width="1.5" opacity=".6"/>
-              <text x="162" y="186" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#C8102E" opacity=".6">w₅</text>
+              <text x="162" y="186" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#C8102E" opacity=".6">w₅</text>
               <line x1="144" y1="172" x2="180" y2="208" stroke="#C8102E" stroke-width="2" opacity=".5"/>
               <line x1="180" y1="172" x2="144" y2="208" stroke="#C8102E" stroke-width="2" opacity=".5"/>
 
-              <text x="14" y="222" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3D7A3D">S∞ — greatest fixed point</text>
+              <text x="14" y="222" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D">S∞ — greatest fixed point</text>
             </svg>
           </div>
-          <span class="fig-sub">after — \(S_\infty \models \nu X\)</span>
+          <span class="fig-sub">after — S∞ ⊨ νX</span>
         </div>
       </div>
       <p class="fig-caption">
-        Greatest fixed-point computation for coherent knowledge blocks. The iteration
-        starts at \(S_0 = W\) and eliminates at each step any world failing \(\Box X\):
-        worlds \(w_4\) and \(w_5\) are unknown with successors outside the known sub-graph;
-        they are expelled. The surviving set \(\{w_0, w_1, w_2, w_3\}\) is exactly the
-        DEL bisimulation contraction of the epistemic state to its maximal coherent sub-model —
-        the \(\nu X\) computation and bisimulation contraction are two descriptions of the
-        same canonical reduction.
+        Greatest fixed-point computation. Starting at \(S_0 = W\), worlds \(w_4\) and \(w_5\)
+        are expelled — they are unknown with successors outside the known sub-graph.
+        The surviving set \(\{w_0, w_1, w_2, w_3\}\) is the DEL bisimulation contraction
+        of the epistemic state to its maximal coherent sub-model.
       </p>
     </div>
 
-    <!-- FIG 3: DEL product update — IMPROVED -->
+    <!-- FIG 3: DEL product update -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
         \[s' \;=\; s \otimes E_{\mathrm{sense}} \qquad R'_i \;=\; \{\,((w,e),(v,f)) \;\mid\; wR_iv \;\wedge\; eQ_if\,\}\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#1A52A0;border-radius:50%"></span>designated world \(*\)</span>
+        <span><span class="lsq" style="background:#1A52A0;border-radius:50%"></span>designated world *</span>
         <span><span class="lsq" style="background:#E8F0E8;border-radius:50%"></span>possible world</span>
         <span style="display:flex;align-items:center;gap:.3rem">
           <svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="#C8102E" stroke-width="1.8"/><polygon points="18,1 22,4 18,7" fill="#C8102E"/></svg>
-          R<sub>i</sub>
+          Rᵢ
         </span>
         <span style="display:flex;align-items:center;gap:.3rem">
           <svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2"/><polygon points="18,1 22,4 18,7" fill="#1A52A0"/></svg>
-          R<sub>j</sub>
+          Rⱼ
         </span>
       </div>
 
@@ -844,99 +854,80 @@ footer a:hover{color:var(--red)}
               <path d="M0,0 L8,4 L0,8 Z" fill="#1A52A0"/>
             </marker>
             <marker id="arr-prod" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <path d="M0,0 L8,4 L0,8 Z" fill="#C8A020"/>
+              <path d="M0,0 L8,4 L0,8 Z" fill="#555"/>
             </marker>
           </defs>
 
-          <!-- BEFORE MODEL (left) -->
           <text x="155" y="22" text-anchor="middle"
                 font-family="'Space Grotesk',sans-serif" font-size="10" fill="#AAA" letter-spacing=".08em">BEFORE  s</text>
 
-          <!-- Ri arcs (red): wₐ↔w_b (top pair) -->
           <path d="M108,94 Q155,72 196,94" fill="none" stroke="#C8102E" stroke-width="1.7" marker-end="url(#arr-ri2)"/>
           <path d="M196,110 Q155,132 108,110" fill="none" stroke="#C8102E" stroke-width="1.7" marker-end="url(#arr-ri2)"/>
-          <!-- Ri arcs: w_c↔w_d (bottom pair) -->
           <path d="M108,190 Q155,168 196,190" fill="none" stroke="#C8102E" stroke-width="1.7" marker-end="url(#arr-ri2)"/>
           <path d="M196,206 Q155,228 108,206" fill="none" stroke="#C8102E" stroke-width="1.7" marker-end="url(#arr-ri2)"/>
-
-          <!-- Rj arcs (blue dashed): wₐ↔w_c (left pair, vertical) -->
           <path d="M82,128 Q64,158 82,186" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
           <path d="M108,186 Q126,158 108,128" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
-          <!-- Rj arcs: w_b↔w_d (right pair) -->
           <path d="M220,128 Q238,158 220,186" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
           <path d="M196,186 Q178,158 196,128" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
 
-          <!-- Before nodes -->
           <circle cx="94" cy="102" r="28" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
-          <text x="94" y="97" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#fff">wₐ*</text>
-          <text x="94" y="111" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#BCD0F0">p = T</text>
+          <text x="94" y="97" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#fff">wₐ*</text>
+          <text x="94" y="111" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#BCD0F0">p = T</text>
 
           <circle cx="216" cy="102" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="216" y="97" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#333">w_b</text>
-          <text x="216" y="111" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">p = T</text>
+          <text x="216" y="97" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#333">w_b</text>
+          <text x="216" y="111" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">p = T</text>
 
           <circle cx="94" cy="198" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="94" y="193" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#333">w_c</text>
-          <text x="94" y="207" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">p = F</text>
+          <text x="94" y="193" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#333">w_c</text>
+          <text x="94" y="207" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">p = F</text>
 
           <circle cx="216" cy="198" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="216" y="193" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#333">w_d</text>
-          <text x="216" y="207" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">p = F</text>
+          <text x="216" y="193" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#333">w_d</text>
+          <text x="216" y="207" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">p = F</text>
 
-          <!-- PRODUCT UPDATE arrow -->
-          <line x1="270" y1="150" x2="362" y2="150" stroke="#C8A020" stroke-width="2" marker-end="url(#arr-prod)"/>
-          <text x="316" y="142" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#C8A020">⊗ E_sense</text>
-          <rect x="276" y="156" width="80" height="18" rx="2" fill="#FFFBE8" stroke="#C8A020" stroke-width=".8"/>
-          <text x="316" y="169" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#C8A020">pre(e) = p</text>
+          <line x1="270" y1="150" x2="362" y2="150" stroke="#555" stroke-width="2" marker-end="url(#arr-prod)"/>
+          <text x="316" y="142" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="9.5" font-style="italic" fill="#555">⊗ E_sense</text>
+          <rect x="276" y="156" width="80" height="18" rx="2" fill="#F4F4F4" stroke="#999" stroke-width=".8"/>
+          <text x="316" y="169" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">pre(e) = p</text>
 
-          <!-- AFTER MODEL (right) -->
           <text x="580" y="22" text-anchor="middle"
                 font-family="'Space Grotesk',sans-serif" font-size="10" fill="#AAA" letter-spacing=".08em">AFTER  s ⊗ E_sense</text>
 
-          <!-- After: Rj arc only for (wₐ,e)↔(w_b,e) — i retains indist. -->
           <path d="M492,128 Q474,158 492,186" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
           <path d="M518,186 Q536,158 518,128" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
 
-          <!-- surviving nodes -->
           <circle cx="504" cy="102" r="28" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
-          <text x="504" y="93" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#fff">(wₐ,e)*</text>
-          <text x="504" y="106" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#BCD0F0">Kᵢ(p)</text>
-          <text x="504" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#C8A020">⊨ φ_goal</text>
+          <text x="504" y="93" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#fff">(wₐ,e)*</text>
+          <text x="504" y="106" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#BCD0F0">Kᵢ(p)</text>
+          <text x="504" y="118" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#888">⊨ φ_goal</text>
 
           <circle cx="504" cy="198" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="504" y="189" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#333">(w_b,e)</text>
-          <text x="504" y="202" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#666">Kᵢ(p)</text>
+          <text x="504" y="189" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#333">(w_b,e)</text>
+          <text x="504" y="202" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">Kᵢ(p)</text>
 
-          <!-- eliminated nodes (ghost) -->
           <circle cx="636" cy="102" r="28" fill="#FFF" stroke="#C8102E" stroke-width="1.4" opacity=".45"/>
-          <text x="636" y="97" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#C8102E" opacity=".5">(w_c,e)</text>
-          <text x="636" y="110" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#C8102E" opacity=".5">pre fails</text>
+          <text x="636" y="97" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#C8102E" opacity=".5">(w_c,e)</text>
+          <text x="636" y="110" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#C8102E" opacity=".5">pre fails</text>
           <line x1="612" y1="78" x2="660" y2="126" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
           <line x1="660" y1="78" x2="612" y2="126" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
 
           <circle cx="636" cy="198" r="28" fill="#FFF" stroke="#C8102E" stroke-width="1.4" opacity=".45"/>
-          <text x="636" y="193" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#C8102E" opacity=".5">(w_d,e)</text>
-          <text x="636" y="206" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#C8102E" opacity=".5">pre fails</text>
+          <text x="636" y="193" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#C8102E" opacity=".5">(w_d,e)</text>
+          <text x="636" y="206" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#C8102E" opacity=".5">pre fails</text>
           <line x1="612" y1="174" x2="660" y2="222" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
           <line x1="660" y1="174" x2="612" y2="222" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
 
-          <!-- annotation box -->
-          <rect x="456" y="232" width="160" height="22" rx="2" fill="none"/>
-          <text x="504" y="244" font-family="'JetBrains Mono',monospace" font-size="8" fill="#C8102E">Rᵢ collapsed → Kᵢ(p) holds</text>
-          <text x="504" y="256" font-family="'JetBrains Mono',monospace" font-size="8" fill="#1A52A0">Rⱼ unchanged (j unobserved)</text>
+          <text x="504" y="244" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#C8102E">Rᵢ collapsed → Kᵢ(p) holds</text>
+          <text x="504" y="256" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#1A52A0">Rⱼ unchanged (j unobserved)</text>
         </svg>
       </div>
 
       <p class="fig-caption">
-        DEL product update \(s \otimes E_{\mathrm{sense}}\). The initial model has
-        four worlds; agent \(i\) cannot distinguish \(w_a\) from \(w_c\) (red arcs),
-        while agent \(j\) cannot distinguish \(w_a\) from \(w_b\) (blue dashed arcs).
-        After the update, only worlds where \(\mathrm{pre}(e) = p\) holds survive —
-        eliminating \(w_c\) and \(w_d\). Agent \(i\)'s relation \(R_i\) collapses:
+        DEL product update \(s \otimes E_{\mathrm{sense}}\). After the update, only worlds where
+        \(\mathrm{pre}(e) = p\) holds survive. Agent \(i\)'s relation \(R_i\) collapses:
         \(K_i\,p\) holds in \(s'\). Agent \(j\) retains its indistinguishability arc
-        because it did not observe the sensing outcome. The designated world
-        \((w_a, e)\) satisfies \(K_i\,p\) — the µ-calculus goal at this node of the
-        epistemic transition system is achieved.
+        because it did not observe the sensing outcome.
       </p>
     </div>
 
@@ -972,11 +963,11 @@ footer a:hover{color:var(--red)}
   </div>
 </section>
 
-<!-- ─── EPISTEMIC PLANNING + EPDDL ──────────────────────────────────────── -->
+<!-- ─── EPISTEMIC PLANNING + ACTION TYPES ──────────────────────────────── -->
 <section>
   <div class="container">
     <p class="sec-label">Planning System</p>
-    <h3>Epistemic planning tasks and the EPDDL language
+    <h3>Epistemic action types and the ALETHEIA planner
       <a class="ext-chip" href="https://arxiv.org/abs/2601.20969" target="_blank" rel="noopener">
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
           <path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" stroke-width="1.2"/>
@@ -987,40 +978,100 @@ footer a:hover{color:var(--red)}
     <p>
       An epistemic planning task is a triple \((s_0, \mathrm{Act}, \varphi_g)\):
       an initial epistemic state, a finite set of epistemic actions, and a goal
-      formula drawn from the full epistemic language — which, as established above,
-      lies within the modal µ-fragment. EPDDL (Epistemic Planning Domain Definition
-      Language) operationalises this framework in a PDDL-compatible format through
-      an action-type library that makes DEL event models writable as structured
-      planning domains. The formal specification and benchmarks are given in the
-      IPC 2026 Epistemic Planning Track documentation.
+      formula drawn from the full epistemic language. EPDDL operationalises this
+      framework in a PDDL-compatible format through a structured library of
+      action types, each corresponding to a distinct class of DEL event model.
+      The four core types cover the full range of informational and physical effects
+      that arise in multi-robot deployment.
     </p>
+
+    <div class="action-grid">
+      <div class="action-card">
+        <h4>Public announcement</h4>
+        <div class="action-formula">E* = {e},  Qi = E × E  (fully observable)</div>
+        <p>All agents learn \(\varphi\) simultaneously. The accessibility relation
+        collapses for \(\varphi\) across the group, establishing \(C_G\,\varphi\)
+        in a single product update. Used to model broadcasts, shared sensor readings,
+        and synchronisation points in multi-robot protocols.</p>
+      </div>
+      <div class="action-card">
+        <h4>Private sensing</h4>
+        <div class="action-formula">|E*| ≥ 2,  Qi ⊂ E × E  (partial observability)</div>
+        <p>The acting agent resolves its uncertainty about \(\varphi\); other agents
+        observe that an action occurred but not its outcome. The product update
+        contracts \(R_i\) while leaving \(R_j\) for \(j \neq i\) unchanged —
+        the fundamental asymmetry modelled by the split product update in ALETHEIA.</p>
+      </div>
+      <div class="action-card">
+        <h4>Ontic action</h4>
+        <div class="action-formula">post(e)(p) ≠ p,  |E*| = 1  (deterministic effect)</div>
+        <p>Modifies the physical world via postconditions on atoms. Uninformed agents
+        retain their prior beliefs about the changed proposition; the actor and any
+        witnesses whose accessibility relations include the affected worlds update
+        via the product update accordingly.</p>
+      </div>
+      <div class="action-card">
+        <h4>Semi-private announcement</h4>
+        <div class="action-formula">E* = {e},  Qi ≠ Qj  (group-dependent observability)</div>
+        <p>A subgroup \(G \subseteq \mathcal{A}\) learns \(\varphi\) while the
+        remainder observes only that some announcement occurred. Intermediate between
+        public and private: establishes \(C_G\,\varphi\) within the group without
+        informing outsiders of the content, modelling whisper actions and
+        side-channel communication.</p>
+      </div>
+    </div>
+
     <p>
-      The connection to the µ-calculus is direct at the level of goals: the EPDDL
-      goal language includes \(K_i\,\varphi\), \(\mathrm{Kw}_i\,\varphi\), and
-      \(C_G\,\varphi\) — each of which is a fixed-point formula when unfolded.
-      A planner searching for a linear plan in a non-sensing domain computes a
-      path through the epistemic transition system \(\mathcal{K}_{\mathrm{plan}}\)
-      to a node satisfying a \(\mu\)-formula; a planner producing a conditional plan
-      for a sensing domain builds a strategy tree whose branches correspond to
-      AND-nodes of the AND-OR structure implicit in the fixed-point computation.
+      Each action type maps to a distinct configuration of the event model
+      \(\mathcal{E} = (E, Q, \mathrm{pre}, \mathrm{post}, E^*)\). The choice of
+      \(|E^*|\) determines whether the planner produces a linear plan (ontic and
+      public announcement actions, \(|E^*| = 1\)) or a conditional plan (sensing
+      actions, \(|E^*| \geq 2\)), since each designated event corresponds to one
+      branch of an AND-OR tree.
     </p>
+
+    <p>
+      The ALETHEIA planner implements all four action types under a unified
+      adaptive search framework. Three complementary aspects of its architecture
+      directly reflect the structure of the action taxonomy above.
+    </p>
+
+    <div class="feature-row">
+      <div class="feature-item">
+        <h5>Strategy selection</h5>
+        <p>Sensing domains (|E*| ≥ 2) are routed to iterative-deepening AO* for
+        conditional plan construction; deterministic domains use GBFS or EHC
+        depending on state-space size and goal modal depth.</p>
+      </div>
+      <div class="feature-item">
+        <h5>Bisimulation contraction</h5>
+        <p>After every product update, the resulting Kripke model is reduced to its
+        coarsest bisimilar quotient via partition refinement — preserving the truth
+        of all modal formulae while keeping world counts tractable across iterated
+        ontic and sensing sequences.</p>
+      </div>
+      <div class="feature-item">
+        <h5>Domain-aware heuristics</h5>
+        <p>Four heuristics — \(h_{ug}\), \(h_{ed}\), \(h_{ks}\), \(h_{wc}\) —
+        target distinct goal structures: unsatisfied conjunct count, epistemic
+        distance in accessibility relations, knowledge-spread for Kw-goals,
+        and designated world count for uncertainty reduction.</p>
+      </div>
+    </div>
+
+    <p>
+      The goal language includes \(K_i\,\varphi\), \(\mathrm{Kw}_i\,\varphi\), and
+      \(C_G\,\varphi\) — each a fixed-point formula when unfolded — allowing goals
+      of mixed epistemic depth to be satisfied simultaneously:
+    </p>
+
     <div class="math-block">
-      \[\text{Epistemic goal:}\quad
-        \mathrm{Kw}_{\mathrm{All}}\bigl(\textit{blocked}(c_1)\bigr)
+      \[\mathrm{Kw}_{\mathrm{All}}\bigl(\textit{blocked}(c_1)\bigr)
         \;\wedge\;
         K_{R_1}\bigl(\textit{at}(p,\, \textit{storage})\bigr)
         \;\wedge\;
         C_{\{R_1,R_2\}}\bigl(\textit{done}(\alpha)\bigr)\]
     </div>
-    <p>
-      Each conjunct is of a different µ-calculus depth: \(\mathrm{Kw}\) is a
-      \(\mu/\nu\)-alternation of depth 1, \(K_{R_1}\) is a box modality (depth 1),
-      and \(C_G\) is the greatest fixed point \(\nu X.\,\Box_G X \wedge \psi\)
-      (depth 1 of the greatest fixed-point operator, but requiring the accessibility
-      relation to be transitively closed, making it equivalent to a \(\nu\)-formula
-      over the reflexive-transitive closure of \(\Box_G\)). The planner must satisfy
-      all three simultaneously in a single final state.
-    </p>
   </div>
 </section>
 
@@ -1032,7 +1083,6 @@ footer a:hover{color:var(--red)}
         &nbsp;·&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">IPC 2026 Epistemic Track &nbsp;·&nbsp; ICAPS 2026 PR-BGI</span>
     </div>
   </div>
 </footer>
@@ -1101,72 +1151,24 @@ footer a:hover{color:var(--red)}
 /* ── SVG Kripke reach animation ─────────────────────────────── */
 (function () {
   'use strict';
-  const nodes = {
-    n7: { id:'n7', sat:1, label:'S₁', shell:'shell-7' },
-    n6: { id:'n6', sat:2, label:'S₂', shell:'shell-6' },
-    n5: { id:'n5', sat:3, label:'S₃', shell:'shell-5' },
-    n3: { id:'n3', sat:4, label:'S₄ (after sense)', shell:null, isSense:true },
-    n2: { id:'n2', sat:4, label:'S₄', shell:'shell-2' },
-    n1: { id:'n1', sat:5, label:'S₅' },
-    n0: { id:'n0', sat:6, label:'S₆' },
-  };
   const GREEN = '#3D7A3D', GOAL = '#1A52A0', UNK = '#A8A8A8', FREE = '#E8F0E8';
   const BLOCKED = '#333';
 
   const steps = [
-    { frame:0, lbl:'S₀ — ∅ (initial)', colored:[], sense:false },
-    { frame:1, lbl:'S₁ — w₇ ∈ µX (goal base case)', colored:['n7'], sense:false },
-    { frame:2, lbl:'S₂ — w₆ ∈ µX', colored:['n7','n6'], sense:false },
-    { frame:3, lbl:'S₃ — w₅ ∈ µX', colored:['n7','n6','n5'], sense:false },
-    { frame:4, lbl:'S₄ — sense(w₃) → free ; w₃, w₂ enter µX', colored:['n7','n6','n5','n3','n2'], sense:true },
-    { frame:5, lbl:'S₅ — w₁ ∈ µX', colored:['n7','n6','n5','n3','n2','n1'], sense:false },
-    { frame:6, lbl:'S₆ = µX — fixed point reached', colored:['n7','n6','n5','n3','n2','n1','n0'], sense:false },
+    { lbl:'S₀ — ∅ (initial)', colored:[], sense:false },
+    { lbl:'S₁ — w₇ ∈ µX (goal base case)', colored:['n7'], sense:false },
+    { lbl:'S₂ — w₆ ∈ µX', colored:['n7','n6'], sense:false },
+    { lbl:'S₃ — w₅ ∈ µX', colored:['n7','n6','n5'], sense:false },
+    { lbl:'S₄ — sense(w₃) → free; w₃, w₂ enter µX', colored:['n7','n6','n5','n3','n2'], sense:true },
+    { lbl:'S₅ — w₁ ∈ µX', colored:['n7','n6','n5','n3','n2','n1'], sense:false },
+    { lbl:'S₆ = µX — fixed point reached', colored:['n7','n6','n5','n3','n2','n1','n0'], sense:false },
   ];
-
-  function applyStep(s) {
-    const colored = new Set(s.colored);
-    // reset
-    ['n0','n1','n2','n5','n6'].forEach(id => setNode(id, FREE, '#AAA', '#333'));
-    setNode('n3', s.sense ? GREEN : UNK, s.sense ? '#2a5a2a' : '#888', s.sense ? '#fff' : '#fff');
-    setNode('n4', BLOCKED, '#111', '#CCC');
-    setNode('n7', GOAL, '#0d3570', '#fff');
-
-    // color satisified
-    colored.forEach(id => {
-      if (id === 'n7') return; // stays goal
-      if (id === 'n3') { setNode('n3', GREEN, '#2a5a2a', '#fff'); return; }
-      setNode(id, GREEN, '#2a5a2a', '#fff');
-    });
-
-    // sense event indicator
-    const senseEl = document.getElementById('sense-evt');
-    if (senseEl) senseEl.style.opacity = s.sense ? '1' : '0';
-
-    // shell labels
-    Object.values(nodes).forEach(n => {
-      if (n.shell) {
-        const el = document.getElementById(n.shell);
-        if (el) el.style.opacity = colored.has(n.id) ? '1' : '0';
-      }
-    });
-
-    // n3 sub-text
-    const n3sub = document.getElementById('n3-sub');
-    if (n3sub) n3sub.textContent = s.sense ? 'free' : 'unknown';
-    const n3lbl = document.getElementById('n3-lbl');
-    if (n3lbl) n3lbl.setAttribute('fill', '#fff');
-
-    // step label
-    const lbl = document.getElementById('reach-lbl');
-    if (lbl) lbl.textContent = s.lbl;
-  }
 
   function setNode(id, fill, stroke, textFill) {
     const el = document.getElementById(id);
     if (!el) return;
     el.setAttribute('fill', fill);
     el.setAttribute('stroke', stroke);
-    // text color: update all text children
     const svg = el.closest('svg');
     if (!svg) return;
     const cx = parseFloat(el.getAttribute('cx'));
@@ -1177,6 +1179,34 @@ footer a:hover{color:var(--red)}
       if (Math.abs(tx - cx) < 5 && ty > cy - 30 && ty < cy + 30)
         t.setAttribute('fill', textFill);
     });
+  }
+
+  function applyStep(s) {
+    const colored = new Set(s.colored);
+    ['n0','n1','n2','n5','n6'].forEach(id => setNode(id, FREE, '#AAA', '#333'));
+    setNode('n3', s.sense ? GREEN : UNK, s.sense ? '#2a5a2a' : '#888', '#fff');
+    setNode('n4', BLOCKED, '#111', '#CCC');
+    setNode('n7', GOAL, '#0d3570', '#fff');
+
+    colored.forEach(id => {
+      if (id === 'n7') return;
+      setNode(id, GREEN, '#2a5a2a', '#fff');
+    });
+
+    const senseEl = document.getElementById('sense-evt');
+    if (senseEl) senseEl.style.opacity = s.sense ? '1' : '0';
+
+    const shells = {n7:'shell-7',n6:'shell-6',n5:'shell-5',n2:'shell-2'};
+    Object.entries(shells).forEach(([nid,sid]) => {
+      const el = document.getElementById(sid);
+      if (el) el.style.opacity = colored.has(nid) ? '1' : '0';
+    });
+
+    const n3sub = document.getElementById('n3-sub');
+    if (n3sub) n3sub.textContent = s.sense ? 'free' : 'unknown';
+
+    const lbl = document.getElementById('reach-lbl');
+    if (lbl) lbl.textContent = s.lbl;
   }
 
   let step = 0, timer = null;
@@ -1209,14 +1239,17 @@ footer a:hover{color:var(--red)}
 (function () {
 'use strict';
 
-const COLS = 14, ROWS = 12, CELL = 22;
+const COLS = 18, ROWS = 13, CELL = 22;
 const W = COLS * CELL, H = ROWS * CELL;
 
 const C = {
-  FREE:'#E8F0E8', OCC:'#222222', UNK:'#A8A8A8', GOAL:'#1A52A0',
-  SAT:'#3D7A3D', PATH:'#C8A020', ROBOT:'#C8102E',
-  GRID:'#C8C8C8',
-  KR1:'#1A52A0', KR2:'#3D7A3D', CK:'#7B35A0', NEW:'#C8A020',
+  FREE:'#E8F0E8', OCC:'#222222', UNK:'#A8A8A8',
+  GOAL1:'#1A52A0', GOAL2:'#7B35A0',
+  SAT:'#3D7A3D',
+  PATH:'#C8102E',
+  ROBOT:'#C8102E',
+  GRID:'#D0D0D0',
+  FRONTIER:'#C8102E',
 };
 
 function makeG(fill){ return Array.from({length:ROWS},()=>new Array(COLS).fill(fill)); }
@@ -1229,7 +1262,7 @@ function drawCell(ctx,c,r,color){
   ctx.fillRect(c*CELL,(ROWS-1-r)*CELL,CELL,CELL);
 }
 function drawGridLines(ctx){
-  ctx.strokeStyle=C.GRID; ctx.lineWidth=.5;
+  ctx.strokeStyle=C.GRID; ctx.lineWidth=.4;
   for(let c=0;c<=COLS;c++){ctx.beginPath();ctx.moveTo(c*CELL,0);ctx.lineTo(c*CELL,H);ctx.stroke();}
   for(let r=0;r<=ROWS;r++){ctx.beginPath();ctx.moveTo(0,r*CELL);ctx.lineTo(W,r*CELL);ctx.stroke();}
 }
@@ -1240,174 +1273,554 @@ function drawRobot(ctx,col,row,color){
   ctx.fillStyle='#fff';
   ctx.beginPath();ctx.arc(x+R*.35,y-R*.3,R*.25,0,Math.PI*2);ctx.fill();
 }
-function drawRobotLabel(ctx,col,row,label,color){
-  const x=col*CELL+CELL/2,y=(ROWS-1-row)*CELL-3;
-  ctx.save();ctx.font="bold 8px 'JetBrains Mono',monospace";
-  ctx.fillStyle=color||C.ROBOT;ctx.textAlign='center';
-  ctx.fillText(label,x,y);ctx.restore();
-}
-function drawPath(ctx,pts){
-  if(!pts||pts.length<2)return;
-  ctx.save();ctx.strokeStyle=C.PATH;ctx.lineWidth=2.5;
-  ctx.lineJoin='round';ctx.lineCap='round';ctx.setLineDash([]);
-  ctx.beginPath();
-  pts.forEach(([c,r],i)=>{const x=c*CELL+CELL/2,y=(ROWS-1-r)*CELL+CELL/2;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.stroke();
-  const n=pts.length;
-  const[c1,r1]=pts[n-2],[c2,r2]=pts[n-1];
-  const x1=c1*CELL+CELL/2,y1=(ROWS-1-r1)*CELL+CELL/2;
-  const x2=c2*CELL+CELL/2,y2=(ROWS-1-r2)*CELL+CELL/2;
-  const ang=Math.atan2(y2-y1,x2-x1),hs=8;
-  ctx.beginPath();ctx.moveTo(x2,y2);
-  ctx.lineTo(x2-hs*Math.cos(ang-.38),y2-hs*Math.sin(ang-.38));
-  ctx.lineTo(x2-hs*Math.cos(ang+.38),y2-hs*Math.sin(ang+.38));
-  ctx.closePath();ctx.fillStyle=C.PATH;ctx.fill();ctx.restore();
-}
-function renderGrid(ctx,grid,robots,path){
+function renderGrid(ctx,grid,robots){
   ctx.clearRect(0,0,W,H);
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)drawCell(ctx,c,r,grid[r][c]);
   drawGridLines(ctx);
-  if(path)drawPath(ctx,path);
-  if(robots)robots.forEach(({col,row,color,label})=>{drawRobot(ctx,col,row,color);if(label)drawRobotLabel(ctx,col,row,label,color);});
+  if(robots)robots.forEach(({col,row,color})=>drawRobot(ctx,col,row,color));
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  ctx.save();
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2.5;
+  ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  const ang=Math.atan2(y2-y1,x2-x1),hs=7;
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hs*Math.cos(ang-.4),y2-hs*Math.sin(ang-.4));
+  ctx.lineTo(x2-hs*Math.cos(ang+.4),y2-hs*Math.sin(ang+.4));
+  ctx.closePath();ctx.fill();
+  ctx.restore();
 }
 
-/* MAP 1 */
-function makePathBase(){
-  const g=makeG(C.FREE);
-  for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[11][c]=C.OCC;}
-  for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][13]=C.OCC;}
-  for(let r=6;r<=10;r++)for(let c=5;c<=6;c++)g[r][c]=C.OCC;
-  for(let c=7;c<=9;c++)g[10][c]=C.OCC;
-  for(let r=7;r<=10;r++)for(let c=1;c<=3;c++)g[r][c]=C.UNK;
-  g[10][12]=C.GOAL;
-  return g;
-}
+/* ── MAP 0: Animated path building — 3 phases ── */
 (function(){
-  const ctx=initCanvas('cv-path'); if(!ctx)return;
-  const base=makePathBase();
-  const FREE_CELLS=(r,c)=>base[r][c]===C.FREE||base[r][c]===C.GOAL;
-  const nb4=(r,c)=>[[r+1,c],[r-1,c],[r,c+1],[r,c-1]].filter(([nr,nc])=>nr>=0&&nr<ROWS&&nc>=0&&nc<COLS);
-  const layers=[];
-  const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
-  vis[10][12]=1;let frontier=[[12,10]];layers.push([[12,10]]);
-  while(frontier.length){
-    const next=[];
-    for(const[fc,fr]of frontier)for(const[nr,nc]of nb4(fr,fc))if(!vis[nr][nc]&&FREE_CELLS(nr,nc)){vis[nr][nc]=1;next.push([nc,nr]);}
-    if(next.length)layers.push(next);
-    frontier=next;
+  const ctx=initCanvas('cv-pathbuild'); if(!ctx)return;
+
+  // Grid: 18 cols x 13 rows
+  // Robot starts at (1,1), goal at (16,11)
+  // Wall block cols 7-8, rows 3-9
+  // Unknown corridor rows 5-7, cols 9-11 (blocks direct path until sensed)
+  // Secondary wall rows 1-4, cols 13-14
+  const ROBOT_C=1, ROBOT_R=1;
+  const GOAL_C=16, GOAL_R=11;
+
+  function makeBase(){
+    const g=makeG(C.FREE);
+    for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
+    for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
+    // main wall cols 7-8, rows 2-9
+    for(let r=2;r<=9;r++){g[r][7]=C.OCC;g[r][8]=C.OCC;}
+    // secondary wall col 13, rows 8-11
+    for(let r=8;r<=11;r++) g[r][13]=C.OCC;
+    // unknown corridor rows 5-7, cols 9-11
+    for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) g[r][c]=C.UNK;
+    // goal
+    g[GOAL_R][GOAL_C]=C.GOAL1;
+    return g;
   }
-  const CERT_PATH=[[1,1],[1,2],[1,3],[1,4],[1,5],[2,5],[3,5],[4,5],[5,5],[6,5],[7,5],[7,6],[7,7],[7,8],[7,9],[8,9],[9,9],[10,9],[10,10],[11,10],[12,10]];
-  const totalFrames=layers.length+1;
-  const stepLabels=['S₀ — ∅'];
-  for(let i=0;i<layers.length-1;i++)stepLabels.push(`S${i+1} — iteration ${i+1}`);
-  stepLabels.push('S∞ — fixed point · certified path');
-  let frame=0,timer=null;
-  const STEP_MS=820,HOLD_MS=2800;
-  function buildSat(f){const s=new Set();for(let i=0;i<Math.min(f,layers.length);i++)layers[i].forEach(([c,r])=>s.add(`${c},${r}`));return s;}
+
+  // BFS backward from goal treating UNK as blocked
+  function bfsBack(g, extras){
+    const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
+    const sat=[];
+    const shells=[];
+    vis[GOAL_R][GOAL_C]=1;
+    let frontier=[[GOAL_C,GOAL_R]]; sat.push([GOAL_C,GOAL_R]); shells.push([[GOAL_C,GOAL_R]]);
+    while(frontier.length){
+      const next=[];
+      for(const[fc,fr] of frontier){
+        for(const[nr,nc] of [[fr+1,fc],[fr-1,fc],[fr,fc+1],[fr,fc-1]]){
+          if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
+          const cell=g[nr][nc];
+          const isExtra=extras&&extras.has(`${nc},${nr}`);
+          if(cell===C.OCC) continue;
+          if(cell===C.UNK&&!isExtra) continue;
+          vis[nr][nc]=1; sat.push([nc,nr]); next.push([nc,nr]);
+        }
+      }
+      if(next.length) shells.push(next);
+      frontier=next;
+    }
+    return {sat,shells,vis};
+  }
+
+  // reconstruct path from robot to goal using vis (shell distance)
+  function extractPath(vis){
+    // vis holds BFS distance from goal; trace robot pos greedily downhill
+    let c=ROBOT_C, r=ROBOT_R;
+    const path=[[c,r]];
+    const visited=new Set([`${c},${r}`]);
+    for(let iter=0;iter<200;iter++){
+      if(c===GOAL_C&&r===GOAL_R) break;
+      let bestC=c,bestR=r,bestV=vis[r][c];
+      // pick neighbor with lowest nonzero vis value (closest to goal in BFS tree)
+      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+        if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+        if(visited.has(`${nc},${nr}`)) continue;
+        const v=vis[nr][nc];
+        if(v>0&&v<bestV){bestV=v;bestC=nc;bestR=nr;}
+      }
+      if(bestC===c&&bestR===r) break;
+      c=bestC;r=bestR;
+      path.push([c,r]);
+      visited.add(`${c},${r}`);
+    }
+    return path;
+  }
+
+  // Phase 1: wavefront with unknown blocking (shells before sense)
+  const gBase=makeBase();
+  const phase1=bfsBack(gBase,null);
+  // Phase 2: sense event reveals corridor, wavefront resumes
+  const sensedCells=new Set();
+  for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) sensedCells.add(`${c},${r}`);
+  const gRevealed=makeBase();
+  for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) gRevealed[r][c]=C.FREE;
+  gRevealed[GOAL_R][GOAL_C]=C.GOAL1;
+  const phase2=bfsBack(gRevealed,null);
+
+  // Build a merged shell sequence: phase1 shells, then sensing pause, then new shells from phase2
+  // Find which shells from phase2 are new (not already in phase1)
+  const satSet1=new Set(phase1.sat.map(([c,r])=>`${c},${r}`));
+  const newShells=[];
+  for(const shell of phase2.shells){
+    const novelCells=shell.filter(([c,r])=>!satSet1.has(`${c},${r}`));
+    if(novelCells.length) newShells.push(novelCells);
+  }
+
+  const PATH=extractPath(phase2.vis);
+
+  // Total animation:
+  // 0 .. phase1.shells.length-1 : phase 1 wavefront
+  // phase1.shells.length : "sensing" pause frame
+  // phase1.shells.length+1 .. +newShells.length : phase 2 new shells
+  // last : path drawing
+  const PHASE1_END=phase1.shells.length;
+  const SENSE_FRAME=PHASE1_END;
+  const PHASE2_START=SENSE_FRAME+1;
+  const PHASE2_END=PHASE2_START+newShells.length;
+  const PATH_FRAMES=PATH.length; // animate each step
+  const PATH_START=PHASE2_END;
+  const TOTAL=PATH_START+PATH_FRAMES+1;
+
+  let frame=0, timer=null;
+  const STEP_MS=160, SENSE_HOLD=900, HOLD_MS=2800;
+
   function drawFrame(f){
-    const g=makePathBase();const isFinal=f>=totalFrames-1;
-    buildSat(isFinal?layers.length:f).forEach(k=>{const[c,r]=k.split(',').map(Number);if(g[r][c]!==C.GOAL&&g[r][c]!==C.OCC&&g[r][c]!==C.UNK)g[r][c]=C.SAT;});
-    let path=null;
-    if(isFinal){path=CERT_PATH;path.forEach(([c,r])=>{if(g[r][c]===C.SAT)g[r][c]=C.PATH;});g[10][12]=C.GOAL;}
-    renderGrid(ctx,g,[{col:1,row:1}],path);
-    const lbl=document.getElementById('step-lbl-path');if(lbl)lbl.textContent=stepLabels[Math.min(f,stepLabels.length-1)];
+    const g=makeBase();
+
+    // determine which cells are saturated up to this frame
+    const satNow=new Set();
+    let isSenseFrame=false;
+    let pathProgress=0;
+
+    if(f<=PHASE1_END){
+      for(let i=0;i<Math.min(f,phase1.shells.length);i++)
+        phase1.shells[i].forEach(([c,r])=>satNow.add(`${c},${r}`));
+      if(f===SENSE_FRAME) isSenseFrame=true;
+    } else if(f<PATH_START){
+      // all of phase1 saturated
+      phase1.sat.forEach(([c,r])=>satNow.add(`${c},${r}`));
+      // plus new shells from phase2
+      const nNew=f-PHASE2_START;
+      for(let i=0;i<Math.min(nNew,newShells.length);i++)
+        newShells[i].forEach(([c,r])=>satNow.add(`${c},${r}`));
+      // reveal corridor cells
+      for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) g[r][c]=C.FREE;
+    } else {
+      // path phase
+      phase2.sat.forEach(([c,r])=>satNow.add(`${c},${r}`));
+      for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) g[r][c]=C.FREE;
+      pathProgress=f-PATH_START;
+    }
+
+    // color sat cells
+    for(const k of satNow){
+      const[c,r]=k.split(',').map(Number);
+      if(g[r][c]===C.FREE) g[r][c]=C.SAT;
+    }
+
+    // draw base
+    ctx.clearRect(0,0,W,H);
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) drawCell(ctx,c,r,g[r][c]);
+    drawGridLines(ctx);
+
+    // draw path so far
+    if(pathProgress>0){
+      const seg=PATH.slice(0,pathProgress+1);
+      for(let i=0;i<seg.length-1;i++){
+        const[c1,r1]=seg[i],[c2,r2]=seg[i+1];
+        drawArrow(ctx,
+          c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+          c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,
+          C.PATH,3);
+      }
+    }
+
+    // sensing indicator
+    if(isSenseFrame||f>SENSE_FRAME){
+      // draw sensing radius around corridor entrance
+      ctx.save();
+      ctx.strokeStyle='#888';ctx.lineWidth=1.2;ctx.setLineDash([3,2]);
+      ctx.beginPath();
+      ctx.arc(9*CELL+CELL/2,(ROWS-1-5)*CELL+CELL/2,CELL*2,0,Math.PI*2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font="italic 9px 'Source Serif 4',serif";
+      ctx.fillStyle='#555';ctx.textAlign='center';
+      if(isSenseFrame) ctx.fillText('sense event',9*CELL+CELL/2,(ROWS-1-5)*CELL-6);
+      ctx.restore();
+    }
+
+    // robot
+    drawRobot(ctx,ROBOT_C,ROBOT_R);
+
+    // status label
+    const lbl=document.getElementById('step-lbl-pathbuild');
+    if(lbl){
+      if(f<PHASE1_END) lbl.textContent=`Phase 1 — backward wavefront shell S${f}`;
+      else if(f===SENSE_FRAME) lbl.textContent='Phase 2 — sensing event resolves unknown corridor';
+      else if(f<PATH_START) lbl.textContent=`Phase 2 — wavefront resumes through revealed cells (S${f-SENSE_FRAME})`;
+      else if(pathProgress<PATH.length) lbl.textContent=`Phase 3 — path extraction step ${pathProgress}/${PATH.length-1}`;
+      else lbl.textContent='Done — certified shortest path extracted from µX shells';
+    }
   }
+
   function step(){
-    if(frame>=totalFrames-1){timer=setTimeout(()=>{frame=0;drawFrame(0);scheduleNext();},HOLD_MS);}
-    else{frame++;drawFrame(frame);scheduleNext();}
+    drawFrame(frame);
+    if(frame>=TOTAL-1){
+      timer=setTimeout(()=>{frame=0;step();},HOLD_MS);
+      return;
+    }
+    frame++;
+    // special hold at sense frame
+    const delay=(frame-1===SENSE_FRAME)?SENSE_HOLD:STEP_MS;
+    timer=setTimeout(step,delay);
   }
-  function scheduleNext(){if(frame<totalFrames-1)timer=setTimeout(step,STEP_MS);else timer=setTimeout(step,HOLD_MS);}
-  function start(){clearTimeout(timer);frame=0;drawFrame(0);timer=setTimeout(step,STEP_MS);}
+
+  function start(){clearTimeout(timer);frame=0;step();}
   function stop(){clearTimeout(timer);timer=null;}
-  const el=document.getElementById('cv-path');
+
+  const el=document.getElementById('cv-pathbuild');
   if('IntersectionObserver'in window){
-    const obs=new IntersectionObserver(entries=>{entries[0].isIntersecting?start():stop();},{threshold:.2});
+    const obs=new IntersectionObserver(e=>{e[0].isIntersecting?start():stop();},{threshold:.2});
     obs.observe(el);
   }else{start();}
-  const btn=document.getElementById('btn-reset-path');if(btn)btn.onclick=()=>{stop();start();};
+  document.getElementById('btn-reset-pathbuild').onclick=()=>{stop();start();};
 })();
 
-/* MAP 2 */
+/* ── MAP 1: Branching µX — two goals, non-linear plan ── */
+(function(){
+  const ctx=initCanvas('cv-branch'); if(!ctx)return;
+
+  function makeBase(){
+    const g=makeG(C.FREE);
+    for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
+    for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
+    for(let r=1;r<=12;r++) if(r!==6) g[r][8]=C.OCC;
+    for(let r=8;r<=11;r++) g[r][5]=C.OCC;
+    for(let r=2;r<=4;r++) g[r][12]=C.OCC;
+    for(let r=9;r<=11;r++) for(let c=9;c<=11;c++) g[r][c]=C.UNK;
+    g[11][16]=C.GOAL1;
+    g[2][16]=C.GOAL2;
+    return g;
+  }
+
+  function bfsBack(g, goalR, goalC, extraFree){
+    const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
+    const q=[[goalR,goalC]]; vis[goalR][goalC]=1;
+    const sat=new Set([`${goalC},${goalR}`]);
+    while(q.length){
+      const[r,c]=q.shift();
+      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+        if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
+        const cell=g[nr][nc];
+        if(cell===C.OCC||cell===C.UNK) continue;
+        if(extraFree&&extraFree.has(`${nc},${nr}`)) {vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);continue;}
+        if(cell===C.FREE||cell===C.GOAL1||cell===C.GOAL2){vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);}
+      }
+    }
+    return sat;
+  }
+
+  const ORIGIN=[1,6];
+  const totalFrames=18;
+  const STEP_MS=600,HOLD_MS=2800;
+
+  const SHARED=[[1,6],[2,6],[3,6],[4,6],[5,6],[6,6],[7,6],[8,6]];
+  const BRANCH_TOP=[[8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[13,7],[13,8],[13,9],[13,10],[13,11],[14,11],[15,11],[16,11]];
+  const BRANCH_BOT=[[8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[13,5],[13,4],[13,3],[13,2],[14,2],[15,2],[16,2]];
+
+  let frame=0,timer=null;
+
+  function drawFrame(f){
+    const g=makeBase();
+    const isFinal=f>=totalFrames-1;
+    const base=makeBase();
+    const sensed=f>=10;
+    const extraFree=sensed?new Set(
+      [[9,9],[10,9],[11,9],[9,10],[10,10],[11,10],[9,11],[10,11],[11,11]].map(([c,r])=>`${c},${r}`)
+    ):null;
+
+    const sat1=bfsBack(base,11,16,extraFree);
+    const sat2=bfsBack(base,2,16,null);
+
+    for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
+      const k=`${c},${r}`;
+      if(g[r][c]!==C.FREE) continue;
+      const in1=sat1.has(k), in2=sat2.has(k);
+      if(in1&&in2) g[r][c]=C.SAT;
+      else if(in1) g[r][c]='#2060a0';
+      else if(in2) g[r][c]='#6030a0';
+    }
+
+    if(sensed){
+      for(let r=9;r<=11;r++) for(let c=9;c<=11;c++) if(g[r][c]===C.UNK) g[r][c]='#3D7A3D';
+    }
+
+    renderGrid(ctx,g,[]);
+
+    if(isFinal){
+      for(let i=0;i<SHARED.length-1;i++){
+        const[c1,r1]=SHARED[i],[c2,r2]=SHARED[i+1];
+        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.PATH,3);
+      }
+      for(let i=1;i<BRANCH_TOP.length-1;i++){
+        const[c1,r1]=BRANCH_TOP[i],[c2,r2]=BRANCH_TOP[i+1];
+        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#1A52A0',2.5);
+      }
+      for(let i=1;i<BRANCH_BOT.length-1;i++){
+        const[c1,r1]=BRANCH_BOT[i],[c2,r2]=BRANCH_BOT[i+1];
+        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#7B35A0',2.5);
+      }
+      ctx.save();
+      ctx.font="italic 10px 'Source Serif 4',serif";
+      ctx.fillStyle='#333';ctx.textAlign='center';
+      ctx.fillText('split',8*CELL+CELL/2,(ROWS-1-6)*CELL-5);
+      ctx.restore();
+    }
+
+    drawRobot(ctx,ORIGIN[0],ORIGIN[1]);
+
+    const lbl=document.getElementById('step-lbl-branch');
+    if(lbl){
+      if(isFinal) lbl.textContent='µX = fixed point · branching plan extracted';
+      else if(f<10) lbl.textContent=`S${f} — backward wavefront (unknown blocks upper)`;
+      else if(f===10) lbl.textContent='S₁₀ — sensing resolves unknown corridor';
+      else lbl.textContent=`S${f} — wavefront expands through revealed cells`;
+    }
+  }
+
+  function step(){
+    if(frame>=totalFrames-1){ timer=setTimeout(()=>{frame=0;drawFrame(0);sched();},HOLD_MS);}
+    else{frame++;drawFrame(frame);sched();}
+  }
+  function sched(){ if(frame<totalFrames-1) timer=setTimeout(step,STEP_MS); else timer=setTimeout(step,HOLD_MS); }
+  function start(){ clearTimeout(timer);frame=0;drawFrame(0);timer=setTimeout(step,STEP_MS); }
+  function stop(){ clearTimeout(timer);timer=null; }
+
+  const el=document.getElementById('cv-branch');
+  if('IntersectionObserver'in window){
+    const obs=new IntersectionObserver(e=>{e[0].isIntersecting?start():stop();},{threshold:.2});
+    obs.observe(el);
+  } else { start(); }
+  document.getElementById('btn-reset-branch').onclick=()=>{stop();start();};
+})();
+
+/* ── MAP 2: Sensing-blocked µX ── */
 (function(){
   const ctxB=initCanvas('cv-sense-before'),ctxA=initCanvas('cv-sense-after');
   if(!ctxB||!ctxA)return;
-  function makeSenseBase(){
+
+  function makeBase(){
     const g=makeG(C.FREE);
-    for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[11][c]=C.OCC;}
-    for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][13]=C.OCC;}
-    for(let r=2;r<=5;r++)g[r][4]=C.OCC;
-    for(let c=4;c<=8;c++)g[2][c]=C.OCC;
-    for(let r=5;r<=10;r++)for(let c=6;c<=12;c++)g[r][c]=C.UNK;
+    for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
+    for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
+    for(let c=1;c<COLS-1;c++) if(c<6||c>8) g[7][c]=C.OCC;
+    for(let r=8;r<=11;r++) g[r][5]=C.OCC;
+    for(let r=8;r<=11;r++) g[r][10]=C.OCC;
+    for(let r=5;r<=7;r++) for(let c=6;c<=8;c++) g[r][c]=C.UNK;
+    g[11][15]=C.GOAL1;
     return g;
   }
-  const gBefore=makeSenseBase();renderGrid(ctxB,gBefore,[{col:8,row:8}],null);
-  const gAfter=makeSenseBase();
-  const revealed=[{c:8,r:9,v:C.FREE},{c:8,r:7,v:C.FREE},{c:7,r:8,v:C.FREE},{c:9,r:8,v:C.OCC}];
-  revealed.forEach(({c,r,v})=>{gAfter[r][c]=C.NEW;});
-  renderGrid(ctxA,gAfter,[{col:8,row:8}],null);
-  revealed.forEach(({c,r,v})=>{
-    ctxA.save();ctxA.strokeStyle='#C8A020';ctxA.lineWidth=2.5;
-    const px=c*CELL,py=(ROWS-1-r)*CELL;
-    ctxA.strokeRect(px+1.25,py+1.25,CELL-2.5,CELL-2.5);
-    ctxA.font="7px 'JetBrains Mono',monospace";
-    ctxA.fillStyle=v===C.OCC?'#fff':'#1A52A0';
-    ctxA.textAlign='center';
-    ctxA.fillText(v===C.OCC?'blk':'free',px+CELL/2,py+CELL/2+2.5);
-    ctxA.restore();
-  });
-  drawRobot(ctxA,8,8);
-  ctxA.save();ctxA.strokeStyle='#C8A020';ctxA.lineWidth=1;ctxA.setLineDash([3,2]);
-  const rx=8*CELL+CELL/2,ry=(ROWS-1-8)*CELL+CELL/2;
-  ctxA.beginPath();ctxA.arc(rx,ry,CELL*1.45,0,Math.PI*2);ctxA.stroke();
-  ctxA.setLineDash([]);ctxA.restore();
-})();
 
-/* MAP 3 */
-(function(){
-  const ctxB=initCanvas('cv-ann-before'),ctxA=initCanvas('cv-ann-after');
-  if(!ctxB||!ctxA)return;
-  function makeAnnBase(){
-    const g=makeG(C.UNK);
-    for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[11][c]=C.OCC;}
-    for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][13]=C.OCC;}
-    for(let r=3;r<=5;r++)for(let c=6;c<=8;c++)g[r][c]=C.OCC;
-    for(let r=7;r<=9;r++)for(let c=4;c<=5;c++)g[r][c]=C.OCC;
-    return g;
+  function bfsBack(g){
+    const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
+    const q=[[11,15]]; vis[11][15]=1;
+    const sat=new Set(['15,11']);
+    while(q.length){
+      const[r,c]=q.shift();
+      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+        if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
+        if(g[nr][nc]===C.FREE||g[nr][nc]===C.GOAL1){vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);}
+      }
+    }
+    return sat;
   }
-  const gBefore=makeAnnBase();
-  for(let r=1;r<=6;r++)for(let c=1;c<=5;c++){if(gBefore[r][c]!==C.OCC)gBefore[r][c]=C.KR1;}
-  for(let c=1;c<=12;c++)if(gBefore[6][c]!==C.OCC)gBefore[6][c]=C.KR1;
-  for(let r=7;r<=10;r++)for(let c=8;c<=12;c++){if(gBefore[r][c]!==C.OCC)gBefore[r][c]=C.KR2;}
-  renderGrid(ctxB,gBefore,[{col:2,row:2,color:C.KR1,label:'R₁'},{col:11,row:9,color:C.KR2,label:'R₂'}],null);
-  ctxB.save();ctxB.font="7px 'JetBrains Mono',monospace";ctxB.fillStyle=C.KR1;ctxB.textAlign='center';
-  ctxB.fillText('K_{R1}(free(σ))',W/2,(ROWS-1-6)*CELL+CELL/2-6);ctxB.restore();
-  const gAfter=makeAnnBase();
-  for(let r=1;r<=6;r++)for(let c=1;c<=5;c++){if(gAfter[r][c]!==C.OCC)gAfter[r][c]=C.KR1;}
-  for(let r=7;r<=10;r++)for(let c=8;c<=12;c++){if(gAfter[r][c]!==C.OCC)gAfter[r][c]=C.KR2;}
-  for(let c=1;c<=12;c++)if(gAfter[6][c]!==C.OCC)gAfter[6][c]=C.CK;
-  renderGrid(ctxA,gAfter,[{col:2,row:2,color:C.KR1,label:'R₁'},{col:11,row:9,color:C.KR2,label:'R₂'}],null);
-  ctxA.save();ctxA.font="7px 'JetBrains Mono',monospace";ctxA.fillStyle=C.CK;ctxA.textAlign='center';
-  ctxA.fillText('C_{R₁,R₂}(free(σ))',W/2,(ROWS-1-6)*CELL+CELL/2-6);ctxA.restore();
+
+  {
+    const g=makeBase();
+    const sat=bfsBack(g);
+    for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
+      if(g[r][c]===C.FREE&&sat.has(`${c},${r}`)) g[r][c]=C.SAT;
+    }
+    renderGrid(ctxB,g,[{col:7,row:4}]);
+    ctxB.save();ctxB.font="italic 8px 'Source Serif 4',serif";ctxB.fillStyle='#888';
+    ctxB.textAlign='center';
+    for(let r=5;r<=7;r++) for(let c=6;c<=8;c++){
+      ctxB.fillText('?',c*CELL+CELL/2,(ROWS-1-r)*CELL+CELL/2+3);
+    }
+    ctxB.restore();
+  }
+  {
+    const g=makeBase();
+    for(let r=5;r<=7;r++) for(let c=6;c<=8;c++) g[r][c]=C.FREE;
+    const sat=bfsBack(g);
+    for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
+      if(g[r][c]===C.FREE&&sat.has(`${c},${r}`)) g[r][c]=C.SAT;
+    }
+    renderGrid(ctxA,g,[{col:7,row:4}]);
+    const path=[[7,4],[7,5],[7,6],[7,7],[7,8],[7,9],[7,10],[8,10],[9,10],[10,10],[11,10],[12,10],[13,10],[14,10],[15,10],[15,11]];
+    for(let i=0;i<path.length-1;i++){
+      const[c1,r1]=path[i],[c2,r2]=path[i+1];
+      drawArrow(ctxA,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.PATH,2.5);
+    }
+    ctxA.save();ctxA.strokeStyle='#888';ctxA.lineWidth=1;ctxA.setLineDash([3,2]);
+    ctxA.beginPath();ctxA.arc(7*CELL+CELL/2,(ROWS-1-4)*CELL+CELL/2,CELL*1.5,0,Math.PI*2);ctxA.stroke();
+    ctxA.setLineDash([]);ctxA.restore();
+  }
 })();
 
-/* MAP 4 */
+/* ── MAP 3: Dual-branch patrol (µX ∧ µY) ── */
 (function(){
-  const ctx=initCanvas('cv-expl'); if(!ctx)return;
+  const ctx=initCanvas('cv-dual'); if(!ctx)return;
+
   const g=makeG(C.FREE);
-  for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[11][c]=C.OCC;}
-  for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][13]=C.OCC;}
-  for(let r=2;r<=6;r++)g[r][6]=C.OCC;
-  for(let r=4;r<=10;r++)for(let c=7;c<=12;c++)g[r][c]=C.UNK;
-  for(let r=2;r<=3;r++)for(let c=11;c<=12;c++)g[r][c]=C.UNK;
-  for(let r=8;r<=10;r++)for(let c=1;c<=3;c++)g[r][c]=C.UNK;
-  const isUnk=(r,c)=>r>=0&&r<ROWS&&c>=0&&c<COLS&&g[r][c]===C.UNK;
-  const nb4=(r,c)=>[[r+1,c],[r-1,c],[r,c+1],[r,c-1]];
-  for(let r=1;r<=10;r++)for(let c=1;c<=12;c++){
-    if(g[r][c]!==C.FREE)continue;
-    const isFrontier=nb4(r,c).some(([nr,nc])=>isUnk(nr,nc));
-    g[r][c]=isFrontier?C.PATH:C.SAT;
+  for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
+  for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
+  for(let c=4;c<COLS-1;c++) g[6][c]=C.OCC;
+  for(let r=7;r<=11;r++) g[r][4]=C.OCC;
+  for(let r=1;r<=5;r++) g[r][4]=C.OCC;
+  g[11][16]=C.GOAL1;
+  g[2][16]=C.GOAL2;
+
+  function bfs(goalR,goalC,avoidR){
+    const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
+    const q=[[goalR,goalC]]; vis[goalR][goalC]=1;
+    const sat=new Set([`${goalC},${goalR}`]);
+    while(q.length){
+      const[r,c]=q.shift();
+      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+        if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
+        if(g[nr][nc]===C.OCC) continue;
+        if(avoidR&&nr===avoidR) continue;
+        vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);
+      }
+    }
+    return sat;
   }
-  renderGrid(ctx,g,[{col:5,row:6}],null);
+
+  const sat1=bfs(11,16,6);
+  const sat2=bfs(2,16,7);
+
+  for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
+    if(g[r][c]!==C.FREE) continue;
+    const in1=sat1.has(`${c},${r}`),in2=sat2.has(`${c},${r}`);
+    if(in1&&in2) g[r][c]=C.SAT;
+    else if(in1) g[r][c]='#3060a8';
+    else if(in2) g[r][c]='#7040a8';
+  }
+
+  renderGrid(ctx,g,[]);
+
+  const ORIGIN_C=2,ORIGIN_R=6;
+  const SPLIT_C=4,SPLIT_R=6;
+  drawArrow(ctx,ORIGIN_C*CELL+CELL/2,(ROWS-1-ORIGIN_R)*CELL+CELL/2,
+               SPLIT_C*CELL+CELL/2,(ROWS-1-SPLIT_R)*CELL+CELL/2,'#3D7A3D',3);
+
+  const topPath=[[4,6],[4,7],[4,8],[4,9],[4,10],[4,11],[5,11],[6,11],[7,11],[8,11],[9,11],[10,11],[11,11],[12,11],[13,11],[14,11],[15,11],[16,11]];
+  for(let i=0;i<topPath.length-1;i++){
+    const[c1,r1]=topPath[i],[c2,r2]=topPath[i+1];
+    drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#1A52A0',2.5);
+  }
+
+  const botPath=[[4,6],[4,5],[4,4],[4,3],[4,2],[5,2],[6,2],[7,2],[8,2],[9,2],[10,2],[11,2],[12,2],[13,2],[14,2],[15,2],[16,2]];
+  for(let i=0;i<botPath.length-1;i++){
+    const[c1,r1]=botPath[i],[c2,r2]=botPath[i+1];
+    drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#7B35A0',2.5);
+  }
+
+  drawRobot(ctx,ORIGIN_C,ORIGIN_R);
+
+  ctx.save();
+  ctx.font="italic 9px 'Source Serif 4',serif";
+  ctx.fillStyle='#1A52A0';ctx.textAlign='left';
+  ctx.fillText('R₁ (µX)',5*CELL,(ROWS-1-10)*CELL-3);
+  ctx.fillStyle='#7B35A0';
+  ctx.fillText('R₂ (µY)',5*CELL,(ROWS-1-2)*CELL-3);
+  ctx.fillStyle='#3D7A3D';
+  ctx.fillText('shared',1*CELL+4,(ROWS-1-6)*CELL-5);
+  ctx.restore();
+})();
+
+/* ── MAP 4: νX safety — greatest fixed point ── */
+(function(){
+  const ctx=initCanvas('cv-safe'); if(!ctx)return;
+
+  const g=makeG(C.FREE);
+  for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
+  for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
+  for(let r=3;r<=6;r++) g[r][6]=C.OCC;
+  for(let c=6;c<=10;c++) g[3][c]=C.OCC;
+  for(let r=8;r<=10;r++) g[r][12]=C.OCC;
+  for(let c=12;c<=15;c++) g[8][c]=C.OCC;
+  for(let r=7;r<=12;r++) for(let c=7;c<=11;c++) g[r][c]=C.UNK;
+  for(let r=1;r<=3;r++) for(let c=13;c<=17;c++) g[r][c]=C.UNK;
+  for(let r=9;r<=12;r++) for(let c=13;c<=17;c++) g[r][c]=C.UNK;
+  for(let r=1;r<=2;r++) for(let c=1;c<=4;c++) g[r][c]=C.UNK;
+
+  let safeSet=new Set();
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(g[r][c]===C.FREE) safeSet.add(`${c},${r}`);
+
+  let changed=true;
+  while(changed){
+    changed=false;
+    const toRemove=[];
+    for(const k of safeSet){
+      const[c,r]=k.split(',').map(Number);
+      let hasUnknownNb=false;
+      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+        if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+        if(g[nr][nc]===C.UNK) {hasUnknownNb=true;break;}
+        if(g[nr][nc]===C.FREE&&!safeSet.has(`${nc},${nr}`)) {hasUnknownNb=true;break;}
+      }
+      if(hasUnknownNb) toRemove.push(k);
+    }
+    for(const k of toRemove){safeSet.delete(k);changed=true;}
+  }
+
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    if(g[r][c]===C.FREE){
+      drawCell(ctx,c,r,safeSet.has(`${c},${r}`)?C.SAT:C.FREE);
+    } else {
+      drawCell(ctx,c,r,g[r][c]);
+    }
+  }
+  drawGridLines(ctx);
+
+  for(const k of safeSet){
+    const[c,r]=k.split(',').map(Number);
+    let isFrontier=false;
+    for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+      if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+      if(g[nr][nc]===C.UNK){isFrontier=true;break;}
+    }
+    if(isFrontier) drawCell(ctx,c,r,C.FRONTIER);
+  }
+  drawGridLines(ctx);
+  drawRobot(ctx,3,6);
 })();
 
 })();
