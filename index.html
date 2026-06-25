@@ -1,27 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>The Epistemic Robotics Project</title>
-
-<meta name="description"
-content="The Epistemic Robotics Project explores epistemic planning, dynamic epistemic logic, modal μ-calculus, ROS2 integration, autonomous robotic reasoning, and multi-agent systems." />
-
-<meta name="keywords"
-content="Epistemic Robotics, Epistemic Planning, Dynamic Epistemic Logic, Modal Mu Calculus, ROS2, Multi-Agent Systems, Autonomous Robotics" />
-
-<meta name="author" content="Haniel" />
-
-<!-- Open Graph -->
-<meta property="og:title" content="The Epistemic Robotics Project" />
-<meta property="og:description"
-content="Research project on epistemic planning, modal μ-calculus, ROS2, and autonomous robotic reasoning." />
-<meta property="og:type" content="website" />
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="The Epistemic Robotics Project" />
-<meta name="twitter:description"
-content="Research project on epistemic planning, modal μ-calculus, ROS2, and autonomous robotic reasoning." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!--
   FIX 1 — MathJax rendering
@@ -411,163 +395,405 @@ footer a:hover{color:var(--red)}
   </div>
 </section>
 
-<!-- GEOMETRIC REASONING -->
+<!-- FORMAL VISUALIZATION -->
 <section>
   <div class="container">
-    <p class="sec-label">Geometric Reasoning</p>
-    <h3>The µ-calculus over occupancy grids</h3>
+    <p class="sec-label">Formal Visualization</p>
+    <h3>µ-calculus fixed points and epistemic events on Kripke structures</h3>
     <p>
-      A robot under SLAM maintains an <em>occupancy grid</em>: a discrete
-      probabilistic map in which each cell is classified as free, occupied, or
-      unknown. The project treats this structure as a Kripke model for spatial
-      reasoning, where cells are possible worlds and the edge relation encodes
-      navigable adjacency. The µ-calculus — a modal fixed-point logic extending
-      propositional dynamic logic with least and greatest fixed-point operators —
-      evaluates epistemic properties directly over this graph.
+      The µ-calculus extends modal logic with least fixed-point (\(\mu\)) and greatest
+      fixed-point (\(\nu\)) operators, enabling the expression of reachability,
+      safety, and liveness properties directly over Kripke structures. When the
+      underlying structure is a robot's belief state — a multi-agent Kripke model
+      whose worlds encode possible configurations and whose accessibility relations
+      encode epistemic indistinguishability — these fixed-point computations become
+      tools for epistemic planning. The three figures below render the core formulas
+      directly over Kripke graphs, without the intermediate occupancy-grid layer,
+      so the logical and epistemic structure is immediately visible.
     </p>
 
-    <div class="math-block">
-      \[
-        \Gamma : \mathrm{OGM} \;\longrightarrow\; K_{\mathrm{nav}}
-        \qquad
-        K_{\mathrm{nav}} = \bigl(C,\; E_{\mathrm{adj}},\; L_{\mathrm{sem}}\bigr)
-      \]
-    </div>
-
-    <p>
-      The function \(\Gamma\) lifts the occupancy grid to a Kripke navigation
-      model. Each SLAM update applies an event model \(E_{\mathrm{exp}}\) via
-      product update. The central empirical question of the project's experimental
-      program is whether \(\Gamma\) commutes with this update:
-    </p>
-
-    <div class="math-block">
-      \[
-        \Gamma\!\left(\mathrm{OGM}^{(t+1)}\right) \;\cong\; K_{\mathrm{nav}}^{(t)} \otimes E_{\mathrm{exp}}
-      \]
-    </div>
-
-    <p>
-      This commutativity condition — that the geometric and epistemic updates
-      are order-independent — is not trivially satisfied. It depends on the
-      consistency between the navigation accessibility relation \(R_{\mathrm{nav}}\)
-      and the semantic labeling produced by the certification layer. Its failure
-      would mean that incremental epistemic reasoning over SLAM graphs is unsound,
-      and would require full recomputation of the Kripke model at every map update.
-      Its truth, conversely, licenses a modular architecture in which geometric and
-      epistemic updates are decoupled.
-    </p>
-    <p>
-      Three core formulas drive the planning interface. Each is a fixed-point
-      computation evaluated incrementally as the SLAM graph grows. The figures
-      below render each formula over a 14×12 occupancy grid. The step-through
-      control on the first figure shows the minimum fixed-point propagating
-      iteration by iteration.
-    </p>
-
-    <!-- φ_PATH -->
+    <!-- ── FIG 1: μX reachability with mid-stream sensing event ── -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
-        \[\varphi_{\mathrm{path}} \;=\; \mu x.\;\bigl(p_{\mathrm{goal}} \;\vee\; (p_{\mathrm{free}} \wedge \Diamond x)\bigr)\]
+        \[\varphi_{\mathrm{reach}} \;=\; \mu X.\;\bigl(\mathit{goal} \;\vee\; (\mathit{free} \wedge \Diamond X)\bigr)\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
-        <span><span class="lsq" style="background:#222"></span>occupied</span>
-        <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
-        <span><span class="lsq" style="background:#1A52A0"></span>goal</span>
-        <span><span class="lsq" style="background:#3D7A3D"></span>reachable \(S_k\)</span>
-        <span><span class="lsq" style="background:#C8A020"></span>path</span>
-        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot</span>
+        <span><span class="lsq" style="background:#E8F0E8;border-radius:50%"></span>free world</span>
+        <span><span class="lsq" style="background:#222;border-radius:50%"></span>blocked</span>
+        <span><span class="lsq" style="background:#A8A8A8;border-radius:50%"></span>unknown</span>
+        <span><span class="lsq" style="background:#1A52A0;border-radius:50%"></span>goal</span>
+        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>\(\in \mu X\) at \(S_k\)</span>
+        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot (designated world)</span>
+        <span><span class="lsq" style="background:#C8A020"></span>sense event fires</span>
       </div>
       <div class="fig-row">
-        <div class="fig-unit">
-          <canvas id="cv-path" width="308" height="264"></canvas>
-          <div class="step-ctrl">
-            <span class="step-lbl" id="step-lbl">S₀ — initial (∅)</span>
-            <button id="btn-reset" title="restart">↺</button>
-          </div>
+        <div class="fig-unit" style="width:100%">
+          <svg id="svg-reach" viewBox="0 0 700 220" width="700" height="220"
+               style="max-width:100%;border:1px solid var(--border);background:#FAFAFA">
+            <defs>
+              <!-- nav edge arrow -->
+              <marker id="arr-nav" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#AAAAAA"/>
+              </marker>
+              <!-- reached arrow -->
+              <marker id="arr-sat" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#3D7A3D"/>
+              </marker>
+              <!-- sense event arrow -->
+              <marker id="arr-evt" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#C8A020"/>
+              </marker>
+            </defs>
+
+            <!-- ── edges (drawn before nodes so nodes sit on top) ── -->
+            <!-- w0-w1 -->
+            <line id="e01" x1="90" y1="160" x2="174" y2="160" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <line id="e10" x1="186" y1="160" x2="102" y2="160" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <!-- w1-w2 -->
+            <line id="e12" x1="200" y1="148" x2="200" y2="92" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <line id="e21" x1="196" y1="92" x2="196" y2="148" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <!-- w2-w3 -->
+            <line id="e23" x1="216" y1="70" x2="304" y2="70" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <line id="e32" x1="316" y1="70" x2="228" y2="70" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <!-- w1-w4 (blocked branch — dashed) -->
+            <line id="e14b" x1="210" y1="168" x2="294" y2="168" stroke="#CCCCCC" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-nav)"/>
+            <!-- w3-w5 -->
+            <line id="e35" x1="336" y1="70" x2="444" y2="70" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <line id="e53" x1="456" y1="70" x2="348" y2="70" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <!-- w5-w6 -->
+            <line id="e56" x1="476" y1="62" x2="564" y2="62" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <line id="e65" x1="576" y1="62" x2="488" y2="62" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <!-- w6-w7 (goal) -->
+            <line id="e67" x1="596" y1="70" x2="644" y2="70" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+            <line id="e76" x1="656" y1="70" x2="608" y2="70" stroke="#AAAAAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
+
+            <!-- sense event annotation (hidden initially) -->
+            <g id="sense-evt" opacity="0" style="transition:opacity .4s">
+              <rect x="290" y="90" width="80" height="22" rx="3" fill="#FFF8E8" stroke="#C8A020" stroke-width="1"/>
+              <text x="330" y="105" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#C8A020">sense(w₃)</text>
+              <line x1="320" y1="82" x2="320" y2="90" stroke="#C8A020" stroke-width="1" stroke-dasharray="2,2"/>
+            </g>
+
+            <!-- ── nodes ── -->
+            <!-- w0: robot start, free -->
+            <circle id="n0" cx="80" cy="160" r="22" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="80" y="156" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w₀</text>
+            <text x="80" y="168" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">free</text>
+            <!-- robot marker -->
+            <circle id="robot-dot" cx="80" cy="145" r="5" fill="#C8102E"/>
+
+            <!-- w1: free -->
+            <circle id="n1" cx="200" cy="160" r="22" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="200" y="156" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w₁</text>
+            <text x="200" y="168" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">free</text>
+
+            <!-- w4: blocked (dead end) -->
+            <circle id="n4" cx="310" cy="160" r="22" fill="#333333" stroke="#111" stroke-width="1.5"/>
+            <text x="310" y="156" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#ccc">w₄</text>
+            <text x="310" y="168" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#aaa">blocked</text>
+
+            <!-- w2: free -->
+            <circle id="n2" cx="200" cy="70" r="22" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="200" y="66" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w₂</text>
+            <text x="200" y="78" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">free</text>
+
+            <!-- w3: unknown (resolved mid-animation) -->
+            <circle id="n3" cx="320" cy="70" r="22" fill="#A8A8A8" stroke="#888" stroke-width="1.5"/>
+            <text id="n3-label" x="320" y="66" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₃</text>
+            <text id="n3-sub" x="320" y="78" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#eee">unknown</text>
+
+            <!-- w5: free -->
+            <circle id="n5" cx="466" cy="70" r="22" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="466" y="66" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w₅</text>
+            <text x="466" y="78" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">free</text>
+
+            <!-- w6: free -->
+            <circle id="n6" cx="580" cy="70" r="22" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="580" y="66" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w₆</text>
+            <text x="580" y="78" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">free</text>
+
+            <!-- w7: goal -->
+            <circle id="n7" cx="660" cy="70" r="22" fill="#1A52A0" stroke="#0d3570" stroke-width="1.5"/>
+            <text x="660" y="66" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">w₇</text>
+            <text x="660" y="78" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#BCD0F0">goal</text>
+
+            <!-- iteration label -->
+            <text id="reach-lbl" x="10" y="215" font-family="'JetBrains Mono',monospace" font-size="9" fill="#888">S₀ — ∅</text>
+            <!-- reset button -->
+            <text id="reach-reset" x="690" y="215" text-anchor="end" font-family="'JetBrains Mono',monospace" font-size="10" fill="#D6D6D6" cursor="pointer" style="cursor:pointer">↺</text>
+          </svg>
         </div>
       </div>
       <p class="fig-caption">
-        Minimum fixed-point iteration for reachability. Unknown cells (grey) block
-        propagation because they do not satisfy \(p_{\mathrm{free}}\). Each step
-        \(S_k \to S_{k+1}\) is equivalent to a public announcement of reachability:
-        the agent learns that cells adjacent to known-reachable free cells are
-        themselves reachable. The certified path (amber) at convergence is extracted
-        as a branching plan by the epistemic planner. The iteration replays automatically.
+        Least fixed-point iteration for reachability on a Kripke navigation graph.
+        Worlds enter \(\mu X\) one wavefront at a time, propagating backward from the
+        goal world \(w_7\). At \(S_2\), a private sensing event resolves \(w_3\) from
+        <em>unknown</em> to <em>free</em>, unblocking propagation through the upper branch.
+        The blocked world \(w_4\) never satisfies \(\mathit{free} \wedge \Diamond X\)
+        and is excluded from the fixed point. Each iteration step is a DEL product
+        update: an announcement that worlds adjacent to the current fixed-point set are
+        themselves reachable.
       </p>
     </div>
 
-    <!-- φ_BLOCK -->
+    <!-- ── FIG 2: νX greatest fixed-point — coherent knowledge blocks ── -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
-        \[\varphi_{\mathrm{block}} \;=\; \nu x.\;\bigl(p_{\mathrm{occ}} \wedge \Box x\bigr)\]
+        \[\varphi_{\mathrm{safe}} \;=\; \nu X.\;\bigl(\mathit{known} \wedge \Box X\bigr)\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
-        <span><span class="lsq" style="background:#222"></span>occupied</span>
-        <span><span class="lsq" style="background:#3D7A3D"></span>coherent obstacle \(S_\infty\)</span>
-        <span><span class="lsq" style="background:#C8102E;opacity:.55"></span>noise — eliminated</span>
+        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>known — survives \(\nu\)</span>
+        <span><span class="lsq" style="background:#A8A8A8;border-radius:50%"></span>unknown</span>
+        <span><span class="lsq" style="background:#C8102E;border-radius:50%;opacity:.6"></span>eliminated — \(\Box X\) fails</span>
       </div>
-      <div class="fig-row">
+      <div class="fig-row" style="gap:2.4rem;justify-content:flex-start">
         <div class="fig-unit">
-          <canvas id="cv-block-0" width="308" height="264"></canvas>
-          <span class="fig-sub">OGM — raw input</span>
+          <!-- BEFORE -->
+          <svg viewBox="0 0 300 200" width="300" height="200"
+               style="max-width:100%;border:1px solid var(--border);background:#FAFAFA">
+            <defs>
+              <marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#AAAAAA"/>
+              </marker>
+            </defs>
+            <!-- edges -->
+            <line x1="70" y1="100" x2="118" y2="100" stroke="#AAA" stroke-width="1.4" marker-end="url(#arr2)"/>
+            <line x1="130" y1="100" x2="82" y2="100" stroke="#AAA" stroke-width="1.4" marker-end="url(#arr2)"/>
+            <line x1="144" y1="92" x2="144" y2="58" stroke="#AAA" stroke-width="1.4" marker-end="url(#arr2)"/>
+            <line x1="140" y1="58" x2="140" y2="92" stroke="#AAA" stroke-width="1.4" marker-end="url(#arr2)"/>
+            <line x1="158" y1="100" x2="206" y2="100" stroke="#AAA" stroke-width="1.4" marker-end="url(#arr2)"/>
+            <line x1="218" y1="100" x2="170" y2="100" stroke="#AAA" stroke-width="1.4" marker-end="url(#arr2)"/>
+            <line x1="232" y1="92" x2="232" y2="58" stroke="#AAA" stroke-width="1.4" marker-end="url(#arr2)"/>
+            <!-- isolated unknown node — no successor in known set -->
+            <line x1="144" y1="148" x2="144" y2="112" stroke="#AAA" stroke-width="1.4" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+
+            <!-- nodes -->
+            <circle cx="58" cy="100" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.5"/>
+            <text x="58" y="96" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₀</text>
+            <text x="58" y="107" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">known</text>
+
+            <circle cx="142" cy="100" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.5"/>
+            <text x="142" y="96" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₁</text>
+            <text x="142" y="107" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">known</text>
+
+            <circle cx="142" cy="40" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.5"/>
+            <text x="142" y="36" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₂</text>
+            <text x="142" y="47" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">known</text>
+
+            <circle cx="222" cy="100" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.5"/>
+            <text x="222" y="96" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₃</text>
+            <text x="222" y="107" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">known</text>
+
+            <circle cx="232" cy="40" r="18" fill="#A8A8A8" stroke="#888" stroke-width="1.5"/>
+            <text x="232" y="36" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₄</text>
+            <text x="232" y="47" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#eee">unk</text>
+
+            <!-- isolated: will be eliminated -->
+            <circle cx="142" cy="160" r="18" fill="#A8A8A8" stroke="#888" stroke-width="1.5"/>
+            <text x="142" y="156" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₅</text>
+            <text x="142" y="167" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#eee">unk</text>
+
+            <text x="150" y="193" font-family="'JetBrains Mono',monospace" font-size="8" fill="#888">S₀ = W (before ν)</text>
+          </svg>
+          <span class="fig-sub">before — \(S_0 = W\)</span>
         </div>
         <div class="fig-unit">
-          <canvas id="cv-block-1" width="308" height="264"></canvas>
-          <span class="fig-sub">\(S_\infty\) — coherent obstacles only</span>
+          <!-- AFTER -->
+          <svg viewBox="0 0 300 200" width="300" height="200"
+               style="max-width:100%;border:1px solid var(--border);background:#FAFAFA">
+            <defs>
+              <marker id="arr3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#3D7A3D"/>
+              </marker>
+            </defs>
+            <!-- surviving edges -->
+            <line x1="70" y1="100" x2="118" y2="100" stroke="#3D7A3D" stroke-width="1.6" marker-end="url(#arr3)"/>
+            <line x1="130" y1="100" x2="82" y2="100" stroke="#3D7A3D" stroke-width="1.6" marker-end="url(#arr3)"/>
+            <line x1="144" y1="92" x2="144" y2="58" stroke="#3D7A3D" stroke-width="1.6" marker-end="url(#arr3)"/>
+            <line x1="140" y1="58" x2="140" y2="92" stroke="#3D7A3D" stroke-width="1.6" marker-end="url(#arr3)"/>
+            <line x1="158" y1="100" x2="206" y2="100" stroke="#3D7A3D" stroke-width="1.6" marker-end="url(#arr3)"/>
+            <line x1="218" y1="100" x2="170" y2="100" stroke="#3D7A3D" stroke-width="1.6" marker-end="url(#arr3)"/>
+
+            <!-- surviving nodes -->
+            <circle cx="58" cy="100" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
+            <text x="58" y="96" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₀</text>
+            <text x="58" y="107" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">⊨ νX</text>
+
+            <circle cx="142" cy="100" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
+            <text x="142" y="96" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₁</text>
+            <text x="142" y="107" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">⊨ νX</text>
+
+            <circle cx="142" cy="40" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
+            <text x="142" y="36" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₂</text>
+            <text x="142" y="47" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">⊨ νX</text>
+
+            <circle cx="222" cy="100" r="18" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
+            <text x="222" y="96" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">w₃</text>
+            <text x="222" y="107" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#c8eec8">⊨ νX</text>
+
+            <!-- eliminated: w4, w5 — shown faded with strike -->
+            <circle cx="232" cy="40" r="18" fill="#eee" stroke="#C8102E" stroke-width="1.5" opacity=".5"/>
+            <text x="232" y="36" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#C8102E" opacity=".6">w₄</text>
+            <line x1="218" y1="26" x2="246" y2="54" stroke="#C8102E" stroke-width="1.8" opacity=".55"/>
+
+            <circle cx="142" cy="160" r="18" fill="#eee" stroke="#C8102E" stroke-width="1.5" opacity=".5"/>
+            <text x="142" y="156" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#C8102E" opacity=".6">w₅</text>
+            <line x1="128" y1="146" x2="156" y2="174" stroke="#C8102E" stroke-width="1.8" opacity=".55"/>
+
+            <text x="150" y="193" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3D7A3D">S∞ — greatest fixed point</text>
+          </svg>
+          <span class="fig-sub">after — \(S_\infty \models \nu X\)</span>
         </div>
       </div>
       <p class="fig-caption">
-        Greatest fixed-point for structural obstacle coherence. The iteration begins
-        at \(S_0 = W\) (all cells) and eliminates at each step any occupied cell
-        failing \(\Box x\) — i.e. one with at least one free or absent neighbor.
-        Isolated occupied cells (sensor noise, red ✕) do not satisfy the \(\Box x\)
-        condition and are eliminated. In epistemic terms: the iteration discards
-        worlds inconsistent with the hypothesis that a structural obstacle occupies
-        that location.
+        Greatest fixed-point iteration for coherent knowledge blocks. The iteration
+        starts at \(S_0 = W\) (all worlds) and eliminates at each step any world
+        failing \(\Box X\) — i.e. one with a successor outside the current set.
+        Worlds \(w_4\) and \(w_5\) are unknown and their successors lie outside the
+        known sub-graph; they are expelled from the fixed point. The surviving set
+        \(\{w_0, w_1, w_2, w_3\}\) is closed under the accessibility relation and
+        certifies a maximal sub-model in which the robot can reason soundly without
+        further observation.
       </p>
     </div>
 
-    <!-- φ_EXPL -->
+    <!-- ── FIG 3: DEL product update — private sensing collapses R_i ── -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
-        \[\varphi_{\mathrm{expl}} \;=\; \Box\,\neg p_{\mathrm{unk}}\]
+        \[s' \;=\; s \otimes E_{\mathrm{sense}} \qquad R'_i \;=\; \{\,(w,e),(v,f)\,\mid\, wR_iv \;\wedge\; eQ_if\,\}\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
-        <span><span class="lsq" style="background:#222"></span>occupied</span>
-        <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
-        <span><span class="lsq" style="background:#3D7A3D"></span>locally complete \((\models \varphi_{\mathrm{expl}})\)</span>
-        <span><span class="lsq" style="background:#C8A020"></span>frontier \((\not\models \varphi_{\mathrm{expl}})\)</span>
+        <span><span class="lsq" style="background:#1A52A0;border-radius:50%"></span>designated world \(*\)</span>
+        <span><span class="lsq" style="background:#E8F0E8;border-radius:50%"></span>possible world</span>
+        <span style="display:flex;align-items:center;gap:.3rem">
+          <svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="#C8102E" stroke-width="1.8"/><polygon points="18,1 22,4 18,7" fill="#C8102E"/></svg>
+          R<sub>i</sub> (sensing agent)
+        </span>
+        <span style="display:flex;align-items:center;gap:.3rem">
+          <svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2"/><polygon points="18,1 22,4 18,7" fill="#1A52A0"/></svg>
+          R<sub>j</sub> (observer)
+        </span>
+        <span><span class="lsq" style="background:#C8A020"></span>event \(e\) precondition holds</span>
       </div>
       <div class="fig-row">
-        <div class="fig-unit">
-          <canvas id="cv-expl" width="308" height="264"></canvas>
-          <span class="fig-sub">Exploration frontier — maximum epistemic value</span>
+        <div class="fig-unit" style="width:100%">
+          <svg id="svg-update" viewBox="0 0 700 230" width="700" height="230"
+               style="max-width:100%;border:1px solid var(--border);background:#FAFAFA">
+            <defs>
+              <marker id="arr-ri" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#C8102E"/>
+              </marker>
+              <marker id="arr-rj" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#1A52A0"/>
+              </marker>
+              <marker id="arr-rj2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#1A52A0"/>
+              </marker>
+            </defs>
+
+            <!-- ═══ BEFORE (left panel, x 20..300) ═══ -->
+            <text x="160" y="18" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#888" letter-spacing=".08em">BEFORE  s</text>
+
+            <!-- Rᵢ arcs: w_a↔w_b (agent i cannot distinguish) -->
+            <!-- w_a(100,90) w_b(220,90) w_c(100,170) w_d(220,170) -->
+            <path d="M118,82 Q160,55 202,82" fill="none" stroke="#C8102E" stroke-width="1.6" marker-end="url(#arr-ri)"/>
+            <path d="M202,98 Q160,125 118,98" fill="none" stroke="#C8102E" stroke-width="1.6" marker-end="url(#arr-ri)"/>
+            <path d="M118,178 Q160,205 202,178" fill="none" stroke="#C8102E" stroke-width="1.6" marker-end="url(#arr-ri)"/>
+            <path d="M202,162 Q160,135 118,162" fill="none" stroke="#C8102E" stroke-width="1.6" marker-end="url(#arr-ri)"/>
+
+            <!-- Rⱼ arcs: w_a↔w_c, w_b↔w_d -->
+            <path d="M88,108 Q70,140 88,162" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj)"/>
+            <path d="M112,162 Q130,140 112,108" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj)"/>
+            <path d="M212,108 Q230,140 212,162" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj)"/>
+            <path d="M228,162 Q210,140 228,108" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj)"/>
+
+            <!-- worlds before -->
+            <!-- w_a: designated, p holds -->
+            <circle cx="100" cy="90" r="24" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
+            <text x="100" y="86" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">wₐ*</text>
+            <text x="100" y="98" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#BCD0F0">p=T</text>
+
+            <!-- w_b: p holds -->
+            <circle cx="220" cy="90" r="24" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="220" y="86" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w_b</text>
+            <text x="220" y="98" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">p=T</text>
+
+            <!-- w_c: p false -->
+            <circle cx="100" cy="170" r="24" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="100" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w_c</text>
+            <text x="100" y="178" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">p=F</text>
+
+            <!-- w_d: p false -->
+            <circle cx="220" cy="170" r="24" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="220" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#333">w_d</text>
+            <text x="220" y="178" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#555">p=F</text>
+
+            <!-- ═══ ARROW between panels ═══ -->
+            <text x="348" y="120" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#C8A020">⊗ E_sense</text>
+            <line x1="300" y1="130" x2="396" y2="130" stroke="#C8A020" stroke-width="1.6"/>
+            <polygon points="392,126 400,130 392,134" fill="#C8A020"/>
+
+            <!-- event box hint -->
+            <rect x="306" y="138" width="88" height="18" rx="2" fill="#FFF8E8" stroke="#C8A020" stroke-width=".8"/>
+            <text x="350" y="150" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#C8A020">pre(e)=p, Qᵢ=id</text>
+
+            <!-- ═══ AFTER (right panel, x 400..680) ═══ -->
+            <text x="545" y="18" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#888" letter-spacing=".08em">AFTER  s ⊗ E_sense</text>
+
+            <!-- Rᵢ COLLAPSED (sensing agent now knows p) — no arcs between (wₐ,e) and (w_c,e) -->
+            <!-- Rⱼ still present: (wₐ,e)↔(w_b,e) via observer indistinguishability -->
+            <path d="M530,108 Q548,140 530,162" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
+            <path d="M554,162 Q572,140 554,108" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
+
+            <!-- product worlds: only pre(e) satisfied in wₐ, w_b (p=T) -->
+            <!-- (wₐ,e) designated -->
+            <circle cx="460" cy="90" r="24" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
+            <text x="460" y="82" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">(wₐ,e)*</text>
+            <text x="460" y="94" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7" fill="#BCD0F0">Kᵢ(p)</text>
+            <text x="460" y="105" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="#C8A020">⊨ φ_goal</text>
+
+            <!-- (w_b,e) -->
+            <circle cx="540" cy="170" r="24" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.5"/>
+            <text x="540" y="162" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#333">(w_b,e)</text>
+            <text x="540" y="174" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7" fill="#555">Kᵢ(p)</text>
+
+            <!-- w_c, w_d eliminated (pre(e) fails) — shown ghosted -->
+            <circle cx="620" cy="90" r="24" fill="#f5f5f5" stroke="#DDD" stroke-width="1.2" opacity=".45"/>
+            <text x="620" y="86" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#AAA" opacity=".5">(w_c,e)</text>
+            <text x="620" y="97" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7" fill="#AAA" opacity=".5">pre fails</text>
+            <line x1="600" y1="70" x2="640" y2="110" stroke="#C8102E" stroke-width="1.4" opacity=".35"/>
+
+            <circle cx="620" cy="170" r="24" fill="#f5f5f5" stroke="#DDD" stroke-width="1.2" opacity=".45"/>
+            <text x="620" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#AAA" opacity=".5">(w_d,e)</text>
+            <text x="620" y="177" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7" fill="#AAA" opacity=".5">pre fails</text>
+            <line x1="600" y1="150" x2="640" y2="190" stroke="#C8102E" stroke-width="1.4" opacity=".35"/>
+
+            <!-- Rᵢ eliminated annotation -->
+            <text x="470" y="140" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#C8102E">Rᵢ collapsed</text>
+            <text x="470" y="150" font-family="'JetBrains Mono',monospace" font-size="7.5" fill="#C8102E">K_i p holds</text>
+          </svg>
         </div>
       </div>
       <p class="fig-caption">
-        \(\varphi_{\mathrm{expl}}\) has no fixed-point: it is evaluated pointwise. A
-        cell satisfies it iff none of its navigable neighbors belongs to the unknown
-        region — constituting a locally complete S5 knowledge block. The frontier
-        (amber) is the set of cells where \(\varphi_{\mathrm{expl}}\) fails: this is
-        the zone of maximum epistemic value for the planner, where observation actions
-        yield the greatest reduction in world count. The exploration problem is
-        therefore cast as a planning problem whose goal is
-        \(\forall v \in C : v \models \varphi_{\mathrm{expl}}\) — a purely
-        epistemic goal over the geometry of the environment.
+        DEL product update \(s \otimes E_{\mathrm{sense}}\) for a private sensing event.
+        The initial model has four worlds; agent \(i\) cannot distinguish \(w_a\) from
+        \(w_c\) (both compatible with its prior), while agent \(j\) cannot distinguish
+        \(w_a\) from \(w_b\). After the update, only worlds where \(\mathrm{pre}(e) = p\)
+        holds survive — eliminating \(w_c\) and \(w_d\). Agent \(i\)'s accessibility
+        relation collapses: in \(s'\) it knows \(p\). Agent \(j\) retains its
+        indistinguishability arc between \((w_a, e)\) and \((w_b, e)\) because it did
+        not observe the sensing outcome. The designated world \((w_a, e)\) now satisfies
+        the epistemic goal \(K_i\,p\).
       </p>
     </div>
 
     <p>
-      The epistemic overhead of these computations is bounded: the certification
-      cost for \(\varphi_p\) is \(O(k \cdot r^2_{\mathrm{eval}} / \delta^2 \cdot |\varphi|)\),
-      local and independent of the global graph size \(|C^{(t)}|\). Whether the
-      latency \(\lambda_\Gamma = \lambda_{\mathrm{nav}} + \lambda_{\mathrm{cert}}\)
-      satisfies \(\mathrm{P}_{95}(\lambda_\Gamma) < 100\,\mathrm{ms}\) in nominal
-      SLAM conditions is a core falsifiable hypothesis of the experimental program.
+      These three diagrams illustrate the logical core of the planning loop: the
+      µ-calculus computes which worlds are reachable or safe given current knowledge;
+      epistemic events (sensing, announcement) transform the Kripke model via product
+      update; and the µ-calculus is re-evaluated over the resulting structure. The
+      planning problem is to find a sequence of events whose cumulative product update
+      drives the designated world into the extension of the goal formula \(\varphi_g\).
     </p>
   </div>
 </section>
