@@ -1,39 +1,9 @@
 # Epistemic-Robotics
----
-## Preliminary Paper
 
-[View Latest PDF](https://HanielUlises.github.io/Epistemic-Robotics/paper.pdf)
----
+Autonomous robots operating in partially observable environments cannot plan over what they do not know. This project addresses that gap by grounding multi-agent task planning in Dynamic Epistemic Logic — a formal framework for reasoning about knowledge, ignorance, and how both evolve as agents perceive and communicate.
 
-**Formal multi-agent task planning under epistemic uncertainty**
+Each agent maintains a Kripke model of the world: a set of possible worlds, an accessibility relation encoding what the agent considers plausible, and a designated subset representing the actual situation as far as the agent can tell. Actions are not state transitions but epistemic events — product updates that refine the model. Navigation routes are winning regions of µ-calculus reachability formulas computed over the occupancy graph, not geometric shortest paths. The goal of a task may be that an agent reaches a zone, or that an agent *knows* it has reached it — these are different things, and the planner treats them differently.
 
-Epistemic-Robotics is a research-oriented framework for multi-agent task planning in partially observable and dynamically evolving environments. The project combines epistemic logic, symbolic planning, and robotic execution to bridge the gap between formal semantics and real-world autonomous systems.
+Consider two robots, R₁ and R₂, assigned to retrieve an object from a corridor that may or may not be blocked. A classical planner assigns R₂ a route through the blocked corridor because it treats the world as globally known and generates the geometrically shortest path. When R₂ reaches the obstruction it simply fails. Under this framework, the initial epistemic state explicitly represents R₂'s uncertainty: two possible worlds, one where the corridor is free and one where it is not, both designated. The planner does not assign R₂ a route until R₁ — already near the corridor — executes a sensing action that collapses R₂'s belief state to a single world. The route follows from knowledge, not assumption.
 
-At its core, the system integrates **Dynamic Epistemic Logic (DEL)** with Kripke-based belief modeling to represent and update agents’ knowledge about the world and about each other. These epistemic models are connected to an EPDDL-inspired task planning layer, enabling reasoning over actions with epistemic preconditions and effects (e.g., sensing, announcements, information gain).
-
-The planning component is designed to interoperate with PDDL-style planners and SysPlan-like task planning pipelines, allowing epistemic planning problems to be compiled or coordinated with classical planners when appropriate. This supports hybrid workflows where symbolic task planning, epistemic reasoning, and robotic execution coexist within a unified architecture.
-
-## Architecture Overview
-
-The system is structured in three conceptual layers:
-
-**Cognitive Layer**  
-Implements the epistemic world model, DEL-based belief updates, task planner, and dispatcher. This layer handles symbolic reasoning, epistemic queries, and the generation of executable task plans under uncertainty.
-
-**Execution Layer**  
-Built on ROS2, this layer coordinates multi-robot task execution. It translates high-level epistemic plans into concrete robotic behaviors, ensuring synchronization, communication, and distributed action execution.
-
-**Perception Layer**  
-Connects SLAM and sensor-driven estimation modules to the epistemic model. Perceptual events (e.g., LIDAR observations) are lifted into epistemic events, enabling belief revision and information-aware planning in uncertain or partially known environments.
-
-## Research Focus
-
-The project explores:
-
-- Task planning under partial observability and knowledge constraints  
-- EPDDL-style modeling of epistemic actions  
-- Integration of symbolic planning with ROS2-based execution  
-- Event-based belief revision grounded in real sensor input  
-- Alignment between formal logic specifications and executable robotic systems  
-
-Epistemic-Robotics aims to serve both as a practical experimental platform and as a formal research artifact for studying epistemic task planning in autonomous multi-agent robotics.
+The epistemic planner lives in [Aletheia](https://github.com/HanielUlises/Aletheia). The execution layer lives in [eplansys](https://github.com/HanielUlises/eplansys). This repository connects them to physical robots running under ROS2.
