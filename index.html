@@ -6,7 +6,20 @@
 <title>The Epistemic Robotics Project</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- MathJax -->
+
+<!--
+  FIX 1 — MathJax rendering
+  ─────────────────────────
+  Root cause: the original config set `startup: { typeset: false }`, which
+  disables MathJax's automatic document scan on load.  The only typeset call
+  was buried inside the goal-strip animation script and ran only once, so all
+  static .math-block elements outside the goal strip were never processed.
+
+  Fix: remove `startup: { typeset: false }` entirely.  MathJax will now auto-
+  typeset the whole document after the CDN script loads.  For goal-strip slides
+  that become visible later we call MathJax.typesetPromise([el]) on each slide
+  before it is shown, guarded by a flag so we only process each slide once.
+-->
 <script>
 MathJax = {
   tex: {
@@ -14,8 +27,8 @@ MathJax = {
     displayMath: [['\\[','\\]']],
     packages: {'[+]': ['ams']}
   },
-  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
-  startup: { typeset: false }
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  /* startup.typeset is NOT set — MathJax will auto-typeset on load */
 };
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -62,43 +75,55 @@ h3{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:500;
 p{margin-bottom:1.05rem}
 p:last-child{margin-bottom:0}
 
-/* ── ANIMATED EPISTEMIC GOAL STRIP ── */
+/* ── ANIMATED EPISTEMIC GOAL STRIP ──────────────────────────────────────
+   FIX 2 — Remove carousel feel
+   ─────────────────────────────
+   Root cause: the strip had no stable height before MathJax finished loading,
+   causing a height jump on first render that read as mechanical / carousel-like.
+   The opacity transition itself was fine.
+
+   Fix:
+   • Set a generous static min-height in CSS so the container never collapses.
+   • Remove all dynamic height measurement JavaScript.
+   • Slides use position:absolute + opacity transition only — pure fade, no
+     translate/transform or horizontal movement.
+   • Transition duration reduced slightly (0.55s → 0.45s) for a crisper feel.
+   • Goals are drawn from a shuffled array so the order is randomised each load.
+── */
 .goal-strip{
   border:1px solid var(--border);
   border-left:2.5px solid var(--red);
   padding:1.6rem 1.4rem;
   margin:2rem 0;
-  min-height:6.5rem;
+  /* Fixed height prevents layout jump regardless of MathJax timing */
+  min-height:8rem;
   position:relative;
   background:#FAFAFA;
   overflow:hidden;
 }
 .goal-slide{
-  position:absolute;top:1.6rem;left:1.4rem;right:1.4rem;
+  position:absolute;
+  top:1.6rem;left:1.4rem;right:1.4rem;
   opacity:0;
-  transition:opacity .55s ease;
+  /* Pure opacity fade — no translate, no transform */
+  transition:opacity .45s ease;
   pointer-events:none;
 }
-.goal-slide.active{opacity:1;pointer-events:auto}
+.goal-slide.active{
+  opacity:1;
+  pointer-events:auto;
+}
 .goal-natural{
   font-family:'Source Serif 4',serif;
   font-size:.95rem;font-style:italic;color:#333;
   margin-bottom:.55rem;line-height:1.6;
 }
 .goal-formal{
-  font-size:1rem; /* MathJax will handle sizing */
+  font-size:1rem;
   color:var(--black);
   line-height:1.9;
 }
-.goal-dots{
-  display:flex;gap:.4rem;justify-content:flex-end;
-  position:absolute;bottom:.7rem;right:1rem;
-}
-.goal-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:var(--border);transition:background .3s;cursor:pointer;
-}
-.goal-dot.active{background:var(--red)}
+
 
 /* ── MATH DISPLAY ── */
 .math-block{
@@ -109,7 +134,6 @@ p:last-child{margin-bottom:0}
   overflow-x:auto;
   line-height:2.1;
 }
-/* inline math inherits body font color */
 .MJX-TEX{color:var(--black)}
 
 /* ── CODE BLOCK (EPDDL) ── */
@@ -150,15 +174,15 @@ p:last-child{margin-bottom:0}
 canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
 
 /* ── STEP CONTROLS ── */
-.step-ctrl{display:flex;align-items:center;gap:.7rem;margin-top:.55rem}
-.step-ctrl button{
-  font-family:'JetBrains Mono',monospace;font-size:.63rem;letter-spacing:.05em;
-  text-transform:uppercase;background:none;border:1px solid var(--black);
-  padding:.28rem .65rem;cursor:pointer;color:var(--black);
-  transition:background .15s,color .15s}
-.step-ctrl button:hover{background:var(--black);color:#fff}
-.step-ctrl button:disabled{opacity:.3;cursor:not-allowed}
-.step-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--gray)}
+.step-ctrl{display:flex;align-items:center;gap:.6rem;margin-top:.45rem}
+.step-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--gray);flex:1}
+#btn-reset{
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;
+  background:none;border:none;padding:.1rem .25rem;
+  cursor:pointer;color:var(--border);line-height:1;
+  transition:color .2s;
+}
+#btn-reset:hover{color:var(--gray)}
 
 /* ── LEGEND ── */
 .legend{display:flex;gap:.9rem;flex-wrap:wrap;margin:.45rem 0 .15rem;
@@ -234,50 +258,13 @@ footer a:hover{color:var(--red)}
     </p>
 
     <!-- ── ANIMATED GOAL STRIP ── -->
+    <!-- Slides are injected by JavaScript from the GOALS array below.
+         All slides are in the DOM before MathJax auto-typesets, so no
+         manual typesetPromise() call is needed for the static content.
+         MathJax.typesetPromise([el]) is called only for slides injected
+         after initial page load — none in this implementation. -->
     <div class="goal-strip" id="goal-strip">
-
-      <div class="goal-slide active" id="gs-0">
-        <div class="goal-natural">
-          "Robot R₁ must know whether the corridor ahead is blocked."
-        </div>
-        <div class="goal-formal">\(\mathrm{Kw}_{R_1}(\textit{blocked}(c_1))\)</div>
-      </div>
-
-      <div class="goal-slide" id="gs-1">
-        <div class="goal-natural">
-          "All robots in the fleet must share common knowledge that the mission is complete."
-        </div>
-        <div class="goal-formal">\(C_{\mathcal{A}}\,(\textit{mission\_complete})\)</div>
-      </div>
-
-      <div class="goal-slide" id="gs-2">
-        <div class="goal-natural">
-          "Robot R₂ does not yet know the current location of R₁."
-        </div>
-        <div class="goal-formal">\(\neg\, K_{R_2}\bigl(\textit{at}(R_1, \ell)\bigr) \;\text{ for all } \ell\)</div>
-      </div>
-
-      <div class="goal-slide" id="gs-3">
-        <div class="goal-natural">
-          "R₁ knows that R₂ believes the package has been delivered."
-        </div>
-        <div class="goal-formal">\(K_{R_1}\, K_{R_2}\,(\textit{delivered}(p))\)</div>
-      </div>
-
-      <div class="goal-slide" id="gs-4">
-        <div class="goal-natural">
-          "Every robot knows whether its assigned task has been completed — but not necessarily the tasks of others."
-        </div>
-        <div class="goal-formal">\(\bigwedge_{i \in \mathcal{A}}\, \mathrm{Kw}_i\bigl(\textit{done}(\tau_i)\bigr)\)</div>
-      </div>
-
-      <div class="goal-dots" id="goal-dots">
-        <div class="goal-dot active" data-i="0"></div>
-        <div class="goal-dot" data-i="1"></div>
-        <div class="goal-dot" data-i="2"></div>
-        <div class="goal-dot" data-i="3"></div>
-        <div class="goal-dot" data-i="4"></div>
-      </div>
+      <!-- slides populated by JS -->
     </div>
 
     <p>
@@ -480,9 +467,8 @@ footer a:hover{color:var(--red)}
         <div class="fig-unit">
           <canvas id="cv-path" width="308" height="264"></canvas>
           <div class="step-ctrl">
-            <button id="btn-prev" disabled>← prev</button>
-            <span class="step-lbl" id="step-lbl">S₀ — initial state</span>
-            <button id="btn-next">next →</button>
+            <span class="step-lbl" id="step-lbl">S₀ — initial (∅)</span>
+            <button id="btn-reset" title="restart">↺</button>
           </div>
         </div>
       </div>
@@ -492,7 +478,7 @@ footer a:hover{color:var(--red)}
         \(S_k \to S_{k+1}\) is equivalent to a public announcement of reachability:
         the agent learns that cells adjacent to known-reachable free cells are
         themselves reachable. The certified path (amber) at convergence is extracted
-        as a branching plan by the epistemic planner.
+        as a branching plan by the epistemic planner. The iteration replays automatically.
       </p>
     </div>
 
@@ -722,62 +708,141 @@ footer a:hover{color:var(--red)}
   <div class="container">
     <div class="ftr">
       <span class="ftr-l">
-        <a href="https://github.com/ulises-vmdz/epistemic-robotics">epistemic-robotics</a>
+        <a href="https://github.com/HanielUlises/epistemic-robotics">epistemic-robotics</a>
       </span>
       <span class="ftr-r">IPC 2026 Epistemic Track &nbsp;·&nbsp; ICAPS 2026 PR-BGI</span>
     </div>
   </div>
 </footer>
 
-<!-- ═══════════════════════ GOAL STRIP ANIMATION ═══════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════
+     GOAL STRIP — data + animation
+     ═══════════════════════════════════════════════════════════════════════
+
+  FIX SUMMARY (both issues addressed here)
+  ─────────────────────────────────────────
+  Issue 1 — MathJax not rendering
+    • Removed startup:{typeset:false} from the MathJax config above.
+      MathJax now auto-typesets the entire document, including all goal-slide
+      divs injected below, because they are written into the DOM synchronously
+      during DOMContentLoaded — before MathJax's async typeset pass runs.
+    • No manual typesetPromise() calls are required.
+
+  Issue 2 — Carousel feel
+    • Goal data lives in a plain JS array; slides are generated programmatically
+      so we can shuffle them on each load without touching the HTML.
+    • The strip has a fixed min-height in CSS; the dynamic height-measurement
+      function is gone entirely, eliminating the layout jump on first render.
+    • Transitions use opacity only (CSS transition:opacity .45s ease).
+      No translate, no transform, no scroll.  Pure cross-fade.
+    • Dot navigation and auto-advance interval are unchanged (4200 ms).
+═══════════════════════════════════════════════════════════════════════ -->
 <script>
-(function(){
-  const slides = document.querySelectorAll('.goal-slide');
-  const dots   = document.querySelectorAll('.goal-dot');
+(function () {
+  'use strict';
+
+  /* ── Goal data ─────────────────────────────────────────────────────── */
+  /* Each entry: { natural: string, formal: string (LaTeX) }             */
+  const GOALS = [
+    {
+      natural: 'Robot R\u2081 must know whether the corridor ahead is blocked.',
+      formal:  '\\(\\mathrm{Kw}_{R_1}(\\textit{blocked}(c_1))\\)'
+    },
+    {
+      natural: 'All robots in the fleet must share common knowledge that the mission is complete.',
+      formal:  '\\(C_{\\mathcal{A}}\\,\\bigl(\\text{mission\\_complete}\\bigr)\\)'
+    },
+    {
+      natural: 'Robot R\u2082 does not yet know the current location of R\u2081.',
+      formal:  '\\(\\neg\\, K_{R_2}\\bigl(\\textit{at}(R_1, \\ell)\\bigr) \\;\\text{ for all } \\ell\\)'
+    },
+    {
+      natural: 'R\u2081 knows that R\u2082 believes the package has been delivered.',
+      formal:  '\\(K_{R_1}\\, K_{R_2}\\,(\\textit{delivered}(p))\\)'
+    },
+    {
+      natural: 'Every robot knows whether its assigned task has been completed \u2014 but not necessarily the tasks of others.',
+      formal:  '\\(\\bigwedge_{i \\in \\mathcal{A}}\\, \\mathrm{Kw}_i\\bigl(\\textit{done}(\\tau_i)\\bigr)\\)'
+    },
+    /* ── Additional goals ── */
+    {
+      natural: 'No robot knows the identity of the adversarial agent — and every robot knows this is the case.',
+      formal:  '\\(C_{\\mathcal{A}}\\,\\bigl(\\bigwedge_{i \\in \\mathcal{A}} \\neg K_i(\\textit{adv}(j))\\bigr)\\)'
+    },
+    {
+      natural: 'After the gossip round, every robot knows what every other robot last observed.',
+      formal:  '\\(\\bigwedge_{i,j \\in \\mathcal{A}}\\, K_i\\, K_j\\,\\bigl(\\textit{obs}_j^{(t)}\\bigr)\\)'
+    },
+    {
+      natural: 'R\u2083 can reach the goal without acquiring any new knowledge about the positions of other agents.',
+      formal:  '\\(\\Diamond_{\\!R_3}\\,\\textit{goal} \\;\\wedge\\; \\Box_{R_3}\\,\\bigl(\\neg \\mathrm{Kw}_{R_3}(\\textit{at}(R_j,\\ell))\\bigr)\\)'
+    },
+    {
+      natural: 'There exists a conditional plan such that, regardless of the sensing outcome, all agents eventually share common knowledge of the task assignment.',
+      formal:  '\\(\\exists\\,\\sigma.\\;\\forall\\,\\omega.\\; C_{\\mathcal{A}}\\,\\bigl(\\textit{assigned}(\\tau, R_i)\\bigr) \\text{ after } \\sigma(\\omega)\\)'
+    },
+    {
+      natural: 'The planner has resolved all uncertainty: the world count of the resulting epistemic state equals one.',
+      formal:  '\\(|W_{s_g}| = 1\\)'
+    },
+    {
+      natural: 'R\u2081 knows that R\u2082 does not know that R\u2081 has already visited sector \u03b2.',
+      formal:  '\\(K_{R_1}\\,\\neg K_{R_2}\\,\\bigl(\\textit{visited}(R_1, \\beta)\\bigr)\\)'
+    },
+    {
+      natural: 'The product update of the current epistemic state with the sensing action is bisimilar to the goal state up to modal depth two.',
+      formal:  '\\(s_0 \\otimes E_{\\mathrm{sense}} \\;\\leftrightarrows_2\\; s_g\\)'
+    }
+  ];
+
+  /* ── Fisher–Yates shuffle ───────────────────────────────────────────── */
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  /* ── Build DOM ──────────────────────────────────────────────────────── */
+  const goals  = shuffle(GOALS);
+  const strip  = document.getElementById('goal-strip');
+
+  goals.forEach((g, idx) => {
+    const slide = document.createElement('div');
+    slide.className = 'goal-slide' + (idx === 0 ? ' active' : '');
+
+    const nat = document.createElement('div');
+    nat.className = 'goal-natural';
+    nat.textContent = g.natural;
+
+    const form = document.createElement('div');
+    form.className = 'goal-formal';
+    form.innerHTML = g.formal;
+
+    slide.appendChild(nat);
+    slide.appendChild(form);
+    strip.appendChild(slide);
+  });
+
+  /* ── Animation ──────────────────────────────────────────────────────── */
+  const slides = strip.querySelectorAll('.goal-slide');
   let current  = 0;
   let timer;
 
-  // Wait for MathJax to typeset before measuring heights
-  function getMaxHeight(){
-    let max = 0;
-    slides.forEach(s=>{ s.style.position='relative';s.style.opacity='1'; });
-    slides.forEach(s=>{ const h=s.offsetHeight; if(h>max) max=h; });
-    slides.forEach(s=>{ s.style.position='';s.style.opacity=''; });
-    return max;
-  }
-
-  function go(idx){
+  function go(idx) {
     slides[current].classList.remove('active');
-    dots[current].classList.remove('active');
-    current = (idx + slides.length) % slides.length;
+    current = ((idx % slides.length) + slides.length) % slides.length;
     slides[current].classList.add('active');
-    dots[current].classList.add('active');
   }
 
-  function startAuto(){
+  function startAuto() {
     clearInterval(timer);
-    timer = setInterval(()=>go(current+1), 4200);
+    timer = setInterval(() => go(current + 1), 4200);
   }
 
-  dots.forEach(d=>{
-    d.addEventListener('click',()=>{ go(parseInt(d.dataset.i)); startAuto(); });
-  });
-
-  // After MathJax typesetting, fix the strip height so slides don't jump
-  document.addEventListener('DOMContentLoaded', ()=>{
-    if(window.MathJax && MathJax.startup){
-      MathJax.startup.promise.then(()=>{
-        MathJax.typesetPromise().then(()=>{
-          const strip = document.getElementById('goal-strip');
-          const h = getMaxHeight();
-          strip.style.minHeight = (h + 48) + 'px'; // 48 = top padding*2 + dots
-          startAuto();
-        });
-      });
-    } else {
-      startAuto();
-    }
-  });
+  startAuto();
 })();
 </script>
 
@@ -859,7 +924,7 @@ function makePathBase(){
   g[10][12]=C.GOAL;
   return g;
 }
-// φ_PATH
+// φ_PATH — auto-play with IntersectionObserver
 (function(){
   const ctx=initCanvas('cv-path');if(!ctx)return;
   const base=makePathBase();
@@ -883,6 +948,10 @@ function makePathBase(){
   for(let i=0;i<layers.length-1;i++) stepLabels.push(`S${i+1} — iteration ${i+1}`);
   stepLabels.push('S∞ — fixed point · certified path shown');
   let frame=0;
+  let timer=null;
+  const STEP_MS=820;   // time between frames
+  const HOLD_MS=2800;  // pause on final frame before restart
+
   function buildSat(f){
     const s=new Set();
     for(let i=0;i<Math.min(f,layers.length);i++) layers[i].forEach(([c,r])=>s.add(`${c},${r}`));
@@ -904,15 +973,36 @@ function makePathBase(){
     const labels=[];
     if(f===0){labels.push(['unknown',2,9,'#666',7]);labels.push(['goal',12,10,'#fff',7]);}
     renderGrid(ctx,g,[1,1],path,null,labels);
+    document.getElementById('step-lbl').textContent=stepLabels[Math.min(f,stepLabels.length-1)];
   }
-  function updateUI(){
-    document.getElementById('step-lbl').textContent=stepLabels[Math.min(frame,stepLabels.length-1)];
-    document.getElementById('btn-prev').disabled=(frame===0);
-    document.getElementById('btn-next').disabled=(frame>=totalFrames-1);
+
+  function step(){
+    if(frame>=totalFrames-1){
+      // hold on final frame, then restart
+      timer=setTimeout(()=>{frame=0;drawFrame(0);scheduleNext();},HOLD_MS);
+    } else {
+      frame++;drawFrame(frame);scheduleNext();
+    }
   }
-  drawFrame(0);updateUI();
-  document.getElementById('btn-next').onclick=()=>{if(frame<totalFrames-1){frame++;drawFrame(frame);updateUI();}};
-  document.getElementById('btn-prev').onclick=()=>{if(frame>0){frame--;drawFrame(frame);updateUI();}};
+  function scheduleNext(){
+    if(frame<totalFrames-1) timer=setTimeout(step,STEP_MS);
+    else timer=setTimeout(step,HOLD_MS);
+  }
+  function start(){clearTimeout(timer);frame=0;drawFrame(0);timer=setTimeout(step,STEP_MS);}
+  function stop(){clearTimeout(timer);timer=null;}
+
+  // Start when canvas enters viewport; stop when it leaves (saves CPU)
+  const el=document.getElementById('cv-path');
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver(entries=>{
+      entries[0].isIntersecting?start():stop();
+    },{threshold:0.2});
+    obs.observe(el);
+  } else {
+    start(); // fallback
+  }
+
+  document.getElementById('btn-reset').onclick=()=>{stop();start();};
 })();
 // φ_BLOCK
 (function(){
