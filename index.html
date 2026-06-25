@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Epistemic Robotics Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- MathJax -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+  startup: { typeset: false }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F0F0F0;
+}
+html{font-size:17px;scroll-behavior:smooth}
+body{background:#fff;color:var(--black);
+  font-family:'Source Serif 4',Georgia,serif;
+  font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
+
+.container{max-width:760px;margin:0 auto;padding:0 2.2rem}
+
+/* ── HEADER ── */
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:'JetBrains Mono',monospace;font-size:.66rem;
+  color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+header h1{font-family:'Space Grotesk',sans-serif;font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+
+/* ── HERO ── */
+.hero{padding:4.5rem 0 3.2rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
+.hero h2{font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(2rem,4.5vw,2.85rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:640px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:600px;color:#2C2C2C}
+
+/* ── SECTIONS ── */
+section{padding:3.6rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:.66rem;
+  color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6rem}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+
+/* ── ANIMATED EPISTEMIC GOAL STRIP ── */
+.goal-strip{
+  border:1px solid var(--border);
+  border-left:2.5px solid var(--red);
+  padding:1.6rem 1.4rem;
+  margin:2rem 0;
+  min-height:6.5rem;
+  position:relative;
+  background:#FAFAFA;
+  overflow:hidden;
+}
+.goal-slide{
+  position:absolute;top:1.6rem;left:1.4rem;right:1.4rem;
+  opacity:0;
+  transition:opacity .55s ease;
+  pointer-events:none;
+}
+.goal-slide.active{opacity:1;pointer-events:auto}
+.goal-natural{
+  font-family:'Source Serif 4',serif;
+  font-size:.95rem;font-style:italic;color:#333;
+  margin-bottom:.55rem;line-height:1.6;
+}
+.goal-formal{
+  font-size:1rem; /* MathJax will handle sizing */
+  color:var(--black);
+  line-height:1.9;
+}
+.goal-dots{
+  display:flex;gap:.4rem;justify-content:flex-end;
+  position:absolute;bottom:.7rem;right:1rem;
+}
+.goal-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--border);transition:background .3s;cursor:pointer;
+}
+.goal-dot.active{background:var(--red)}
+
+/* ── MATH DISPLAY ── */
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;
+  margin:1.5rem 0;
+  overflow-x:auto;
+  line-height:2.1;
+}
+/* inline math inherits body font color */
+.MJX-TEX{color:var(--black)}
+
+/* ── CODE BLOCK (EPDDL) ── */
+.code-block{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  background:var(--code-bg);
+  border-left:2.5px solid #888;
+  padding:.9rem 1.1rem;
+  margin:1.5rem 0;
+  line-height:1.9;
+  color:#222;
+}
+.code-block .kw{color:#1A52A0;font-weight:500}
+.code-block .op{color:var(--red);font-weight:500}
+.code-block .cm{color:#888}
+
+/* ── PULL ── */
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+
+/* ── DEF PAIR ── */
+.def-pair{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin:1.5rem 0}
+@media(max-width:520px){.def-pair{grid-template-columns:1fr}}
+.def-item h4{font-family:'Space Grotesk',sans-serif;font-size:.87rem;
+  font-weight:500;margin-bottom:.35rem}
+.def-item p{font-size:.87rem;color:#444;margin:0}
+
+/* ── FIGURES ── */
+.fig-block{margin:2.2rem 0}
+.fig-row{display:flex;gap:1.6rem;align-items:flex-start;flex-wrap:wrap}
+.fig-unit{display:flex;flex-direction:column;align-items:center;gap:.45rem}
+.fig-sub{font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  color:var(--gray);letter-spacing:.04em;text-align:center}
+.fig-caption{font-family:'Source Serif 4',serif;font-size:.82rem;
+  font-style:italic;color:var(--gray);margin-top:.8rem;line-height:1.55}
+
+/* ── CANVAS ── */
+canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
+
+/* ── STEP CONTROLS ── */
+.step-ctrl{display:flex;align-items:center;gap:.7rem;margin-top:.55rem}
+.step-ctrl button{
+  font-family:'JetBrains Mono',monospace;font-size:.63rem;letter-spacing:.05em;
+  text-transform:uppercase;background:none;border:1px solid var(--black);
+  padding:.28rem .65rem;cursor:pointer;color:var(--black);
+  transition:background .15s,color .15s}
+.step-ctrl button:hover{background:var(--black);color:#fff}
+.step-ctrl button:disabled{opacity:.3;cursor:not-allowed}
+.step-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--gray)}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;margin:.45rem 0 .15rem;
+  font-family:'JetBrains Mono',monospace;font-size:.61rem;color:var(--gray)}
+.legend span{display:flex;align-items:center;gap:.3rem}
+.lsq{width:9px;height:9px;display:inline-block;flex-shrink:0;
+  border:1px solid rgba(0,0,0,.14)}
+
+/* ── FOOTER ── */
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:500}
+.ftr-r{font-family:'JetBrains Mono',monospace;font-size:.63rem;
+  color:var(--gray);letter-spacing:.07em}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1>The Epistemic Robotics Project</h1>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Long-term Research Program</p>
+    <h2>Robots that reason about<br><em>what they know,</em><br>and what they do not.</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      Epistemic robotics is the study of autonomous systems that maintain formal representations
+      of knowledge, belief, and uncertainty — not only about the physical world, but about
+      the epistemic states of other agents operating within it. This project develops planning
+      formalisms, runtime architectures, and geometric reasoning tools grounded in Dynamic
+      Epistemic Logic and the µ-calculus, targeting heterogeneous multi-robot fleets
+      under partial observability and communication constraints.
+    </p>
+  </div>
+</div>
+
+<!-- THE PROBLEM -->
+<section>
+  <div class="container">
+    <p class="sec-label">The Problem</p>
+    <h3>Classical planning assumes a world fully known</h3>
+    <p>
+      A robot navigating a warehouse, a drone team conducting search-and-rescue, a fleet
+      of heterogeneous agents coordinating through communication blackouts — all share a
+      challenge that classical task planning cannot address. The world is not fully
+      observable, and the agents within it hold genuinely different, potentially
+      inconsistent views of what is true.
+    </p>
+    <p>
+      Planning under partial observability requires more than probabilistic state
+      estimation. It requires a robot to represent not only <em>what it believes</em>
+      about the world, but <em>what it believes other agents believe</em> — and to plan
+      actions that deliberately shape the epistemic state of the system as a whole.
+      This is the problem of <em>epistemic planning</em>, and it demands a logic capable
+      of reasoning about knowledge as a first-class object.
+    </p>
+    <p>
+      The following goals are not expressible in any classical planning formalism.
+      They are epistemic goals — and they arise routinely in the deployment of
+      autonomous multi-robot systems.
+    </p>
+
+    <!-- ── ANIMATED GOAL STRIP ── -->
+    <div class="goal-strip" id="goal-strip">
+
+      <div class="goal-slide active" id="gs-0">
+        <div class="goal-natural">
+          "Robot R₁ must know whether the corridor ahead is blocked."
+        </div>
+        <div class="goal-formal">\(\mathrm{Kw}_{R_1}(\textit{blocked}(c_1))\)</div>
+      </div>
+
+      <div class="goal-slide" id="gs-1">
+        <div class="goal-natural">
+          "All robots in the fleet must share common knowledge that the mission is complete."
+        </div>
+        <div class="goal-formal">\(C_{\mathcal{A}}\,(\textit{mission\_complete})\)</div>
+      </div>
+
+      <div class="goal-slide" id="gs-2">
+        <div class="goal-natural">
+          "Robot R₂ does not yet know the current location of R₁."
+        </div>
+        <div class="goal-formal">\(\neg\, K_{R_2}\bigl(\textit{at}(R_1, \ell)\bigr) \;\text{ for all } \ell\)</div>
+      </div>
+
+      <div class="goal-slide" id="gs-3">
+        <div class="goal-natural">
+          "R₁ knows that R₂ believes the package has been delivered."
+        </div>
+        <div class="goal-formal">\(K_{R_1}\, K_{R_2}\,(\textit{delivered}(p))\)</div>
+      </div>
+
+      <div class="goal-slide" id="gs-4">
+        <div class="goal-natural">
+          "Every robot knows whether its assigned task has been completed — but not necessarily the tasks of others."
+        </div>
+        <div class="goal-formal">\(\bigwedge_{i \in \mathcal{A}}\, \mathrm{Kw}_i\bigl(\textit{done}(\tau_i)\bigr)\)</div>
+      </div>
+
+      <div class="goal-dots" id="goal-dots">
+        <div class="goal-dot active" data-i="0"></div>
+        <div class="goal-dot" data-i="1"></div>
+        <div class="goal-dot" data-i="2"></div>
+        <div class="goal-dot" data-i="3"></div>
+        <div class="goal-dot" data-i="4"></div>
+      </div>
+    </div>
+
+    <p>
+      None of these goals have a representation in STRIPS, PDDL, or any classical
+      planning formalism. They require an epistemic planner — a system whose state
+      space is not a set of ground atoms, but a structured model of what every agent
+      knows, believes, and is uncertain about. The gap between classical planning and
+      epistemic planning is not a matter of expressivity at the margins; it is a
+      categorical difference in what kind of object constitutes a world state.
+    </p>
+  </div>
+</section>
+
+<!-- FORMAL FRAMEWORK -->
+<section>
+  <div class="container">
+    <p class="sec-label">Formal Framework</p>
+    <h3>Dynamic Epistemic Logic and the product update</h3>
+    <p>
+      The project is grounded in Dynamic Epistemic Logic (DEL), a modal framework
+      for reasoning about how informational actions — sensing, announcement,
+      communication — transform the knowledge states of agents. The central semantic
+      object is the <em>Kripke model</em>: a labeled graph whose nodes are possible
+      worlds and whose edges, indexed by agent, encode what each agent considers
+      epistemically indistinguishable from its current vantage point.
+    </p>
+
+    <div class="math-block">
+      \[
+        M = (W,\, R,\, L), \quad W \neq \emptyset,\quad R : \mathrm{Ag} \to 2^{W \times W}
+      \]
+      \[
+        M, w \models \Box_i \varphi \;\iff\; \forall v : w\, R_i\, v \;\Rightarrow\; M, v \models \varphi
+      \]
+      \[
+        \mathrm{Kw}_i\,\varphi \;\;\overset{\mathrm{def}}{=}\;\; \Box_i \varphi \;\vee\; \Box_i \neg\varphi
+        \qquad\qquad
+        C_G\,\varphi \;=\; \bigwedge_{k > 0} \Box_G^k\,\varphi
+      \]
+    </div>
+
+    <p>
+      The <em>product update</em> \(s \otimes a\) is the core operation. Given an
+      epistemic state and an event model describing an action's physical and
+      informational effects simultaneously, it computes the resulting epistemic state.
+      Physical ontic effects, private sensing, and public communication are unified
+      under this single operator.
+    </p>
+
+    <div class="math-block">
+      \[
+        W' = \{\,(w, e) \in W \times E \;\mid\; M, w \models \mathrm{pre}(e)\,\}
+      \]
+      \[
+        R'_i = \{\,((w,e),(v,f)) \;\mid\; w\, R_i\, v \;\wedge\; e\, Q_i\, f\,\}
+      \]
+      \[
+        L'(w,e) = \{\,p \in P \;\mid\; M, w \models \mathrm{post}(e)(p)\,\}
+      \]
+    </div>
+
+    <p>
+      Two structural properties bound the computational cost of runtime planning.
+      An event model \(\mathcal{E}\) is <em>self-absorbing</em> if
+      \(M \otimes \mathcal{E} \otimes \mathcal{E} \simeq M \otimes \mathcal{E}\)
+      for all \(M\) — applying it twice has the same effect as once.
+      Two event models \(\mathcal{E}, \mathcal{E}'\) are <em>commutative</em> if
+      \(M \otimes \mathcal{E} \otimes \mathcal{E}' \simeq M \otimes \mathcal{E}' \otimes \mathcal{E}\)
+      for all \(M\). When an event library satisfies these conditions, the Kripke model
+      remains bounded in size under any sequence of updates, and the bisimulation
+      contraction can be computed in linear time. This tractability guarantee is a
+      design constraint that propagates through every action schema in the system:
+      it is the formal bridge between the expressivity demands of DEL planning and
+      the latency constraints of physical deployment.
+    </p>
+
+    <div class="def-pair">
+      <div class="def-item">
+        <h4>Public announcement</h4>
+        <p>All agents simultaneously learn \(\varphi\). Accessibility relations
+        collapse for \(\varphi\) across the group, establishing
+        \(C_G\,\varphi\) in a single update.</p>
+      </div>
+      <div class="def-item">
+        <h4>Private sensing</h4>
+        <p>The acting agent resolves its uncertainty about \(\varphi\). Others
+        may observe that an action occurred without learning its outcome —
+        a fundamental asymmetry in distributed systems.</p>
+      </div>
+      <div class="def-item">
+        <h4>Ontic action</h4>
+        <p>Modifies the physical world via postconditions. Uninformed agents
+        retain prior beliefs; the actor and any witnesses update via the
+        product update accordingly.</p>
+      </div>
+      <div class="def-item">
+        <h4>Higher-order belief</h4>
+        <p>Nested modalities \(\Box_i \Box_j \varphi\) encode what agent \(i\)
+        believes agent \(j\) knows. Theory of Mind arises naturally from the
+        Kripke semantics without additional machinery.</p>
+      </div>
+    </div>
+
+    <p>
+      The challenge of multi-agent coordination under communication restrictions
+      makes the depth of this reasoning non-trivially consequential. Two robots
+      approaching the same task simultaneously can resolve the assignment ambiguity
+      without any explicit communication, if each reasons to sufficient depth about
+      the other's observations. Third-order reasoning —
+      \(\Box_i \Box_j \Box_k \varphi\) — reduces posterior variance on joint
+      task-assignment configurations substantially over first-order baselines.
+      Robots can signal intent through motion alone by selecting policies that
+      minimize expected free energy over the higher-order belief structure, an
+      approach grounded in variational active inference and formalized directly
+      through DEL product update semantics over the empathy-state representation.
+    </p>
+
+    <p>
+      Whether a particle-based approximation of the Kripke model suffices for
+      robust multi-robot coordination — or whether exact product update semantics
+      are necessary in adversarial conditions — is one of the long-horizon questions
+      this project is built to answer. The adversarial DEL planning problem, in
+      which the planner must find a partial strategy \(\hat{\sigma}\) achieving the
+      epistemic goal \(\varphi_g\) under <em>all</em> legal completions by an
+      opponent or nondeterministic environment, provides the game-theoretic framework
+      for the hardest variant of this question.
+    </p>
+  </div>
+</section>
+
+<!-- GEOMETRIC REASONING -->
+<section>
+  <div class="container">
+    <p class="sec-label">Geometric Reasoning</p>
+    <h3>The µ-calculus over occupancy grids</h3>
+    <p>
+      A robot under SLAM maintains an <em>occupancy grid</em>: a discrete
+      probabilistic map in which each cell is classified as free, occupied, or
+      unknown. The project treats this structure as a Kripke model for spatial
+      reasoning, where cells are possible worlds and the edge relation encodes
+      navigable adjacency. The µ-calculus — a modal fixed-point logic extending
+      propositional dynamic logic with least and greatest fixed-point operators —
+      evaluates epistemic properties directly over this graph.
+    </p>
+
+    <div class="math-block">
+      \[
+        \Gamma : \mathrm{OGM} \;\longrightarrow\; K_{\mathrm{nav}}
+        \qquad
+        K_{\mathrm{nav}} = \bigl(C,\; E_{\mathrm{adj}},\; L_{\mathrm{sem}}\bigr)
+      \]
+    </div>
+
+    <p>
+      The function \(\Gamma\) lifts the occupancy grid to a Kripke navigation
+      model. Each SLAM update applies an event model \(E_{\mathrm{exp}}\) via
+      product update. The central empirical question of the project's experimental
+      program is whether \(\Gamma\) commutes with this update:
+    </p>
+
+    <div class="math-block">
+      \[
+        \Gamma\!\left(\mathrm{OGM}^{(t+1)}\right) \;\cong\; K_{\mathrm{nav}}^{(t)} \otimes E_{\mathrm{exp}}
+      \]
+    </div>
+
+    <p>
+      This commutativity condition — that the geometric and epistemic updates
+      are order-independent — is not trivially satisfied. It depends on the
+      consistency between the navigation accessibility relation \(R_{\mathrm{nav}}\)
+      and the semantic labeling produced by the certification layer. Its failure
+      would mean that incremental epistemic reasoning over SLAM graphs is unsound,
+      and would require full recomputation of the Kripke model at every map update.
+      Its truth, conversely, licenses a modular architecture in which geometric and
+      epistemic updates are decoupled.
+    </p>
+    <p>
+      Three core formulas drive the planning interface. Each is a fixed-point
+      computation evaluated incrementally as the SLAM graph grows. The figures
+      below render each formula over a 14×12 occupancy grid. The step-through
+      control on the first figure shows the minimum fixed-point propagating
+      iteration by iteration.
+    </p>
+
+    <!-- φ_PATH -->
+    <div class="fig-block">
+      <div class="math-block" style="margin-bottom:.9rem">
+        \[\varphi_{\mathrm{path}} \;=\; \mu x.\;\bigl(p_{\mathrm{goal}} \;\vee\; (p_{\mathrm{free}} \wedge \Diamond x)\bigr)\]
+      </div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
+        <span><span class="lsq" style="background:#222"></span>occupied</span>
+        <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
+        <span><span class="lsq" style="background:#1A52A0"></span>goal</span>
+        <span><span class="lsq" style="background:#3D7A3D"></span>reachable \(S_k\)</span>
+        <span><span class="lsq" style="background:#C8A020"></span>path</span>
+        <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot</span>
+      </div>
+      <div class="fig-row">
+        <div class="fig-unit">
+          <canvas id="cv-path" width="308" height="264"></canvas>
+          <div class="step-ctrl">
+            <button id="btn-prev" disabled>← prev</button>
+            <span class="step-lbl" id="step-lbl">S₀ — initial state</span>
+            <button id="btn-next">next →</button>
+          </div>
+        </div>
+      </div>
+      <p class="fig-caption">
+        Minimum fixed-point iteration for reachability. Unknown cells (grey) block
+        propagation because they do not satisfy \(p_{\mathrm{free}}\). Each step
+        \(S_k \to S_{k+1}\) is equivalent to a public announcement of reachability:
+        the agent learns that cells adjacent to known-reachable free cells are
+        themselves reachable. The certified path (amber) at convergence is extracted
+        as a branching plan by the epistemic planner.
+      </p>
+    </div>
+
+    <!-- φ_BLOCK -->
+    <div class="fig-block">
+      <div class="math-block" style="margin-bottom:.9rem">
+        \[\varphi_{\mathrm{block}} \;=\; \nu x.\;\bigl(p_{\mathrm{occ}} \wedge \Box x\bigr)\]
+      </div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
+        <span><span class="lsq" style="background:#222"></span>occupied</span>
+        <span><span class="lsq" style="background:#3D7A3D"></span>coherent obstacle \(S_\infty\)</span>
+        <span><span class="lsq" style="background:#C8102E;opacity:.55"></span>noise — eliminated</span>
+      </div>
+      <div class="fig-row">
+        <div class="fig-unit">
+          <canvas id="cv-block-0" width="308" height="264"></canvas>
+          <span class="fig-sub">OGM — raw input</span>
+        </div>
+        <div class="fig-unit">
+          <canvas id="cv-block-1" width="308" height="264"></canvas>
+          <span class="fig-sub">\(S_\infty\) — coherent obstacles only</span>
+        </div>
+      </div>
+      <p class="fig-caption">
+        Greatest fixed-point for structural obstacle coherence. The iteration begins
+        at \(S_0 = W\) (all cells) and eliminates at each step any occupied cell
+        failing \(\Box x\) — i.e. one with at least one free or absent neighbor.
+        Isolated occupied cells (sensor noise, red ✕) do not satisfy the \(\Box x\)
+        condition and are eliminated. In epistemic terms: the iteration discards
+        worlds inconsistent with the hypothesis that a structural obstacle occupies
+        that location.
+      </p>
+    </div>
+
+    <!-- φ_EXPL -->
+    <div class="fig-block">
+      <div class="math-block" style="margin-bottom:.9rem">
+        \[\varphi_{\mathrm{expl}} \;=\; \Box\,\neg p_{\mathrm{unk}}\]
+      </div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
+        <span><span class="lsq" style="background:#222"></span>occupied</span>
+        <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
+        <span><span class="lsq" style="background:#3D7A3D"></span>locally complete \((\models \varphi_{\mathrm{expl}})\)</span>
+        <span><span class="lsq" style="background:#C8A020"></span>frontier \((\not\models \varphi_{\mathrm{expl}})\)</span>
+      </div>
+      <div class="fig-row">
+        <div class="fig-unit">
+          <canvas id="cv-expl" width="308" height="264"></canvas>
+          <span class="fig-sub">Exploration frontier — maximum epistemic value</span>
+        </div>
+      </div>
+      <p class="fig-caption">
+        \(\varphi_{\mathrm{expl}}\) has no fixed-point: it is evaluated pointwise. A
+        cell satisfies it iff none of its navigable neighbors belongs to the unknown
+        region — constituting a locally complete S5 knowledge block. The frontier
+        (amber) is the set of cells where \(\varphi_{\mathrm{expl}}\) fails: this is
+        the zone of maximum epistemic value for the planner, where observation actions
+        yield the greatest reduction in world count. The exploration problem is
+        therefore cast as a planning problem whose goal is
+        \(\forall v \in C : v \models \varphi_{\mathrm{expl}}\) — a purely
+        epistemic goal over the geometry of the environment.
+      </p>
+    </div>
+
+    <p>
+      The epistemic overhead of these computations is bounded: the certification
+      cost for \(\varphi_p\) is \(O(k \cdot r^2_{\mathrm{eval}} / \delta^2 \cdot |\varphi|)\),
+      local and independent of the global graph size \(|C^{(t)}|\). Whether the
+      latency \(\lambda_\Gamma = \lambda_{\mathrm{nav}} + \lambda_{\mathrm{cert}}\)
+      satisfies \(\mathrm{P}_{95}(\lambda_\Gamma) < 100\,\mathrm{ms}\) in nominal
+      SLAM conditions is a core falsifiable hypothesis of the experimental program.
+    </p>
+  </div>
+</section>
+
+<!-- MULTI-AGENT -->
+<section>
+  <div class="container">
+    <p class="sec-label">Multi-Agent Coordination</p>
+    <h3>Heterogeneous fleets under communication restrictions</h3>
+    <p>
+      The hardest problems arise when multiple robots must coordinate while operating
+      in communication-restricted environments. Each robot maintains a local Kripke
+      model of the system's joint epistemic state. When robots are connected, public
+      announcements collapse accessibility relations and establish common knowledge.
+      When they are disconnected, each robot evolves its model independently through
+      DEL product updates over local observations alone — producing genuinely
+      heterogeneous epistemic states that cannot be resolved by a central world model.
+    </p>
+
+    <p>
+      A particle-based approximation of the Kripke model enables runtime use.
+      Each robot \(i\) maintains a finite set of belief particles — including
+      second-order particles representing what it believes other robots believe —
+      and propagates them forward using known dynamics and the product update
+      operator. The <em>common belief set</em>
+      \(C_i \subseteq \mathcal{P}_i\) corresponds to the last globally shared
+      epistemic state. When communication resumes, a gossip protocol routes
+      task assignments through predicted teammate locations, exploiting the
+      particle model to minimize rendezvous cost.
+    </p>
+
+    <div class="math-block">
+      \[
+        p_{ij,k} \;=\; \text{robot } i\text{'s belief about robot } j\text{'s belief about robot } k\text{'s state}
+      \]
+      \[
+        s^i_{t-1} \otimes \mathrm{announce}(\Omega) \;\models\;
+        K_i \sigma^i_t \;\wedge\; \bigwedge_{j \in \mathcal{A}} K_i K_j \sigma^j_t
+      \]
+    </div>
+
+    <p>
+      The epistemic task allocation problem is cast as an integer program over the
+      belief state, whose solution produces a policy as a concatenation of
+      <em>gossip bundles</em> and <em>task bundles</em>. The allocation problem
+      is NP-hard in general, but the particle-based belief approximation renders
+      it tractable via a genetic algorithm with a greedy feasible-solution seed.
+    </p>
+
+    <p>
+      The deeper challenge is implicit coordination: resolving task assignment
+      ambiguity without any communication, by reasoning about what other robots
+      observe. The active epistemic inference formulation casts this as minimization
+      of variational free energy over the higher-order belief structure:
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathcal{F}(x_i, u_i) \;=\;
+        H\!\left[q(\mathcal{G})\right] +
+        D_{\mathrm{KL}}\!\left[q(\mathcal{G})\;\|\; P(x_i \mid y_i, \omega_i)\right]
+      \]
+    </div>
+
+    <p>
+      Policies that actively disambiguate goal assignments by taking movements
+      informative to observers minimize the epistemic term of the expected free
+      energy. Robots signal intent through motion without explicit communication,
+      resolving assignment conflicts that would stalemate first-order reasoners.
+      The advantage grows markedly as team size exceeds three robots, and only
+      materializes at third order — the depth at which a robot models what a
+      teammate believes it itself observes.
+    </p>
+  </div>
+</section>
+
+<!-- PLANNING -->
+<section>
+  <div class="container">
+    <p class="sec-label">Planning System</p>
+    <h3>Epistemic planning tasks and EPDDL</h3>
+    <p>
+      An epistemic planning task is a triple \((s_0, \mathrm{Act}, \varphi_g)\):
+      an initial epistemic state, a finite set of epistemic actions, and a goal
+      formula drawn from the full epistemic language. A solution is a sequence —
+      or, for nondeterministic domains, a conditional plan — transforming \(s_0\)
+      into a state satisfying \(\varphi_g\).
+    </p>
+    <p>
+      EPDDL, the Epistemic Planning Domain Definition Language introduced for the
+      IPC 2026 Epistemic Planning Track, provides a standardized syntax for
+      expressing these tasks. It grounds DEL semantics in a PDDL-compatible format
+      through an <em>action type library</em> system that decouples the structural
+      observability pattern of an action from its specific preconditions and effects.
+      Planning problems separate into two distinct syntactic layers:
+    </p>
+
+    <div class="math-block">
+      \[
+        \text{Epistemic goal:}\quad
+        \mathrm{Kw}_{\mathrm{All}}\bigl(\textit{blocked}(c_1)\bigr)
+        \;\wedge\;
+        K_{R_1}\bigl(\textit{at}(p,\, \textit{storage})\bigr)
+        \;\wedge\;
+        C_{\{R_1,R_2\}}\bigl(\textit{done}(\alpha)\bigr)
+      \]
+    </div>
+
+    <div class="code-block">
+<span class="cm">;; EPDDL domain fragment — sensing and announcement actions</span>
+(<span class="kw">:action</span> sense-corridor
+  <span class="kw">:type</span>        sensing
+  <span class="kw">:actor</span>       ?r - robot
+  <span class="kw">:parameters</span>  (?r - robot ?c - corridor)
+  <span class="kw">:observability</span> ((<span class="op">full-obs</span> ?r) (<span class="op">no-obs</span> All \ {?r}))
+  <span class="kw">:precondition</span> (adjacent ?r ?c)
+  <span class="kw">:sense-formula</span> (blocked ?c))
+
+(<span class="kw">:action</span> announce-blocked
+  <span class="kw">:type</span>        public-announcement
+  <span class="kw">:actor</span>       ?r - robot
+  <span class="kw">:precondition</span> (and (adjacent ?r ?c) (<span class="op">[?r]</span> (blocked ?c)))
+  <span class="kw">:announced-formula</span> (blocked ?c))
+    </div>
+
+    <p>
+      The separation is intentional. The goal formula lives in the epistemic
+      language and is rendered mathematically; the action schema lives in the
+      planning language and is rendered as code. Conflating the two syntactically
+      obscures the theoretical architecture that makes EPDDL expressive: the goal
+      is a modal formula over a Kripke model, while the action schema is a template
+      for constructing event models whose product with the current state produces
+      a new epistemic state. The planner operates entirely in the first register;
+      the executor operates in the second.
+    </p>
+    <p>
+      Three search algorithms handle different problem classes. GBFS with
+      goal-directed heuristics handles problems with deterministic plans.
+      Enforced hill-climbing handles problems where the heuristic landscape
+      is smooth enough to avoid plateaus. AO* constructs full AND-OR trees
+      for problems requiring conditional branching plans — where the correct
+      next action depends on the outcome of an observation that has not yet
+      been made. The heuristics — world count, unsatisfied goal conjuncts, and
+      epistemic distance — differ in how they measure proximity to \(\varphi_g\)
+      in the space of epistemic states. Their relative advantage is domain-dependent
+      and grows with problem complexity in ways that remain an active area of
+      investigation within the project.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="https://github.com/ulises-vmdz/epistemic-robotics">epistemic-robotics</a>
+      </span>
+      <span class="ftr-r">IPC 2026 Epistemic Track &nbsp;·&nbsp; ICAPS 2026 PR-BGI</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════ GOAL STRIP ANIMATION ═══════════════════════ -->
+<script>
+(function(){
+  const slides = document.querySelectorAll('.goal-slide');
+  const dots   = document.querySelectorAll('.goal-dot');
+  let current  = 0;
+  let timer;
+
+  // Wait for MathJax to typeset before measuring heights
+  function getMaxHeight(){
+    let max = 0;
+    slides.forEach(s=>{ s.style.position='relative';s.style.opacity='1'; });
+    slides.forEach(s=>{ const h=s.offsetHeight; if(h>max) max=h; });
+    slides.forEach(s=>{ s.style.position='';s.style.opacity=''; });
+    return max;
+  }
+
+  function go(idx){
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function startAuto(){
+    clearInterval(timer);
+    timer = setInterval(()=>go(current+1), 4200);
+  }
+
+  dots.forEach(d=>{
+    d.addEventListener('click',()=>{ go(parseInt(d.dataset.i)); startAuto(); });
+  });
+
+  // After MathJax typesetting, fix the strip height so slides don't jump
+  document.addEventListener('DOMContentLoaded', ()=>{
+    if(window.MathJax && MathJax.startup){
+      MathJax.startup.promise.then(()=>{
+        MathJax.typesetPromise().then(()=>{
+          const strip = document.getElementById('goal-strip');
+          const h = getMaxHeight();
+          strip.style.minHeight = (h + 48) + 'px'; // 48 = top padding*2 + dots
+          startAuto();
+        });
+      });
+    } else {
+      startAuto();
+    }
+  });
+})();
+</script>
+
+<!-- ═══════════════════════ CANVAS ENGINE ═══════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+const COLS=14, ROWS=12, CELL=22;
+const W=COLS*CELL, H=ROWS*CELL;
+const C={
+  FREE:'#E8F0E8', OCC:'#222222', UNK:'#A8A8A8', GOAL:'#1A52A0',
+  SAT:'#3D7A3D', PATH:'#C8A020', ROBOT:'#C8102E',
+  GRID:'#C8C8C8', NOISE:'#C8102E', FRONT:'#C8A020',
+};
+function makeG(fill){return Array.from({length:ROWS},()=>new Array(COLS).fill(fill));}
+function initCanvas(id){
+  const el=document.getElementById(id);if(!el)return null;
+  el.width=W;el.height=H;return el.getContext('2d');
+}
+function drawCell(ctx,c,r,color){
+  ctx.fillStyle=color;ctx.fillRect(c*CELL,(ROWS-1-r)*CELL,CELL,CELL);
+}
+function drawGridLines(ctx){
+  ctx.strokeStyle=C.GRID;ctx.lineWidth=0.5;
+  for(let c=0;c<=COLS;c++){ctx.beginPath();ctx.moveTo(c*CELL,0);ctx.lineTo(c*CELL,H);ctx.stroke();}
+  for(let r=0;r<=ROWS;r++){ctx.beginPath();ctx.moveTo(0,r*CELL);ctx.lineTo(W,r*CELL);ctx.stroke();}
+}
+function drawRobot(ctx,col,row){
+  const x=col*CELL+CELL/2, y=(ROWS-1-row)*CELL+CELL/2, R=CELL*0.28;
+  ctx.fillStyle=C.ROBOT;ctx.beginPath();ctx.arc(x,y,R,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x+R*.35,y-R*.3,R*.25,0,Math.PI*2);ctx.fill();
+}
+function drawPath(ctx,pts){
+  if(!pts||pts.length<2)return;
+  ctx.save();ctx.strokeStyle=C.PATH;ctx.lineWidth=2.5;
+  ctx.lineJoin='round';ctx.lineCap='round';ctx.setLineDash([]);
+  ctx.beginPath();
+  pts.forEach(([c,r],i)=>{const x=c*CELL+CELL/2,y=(ROWS-1-r)*CELL+CELL/2;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+  const n=pts.length;
+  const [c1,r1]=pts[n-2],[c2,r2]=pts[n-1];
+  const x1=c1*CELL+CELL/2,y1=(ROWS-1-r1)*CELL+CELL/2;
+  const x2=c2*CELL+CELL/2,y2=(ROWS-1-r2)*CELL+CELL/2;
+  const ang=Math.atan2(y2-y1,x2-x1),hs=8;
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hs*Math.cos(ang-.38),y2-hs*Math.sin(ang-.38));
+  ctx.lineTo(x2-hs*Math.cos(ang+.38),y2-hs*Math.sin(ang+.38));
+  ctx.closePath();ctx.fillStyle=C.PATH;ctx.fill();ctx.restore();
+}
+function drawCross(ctx,col,row){
+  const x0=col*CELL+3,y0=(ROWS-1-row)*CELL+3;
+  const x1=(col+1)*CELL-3,y1=(ROWS-row)*CELL-3;
+  ctx.save();ctx.strokeStyle=C.NOISE;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x1,y0);ctx.lineTo(x0,y1);ctx.stroke();
+  ctx.restore();
+}
+function drawLabel(ctx,text,col,row,color,size){
+  ctx.save();ctx.font=`${size||8}px 'JetBrains Mono',monospace`;
+  ctx.fillStyle=color||'#333';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(text,col*CELL+CELL/2,(ROWS-1-row)*CELL+CELL/2);ctx.restore();
+}
+function renderGrid(ctx,grid,robot,path,crosses,labels){
+  ctx.clearRect(0,0,W,H);
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) drawCell(ctx,c,r,grid[r][c]);
+  drawGridLines(ctx);
+  if(path) drawPath(ctx,path);
+  if(crosses) crosses.forEach(([c,r])=>drawCross(ctx,c,r));
+  if(labels) labels.forEach(([t,c,r,cl,sz])=>drawLabel(ctx,t,c,r,cl,sz));
+  if(robot) drawRobot(ctx,robot[0],robot[1]);
+}
+function makePathBase(){
+  const g=makeG(C.FREE);
+  for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[11][c]=C.OCC;}
+  for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][13]=C.OCC;}
+  for(let r=6;r<=10;r++) for(let c=5;c<=6;c++) g[r][c]=C.OCC;
+  for(let c=7;c<=9;c++) g[10][c]=C.OCC;
+  for(let r=7;r<=10;r++) for(let c=1;c<=3;c++) g[r][c]=C.UNK;
+  g[10][12]=C.GOAL;
+  return g;
+}
+// φ_PATH
+(function(){
+  const ctx=initCanvas('cv-path');if(!ctx)return;
+  const base=makePathBase();
+  const goalC=12,goalR=10;
+  const FREE_CELLS=(r,c)=>base[r][c]===C.FREE||base[r][c]===C.GOAL;
+  const nb4=(r,c)=>[[r+1,c],[r-1,c],[r,c+1],[r,c-1]].filter(([nr,nc])=>nr>=0&&nr<ROWS&&nc>=0&&nc<COLS);
+  const layers=[];
+  const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
+  vis[goalR][goalC]=1;let frontier=[[goalC,goalR]];layers.push([[goalC,goalR]]);
+  while(frontier.length){
+    const next=[];
+    for(const [fc,fr] of frontier){
+      for(const [nr,nc] of nb4(fr,fc)){
+        if(!vis[nr][nc]&&FREE_CELLS(nr,nc)){vis[nr][nc]=1;next.push([nc,nr]);}
+      }
+    }
+    if(next.length)layers.push(next);frontier=next;
+  }
+  const totalFrames=layers.length+1;
+  const stepLabels=['S₀ — initial (∅)'];
+  for(let i=0;i<layers.length-1;i++) stepLabels.push(`S${i+1} — iteration ${i+1}`);
+  stepLabels.push('S∞ — fixed point · certified path shown');
+  let frame=0;
+  function buildSat(f){
+    const s=new Set();
+    for(let i=0;i<Math.min(f,layers.length);i++) layers[i].forEach(([c,r])=>s.add(`${c},${r}`));
+    return s;
+  }
+  function drawFrame(f){
+    const g=makePathBase();
+    const isFinal=f>=totalFrames-1;
+    buildSat(isFinal?layers.length:f).forEach(k=>{
+      const [c,r]=k.split(',').map(Number);
+      if(g[r][c]!==C.GOAL&&g[r][c]!==C.OCC&&g[r][c]!==C.UNK) g[r][c]=C.SAT;
+    });
+    let path=null;
+    if(isFinal){
+      path=[[1,1],[4,1],[4,6],[7,6],[10,6],[10,10],[12,10]];
+      path.forEach(([c,r])=>{if(g[r][c]===C.SAT)g[r][c]=C.PATH;});
+      g[goalR][goalC]=C.GOAL;
+    }
+    const labels=[];
+    if(f===0){labels.push(['unknown',2,9,'#666',7]);labels.push(['goal',12,10,'#fff',7]);}
+    renderGrid(ctx,g,[1,1],path,null,labels);
+  }
+  function updateUI(){
+    document.getElementById('step-lbl').textContent=stepLabels[Math.min(frame,stepLabels.length-1)];
+    document.getElementById('btn-prev').disabled=(frame===0);
+    document.getElementById('btn-next').disabled=(frame>=totalFrames-1);
+  }
+  drawFrame(0);updateUI();
+  document.getElementById('btn-next').onclick=()=>{if(frame<totalFrames-1){frame++;drawFrame(frame);updateUI();}};
+  document.getElementById('btn-prev').onclick=()=>{if(frame>0){frame--;drawFrame(frame);updateUI();}};
+})();
+// φ_BLOCK
+(function(){
+  function makeBlockBase(){
+    const g=makeG(C.FREE);
+    for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[11][c]=C.OCC;}
+    for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][13]=C.OCC;}
+    for(let r=4;r<=8;r++) for(let c=4;c<=5;c++) g[r][c]=C.OCC;
+    for(let r=4;r<=5;r++) for(let c=6;c<=8;c++) g[r][c]=C.OCC;
+    g[9][10]=C.OCC;g[2][8]=C.OCC;g[7][11]=C.OCC;
+    return g;
+  }
+  const ctx0=initCanvas('cv-block-0'),ctx1=initCanvas('cv-block-1');
+  if(!ctx0||!ctx1)return;
+  const base=makeBlockBase();
+  const noise=[[10,9],[8,2],[11,7]];
+  const labels0=noise.map(([c,r])=>['✕',c,r,'#C8102E',9]);
+  labels0.push(['noise',10,8,'#888',7]);
+  renderGrid(ctx0,base,null,null,null,labels0);
+  const g1=makeBlockBase();
+  for(let r=4;r<=8;r++) for(let c=4;c<=5;c++) g1[r][c]=C.SAT;
+  for(let r=4;r<=5;r++) for(let c=6;c<=8;c++) g1[r][c]=C.SAT;
+  noise.forEach(([c,r])=>{g1[r][c]=C.FREE;});
+  renderGrid(ctx1,g1,null,null,noise,[]);
+})();
+// φ_EXPL
+(function(){
+  const ctx=initCanvas('cv-expl');if(!ctx)return;
+  const g=makeG(C.FREE);
+  for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[11][c]=C.OCC;}
+  for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][13]=C.OCC;}
+  for(let r=7;r<=10;r++) for(let c=9;c<=12;c++) g[r][c]=C.UNK;
+  for(let r=4;r<=6;r++) for(let c=11;c<=12;c++) g[r][c]=C.UNK;
+  for(let r=2;r<=6;r++) g[r][6]=C.OCC;
+  const isUnk=(r,c)=>r>=0&&r<ROWS&&c>=0&&c<COLS&&g[r][c]===C.UNK;
+  const nb4=(r,c)=>[[r+1,c],[r-1,c],[r,c+1],[r,c-1]];
+  for(let r=1;r<=10;r++) for(let c=1;c<=12;c++){
+    if(g[r][c]!==C.FREE)continue;
+    g[r][c]=nb4(r,c).some(([nr,nc])=>isUnk(nr,nc))?C.FRONT:C.SAT;
+  }
+  renderGrid(ctx,g,[8,7],null,null,[
+    ['known',3,5,'#3D7A3D',7],['frontier',8,6,'#C8A020',7],['unknown',11,9,'#666',7],
+  ]);
+})();
+})();
+</script>
+</body>
+</html>
