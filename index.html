@@ -60,10 +60,13 @@ p:last-child{margin-bottom:0}
   border-left:2.5px solid var(--red);
   padding:1.6rem 1.4rem;
   margin:2rem 0;
-  min-height:8rem;
+  min-height:10rem;
   position:relative;
   background:#FAFAFA;
   overflow:hidden;
+}
+@media(max-width:520px){
+  .goal-strip{ min-height:13rem; }
 }
 .goal-slide{
   position:absolute;
@@ -1167,28 +1170,28 @@ footer a:hover{color:var(--red)}
 /* ── Goal strip ─────────────────────────────────────────────── */
 (function () {
   'use strict';
-  const GOALS = [
-    { natural: 'Robot R\u2081 must know whether the corridor ahead is blocked.',
-      formal: '\\(\\mathrm{Kw}_{R_1}(\\textit{blocked}(c_1))\\)' },
-    { natural: 'All robots in the fleet must share common knowledge that the mission is complete.',
-      formal: '\\(C_{\\mathcal{A}}\\,\\bigl(\\text{mission\\_complete}\\bigr)\\)' },
-    { natural: 'Robot R\u2082 does not yet know the current location of R\u2081.',
-      formal: '\\(\\neg\\, K_{R_2}\\bigl(\\textit{at}(R_1, \\ell)\\bigr) \\;\\text{ for all } \\ell\\)' },
-    { natural: 'R\u2081 knows that R\u2082 believes the package has been delivered.',
-      formal: '\\(K_{R_1}\\, K_{R_2}\\,(\\textit{delivered}(p))\\)' },
-    { natural: 'Every robot knows whether its assigned task has been completed.',
-      formal: '\\(\\bigwedge_{i \\in \\mathcal{A}}\\, \\mathrm{Kw}_i\\bigl(\\textit{done}(\\tau_i)\\bigr)\\)' },
-    { natural: 'No robot knows the identity of the adversarial agent — and every robot knows this.',
-      formal: '\\(C_{\\mathcal{A}}\\,\\bigl(\\bigwedge_{i \\in \\mathcal{A}} \\neg K_i(\\textit{adv}(j))\\bigr)\\)' },
-    { natural: 'After the gossip round, every robot knows what every other robot last observed.',
-      formal: '\\(\\bigwedge_{i,j \\in \\mathcal{A}}\\, K_i\\, K_j\\,\\bigl(\\textit{obs}_j^{(t)}\\bigr)\\)' },
-    { natural: 'R\u2081 knows that R\u2082 does not know that R\u2081 has already visited sector \u03b2.',
-      formal: '\\(K_{R_1}\\,\\neg K_{R_2}\\,\\bigl(\\textit{visited}(R_1, \\beta)\\bigr)\\)' },
-    { natural: 'The product update of the current epistemic state with the sensing action is bisimilar to the goal state at modal depth two.',
-      formal: '\\(s_0 \\otimes E_{\\mathrm{sense}} \\;\\leftrightarrows_2\\; s_g\\)' },
-    { natural: 'The planner has resolved all uncertainty: the world count of the resulting epistemic state equals one.',
-      formal: '\\(|W_{s_g}| = 1\\)' }
-  ];
+const GOALS = [
+  { natural: 'Robot R\u2081 must know whether the corridor ahead is blocked.',
+    formal: '\\(\\mathrm{Kw}_{R_1}(\\mathit{blocked}(c_1))\\)' },
+  { natural: 'All robots in the fleet must share common knowledge that the mission is complete.',
+    formal: '\\(C_{\\mathcal{A}}\\,(\\mathit{mission\\_complete})\\)' },
+  { natural: 'Robot R\u2082 does not yet know the current location of R\u2081.',
+    formal: '\\(\\neg K_{R_2}(\\mathit{at}(R_1, \\ell)) \\;\\text{ for all } \\ell\\)' },
+  { natural: 'R\u2081 knows that R\u2082 believes the package has been delivered.',
+    formal: '\\(K_{R_1} K_{R_2}(\\mathit{delivered}(p))\\)' },
+  { natural: 'Every robot knows whether its assigned task has been completed.',
+    formal: '\\(\\bigwedge_{i \\in \\mathcal{A}} \\mathrm{Kw}_i(\\mathit{done}(\\tau_i))\\)' },
+  { natural: 'No robot knows the identity of the adversarial agent — and every robot knows this.',
+    formal: '\\(C_{\\mathcal{A}}\\bigl(\\bigwedge_{i \\in \\mathcal{A}} \\neg K_i(\\mathit{adv}(j))\\bigr)\\)' },
+  { natural: 'After the gossip round, every robot knows what every other robot last observed.',
+    formal: '\\(\\bigwedge_{i,j \\in \\mathcal{A}} K_i K_j(\\mathit{obs}_j^{(t)})\\)' },
+  { natural: 'R\u2081 knows that R\u2082 does not know that R\u2081 has already visited sector \u03b2.',
+    formal: '\\(K_{R_1}\\neg K_{R_2}(\\mathit{visited}(R_1, \\beta))\\)' },
+  { natural: 'The product update of the current epistemic state with the sensing action is bisimilar to the goal state at modal depth two.',
+    formal: '\\(s_0 \\otimes E_{\\mathrm{sense}} \\;\\leftrightarrows_2\\; s_g\\)' },
+  { natural: 'The planner has resolved all uncertainty: the world count of the resulting epistemic state equals one.',
+    formal: '\\(|W_{s_g}| = 1\\)' }
+];
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
