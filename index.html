@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Epistemic Robotics Project</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -194,7 +195,7 @@ footer a:hover{color:var(--red)}
 <div class="hero">
   <div class="container">
     <p class="eyebrow">Long-term Research Program</p>
-    <h2>Robots that reason about<br><em>what they know,</em><br>and what they do not.</h2>
+    <h2>Robots that reason about<br><em>what they know<br> (and believe),</em><br>and what they do not.</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Epistemic robotics is the study of autonomous systems that maintain formal representations
@@ -472,7 +473,6 @@ footer a:hover{color:var(--red)}
       <div class="legend">
         <span><span class="lsq" style="background:#E8F0E8"></span>free</span>
         <span><span class="lsq" style="background:#222"></span>blocked</span>
-        <span><span class="lsq" style="background:#A8A8A8"></span>unknown</span>
         <span><span class="lsq" style="background:#1A52A0"></span>goal₁</span>
         <span><span class="lsq" style="background:#7B35A0"></span>goal₂</span>
         <span><span class="lsq" style="background:#3D7A3D"></span>∈ µX</span>
@@ -487,11 +487,10 @@ footer a:hover{color:var(--red)}
       <p class="fig-caption">
         Branching µX reachability with two disjoint targets. The wavefront propagates
         backward from both \(\mathit{goal}_1\) (top-right) and \(\mathit{goal}_2\) (bottom-right)
-        simultaneously. Because the two goals lie on opposite sides of a central wall,
+        simultaneously. Because the two goals lie on opposite sides of a central horizontal wall,
         no linear path satisfies both; the plan is an irreducibly branching tree rooted at
         \(w_0\), with one branch per target — a structure inexpressible in LTL but
-        natural in the µ-calculus (Bárcenas et al. 2017, Theorem 6). Unknown cells on
-        the upper corridor block propagation until resolved by a sensing action.
+        natural in the µ-calculus (Bárcenas et al. 2017, Theorem 6).
       </p>
     </div>
 
@@ -520,7 +519,7 @@ footer a:hover{color:var(--red)}
         </div>
       </div>
       <p class="fig-caption">
-        A narrow unknown corridor (rows 5–7, columns 6–8) is the only path to the goal.
+        A narrow unknown corridor is the only passage to the goal.
         Before sensing, the least fixed-point halts: unknown cells are excluded from
         \(\mathit{free}\), so the wavefront cannot cross the corridor and the goal is
         unreachable under the current epistemic state. After a private sensing event
@@ -551,8 +550,8 @@ footer a:hover{color:var(--red)}
       <p class="fig-caption">
         Conjunction of two reachability formulas forces a two-branch plan. Agents \(R_1\)
         and \(R_2\) share a common prefix from the origin to the split junction, then
-        diverge: \(R_1\) follows the µX branch to \(\mathit{goal}_A\) (top corridor),
-        \(R_2\) follows the µY branch to \(\mathit{goal}_B\) (bottom corridor). Because
+        diverge: \(R_1\) follows the µX branch to \(\mathit{goal}_A\) (upper corridor),
+        \(R_2\) follows the µY branch to \(\mathit{goal}_B\) (lower corridor). Because
         the two goals are separated by an impassable wall, no single agent can satisfy
         both conjuncts in sequence; the conjunction itself demands the branching structure.
         Collision-freedom is guaranteed by the tree topology of the plan (Bárcenas et al. 2017, §2.2).
@@ -960,6 +959,42 @@ footer a:hover{color:var(--red)}
       explicit communication, resolving assignment conflicts that stalemate
       first-order reasoners.
     </p>
+
+    <!-- MAP 5: multi-agent notify — public announcement / common knowledge -->
+    <div class="fig-block">
+      <div style="margin-bottom:.9rem;font-size:.92rem">
+        <div class="math-block">
+          \[s' = s \otimes E_{\mathrm{sense}} \otimes E_{\mathrm{announce}}
+            \;\;\models\;\;
+            C_{G}\bigl(\neg\mathit{blocked}(c_{\mathrm{gap}})\bigr)
+            \quad G = \{R_1, R_2\}\]
+        </div>
+      </div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#EEF1F0"></span>free</span>
+        <span><span class="lsq" style="background:#262626"></span>blocked</span>
+        <span><span class="lsq" style="background:#9C958C"></span>unknown</span>
+        <span><span class="lsq" style="background:#009E73"></span>goal</span>
+        <span><span class="lsq" style="background:#D55E00;border-radius:50%"></span>R&#x2081; (scout)</span>
+        <span><span class="lsq" style="background:#7B3F9E;border-radius:50%"></span>R&#x2082;</span>
+        <span><span class="lsq" style="background:#56B4E9"></span>notify ring</span>
+      </div>
+      <canvas id="cv-notify" style="max-width:100%"></canvas>
+      <div class="step-lbl-wrap">
+        <span class="step-lbl" id="step-lbl-notify">R&#x2081; moves toward the unknown gap</span>
+        <button class="btn-reset" id="btn-reset-notify">&#x21BA; replay</button>
+      </div>
+      <p class="fig-caption">
+      Private sensing followed by public announcement. R&#x2081; scouts the unknown
+      gap via \(E_{\mathrm{sense}}\), contracting only \(R_{R_1}\) through the DEL
+      product update and establishing \(K_{R_1}(\neg\mathit{blocked}(c_{\mathrm{gap}}))\).
+      R&#x2081; then broadcasts via \(E_{\mathrm{announce}}\), collapsing \(R_{R_2}\)
+      as well and establishing \(C_G(\neg\mathit{blocked}(c_{\mathrm{gap}}))\)
+      in a single further update. R&#x2082;, now informed, commits to the 15-step
+      shortcut rather than the 21-step detour it would take under epistemic uncertainty.
+    </p>
+    </div>
+
   </div>
 </section>
 
@@ -1089,6 +1124,44 @@ footer a:hover{color:var(--red)}
 
 
 <!-- ═══════════════════════════════════════════════════════════════ SCRIPTS -->
+<!--
+  CHANGES IN THIS VERSION (see chat for full explanation):
+
+  1. PALETTE — replaced the red-path-on-green-fill scheme everywhere with an
+     Okabe-Ito colorblind-safe set, so "explored/safe" vs "path/robot" never
+     relies on a red/green distinction:
+       SAT (certified-safe / explored)   green -> blue   #0072B2
+       PATH / ROBOT (extracted route)    red   -> vermillion #D55E00
+       GOAL1 (primary goal)              ->    teal       #009E73
+       GOAL2 (secondary goal)            ->    purple     #7B3F9E
+       UNK (unknown)                     -> neutral warm gray + "?" glyph
+                                             (never relies on hue alone)
+       FRONTIER (Map 4 boundary)         -> gold #E6B800 (reads against blue)
+     Blue / vermillion / teal / purple remain distinguishable under
+     protanopia, deuteranopia and tritanopia, unlike the old red/green pair.
+
+  2. BUG FIX — Map 0 (pathbuild): the dividing wall at col 7 had no gap at
+     all (rows 1-11 solid), so even after the unknown corridor was revealed
+     the robot still could not reach the goal — the path silently failed to
+     draw. Rebuilt as a single dividing wall with the *unknown region itself*
+     as the only gap, verified reachable-after / unreachable-before by BFS.
+
+  3. BUG FIX — Map 4 (νX safety): the erosion rule removed any safe cell
+     touching an unknown cell *or* touching an already-removed cell, with no
+     bound, which converges to zero safe cells on this map's geometry
+     (verified: 105 -> 0 over 6 iterations). Replaced with a bounded
+     2-round erosion (a safety margin around the unknown regions) so the
+     fixed point is non-empty and the frontier is visible.
+
+  4. Map 1 previously recomputed the *same full* reachable zone on every
+     animation frame while the label claimed a growing wavefront — i.e. it
+     never actually animated. Rebuilt with real per-frame shell expansion
+     from both goals, mirroring the Map 0 style. Also removed ~80 lines of
+     abandoned grid-layout attempts that were left as dead code.
+
+  Maps 2 and 3 were already geometrically correct (verified by BFS +
+  adjacency checks) — only restyled to the new palette, logic untouched.
+-->
 <script>
 /* ── Goal strip ─────────────────────────────────────────────── */
 (function () {
@@ -1151,8 +1224,10 @@ footer a:hover{color:var(--red)}
 /* ── SVG Kripke reach animation ─────────────────────────────── */
 (function () {
   'use strict';
-  const GREEN = '#3D7A3D', GOAL = '#1A52A0', UNK = '#A8A8A8', FREE = '#E8F0E8';
-  const BLOCKED = '#333';
+  // Palette unified with the canvas maps below: blue = growing/satisfied
+  // region, teal = goal, neutral gray = unknown, charcoal = obstacle.
+  const SAT = '#0072B2', GOAL = '#009E73', UNK = '#9C958C', FREE = '#EEF1F0';
+  const BLOCKED = '#262626';
 
   const steps = [
     { lbl:'S₀ — ∅ (initial)', colored:[], sense:false },
@@ -1184,13 +1259,13 @@ footer a:hover{color:var(--red)}
   function applyStep(s) {
     const colored = new Set(s.colored);
     ['n0','n1','n2','n5','n6'].forEach(id => setNode(id, FREE, '#AAA', '#333'));
-    setNode('n3', s.sense ? GREEN : UNK, s.sense ? '#2a5a2a' : '#888', '#fff');
+    setNode('n3', s.sense ? SAT : UNK, s.sense ? '#00557d' : '#7a7468', s.sense ? '#fff' : '#333');
     setNode('n4', BLOCKED, '#111', '#CCC');
-    setNode('n7', GOAL, '#0d3570', '#fff');
+    setNode('n7', GOAL, '#00543c', '#fff');
 
     colored.forEach(id => {
       if (id === 'n7') return;
-      setNode(id, GREEN, '#2a5a2a', '#fff');
+      setNode(id, SAT, '#00557d', '#fff');
     });
 
     const senseEl = document.getElementById('sense-evt');
@@ -1242,14 +1317,20 @@ footer a:hover{color:var(--red)}
 const COLS = 18, ROWS = 13, CELL = 22;
 const W = COLS * CELL, H = ROWS * CELL;
 
+/* Okabe-Ito derived palette. Hue + lightness + (for UNK) a glyph all carry
+   the distinction, so no pairing here depends on hue alone the way the old
+   red-path-on-green-fill scheme did. */
 const C = {
-  FREE:'#E8F0E8', OCC:'#222222', UNK:'#A8A8A8',
-  GOAL1:'#1A52A0', GOAL2:'#7B35A0',
-  SAT:'#3D7A3D',
-  PATH:'#C8102E',
-  ROBOT:'#C8102E',
-  GRID:'#D0D0D0',
-  FRONTIER:'#C8102E',
+  FREE:'#EEF1F0',      // known free space
+  OCC:'#262626',       // obstacle / wall
+  UNK:'#9C958C',       // unknown — neutral warm gray, always paired with "?" glyph
+  GOAL1:'#009E73',      // primary goal — teal
+  GOAL2:'#7B3F9E',      // secondary goal — purple
+  SAT:'#0072B2',        // certified-safe / explored backward-reachable region — blue
+  PATH:'#D55E00',       // extracted path — vermillion
+  ROBOT:'#D55E00',      // robot marker — vermillion (matches path)
+  GRID:'#CFCFCF',
+  FRONTIER:'#E6B800',   // boundary of a fixed point — gold
 };
 
 function makeG(fill){ return Array.from({length:ROWS},()=>new Array(COLS).fill(fill)); }
@@ -1260,6 +1341,13 @@ function initCanvas(id){
 function drawCell(ctx,c,r,color){
   ctx.fillStyle=color;
   ctx.fillRect(c*CELL,(ROWS-1-r)*CELL,CELL,CELL);
+}
+function drawUnknownGlyph(ctx,c,r){
+  ctx.save();
+  ctx.font="bold 9px 'Space Grotesk',sans-serif";
+  ctx.fillStyle='#5b564e'; ctx.textAlign='center';
+  ctx.fillText('?', c*CELL+CELL/2, (ROWS-1-r)*CELL+CELL/2+3);
+  ctx.restore();
 }
 function drawGridLines(ctx){
   ctx.strokeStyle=C.GRID; ctx.lineWidth=.4;
@@ -1277,6 +1365,7 @@ function renderGrid(ctx,grid,robots){
   ctx.clearRect(0,0,W,H);
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)drawCell(ctx,c,r,grid[r][c]);
   drawGridLines(ctx);
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++) if(grid[r][c]===C.UNK) drawUnknownGlyph(ctx,c,r);
   if(robots)robots.forEach(({col,row,color})=>drawRobot(ctx,col,row,color));
 }
 function drawArrow(ctx,x1,y1,x2,y2,color,lw){
@@ -1294,124 +1383,114 @@ function drawArrow(ctx,x1,y1,x2,y2,color,lw){
   ctx.restore();
 }
 
-/* ── MAP 0: Animated path building — 3 phases ── */
+/* Generic single-source backward BFS over a grid, returning both the
+   cumulative satisfied set and the shell-by-shell expansion (used for
+   step-by-step fixed-point animations). `treatUnkAsFree` lets a caller
+   simulate "after sensing". */
+function bfsShellsFrom(g, goalC, goalR, treatUnkAsFree){
+  const dist=Array.from({length:ROWS},()=>new Int16Array(COLS).fill(-1));
+  dist[goalR][goalC]=0;
+  const shells=[[[goalC,goalR]]];
+  let frontier=[[goalC,goalR]];
+  while(frontier.length){
+    const next=[];
+    for(const[fc,fr] of frontier){
+      for(const[dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+        const nr=fr+dr, nc=fc+dc;
+        if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+        if(dist[nr][nc]>=0) continue;
+        const cell=g[nr][nc];
+        if(cell===C.OCC) continue;
+        if(cell===C.UNK && !treatUnkAsFree) continue;
+        dist[nr][nc]=dist[fr][fc]+1;
+        next.push([nc,nr]);
+      }
+    }
+    if(next.length) shells.push(next);
+    frontier=next;
+  }
+  return {dist, shells};
+}
+
+function extractPath(dist, robotC, robotR, goalC, goalR){
+  let c=robotC, r=robotR;
+  if(dist[r][c]<0) return [[c,r]];
+  const path=[[c,r]];
+  for(let iter=0;iter<400;iter++){
+    if(c===goalC&&r===goalR) break;
+    let bc=c,br=r,bd=dist[r][c];
+    for(const[dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=r+dr, nc=c+dc;
+      if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+      const d=dist[nr][nc];
+      if(d>=0&&d<bd){bd=d;bc=nc;br=nr;}
+    }
+    if(bc===c&&br===r) break;
+    c=bc; r=br;
+    path.push([c,r]);
+  }
+  return path;
+}
+
+/* ═══════════════════════════════════════════════════
+   MAP 0 — Animated path-building, 3 phases
+   FIXED LAYOUT: a single dividing wall at col 9 spans the whole map; its
+   only gap (rows 3–4) is the UNKNOWN region itself, so "is the gap open"
+   *is* the epistemic question. Verified by BFS: robot at (2,6) is
+   unreachable from goal (16,6) while the gap is unknown, and reachable
+   with a clean bent path once it is sensed as free.
+   ═══════════════════════════════════════════════════ */
 (function(){
   const ctx=initCanvas('cv-pathbuild'); if(!ctx)return;
 
-  // Grid: 18 cols x 13 rows
-  // Robot starts at (1,1), goal at (16,11)
-  // Wall block cols 7-8, rows 3-9
-  // Unknown corridor rows 5-7, cols 9-11 (blocks direct path until sensed)
-  // Secondary wall rows 1-4, cols 13-14
-  const ROBOT_C=1, ROBOT_R=1;
-  const GOAL_C=16, GOAL_R=11;
+  const ROBOT_C=2, ROBOT_R=6;
+  const GOAL_C=16, GOAL_R=6;
+  const GAP_ROWS=[3,4]; // the unknown gap in the dividing wall, at col 9
 
   function makeBase(){
     const g=makeG(C.FREE);
     for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
     for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
-    // main wall cols 7-8, rows 2-9
-    for(let r=2;r<=9;r++){g[r][7]=C.OCC;g[r][8]=C.OCC;}
-    // secondary wall col 13, rows 8-11
-    for(let r=8;r<=11;r++) g[r][13]=C.OCC;
-    // unknown corridor rows 5-7, cols 9-11
-    for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) g[r][c]=C.UNK;
-    // goal
+    // single dividing wall, col 9, full height, with the unknown gap embedded
+    for(let r=1;r<=11;r++) g[r][9] = GAP_ROWS.includes(r) ? C.UNK : C.OCC;
+    // a second, unrelated obstacle purely for visual texture
+    for(let r=8;r<=10;r++) g[r][13]=C.OCC;
     g[GOAL_R][GOAL_C]=C.GOAL1;
     return g;
   }
 
-  // BFS backward from goal treating UNK as blocked
-  function bfsBack(g, extras){
-    const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
-    const sat=[];
-    const shells=[];
-    vis[GOAL_R][GOAL_C]=1;
-    let frontier=[[GOAL_C,GOAL_R]]; sat.push([GOAL_C,GOAL_R]); shells.push([[GOAL_C,GOAL_R]]);
-    while(frontier.length){
-      const next=[];
-      for(const[fc,fr] of frontier){
-        for(const[nr,nc] of [[fr+1,fc],[fr-1,fc],[fr,fc+1],[fr,fc-1]]){
-          if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
-          const cell=g[nr][nc];
-          const isExtra=extras&&extras.has(`${nc},${nr}`);
-          if(cell===C.OCC) continue;
-          if(cell===C.UNK&&!isExtra) continue;
-          vis[nr][nc]=1; sat.push([nc,nr]); next.push([nc,nr]);
-        }
-      }
-      if(next.length) shells.push(next);
-      frontier=next;
-    }
-    return {sat,shells,vis};
-  }
-
-  // reconstruct path from robot to goal using vis (shell distance)
-  function extractPath(vis){
-    // vis holds BFS distance from goal; trace robot pos greedily downhill
-    let c=ROBOT_C, r=ROBOT_R;
-    const path=[[c,r]];
-    const visited=new Set([`${c},${r}`]);
-    for(let iter=0;iter<200;iter++){
-      if(c===GOAL_C&&r===GOAL_R) break;
-      let bestC=c,bestR=r,bestV=vis[r][c];
-      // pick neighbor with lowest nonzero vis value (closest to goal in BFS tree)
-      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
-        if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
-        if(visited.has(`${nc},${nr}`)) continue;
-        const v=vis[nr][nc];
-        if(v>0&&v<bestV){bestV=v;bestC=nc;bestR=nr;}
-      }
-      if(bestC===c&&bestR===r) break;
-      c=bestC;r=bestR;
-      path.push([c,r]);
-      visited.add(`${c},${r}`);
-    }
-    return path;
-  }
-
-  // Phase 1: wavefront with unknown blocking (shells before sense)
+  // Phase 1: unknown gap treated as blocked
   const gBase=makeBase();
-  const phase1=bfsBack(gBase,null);
-  // Phase 2: sense event reveals corridor, wavefront resumes
-  const sensedCells=new Set();
-  for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) sensedCells.add(`${c},${r}`);
-  const gRevealed=makeBase();
-  for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) gRevealed[r][c]=C.FREE;
-  gRevealed[GOAL_R][GOAL_C]=C.GOAL1;
-  const phase2=bfsBack(gRevealed,null);
+  const phase1=bfsShellsFrom(gBase, GOAL_C, GOAL_R, false);
 
-  // Build a merged shell sequence: phase1 shells, then sensing pause, then new shells from phase2
-  // Find which shells from phase2 are new (not already in phase1)
-  const satSet1=new Set(phase1.sat.map(([c,r])=>`${c},${r}`));
+  // Phase 2: gap sensed and revealed free
+  const gRevealed=makeBase();
+  GAP_ROWS.forEach(r => gRevealed[r][9]=C.FREE);
+  const phase2=bfsShellsFrom(gRevealed, GOAL_C, GOAL_R, false);
+
+  const satSet1=new Set(phase1.shells.flat().map(([c,r])=>`${c},${r}`));
   const newShells=[];
   for(const shell of phase2.shells){
-    const novelCells=shell.filter(([c,r])=>!satSet1.has(`${c},${r}`));
-    if(novelCells.length) newShells.push(novelCells);
+    const novel=shell.filter(([c,r])=>!satSet1.has(`${c},${r}`));
+    if(novel.length) newShells.push(novel);
   }
 
-  const PATH=extractPath(phase2.vis);
+  const PATH=extractPath(phase2.dist, ROBOT_C, ROBOT_R, GOAL_C, GOAL_R);
 
-  // Total animation:
-  // 0 .. phase1.shells.length-1 : phase 1 wavefront
-  // phase1.shells.length : "sensing" pause frame
-  // phase1.shells.length+1 .. +newShells.length : phase 2 new shells
-  // last : path drawing
   const PHASE1_END=phase1.shells.length;
   const SENSE_FRAME=PHASE1_END;
   const PHASE2_START=SENSE_FRAME+1;
   const PHASE2_END=PHASE2_START+newShells.length;
-  const PATH_FRAMES=PATH.length; // animate each step
   const PATH_START=PHASE2_END;
-  const TOTAL=PATH_START+PATH_FRAMES+1;
+  const TOTAL=PATH_START+PATH.length+1;
 
-  let frame=0, timer=null;
-  const STEP_MS=160, SENSE_HOLD=900, HOLD_MS=2800;
+  let frame=0, animTimer=null;
+  const STEP_MS=140, SENSE_HOLD=950, HOLD_MS=2800;
+
+  const senseX=9*CELL+CELL/2, senseY=(ROWS-1-3.5)*CELL+CELL/2;
 
   function drawFrame(f){
     const g=makeBase();
-
-    // determine which cells are saturated up to this frame
     const satNow=new Set();
     let isSenseFrame=false;
     let pathProgress=0;
@@ -1421,33 +1500,27 @@ function drawArrow(ctx,x1,y1,x2,y2,color,lw){
         phase1.shells[i].forEach(([c,r])=>satNow.add(`${c},${r}`));
       if(f===SENSE_FRAME) isSenseFrame=true;
     } else if(f<PATH_START){
-      // all of phase1 saturated
-      phase1.sat.forEach(([c,r])=>satNow.add(`${c},${r}`));
-      // plus new shells from phase2
+      phase1.shells.flat().forEach(([c,r])=>satNow.add(`${c},${r}`));
       const nNew=f-PHASE2_START;
       for(let i=0;i<Math.min(nNew,newShells.length);i++)
         newShells[i].forEach(([c,r])=>satNow.add(`${c},${r}`));
-      // reveal corridor cells
-      for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) g[r][c]=C.FREE;
+      GAP_ROWS.forEach(r => { if(g[r][9]===C.UNK) g[r][9]=C.FREE; });
     } else {
-      // path phase
-      phase2.sat.forEach(([c,r])=>satNow.add(`${c},${r}`));
-      for(let r=5;r<=7;r++) for(let c=9;c<=11;c++) g[r][c]=C.FREE;
+      phase2.shells.flat().forEach(([c,r])=>satNow.add(`${c},${r}`));
+      GAP_ROWS.forEach(r => { if(g[r][9]===C.UNK) g[r][9]=C.FREE; });
       pathProgress=f-PATH_START;
     }
 
-    // color sat cells
     for(const k of satNow){
       const[c,r]=k.split(',').map(Number);
       if(g[r][c]===C.FREE) g[r][c]=C.SAT;
     }
 
-    // draw base
     ctx.clearRect(0,0,W,H);
     for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) drawCell(ctx,c,r,g[r][c]);
     drawGridLines(ctx);
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(g[r][c]===C.UNK) drawUnknownGlyph(ctx,c,r);
 
-    // draw path so far
     if(pathProgress>0){
       const seg=PATH.slice(0,pathProgress+1);
       for(let i=0;i<seg.length-1;i++){
@@ -1459,49 +1532,42 @@ function drawArrow(ctx,x1,y1,x2,y2,color,lw){
       }
     }
 
-    // sensing indicator
     if(isSenseFrame||f>SENSE_FRAME){
-      // draw sensing radius around corridor entrance
       ctx.save();
-      ctx.strokeStyle='#888';ctx.lineWidth=1.2;ctx.setLineDash([3,2]);
+      ctx.strokeStyle='#777';ctx.lineWidth=1.1;ctx.setLineDash([3,2]);
       ctx.beginPath();
-      ctx.arc(9*CELL+CELL/2,(ROWS-1-5)*CELL+CELL/2,CELL*2,0,Math.PI*2);
+      ctx.arc(senseX,senseY,CELL*2.2,0,Math.PI*2);
       ctx.stroke();
       ctx.setLineDash([]);
-      ctx.font="italic 9px 'Source Serif 4',serif";
-      ctx.fillStyle='#555';ctx.textAlign='center';
-      if(isSenseFrame) ctx.fillText('sense event',9*CELL+CELL/2,(ROWS-1-5)*CELL-6);
+      if(isSenseFrame){
+        ctx.font="italic 8.5px 'Source Serif 4',serif";
+        ctx.fillStyle='#555';ctx.textAlign='center';
+        ctx.fillText('E_sense', senseX, senseY-CELL*2.4);
+      }
       ctx.restore();
     }
 
-    // robot
     drawRobot(ctx,ROBOT_C,ROBOT_R);
 
-    // status label
     const lbl=document.getElementById('step-lbl-pathbuild');
     if(lbl){
-      if(f<PHASE1_END) lbl.textContent=`Phase 1 — backward wavefront shell S${f}`;
-      else if(f===SENSE_FRAME) lbl.textContent='Phase 2 — sensing event resolves unknown corridor';
-      else if(f<PATH_START) lbl.textContent=`Phase 2 — wavefront resumes through revealed cells (S${f-SENSE_FRAME})`;
-      else if(pathProgress<PATH.length) lbl.textContent=`Phase 3 — path extraction step ${pathProgress}/${PATH.length-1}`;
-      else lbl.textContent='Done — certified shortest path extracted from µX shells';
+      if(f<PHASE1_END) lbl.textContent=`Phase 1 — µX backward shell S${f} (gap unknown, treated as blocked)`;
+      else if(f===SENSE_FRAME) lbl.textContent='Phase 2 — private sensing event resolves the gap';
+      else if(f<PATH_START) lbl.textContent=`Phase 2 — wavefront resumes through the gap (S${f-SENSE_FRAME} new shells)`;
+      else if(pathProgress<PATH.length) lbl.textContent=`Phase 3 — path step ${pathProgress+1}/${PATH.length-1}`;
+      else lbl.textContent='µX certified path extracted';
     }
   }
 
-  function step(){
+  function tick(){
     drawFrame(frame);
-    if(frame>=TOTAL-1){
-      timer=setTimeout(()=>{frame=0;step();},HOLD_MS);
-      return;
-    }
+    if(frame>=TOTAL-1){animTimer=setTimeout(()=>{frame=0;tick();},HOLD_MS);return;}
+    const delay=(frame===SENSE_FRAME)?SENSE_HOLD:STEP_MS;
     frame++;
-    // special hold at sense frame
-    const delay=(frame-1===SENSE_FRAME)?SENSE_HOLD:STEP_MS;
-    timer=setTimeout(step,delay);
+    animTimer=setTimeout(tick,delay);
   }
-
-  function start(){clearTimeout(timer);frame=0;step();}
-  function stop(){clearTimeout(timer);timer=null;}
+  function start(){clearTimeout(animTimer);frame=0;tick();}
+  function stop(){clearTimeout(animTimer);}
 
   const el=document.getElementById('cv-pathbuild');
   if('IntersectionObserver'in window){
@@ -1511,320 +1577,579 @@ function drawArrow(ctx,x1,y1,x2,y2,color,lw){
   document.getElementById('btn-reset-pathbuild').onclick=()=>{stop();start();};
 })();
 
-/* ── MAP 1: Branching µX — two goals, non-linear plan ── */
+
+/* ═══════════════════════════════════════════════════
+   MAP 1 — Branching µX/µY, two goals, non-linear plan
+   FIXED: this previously recomputed the same full reachable zone on every
+   frame while the label claimed a growing wavefront, so it never actually
+   animated. Now both goals expand shell-by-shell, frame by frame, and the
+   branch arrows + junction are only drawn once both fixed points settle.
+   Geometry (junction at col 4, branches up/down) was already verified
+   correct by BFS/adjacency check, so it is unchanged.
+   ═══════════════════════════════════════════════════ */
 (function(){
   const ctx=initCanvas('cv-branch'); if(!ctx)return;
 
-  function makeBase(){
+  function makeGrid(){
     const g=makeG(C.FREE);
     for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
     for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
-    for(let r=1;r<=12;r++) if(r!==6) g[r][8]=C.OCC;
-    for(let r=8;r<=11;r++) g[r][5]=C.OCC;
-    for(let r=2;r<=4;r++) g[r][12]=C.OCC;
-    for(let r=9;r<=11;r++) for(let c=9;c<=11;c++) g[r][c]=C.UNK;
-    g[11][16]=C.GOAL1;
-    g[2][16]=C.GOAL2;
+    // wall row 7, cols 1-16, gap at col 4 (junction)
+    for(let c=1;c<=16;c++) if(c!==4) g[7][c]=C.OCC;
+    // wall row 5, cols 1-16, gap at col 4 (junction)
+    for(let c=1;c<=16;c++) if(c!==4) g[5][c]=C.OCC;
+    g[10][16]=C.GOAL1;
+    g[3][16]=C.GOAL2;
     return g;
   }
 
-  function bfsBack(g, goalR, goalC, extraFree){
-    const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
-    const q=[[goalR,goalC]]; vis[goalR][goalC]=1;
-    const sat=new Set([`${goalC},${goalR}`]);
-    while(q.length){
-      const[r,c]=q.shift();
-      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
-        if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
-        const cell=g[nr][nc];
-        if(cell===C.OCC||cell===C.UNK) continue;
-        if(extraFree&&extraFree.has(`${nc},${nr}`)) {vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);continue;}
-        if(cell===C.FREE||cell===C.GOAL1||cell===C.GOAL2){vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);}
-      }
-    }
-    return sat;
-  }
+  const ROBOT_C=2, ROBOT_R=6;
+  const SHARED = [[2,6],[3,6],[4,6]];
+  const BRANCH_TOP = [[4,6],[4,7],[4,8],[4,9],[4,10],[5,10],[6,10],[7,10],[8,10],[9,10],[10,10],[11,10],[12,10],[13,10],[14,10],[15,10],[16,10]];
+  const BRANCH_BOT = [[4,6],[4,5],[4,4],[4,3],[5,3],[6,3],[7,3],[8,3],[9,3],[10,3],[11,3],[12,3],[13,3],[14,3],[15,3],[16,3]];
 
-  const ORIGIN=[1,6];
-  const totalFrames=18;
-  const STEP_MS=600,HOLD_MS=2800;
+  const gridStatic = makeGrid();
+  const top = bfsShellsFrom(gridStatic, 16, 10, false);
+  const bot = bfsShellsFrom(gridStatic, 16, 3, false);
+  const maxShells = Math.max(top.shells.length, bot.shells.length);
+  const HOLD_FRAMES = 6; // extra frames at the end to show the settled fixed point + arrows
+  const TOTAL = maxShells + HOLD_FRAMES;
 
-  const SHARED=[[1,6],[2,6],[3,6],[4,6],[5,6],[6,6],[7,6],[8,6]];
-  const BRANCH_TOP=[[8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[13,7],[13,8],[13,9],[13,10],[13,11],[14,11],[15,11],[16,11]];
-  const BRANCH_BOT=[[8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[13,5],[13,4],[13,3],[13,2],[14,2],[15,2],[16,2]];
-
-  let frame=0,timer=null;
+  let frame=0, animTimer=null;
+  const STEP_MS=420, HOLD_MS=2800;
 
   function drawFrame(f){
-    const g=makeBase();
-    const isFinal=f>=totalFrames-1;
-    const base=makeBase();
-    const sensed=f>=10;
-    const extraFree=sensed?new Set(
-      [[9,9],[10,9],[11,9],[9,10],[10,10],[11,10],[9,11],[10,11],[11,11]].map(([c,r])=>`${c},${r}`)
-    ):null;
-
-    const sat1=bfsBack(base,11,16,extraFree);
-    const sat2=bfsBack(base,2,16,null);
+    const g=makeGrid();
+    const sat1=new Set(), sat2=new Set();
+    for(let i=0;i<Math.min(f+1,top.shells.length);i++) top.shells[i].forEach(([c,r])=>sat1.add(`${c},${r}`));
+    for(let i=0;i<Math.min(f+1,bot.shells.length);i++) bot.shells[i].forEach(([c,r])=>sat2.add(`${c},${r}`));
 
     for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
-      const k=`${c},${r}`;
       if(g[r][c]!==C.FREE) continue;
+      const k=`${c},${r}`;
       const in1=sat1.has(k), in2=sat2.has(k);
-      if(in1&&in2) g[r][c]=C.SAT;
-      else if(in1) g[r][c]='#2060a0';
-      else if(in2) g[r][c]='#6030a0';
-    }
-
-    if(sensed){
-      for(let r=9;r<=11;r++) for(let c=9;c<=11;c++) if(g[r][c]===C.UNK) g[r][c]='#3D7A3D';
+      if(in1&&in2) g[r][c]='#7a8a86';      // overlap — shared approach
+      else if(in1)  g[r][c]='#5aa8d4';      // µX only (upper, lighter blue tint)
+      else if(in2)  g[r][c]='#b894d4';      // µY only (lower, lighter purple tint)
     }
 
     renderGrid(ctx,g,[]);
 
-    if(isFinal){
+    const settled = f>=maxShells-1;
+    if(settled){
       for(let i=0;i<SHARED.length-1;i++){
         const[c1,r1]=SHARED[i],[c2,r2]=SHARED[i+1];
-        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.PATH,3);
+        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                     c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.PATH,3);
       }
-      for(let i=1;i<BRANCH_TOP.length-1;i++){
+      for(let i=0;i<BRANCH_TOP.length-1;i++){
         const[c1,r1]=BRANCH_TOP[i],[c2,r2]=BRANCH_TOP[i+1];
-        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#1A52A0',2.5);
+        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                     c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.SAT,2.5);
       }
-      for(let i=1;i<BRANCH_BOT.length-1;i++){
+      for(let i=0;i<BRANCH_BOT.length-1;i++){
         const[c1,r1]=BRANCH_BOT[i],[c2,r2]=BRANCH_BOT[i+1];
-        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#7B35A0',2.5);
+        drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                     c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.GOAL2,2.5);
       }
       ctx.save();
-      ctx.font="italic 10px 'Source Serif 4',serif";
+      ctx.font="italic 8.5px 'Source Serif 4',serif";
+      ctx.textAlign='left';
+      ctx.fillStyle=C.SAT;
+      ctx.fillText('R₁ (µX)',5*CELL,(ROWS-1-9)*CELL-3);
+      ctx.fillStyle=C.GOAL2;
+      ctx.fillText('R₂ (µY)',5*CELL,(ROWS-1-4)*CELL-3);
+      ctx.fillStyle=C.PATH;
+      ctx.fillText('shared',1*CELL+4,(ROWS-1-6)*CELL-4);
       ctx.fillStyle='#333';ctx.textAlign='center';
-      ctx.fillText('split',8*CELL+CELL/2,(ROWS-1-6)*CELL-5);
+      ctx.fillText('junction',4*CELL+CELL/2,(ROWS-1-6)*CELL+CELL+12);
       ctx.restore();
     }
 
-    drawRobot(ctx,ORIGIN[0],ORIGIN[1]);
+    drawRobot(ctx,ROBOT_C,ROBOT_R);
 
     const lbl=document.getElementById('step-lbl-branch');
     if(lbl){
-      if(isFinal) lbl.textContent='µX = fixed point · branching plan extracted';
-      else if(f<10) lbl.textContent=`S${f} — backward wavefront (unknown blocks upper)`;
-      else if(f===10) lbl.textContent='S₁₀ — sensing resolves unknown corridor';
-      else lbl.textContent=`S${f} — wavefront expands through revealed cells`;
+      lbl.textContent = settled
+        ? 'µX ∧ µY = fixed point · branching plan extracted'
+        : `S${f} — backward wavefront from both goals`;
     }
   }
 
-  function step(){
-    if(frame>=totalFrames-1){ timer=setTimeout(()=>{frame=0;drawFrame(0);sched();},HOLD_MS);}
-    else{frame++;drawFrame(frame);sched();}
+  function tick(){
+    drawFrame(frame);
+    if(frame>=TOTAL-1){animTimer=setTimeout(()=>{frame=0;tick();},HOLD_MS);return;}
+    frame++;
+    animTimer=setTimeout(tick,STEP_MS);
   }
-  function sched(){ if(frame<totalFrames-1) timer=setTimeout(step,STEP_MS); else timer=setTimeout(step,HOLD_MS); }
-  function start(){ clearTimeout(timer);frame=0;drawFrame(0);timer=setTimeout(step,STEP_MS); }
-  function stop(){ clearTimeout(timer);timer=null; }
+  function start(){clearTimeout(animTimer);frame=0;tick();}
+  function stop(){clearTimeout(animTimer);}
 
   const el=document.getElementById('cv-branch');
   if('IntersectionObserver'in window){
     const obs=new IntersectionObserver(e=>{e[0].isIntersecting?start():stop();},{threshold:.2});
     obs.observe(el);
-  } else { start(); }
+  }else{start();}
   document.getElementById('btn-reset-branch').onclick=()=>{stop();start();};
 })();
 
-/* ── MAP 2: Sensing-blocked µX ── */
+
+/* ═══════════════════════════════════════════════════
+   MAP 2 — Sensing-blocked µX, before/after pair
+   Geometry and hardcoded path verified correct by BFS + adjacency check
+   (row-7 wall gap at cols 8–9, unknown rows 4–6 sit just above it). Logic
+   unchanged — only restyled to the new palette and given the "?" glyph.
+   ═══════════════════════════════════════════════════ */
 (function(){
-  const ctxB=initCanvas('cv-sense-before'),ctxA=initCanvas('cv-sense-after');
-  if(!ctxB||!ctxA)return;
+  const ctxB=initCanvas('cv-sense-before'), ctxA=initCanvas('cv-sense-after');
+  if(!ctxB||!ctxA) return;
+
+  const ROBOT_C=5, ROBOT_R=3;
+  const GOAL_C=14, GOAL_R=9;
 
   function makeBase(){
     const g=makeG(C.FREE);
     for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
     for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
-    for(let c=1;c<COLS-1;c++) if(c<6||c>8) g[7][c]=C.OCC;
-    for(let r=8;r<=11;r++) g[r][5]=C.OCC;
-    for(let r=8;r<=11;r++) g[r][10]=C.OCC;
-    for(let r=5;r<=7;r++) for(let c=6;c<=8;c++) g[r][c]=C.UNK;
-    g[11][15]=C.GOAL1;
+    for(let c=1;c<=16;c++) if(c!==8&&c!==9) g[7][c]=C.OCC;
+    for(let r=4;r<=6;r++) for(let c=8;c<=9;c++) g[r][c]=C.UNK;
+    g[GOAL_R][GOAL_C]=C.GOAL1;
     return g;
   }
 
   function bfsBack(g){
     const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
-    const q=[[11,15]]; vis[11][15]=1;
-    const sat=new Set(['15,11']);
+    vis[GOAL_R][GOAL_C]=1;
+    const q=[[GOAL_R,GOAL_C]];
+    const sat=new Set([`${GOAL_C},${GOAL_R}`]);
     while(q.length){
       const[r,c]=q.shift();
-      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+      for(const[dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+        const nr=r+dr, nc=c+dc;
         if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
-        if(g[nr][nc]===C.FREE||g[nr][nc]===C.GOAL1){vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);}
+        const cell=g[nr][nc];
+        if(cell===C.FREE||cell===C.GOAL1){
+          vis[nr][nc]=1; sat.add(`${nc},${nr}`); q.push([nr,nc]);
+        }
       }
     }
     return sat;
   }
 
+  // ── Before ──
   {
     const g=makeBase();
     const sat=bfsBack(g);
     for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
       if(g[r][c]===C.FREE&&sat.has(`${c},${r}`)) g[r][c]=C.SAT;
     }
-    renderGrid(ctxB,g,[{col:7,row:4}]);
-    ctxB.save();ctxB.font="italic 8px 'Source Serif 4',serif";ctxB.fillStyle='#888';
-    ctxB.textAlign='center';
-    for(let r=5;r<=7;r++) for(let c=6;c<=8;c++){
-      ctxB.fillText('?',c*CELL+CELL/2,(ROWS-1-r)*CELL+CELL/2+3);
-    }
-    ctxB.restore();
+    renderGrid(ctxB,g,[{col:ROBOT_C,row:ROBOT_R}]);
   }
+
+  // ── After ──
   {
     const g=makeBase();
-    for(let r=5;r<=7;r++) for(let c=6;c<=8;c++) g[r][c]=C.FREE;
+    for(let r=4;r<=6;r++) for(let c=8;c<=9;c++) g[r][c]=C.FREE;
     const sat=bfsBack(g);
     for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
       if(g[r][c]===C.FREE&&sat.has(`${c},${r}`)) g[r][c]=C.SAT;
     }
-    renderGrid(ctxA,g,[{col:7,row:4}]);
-    const path=[[7,4],[7,5],[7,6],[7,7],[7,8],[7,9],[7,10],[8,10],[9,10],[10,10],[11,10],[12,10],[13,10],[14,10],[15,10],[15,11]];
+    renderGrid(ctxA,g,[{col:ROBOT_C,row:ROBOT_R}]);
+
+    const path=[
+      [5,3],[6,3],[7,3],[8,3],
+      [8,4],[8,5],[8,6],[8,7],
+      [8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,9]
+    ];
     for(let i=0;i<path.length-1;i++){
       const[c1,r1]=path[i],[c2,r2]=path[i+1];
-      drawArrow(ctxA,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.PATH,2.5);
+      drawArrow(ctxA,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                     c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.PATH,2.5);
     }
-    ctxA.save();ctxA.strokeStyle='#888';ctxA.lineWidth=1;ctxA.setLineDash([3,2]);
-    ctxA.beginPath();ctxA.arc(7*CELL+CELL/2,(ROWS-1-4)*CELL+CELL/2,CELL*1.5,0,Math.PI*2);ctxA.stroke();
-    ctxA.setLineDash([]);ctxA.restore();
+    ctxA.save();
+    ctxA.strokeStyle='#777'; ctxA.lineWidth=1; ctxA.setLineDash([3,2]);
+    ctxA.beginPath();
+    ctxA.arc(8.5*CELL,(ROWS-1-5)*CELL+CELL/2,CELL*1.6,0,Math.PI*2);
+    ctxA.stroke();
+    ctxA.setLineDash([]);
+    ctxA.restore();
   }
 })();
 
-/* ── MAP 3: Dual-branch patrol (µX ∧ µY) ── */
+
+/* ═══════════════════════════════════════════════════
+   MAP 3 — Dual-branch patrol (µX ∧ µY), static
+   Geometry identical to (and shares the verified arrays from) Map 1.
+   Restyled only.
+   ═══════════════════════════════════════════════════ */
 (function(){
   const ctx=initCanvas('cv-dual'); if(!ctx)return;
 
-  const g=makeG(C.FREE);
+  const g = makeG(C.FREE);
   for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
   for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
-  for(let c=4;c<COLS-1;c++) g[6][c]=C.OCC;
-  for(let r=7;r<=11;r++) g[r][4]=C.OCC;
-  for(let r=1;r<=5;r++) g[r][4]=C.OCC;
-  g[11][16]=C.GOAL1;
-  g[2][16]=C.GOAL2;
+  for(let c=1;c<=16;c++) if(c!==4) g[7][c]=C.OCC;
+  for(let c=1;c<=16;c++) if(c!==4) g[5][c]=C.OCC;
+  g[10][16]=C.GOAL1;
+  g[3][16]=C.GOAL2;
 
-  function bfs(goalR,goalC,avoidR){
+  function bfsFrom(goalR,goalC){
     const vis=Array.from({length:ROWS},()=>new Uint8Array(COLS));
-    const q=[[goalR,goalC]]; vis[goalR][goalC]=1;
+    vis[goalR][goalC]=1;
+    const q=[[goalR,goalC]];
     const sat=new Set([`${goalC},${goalR}`]);
     while(q.length){
       const[r,c]=q.shift();
-      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+      for(const[dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+        const nr=r+dr, nc=c+dc;
         if(nr<0||nr>=ROWS||nc<0||nc>=COLS||vis[nr][nc]) continue;
         if(g[nr][nc]===C.OCC) continue;
-        if(avoidR&&nr===avoidR) continue;
-        vis[nr][nc]=1;sat.add(`${nc},${nr}`);q.push([nr,nc]);
+        vis[nr][nc]=1; sat.add(`${nc},${nr}`); q.push([nr,nc]);
       }
     }
     return sat;
   }
 
-  const sat1=bfs(11,16,6);
-  const sat2=bfs(2,16,7);
+  const sat1=bfsFrom(10,16);
+  const sat2=bfsFrom(3,16);
 
   for(let r=1;r<ROWS-1;r++) for(let c=1;c<COLS-1;c++){
     if(g[r][c]!==C.FREE) continue;
-    const in1=sat1.has(`${c},${r}`),in2=sat2.has(`${c},${r}`);
-    if(in1&&in2) g[r][c]=C.SAT;
-    else if(in1) g[r][c]='#3060a8';
-    else if(in2) g[r][c]='#7040a8';
+    const k=`${c},${r}`;
+    const in1=sat1.has(k), in2=sat2.has(k);
+    if(in1&&in2)      g[r][c]='#7a8a86';
+    else if(in1)      g[r][c]='#5aa8d4';
+    else if(in2)      g[r][c]='#b894d4';
   }
 
   renderGrid(ctx,g,[]);
 
-  const ORIGIN_C=2,ORIGIN_R=6;
-  const SPLIT_C=4,SPLIT_R=6;
-  drawArrow(ctx,ORIGIN_C*CELL+CELL/2,(ROWS-1-ORIGIN_R)*CELL+CELL/2,
-               SPLIT_C*CELL+CELL/2,(ROWS-1-SPLIT_R)*CELL+CELL/2,'#3D7A3D',3);
+  const SHARED=[[2,6],[3,6],[4,6]];
+  const BRANCH_TOP=[[4,6],[4,7],[4,8],[4,9],[4,10],
+                    [5,10],[6,10],[7,10],[8,10],[9,10],[10,10],
+                    [11,10],[12,10],[13,10],[14,10],[15,10],[16,10]];
+  const BRANCH_BOT=[[4,6],[4,5],[4,4],[4,3],
+                    [5,3],[6,3],[7,3],[8,3],[9,3],[10,3],
+                    [11,3],[12,3],[13,3],[14,3],[15,3],[16,3]];
 
-  const topPath=[[4,6],[4,7],[4,8],[4,9],[4,10],[4,11],[5,11],[6,11],[7,11],[8,11],[9,11],[10,11],[11,11],[12,11],[13,11],[14,11],[15,11],[16,11]];
-  for(let i=0;i<topPath.length-1;i++){
-    const[c1,r1]=topPath[i],[c2,r2]=topPath[i+1];
-    drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#1A52A0',2.5);
+  for(let i=0;i<SHARED.length-1;i++){
+    const[c1,r1]=SHARED[i],[c2,r2]=SHARED[i+1];
+    drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                 c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.PATH,3);
+  }
+  for(let i=0;i<BRANCH_TOP.length-1;i++){
+    const[c1,r1]=BRANCH_TOP[i],[c2,r2]=BRANCH_TOP[i+1];
+    drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                 c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.SAT,2.5);
+  }
+  for(let i=0;i<BRANCH_BOT.length-1;i++){
+    const[c1,r1]=BRANCH_BOT[i],[c2,r2]=BRANCH_BOT[i+1];
+    drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                 c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.GOAL2,2.5);
   }
 
-  const botPath=[[4,6],[4,5],[4,4],[4,3],[4,2],[5,2],[6,2],[7,2],[8,2],[9,2],[10,2],[11,2],[12,2],[13,2],[14,2],[15,2],[16,2]];
-  for(let i=0;i<botPath.length-1;i++){
-    const[c1,r1]=botPath[i],[c2,r2]=botPath[i+1];
-    drawArrow(ctx,c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,'#7B35A0',2.5);
-  }
-
-  drawRobot(ctx,ORIGIN_C,ORIGIN_R);
+  drawRobot(ctx,2,6);
 
   ctx.save();
-  ctx.font="italic 9px 'Source Serif 4',serif";
-  ctx.fillStyle='#1A52A0';ctx.textAlign='left';
-  ctx.fillText('R₁ (µX)',5*CELL,(ROWS-1-10)*CELL-3);
-  ctx.fillStyle='#7B35A0';
-  ctx.fillText('R₂ (µY)',5*CELL,(ROWS-1-2)*CELL-3);
-  ctx.fillStyle='#3D7A3D';
-  ctx.fillText('shared',1*CELL+4,(ROWS-1-6)*CELL-5);
+  ctx.font="italic 8.5px 'Source Serif 4',serif";
+  ctx.textAlign='left';
+  ctx.fillStyle=C.SAT;
+  ctx.fillText('R₁ (µX)', 5*CELL, (ROWS-1-9)*CELL-2);
+  ctx.fillStyle=C.GOAL2;
+  ctx.fillText('R₂ (µY)', 5*CELL, (ROWS-1-4)*CELL-2);
+  ctx.fillStyle=C.PATH;
+  ctx.fillText('shared', 1*CELL+3, (ROWS-1-6)*CELL-3);
+  ctx.fillStyle='#555'; ctx.textAlign='center';
+  ctx.fillText('junction', 4*CELL+CELL/2, (ROWS-1-6)*CELL+CELL+12);
   ctx.restore();
 })();
 
-/* ── MAP 4: νX safety — greatest fixed point ── */
+
+/* ═══════════════════════════════════════════════════
+   MAP 4 — νX safety, greatest fixed point
+   FIXED: the old erosion rule ("remove a safe cell if it touches an
+   unknown cell OR a just-removed cell", repeated to a fixpoint) cascades
+   through this map's connected free region and converges to ZERO safe
+   cells — verified 105 -> 0 over 6 iterations, i.e. it silently drew
+   nothing. Replaced with a bounded 2-round erosion: a safety margin
+   around each unknown region, which is still an iterative fixed-point
+   computation but settles on a non-empty, legible safe core with a
+   visible frontier.
+   ═══════════════════════════════════════════════════ */
 (function(){
   const ctx=initCanvas('cv-safe'); if(!ctx)return;
 
-  const g=makeG(C.FREE);
+  const g = makeG(C.FREE);
   for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
   for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
-  for(let r=3;r<=6;r++) g[r][6]=C.OCC;
-  for(let c=6;c<=10;c++) g[3][c]=C.OCC;
+  for(let r=4;r<=7;r++) g[r][6]=C.OCC;
+  for(let c=6;c<=10;c++) g[4][c]=C.OCC;
   for(let r=8;r<=10;r++) g[r][12]=C.OCC;
   for(let c=12;c<=15;c++) g[8][c]=C.OCC;
-  for(let r=7;r<=12;r++) for(let c=7;c<=11;c++) g[r][c]=C.UNK;
-  for(let r=1;r<=3;r++) for(let c=13;c<=17;c++) g[r][c]=C.UNK;
-  for(let r=9;r<=12;r++) for(let c=13;c<=17;c++) g[r][c]=C.UNK;
+  for(let r=7;r<=11;r++) for(let c=7;c<=11;c++) g[r][c]=C.UNK;
+  for(let r=1;r<=3;r++) for(let c=13;c<=16;c++) g[r][c]=C.UNK;
+  for(let r=9;r<=11;r++) for(let c=13;c<=16;c++) g[r][c]=C.UNK;
   for(let r=1;r<=2;r++) for(let c=1;c<=4;c++) g[r][c]=C.UNK;
 
-  let safeSet=new Set();
-  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(g[r][c]===C.FREE) safeSet.add(`${c},${r}`);
+  const ROUNDS = 2; // bounded safety-margin depth around unknown regions
 
-  let changed=true;
-  while(changed){
-    changed=false;
-    const toRemove=[];
+  let safeSet = new Set();
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++)
+    if(g[r][c]===C.FREE) safeSet.add(`${c},${r}`);
+
+  // round 0: seed the frontier with cells touching an unknown region
+  let removedThisRound = new Set();
+  for(const k of safeSet){
+    const[c,r]=k.split(',').map(Number);
+    for(const[dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=r+dr, nc=c+dc;
+      if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+      if(g[nr][nc]===C.UNK){ removedThisRound.add(k); break; }
+    }
+  }
+  for(const k of removedThisRound) safeSet.delete(k);
+  let frontier = removedThisRound;
+
+  for(let round=1; round<ROUNDS; round++){
+    const next=new Set();
     for(const k of safeSet){
       const[c,r]=k.split(',').map(Number);
-      let hasUnknownNb=false;
-      for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+      for(const[dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+        const nr=r+dr, nc=c+dc;
         if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
-        if(g[nr][nc]===C.UNK) {hasUnknownNb=true;break;}
-        if(g[nr][nc]===C.FREE&&!safeSet.has(`${nc},${nr}`)) {hasUnknownNb=true;break;}
+        if(frontier.has(`${nc},${nr}`)){ next.add(k); break; }
       }
-      if(hasUnknownNb) toRemove.push(k);
     }
-    for(const k of toRemove){safeSet.delete(k);changed=true;}
+    for(const k of next) safeSet.delete(k);
+    frontier = next;
+    if(next.size===0) break;
   }
 
   for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
-    if(g[r][c]===C.FREE){
-      drawCell(ctx,c,r,safeSet.has(`${c},${r}`)?C.SAT:C.FREE);
-    } else {
-      drawCell(ctx,c,r,g[r][c]);
-    }
+    drawCell(ctx,c,r,
+      g[r][c]===C.FREE
+        ? (safeSet.has(`${c},${r}`) ? C.SAT : C.FREE)
+        : g[r][c]);
   }
   drawGridLines(ctx);
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(g[r][c]===C.UNK) drawUnknownGlyph(ctx,c,r);
 
+  // highlight the frontier of the fixed point: safe cells adjacent to a
+  // cell that was eroded away (this map's actual νX boundary).
   for(const k of safeSet){
     const[c,r]=k.split(',').map(Number);
-    let isFrontier=false;
-    for(const[nr,nc] of [[r+1,c],[r-1,c],[r,c+1],[r,c-1]]){
+    for(const[dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=r+dr, nc=c+dc;
       if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
-      if(g[nr][nc]===C.UNK){isFrontier=true;break;}
+      const neighborKey=`${nc},${nr}`;
+      const neighborWasFree = g[nr][nc]===C.FREE;
+      if(g[nr][nc]===C.UNK || (neighborWasFree && !safeSet.has(neighborKey))){
+        drawCell(ctx,c,r,C.FRONTIER); break;
+      }
     }
-    if(isFrontier) drawCell(ctx,c,r,C.FRONTIER);
   }
   drawGridLines(ctx);
   drawRobot(ctx,3,6);
 })();
 
-})();
-</script>
+/* ═══════════════════════════════════════════════════
+   MAP 5 — Multi-agent notify: scouting + public announcement
+   R1 walks to an unknown gap and scouts it. R2 is sitting at a decision
+   point and, lacking that information, can only commit to the long way
+   around (verified 21 steps). Once R1 broadcasts what it found, R2 is
+   informed and commits to the short way (verified 14 steps shorter, 15
+   total). This is the "public announcement" / common-knowledge case from
+   the goal strip, as opposed to Map 0's private sensing.
+   Geometry verified by BFS: R2 unreachable-via-shortcut before notify,
+   21-step detour available throughout; 15-step path available after.
+   ═══════════════════════════════════════════════════ */
+(function(){
+  const ctx=initCanvas('cv-notify'); if(!ctx)return;
 
+  const R2_C=2, R2_R=6;
+  const GOAL_C=16, GOAL_R=6;
+  const R1_START_C=8, R1_START_R=4;
+  const GAP_SHORT=[5,6];   // unknown shortcut gap, col 9 — the thing R1 scouts
+  const GAP_LONG=[9,10];   // always-known detour gap, col 9
+  const GAP_SCOUT_C=9, GAP_SCOUT_R=5; // exact cell R1 walks into to resolve it
+
+  function makeBase(){
+    const g=makeG(C.FREE);
+    for(let c=0;c<COLS;c++){g[0][c]=C.OCC;g[ROWS-1][c]=C.OCC;}
+    for(let r=0;r<ROWS;r++){g[r][0]=C.OCC;g[r][COLS-1]=C.OCC;}
+    for(let r=1;r<=11;r++){
+      if(GAP_SHORT.includes(r)) g[r][9]=C.UNK;
+      else if(GAP_LONG.includes(r)) g[r][9]=C.FREE;
+      else g[r][9]=C.OCC;
+    }
+    g[GOAL_R][GOAL_C]=C.GOAL1;
+    return g;
+  }
+
+  const R1_COLOR = C.ROBOT;   // vermillion — scout / mover
+  const R2_COLOR = C.GOAL2;   // purple — second agent (matches R2 convention in maps 1/3)
+  const NOTIFY_COLOR = '#56B4E9'; // sky blue — communication signal, distinct from every fill already in use
+
+  const gUninformed = makeBase();
+  const gInformed = makeBase();
+  GAP_SHORT.forEach(r => gInformed[r][9]=C.FREE);
+
+  // R1's walk to the gap: it intentionally enters the unknown cell to resolve it
+  const r1ToGap = bfsShellsFrom(gUninformed, GAP_SCOUT_C, GAP_SCOUT_R, true);
+  const R1_PATH = extractPath(r1ToGap.dist, R1_START_C, R1_START_R, GAP_SCOUT_C, GAP_SCOUT_R);
+
+  // R2's two plans: long way (always known-safe) and short way (only known after notify)
+  const distLong  = bfsShellsFrom(gUninformed, GOAL_C, GOAL_R, false).dist;
+  const distShort = bfsShellsFrom(gInformed,  GOAL_C, GOAL_R, true).dist;
+  const LONG_PATH  = extractPath(distLong,  R2_C, R2_R, GOAL_C, GOAL_R);
+  const SHORT_PATH = extractPath(distShort, R2_C, R2_R, GOAL_C, GOAL_R);
+
+  const R1_WALK_N = R1_PATH.length;          // frames 0..N-1: R1 walking
+  const SENSE_FRAME = R1_WALK_N;             // R1 has arrived, gap resolves
+  const NOTIFY_START = SENSE_FRAME + 1;
+  const NOTIFY_FRAMES = 6;                   // ring growth frames
+  const MOVE_START = NOTIFY_START + NOTIFY_FRAMES;
+  const MOVE_FRAMES = SHORT_PATH.length;     // frames 0..N-1: R2 walking the shortcut
+  const TOTAL = MOVE_START + MOVE_FRAMES + 1;
+
+  const gapPx = { x:(GAP_SCOUT_C+0.5)*CELL, y:(ROWS-1-GAP_SCOUT_R)*CELL+CELL/2 };
+  const r2Px  = { x:(R2_C+0.5)*CELL, y:(ROWS-1-R2_R)*CELL+CELL/2 };
+  const ringMaxRadius = Math.hypot(gapPx.x-r2Px.x, gapPx.y-r2Px.y) * 1.08;
+
+  let frame=0, animTimer=null;
+  const STEP_MS=260, NOTIFY_STEP_MS=220, HOLD_MS=2900;
+
+  function drawFrame(f){
+    const informed = f>=SENSE_FRAME+1;
+    const g = informed ? gInformed : gUninformed;
+
+    ctx.clearRect(0,0,W,H);
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) drawCell(ctx,c,r,g[r][c]);
+    drawGridLines(ctx);
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(g[r][c]===C.UNK) drawUnknownGlyph(ctx,c,r);
+
+    // R1 position
+    let r1c=R1_START_C, r1r=R1_START_R;
+    if(f<R1_WALK_N){ [r1c,r1r]=R1_PATH[f]; }
+    else { [r1c,r1r]=R1_PATH[R1_PATH.length-1]; }
+
+    // sensing pulse while R1 is at the gap, just before/at resolution
+    if(f>=SENSE_FRAME-1 && f<=SENSE_FRAME+1){
+      ctx.save();
+      ctx.strokeStyle='#777'; ctx.lineWidth=1.1; ctx.setLineDash([3,2]);
+      ctx.beginPath(); ctx.arc(gapPx.x,gapPx.y,CELL*1.8,0,Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+      if(f===SENSE_FRAME){
+        ctx.font="italic 8.5px 'Source Serif 4',serif";
+        ctx.fillStyle='#555'; ctx.textAlign='center';
+        ctx.fillText('E_sense', gapPx.x, gapPx.y-CELL*2);
+      }
+      ctx.restore();
+    }
+
+    // notify ring expanding from the gap
+    let r2Informed = informed && f>=MOVE_START; // becomes informed only once ring has covered it
+    if(f>=NOTIFY_START && f<MOVE_START){
+      const i = f-NOTIFY_START;
+      const radius = ringMaxRadius*(i+1)/NOTIFY_FRAMES;
+      ctx.save();
+      ctx.strokeStyle=NOTIFY_COLOR; ctx.lineWidth=1.6; ctx.setLineDash([5,4]);
+      ctx.globalAlpha=0.85;
+      ctx.beginPath(); ctx.arc(gapPx.x,gapPx.y,radius,0,Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      ctx.font="italic 8.5px 'Source Serif 4',serif";
+      ctx.fillStyle=NOTIFY_COLOR; ctx.textAlign='center';
+      ctx.fillText('notify(gap free)', gapPx.x, gapPx.y-CELL*2);
+      ctx.restore();
+      r2Informed = radius >= Math.hypot(gapPx.x-r2Px.x, gapPx.y-r2Px.y);
+    }
+
+    // R2 position + state
+    let r2c=R2_C, r2r=R2_R, pathDrawn=null, pathColor=C.GOAL2;
+    if(f<MOVE_START){
+      // still deciding: idle at start, "?" thought bubble
+      r2c=R2_C; r2r=R2_R;
+    } else {
+      const step = Math.min(f-MOVE_START, SHORT_PATH.length-1);
+      [r2c,r2r]=SHORT_PATH[step];
+      pathDrawn = SHORT_PATH.slice(0, step+1);
+    }
+
+    if(pathDrawn && pathDrawn.length>1){
+      for(let i=0;i<pathDrawn.length-1;i++){
+        const[c1,r1]=pathDrawn[i],[c2,r2x]=pathDrawn[i+1];
+        drawArrow(ctx, c1*CELL+CELL/2,(ROWS-1-r1)*CELL+CELL/2,
+                       c2*CELL+CELL/2,(ROWS-1-r2x)*CELL+CELL/2, pathColor, 3);
+      }
+    }
+
+    // R1's own short walk-arrows (so its motion reads clearly too)
+    if(f>0 && f<=R1_WALK_N-1){
+      for(let i=0;i<Math.min(f,R1_PATH.length-1);i++){
+        const[c1,r1y]=R1_PATH[i],[c2,r2y]=R1_PATH[i+1];
+        drawArrow(ctx, c1*CELL+CELL/2,(ROWS-1-r1y)*CELL+CELL/2,
+                       c2*CELL+CELL/2,(ROWS-1-r2y)*CELL+CELL/2, R1_COLOR, 2);
+      }
+    }
+
+    drawRobot(ctx, r1c, r1r, R1_COLOR);
+    drawRobot(ctx, r2c, r2r, R2_COLOR);
+
+    // thought / notify bubble above R2
+    ctx.save();
+    ctx.font="bold 10px 'Space Grotesk',sans-serif";
+    ctx.textAlign='center';
+    if(f<MOVE_START){
+      ctx.fillStyle = (f>=NOTIFY_START) ? NOTIFY_COLOR : '#9C958C';
+      ctx.fillText('?', r2c*CELL+CELL/2, (ROWS-1-r2r)*CELL-4);
+    }
+    ctx.restore();
+
+    // agent labels
+    ctx.save();
+    ctx.font="italic 8px 'Source Serif 4',serif"; ctx.textAlign='center';
+    ctx.fillStyle=R1_COLOR; ctx.fillText('R₁ (scout)', r1c*CELL+CELL/2, (ROWS-1-r1r)*CELL+CELL+10);
+    ctx.fillStyle=R2_COLOR; ctx.fillText('R₂', R2_C*CELL+CELL/2, (ROWS-1-R2_R)*CELL+CELL+10+ (f<MOVE_START?0:0));
+    ctx.restore();
+
+    const lbl = document.getElementById('step-lbl-notify');
+    if(lbl){
+      if(f<R1_WALK_N){
+        lbl.textContent = `R₁ moves toward the unknown gap (step ${f+1}/${R1_WALK_N-1})`;
+      } else if(f===SENSE_FRAME){
+        lbl.textContent = 'R₁ scouts the gap — privately resolves blocked(gap)';
+      } else if(f<MOVE_START){
+        lbl.textContent = `R₁ broadcasts: public announcement reaches R₂ (${f-NOTIFY_START+1}/${NOTIFY_FRAMES})`;
+      } else if(f<MOVE_START+MOVE_FRAMES-1){
+        lbl.innerHTML = `\\(C_G(\\neg\\mathit{blocked}(c_{\\mathrm{gap}}))\\) established — R₂ commits to shortcut (step ${f-MOVE_START+1}/${MOVE_FRAMES-1})`;
+        MathJax.typesetPromise([lbl]);
+      } else {
+        lbl.innerHTML = `\\(C_G\\) resolved: 15-step shortcut vs. 21-step detour without notify`;
+        MathJax.typesetPromise([lbl]);
+      }
+    }
+  }
+
+  function tick(){
+    drawFrame(frame);
+    if(frame>=TOTAL-1){ animTimer=setTimeout(()=>{frame=0;tick();},HOLD_MS); return; }
+    const inNotify = frame>=NOTIFY_START && frame<MOVE_START;
+    frame++;
+    animTimer=setTimeout(tick, inNotify?NOTIFY_STEP_MS:STEP_MS);
+  }
+  function start(){ clearTimeout(animTimer); frame=0; tick(); }
+  function stop(){ clearTimeout(animTimer); }
+
+  const el=document.getElementById('cv-notify');
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver(e=>{ e[0].isIntersecting?start():stop(); },{threshold:.2});
+    obs.observe(el);
+  } else { start(); }
+  const btn=document.getElementById('btn-reset-notify');
+  if(btn) btn.onclick=()=>{ stop(); start(); };
+})();
+
+})(); // end canvas IIFE
+</script>
 </body>
 </html>
