@@ -49,11 +49,15 @@ header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
   color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
 header h1{font-family:var(--sg);font-size:1.18rem;
   font-weight:500;letter-spacing:-.01em}
-.hdr-nav{margin-left:auto;font-family:var(--sg);font-size:.78rem;font-weight:500}
-.hdr-nav a{color:var(--gray);text-decoration:none;margin-left:1.1rem;
-  transition:color .18s,border-color .18s;border-bottom:1.5px solid transparent}
-.hdr-nav a:hover{color:var(--black);border-bottom-color:var(--red)}
-.hdr-nav a.here{color:var(--black);border-bottom-color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
 .hero{padding:4.5rem 0 3.2rem;border-bottom:1px solid var(--border)}
 .eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
   letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
@@ -207,8 +211,8 @@ footer a:hover{color:var(--red)}
     <div class="hdr-inner">
       <span class="site-tag">epistemic-robotics</span>
       <h1>The Epistemic Robotics Project</h1>
-      <nav class="hdr-nav">
-        <a href="index.html" class="here">Overview</a>
+      <nav class="hdr-nav" aria-label="Sections">
+        <a href="index.html" aria-current="page">Overview</a>
         <a href="domains.html">Domains</a>
       </nav>
     </div>

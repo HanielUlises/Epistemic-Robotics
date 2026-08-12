@@ -50,11 +50,15 @@ header h1{font-family:var(--sg);font-size:1.18rem;
   font-weight:500;letter-spacing:-.01em}
 header h1 a{color:inherit;text-decoration:none}
 header h1 a:hover{color:var(--red)}
-.hdr-nav{margin-left:auto;font-family:var(--mono);font-size:.67rem;
-  letter-spacing:.1em;text-transform:uppercase}
-.hdr-nav a{color:var(--gray);text-decoration:none;margin-left:1rem}
-.hdr-nav a:hover,.hdr-nav a.here{color:var(--black)}
-.hdr-nav a.here{border-bottom:1.5px solid var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
 
 .hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
 .eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
@@ -221,13 +225,13 @@ footer a:hover{color:var(--red)}
 <body>
 
 <header>
-  <div class="container-wide">
+  <div class="container">
     <div class="hdr-inner">
       <span class="site-tag">epistemic-robotics</span>
       <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
-      <nav class="hdr-nav">
+      <nav class="hdr-nav" aria-label="Sections">
         <a href="index.html">Overview</a>
-        <a href="domains.html" class="here">Domains</a>
+        <a href="domains.html" aria-current="page">Domains</a>
       </nav>
     </div>
   </div>
@@ -528,6 +532,11 @@ footer a:hover{color:var(--red)}
               <g id="th-agents"></g>
               <g id="th-tree"></g>
             </svg>
+            <div class="panel" style="margin-top:.7rem">
+              <h5>Policy trace</h5>
+              <div class="steplist" id="th-steps"></div>
+              <div class="step-formal" id="th-formal"></div>
+            </div>
           </div>
           <div>
             <div class="panel" style="margin-bottom:.7rem">
@@ -550,11 +559,6 @@ footer a:hover{color:var(--red)}
                 <circle id="m-d2" cx="174" cy="44" r="28" fill="none" stroke="#C8102E" stroke-width="1.1"/>
                 <text id="m-cap" x="120" y="88" font-size="8.5" fill="#5A5A5A" text-anchor="middle">|W*| = 2</text>
               </svg>
-            </div>
-            <div class="panel">
-              <h5>Policy trace</h5>
-              <div class="steplist" id="th-steps"></div>
-              <div class="step-formal" id="th-formal"></div>
             </div>
           </div>
         </div>
@@ -944,11 +948,11 @@ function agentMarker(g, id, label, cx, cy){
       m.setAttribute('transform', 'translate(' + bayCx(0, OPT) + ',' + (96 + (i-1)*0) + ')');
     });
     // target marker
-    var star = el('text', {id:'th-star', x:bayCx(2, OPT), y:56, 'font-size':15,
+    var star = el('text', {id:'th-star', x:bayCx(2, OPT), y:58, 'font-size':15,
       fill:'#C9C9C9', 'text-anchor':'middle'});
     star.textContent = '★';
     gA.appendChild(star);
-    var slab = el('text', {id:'th-starlab', x:bayCx(2, OPT), y:44, 'font-size':9,
+    var slab = el('text', {id:'th-starlab', x:bayCx(2, OPT), y:36, 'font-size':9,
       fill:'#AAA', 'text-anchor':'middle'});
     slab.textContent = 'target, unknown to the fleet';
     gA.appendChild(slab);
