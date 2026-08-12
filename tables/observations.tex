@@ -10,7 +10,7 @@ three orders of magnitude.
 
 \paragraph{Fleet size is secondary, corridor length intermediate}
 Restricted to $L\le5$ so the uncertainty frontier does not confound it, fleet
-size takes the median from 621 ($N=2$) to 2\,714 ($N=3$) to 5\,480 ($N=4$) ---
+size takes the median from 621 ($N=2$) to 2\,714 ($N=3$) to 5\,480 ($N=4$) , 
 roughly an order of magnitude across the range, not three. Corridor length at
 fixed $U=2$ gives 66, 214, 2\,801 for $L=3,4,5$: longer corridors buy longer
 plans, and depth costs more than breadth here.
@@ -24,7 +24,7 @@ multiplies rather than adds. All eight unsolved instances are range-limited.
 
 \paragraph{Second-order goals were not the bottleneck}
 Nested goals cost no more than common-knowledge goals in this grid (median
-2\,224 vs.\ 2\,532 expanded). Under a public radio this is expected --- one
+2\,224 vs.\ 2\,532 expanded). Under a public radio this is expected, one
 announcement gives common knowledge, which entails any finite nesting. Under
 the range-limited radio the nested goal is \emph{weaker} than the
 common-knowledge one: it constrains two vehicles rather than the whole fleet,
@@ -36,7 +36,7 @@ construct.
 \paragraph{Grounding and search fail in opposite directions}
 Search cost tracks $U$; grounding cost tracks $N\times L$. Ground actions grow
 from 20 to 88 across the grid, and \textsf{plank}'s grounding time from 0.02\,s
-to 76\,s, the worst case being $N=4$, $L=6$ --- an instance whose \emph{search},
+to 76\,s, the worst case being $N=4$, $L=6$, an instance whose \emph{search},
 where solved, takes a few seconds. For a fielded system these are different
 engineering problems: grounding is an offline, cacheable cost that scales with
 the size of the facility and the fleet, while search is the online cost and
@@ -45,8 +45,8 @@ scales with how much the fleet does not know.
 \paragraph{The selection policy did not discriminate}
 The planner's automatic policy chose \texttt{knowledge-spread} with AO$^\ast$
 for all 136 solved instances (Table~\ref{tab:selection}). This is a reasonable
-classification --- every instance has sensing, a knowing-whether goal, and few
-designated worlds --- but it means the benchmark exercises one configuration
+classification, every instance has sensing, a knowing-whether goal, and few
+designated worlds, but it means the benchmark exercises one configuration
 and says nothing about the alternatives. Instances that would discriminate
 between heuristics need goals mixing modal and factual conjuncts, which this
 family deliberately avoids.

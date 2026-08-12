@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coordination Domains — The Epistemic Robotics Project</title>
+<meta name="description" content="Four DEL coordination domains for UGV fleets: the planning task, the observability models, and animated policy execution.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:'Space Grotesk',sans-serif;
+  --ss:'Source Serif 4',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{font-size:17px;scroll-behavior:smooth}
+body{background:#fff;color:var(--black);
+  font-family:var(--ss);
+  font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
+.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
+.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;font-family:var(--mono);font-size:.67rem;
+  letter-spacing:.1em;text-transform:uppercase}
+.hdr-nav a{color:var(--gray);text-decoration:none;margin-left:1rem}
+.hdr-nav a:hover,.hdr-nav a.here{color:var(--black)}
+.hdr-nav a.here{border-bottom:1.5px solid var(--red)}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;letter-spacing:.06em;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--mono);font-size:.63rem;color:var(--gray);
+  letter-spacing:.1em;text-transform:uppercase;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--mono);font-size:.69rem;line-height:1.5}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--mono);font-size:.66rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--mono);font-size:.69rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--mono);font-size:.63rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--mono);font-size:.74rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);letter-spacing:.07em}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container-wide">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <nav class="hdr-nav">
+        <a href="index.html">Overview</a>
+        <a href="domains.html" class="here">Domains</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Coordination domains · UGV fleets</p>
+    <h2>Planning for what a fleet <em>knows</em></h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      Four EPDDL domains in which a fleet of unmanned ground vehicles must reach a
+      prescribed configuration of knowledge — not a configuration of the world.
+      Each domain fixes one thing only: who observes what. This page states the
+      planning task, gives the observability model of each domain, and executes
+      the policies the planner actually returned.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE TASK -->
+<section>
+  <div class="container">
+    <p class="sec-label">The planning task</p>
+    <h3>Epistemic states, event models, and conditional policies</h3>
+
+    <p>
+      An epistemic state is a multi-pointed Kripke model
+      \(\mathcal{M} = (W, \{R_i\}_{i\in\mathcal{A}}, V, W^{*})\): the worlds a
+      fleet considers possible, one indistinguishability relation per vehicle,
+      a valuation, and the designated set \(W^{*}\) of candidates for the actual
+      world. Knowledge is \(\mathrm{S5}\), so each \(R_i\) is an equivalence.
+    </p>
+
+    <p>
+      An action is an event model
+      \(\mathcal{E} = (E, \{Q_i\}, \mathrm{pre}, \mathrm{post}, E^{*})\), applied
+      by product update. The relation \(Q_i\) carries the entire modelling
+      commitment: a vehicle that relates every event to a distinguished null
+      event is <em class="term">oblivious</em> — it observes neither the outcome
+      of the action nor its occurrence.
+    </p>
+
+    <div class="math-block">
+      \[\mathcal{M}\otimes\mathcal{E}
+        \;=\;\bigl(\{(w,e) : \mathcal{M},w\models \mathrm{pre}(e)\},\;
+        (w,e)R'_i(v,f)\iff wR_iv \wedge eQ_if,\;
+        V',\;W^{*}\!\times\!E^{*}\bigr)\]
+    </div>
+
+    <p>
+      A sensing action has \(|E^{*}| \ge 2\) — one designated event per reading —
+      so a solution is not a sequence but a policy: an AND/OR tree whose
+      OR-nodes choose an action, whose AND-nodes branch over designated events,
+      and every leaf of which satisfies the goal. Goals here are modal:
+    </p>
+
+    <div class="math-block">
+      \[\underbrace{C_{\mathcal{A}}\textstyle\bigwedge_{i}\mathrm{Kw}_i\,p}_{\text{fleet-wide}}
+        \qquad
+        \underbrace{K_{R_1}\mathrm{Kw}_{R_2}\,p}_{\text{second-order}}
+        \qquad
+        \underbrace{\mathrm{Kw}_{R_2}\,p \wedge \neg\,\mathrm{Kw}_{R_3}\,p}_{\text{selective}}\]
+    </div>
+
+    <p>
+      The third is the one no non-epistemic encoding expresses: it requires one
+      vehicle to be informed <em>and another to remain ignorant</em>, so no scalar
+      measure of "how much the fleet knows" can serve as a goal test.
+    </p>
+
+    <!-- product update animation -->
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Product update under private sensing</span>
+        <div class="ctrls">
+          <button class="btn primary" id="pu-play">▶ Play</button>
+          <button class="btn" id="pu-step">Step</button>
+          <button class="btn" id="pu-reset">Reset</button>
+        </div>
+      </div>
+      <div class="fig-body">
+        <svg id="pu-svg" viewBox="0 0 760 220" width="100%" style="max-width:760px;display:block;margin:0 auto"
+             xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+          <defs>
+            <marker id="pu-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,1 L7,4 L0,7" fill="none" stroke="#888" stroke-width="1.2"/>
+            </marker>
+          </defs>
+
+          <!-- M -->
+          <text x="96" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">epistemic state 𝓜</text>
+          <circle id="pu-w1" cx="56" cy="86" r="21" fill="#fff" stroke="#111" stroke-width="1.6"/>
+          <circle cx="56" cy="86" r="25" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+          <text x="56" y="90" font-size="10" text-anchor="middle" fill="#111">p</text>
+          <circle id="pu-w2" cx="136" cy="86" r="21" fill="#fff" stroke="#111" stroke-width="1.6"/>
+          <circle cx="136" cy="86" r="25" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+          <text x="136" y="90" font-size="10" text-anchor="middle" fill="#111">¬p</text>
+          <line x1="79" y1="86" x2="113" y2="86" stroke="#888" stroke-width="1.3"/>
+          <text x="96" y="76" font-size="9" fill="#5A5A5A" text-anchor="middle">R₁R₂</text>
+          <text x="96" y="132" font-size="9.5" fill="#5A5A5A" text-anchor="middle">|W*| = 2 · nobody knows</text>
+
+          <text x="196" y="92" font-size="18" fill="#111" text-anchor="middle">⊗</text>
+
+          <!-- E -->
+          <text x="286" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">event model 𝓔 (scan)</text>
+          <circle cx="246" cy="70" r="18" fill="#fff" stroke="#111" stroke-width="1.6"/>
+          <text x="246" y="74" font-size="9" text-anchor="middle">e⁺</text>
+          <circle cx="326" cy="70" r="18" fill="#fff" stroke="#111" stroke-width="1.6"/>
+          <text x="326" y="74" font-size="9" text-anchor="middle">e⁻</text>
+          <circle cx="286" cy="128" r="18" fill="#fff" stroke="#888" stroke-width="1.3" stroke-dasharray="3,2"/>
+          <text x="286" y="132" font-size="9" text-anchor="middle" fill="#555">nil</text>
+          <path d="M252,86 Q268,110 274,120" fill="none" stroke="#1A52A0" stroke-width="1.2" marker-end="url(#pu-arr)"/>
+          <path d="M320,86 Q304,110 298,120" fill="none" stroke="#1A52A0" stroke-width="1.2" marker-end="url(#pu-arr)"/>
+          <text x="286" y="160" font-size="9" fill="#1A52A0" text-anchor="middle">R₂ : Q₂(e) = nil  (oblivious)</text>
+          <text x="286" y="52" font-size="9" fill="#5A5A5A" text-anchor="middle">E* = {e⁺, e⁻}</text>
+
+          <text x="386" y="92" font-size="15" fill="#111" text-anchor="middle">=</text>
+
+          <!-- M' -->
+          <text x="596" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">𝓜′ — branch e⁺</text>
+          <g id="pu-out" opacity="0">
+            <circle id="pu-o1" cx="470" cy="70" r="20" fill="#fff" stroke="#C8102E" stroke-width="2"/>
+            <text x="470" y="74" font-size="9" text-anchor="middle">p,e⁺</text>
+            <circle id="pu-o2" cx="596" cy="70" r="20" fill="#fff" stroke="#111" stroke-width="1.4" opacity=".45"/>
+            <text x="596" y="74" font-size="9" text-anchor="middle" fill="#555">p,nil</text>
+            <circle id="pu-o3" cx="722" cy="70" r="20" fill="#fff" stroke="#111" stroke-width="1.4" opacity=".45"/>
+            <text x="722" y="74" font-size="8.5" text-anchor="middle" fill="#555">¬p,nil</text>
+            <line id="pu-e1" x1="490" y1="70" x2="576" y2="70" stroke="#1A52A0" stroke-width="1.4"/>
+            <line id="pu-e2" x1="616" y1="70" x2="702" y2="70" stroke="#1A52A0" stroke-width="1.4"/>
+            <text x="533" y="60" font-size="9" fill="#1A52A0" text-anchor="middle">R₂</text>
+            <text x="659" y="60" font-size="9" fill="#1A52A0" text-anchor="middle">R₂</text>
+            <text x="596" y="128" font-size="9.5" fill="#111" text-anchor="middle">R₁ separates ⇒ Kw₁ p</text>
+            <text x="596" y="146" font-size="9.5" fill="#1A52A0" text-anchor="middle">R₂ still reaches ¬p ⇒ ¬Kw₂ p</text>
+            <text x="596" y="168" font-size="9" fill="#5A5A5A" text-anchor="middle">the null copies are exactly what keeps R₂ ignorant</text>
+          </g>
+        </svg>
+      </div>
+      <div class="fig-cap">
+        <b>Figure 1.</b> One product update with a private sensing action. The
+        designated event \(e^{+}\) fixes the reading for \(R_1\), but the null
+        copies survive in \(\mathcal{M}'\) and remain \(R_2\)-accessible, so
+        \(R_2\) knows neither the outcome nor that a scan occurred. Every
+        difference between the four domains below is a difference in this one
+        relation.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DOMAINS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The four domains</p>
+    <h3>One facility, four observability models</h3>
+
+    <p>
+      All four domains share a corridor of \(L\) bays, a fleet of \(N\) UGVs, a
+      target confined to \(U\) candidate bays, movement as a public ontic action,
+      and sensing as strictly private: a vehicle reads only the bay it occupies,
+      and no teammate observes the reading. What differs is the communication
+      action.
+    </p>
+
+    <div class="dom-grid">
+      <div class="dom-card">
+        <h4>ugv-public</h4>
+        <div class="sig">broadcast ?i ?l — public-announcement<br>(default Fully)</div>
+        <p>Facility-wide radio. One transmission establishes
+        \(C_{\mathcal{A}}\), so fleet knowledge is always symmetric. The planning
+        problem is the division of labour: who drives where, and when to speak.</p>
+      </div>
+      <div class="dom-card">
+        <h4>ugv-radio</h4>
+        <div class="sig">report ?i ?l — private-announcement<br>(?j Fully if in range, else Oblivious)</div>
+        <p>Range-limited radio: the sender's bay and its neighbours. Acquisition
+        happens at the far end, delivery must happen near the fleet, so policies
+        gain a return, a relay, or a rendezvous.</p>
+      </div>
+      <div class="dom-card">
+        <h4>ugv-directed</h4>
+        <div class="sig">tell ?i ?j ?l — private-announcement<br>(?i, ?j Fully; default Oblivious)</div>
+        <p>Point-to-point radio with a single detector in the fleet. Reaches
+        asymmetric information states: one teammate informed, another
+        deliberately left ignorant.</p>
+      </div>
+      <div class="dom-card">
+        <h4>ugv-facility</h4>
+        <div class="sig">unlock ?i ?from ?to — public-ontic<br>scan gated by (has-scanner ?i)</div>
+        <p>Heterogeneous fleet, locked bays, several items. One vehicle holds the
+        key, another the detector, so an ontic action becomes the precondition of
+        an epistemic one.</p>
+      </div>
+    </div>
+
+    <h4>Observability as a formula</h4>
+    <p>
+      Range limitation is not a special case in the planner; it is an
+      observability condition evaluated per agent at update time. This is the
+      single block in which <span style="font-family:var(--mono);font-size:.85em">ugv-radio</span>
+      differs from <span style="font-family:var(--mono);font-size:.85em">ugv-public</span>:
+    </p>
+
+<pre class="code"><span class="k">(:action</span> report
+    <span class="k">:parameters</span> (?i - agent ?l - location)
+    <span class="k">:action-type</span> (private-announcement (e-report ?i ?l) (nil))
+    <span class="k">:observability-conditions</span>
+        (:and
+            (?i Fully)
+            (:forall (?j - agent | (/= ?i ?j))
+                (?j
+                    (<span class="k">if</span>
+                        (forall (?l1 - location)
+                            (imply (at ?i ?l1)
+                                (exists (?l2 - location |
+                                        (or (= ?l2 ?l1) (adjacent ?l1 ?l2) (adjacent ?l2 ?l1)))
+                                    (at ?j ?l2) )))
+                        Fully
+                    <span class="k">else</span>
+                        Oblivious ) ) )
+            (default Oblivious) )
+)</pre>
+
+    <!-- reception figure -->
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Who receives a report sent from b2</span>
+        <div class="ctrls">
+          <span class="ctrl-label">domain</span>
+          <div class="seg" id="rx-seg">
+            <button class="btn" data-rx="public" aria-pressed="true">public</button>
+            <button class="btn" data-rx="radio" aria-pressed="false">radio</button>
+            <button class="btn" data-rx="directed" aria-pressed="false">directed</button>
+          </div>
+          <button class="btn primary" id="rx-send">▶ Transmit</button>
+        </div>
+      </div>
+      <div class="fig-body">
+        <svg id="rx-svg" viewBox="0 0 700 170" width="100%" style="max-width:700px;display:block;margin:0 auto"
+             xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+          <g id="rx-bays"></g>
+          <circle id="rx-wave" class="wave" cx="0" cy="76" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
+          <g id="rx-agents"></g>
+          <text id="rx-note" x="350" y="150" font-size="10.5" fill="#5A5A5A" text-anchor="middle"></text>
+        </svg>
+      </div>
+      <div class="fig-cap">
+        <b>Figure 2.</b> The same transmission under three observability models.
+        Filled markers received the content; hollow markers are oblivious — they
+        did not learn that a transmission occurred, so they can infer nothing
+        from the fleet's silence either.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ POLICY THEATRE -->
+<section>
+  <div class="container-wide">
+    <p class="sec-label">Policy execution</p>
+    <h3>What the planner returned, executed step by step</h3>
+    <p style="max-width:800px">
+      Both policies below are transcribed verbatim from the solver's output on
+      instances that differ in one respect only — the communication model.
+      Three UGVs start at the depot \(b_1\); the target is in \(b_3\) or
+      \(b_4\) and nobody knows which; the goal is
+      \(C_{\mathcal{A}}\bigwedge_i \mathrm{Kw}_i\,p\) with
+      \(p \equiv \textit{target-at}(b_3)\). Choose the branch to follow the
+      sensing outcome the policy conditions on.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Policy execution — corridor, model, and knowledge state</span>
+        <div class="ctrls">
+          <span class="ctrl-label">domain</span>
+          <div class="seg" id="th-dom">
+            <button class="btn" data-dom="public" aria-pressed="true">public</button>
+            <button class="btn" data-dom="radio" aria-pressed="false">radio</button>
+          </div>
+          <span class="ctrl-label" style="margin-left:.5rem">branch</span>
+          <div class="seg" id="th-branch">
+            <button class="btn" data-br="pos" aria-pressed="true">target in b3</button>
+            <button class="btn" data-br="neg" aria-pressed="false">not in b3</button>
+          </div>
+          <button class="btn primary" id="th-play" style="margin-left:.5rem">▶ Play</button>
+          <button class="btn" id="th-step">Step</button>
+          <button class="btn" id="th-reset">Reset</button>
+        </div>
+      </div>
+      <div class="fig-body">
+        <div class="theatre">
+          <div>
+            <svg id="th-svg" viewBox="0 0 660 250" width="100%" style="display:block"
+                 xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+              <g id="th-bays"></g>
+              <circle id="th-wave" class="wave" cx="0" cy="96" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
+              <circle id="th-scan" class="scanring" cx="0" cy="96" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>
+              <g id="th-agents"></g>
+              <g id="th-tree"></g>
+            </svg>
+          </div>
+          <div>
+            <div class="panel" style="margin-bottom:.7rem">
+              <h5>Knowledge state</h5>
+              <div id="th-kw"></div>
+            </div>
+            <div class="panel" style="margin-bottom:.7rem">
+              <h5>Epistemic model</h5>
+              <svg id="th-model" viewBox="0 0 240 96" width="100%"
+                   xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+                <circle id="m-w1" class="wnode" cx="66" cy="44" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+                <text x="66" y="41" font-size="9" text-anchor="middle" fill="#111">target</text>
+                <text x="66" y="52" font-size="9" text-anchor="middle" fill="#111">b3</text>
+                <circle id="m-w2" class="wnode" cx="174" cy="44" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+                <text x="174" y="41" font-size="9" text-anchor="middle" fill="#111">target</text>
+                <text x="174" y="52" font-size="9" text-anchor="middle" fill="#111">b4</text>
+                <line id="m-edge" class="wedge" x1="90" y1="44" x2="150" y2="44" stroke="#888" stroke-width="1.4"/>
+                <text id="m-lbl" x="120" y="34" font-size="8.5" fill="#5A5A5A" text-anchor="middle">R₁R₂R₃</text>
+                <circle id="m-d1" cx="66" cy="44" r="28" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+                <circle id="m-d2" cx="174" cy="44" r="28" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+                <text id="m-cap" x="120" y="88" font-size="8.5" fill="#5A5A5A" text-anchor="middle">|W*| = 2</text>
+              </svg>
+            </div>
+            <div class="panel">
+              <h5>Policy trace</h5>
+              <div class="steplist" id="th-steps"></div>
+              <div class="step-formal" id="th-formal"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fig-cap">
+        <b>Figure 3.</b> Two behaviours repay attention. On the negative branch
+        the policy reports \(b_4\) — a bay no vehicle ever scanned — because the
+        reading together with the common knowledge that the target lies in
+        exactly one of two bays entails it. And under the range-limited radio a
+        return move is inserted on <b>both</b> branches: a report transmitted
+        from \(b_3\) would reach nobody, so the knowledge would not be delivered.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ INTERLOCK -->
+<section>
+  <div class="container">
+    <p class="sec-label">Capability interlock</p>
+    <h3>When an ontic action is the precondition of an epistemic one</h3>
+    <p>
+      In <span style="font-family:var(--mono);font-size:.85em">ugv-facility</span>
+      the fleet is heterogeneous: \(R_2\) carries the key but no detector,
+      \(R_1\) the reverse, and a mid-corridor bay starts locked. Neither vehicle
+      can complete the mission alone, and the dependency runs across the
+      ontic/epistemic boundary — \(R_2\) must change the world before \(R_1\) can
+      learn anything at all.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">facility — unlock, traverse, sense, report</span>
+        <div class="ctrls">
+          <button class="btn primary" id="fc-play">▶ Play</button>
+          <button class="btn" id="fc-step">Step</button>
+          <button class="btn" id="fc-reset">Reset</button>
+        </div>
+      </div>
+      <div class="fig-body">
+        <svg id="fc-svg" viewBox="0 0 660 200" width="100%" style="max-width:660px;display:block;margin:0 auto"
+             xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+          <g id="fc-bays"></g>
+          <circle id="fc-wave" class="wave" cx="0" cy="86" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
+          <circle id="fc-scan" class="scanring" cx="0" cy="86" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>
+          <g id="fc-agents"></g>
+          <text id="fc-note" x="330" y="176" font-size="10.5" fill="#5A5A5A" text-anchor="middle"></text>
+        </svg>
+      </div>
+      <div class="fig-cap">
+        <b>Figure 4.</b> The policy for
+        <span style="font-family:var(--mono)">facility-a2-b4-i1-depot-ck</span>.
+        The lock is public, so its opening is common knowledge the moment it
+        happens; the reading is private, so it is worth nothing until broadcast.
+        The two halves of the mission are coupled only through the plan.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ RESULTS -->
+<section>
+  <div class="container">
+    <p class="sec-label">Measurements</p>
+    <h3>What actually drives the cost</h3>
+    <p>
+      204 instances, grounded with <span style="font-family:var(--mono);font-size:.85em">plank</span>
+      and solved with ALETHEIA under a 60 s search budget. The suite varies fleet
+      size \(N\), corridor length \(L\), initial uncertainty \(U\) — which is
+      exactly \(|W|\) — deployment, goal shape, and the number of items.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Median expanded nodes, by parameter (logarithmic)</span>
+        <div class="ctrls"><button class="btn" id="ch-replay">↻ Replay</button></div>
+      </div>
+      <div class="fig-body">
+        <div id="charts" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.4rem"></div>
+      </div>
+      <div class="fig-cap">
+        <b>Figure 5.</b> Uncertainty is measured at \(N = 2\), fleet size over
+        \(L \le 5\), and corridor length at \(U = 2\), so that the strata do not
+        confound one another. Uncertainty moves the cost by three orders of
+        magnitude; fleet size by one. Each additional candidate bay is another
+        world in the initial model, and the model is what the search carries.
+      </div>
+    </div>
+
+    <table class="data">
+      <thead>
+        <tr><th>Family</th><th>Solved</th><th>Depth</th><th>Expanded</th><th>Search (s)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>public / common knowledge</td><td>36/36</td><td>4</td><td>1 397</td><td>0.01</td></tr>
+        <tr><td>radio / common knowledge</td><td>32/36</td><td>5</td><td>4 829</td><td>0.04</td></tr>
+        <tr><td>public / second-order</td><td>36/36</td><td>4</td><td>1 397</td><td>0.01</td></tr>
+        <tr><td>radio / second-order</td><td>32/36</td><td>5</td><td>4 164</td><td>0.03</td></tr>
+        <tr><td>directed / second-order</td><td>30/30</td><td>5</td><td>536</td><td>0.01</td></tr>
+        <tr><td>directed / selective</td><td>20/20</td><td>5</td><td>1 254</td><td>0.01</td></tr>
+        <tr><td>facility / common knowledge</td><td>10/10</td><td>7</td><td>3 971</td><td>0.03</td></tr>
+        <tr class="sum"><td>All</td><td>196/204</td><td>5</td><td>2 263</td><td>0.02</td></tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      Medians over solved instances. All eight unsolved instances are
+      range-limited with four candidate bays and three or more vehicles; every
+      one is a search timeout rather than an error. Grounding, by contrast,
+      scales with \(N \times L\): from 0.02 s to 76 s across the same suite —
+      an offline, cacheable cost, where search is the online one.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DISCREPANCY -->
+<section>
+  <div class="container">
+    <p class="sec-label">Open issue</p>
+    <h3>A benchmark earning its keep</h3>
+
+    <div class="warn">
+      <h4>Four of the 204 returned policies are unsound</h4>
+      <p>
+        On the multi-item facility instances, the policy terminates on a
+        <em>private</em> scan while the goal demands fleet-wide knowledge:
+      </p>
+<pre class="code" style="margin:.6rem 0">... broadcast_R1_o2_b2 -> unlock_R2_b2_b3
+    -> move_R1_b2_b3 -> move_R1_b3_b4 -> scan_R1_o1_b4   <span class="c">[leaf]</span></pre>
+      <p style="margin-bottom:0">
+        Since <span style="font-family:var(--mono);font-size:.85em">scan</span>
+        declares <span style="font-family:var(--mono);font-size:.85em">(default Oblivious)</span>,
+        \(R_2\)'s accessibility class still contains worlds disagreeing on the
+        item's bay — precisely the null copies of Figure 1 — so
+        \(\mathrm{Kw}_{R_2}\) fails and the goal cannot hold at that leaf.
+      </p>
+    </div>
+
+    <p>
+      Three checks locate the fault in the planner rather than the encoding.
+      <span style="font-family:var(--mono);font-size:.85em">plank</span>'s
+      independent validator reports the goal unsatisfied on the same history;
+      the identical model with a goal naming only the last-sensed atom is solved
+      correctly, with the broadcast present; and all 190 corridor and
+      addressed-radio policies end in a communication action, as does every
+      single-item facility policy. Only goals conjoining knowledge requirements
+      over <em>two distinct atoms</em> exhibit it.
+    </p>
+
+    <p class="pull">
+      Goal shape — knowing-whether, nested, negated, conjoined over several
+      atoms — deserves standing as a benchmark dimension alongside instance size.
+      Scaling a suite exercises one code path harder; varying the shape of the
+      goal exercises different ones.
+    </p>
+
+    <p class="note">
+      A planner's own plan validator cannot adjudicate this class of
+      disagreement, since it shares the state pipeline under suspicion. The
+      cross-check that settled it came from a second, independent implementation
+      of the semantics.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;·&nbsp;
+        <a href="ugv_del_coordination.pdf">Full report (PDF)</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">204 instances · 4 domains · EPDDL</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+var RED = '#C8102E', STEEL = '#1A52A0', INK = '#111', GRAY = '#5A5A5A', BORD = '#D6D6D6';
+
+function el(tag, attrs){
+  var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+function onView(node, fn){
+  if (!('IntersectionObserver' in window)) { fn(); return; }
+  var o = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if (e.isIntersecting){ fn(); o.disconnect(); } });
+  }, {threshold:.35});
+  o.observe(node);
+}
+
+/* ─────────────────────────────── Figure 1: product update ── */
+(function(){
+  var out = document.getElementById('pu-out');
+  var svg = document.getElementById('pu-svg');
+  if (!out) return;
+  var stage = 0, timer = null;
+  var parts = [
+    ['pu-o1'], ['pu-o2','pu-e1'], ['pu-o3','pu-e2']
+  ];
+  function reset(){
+    clearInterval(timer); timer = null; stage = 0;
+    out.setAttribute('opacity','0');
+    document.getElementById('pu-play').textContent = '▶ Play';
+  }
+  function step(){
+    if (stage === 0) out.setAttribute('opacity','1');
+    stage++;
+    if (stage > 3){ reset(); return false; }
+    return true;
+  }
+  document.getElementById('pu-step').onclick = function(){ step(); };
+  document.getElementById('pu-reset').onclick = reset;
+  document.getElementById('pu-play').onclick = function(){
+    if (timer){ reset(); return; }
+    this.textContent = '■ Stop';
+    step();
+    timer = setInterval(function(){ if (!step()) clearInterval(timer); }, 900);
+  };
+  onView(svg, function(){ if (!RM) out.setAttribute('opacity','1'); });
+})();
+
+/* ─────────────────────────────── shared corridor drawing ── */
+function drawCorridor(gBays, opts){
+  var n = opts.bays, x0 = opts.x0, w = opts.w, y = opts.y, h = opts.h;
+  while (gBays.firstChild) gBays.removeChild(gBays.firstChild);
+  for (var i = 0; i < n; i++){
+    var x = x0 + i * w;
+    gBays.appendChild(el('rect', {x:x, y:y, width:w-10, height:h,
+      fill:'#fff', stroke:BORD, 'stroke-width':1.2, rx:2}));
+    var t = el('text', {x:x + (w-10)/2, y:y+h+16, 'font-size':10.5,
+      fill:GRAY, 'text-anchor':'middle'});
+    t.textContent = 'b' + (i+1);
+    gBays.appendChild(t);
+  }
+}
+function bayCx(i, opts){ return opts.x0 + i*opts.w + (opts.w-10)/2; }
+
+function agentMarker(g, id, label, cx, cy){
+  var wrap = el('g', {id:id, class:'ugv', transform:'translate(' + cx + ',' + cy + ')'});
+  wrap.appendChild(el('circle', {r:15, fill:'#fff', stroke:INK, 'stroke-width':1.6}));
+  var t = el('text', {y:4, 'font-size':10, 'text-anchor':'middle', fill:INK});
+  t.textContent = label;
+  wrap.appendChild(t);
+  g.appendChild(wrap);
+  return wrap;
+}
+
+/* ─────────────────────────────── Figure 2: reception ── */
+(function(){
+  var svg = document.getElementById('rx-svg');
+  if (!svg) return;
+  var OPT = {bays:5, x0:40, w:124, y:44, h:64};
+  var gB = document.getElementById('rx-bays'), gA = document.getElementById('rx-agents');
+  var note = document.getElementById('rx-note'), wave = document.getElementById('rx-wave');
+  var mode = 'public';
+  // sender R1 at b2; R2 at b1; R3 at b3; R4 at b5
+  var fleet = [
+    {id:'S', bay:1, sender:true},
+    {id:'R2', bay:0}, {id:'R3', bay:2}, {id:'R4', bay:4}
+  ];
+  var NOTES = {
+    public:  'public-announcement — every vehicle receives; C_A holds in one step',
+    radio:   'private-announcement, range = sender bay ± 1 — R4 is oblivious',
+    directed:'private-announcement addressed to R2 — R3 and R4 are oblivious'
+  };
+  function hears(a){
+    if (a.sender) return true;
+    if (mode === 'public') return true;
+    if (mode === 'radio') return Math.abs(a.bay - 1) <= 1;
+    return a.id === 'R2';
+  }
+  function draw(){
+    drawCorridor(gB, OPT);
+    while (gA.firstChild) gA.removeChild(gA.firstChild);
+    // range shading for radio
+    if (mode === 'radio'){
+      gB.appendChild(el('rect', {x:OPT.x0 - 4, y:OPT.y - 8,
+        width:3*OPT.w + 2, height:OPT.h + 16, fill:RED, opacity:.055,
+        stroke:RED, 'stroke-width':.8, 'stroke-dasharray':'4,3', rx:3}));
+    }
+    fleet.forEach(function(a){
+      var m = agentMarker(gA, 'rx-' + a.id, a.sender ? 'R1' : a.id,
+                          bayCx(a.bay, OPT), 76);
+      var c = m.querySelector('circle');
+      if (a.sender){ c.setAttribute('stroke', RED); c.setAttribute('stroke-width', 2.2); }
+      m.setAttribute('data-hears', hears(a) ? '1' : '0');
+    });
+    note.textContent = NOTES[mode];
+    paint(false);
+  }
+  function paint(received){
+    fleet.forEach(function(a){
+      var m = document.getElementById('rx-' + a.id);
+      var c = m.querySelector('circle'), t = m.querySelector('text');
+      if (a.sender) return;
+      if (received && hears(a)){
+        c.setAttribute('fill', RED); c.setAttribute('stroke', RED);
+        t.setAttribute('fill', '#fff');
+      } else {
+        c.setAttribute('fill', '#fff');
+        c.setAttribute('stroke', received ? BORD : INK);
+        t.setAttribute('fill', received ? GRAY : INK);
+      }
+    });
+  }
+  document.getElementById('rx-seg').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    mode = b.getAttribute('data-rx');
+    this.querySelectorAll('button').forEach(function(x){
+      x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+    });
+    draw();
+  });
+  document.getElementById('rx-send').onclick = function(){
+    wave.setAttribute('cx', bayCx(1, OPT));
+    wave.classList.remove('go'); void wave.offsetWidth; wave.classList.add('go');
+    setTimeout(function(){ paint(true); }, RM ? 0 : 380);
+  };
+  draw();
+})();
+
+/* ─────────────────────────────── Figure 3: policy theatre ── */
+(function(){
+  var svg = document.getElementById('th-svg');
+  if (!svg) return;
+  var OPT = {bays:4, x0:34, w:150, y:64, h:64};
+  var gB = document.getElementById('th-bays'), gA = document.getElementById('th-agents');
+  var gT = document.getElementById('th-tree');
+  var wave = document.getElementById('th-wave'), scan = document.getElementById('th-scan');
+  var kwBox = document.getElementById('th-kw'), stepBox = document.getElementById('th-steps');
+  var formal = document.getElementById('th-formal');
+  var dom = 'public', branch = 'pos', idx = -1, timer = null;
+
+  // Policies exactly as returned by the solver.
+  function build(dom, branch){
+    var tgt = branch === 'pos' ? 'b3' : 'b4';
+    var S = [];
+    S.push({lab:'initial state', pos:[0,0,0], kw:[0,0,0], ck:0,
+            edge:'R₁R₂R₃', dead:0, des:'both',
+            f:'|W*| = 2 · C_A(nobody knows which bay)'});
+    S.push({lab:'move R1 b1→b2', pos:[1,0,0], kw:[0,0,0], ck:0,
+            edge:'R₁R₂R₃', dead:0, des:'both',
+            f:'public-ontic · (default Fully) · no epistemic effect'});
+    S.push({lab:'move R1 b2→b3', pos:[2,0,0], kw:[0,0,0], ck:0,
+            edge:'R₁R₂R₃', dead:0, des:'both',
+            f:'public-ontic · positions are common knowledge'});
+    S.push({lab:'scan R1 b3', pos:[2,0,0], kw:[1,0,0], ck:0, act:'scan',
+            edge:'R₂R₃', dead:0, des:(branch === 'pos' ? 'w1' : 'w2'),
+            f:'private-sensing · (?i Fully)(default Oblivious) · branch e' +
+              (branch === 'pos' ? '⁺' : '⁻')});
+    if (dom === 'radio'){
+      S.push({lab:'move R1 b3→b2', pos:[1,0,0], kw:[1,0,0], ck:0,
+              edge:'R₂R₃', dead:0, des:(branch === 'pos' ? 'w1' : 'w2'),
+              f:'public-ontic · drives back into radio range of the depot'});
+      S.push({lab:'report R1 ' + tgt, pos:[1,0,0], kw:[1,1,1], ck:1, act:'send',
+              edge:'—', dead:(branch === 'pos' ? 2 : 1), des:(branch === 'pos' ? 'w1' : 'w2'),
+              f:'private-announcement · in range ⇒ R2,R3 Fully · goal reached'});
+    } else {
+      S.push({lab:'broadcast R1 ' + tgt, pos:[2,0,0], kw:[1,1,1], ck:1, act:'send',
+              edge:'—', dead:(branch === 'pos' ? 2 : 1), des:(branch === 'pos' ? 'w1' : 'w2'),
+              f:'public-announcement · (default Fully) · goal reached'});
+    }
+    return S;
+  }
+  var steps = build(dom, branch);
+
+  function drawStatic(){
+    drawCorridor(gB, OPT);
+    while (gA.firstChild) gA.removeChild(gA.firstChild);
+    ['R1','R2','R3'].forEach(function(id, i){
+      var m = agentMarker(gA, 'th-' + id, id, bayCx(0, OPT), 96 + (i - 1) * 0);
+      m.setAttribute('transform', 'translate(' + bayCx(0, OPT) + ',' + (96 + (i-1)*0) + ')');
+    });
+    // target marker
+    var star = el('text', {id:'th-star', x:bayCx(2, OPT), y:78, 'font-size':15,
+      fill:RED, 'text-anchor':'middle', opacity:'0'});
+    star.textContent = '★';
+    gA.appendChild(star);
+    drawTree();
+  }
+
+  // Agents share a bay: fan them out horizontally inside it.
+  function place(){
+    var st = steps[Math.max(idx, 0)];
+    var byBay = {};
+    st.pos.forEach(function(b, i){ (byBay[b] = byBay[b] || []).push(i); });
+    ['R1','R2','R3'].forEach(function(id, i){
+      var b = st.pos[i], grp = byBay[b], k = grp.indexOf(i);
+      var spread = (grp.length - 1) * 34;
+      var x = bayCx(b, OPT) - spread/2 + k * 34;
+      var m = document.getElementById('th-' + id);
+      m.setAttribute('transform', 'translate(' + x + ',96)');
+      var c = m.querySelector('circle'), t = m.querySelector('text');
+      var knows = st.kw[i];
+      c.setAttribute('fill', knows ? RED : '#fff');
+      c.setAttribute('stroke', knows ? RED : INK);
+      t.setAttribute('fill', knows ? '#fff' : INK);
+    });
+    var star = document.getElementById('th-star');
+    if (star){
+      var known = idx >= 3;
+      star.setAttribute('opacity', known ? '1' : '0');
+      star.setAttribute('x', bayCx(branch === 'pos' ? 2 : 3, OPT));
+    }
+  }
+
+  function drawTree(){
+    while (gT.firstChild) gT.removeChild(gT.firstChild);
+    var y0 = 178, labels = steps.map(function(s){ return s.lab; }).slice(1);
+    var n = labels.length, x0 = 40, gap = Math.min(126, (600 - x0) / n);
+    var lab = el('text', {x:34, y:162, 'font-size':9.5, fill:GRAY});
+    lab.textContent = 'policy path — branch ' + (branch === 'pos' ? 'e⁺ (target in b3)' : 'e⁻ (not in b3)');
+    gT.appendChild(lab);
+    for (var i = 0; i < n; i++){
+      var x = x0 + i * gap;
+      var isSense = labels[i].indexOf('scan') === 0;
+      var g = el('g', {id:'th-node-' + i});
+      g.appendChild(el('rect', {x:x, y:y0, width:gap - 12, height:26,
+        fill:'#fff', stroke:isSense ? STEEL : BORD, 'stroke-width':isSense ? 1.5 : 1.1, rx:2}));
+      var t = el('text', {x:x + (gap-12)/2, y:y0 + 17, 'font-size':8.5,
+        'text-anchor':'middle', fill:'#555'});
+      t.textContent = labels[i];
+      g.appendChild(t);
+      gT.appendChild(g);
+      if (i < n - 1){
+        gT.appendChild(el('line', {x1:x + gap - 12, y1:y0 + 13, x2:x + gap - 2, y2:y0 + 13,
+          stroke:BORD, 'stroke-width':1.2}));
+      }
+    }
+  }
+  function paintTree(){
+    var n = steps.length - 1;
+    for (var i = 0; i < n; i++){
+      var g = document.getElementById('th-node-' + i);
+      if (!g) continue;
+      var r = g.querySelector('rect'), t = g.querySelector('text');
+      if (i < idx){ r.setAttribute('stroke', BORD); r.setAttribute('fill', '#fff'); t.setAttribute('fill', '#777'); }
+      else if (i === idx - 1){ r.setAttribute('stroke', RED); r.setAttribute('fill', '#FFF4F5'); t.setAttribute('fill', INK); }
+      else { r.setAttribute('stroke', BORD); r.setAttribute('fill', '#fff'); t.setAttribute('fill', '#BBB'); }
+    }
+  }
+
+  function paintKw(){
+    var st = steps[Math.max(idx, 0)];
+    kwBox.innerHTML = '';
+    ['R1','R2','R3'].forEach(function(id, i){
+      var row = document.createElement('div');
+      row.className = 'kw-row';
+      row.innerHTML = '<span class="kw-dot' + (st.kw[i] ? ' on' : '') + '"></span>' +
+        '<span class="kw-name">' + id + '</span>' +
+        '<span class="kw-state">' + (st.kw[i] ? 'Kw ' + id + ' p' : '¬Kw ' + id + ' p') + '</span>';
+      kwBox.appendChild(row);
+    });
+    var ck = document.createElement('div');
+    ck.className = 'kw-row ck';
+    ck.innerHTML = '<span class="kw-dot' + (st.ck ? ' on' : '') + '"></span>' +
+      '<span class="kw-name">C</span>' +
+      '<span class="kw-state">' + (st.ck ? 'goal reached' : 'goal not yet reached') + '</span>';
+    kwBox.appendChild(ck);
+  }
+
+  function paintModel(){
+    var st = steps[Math.max(idx, 0)];
+    var w1 = document.getElementById('m-w1'), w2 = document.getElementById('m-w2');
+    var edge = document.getElementById('m-edge'), lbl = document.getElementById('m-lbl');
+    var d1 = document.getElementById('m-d1'), d2 = document.getElementById('m-d2');
+    var cap = document.getElementById('m-cap');
+    w1.classList.toggle('dead', st.dead === 1);
+    w2.classList.toggle('dead', st.dead === 2);
+    edge.classList.toggle('cut', st.edge === '—');
+    lbl.textContent = st.edge === '—' ? '' : st.edge;
+    d1.setAttribute('opacity', (st.des === 'both' || st.des === 'w1') && st.dead !== 1 ? '1' : '0');
+    d2.setAttribute('opacity', (st.des === 'both' || st.des === 'w2') && st.dead !== 2 ? '1' : '0');
+    cap.textContent = st.dead ? '|W*| = 1 · C_A p' : '|W*| = 2';
+  }
+
+  function paintSteps(){
+    stepBox.innerHTML = '';
+    steps.forEach(function(s, i){
+      var d = document.createElement('div');
+      d.textContent = (i === 0 ? '·' : i) + '  ' + s.lab;
+      if (i < idx) d.className = 'done';
+      if (i === idx) d.className = 'cur';
+      stepBox.appendChild(d);
+    });
+    formal.textContent = steps[Math.max(idx, 0)].f;
+  }
+
+  function render(){
+    place(); paintKw(); paintModel(); paintSteps(); paintTree();
+  }
+  function fx(){
+    var st = steps[idx];
+    if (!st || RM) return;
+    if (st.act === 'scan'){
+      scan.setAttribute('cx', bayCx(st.pos[0], OPT));
+      scan.setAttribute('cy', 96);
+      scan.classList.remove('go'); void scan.getBoundingClientRect(); scan.classList.add('go');
+    }
+    if (st.act === 'send'){
+      wave.setAttribute('cx', bayCx(st.pos[0], OPT));
+      wave.setAttribute('cy', 96);
+      wave.classList.remove('go'); void wave.getBoundingClientRect(); wave.classList.add('go');
+    }
+  }
+  function step(){
+    if (idx >= steps.length - 1) return false;
+    idx++; render(); fx(); return true;
+  }
+  function reset(hard){
+    clearInterval(timer); timer = null;
+    document.getElementById('th-play').textContent = '▶ Play';
+    idx = 0;
+    if (hard) { steps = build(dom, branch); drawStatic(); }
+    render();
+  }
+  document.getElementById('th-step').onclick = function(){ step(); };
+  document.getElementById('th-reset').onclick = function(){ reset(false); };
+  document.getElementById('th-play').onclick = function(){
+    var self = this;
+    if (timer){ clearInterval(timer); timer = null; self.textContent = '▶ Play'; return; }
+    if (idx >= steps.length - 1) idx = 0;
+    self.textContent = '■ Stop';
+    step();
+    timer = setInterval(function(){
+      if (!step()){ clearInterval(timer); timer = null; self.textContent = '▶ Play'; }
+    }, 1750);
+  };
+  document.getElementById('th-dom').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    dom = b.getAttribute('data-dom');
+    this.querySelectorAll('button').forEach(function(x){
+      x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    reset(true);
+  });
+  document.getElementById('th-branch').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    branch = b.getAttribute('data-br');
+    this.querySelectorAll('button').forEach(function(x){
+      x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    reset(true);
+  });
+
+  drawStatic(); idx = 0; render();
+  onView(svg, function(){
+    if (RM) return;
+    setTimeout(function(){ document.getElementById('th-play').click(); }, 400);
+  });
+})();
+
+/* ─────────────────────────────── Figure 4: facility ── */
+(function(){
+  var svg = document.getElementById('fc-svg');
+  if (!svg) return;
+  var OPT = {bays:4, x0:34, w:150, y:56, h:60};
+  var gB = document.getElementById('fc-bays'), gA = document.getElementById('fc-agents');
+  var note = document.getElementById('fc-note');
+  var wave = document.getElementById('fc-wave'), scan = document.getElementById('fc-scan');
+  var idx = 0, timer = null, lockG = null;
+
+  var STEPS = [
+    {lab:'initial', r1:0, r2:0, locked:true, kw:[0,0], ck:0,
+     note:'b2 is locked · R1 carries the detector, R2 the key'},
+    {lab:'unlock_R2_b1_b2', r1:0, r2:0, locked:false, kw:[0,0], ck:0, act:'unlock',
+     note:'public-ontic · the bay opens, and that is common knowledge at once'},
+    {lab:'move_R1_b1_b2', r1:1, r2:0, locked:false, kw:[0,0], ck:0,
+     note:'R1 may now traverse — the ontic act was the precondition of sensing'},
+    {lab:'move_R1_b2_b3', r1:2, r2:0, locked:false, kw:[0,0], ck:0,
+     note:'public-ontic · positions remain common knowledge'},
+    {lab:'scan_R1_o1_b3', r1:2, r2:0, locked:false, kw:[1,0], ck:0, act:'scan',
+     note:'private-sensing · R1 knows; R2 does not observe the reading'},
+    {lab:'broadcast_R1_o1_b3', r1:2, r2:0, locked:false, kw:[1,1], ck:1, act:'send',
+     note:'public-announcement · the private reading becomes common knowledge'}
+  ];
+
+  function draw(){
+    drawCorridor(gB, OPT);
+    lockG = el('g', {id:'fc-lock'});
+    lockG.appendChild(el('rect', {x:OPT.x0 + OPT.w - 5, y:OPT.y, width:10, height:OPT.h,
+      fill:RED, opacity:.5}));
+    var t = el('text', {x:OPT.x0 + OPT.w, y:OPT.y - 8, 'font-size':9.5,
+      fill:RED, 'text-anchor':'middle'});
+    t.textContent = 'locked';
+    lockG.appendChild(t);
+    gB.appendChild(lockG);
+    while (gA.firstChild) gA.removeChild(gA.firstChild);
+    agentMarker(gA, 'fc-R1', 'R1', bayCx(0, OPT) - 17, 86);
+    agentMarker(gA, 'fc-R2', 'R2', bayCx(0, OPT) + 17, 86);
+    var cap = el('text', {x:bayCx(0, OPT), y:132, 'font-size':9, fill:GRAY, 'text-anchor':'middle'});
+    cap.textContent = 'detector / key';
+    gA.appendChild(cap);
+    render();
+  }
+  function render(){
+    var st = STEPS[idx];
+    document.getElementById('fc-lock').setAttribute('opacity', st.locked ? '1' : '0');
+    var r1 = document.getElementById('fc-R1'), r2 = document.getElementById('fc-R2');
+    var x1 = st.r1 === st.r2 ? bayCx(st.r1, OPT) - 17 : bayCx(st.r1, OPT);
+    var x2 = st.r1 === st.r2 ? bayCx(st.r2, OPT) + 17 : bayCx(st.r2, OPT);
+    r1.setAttribute('transform', 'translate(' + x1 + ',86)');
+    r2.setAttribute('transform', 'translate(' + x2 + ',86)');
+    [[r1, st.kw[0]], [r2, st.kw[1]]].forEach(function(pair){
+      var c = pair[0].querySelector('circle'), t = pair[0].querySelector('text');
+      c.setAttribute('fill', pair[1] ? RED : '#fff');
+      c.setAttribute('stroke', pair[1] ? RED : INK);
+      t.setAttribute('fill', pair[1] ? '#fff' : INK);
+    });
+    note.textContent = st.lab === 'initial' ? st.note : st.lab + ' — ' + st.note;
+    if (!RM && st.act === 'scan'){
+      scan.setAttribute('cx', bayCx(st.r1, OPT)); scan.setAttribute('cy', 86);
+      scan.classList.remove('go'); void scan.getBoundingClientRect(); scan.classList.add('go');
+    }
+    if (!RM && st.act === 'send'){
+      wave.setAttribute('cx', bayCx(st.r1, OPT)); wave.setAttribute('cy', 86);
+      wave.classList.remove('go'); void wave.getBoundingClientRect(); wave.classList.add('go');
+    }
+  }
+  function step(){ if (idx >= STEPS.length - 1) return false; idx++; render(); return true; }
+  document.getElementById('fc-step').onclick = function(){ step(); };
+  document.getElementById('fc-reset').onclick = function(){
+    clearInterval(timer); timer = null; idx = 0; render();
+    document.getElementById('fc-play').textContent = '▶ Play';
+  };
+  document.getElementById('fc-play').onclick = function(){
+    var self = this;
+    if (timer){ clearInterval(timer); timer = null; self.textContent = '▶ Play'; return; }
+    if (idx >= STEPS.length - 1) idx = 0;
+    self.textContent = '■ Stop'; step();
+    timer = setInterval(function(){
+      if (!step()){ clearInterval(timer); timer = null; self.textContent = '▶ Play'; }
+    }, 1750);
+  };
+  draw();
+})();
+
+/* ─────────────────────────────── Figure 5: charts ── */
+(function(){
+  var host = document.getElementById('charts');
+  if (!host) return;
+  var CHARTS = [
+    {title:'initial uncertainty', sub:'U = |W|, at N = 2', unit:'candidate bays',
+     pts:[{k:'U = 2', v:172}, {k:'U = 3', v:2177}, {k:'U = 4', v:330188}]},
+    {title:'fleet size', sub:'N, over L ≤ 5', unit:'vehicles',
+     pts:[{k:'N = 2', v:621}, {k:'N = 3', v:2714}, {k:'N = 4', v:5480}]},
+    {title:'corridor length', sub:'L, at U = 2', unit:'bays',
+     pts:[{k:'L = 3', v:66}, {k:'L = 4', v:214}, {k:'L = 5', v:2801}]}
+  ];
+  var LOGMAX = Math.log10(330188);
+  function fmt(v){ return v >= 1000 ? (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : String(v); }
+
+  CHARTS.forEach(function(c, ci){
+    var wrap = document.createElement('div');
+    var h = document.createElement('div');
+    h.style.cssText = 'font-family:var(--sg);font-size:.78rem;font-weight:500;margin-bottom:.1rem';
+    h.textContent = c.title;
+    var s = document.createElement('div');
+    s.style.cssText = 'font-family:var(--mono);font-size:.62rem;color:var(--gray);margin-bottom:.6rem';
+    s.textContent = c.sub;
+    wrap.appendChild(h); wrap.appendChild(s);
+
+    c.pts.forEach(function(p, i){
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:.5rem;margin-bottom:.42rem';
+      var k = document.createElement('span');
+      k.style.cssText = 'font-family:var(--mono);font-size:.66rem;color:#555;width:3.1rem;flex-shrink:0';
+      k.textContent = p.k;
+      var track = document.createElement('span');
+      track.style.cssText = 'flex:1;height:13px;background:#EEE;position:relative;border-radius:1px';
+      var bar = document.createElement('span');
+      bar.className = 'bar';
+      bar.style.cssText = 'position:absolute;left:0;top:0;bottom:0;width:0;' +
+        'background:' + (ci === 0 ? RED : (ci === 1 ? '#7A7A7A' : '#B9B9B9')) + ';border-radius:1px';
+      bar.setAttribute('data-w', (Math.log10(p.v) / LOGMAX * 100).toFixed(1));
+      track.appendChild(bar);
+      var v = document.createElement('span');
+      v.style.cssText = 'font-family:var(--mono);font-size:.66rem;color:#333;width:2.6rem;text-align:right;flex-shrink:0';
+      v.textContent = fmt(p.v);
+      row.appendChild(k); row.appendChild(track); row.appendChild(v);
+      wrap.appendChild(row);
+    });
+    var f = document.createElement('div');
+    f.style.cssText = 'font-family:var(--mono);font-size:.6rem;color:#999;margin-top:.35rem';
+    f.textContent = 'median expanded nodes · log scale';
+    wrap.appendChild(f);
+    host.appendChild(wrap);
+  });
+
+  function run(){
+    host.querySelectorAll('.bar').forEach(function(b, i){
+      b.style.width = '0';
+      setTimeout(function(){ b.style.width = b.getAttribute('data-w') + '%'; }, RM ? 0 : 70 * i);
+    });
+  }
+  document.getElementById('ch-replay').onclick = run;
+  onView(host, run);
+})();
+})();
+</script>
+</body>
+</html>

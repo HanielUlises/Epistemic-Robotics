@@ -3,7 +3,7 @@
 A small epistemic warehouse domain, written to exercise the aletheia planner
 end to end: EPDDL → `plank export` → `epistemic_planner`.
 
-Two robots share a three-bay warehouse (`bay1 — bay2 — bay3`). A package sits
+Two robots share a three-bay warehouse (`bay1, bay2, bay3`). A package sits
 in `bay2` or `bay3`, and nobody knows which. Actions:
 
 | Action | Type | Meaning |
@@ -17,10 +17,10 @@ the package is in `bay2`.
 
 ## Instances
 
-- `problem_1.epddl` — the true bay is asserted in `:init`, so only one world is
+- `problem_1.epddl`, the true bay is asserted in `:init`, so only one world is
   designated and the plan collapses to a single branch: `R2` already stands in
   `bay3`, scans, and broadcasts.
-- `problem_2.epddl` — the true bay is left open, so both worlds stay designated
+- `problem_2.epddl`, the true bay is left open, so both worlds stay designated
   and the plan must succeed either way: `R1` drives to `bay2`, scans, then
   broadcasts `bay2` on a positive reading and `bay3` on a negative one (it can
   deduce the location from the common knowledge that the package is in exactly
