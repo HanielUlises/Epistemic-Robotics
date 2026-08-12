@@ -153,6 +153,21 @@ em.term{font-style:italic;color:#333}
 .step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
   margin-top:.5rem;line-height:1.5;min-height:2.6rem}
 
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
 /* ── domain cards ─────────────────────────────────────────── */
 .dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
 @media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
@@ -487,6 +502,80 @@ footer a:hover{color:var(--red)}
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ MAP AND MODEL -->
+<section>
+  <div class="container-wide">
+    <p class="sec-label">Map and model</p>
+    <h3>One run, two representations</h3>
+    <p style="max-width:820px">
+      The fleet drives on a metric map; the planner reasons over a symbolic
+      quotient of it. Cells of the occupancy grid group into bays, and the bay a
+      vehicle occupies is the atom \(\textit{at}(i,b)\). What the planner adds
+      on top is the third column: the set of worlds still considered possible.
+      Below, a three-bay search runs on both representations at once. The target
+      is in \(b_3\), \(b_4\), or \(b_5\), and R1 is the only vehicle with a
+      detector.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Warehouse occupancy grid and epistemic state, stepped together</span>
+        <div class="ctrls">
+          <button class="btn primary" id="mm-play">▶ Play</button>
+          <button class="btn" id="mm-step">Step</button>
+          <button class="btn" id="mm-reset">Reset</button>
+        </div>
+      </div>
+      <div class="fig-body">
+        <div class="mm-grid">
+          <div>
+            <div class="mm-cap">metric layer, occupancy grid</div>
+            <svg id="mm-map" viewBox="0 0 512 282" width="100%" style="display:block"
+                 xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+              <g id="mm-cells"></g>
+              <g id="mm-fov"></g>
+              <g id="mm-bays"></g>
+              <g id="mm-trail"></g>
+              <circle id="mm-wave" class="wave" cx="0" cy="0" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
+              <g id="mm-bots"></g>
+            </svg>
+            <div class="panel" style="margin-top:.7rem">
+              <h5>Knowledge state</h5>
+              <div id="mm-kw"></div>
+            </div>
+          </div>
+          <div>
+            <div class="mm-cap">epistemic layer, state space</div>
+            <svg id="mm-model" viewBox="0 0 300 286" width="100%" style="display:block"
+                 xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+              <g id="mm-edges"></g>
+              <g id="mm-worlds"></g>
+              <text id="mm-mcap" x="150" y="266" font-size="10.5" fill="#5A5A5A" text-anchor="middle"></text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="mm-read">
+          <div><span class="mm-k">metric</span><span id="mm-r1">pose(R1)</span></div>
+          <div><span class="mm-k">symbolic</span><span id="mm-r2">at(R1, b1)</span></div>
+          <div><span class="mm-k">epistemic</span><span id="mm-r3">|W*| = 3</span></div>
+        </div>
+        <div class="mm-act" id="mm-act">initial state</div>
+      </div>
+      <div class="fig-cap">
+        <b>Figure 3.</b> Driving changes the metric and symbolic columns and
+        leaves the state space untouched: motion is not informative by itself. A
+        scan leaves the map unchanged but cuts \(R_1\)'s edges, since \(R_1\)
+        can now tell those worlds apart, while R2 and R3, being oblivious, keep
+        all of theirs. After two negative readings R1 knows the target is in
+        \(b_5\) without ever having scanned it, and the broadcast is what
+        finally removes worlds outright: one world left, no edges to cut, which
+        is what common knowledge looks like here.
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════════ POLICY THEATRE -->
 <section>
   <div class="container-wide">
@@ -564,7 +653,7 @@ footer a:hover{color:var(--red)}
         </div>
       </div>
       <div class="fig-cap">
-        <b>Figure 3.</b> The star marks where the target actually is along the
+        <b>Figure 4.</b> The star marks where the target actually is along the
         selected branch, which is settled from the outset; it is grey while the
         fleet is still ignorant of it and solid once a reading has resolved it.
         Two behaviours repay attention. On the negative branch
@@ -612,7 +701,7 @@ footer a:hover{color:var(--red)}
         </svg>
       </div>
       <div class="fig-cap">
-        <b>Figure 4.</b> The policy for
+        <b>Figure 5.</b> The policy for
         <span style="font-family:var(--mono)">facility-a2-b4-i1-depot-ck</span>.
         The lock is public, so its opening is common knowledge the moment it
         happens; the reading is private, so it is worth nothing until broadcast.
@@ -645,7 +734,7 @@ footer a:hover{color:var(--red)}
         <div id="charts" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.4rem"></div>
       </div>
       <div class="fig-cap">
-        <b>Figure 5.</b> Uncertainty is measured at \(N = 2\), fleet size over
+        <b>Figure 6.</b> Uncertainty is measured at \(N = 2\), fleet size over
         \(L \le 5\), and corridor length at \(U = 2\), so that the strata do not
         confound one another. Uncertainty moves the cost by three orders of
         magnitude; fleet size by one. Each additional candidate bay is another
@@ -895,7 +984,284 @@ function agentMarker(g, id, label, cx, cy){
   draw();
 })();
 
-/* ─────────────────────────────── Figure 3: policy theatre ── */
+
+/* ────────────────── Figure 3: occupancy grid + Kripke state space ──
+   A three-bay search on a warehouse map, with the epistemic state kept in
+   lockstep. Worlds: w1 target in b3, w2 in b4, w3 in b5. The run is the one
+   the planner produces on this instance shape: scan, scan, then report the
+   bay that elimination leaves, which no vehicle ever visited.              */
+(function(){
+  var map = document.getElementById('mm-map');
+  if (!map) return;
+  var C = 16, COLS = 32, ROWS = 15;
+  var gCells = document.getElementById('mm-cells'), gBays = document.getElementById('mm-bays');
+  var gBots = document.getElementById('mm-bots'), gFov = document.getElementById('mm-fov');
+  var gTrail = document.getElementById('mm-trail');
+  var gEdges = document.getElementById('mm-edges'), gWorlds = document.getElementById('mm-worlds');
+  var wave = document.getElementById('mm-wave');
+  var kwBox = document.getElementById('mm-kw'), mcap = document.getElementById('mm-mcap');
+
+  // bay k occupies columns [3+7k, 3+7k+5]; racks fill rows 3..7 and 14..18,
+  // leaving a central aisle. Bay 1 is the depot and carries no racking.
+  var BAYX = [1, 7, 13, 19, 25];           // first column of each bay
+  var BAYW = 5;                            // bay width in cells
+  var AISLE = 7.5;                         // robot lane (row units)
+  var RACKS = [[2, 5], [9, 12]];           // racking rows, above and below
+  function bayCols(k){ return [BAYX[k], BAYX[k] + BAYW - 1]; }
+  function bayCenter(k){ return BAYX[k] + BAYW / 2; }
+
+  function drawMap(){
+    var W = COLS * C, H = ROWS * C;
+    gCells.appendChild(el('rect', {x:0, y:0, width:W, height:H, fill:'#FFFFFF'}));
+    // free-space lattice: the occupancy grid itself
+    for (var c = 0; c <= COLS; c++)
+      gCells.appendChild(el('line', {x1:c*C, y1:0, x2:c*C, y2:H,
+        stroke:'#F1F2F4', 'stroke-width':1}));
+    for (var r = 0; r <= ROWS; r++)
+      gCells.appendChild(el('line', {x1:0, y1:r*C, x2:W, y2:r*C,
+        stroke:'#F1F2F4', 'stroke-width':1}));
+    // racking: occupied cells, drawn as blocks with shelf slots
+    for (var k = 1; k < 5; k++){
+      var b = bayCols(k);
+      RACKS.forEach(function(rr){
+        var x = b[0]*C, y = rr[0]*C, w = BAYW*C, h = (rr[1]-rr[0]+1)*C;
+        gCells.appendChild(el('rect', {x:x, y:y, width:w, height:h,
+          fill:'#C4C9CF', stroke:'#AEB4BB', 'stroke-width':1, rx:1}));
+        for (var s = 1; s < BAYW; s++)
+          gCells.appendChild(el('line', {x1:x + s*C, y1:y, x2:x + s*C, y2:y + h,
+            stroke:'#FFFFFF', 'stroke-width':1, opacity:.55}));
+      });
+    }
+    gCells.appendChild(el('rect', {x:0, y:0, width:W, height:H,
+      fill:'none', stroke:'#D6D6D6', 'stroke-width':1.5}));
+    // bay partition and labels
+    for (var k = 0; k < 5; k++){
+      var b = bayCols(k);
+      gBays.appendChild(el('rect', {x:b[0]*C - 3, y:1*C - 3,
+        width:BAYW*C + 6, height:(ROWS - 2)*C + 6,
+        fill:'none', stroke:'#1A52A0', 'stroke-width':1,
+        'stroke-dasharray':'5,3', opacity:.5, rx:2}));
+      var lb = el('text', {x:bayCenter(k)*C, y:H + 16, 'font-size':11,
+        fill:'#5A5A5A', 'text-anchor':'middle'});
+      lb.textContent = 'b' + (k+1);
+      gBays.appendChild(lb);
+    }
+    var dep = el('text', {x:bayCenter(0)*C, y:1*C - 3, 'font-size':10,
+      fill:'#5A5A5A', 'text-anchor':'middle'});
+    dep.textContent = 'depot';
+    gBays.appendChild(dep);
+    // the target: a fact of this run, greyed until the fleet works it out
+    var star = el('text', {id:'mm-star', x:bayCenter(4)*C,
+      y:(RACKS[0][0] + (RACKS[0][1] - RACKS[0][0] + 1) / 2) * C + 6,
+      'font-size':17, fill:'#BFBFBF', 'text-anchor':'middle'});
+    star.textContent = '★';
+    gBays.appendChild(star);
+    var slab = el('text', {id:'mm-starlab', x:bayCenter(4)*C, y:RACKS[0][0]*C - 6,
+      'font-size':9, fill:'#AAA', 'text-anchor':'middle'});
+    slab.textContent = 'target';
+    gBays.appendChild(slab);
+    // legend
+    var lg = el('g', {});
+    var items = [['#FFFFFF', 'free'], ['#C4C9CF', 'occupied'], ['#B9CBE4', 'sensor footprint']];
+    var lx = 2;
+    items.forEach(function(it){
+      lg.appendChild(el('rect', {x:lx, y:H + 26, width:11, height:11,
+        fill:it[0], stroke:'#C0C4C9', 'stroke-width':1}));
+      var tx = el('text', {x:lx + 16, y:H + 35, 'font-size':9.5, fill:'#5A5A5A'});
+      tx.textContent = it[1];
+      lg.appendChild(tx);
+      lx += 26 + it[1].length * 5.6;
+    });
+    gBays.appendChild(lg);
+  }
+
+  function bot(id, label, col, accent){
+    var g = el('g', {id:'mm-' + id, class:'bot',
+      transform:'translate(' + (col*C) + ',' + (AISLE*C) + ')'});
+    g.appendChild(el('circle', {r:12, fill:'#fff', stroke:accent, 'stroke-width':2}));
+    var t = el('text', {y:3.8, 'font-size':10, 'text-anchor':'middle', fill:accent});
+    t.textContent = label;
+    g.appendChild(t);
+    gBots.appendChild(g);
+    return g;
+  }
+
+  // ── the run ───────────────────────────────────────────────────────────
+  // Each step: where R1 ends up, what it learns, and how the model changes.
+  var STEPS = [
+    {act:'initial state', bay:0, know:0, cut:[], alive:[1,1,1], des:[1,1,1],
+     note:'target in b3, b4 or b5; nobody knows which'},
+    {act:'move R1 b1→b2', bay:1, know:0, cut:[], alive:[1,1,1], des:[1,1,1],
+     note:'ontic and public: the map changes, the state space does not'},
+    {act:'move R1 b2→b3', bay:2, know:0, cut:[], alive:[1,1,1], des:[1,1,1],
+     note:'still no information gained by driving'},
+    {act:'scan R1 b3  →  negative', bay:2, know:1, scan:true, cut:['12','13'],
+     alive:[1,1,1], des:[0,1,1],
+     note:'private sensing: R1 separates w₁ from the rest, R2 and R3 observe nothing'},
+    {act:'move R1 b3→b4', bay:3, know:1, cut:['12','13'], alive:[1,1,1], des:[0,1,1],
+     note:'R1 carries its knowledge with it; the model is unchanged'},
+    {act:'scan R1 b4  →  negative', bay:3, know:2, scan:true, cut:['12','13','23'],
+     alive:[1,1,1], des:[0,0,1],
+     note:'two negatives leave one candidate: R1 now knows the bay by elimination'},
+    {act:'broadcast R1 b5', bay:3, know:3, send:true, cut:['12','13','23'],
+     alive:[0,0,1], des:[0,0,1],
+     note:'public announcement: worlds are eliminated, and b5 was never scanned'}
+  ];
+
+  var WPOS = [{x:90, y:56}, {x:212, y:56}, {x:150, y:158}];
+  var WLAB = [['w₁','target b3'], ['w₂','target b4'], ['w₃','target b5']];
+  var EDGES = {'12':[0,1], '13':[0,2], '23':[1,2]};
+
+  function drawModel(){
+    while (gEdges.firstChild) gEdges.removeChild(gEdges.firstChild);
+    while (gWorlds.firstChild) gWorlds.removeChild(gWorlds.firstChild);
+    Object.keys(EDGES).forEach(function(k){
+      var a = WPOS[EDGES[k][0]], b = WPOS[EDGES[k][1]];
+      gEdges.appendChild(el('line', {id:'mm-e' + k, class:'wedge',
+        x1:a.x, y1:a.y, x2:b.x, y2:b.y, stroke:'#888', 'stroke-width':1.5}));
+      var mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
+      var lb = el('text', {id:'mm-el' + k, x:mx, y:my - 6, 'font-size':9,
+        fill:'#5A5A5A', 'text-anchor':'middle'});
+      lb.textContent = 'R₁R₂R₃';
+      gEdges.appendChild(lb);
+    });
+    WPOS.forEach(function(pt, i){
+      var g = el('g', {id:'mm-w' + (i+1), class:'wnode'});
+      g.appendChild(el('circle', {id:'mm-d' + (i+1), cx:pt.x, cy:pt.y, r:34,
+        fill:'none', stroke:'#C8102E', 'stroke-width':1.2}));
+      g.appendChild(el('circle', {cx:pt.x, cy:pt.y, r:30, fill:'#fff',
+        stroke:'#111', 'stroke-width':1.5}));
+      var a = el('text', {x:pt.x, y:pt.y - 2, 'font-size':11, 'text-anchor':'middle', fill:'#111'});
+      a.textContent = WLAB[i][0];
+      var b = el('text', {x:pt.x, y:pt.y + 12, 'font-size':9, 'text-anchor':'middle', fill:'#5A5A5A'});
+      b.textContent = WLAB[i][1];
+      g.appendChild(a); g.appendChild(b);
+      gWorlds.appendChild(g);
+    });
+  }
+
+  var idx = 0, timer = null, r1 = null;
+
+  // Logical position leads, the visual follows by CSS transition, so stepping
+  // faster than the animation can never leave the marker behind.
+  var posCol = null;
+  function moveTo(col){
+    if (posCol === null) posCol = col;
+    if (Math.abs(col - posCol) > 0.01){
+      gTrail.appendChild(el('line', {x1:posCol*C, y1:AISLE*C, x2:col*C, y2:AISLE*C,
+        stroke:'#C8102E', 'stroke-width':2, opacity:.22, 'stroke-linecap':'round'}));
+    }
+    posCol = col;
+    r1.setAttribute('transform', 'translate(' + (col*C) + ',' + (AISLE*C) + ')');
+  }
+
+  function flashFov(bayIdx){
+    while (gFov.firstChild) gFov.removeChild(gFov.firstChild);
+    var b = bayCols(bayIdx);
+    RACKS.forEach(function(rr){
+      gFov.appendChild(el('rect', {x:b[0]*C, y:rr[0]*C,
+        width:BAYW*C, height:(rr[1]-rr[0]+1)*C,
+        fill:'#1A52A0', opacity:.2}));
+    });
+    gFov.appendChild(el('rect', {x:b[0]*C, y:RACKS[0][0]*C, width:BAYW*C,
+      height:(RACKS[1][1]-RACKS[0][0]+1)*C, fill:'none',
+      stroke:'#1A52A0', 'stroke-width':1.4, 'stroke-dasharray':'4,3', opacity:.75}));
+    if (!RM) setTimeout(function(){
+      while (gFov.firstChild) gFov.removeChild(gFov.firstChild);
+    }, 1200);
+  }
+
+  function paint(){
+    var st = STEPS[idx];
+    // model
+    Object.keys(EDGES).forEach(function(k){
+      var line = document.getElementById('mm-e' + k), lbl = document.getElementById('mm-el' + k);
+      var cut = st.cut.indexOf(k) >= 0;
+      var gone = !st.alive[EDGES[k][0]] || !st.alive[EDGES[k][1]];
+      line.setAttribute('opacity', gone ? 0 : (cut ? .55 : 1));
+      line.setAttribute('stroke-dasharray', cut ? '4,3' : 'none');
+      lbl.setAttribute('opacity', gone ? 0 : 1);
+      lbl.textContent = cut ? 'R₂R₃' : 'R₁R₂R₃';
+      lbl.setAttribute('fill', cut ? '#1A52A0' : '#5A5A5A');
+    });
+    st.alive.forEach(function(a, i){
+      document.getElementById('mm-w' + (i+1)).setAttribute('opacity', a ? 1 : .12);
+      document.getElementById('mm-d' + (i+1)).setAttribute('opacity', (a && st.des[i]) ? 1 : 0);
+    });
+    var nW = st.alive.reduce(function(s,x){ return s+x; }, 0);
+    var nD = st.des.reduce(function(s,x,i){ return s + (x && st.alive[i] ? 1 : 0); }, 0);
+    mcap.textContent = '|W| = ' + nW + ',  |W*| = ' + nD + (nW === 1 ? ',  common knowledge' : '');
+    // knowledge chips
+    kwBox.innerHTML = '';
+    [['R1', st.know >= 2], ['R2', st.know >= 3], ['R3', st.know >= 3]].forEach(function(pair){
+      var row = document.createElement('div');
+      row.className = 'kw-row';
+      row.innerHTML = '<span class="kw-dot' + (pair[1] ? ' on' : '') + '"></span>' +
+        '<span class="kw-name">' + pair[0] + '</span>' +
+        '<span class="kw-state">' + (pair[1] ? 'knows the bay' : 'does not know') + '</span>';
+      kwBox.appendChild(row);
+    });
+    // readouts
+    document.getElementById('mm-r1').textContent =
+      'pose(R1) = (' + bayCenter(st.bay).toFixed(1) + ', ' + AISLE.toFixed(1) + ')';
+    document.getElementById('mm-r2').textContent = 'at(R1, b' + (st.bay + 1) + ')';
+    document.getElementById('mm-r3').textContent =
+      '|W*| = ' + nD + (st.know >= 3 ? ', C_A' : (st.know >= 2 ? ', Kw R1 only' : ', nobody knows'));
+    document.getElementById('mm-act').textContent = st.act + '  ·  ' + st.note;
+    var star = document.getElementById('mm-star'), slab = document.getElementById('mm-starlab');
+    if (star){
+      star.setAttribute('fill', st.know >= 2 ? '#C8102E' : '#BFBFBF');
+      slab.setAttribute('fill', st.know >= 2 ? '#C8102E' : '#AAA');
+      slab.textContent = st.know >= 3 ? 'target, known to the fleet'
+                       : (st.know >= 2 ? 'target, known to R1' : 'target, unknown');
+    }
+  }
+
+  function apply(){
+    var st = STEPS[idx];
+    moveTo(bayCenter(st.bay));
+    if (st.scan) flashFov(st.bay);
+    if (st.send && !RM){
+      wave.setAttribute('cx', bayCenter(st.bay)*C);
+      wave.setAttribute('cy', AISLE*C);
+      wave.classList.remove('go'); void wave.getBoundingClientRect(); wave.classList.add('go');
+    }
+    paint();
+  }
+  function step(){ if (idx >= STEPS.length - 1) return false; idx++; apply(); return true; }
+  function reset(){
+    clearInterval(timer); timer = null;
+    while (gTrail.firstChild) gTrail.removeChild(gTrail.firstChild);
+    posCol = null; idx = 0; apply();
+    document.getElementById('mm-play').textContent = '▶ Play';
+  }
+
+  drawMap(); drawModel();
+  r1 = bot('R1', 'R1', bayCenter(0), '#C8102E');
+  bot('R2', 'R2', bayCenter(0) - 1.4, '#5A5A5A');
+  bot('R3', 'R3', bayCenter(0) + 1.4, '#5A5A5A');
+  document.getElementById('mm-R2').setAttribute('transform',
+    'translate(' + ((bayCenter(0) - 1.4)*C) + ',' + ((AISLE + 1.35)*C) + ')');
+  document.getElementById('mm-R3').setAttribute('transform',
+    'translate(' + ((bayCenter(0) + 1.4)*C) + ',' + ((AISLE + 1.35)*C) + ')');
+  apply();
+
+  document.getElementById('mm-step').onclick = function(){ step(); };
+  document.getElementById('mm-reset').onclick = reset;
+  document.getElementById('mm-play').onclick = function(){
+    var self = this;
+    if (timer){ clearInterval(timer); timer = null; self.textContent = '▶ Play'; return; }
+    if (idx >= STEPS.length - 1) reset();
+    self.textContent = '■ Stop'; step();
+    timer = setInterval(function(){
+      if (!step()){ clearInterval(timer); timer = null; self.textContent = '▶ Play'; }
+    }, 2300);
+  };
+  onView(map, function(){ if (!RM) setTimeout(function(){
+    document.getElementById('mm-play').click(); }, 500); });
+})();
+
+/* ─────────────────────────────── Figure 4: policy theatre ── */
 (function(){
   var svg = document.getElementById('th-svg');
   if (!svg) return;
