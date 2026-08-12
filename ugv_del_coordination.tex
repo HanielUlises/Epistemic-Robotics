@@ -121,17 +121,17 @@
 communicate imperfectly face a coordination problem that is not captured by
 classical planning over world states: what has to be achieved is a
 configuration of \emph{knowledge} across the fleet, and the actions that
-achieve it, sensing, driving into radio range, relaying a report, are
+achieve it (sensing, driving into radio range, relaying a report) are
 valuable only for their epistemic effect. This report formulates that problem
 in Dynamic Epistemic Logic (DEL), where an epistemic state is a Kripke model
 and an action is an event model applied by product update, and it states the
 resulting planning problem: from a multi-pointed initial model, find a policy
 whose branches are the designated events of sensing actions and whose leaves
-all satisfy a modal goal formula. Six coordination scenarios, facility-wide
-broadcast, range-limited radio, second-order goals, deployment geometry,
-addressed radio with selective-disclosure goals, and a heterogeneous fleet
-whose capabilities interlock, are described conceptually and encoded as four
-EPDDL domains. A benchmark of 204 instances, scaling the fleet size, the
+all satisfy a modal goal formula. Six coordination scenarios are described conceptually and
+encoded as four EPDDL domains: facility-wide broadcast, range-limited radio,
+second-order goals, deployment geometry, addressed radio with
+selective-disclosure goals, and a heterogeneous fleet whose capabilities
+interlock. A benchmark of 204 instances, scaling the fleet size, the
 facility size, the amount of initial uncertainty, and the number of items to
 localise, is grounded with the \textsf{plank} toolkit and solved with the
 \textsf{aletheia} planner; 196 are solved under a 60\,s budget.
@@ -432,8 +432,8 @@ domain.
 \subsection{Where the epistemic layer sits}
 
 The planner produces a policy, not a trajectory. Its actions are commands to
-the layer beneath, \emph{drive to bay $b_3$}, \emph{run the detector},
-\emph{transmit this report}, and its branches are conditioned on sensing
+the layer beneath (\emph{drive to bay $b_3$}, \emph{run the detector},
+\emph{transmit this report}) and its branches are conditioned on sensing
 outcomes the layer beneath reports back. In an autonomy stack, this is a
 deliberative layer above navigation and below mission specification, and its
 distinguishing feature is that its state is not the fleet's position but the
@@ -484,14 +484,15 @@ sensor that reads only the bay it occupies, and a radio.
   \node[lbl, above=1mm of range.north, text=steel] {radio range of a report sent from \texttt{b2}};
 \end{tikzpicture}
 \caption{The shared setting: a corridor of $L$ bays, $N$ UGVs, target
-uncertainty confined to the last $U$ bays, and, in the range-limited
-scenarios, a radio that reaches only the sender's bay and its neighbours.}
+uncertainty confined to the last $U$ bays, and (in the range-limited
+scenarios) a radio that reaches only the sender's bay and its neighbours.}
 \label{fig:setting}
 \end{figure}
 
 Two epistemic actions are available to every vehicle. \textbf{Scan} is private
 sensing: vehicle $i$ standing in bay $l$ learns whether the target is there,
-and the rest of the fleet observes nothing, not the reading, not the scan.
+and the rest of the fleet observes nothing at all: neither the reading nor
+the scan.
 \textbf{Report} is an announcement whose precondition is epistemic,
 $\Kop{i}\,\mathit{target\text{-}at}(l)$: a vehicle can only report what it
 actually knows. What changes across scenarios is who hears it.
@@ -535,8 +536,8 @@ at transmission time. Goals of this shape are where DEL earns its cost;
 nothing weaker expresses them.
 
 \scenariohead{S4, Deployment geometry.}
-The two deployments, all vehicles starting at a depot ($b_1$) versus spread
-round-robin along the corridor, change no formula, only the initial model.
+The two deployments (all vehicles starting at a depot ($b_1$) versus spread
+round-robin along the corridor) change no formula, only the initial model.
 Yet they change the character of the solution. From a depot, the fleet must
 first travel, and the plan is dominated by ontic movement whose only purpose is
 to enable a later sensing action; the epistemic content is concentrated at the
@@ -917,8 +918,8 @@ The defect therefore sits in the planner rather than in the encoding, and its
 signature is narrow: a conjunctive goal over several atoms is accepted in a
 state where only the most recently sensed conjunct holds for the sensing agent.
 The formula evaluator and the goal test itself read correctly, which points at
-the branch states the AO$^\ast$ layer evaluates, the split-and-contract step
-,  rather than at satisfaction checking. The four affected instances are
+the branch states the AO$^\ast$ layer evaluates (the split-and-contract
+step) rather than at satisfaction checking. The four affected instances are
 excluded from no aggregate in this report, because their \emph{cost} figures
 remain valid measurements of the search that was performed; but their
 \emph{solved} status should be read as unconfirmed, and the extended coverage
@@ -972,7 +973,7 @@ an out-of-range vehicle cannot infer anything from silence, follows from the
 product update rather than from the modeller's diligence.
 
 \paragraph{Where it does not}
-Coverage is high, 136 of 144, most in milliseconds, but the grid is
+Coverage is high (136 of 144, most in milliseconds) but the grid is
 small, and the wall is close: four candidate bays under a range-limited radio
 already defeats a 60\,s budget for fleets of three and four. This is a property
 of explicit-state DEL planning, not of the encoding: the representation is a
@@ -1019,8 +1020,8 @@ directly: epistemic states as Kripke models, actions as event models whose
 observability relations decide who learns what, plans as policies branching on
 sensing outcomes, and goals as modal formulas including common knowledge and
 nested knowledge. The four scenario families in Section~\ref{sec:scenarios}
-show that the interesting variation, inference from a negative reading,
-delivery past obliviousness, confirmation of receipt, lives entirely in the
+show that the interesting variation (inference from a negative reading,
+delivery past obliviousness, confirmation of receipt) lives entirely in the
 observability model, and that changing it is a local change to the
 specification rather than a re-derivation of the domain.
 
@@ -1032,7 +1033,7 @@ a grounding cost that can be paid offline. Restricted communication adds a
 constant factor and, in this grid, all of the failures.
 
 That profile is the useful design guidance. Keep the epistemic layer's
-hypothesis space small, let the perception and mapping layers prune
+hypothesis space small, letting the perception and mapping layers prune
 candidates before the task layer ever sees them, and spend the modelling
 budget on the communication structure, which is both where the interesting
 coordination lives and where a change costs a single observability condition.

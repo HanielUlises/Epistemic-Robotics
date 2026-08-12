@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coordination Domains — The Epistemic Robotics Project</title>
+<title>Coordination Domains · The Epistemic Robotics Project</title>
 <meta name="description" content="Four DEL coordination domains for UGV fleets: the planning task, the observability models, and animated policy execution.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -20,7 +20,13 @@ MathJax = {
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 <style>
+@view-transition{navigation:auto}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
 :root{
   --black:#111111; --red:#C8102E; --gray:#5A5A5A;
   --border:#D6D6D6; --code-bg:#F4F4F4;
@@ -104,7 +110,7 @@ em.term{font-style:italic;color:#333}
 
 /* ── controls ──────────────────────────────────────────────── */
 .ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
-.btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
   border:1px solid var(--border);background:#fff;color:#333;
   padding:.32rem .7rem;border-radius:2px;cursor:pointer;
   transition:border-color .15s,color .15s,background .15s}
@@ -115,16 +121,16 @@ em.term{font-style:italic;color:#333}
 .seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
 .seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
 .seg .btn:last-child{border-right:none}
-.ctrl-label{font-family:var(--mono);font-size:.63rem;color:var(--gray);
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
   letter-spacing:.1em;text-transform:uppercase;margin-right:.15rem}
 
 /* ── theatre layout ───────────────────────────────────────── */
 .theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
 @media(max-width:860px){.theatre{grid-template-columns:1fr}}
 .panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
-.panel h5{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
+.panel h5{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;
   text-transform:uppercase;color:var(--gray);font-weight:400;margin-bottom:.6rem}
-.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
   font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
 .kw-row:last-child{border-bottom:none}
 .kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
@@ -135,12 +141,12 @@ em.term{font-style:italic;color:#333}
 .kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
 .kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
 
-.steplist{font-family:var(--mono);font-size:.69rem;line-height:1.5}
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
 .steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
   transition:color .2s,border-color .2s,background .2s}
 .steplist div.done{color:#555}
 .steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
-.step-formal{font-family:var(--mono);font-size:.66rem;color:var(--gray);
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
   margin-top:.5rem;line-height:1.5;min-height:2.6rem}
 
 /* ── domain cards ─────────────────────────────────────────── */
@@ -149,7 +155,7 @@ em.term{font-style:italic;color:#333}
 .dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
   padding:1rem 1.05rem .9rem;background:var(--panel)}
 .dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
-.dom-card .sig{font-family:var(--mono);font-size:.69rem;color:#555;
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
   margin-bottom:.5rem;line-height:1.55}
 .dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
 
@@ -161,12 +167,12 @@ pre.code .c{color:var(--gray);font-style:italic}
 
 /* ── tables ───────────────────────────────────────────────── */
 table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
-table.data th{font-family:var(--mono);font-size:.63rem;letter-spacing:.08em;
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
   text-transform:uppercase;color:var(--gray);font-weight:400;
   text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
 table.data th:first-child{text-align:left}
 table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
-  font-family:var(--mono);font-size:.74rem;color:#333}
+  font-family:var(--sg);font-size:.78rem;color:#333}
 table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
 table.data tr:last-child td{border-bottom:none}
 table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
@@ -203,6 +209,8 @@ footer a:hover{color:var(--red)}
 .wedge.cut{opacity:.12}
 .bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
 @media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
   .ugv{transition:none}
   .wave.go,.scanring.go{animation:none}
   .bar{transition:none}
@@ -232,7 +240,7 @@ footer a:hover{color:var(--red)}
     <div class="rule"></div>
     <p class="hero-p">
       Four EPDDL domains in which a fleet of unmanned ground vehicles must reach a
-      prescribed configuration of knowledge — not a configuration of the world.
+      prescribed configuration of knowledge, not a configuration of the world.
       Each domain fixes one thing only: who observes what. This page states the
       planning task, gives the observability model of each domain, and executes
       the policies the planner actually returned.
@@ -259,7 +267,7 @@ footer a:hover{color:var(--red)}
       \(\mathcal{E} = (E, \{Q_i\}, \mathrm{pre}, \mathrm{post}, E^{*})\), applied
       by product update. The relation \(Q_i\) carries the entire modelling
       commitment: a vehicle that relates every event to a distinguished null
-      event is <em class="term">oblivious</em> — it observes neither the outcome
+      event is <em class="term">oblivious</em>, it observes neither the outcome
       of the action nor its occurrence.
     </p>
 
@@ -271,8 +279,7 @@ footer a:hover{color:var(--red)}
     </div>
 
     <p>
-      A sensing action has \(|E^{*}| \ge 2\) — one designated event per reading —
-      so a solution is not a sequence but a policy: an AND/OR tree whose
+      A sensing action has \(|E^{*}| \ge 2\), one designated event per reading, so a solution is not a sequence but a policy: an AND/OR tree whose
       OR-nodes choose an action, whose AND-nodes branch over designated events,
       and every leaf of which satisfies the goal. Goals here are modal:
     </p>
@@ -303,7 +310,7 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="fig-body">
         <svg id="pu-svg" viewBox="0 0 760 220" width="100%" style="max-width:760px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+             xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
           <defs>
             <marker id="pu-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
               <path d="M0,1 L7,4 L0,7" fill="none" stroke="#888" stroke-width="1.2"/>
@@ -320,7 +327,7 @@ footer a:hover{color:var(--red)}
           <text x="136" y="90" font-size="10" text-anchor="middle" fill="#111">¬p</text>
           <line x1="79" y1="86" x2="113" y2="86" stroke="#888" stroke-width="1.3"/>
           <text x="96" y="76" font-size="9" fill="#5A5A5A" text-anchor="middle">R₁R₂</text>
-          <text x="96" y="132" font-size="9.5" fill="#5A5A5A" text-anchor="middle">|W*| = 2 · nobody knows</text>
+          <text x="96" y="134" font-size="9.5" fill="#5A5A5A" text-anchor="middle">|W*| = 2 · nobody knows</text>
 
           <text x="196" y="92" font-size="18" fill="#111" text-anchor="middle">⊗</text>
 
@@ -335,12 +342,12 @@ footer a:hover{color:var(--red)}
           <path d="M252,86 Q268,110 274,120" fill="none" stroke="#1A52A0" stroke-width="1.2" marker-end="url(#pu-arr)"/>
           <path d="M320,86 Q304,110 298,120" fill="none" stroke="#1A52A0" stroke-width="1.2" marker-end="url(#pu-arr)"/>
           <text x="286" y="160" font-size="9" fill="#1A52A0" text-anchor="middle">R₂ : Q₂(e) = nil  (oblivious)</text>
-          <text x="286" y="52" font-size="9" fill="#5A5A5A" text-anchor="middle">E* = {e⁺, e⁻}</text>
+          <text x="286" y="40" font-size="9.5" fill="#5A5A5A" text-anchor="middle">E* = {e⁺, e⁻}</text>
 
           <text x="386" y="92" font-size="15" fill="#111" text-anchor="middle">=</text>
 
           <!-- M' -->
-          <text x="596" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">𝓜′ — branch e⁺</text>
+          <text x="596" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">𝓜′, branch e⁺</text>
           <g id="pu-out" opacity="0">
             <circle id="pu-o1" cx="470" cy="70" r="20" fill="#fff" stroke="#C8102E" stroke-width="2"/>
             <text x="470" y="74" font-size="9" text-anchor="middle">p,e⁺</text>
@@ -354,7 +361,7 @@ footer a:hover{color:var(--red)}
             <text x="659" y="60" font-size="9" fill="#1A52A0" text-anchor="middle">R₂</text>
             <text x="596" y="128" font-size="9.5" fill="#111" text-anchor="middle">R₁ separates ⇒ Kw₁ p</text>
             <text x="596" y="146" font-size="9.5" fill="#1A52A0" text-anchor="middle">R₂ still reaches ¬p ⇒ ¬Kw₂ p</text>
-            <text x="596" y="168" font-size="9" fill="#5A5A5A" text-anchor="middle">the null copies are exactly what keeps R₂ ignorant</text>
+            <text x="596" y="170" font-size="10" font-family="'Source Serif 4',serif" font-style="italic" fill="#5A5A5A" text-anchor="middle">the null copies are exactly what keeps R₂ ignorant</text>
           </g>
         </svg>
       </div>
@@ -387,28 +394,28 @@ footer a:hover{color:var(--red)}
     <div class="dom-grid">
       <div class="dom-card">
         <h4>ugv-public</h4>
-        <div class="sig">broadcast ?i ?l — public-announcement<br>(default Fully)</div>
+        <div class="sig">broadcast ?i ?l, public-announcement<br>(default Fully)</div>
         <p>Facility-wide radio. One transmission establishes
         \(C_{\mathcal{A}}\), so fleet knowledge is always symmetric. The planning
         problem is the division of labour: who drives where, and when to speak.</p>
       </div>
       <div class="dom-card">
         <h4>ugv-radio</h4>
-        <div class="sig">report ?i ?l — private-announcement<br>(?j Fully if in range, else Oblivious)</div>
+        <div class="sig">report ?i ?l, private-announcement<br>(?j Fully if in range, else Oblivious)</div>
         <p>Range-limited radio: the sender's bay and its neighbours. Acquisition
         happens at the far end, delivery must happen near the fleet, so policies
         gain a return, a relay, or a rendezvous.</p>
       </div>
       <div class="dom-card">
         <h4>ugv-directed</h4>
-        <div class="sig">tell ?i ?j ?l — private-announcement<br>(?i, ?j Fully; default Oblivious)</div>
+        <div class="sig">tell ?i ?j ?l, private-announcement<br>(?i, ?j Fully; default Oblivious)</div>
         <p>Point-to-point radio with a single detector in the fleet. Reaches
         asymmetric information states: one teammate informed, another
         deliberately left ignorant.</p>
       </div>
       <div class="dom-card">
         <h4>ugv-facility</h4>
-        <div class="sig">unlock ?i ?from ?to — public-ontic<br>scan gated by (has-scanner ?i)</div>
+        <div class="sig">unlock ?i ?from ?to, public-ontic<br>scan gated by (has-scanner ?i)</div>
         <p>Heterogeneous fleet, locked bays, several items. One vehicle holds the
         key, another the detector, so an ontic action becomes the precondition of
         an epistemic one.</p>
@@ -459,7 +466,7 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="fig-body">
         <svg id="rx-svg" viewBox="0 0 700 170" width="100%" style="max-width:700px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+             xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
           <g id="rx-bays"></g>
           <circle id="rx-wave" class="wave" cx="0" cy="76" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
           <g id="rx-agents"></g>
@@ -468,7 +475,7 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="fig-cap">
         <b>Figure 2.</b> The same transmission under three observability models.
-        Filled markers received the content; hollow markers are oblivious — they
+        Filled markers received the content; hollow markers are oblivious, they
         did not learn that a transmission occurred, so they can infer nothing
         from the fleet's silence either.
       </div>
@@ -483,7 +490,7 @@ footer a:hover{color:var(--red)}
     <h3>What the planner returned, executed step by step</h3>
     <p style="max-width:800px">
       Both policies below are transcribed verbatim from the solver's output on
-      instances that differ in one respect only — the communication model.
+      instances that differ in one respect only, the communication model.
       Three UGVs start at the depot \(b_1\); the target is in \(b_3\) or
       \(b_4\) and nobody knows which; the goal is
       \(C_{\mathcal{A}}\bigwedge_i \mathrm{Kw}_i\,p\) with
@@ -493,7 +500,7 @@ footer a:hover{color:var(--red)}
 
     <div class="fig">
       <div class="fig-head">
-        <span class="fig-title">Policy execution — corridor, model, and knowledge state</span>
+        <span class="fig-title">Policy execution, corridor, model, and knowledge state</span>
         <div class="ctrls">
           <span class="ctrl-label">domain</span>
           <div class="seg" id="th-dom">
@@ -514,7 +521,7 @@ footer a:hover{color:var(--red)}
         <div class="theatre">
           <div>
             <svg id="th-svg" viewBox="0 0 660 250" width="100%" style="display:block"
-                 xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+                 xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
               <g id="th-bays"></g>
               <circle id="th-wave" class="wave" cx="0" cy="96" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
               <circle id="th-scan" class="scanring" cx="0" cy="96" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>
@@ -530,13 +537,13 @@ footer a:hover{color:var(--red)}
             <div class="panel" style="margin-bottom:.7rem">
               <h5>Epistemic model</h5>
               <svg id="th-model" viewBox="0 0 240 96" width="100%"
-                   xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+                   xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
                 <circle id="m-w1" class="wnode" cx="66" cy="44" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
-                <text x="66" y="41" font-size="9" text-anchor="middle" fill="#111">target</text>
-                <text x="66" y="52" font-size="9" text-anchor="middle" fill="#111">b3</text>
+                <text x="66" y="38" font-size="9" text-anchor="middle" fill="#111">target</text>
+                <text x="66" y="55" font-size="9" text-anchor="middle" fill="#111">b3</text>
                 <circle id="m-w2" class="wnode" cx="174" cy="44" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
-                <text x="174" y="41" font-size="9" text-anchor="middle" fill="#111">target</text>
-                <text x="174" y="52" font-size="9" text-anchor="middle" fill="#111">b4</text>
+                <text x="174" y="38" font-size="9" text-anchor="middle" fill="#111">target</text>
+                <text x="174" y="55" font-size="9" text-anchor="middle" fill="#111">b4</text>
                 <line id="m-edge" class="wedge" x1="90" y1="44" x2="150" y2="44" stroke="#888" stroke-width="1.4"/>
                 <text id="m-lbl" x="120" y="34" font-size="8.5" fill="#5A5A5A" text-anchor="middle">R₁R₂R₃</text>
                 <circle id="m-d1" cx="66" cy="44" r="28" fill="none" stroke="#C8102E" stroke-width="1.1"/>
@@ -553,8 +560,11 @@ footer a:hover{color:var(--red)}
         </div>
       </div>
       <div class="fig-cap">
-        <b>Figure 3.</b> Two behaviours repay attention. On the negative branch
-        the policy reports \(b_4\) — a bay no vehicle ever scanned — because the
+        <b>Figure 3.</b> The star marks where the target actually is along the
+        selected branch, which is settled from the outset; it is grey while the
+        fleet is still ignorant of it and solid once a reading has resolved it.
+        Two behaviours repay attention. On the negative branch
+        the policy reports \(b_4\), a bay no vehicle ever scanned, because the
         reading together with the common knowledge that the target lies in
         exactly one of two bays entails it. And under the range-limited radio a
         return move is inserted on <b>both</b> branches: a report transmitted
@@ -574,13 +584,13 @@ footer a:hover{color:var(--red)}
       the fleet is heterogeneous: \(R_2\) carries the key but no detector,
       \(R_1\) the reverse, and a mid-corridor bay starts locked. Neither vehicle
       can complete the mission alone, and the dependency runs across the
-      ontic/epistemic boundary — \(R_2\) must change the world before \(R_1\) can
+      ontic/epistemic boundary, \(R_2\) must change the world before \(R_1\) can
       learn anything at all.
     </p>
 
     <div class="fig">
       <div class="fig-head">
-        <span class="fig-title">facility — unlock, traverse, sense, report</span>
+        <span class="fig-title">facility, unlock, traverse, sense, report</span>
         <div class="ctrls">
           <button class="btn primary" id="fc-play">▶ Play</button>
           <button class="btn" id="fc-step">Step</button>
@@ -589,7 +599,7 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="fig-body">
         <svg id="fc-svg" viewBox="0 0 660 200" width="100%" style="max-width:660px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+             xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
           <g id="fc-bays"></g>
           <circle id="fc-wave" class="wave" cx="0" cy="86" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
           <circle id="fc-scan" class="scanring" cx="0" cy="86" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>
@@ -612,12 +622,14 @@ footer a:hover{color:var(--red)}
 <section>
   <div class="container">
     <p class="sec-label">Measurements</p>
-    <h3>What actually drives the cost</h3>
+    <h3>What actually drives the cost
+      <a class="ext-chip" href="https://github.com/a-burigana/plank" target="_blank" rel="noopener"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" stroke-width="1.2"/></svg>plank</a>
+    </h3>
     <p>
       204 instances, grounded with <span style="font-family:var(--mono);font-size:.85em">plank</span>
       and solved with ALETHEIA under a 60 s search budget. The suite varies fleet
-      size \(N\), corridor length \(L\), initial uncertainty \(U\) — which is
-      exactly \(|W|\) — deployment, goal shape, and the number of items.
+      size \(N\), corridor length \(L\), initial uncertainty \(U\), which is
+      exactly \(|W|\), deployment, goal shape, and the number of items.
     </p>
 
     <div class="fig">
@@ -657,8 +669,7 @@ footer a:hover{color:var(--red)}
       Medians over solved instances. All eight unsolved instances are
       range-limited with four candidate bays and three or more vehicles; every
       one is a search timeout rather than an error. Grounding, by contrast,
-      scales with \(N \times L\): from 0.02 s to 76 s across the same suite —
-      an offline, cacheable cost, where search is the online one.
+      scales with \(N \times L\): from 0.02 s to 76 s across the same suite, an offline, cacheable cost, where search is the online one.
     </p>
   </div>
 </section>
@@ -681,7 +692,7 @@ footer a:hover{color:var(--red)}
         Since <span style="font-family:var(--mono);font-size:.85em">scan</span>
         declares <span style="font-family:var(--mono);font-size:.85em">(default Oblivious)</span>,
         \(R_2\)'s accessibility class still contains worlds disagreeing on the
-        item's bay — precisely the null copies of Figure 1 — so
+        item's bay, precisely the null copies of Figure 1, so
         \(\mathrm{Kw}_{R_2}\) fails and the goal cannot hold at that leaf.
       </p>
     </div>
@@ -698,8 +709,8 @@ footer a:hover{color:var(--red)}
     </p>
 
     <p class="pull">
-      Goal shape — knowing-whether, nested, negated, conjoined over several
-      atoms — deserves standing as a benchmark dimension alongside instance size.
+      Goal shape, knowing-whether, nested, negated, conjoined over several
+      atoms, deserves standing as a benchmark dimension alongside instance size.
       Scaling a suite exercises one code path harder; varying the shape of the
       goal exercises different ones.
     </p>
@@ -722,6 +733,8 @@ footer a:hover{color:var(--red)}
         <a href="ugv_del_coordination.pdf">Full report (PDF)</a>
         &nbsp;·&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/a-burigana/plank">plank</a>
       </span>
       <span class="ftr-r">204 instances · 4 domains · EPDDL</span>
     </div>
@@ -818,9 +831,9 @@ function agentMarker(g, id, label, cx, cy){
     {id:'R2', bay:0}, {id:'R3', bay:2}, {id:'R4', bay:4}
   ];
   var NOTES = {
-    public:  'public-announcement — every vehicle receives; C_A holds in one step',
-    radio:   'private-announcement, range = sender bay ± 1 — R4 is oblivious',
-    directed:'private-announcement addressed to R2 — R3 and R4 are oblivious'
+    public:  'public-announcement, every vehicle receives; C_A holds in one step',
+    radio:   'private-announcement, range = sender bay ± 1, R4 is oblivious',
+    directed:'private-announcement addressed to R2, R3 and R4 are oblivious'
   };
   function hears(a){
     if (a.sender) return true;
@@ -912,11 +925,11 @@ function agentMarker(g, id, label, cx, cy){
               edge:'R₂R₃', dead:0, des:(branch === 'pos' ? 'w1' : 'w2'),
               f:'public-ontic · drives back into radio range of the depot'});
       S.push({lab:'report R1 ' + tgt, pos:[1,0,0], kw:[1,1,1], ck:1, act:'send',
-              edge:'—', dead:(branch === 'pos' ? 2 : 1), des:(branch === 'pos' ? 'w1' : 'w2'),
+              edge:', ', dead:(branch === 'pos' ? 2 : 1), des:(branch === 'pos' ? 'w1' : 'w2'),
               f:'private-announcement · in range ⇒ R2,R3 Fully · goal reached'});
     } else {
       S.push({lab:'broadcast R1 ' + tgt, pos:[2,0,0], kw:[1,1,1], ck:1, act:'send',
-              edge:'—', dead:(branch === 'pos' ? 2 : 1), des:(branch === 'pos' ? 'w1' : 'w2'),
+              edge:', ', dead:(branch === 'pos' ? 2 : 1), des:(branch === 'pos' ? 'w1' : 'w2'),
               f:'public-announcement · (default Fully) · goal reached'});
     }
     return S;
@@ -931,10 +944,14 @@ function agentMarker(g, id, label, cx, cy){
       m.setAttribute('transform', 'translate(' + bayCx(0, OPT) + ',' + (96 + (i-1)*0) + ')');
     });
     // target marker
-    var star = el('text', {id:'th-star', x:bayCx(2, OPT), y:78, 'font-size':15,
-      fill:RED, 'text-anchor':'middle', opacity:'0'});
+    var star = el('text', {id:'th-star', x:bayCx(2, OPT), y:56, 'font-size':15,
+      fill:'#C9C9C9', 'text-anchor':'middle'});
     star.textContent = '★';
     gA.appendChild(star);
+    var slab = el('text', {id:'th-starlab', x:bayCx(2, OPT), y:44, 'font-size':9,
+      fill:'#AAA', 'text-anchor':'middle'});
+    slab.textContent = 'target, unknown to the fleet';
+    gA.appendChild(slab);
     drawTree();
   }
 
@@ -955,11 +972,22 @@ function agentMarker(g, id, label, cx, cy){
       c.setAttribute('stroke', knows ? RED : INK);
       t.setAttribute('fill', knows ? '#fff' : INK);
     });
+    // The star is a fact about the world, not about anyone's knowledge: along
+    // this branch the target sits in that bay from the outset. It is drawn
+    // greyed while the fleet is still ignorant, and solid once a reading has
+    // resolved it, so the two are never conflated.
     var star = document.getElementById('th-star');
     if (star){
-      var known = idx >= 3;
-      star.setAttribute('opacity', known ? '1' : '0');
+      var resolved = idx >= 3;
+      star.setAttribute('opacity', '1');
+      star.setAttribute('fill', resolved ? RED : '#C9C9C9');
       star.setAttribute('x', bayCx(branch === 'pos' ? 2 : 3, OPT));
+    }
+    var slab = document.getElementById('th-starlab');
+    if (slab){
+      slab.setAttribute('x', bayCx(branch === 'pos' ? 2 : 3, OPT));
+      slab.setAttribute('fill', idx >= 3 ? RED : '#AAA');
+      slab.textContent = idx >= 3 ? 'target, now known' : 'target, unknown to the fleet';
     }
   }
 
@@ -968,7 +996,7 @@ function agentMarker(g, id, label, cx, cy){
     var y0 = 178, labels = steps.map(function(s){ return s.lab; }).slice(1);
     var n = labels.length, x0 = 40, gap = Math.min(126, (600 - x0) / n);
     var lab = el('text', {x:34, y:162, 'font-size':9.5, fill:GRAY});
-    lab.textContent = 'policy path — branch ' + (branch === 'pos' ? 'e⁺ (target in b3)' : 'e⁻ (not in b3)');
+    lab.textContent = 'policy path, branch ' + (branch === 'pos' ? 'e⁺ (target in b3)' : 'e⁻ (not in b3)');
     gT.appendChild(lab);
     for (var i = 0; i < n; i++){
       var x = x0 + i * gap;
@@ -1026,8 +1054,8 @@ function agentMarker(g, id, label, cx, cy){
     var cap = document.getElementById('m-cap');
     w1.classList.toggle('dead', st.dead === 1);
     w2.classList.toggle('dead', st.dead === 2);
-    edge.classList.toggle('cut', st.edge === '—');
-    lbl.textContent = st.edge === '—' ? '' : st.edge;
+    edge.classList.toggle('cut', st.edge === ', ');
+    lbl.textContent = st.edge === ', ' ? '' : st.edge;
     d1.setAttribute('opacity', (st.des === 'both' || st.des === 'w1') && st.dead !== 1 ? '1' : '0');
     d2.setAttribute('opacity', (st.des === 'both' || st.des === 'w2') && st.dead !== 2 ? '1' : '0');
     cap.textContent = st.dead ? '|W*| = 1 · C_A p' : '|W*| = 2';
@@ -1123,7 +1151,7 @@ function agentMarker(g, id, label, cx, cy){
     {lab:'unlock_R2_b1_b2', r1:0, r2:0, locked:false, kw:[0,0], ck:0, act:'unlock',
      note:'public-ontic · the bay opens, and that is common knowledge at once'},
     {lab:'move_R1_b1_b2', r1:1, r2:0, locked:false, kw:[0,0], ck:0,
-     note:'R1 may now traverse — the ontic act was the precondition of sensing'},
+     note:'R1 may now traverse, the ontic act was the precondition of sensing'},
     {lab:'move_R1_b2_b3', r1:2, r2:0, locked:false, kw:[0,0], ck:0,
      note:'public-ontic · positions remain common knowledge'},
     {lab:'scan_R1_o1_b3', r1:2, r2:0, locked:false, kw:[1,0], ck:0, act:'scan',
@@ -1145,7 +1173,7 @@ function agentMarker(g, id, label, cx, cy){
     while (gA.firstChild) gA.removeChild(gA.firstChild);
     agentMarker(gA, 'fc-R1', 'R1', bayCx(0, OPT) - 17, 86);
     agentMarker(gA, 'fc-R2', 'R2', bayCx(0, OPT) + 17, 86);
-    var cap = el('text', {x:bayCx(0, OPT), y:132, 'font-size':9, fill:GRAY, 'text-anchor':'middle'});
+    var cap = el('text', {x:bayCx(0, OPT), y:112, 'font-size':9, fill:GRAY, 'text-anchor':'middle'});
     cap.textContent = 'detector / key';
     gA.appendChild(cap);
     render();
@@ -1164,7 +1192,7 @@ function agentMarker(g, id, label, cx, cy){
       c.setAttribute('stroke', pair[1] ? RED : INK);
       t.setAttribute('fill', pair[1] ? '#fff' : INK);
     });
-    note.textContent = st.lab === 'initial' ? st.note : st.lab + ' — ' + st.note;
+    note.textContent = st.lab === 'initial' ? st.note : st.lab + ', ' + st.note;
     if (!RM && st.act === 'scan'){
       scan.setAttribute('cx', bayCx(st.r1, OPT)); scan.setAttribute('cy', 86);
       scan.classList.remove('go'); void scan.getBoundingClientRect(); scan.classList.add('go');
@@ -1213,7 +1241,7 @@ function agentMarker(g, id, label, cx, cy){
     h.style.cssText = 'font-family:var(--sg);font-size:.78rem;font-weight:500;margin-bottom:.1rem';
     h.textContent = c.title;
     var s = document.createElement('div');
-    s.style.cssText = 'font-family:var(--mono);font-size:.62rem;color:var(--gray);margin-bottom:.6rem';
+    s.style.cssText = 'font-family:var(--ss);font-style:italic;font-size:.72rem;color:var(--gray);margin-bottom:.6rem';
     s.textContent = c.sub;
     wrap.appendChild(h); wrap.appendChild(s);
 
@@ -1221,7 +1249,7 @@ function agentMarker(g, id, label, cx, cy){
       var row = document.createElement('div');
       row.style.cssText = 'display:flex;align-items:center;gap:.5rem;margin-bottom:.42rem';
       var k = document.createElement('span');
-      k.style.cssText = 'font-family:var(--mono);font-size:.66rem;color:#555;width:3.1rem;flex-shrink:0';
+      k.style.cssText = 'font-family:var(--sg);font-size:.7rem;color:#555;width:3.4rem;flex-shrink:0';
       k.textContent = p.k;
       var track = document.createElement('span');
       track.style.cssText = 'flex:1;height:13px;background:#EEE;position:relative;border-radius:1px';
@@ -1232,13 +1260,13 @@ function agentMarker(g, id, label, cx, cy){
       bar.setAttribute('data-w', (Math.log10(p.v) / LOGMAX * 100).toFixed(1));
       track.appendChild(bar);
       var v = document.createElement('span');
-      v.style.cssText = 'font-family:var(--mono);font-size:.66rem;color:#333;width:2.6rem;text-align:right;flex-shrink:0';
+      v.style.cssText = 'font-family:var(--sg);font-size:.7rem;color:#333;width:2.8rem;text-align:right;flex-shrink:0';
       v.textContent = fmt(p.v);
       row.appendChild(k); row.appendChild(track); row.appendChild(v);
       wrap.appendChild(row);
     });
     var f = document.createElement('div');
-    f.style.cssText = 'font-family:var(--mono);font-size:.6rem;color:#999;margin-top:.35rem';
+    f.style.cssText = 'font-family:var(--ss);font-style:italic;font-size:.68rem;color:#999;margin-top:.35rem';
     f.textContent = 'median expanded nodes · log scale';
     wrap.appendChild(f);
     host.appendChild(wrap);

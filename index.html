@@ -20,7 +20,17 @@ MathJax = {
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 <style>
+@view-transition{navigation:auto}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+}
 :root{
   --black:#111111; --red:#C8102E; --gray:#5A5A5A;
   --border:#D6D6D6; --code-bg:#F4F4F4;
@@ -39,6 +49,11 @@ header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
   color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
 header h1{font-family:var(--sg);font-size:1.18rem;
   font-weight:500;letter-spacing:-.01em}
+.hdr-nav{margin-left:auto;font-family:var(--sg);font-size:.78rem;font-weight:500}
+.hdr-nav a{color:var(--gray);text-decoration:none;margin-left:1.1rem;
+  transition:color .18s,border-color .18s;border-bottom:1.5px solid transparent}
+.hdr-nav a:hover{color:var(--black);border-bottom-color:var(--red)}
+.hdr-nav a.here{color:var(--black);border-bottom-color:var(--red)}
 .hero{padding:4.5rem 0 3.2rem;border-bottom:1px solid var(--border)}
 .eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
   letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
@@ -192,6 +207,10 @@ footer a:hover{color:var(--red)}
     <div class="hdr-inner">
       <span class="site-tag">epistemic-robotics</span>
       <h1>The Epistemic Robotics Project</h1>
+      <nav class="hdr-nav">
+        <a href="index.html" class="here">Overview</a>
+        <a href="domains.html">Domains</a>
+      </nav>
     </div>
   </div>
 </header>
@@ -1112,6 +1131,16 @@ footer a:hover{color:var(--red)}
         \;\wedge\;
         C_{\{R_1,R_2\}}\bigl(\textit{done}(\alpha)\bigr)\]
     </div>
+
+    <p>
+      Four coordination domains built on these action types, together with the
+      policies ALETHEIA returns for them and a 204-instance scaling study, are
+      developed on a companion page:
+      <a href="domains.html" style="font-weight:500">Coordination domains for UGV
+      fleets</a>. It executes the returned policies step by step, so the
+      difference a single observability condition makes can be watched rather
+      than argued.
+    </p>
   </div>
 </section>
 
@@ -1122,6 +1151,8 @@ footer a:hover{color:var(--red)}
         <a href="https://github.com/HanielUlises/epistemic-robotics">epistemic-robotics</a>
         &nbsp;·&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/a-burigana/plank">plank</a>
       </span>
     </div>
   </div>
