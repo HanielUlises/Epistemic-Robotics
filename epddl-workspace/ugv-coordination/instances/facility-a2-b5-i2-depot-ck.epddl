@@ -1,0 +1,75 @@
+(define (problem facility-a2-b5-i2-depot-ck)
+    ;; 2 UGVs: R1 carries the detector, R2 the key. 5 bays with
+    ;; b3 locked, 2 item(s) to localise. Fleet-wide common-knowledge goal.
+    (:domain ugv-facility)
+
+    (:requirements
+        :typing :equality :list-comprehensions
+        :finitary-S5-theories :modal-goals :facts
+        :knowing-whether :group-modalities
+        :disjunctive-preconditions
+    )
+
+    (:agents R1 R2)
+
+    (:objects
+        b1 b2 b3 b4 b5 - location
+        o1 o2 - item
+    )
+
+    (:facts-init
+        (adjacent b1 b2)
+        (adjacent b2 b1)
+        (adjacent b2 b3)
+        (adjacent b3 b2)
+        (adjacent b3 b4)
+        (adjacent b4 b3)
+        (adjacent b4 b5)
+        (adjacent b5 b4)
+        (has-scanner R1)
+        (keyholder R2)
+    )
+
+    (:init
+        (:and
+            (at R1 b1) (at R2 b1)
+            (locked b3)
+
+            ([C. All]
+                (and
+                    (at R1 b1) (at R2 b1)
+                    (locked b3)
+                    (forall (?l - location | (/= ?l b3)) (not (locked ?l)))
+                    (forall (?i - agent ?l1 ?l2 - location | (/= ?l1 ?l2))
+                        (imply (at ?i ?l1) (not (at ?i ?l2))) )
+
+                    (not (item-at o1 b1))
+                    (not (item-at o1 b2))
+                    (not (item-at o1 b3))
+                    (or (item-at o1 b5) (item-at o1 b4))
+                    (forall (?l1 ?l2 - location | (/= ?l1 ?l2))
+                        (imply (item-at o1 ?l1) (not (item-at o1 ?l2))) )
+
+                    (not (item-at o2 b1))
+                    (not (item-at o2 b4))
+                    (not (item-at o2 b5))
+                    (or (item-at o2 b3) (item-at o2 b2))
+                    (forall (?l1 ?l2 - location | (/= ?l1 ?l2))
+                        (imply (item-at o2 ?l1) (not (item-at o2 ?l2))) )))
+
+            (:forall (?i - agent)
+                ([C. All] (<Kw. ?i> (item-at o1 b5))) )
+            (:forall (?i - agent)
+                ([C. All] (<Kw. ?i> (item-at o2 b3))) )
+        )
+    )
+
+    (:goal
+        ([C. All]
+            (and
+                ([Kw. R1] (item-at o1 b5))
+                ([Kw. R2] (item-at o1 b5))
+                ([Kw. R1] (item-at o2 b3))
+                ([Kw. R2] (item-at o2 b3)) ))
+    )
+)

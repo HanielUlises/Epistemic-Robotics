@@ -1,0 +1,17 @@
+{
+  "action": "scan_R2_bay3",
+  "branches": [
+    {
+      "event": 1,
+      "subtree": {
+        "action": "broadcast_R2_bay2",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": null
+          }
+        ]
+      }
+    }
+  ]
+}

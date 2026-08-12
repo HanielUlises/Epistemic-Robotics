@@ -1,0 +1,30 @@
+\begin{table}[H]
+\centering
+\small
+\caption{Scaling along each parameter, aggregated over all other parameters.
+Worlds is $|W|$ of the grounded initial model; expanded nodes and search time
+are medians over the solved instances in each stratum.}
+\label{tab:scaling}
+\begin{tabular}{@{}l r r r r r@{}}
+\toprule
+\textbf{Stratum} & \textbf{Solved} & \textbf{Ground actions} & \textbf{Worlds}
+ & \textbf{Expanded} & \textbf{Search (s)} \\
+\midrule
+Fleet $N$ $= 2$ & 48/48 & 32 & 2 & 1026 & 0.01 \\
+Fleet $N$ $= 3$ & 44/48 & 42 & 2 & 3358 & 0.03 \\
+Fleet $N$ $= 4$ & 44/48 & 56 & 2 & 6970 & 0.06 \\
+\addlinespace
+Corridor $L$ $= 3$ & 24/24 & 30 & 2 & 66 & 0.00 \\
+Corridor $L$ $= 4$ & 48/48 & 42 & 2 & 1026 & 0.01 \\
+Corridor $L$ $= 5$ & 48/48 & 54 & 2 & 6654 & 0.04 \\
+Corridor $L$ $= 6$ & 16/24 & 55 & 4 & 513042 & 4.08 \\
+\addlinespace
+Uncertainty $U$ $= 2$ & 72/72 & 40 & 2 & 179 & 0.01 \\
+Uncertainty $U$ $= 3$ & 48/48 & 48 & 3 & 9202 & 0.08 \\
+Uncertainty $U$ $= 4$ & 16/24 & 55 & 4 & 513042 & 4.08 \\
+\addlinespace
+Depot start & 68/72 & 42 & 2 & 4381 & 0.03 \\
+Spread start & 68/72 & 42 & 2 & 1426 & 0.01 \\
+\bottomrule
+\end{tabular}
+\end{table}

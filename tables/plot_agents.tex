@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.49\textwidth, height=5.8cm,
+    ymode=log, log basis y=10,
+    ylabel={expanded nodes (median)},
+    grid=major, grid style={draw=rulegrey!60, very thin},
+    axis line style={draw=slate}, tick label style={font=\small, color=slate},
+    label style={font=\small, color=ink}, title style={font=\small, color=ink},
+    legend style={font=\scriptsize, draw=rulegrey, fill=white, at={(0.5,-0.30)},
+                  anchor=north, legend columns=2, cells={anchor=west}},
+    cycle list={
+        {steel, mark=*, mark size=1.6pt, thick},
+        {slate, mark=square*, mark size=1.6pt, thick, dashed},
+        {steellight, mark=triangle*, mark size=2pt, thick},
+        {ink, mark=diamond*, mark size=2pt, thick, dotted}},
+    xlabel={fleet size $N$ \quad{\scriptsize($L\le5$)}}, title={Fleet size}, xtick={2,3,4},
+]
+\addplot coordinates {(2,487) (3,1182) (4,3096)};
+\addlegendentry{S1 public / CK}
+\addplot coordinates {(2,1740) (3,5430) (4,12251)};
+\addlegendentry{S2 radio / CK}
+\addplot coordinates {(2,487) (3,1182) (4,3096)};
+\addlegendentry{S3a public / nested}
+\addplot coordinates {(2,1740) (3,4164) (4,7365)};
+\addlegendentry{S3b radio / nested}
+\end{axis}
+\end{tikzpicture}

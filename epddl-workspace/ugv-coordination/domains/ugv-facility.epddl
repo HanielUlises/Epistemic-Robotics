@@ -1,0 +1,114 @@
+(define (domain ugv-facility)
+    ;; A heterogeneous fleet in a facility with several items to localise and
+    ;; bays that start locked. Only some UGVs carry a detector and only some
+    ;; carry a key, so neither the sensing nor the ontic part of the mission can
+    ;; be done by one vehicle alone: a keyholder must open a bay before a
+    ;; scanner-equipped vehicle can read it, and the reading must then be
+    ;; broadcast. Radio is facility-wide here, so the difficulty is the
+    ;; interlocking of capabilities rather than the delivery of reports.
+    (:requirements
+        :typing :equality :ontic-actions :partial-observability
+        :facts :lists :list-comprehensions
+        :general-preconditions
+        :negative-preconditions :universal-preconditions :modal-preconditions
+        :group-modalities
+    )
+
+    (:action-type-libraries intermediate)
+
+    (:types location item)
+
+    (:predicates
+        (at ?i - agent ?l - location)
+        (item-at ?o - item ?l - location)
+        (locked ?l - location)
+        ;; Static facts: topology and fleet capabilities
+        (:fact adjacent    ?l1 ?l2 - location)
+        (:fact has-scanner ?i - agent)
+        (:fact keyholder   ?i - agent)
+    )
+
+    (:event nil)
+
+    ;--------------------MOVE------------------
+    ;; A locked bay cannot be entered. Whether a bay is locked is public.
+
+    (:event e-move
+        :parameters (?i - agent ?from ?to - location)
+        :precondition (and (at ?i ?from) (not (at ?i ?to)) (not (locked ?to)))
+        :effects
+            (:and
+                (not (at ?i ?from))
+                (at ?i ?to) )
+    )
+
+    (:action move
+        :parameters (?i - agent ?from ?to - location | (adjacent ?from ?to))
+        :action-type (public-ontic (e-move ?i ?from ?to))
+        :observability-conditions (default Fully)
+    )
+
+    ;--------------------UNLOCK------------------
+    ;; Only a keyholder unlocks, and only from an adjacent bay. Ontic and
+    ;; public: the fleet sees the bay open.
+
+    (:event e-unlock
+        :parameters (?i - agent ?from ?to - location)
+        :precondition (and (at ?i ?from) (locked ?to))
+        :effects (not (locked ?to))
+    )
+
+    (:action unlock
+        :parameters (?i - agent ?from ?to - location |
+                        (and (keyholder ?i) (adjacent ?from ?to)))
+        :action-type (public-ontic (e-unlock ?i ?from ?to))
+        :observability-conditions (default Fully)
+    )
+
+    ;--------------------SCAN------------------
+    ;; Only scanner-equipped vehicles sense, and only the bay they occupy.
+    ;; The reading is private to the sensing vehicle.
+
+    (:event e-scan-pos
+        :parameters (?i - agent ?o - item ?l - location)
+        :precondition (and (at ?i ?l) (item-at ?o ?l))
+    )
+
+    (:event e-scan-neg
+        :parameters (?i - agent ?o - item ?l - location)
+        :precondition (and (at ?i ?l) (not (item-at ?o ?l)))
+    )
+
+    (:action scan
+        :parameters (?i - agent ?o - item ?l - location | (has-scanner ?i))
+        :action-type (private-sensing
+            (e-scan-pos ?i ?o ?l)
+            (e-scan-neg ?i ?o ?l)
+            (nil))
+        :observability-conditions
+            (:and
+                (?i Fully)
+                (default Oblivious)
+            )
+    )
+
+    ;--------------------BROADCAST------------------
+
+    (:event e-broadcast-pos
+        :parameters (?i - agent ?o - item ?l - location)
+        :precondition ([?i] (item-at ?o ?l))
+    )
+
+    (:event e-broadcast-neg
+        :parameters (?i - agent ?o - item ?l - location)
+        :precondition (not ([?i] (item-at ?o ?l)))
+    )
+
+    (:action broadcast
+        :parameters (?i - agent ?o - item ?l - location)
+        :action-type (public-announcement
+            (e-broadcast-pos ?i ?o ?l)
+            (e-broadcast-neg ?i ?o ?l))
+        :observability-conditions (default Fully)
+    )
+)

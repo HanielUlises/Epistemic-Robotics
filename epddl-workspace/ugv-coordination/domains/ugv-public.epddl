@@ -1,0 +1,86 @@
+(define (domain ugv-public)
+    ;; UGV fleet in a corridor-shaped facility with a facility-wide radio.
+    ;; Sensing is local and private; communication is public.
+    (:requirements
+        :typing :equality :ontic-actions :partial-observability
+        :facts :lists :list-comprehensions
+        :general-preconditions
+        :negative-preconditions :universal-preconditions :modal-preconditions
+        :group-modalities
+    )
+
+    (:action-type-libraries intermediate)
+
+    (:types location)
+
+    (:predicates
+        (at ?i - agent ?l - location)
+        (target-at ?l - location)
+        ;; Facts (static facility topology)
+        (:fact adjacent ?l1 ?l2 - location)
+    )
+
+    (:event nil)
+
+    ;--------------------MOVE------------------
+    ;; Driving between adjacent bays. Fleet positions are public.
+
+    (:event e-move
+        :parameters (?i - agent ?from ?to - location)
+        :precondition (and (at ?i ?from) (not (at ?i ?to)))
+        :effects
+            (:and
+                (not (at ?i ?from))
+                (at ?i ?to) )
+    )
+
+    (:action move
+        :parameters (?i - agent ?from ?to - location | (adjacent ?from ?to))
+        :action-type (public-ontic (e-move ?i ?from ?to))
+        :observability-conditions (default Fully)
+    )
+
+    ;--------------------SCAN------------------
+    ;; On-board sensor: reads only the bay the UGV occupies, and only that UGV
+    ;; learns the reading. The rest of the fleet does not observe the scan.
+
+    (:event e-scan-pos
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (target-at ?l))
+    )
+
+    (:event e-scan-neg
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (not (target-at ?l)))
+    )
+
+    (:action scan
+        :parameters (?i - agent ?l - location)
+        :action-type (private-sensing (e-scan-pos ?i ?l) (e-scan-neg ?i ?l) (nil))
+        :observability-conditions
+            (:and
+                (?i Fully)
+                (default Oblivious)
+            )
+    )
+
+    ;--------------------BROADCAST------------------
+    ;; Facility-wide radio: a UGV that knows the target bay says so, and the
+    ;; report becomes common knowledge in the fleet.
+
+    (:event e-broadcast-pos
+        :parameters (?i - agent ?l - location)
+        :precondition ([?i] (target-at ?l))
+    )
+
+    (:event e-broadcast-neg
+        :parameters (?i - agent ?l - location)
+        :precondition (not ([?i] (target-at ?l)))
+    )
+
+    (:action broadcast
+        :parameters (?i - agent ?l - location)
+        :action-type (public-announcement (e-broadcast-pos ?i ?l) (e-broadcast-neg ?i ?l))
+        :observability-conditions (default Fully)
+    )
+)

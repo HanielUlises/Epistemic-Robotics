@@ -1,0 +1,37 @@
+{
+  "action": "move_R2_b2_b3",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "scan_R2_b3",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "broadcast_R2_b3",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": null
+                }
+              ]
+            }
+          },
+          {
+            "event": 1,
+            "subtree": {
+              "action": "broadcast_R2_b4",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

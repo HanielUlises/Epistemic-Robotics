@@ -1,0 +1,2389 @@
+{
+  "planning-task-info": {
+    "problem": "public-a2-b5-u2-spread-nested",
+    "domain": "ugv-public",
+    "libraries": [
+      "intermediate"
+    ],
+    "requirements": [
+      ":common-knowledge",
+      ":disjunctive-list-formulas",
+      ":disjunctive-preconditions",
+      ":equality",
+      ":events-conditions",
+      ":existential-preconditions",
+      ":facts",
+      ":finitary-S5-theories",
+      ":general-preconditions",
+      ":group-modalities",
+      ":knowing-whether",
+      ":list-comprehensions",
+      ":lists",
+      ":modal-goals",
+      ":modal-preconditions",
+      ":multi-pointed-models",
+      ":negative-list-formulas",
+      ":negative-preconditions",
+      ":ontic-actions",
+      ":partial-observability",
+      ":quantified-preconditions",
+      ":static-common-knowledge",
+      ":typing",
+      ":universal-preconditions"
+    ],
+    "agents-number": 2,
+    "atoms-number": 40,
+    "facts-number": 8,
+    "actions-number": 36,
+    "initial-worlds-number": 2,
+    "goal-modal-depth": 2,
+    "goal-size": 3
+  },
+  "language": {
+    "atoms": [
+      "adjacent_b1_b1",
+      "adjacent_b1_b2",
+      "adjacent_b1_b3",
+      "adjacent_b1_b4",
+      "adjacent_b1_b5",
+      "adjacent_b2_b1",
+      "adjacent_b2_b2",
+      "adjacent_b2_b3",
+      "adjacent_b2_b4",
+      "adjacent_b2_b5",
+      "adjacent_b3_b1",
+      "adjacent_b3_b2",
+      "adjacent_b3_b3",
+      "adjacent_b3_b4",
+      "adjacent_b3_b5",
+      "adjacent_b4_b1",
+      "adjacent_b4_b2",
+      "adjacent_b4_b3",
+      "adjacent_b4_b4",
+      "adjacent_b4_b5",
+      "adjacent_b5_b1",
+      "adjacent_b5_b2",
+      "adjacent_b5_b3",
+      "adjacent_b5_b4",
+      "adjacent_b5_b5",
+      "target-at_b1",
+      "target-at_b2",
+      "target-at_b3",
+      "target-at_b4",
+      "target-at_b5",
+      "at_R1_b1",
+      "at_R1_b2",
+      "at_R1_b3",
+      "at_R1_b4",
+      "at_R1_b5",
+      "at_R2_b1",
+      "at_R2_b2",
+      "at_R2_b3",
+      "at_R2_b4",
+      "at_R2_b5"
+    ],
+    "agents": [
+      "R1",
+      "R2"
+    ]
+  },
+  "facts": [
+    "adjacent_b1_b2",
+    "adjacent_b2_b1",
+    "adjacent_b2_b3",
+    "adjacent_b3_b2",
+    "adjacent_b3_b4",
+    "adjacent_b4_b3",
+    "adjacent_b4_b5",
+    "adjacent_b5_b4"
+  ],
+  "initial-state": {
+    "worlds": [
+      "w0",
+      "w1"
+    ],
+    "relations": {
+      "R1": {
+        "w0": [
+          "w0",
+          "w1"
+        ],
+        "w1": [
+          "w0",
+          "w1"
+        ]
+      },
+      "R2": {
+        "w0": [
+          "w0",
+          "w1"
+        ],
+        "w1": [
+          "w0",
+          "w1"
+        ]
+      }
+    },
+    "labels": {
+      "w0": [
+        "adjacent_b1_b2",
+        "adjacent_b2_b1",
+        "adjacent_b2_b3",
+        "adjacent_b3_b2",
+        "adjacent_b3_b4",
+        "adjacent_b4_b3",
+        "adjacent_b4_b5",
+        "adjacent_b5_b4",
+        "target-at_b5",
+        "at_R1_b1",
+        "at_R2_b2"
+      ],
+      "w1": [
+        "adjacent_b1_b2",
+        "adjacent_b2_b1",
+        "adjacent_b2_b3",
+        "adjacent_b3_b2",
+        "adjacent_b3_b4",
+        "adjacent_b4_b3",
+        "adjacent_b4_b5",
+        "adjacent_b5_b4",
+        "target-at_b4",
+        "at_R1_b1",
+        "at_R2_b2"
+      ]
+    },
+    "designated": [
+      "w1",
+      "w0"
+    ]
+  },
+  "actions": {
+    "move_R1_b1_b2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b1",
+              {
+                "connective": "not",
+                "formula": "at_R1_b2"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b2": {
+            "formula": "true"
+          },
+          "at_R1_b1": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R1_b2_b1": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b2",
+              {
+                "connective": "not",
+                "formula": "at_R1_b1"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b2": {
+            "formula": "false"
+          },
+          "at_R1_b1": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R1_b2_b3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b2",
+              {
+                "connective": "not",
+                "formula": "at_R1_b3"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b3": {
+            "formula": "true"
+          },
+          "at_R1_b2": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R1_b3_b2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b3",
+              {
+                "connective": "not",
+                "formula": "at_R1_b2"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b3": {
+            "formula": "false"
+          },
+          "at_R1_b2": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R1_b3_b4": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b3",
+              {
+                "connective": "not",
+                "formula": "at_R1_b4"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b4": {
+            "formula": "true"
+          },
+          "at_R1_b3": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R1_b4_b3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b4",
+              {
+                "connective": "not",
+                "formula": "at_R1_b3"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b4": {
+            "formula": "false"
+          },
+          "at_R1_b3": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R1_b4_b5": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b4",
+              {
+                "connective": "not",
+                "formula": "at_R1_b5"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b5": {
+            "formula": "true"
+          },
+          "at_R1_b4": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R1_b5_b4": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b5",
+              {
+                "connective": "not",
+                "formula": "at_R1_b4"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R1_b5": {
+            "formula": "false"
+          },
+          "at_R1_b4": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b1_b2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b1",
+              {
+                "connective": "not",
+                "formula": "at_R2_b2"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b2": {
+            "formula": "true"
+          },
+          "at_R2_b1": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b2_b1": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b2",
+              {
+                "connective": "not",
+                "formula": "at_R2_b1"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b2": {
+            "formula": "false"
+          },
+          "at_R2_b1": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b2_b3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b2",
+              {
+                "connective": "not",
+                "formula": "at_R2_b3"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b3": {
+            "formula": "true"
+          },
+          "at_R2_b2": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b3_b2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b3",
+              {
+                "connective": "not",
+                "formula": "at_R2_b2"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b3": {
+            "formula": "false"
+          },
+          "at_R2_b2": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b3_b4": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b3",
+              {
+                "connective": "not",
+                "formula": "at_R2_b4"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b4": {
+            "formula": "true"
+          },
+          "at_R2_b3": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b4_b3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b4",
+              {
+                "connective": "not",
+                "formula": "at_R2_b3"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b4": {
+            "formula": "false"
+          },
+          "at_R2_b3": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b4_b5": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b4",
+              {
+                "connective": "not",
+                "formula": "at_R2_b5"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b5": {
+            "formula": "true"
+          },
+          "at_R2_b4": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "move_R2_b5_b4": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-move"
+      ],
+      "relations": {
+        "Fully": {
+          "e-move": [
+            "e-move"
+          ]
+        }
+      },
+      "designated": [
+        "e-move"
+      ],
+      "preconditions": {
+        "e-move": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b5",
+              {
+                "connective": "not",
+                "formula": "at_R2_b4"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-move": {
+          "at_R2_b5": {
+            "formula": "false"
+          },
+          "at_R2_b4": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R1_b1": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b1",
+              "target-at_b1"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b1",
+              {
+                "connective": "not",
+                "formula": "target-at_b1"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R1_b2": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b2",
+              "target-at_b2"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b2",
+              {
+                "connective": "not",
+                "formula": "target-at_b2"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R1_b3": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b3",
+              "target-at_b3"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b3",
+              {
+                "connective": "not",
+                "formula": "target-at_b3"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R1_b4": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b4",
+              "target-at_b4"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b4",
+              {
+                "connective": "not",
+                "formula": "target-at_b4"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R1_b5": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b5",
+              "target-at_b5"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R1_b5",
+              {
+                "connective": "not",
+                "formula": "target-at_b5"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R2_b1": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b1",
+              "target-at_b1"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b1",
+              {
+                "connective": "not",
+                "formula": "target-at_b1"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R2_b2": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b2",
+              "target-at_b2"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b2",
+              {
+                "connective": "not",
+                "formula": "target-at_b2"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R2_b3": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b3",
+              "target-at_b3"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b3",
+              {
+                "connective": "not",
+                "formula": "target-at_b3"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R2_b4": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b4",
+              "target-at_b4"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b4",
+              {
+                "connective": "not",
+                "formula": "target-at_b4"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "scan_R2_b5": {
+      "action-type": "private-sensing",
+      "events": [
+        "e-scan-pos",
+        "e-scan-neg",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-scan-pos": [
+            "e-scan-pos"
+          ],
+          "e-scan-neg": [
+            "e-scan-neg"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-scan-pos": [
+            "nil"
+          ],
+          "e-scan-neg": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-scan-pos",
+        "e-scan-neg"
+      ],
+      "preconditions": {
+        "e-scan-pos": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b5",
+              "target-at_b5"
+            ]
+          }
+        },
+        "e-scan-neg": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at_R2_b5",
+              {
+                "connective": "not",
+                "formula": "target-at_b5"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-scan-pos": null,
+        "e-scan-neg": null,
+        "nil": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R1_b1": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R1"
+            ],
+            "formula": "target-at_b1"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R1"
+              ],
+              "formula": "target-at_b1"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R1_b2": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R1"
+            ],
+            "formula": "target-at_b2"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R1"
+              ],
+              "formula": "target-at_b2"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R1_b3": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R1"
+            ],
+            "formula": "target-at_b3"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R1"
+              ],
+              "formula": "target-at_b3"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R1_b4": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R1"
+            ],
+            "formula": "target-at_b4"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R1"
+              ],
+              "formula": "target-at_b4"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R1_b5": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R1"
+            ],
+            "formula": "target-at_b5"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R1"
+              ],
+              "formula": "target-at_b5"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R2_b1": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R2"
+            ],
+            "formula": "target-at_b1"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R2"
+              ],
+              "formula": "target-at_b1"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R2_b2": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R2"
+            ],
+            "formula": "target-at_b2"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R2"
+              ],
+              "formula": "target-at_b2"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R2_b3": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R2"
+            ],
+            "formula": "target-at_b3"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R2"
+              ],
+              "formula": "target-at_b3"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R2_b4": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R2"
+            ],
+            "formula": "target-at_b4"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R2"
+              ],
+              "formula": "target-at_b4"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "broadcast_R2_b5": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-broadcast-pos",
+        "e-broadcast-neg"
+      ],
+      "relations": {
+        "Fully": {
+          "e-broadcast-pos": [
+            "e-broadcast-pos"
+          ],
+          "e-broadcast-neg": [
+            "e-broadcast-neg"
+          ]
+        }
+      },
+      "designated": [
+        "e-broadcast-pos"
+      ],
+      "preconditions": {
+        "e-broadcast-pos": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "R2"
+            ],
+            "formula": "target-at_b5"
+          }
+        },
+        "e-broadcast-neg": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "R2"
+              ],
+              "formula": "target-at_b5"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-broadcast-pos": null,
+        "e-broadcast-neg": null
+      },
+      "observability-conditions": {
+        "R1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "R2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    }
+  },
+  "goal": {
+    "formula": {
+      "modality-name": "box",
+      "modality-index": [
+        "R1"
+      ],
+      "formula": {
+        "modality-name": "Kw.box",
+        "modality-index": [
+          "R2"
+        ],
+        "formula": "target-at_b4"
+      }
+    }
+  }
+}

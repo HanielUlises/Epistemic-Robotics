@@ -1,0 +1,53 @@
+{
+  "action": "move_R1_b1_b2",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "move_R1_b2_b3",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "move_R1_b3_b4",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "scan_R1_b4",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": {
+                          "action": "broadcast_R1_b4",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": null
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "event": 1,
+                        "subtree": {
+                          "action": "broadcast_R1_b5",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": null
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

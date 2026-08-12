@@ -1,0 +1,101 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\babel@aux[2]{}
+\@nameuse{bbl@beforestart}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\babel@aux{english}{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background: the planning problem}{1}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Epistemic language}{1}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Epistemic states and actions}{1}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}The planning task}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}From specification to search: the toolchain}{2}{subsection.2.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Specification-to-policy pipeline. Grounding is where the fleet size and corridor length turn into ground actions; search is where the epistemic model grows.\relax }}{3}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:pipeline}{{1}{3}{Specification-to-policy pipeline. Grounding is where the fleet size and corridor length turn into ground actions; search is where the epistemic model grows.\relax }{figure.caption.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}From robot software to epistemic models}{3}{section.3}\protected@file@percent }
+\newlabel{sec:abstraction}{{3}{3}{From robot software to epistemic models}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Metric map to symbolic state}{3}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The abstraction the task layer plans over. Cells are quotiented into bays; the sensor footprint is assumed to cover exactly the occupied bay, which is what licenses \texttt  {scan} being a bay-local sensing action; the adjacency graph of bays becomes static facts in the EPDDL problem.\relax }}{3}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:abstraction}{{2}{3}{The abstraction the task layer plans over. Cells are quotiented into bays; the sensor footprint is assumed to cover exactly the occupied bay, which is what licenses \texttt {scan} being a bay-local sensing action; the adjacency graph of bays becomes static facts in the EPDDL problem.\relax }{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Where the epistemic layer sits}{4}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Coordination scenarios}{4}{section.4}\protected@file@percent }
+\newlabel{sec:scenarios}{{4}{4}{Coordination scenarios}{section.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The shared setting: a corridor of $L$ bays, $N$ UGVs, target uncertainty confined to the last $U$ bays, and --- in the range-limited scenarios --- a radio that reaches only the sender's bay and its neighbours.\relax }}{4}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:setting}{{3}{4}{The shared setting: a corridor of $L$ bays, $N$ UGVs, target uncertainty confined to the last $U$ bays, and --- in the range-limited scenarios --- a radio that reaches only the sender's bay and its neighbours.\relax }{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Extended settings}{5}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The scenario families, their goal formulas, and the reasoning each requires. S1--S4 share the corridor setting and vary only observability; S5--S6 vary the setting itself.\relax }}{6}{table.caption.4}\protected@file@percent }
+\newlabel{tab:scenarios}{{1}{6}{The scenario families, their goal formulas, and the reasoning each requires. S1--S4 share the corridor setting and vary only observability; S5--S6 vary the setting itself.\relax }{table.caption.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Benchmark design}{6}{section.5}\protected@file@percent }
+\newlabel{sec:bench}{{5}{6}{Benchmark design}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Domains}{6}{subsection.5.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}Range-limited radio: observability as a formula. A vehicle hears the report iff it shares a bay with the sender or occupies an adjacent one; otherwise it is oblivious to the transmission.}{6}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Instance family}{7}{subsection.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces The instance family. Ground-action counts are the range over the instances of each family after grounding with \textsf  {plank}.\relax }}{7}{table.caption.5}\protected@file@percent }
+\newlabel{tab:family}{{2}{7}{The instance family. Ground-action counts are the range over the instances of each family after grounding with \textsf {plank}.\relax }{table.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Extended instances}{7}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results}{7}{section.6}\protected@file@percent }
+\newlabel{sec:results}{{6}{7}{Results}{section.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Coverage and cost by scenario family, under a 60\,s search budget. Depth is the depth of the policy tree, leaves its number of terminal branches; both are medians over solved instances, as are the times.\relax }}{7}{table.caption.6}\protected@file@percent }
+\newlabel{tab:coverage}{{3}{7}{Coverage and cost by scenario family, under a 60\,s search budget. Depth is the depth of the policy tree, leaves its number of terminal branches; both are medians over solved instances, as are the times.\relax }{table.caption.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Scaling along each parameter, aggregated over all other parameters. Worlds is $|W|$ of the grounded initial model; expanded nodes and search time are medians over the solved instances in each stratum.\relax }}{8}{table.caption.7}\protected@file@percent }
+\newlabel{tab:scaling}{{4}{8}{Scaling along each parameter, aggregated over all other parameters. Worlds is $|W|$ of the grounded initial model; expanded nodes and search time are medians over the solved instances in each stratum.\relax }{table.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Configurations chosen by the planner's automatic selection policy. No configuration was set by hand: each instance is classified from features of the grounded task before search starts. The eight timed-out instances are absent, their output having been discarded when the run was killed.\relax }}{8}{table.caption.8}\protected@file@percent }
+\newlabel{tab:selection}{{5}{8}{Configurations chosen by the planner's automatic selection policy. No configuration was set by hand: each instance is classified from features of the grounded task before search starts. The eight timed-out instances are absent, their output having been discarded when the run was killed.\relax }{table.caption.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces The extended families. Ground actions are the range over the family; the remaining columns are medians over solved instances. Compare the corridor families of Table~\ref  {tab:coverage}: addressed communication roughly doubles the action count at equal fleet size, and the facility family is the only one whose policies exceed depth~6.\relax }}{8}{table.caption.9}\protected@file@percent }
+\newlabel{tab:extended}{{6}{8}{The extended families. Ground actions are the range over the family; the remaining columns are medians over solved instances. Compare the corridor families of Table~\ref {tab:coverage}: addressed communication roughly doubles the action count at equal fleet size, and the facility family is the only one whose policies exceed depth~6.\relax }{table.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}What the policies look like}{8}{subsection.6.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Policies synthesised for the same instance shape under the two communication models (3 UGVs, 4 bays, target in $\{b_3,b_4\}$, depot start, common-knowledge goal). Branches are the designated events of the sensing action. Two behaviours are worth noting: on the negative branch the planner reports \texttt  {b4}, a bay no vehicle ever scanned, because the reading plus the common knowledge that the target is in exactly one of the two bays entails it; and under the range-limited radio it inserts a return move on \emph  {both} branches, since the report is worthless outside the depot's radio neighbourhood.\relax }}{9}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:policies}{{4}{9}{Policies synthesised for the same instance shape under the two communication models (3 UGVs, 4 bays, target in $\{b_3,b_4\}$, depot start, common-knowledge goal). Branches are the designated events of the sensing action. Two behaviours are worth noting: on the negative branch the planner reports \texttt {b4}, a bay no vehicle ever scanned, because the reading plus the common knowledge that the target is in exactly one of the two bays entails it; and under the range-limited radio it inserts a return move on \emph {both} branches, since the report is worthless outside the depot's radio neighbourhood.\relax }{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Interaction view of the range-limited policy of Figure~\ref  {fig:policies}, with $p \equiv \mathit  {target\text  {-}at}(b_3)$. The shaded interval is the excursion during which R2 and R3 are oblivious: they do not observe the scan, and therefore cannot infer from R1's silence that a reading was taken. Fleet knowledge changes only at the transmission.\relax }}{9}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:interaction}{{5}{9}{Interaction view of the range-limited policy of Figure~\ref {fig:policies}, with $p \equiv \mathit {target\text {-}at}(b_3)$. The shaded interval is the excursion during which R2 and R3 are oblivious: they do not observe the scan, and therefore cannot infer from R1's silence that a reading was taken. Fleet knowledge changes only at the transmission.\relax }{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Capability interlock on \texttt  {facility-a2-b4-i1-depot-ck}. R2 holds the key but no detector and R1 the reverse, so the ontic action of one vehicle is the precondition for the epistemic action of the other. The final broadcast is what turns R1's private reading into the fleet-wide common knowledge the goal demands.\relax }}{10}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:interlock}{{6}{10}{Capability interlock on \texttt {facility-a2-b4-i1-depot-ck}. R2 holds the key but no detector and R1 the reverse, so the ontic action of one vehicle is the precondition for the epistemic action of the other. The final broadcast is what turns R1's private reading into the fleet-wide common knowledge the goal demands.\relax }{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}A correctness discrepancy}{10}{subsection.6.2}\protected@file@percent }
+\newlabel{sec:discrepancy}{{6.2}{10}{A correctness discrepancy}{subsection.6.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}The suspect tail: R1 senses privately and the policy terminates, although the goal demands that R2 know as well.}{10}{lstlisting.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Scaling}{11}{subsection.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Search effort against the two parameters that matter, on logarithmic axes; each point is a median over solved instances. Left: fleet size, restricted to $L\le 5$ because the $L=6$ stratum of the grid always carries $U=4$ and would otherwise confound the two. Right: initial uncertainty, which is also the world count $|W|$ of the initial model; note the wider vertical range --- uncertainty moves the cost by three orders of magnitude, fleet size by about one. The two public series coincide throughout: under a facility-wide radio a nested goal is reached by the same policy as the common-knowledge one. Legend shared by both panels.\relax }}{11}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:scaling}{{7}{11}{Search effort against the two parameters that matter, on logarithmic axes; each point is a median over solved instances. Left: fleet size, restricted to $L\le 5$ because the $L=6$ stratum of the grid always carries $U=4$ and would otherwise confound the two. Right: initial uncertainty, which is also the world count $|W|$ of the initial model; note the wider vertical range --- uncertainty moves the cost by three orders of magnitude, fleet size by about one. The two public series coincide throughout: under a facility-wide radio a nested goal is reached by the same policy as the common-knowledge one. Legend shared by both panels.\relax }{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Reading of the measurements}{11}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Initial uncertainty is the dominant cost}{11}{paragraph*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fleet size is secondary, corridor length intermediate}{11}{paragraph*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Restricted communication costs about a factor of three}{11}{paragraph*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Second-order goals were not the bottleneck}{11}{paragraph*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Grounding and search fail in opposite directions}{12}{paragraph*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The selection policy did not discriminate}{12}{paragraph*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{12}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{What the numbers say about the formulation}{12}{paragraph*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Where the epistemic formulation pays}{12}{paragraph*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Where it does not}{12}{paragraph*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{What a benchmark is for}{12}{paragraph*.23}\protected@file@percent }
+\bibcite{ditmarsch2007}{1}
+\@writefile{toc}{\contentsline {paragraph}{Threats to the reading}{13}{paragraph*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{13}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Reproduction}{13}{appendix.A}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}Regenerating the benchmark from scratch.}{13}{lstlisting.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}Grounding and solving one instance.}{13}{lstlisting.4}\protected@file@percent }
+\bibcite{baltag1998}{2}
+\bibcite{fagin1995}{3}
+\bibcite{bolander2011}{4}
+\bibcite{muise2015}{5}
+\bibcite{kominis2015}{6}
+\bibcite{fabiano2020}{7}
+\bibcite{plank}{8}
+\bibcite{aletheia}{9}
+\gdef \@abspage@last{16}

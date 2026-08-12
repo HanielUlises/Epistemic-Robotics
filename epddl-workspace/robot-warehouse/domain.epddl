@@ -1,0 +1,84 @@
+(define (domain robot-warehouse)
+    (:requirements
+        :typing :equality :ontic-actions :partial-observability
+        :facts :lists :list-comprehensions
+        :general-preconditions
+        :negative-preconditions :universal-preconditions :modal-preconditions
+        :group-modalities
+    )
+
+    (:action-type-libraries intermediate)
+
+    (:types location)
+
+    (:predicates
+        (at ?i - agent ?l - location)
+        (package-at ?l - location)
+        ;; Facts (static warehouse topology)
+        (:fact adjacent ?l1 ?l2 - location)
+    )
+
+    (:event nil)
+
+    ;--------------------MOVE------------------
+    ;; Driving between adjacent bays. Everyone sees who is where.
+
+    (:event e-move
+        :parameters (?i - agent ?from ?to - location)
+        :precondition (and (at ?i ?from) (not (at ?i ?to)))
+        :effects
+            (:and
+                (not (at ?i ?from))
+                (at ?i ?to) )
+    )
+
+    (:action move
+        :parameters (?i - agent ?from ?to - location | (adjacent ?from ?to))
+        :action-type (public-ontic (e-move ?i ?from ?to))
+        :observability-conditions (default Fully)
+    )
+
+    ;--------------------SCAN------------------
+    ;; A robot reads the shelf it is standing at. Only that robot sees the
+    ;; reading; the other one does not even notice the scan happened.
+
+    (:event e-scan-pos
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (package-at ?l))
+    )
+
+    (:event e-scan-neg
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (not (package-at ?l)))
+    )
+
+    (:action scan
+        :parameters (?i - agent ?l - location)
+        :action-type (private-sensing (e-scan-pos ?i ?l) (e-scan-neg ?i ?l) (nil))
+        :observability-conditions
+            (:and
+                (?i Fully)
+                (default Oblivious)
+            )
+    )
+
+    ;--------------------BROADCAST------------------
+    ;; Radio is warehouse-wide: a robot that knows where the package is says
+    ;; so, and it becomes common knowledge.
+
+    (:event e-broadcast-pos
+        :parameters (?i - agent ?l - location)
+        :precondition ([?i] (package-at ?l))
+    )
+
+    (:event e-broadcast-neg
+        :parameters (?i - agent ?l - location)
+        :precondition (not ([?i] (package-at ?l)))
+    )
+
+    (:action broadcast
+        :parameters (?i - agent ?l - location)
+        :action-type (public-announcement (e-broadcast-pos ?i ?l) (e-broadcast-neg ?i ?l))
+        :observability-conditions (default Fully)
+    )
+)

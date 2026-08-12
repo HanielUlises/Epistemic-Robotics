@@ -1,0 +1,98 @@
+(define (domain ugv-radio)
+    ;; Same facility as ugv-public, but the radio is short range: a report is
+    ;; received only by UGVs in the sender's bay or in an adjacent bay. UGVs
+    ;; out of range do not even observe that a transmission took place, so
+    ;; reaching fleet-wide knowledge may require driving into range or relaying.
+    (:requirements
+        :typing :equality :ontic-actions :partial-observability
+        :facts :lists :list-comprehensions
+        :general-preconditions
+        :negative-preconditions :universal-preconditions :modal-preconditions
+        :group-modalities
+    )
+
+    (:action-type-libraries intermediate)
+
+    (:types location)
+
+    (:predicates
+        (at ?i - agent ?l - location)
+        (target-at ?l - location)
+        (:fact adjacent ?l1 ?l2 - location)
+    )
+
+    (:event nil)
+
+    ;--------------------MOVE------------------
+
+    (:event e-move
+        :parameters (?i - agent ?from ?to - location)
+        :precondition (and (at ?i ?from) (not (at ?i ?to)))
+        :effects
+            (:and
+                (not (at ?i ?from))
+                (at ?i ?to) )
+    )
+
+    (:action move
+        :parameters (?i - agent ?from ?to - location | (adjacent ?from ?to))
+        :action-type (public-ontic (e-move ?i ?from ?to))
+        :observability-conditions (default Fully)
+    )
+
+    ;--------------------SCAN------------------
+
+    (:event e-scan-pos
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (target-at ?l))
+    )
+
+    (:event e-scan-neg
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (not (target-at ?l)))
+    )
+
+    (:action scan
+        :parameters (?i - agent ?l - location)
+        :action-type (private-sensing (e-scan-pos ?i ?l) (e-scan-neg ?i ?l) (nil))
+        :observability-conditions
+            (:and
+                (?i Fully)
+                (default Oblivious)
+            )
+    )
+
+    ;--------------------REPORT (short-range radio)------------------
+
+    (:event e-report
+        :parameters (?i - agent ?l - location)
+        :precondition ([?i] (target-at ?l))
+    )
+
+    (:action report
+        :parameters (?i - agent ?l - location)
+        :action-type (private-announcement (e-report ?i ?l) (nil))
+        :observability-conditions
+            (:and
+                (?i Fully)
+                (:forall (?j - agent | (/= ?i ?j))
+                    (?j
+                        ;; ?j hears the report iff it shares a bay with ?i or
+                        ;; sits in a bay adjacent to ?i's.
+                        (if
+                            (forall (?l1 - location)
+                                (imply
+                                    (at ?i ?l1)
+                                    (exists (?l2 - location |
+                                            (or (= ?l2 ?l1) (adjacent ?l1 ?l2) (adjacent ?l2 ?l1)))
+                                        (at ?j ?l2) )))
+                            Fully
+                        else
+                            Oblivious
+                        )
+                    )
+                )
+                (default Oblivious)
+            )
+    )
+)

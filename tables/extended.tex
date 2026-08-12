@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering
+\small
+\caption{The extended families. Ground actions are the range over the family;
+the remaining columns are medians over solved instances. Compare the corridor
+families of Table~\ref{tab:coverage}: addressed communication roughly doubles
+the action count at equal fleet size, and the facility family is the only one
+whose policies exceed depth~6.}
+\label{tab:extended}
+\begin{tabular}{@{}l r r r r r r r@{}}
+\toprule
+\textbf{Family} & \textbf{Solved} & \textbf{Actions} & \textbf{Worlds}
+ & \textbf{Depth} & \textbf{Leaves} & \textbf{Expanded} & \textbf{Search (s)} \\
+\midrule
+S5a directed / 2nd-order & 30/30 & 17--97 & 2 & 5 & 2 & 536 & 0.01 \\
+S5b directed / selective & 20/20 & 33--97 & 2 & 5 & 2 & 1254 & 0.01 \\
+S6 facility / CK & 10/10 & 30--72 & 2 & 7 & 2 & 3971 & 0.03 \\
+\bottomrule
+\end{tabular}
+\end{table}

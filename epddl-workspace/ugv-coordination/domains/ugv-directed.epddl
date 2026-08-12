@@ -1,0 +1,88 @@
+(define (domain ugv-directed)
+    ;; Point-to-point radio. A report is addressed to one teammate and is heard
+    ;; by exactly that teammate; every other UGV is oblivious to it. This makes
+    ;; asymmetric information states reachable: one vehicle can be told while
+    ;; another is deliberately left ignorant, which is impossible under a
+    ;; broadcast model where every transmission produces common knowledge.
+    (:requirements
+        :typing :equality :ontic-actions :partial-observability
+        :facts :lists :list-comprehensions
+        :general-preconditions
+        :negative-preconditions :universal-preconditions :modal-preconditions
+        :group-modalities
+    )
+
+    (:action-type-libraries intermediate)
+
+    (:types location)
+
+    (:predicates
+        (at ?i - agent ?l - location)
+        (target-at ?l - location)
+        (:fact adjacent    ?l1 ?l2 - location)
+        ;; Only some vehicles carry a detector, so knowledge has to travel by
+        ;; radio rather than each vehicle going to look for itself.
+        (:fact has-scanner ?i - agent)
+    )
+
+    (:event nil)
+
+    ;--------------------MOVE------------------
+
+    (:event e-move
+        :parameters (?i - agent ?from ?to - location)
+        :precondition (and (at ?i ?from) (not (at ?i ?to)))
+        :effects
+            (:and
+                (not (at ?i ?from))
+                (at ?i ?to) )
+    )
+
+    (:action move
+        :parameters (?i - agent ?from ?to - location | (adjacent ?from ?to))
+        :action-type (public-ontic (e-move ?i ?from ?to))
+        :observability-conditions (default Fully)
+    )
+
+    ;--------------------SCAN------------------
+
+    (:event e-scan-pos
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (target-at ?l))
+    )
+
+    (:event e-scan-neg
+        :parameters (?i - agent ?l - location)
+        :precondition (and (at ?i ?l) (not (target-at ?l)))
+    )
+
+    (:action scan
+        :parameters (?i - agent ?l - location | (has-scanner ?i))
+        :action-type (private-sensing (e-scan-pos ?i ?l) (e-scan-neg ?i ?l) (nil))
+        :observability-conditions
+            (:and
+                (?i Fully)
+                (default Oblivious)
+            )
+    )
+
+    ;--------------------TELL (addressed)------------------
+    ;; ?i tells ?j where the target is. Only ?j receives it; the rest of the
+    ;; fleet does not observe that any transmission occurred.
+
+    (:event e-tell
+        :parameters (?i - agent ?l - location)
+        :precondition ([?i] (target-at ?l))
+    )
+
+    (:action tell
+        :parameters (?i ?j - agent ?l - location | (/= ?i ?j))
+        :action-type (private-announcement (e-tell ?i ?l) (nil))
+        :observability-conditions
+            (:and
+                (?i Fully)
+                (?j Fully)
+                (default Oblivious)
+            )
+    )
+)

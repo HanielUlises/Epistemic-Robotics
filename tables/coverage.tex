@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering
+\small
+\caption{Coverage and cost by scenario family, under a 60\,s search budget.
+Depth is the depth of the policy tree, leaves its number of terminal branches;
+both are medians over solved instances, as are the times.}
+\label{tab:coverage}
+\begin{tabular}{@{}l r r r r r r r@{}}
+\toprule
+\textbf{Family} & \textbf{Solved} & \textbf{Cov.} & \textbf{Depth} & \textbf{Leaves}
+ & \textbf{Expanded} & \textbf{Search (s)} & \textbf{Ground (s)} \\
+\midrule
+S1 public / CK & 36/36 & 100\% & 4 & 2 & 1397 & 0.01 & 0.08 \\
+S2 radio / CK & 32/36 & 89\% & 5 & 2 & 4829 & 0.04 & 0.09 \\
+S3a public / nested & 36/36 & 100\% & 4 & 2 & 1397 & 0.01 & 0.08 \\
+S3b radio / nested & 32/36 & 89\% & 5 & 2 & 4164 & 0.03 & 0.10 \\
+\midrule
+All & 136/144 & 94\% & 5 & 2 & 2263 & 0.02 & 0.09 \\
+\bottomrule
+\end{tabular}
+\end{table}

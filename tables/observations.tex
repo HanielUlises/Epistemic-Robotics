@@ -1,0 +1,52 @@
+\subsection{Reading of the measurements}
+
+\paragraph{Initial uncertainty is the dominant cost}
+Holding the fleet at $N=2$, the median expanded-node count rises from 172
+($U=2$) to 2\,177 ($U=3$) to 330\,188 ($U=4$). Since every candidate bay
+contributes one world to the initial model, $U$ \emph{is} $|W|$, and each extra
+world multiplies both the size of every model along the frontier and the number
+of branches a policy must cover. Nothing else in the grid moves the cost by
+three orders of magnitude.
+
+\paragraph{Fleet size is secondary, corridor length intermediate}
+Restricted to $L\le5$ so the uncertainty frontier does not confound it, fleet
+size takes the median from 621 ($N=2$) to 2\,714 ($N=3$) to 5\,480 ($N=4$) ---
+roughly an order of magnitude across the range, not three. Corridor length at
+fixed $U=2$ gives 66, 214, 2\,801 for $L=3,4,5$: longer corridors buy longer
+plans, and depth costs more than breadth here.
+
+\paragraph{Restricted communication costs about a factor of three}
+At matched corridor length, the range-limited domain expands roughly $3\times$
+the nodes of the public one ($L=4$: 2\,184 vs.\ 734; $L=5$: 28\,000 vs.\
+2\,177) and produces policies one to three steps deeper. The extra depth is the
+return-into-range or relay move, and it appears on \emph{every} branch, so it
+multiplies rather than adds. All eight unsolved instances are range-limited.
+
+\paragraph{Second-order goals were not the bottleneck}
+Nested goals cost no more than common-knowledge goals in this grid (median
+2\,224 vs.\ 2\,532 expanded). Under a public radio this is expected --- one
+announcement gives common knowledge, which entails any finite nesting. Under
+the range-limited radio the nested goal is \emph{weaker} than the
+common-knowledge one: it constrains two vehicles rather than the whole fleet,
+so it is reached by a prefix of the same policy. A genuinely harder
+second-order task would require the sender to establish receipt without the
+receiver's position being common knowledge, which this instance family does not
+construct.
+
+\paragraph{Grounding and search fail in opposite directions}
+Search cost tracks $U$; grounding cost tracks $N\times L$. Ground actions grow
+from 20 to 88 across the grid, and \textsf{plank}'s grounding time from 0.02\,s
+to 76\,s, the worst case being $N=4$, $L=6$ --- an instance whose \emph{search},
+where solved, takes a few seconds. For a fielded system these are different
+engineering problems: grounding is an offline, cacheable cost that scales with
+the size of the facility and the fleet, while search is the online cost and
+scales with how much the fleet does not know.
+
+\paragraph{The selection policy did not discriminate}
+The planner's automatic policy chose \texttt{knowledge-spread} with AO$^\ast$
+for all 136 solved instances (Table~\ref{tab:selection}). This is a reasonable
+classification --- every instance has sensing, a knowing-whether goal, and few
+designated worlds --- but it means the benchmark exercises one configuration
+and says nothing about the alternatives. Instances that would discriminate
+between heuristics need goals mixing modal and factual conjuncts, which this
+family deliberately avoids.

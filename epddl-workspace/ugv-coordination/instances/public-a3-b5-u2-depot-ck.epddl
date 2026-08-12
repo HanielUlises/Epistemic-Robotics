@@ -1,0 +1,59 @@
+(define (problem public-a3-b5-u2-depot-ck)
+    ;; 3 UGVs, 5 bays, target in one of 2 candidate bays, depot start,
+    ;; fleet-wide common knowledge goal.
+    (:domain ugv-public)
+
+    (:requirements
+        :typing :equality :list-comprehensions
+        :finitary-S5-theories :modal-goals :facts
+        :knowing-whether :group-modalities
+        :disjunctive-preconditions
+    )
+
+    (:agents R1 R2 R3)
+
+    (:objects b1 b2 b3 b4 b5 - location)
+
+    (:facts-init
+        (adjacent b1 b2)
+        (adjacent b2 b1)
+        (adjacent b2 b3)
+        (adjacent b3 b2)
+        (adjacent b3 b4)
+        (adjacent b4 b3)
+        (adjacent b4 b5)
+        (adjacent b5 b4)
+    )
+
+    ;; The true bay is left open, so every candidate world stays designated and
+    ;; the plan must succeed whichever way the scans come out.
+    (:init
+        (:and
+            (at R1 b1) (at R2 b1) (at R3 b1)
+
+            ([C. All]
+                (and
+                    (at R1 b1) (at R2 b1) (at R3 b1)
+                    (forall (?i - agent ?l1 ?l2 - location | (/= ?l1 ?l2))
+                        (imply (at ?i ?l1) (not (at ?i ?l2))) )
+
+                    (not (target-at b1))
+                    (not (target-at b2))
+                    (not (target-at b3))
+                    (or (target-at b4) (target-at b5))
+                    (forall (?l1 ?l2 - location | (/= ?l1 ?l2))
+                        (imply (target-at ?l1) (not (target-at ?l2))) )))
+
+            (:forall (?i - agent)
+                ([C. All] (<Kw. ?i> (target-at b4))) )
+        )
+    )
+
+    (:goal
+        ([C. All]
+            (and
+                ([Kw. R1] (target-at b4))
+                ([Kw. R2] (target-at b4))
+                ([Kw. R3] (target-at b4)) ))
+    )
+)

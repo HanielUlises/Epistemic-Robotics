@@ -1,0 +1,50 @@
+(define (problem rw-2)         ;; Both bays possible: forces a branching plan
+    (:domain robot-warehouse)
+
+    (:requirements
+        :typing :equality :list-comprehensions
+        :finitary-S5-theories :modal-goals :facts
+        :knowing-whether :group-modalities
+        :disjunctive-preconditions
+    )
+
+    (:agents R1 R2)
+
+    (:objects bay1 bay2 bay3 - location)
+
+    (:facts-init
+        (adjacent bay1 bay2)
+        (adjacent bay2 bay1)
+        (adjacent bay2 bay3)
+        (adjacent bay3 bay2)
+    )
+
+    ;; Unlike rw-1, the true bay is left open: both worlds stay designated, so
+    ;; the plan has to work whichever way the scan comes out.
+    (:init
+        (:and
+            (at R1 bay1) (at R2 bay1)
+
+            ([C. All]
+                (and
+                    (at R1 bay1) (at R2 bay1)
+                    (forall (?i - agent ?l1 ?l2 - location | (/= ?l1 ?l2))
+                        (imply (at ?i ?l1) (not (at ?i ?l2))) )
+
+                    (not (package-at bay1))
+                    (or (package-at bay2) (package-at bay3))
+                    (forall (?l1 ?l2 - location | (/= ?l1 ?l2))
+                        (imply (package-at ?l1) (not (package-at ?l2))) )))
+
+            (:forall (?i - agent)
+                ([C. All] (<Kw. ?i> (package-at bay2))) )
+        )
+    )
+
+    (:goal
+        ([C. All]
+            (and
+                ([Kw. R1] (package-at bay2))
+                ([Kw. R2] (package-at bay2)) ))
+    )
+)

@@ -1,0 +1,57 @@
+{
+  "action": "scan_R3_b3",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "broadcast_R3_b3",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": null
+          }
+        ]
+      }
+    },
+    {
+      "event": 1,
+      "subtree": {
+        "action": "move_R3_b3_b4",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "scan_R3_b4",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "broadcast_R3_b4",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": null
+                      }
+                    ]
+                  }
+                },
+                {
+                  "event": 1,
+                  "subtree": {
+                    "action": "broadcast_R3_b5",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": null
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
