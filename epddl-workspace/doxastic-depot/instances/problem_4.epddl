@@ -1,0 +1,67 @@
+;; Doxastic Depot 4 -- KD45 from the very first world.
+;;
+;; Instead of a finitary S5 theory, the initial state is given explicitly, so
+;; the accessibility relations can be non-reflexive right away:
+;;
+;;   w0 (actual): c1 is in bay2      w1: c1 is in bay1
+;;   R_chief = {(w0,w1), (w1,w1)}    -- serial, transitive, euclidean, NOT
+;;                                      reflexive at w0: the chief already
+;;                                      holds the false belief [chief](at c1 bay1)
+;;   R_rob1 = R_rob2 = {(w0,w0), (w1,w1)}  -- the robots know the truth
+;;
+;; The task is belief repair: make the true location common knowledge.
+;;
+;; Expected plan (length 1):
+;;   (broadcast rob1 c1 bay2)
+
+(define (problem depot-4)
+    (:domain doxastic-depot)
+
+    (:requirements
+        :KD45-frames
+        :general-frames
+        :common-knowledge
+        :modal-goals
+        :negative-goals
+        :negative-preconditions
+        :facts
+    )
+
+    (:agents chief rob1 rob2)
+
+    (:objects bay1 bay2 bay3 - bay
+              c1 c2 - crate
+    )
+
+    (:facts-init
+        (adjacent bay1 bay2) (adjacent bay2 bay1)
+        (adjacent bay2 bay3) (adjacent bay3 bay2)
+        (office bay3)
+    )
+
+    (:init
+        :worlds (w0 w1)
+
+        :relations (
+            chief (:and (w0 w1) (w1 w1))
+            rob1  (:and (w0 w0) (w1 w1))
+            rob2  (:and (w0 w0) (w1 w1))
+        )
+
+        :labels (
+            w0 (:and (at c1 bay2) (at c2 bay3)
+                     (at-ag chief bay3) (at-ag rob1 bay2) (at-ag rob2 bay1))
+            w1 (:and (at c1 bay1) (at c2 bay3)
+                     (at-ag chief bay3) (at-ag rob1 bay2) (at-ag rob2 bay1))
+        )
+
+        :designated (w0)
+    )
+
+    (:goal
+        (and
+            (at c1 bay2)
+            ([C. All] (at c1 bay2))
+        )
+    )
+)
