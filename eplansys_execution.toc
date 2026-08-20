@@ -1,0 +1,27 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {paragraph}{Contributions}{2}{paragraph*.1}%
+\contentsline {section}{\numberline {2}Background}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Epistemic states and policies}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}The PlanSys2 execution model}{2}{subsection.2.2}%
+\contentsline {section}{\numberline {3}A policy on the wire}{3}{section.3}%
+\contentsline {paragraph}{Two vocabularies}{3}{paragraph*.3}%
+\contentsline {paragraph}{The sequential reading}{3}{paragraph*.4}%
+\contentsline {subsection}{\numberline {3.1}Unique execution keys}{3}{subsection.3.1}%
+\contentsline {section}{\numberline {4}The behaviour tree}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The three additions}{4}{subsection.4.1}%
+\contentsline {paragraph}{CheckKnowledge}{4}{paragraph*.6}%
+\contentsline {paragraph}{ApplyEpistemicUpdate}{4}{paragraph*.7}%
+\contentsline {paragraph}{EpistemicSwitch}{4}{paragraph*.8}%
+\contentsline {subsection}{\numberline {4.2}Goal checking}{5}{subsection.4.2}%
+\contentsline {section}{\numberline {5}The epistemic state}{5}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Formulas across a process boundary}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Who determines the outcome}{5}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Structure}{6}{section.6}%
+\contentsline {section}{\numberline {7}Verification}{6}{section.7}%
+\contentsline {subsection}{\numberline {7.1}A traced execution}{7}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}What is not covered}{7}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Limitations and further work}{7}{section.8}%
+\contentsline {paragraph}{Observation binding}{7}{paragraph*.12}%
+\contentsline {paragraph}{Concurrency}{7}{paragraph*.13}%
+\contentsline {paragraph}{Replanning}{7}{paragraph*.14}%
