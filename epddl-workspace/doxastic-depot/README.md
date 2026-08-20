@@ -1,4 +1,4 @@
-# Doxastic Depot — a KD45ₙ (belief) EPDDL domain
+# Doxastic Depot: a KD45ₙ (belief) EPDDL domain
 
 A depot of bays connected by an adjacency graph. Robots carry crates between
 bays. Every relocation is **private**: only the agents standing in the *source*
@@ -34,7 +34,6 @@ instances/problem_3.epddl   false belief + repair into CK             (plan: 3)
 instances/problem_4.epddl   explicit KD45 initial model (see caveat)  (plan: 1)
 instances/problem_5.epddl   announcement turns private knowledge into CK (plan: 1)
 out/                        `plank export` output (grounded JSON tasks)
-plank-explicit-init-labels.patch   one-line plank fix needed by problem_4
 ```
 
 All instances ground to **315 actions** over **29 atoms** and 3 agents.
@@ -42,7 +41,7 @@ All instances ground to **315 actions** over **29 atoms** and 3 agents.
 ## Reproducing
 
 ```sh
-L=~/plank/benchmarks/libraries/intermediate.epddl
+L=~/Projects/plank/benchmarks/libraries/intermediate.epddl
 plank parse    -d doxastic-depot.epddl -p instances/problem_1.epddl -l $L
 plank ground   -d doxastic-depot.epddl -p instances/problem_1.epddl -l $L
 plank export   -d doxastic-depot.epddl -p instances/problem_1.epddl -l $L -o out
@@ -61,40 +60,32 @@ Aletheia reports `Frame: KD45 (belief)` on every instance and solves 1, 2, 3 and
 
 ## Two findings worth keeping
 
-### 1. `plank export` drops the world labels of an explicit initial state
+### 1. `problem_4` needs the fork's explicit-init fix
 
 `problem_4.epddl` gives the initial model explicitly (`:worlds / :relations /
 :labels / :designated`) so that a relation is non-reflexive from the very first
-world. It parses and grounds, but the exported JSON labels contain only the
-*facts* — every non-fact predicate is lost:
+world. Upstream plank 1.0 parses and grounds it, but the exported JSON labels
+then contain only the *facts*, and every non-fact predicate is lost:
 
 ```json
 "labels": { "w0": ["office_bay3", "adjacent_bay1_bay2", ...] }   /* at_c1_bay2 missing */
 ```
 
-Cause, in `src/lib/epddl/grounder/initial_state/explicit_initial_state_grounder.cpp`
-(`build_label`):
+The cause is in `build_label`
+(`src/lib/epddl/grounder/initial_state/explicit_initial_state_grounder.cpp`):
+`ground_atoms` is a raw `boost::dynamic_bitset` already sized to the number of
+atoms, so `ground_atoms.push_back(p)` appends a bit *past the end* instead of
+setting atom `p`'s bit. The fork (`~/Projects/plank`) already carries the fix,
+`ground_atoms.set(p)`, together with a matching fix in the label parser.
 
-```cpp
-boost::dynamic_bitset<> ground_atoms = facts_bitset;   // sized |atoms|
-...
-for (const del::atom p : l_atoms)
-    ground_atoms.push_back(p);                          // ← appends a bit, not set(p)
-```
+`out/problem_4.json` was exported with the fork's binary. The four S5-theory
+instances export byte-identical with or without the fix, since only the
+explicit-init path was affected.
 
-`del::world_bitset::push_back` means "insert this element", but `ground_atoms`
-is a raw `boost::dynamic_bitset`, whose `push_back` appends a bit *past the end*
-of the atom range. The fix is one line:
-
-```cpp
-    ground_atoms.set(p);
-```
-
-The patch is in `plank-explicit-init-labels.patch`. With it applied to a local
-copy of plank, `problem_4` exports correctly — `out/problem_4.json` in this
-directory was produced by that patched build. The unpatched `plank` in `~/plank`
-still mis-exports it, so `problem_4` is kept here as a regression case and is
-not part of the Aletheia benchmark set.
+plank's test suite has no grounder-level tests
+(`tests/units/epddl/parser/problems/explicit_init_tests.cpp` covers the parser
+only), so `problem_4` here doubles as the regression case for that fix. It is
+not part of the Aletheia benchmark set; the next section says why.
 
 ### 2. plank and Aletheia disagree on announcing a fact an agent believes false
 
@@ -108,11 +99,11 @@ broadcast_rob1_c1_bay2       ;; public announcement of the new location
 is accepted by `plank validate` (`true`) but Aletheia never finds it: it proves
 depth 2 exhausted and returns a 3-step plan instead. The reason is legitimate on
 both sides. After the announcement the chief's accessibility from the designated
-world is *empty* — the chief believed `(at c1 bay1)`, and no surviving event
+world is *empty*: the chief believed `(at c1 bay1)`, and no surviving event
 pairs with that belief. plank leaves the model non-serial, where `[chief]φ` is
 vacuously true and `C_All (at c1 bay2)` therefore holds. Aletheia enforces
 KD45 seriality (`serial_core` in `src/product_update.cpp`), deletes the
-non-serial worlds, empties `W*`, and prunes the action as `NonSerial` — i.e. it
+non-serial worlds, empties `W*`, and prunes the action as `NonSerial`, i.e. it
 treats a public announcement that contradicts an agent's belief as inapplicable
 rather than as belief revision.
 
