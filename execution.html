@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Execution &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Executing epistemic policies on ROS 2: the policy on the wire, a behavior tree with knowledge guards and DEL updates, and the epistemic state it consults.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:'Space Grotesk',sans-serif;
+  --ss:'Source Serif 4',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{font-size:17px;scroll-behavior:smooth}
+body{background:#fff;color:var(--black);
+  font-family:var(--ss);
+  font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
+.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
+.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;letter-spacing:.06em;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;text-transform:uppercase;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);letter-spacing:.07em}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <nav class="hdr-nav" aria-label="Sections">
+        <a href="index.html">Overview</a>
+        <a href="domains.html">Domains</a>
+        <a href="execution.html" aria-current="page">Execution</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Execution layer · eplansys · ROS 2</p>
+    <h2>Running a policy on a <em>robot</em></h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      A planner that reasons about knowledge is only half of an autonomous system.
+      The other half has to execute what it returns — and what it returns is not a
+      sequence of actions but a policy, branching on what the robot turns out to
+      observe. This page reports the execution layer built for that: the shape a
+      policy takes on the wire, the behavior tree that runs it, and the epistemic
+      state the tree consults while it does.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      Implemented in <a href="https://github.com/HanielUlises/eplansys">eplansys</a>,
+      on top of <a href="https://github.com/PlanSys2/ros2_planning_system">PlanSys2</a>.
+      <a class="ext-chip" href="eplansys_execution.pdf">Technical report (PDF)</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE MISMATCH -->
+<section>
+  <div class="container">
+    <p class="sec-label">The mismatch</p>
+    <h3>Three things a classical executor assumes</h3>
+
+    <p>
+      PlanSys2 executes a plan by rendering it as a behavior tree: one subtree per
+      action, in order, each guarding its action with the PDDL conditions around
+      it. Nothing about that is wrong — it is exactly right for a plan that commits
+      to one future. Every assumption in it fails for a plan that does not.
+    </p>
+
+    <p>
+      <b>A plan is a sequence.</b> <span class="mono-inline">plansys2_msgs/Plan</span>
+      is a flat list of timed items, so item \(i\) is followed by item \(i+1\). A
+      policy for a partially observable domain is a tree: after a sensing action,
+      which action comes next depends on what was seen. Flattening it keeps one
+      contingency and silently assumes it happens.
+    </p>
+
+    <p>
+      <b>An action has one name.</b> The grounder writes an action as a single
+      token — <span class="mono-inline">pickup-A-hold_r2</span> — while the executor
+      splits <span class="mono-inline">(pickup r2 A)</span> into a name and
+      parameters and looks the name up in the PDDL domain to find the behavior tree
+      that drives the hardware. These are two vocabularies, not two spellings of
+      one, and an untranslated name matches nothing: the plan arrives, and the robot
+      does not move.
+    </p>
+
+    <p>
+      <b>A precondition is a fact.</b> The problem expert holds what is true, and
+      answers whether a PDDL condition holds. <em class="term">The corridor is
+      clear</em> lives there. <em class="term">r1 knows whether the corridor is
+      clear</em> is not a fact about the corridor at all; no set of predicates
+      records it, and nothing in a classical stack can be asked.
+    </p>
+
+    <div class="pull">
+      A robot that plans to sense before committing needs all three of these to
+      change, and none of them is a change to the planner.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE MESSAGE -->
+<section>
+  <div class="container">
+    <p class="sec-label">The policy on the wire</p>
+    <h3>One message type, extended rather than replaced</h3>
+
+    <p>
+      Two interfaces stand between the planner and the executor and both take a flat
+      plan: the solver plugin returns one, and the tree builder consumes one. Rather
+      than fork either, the policy travels in additional fields of the existing
+      message, so that the two components keep exchanging the same type.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>Field on PlanItem</th><th>What it carries</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="mono-inline">children</span></td><td>one continuation per possible outcome, by item index</td></tr>
+        <tr><td><span class="mono-inline">outcomes</span></td><td>the observation selecting each, in the same order</td></tr>
+        <tr><td><span class="mono-inline">sensing</span></td><td>whether the outcome must be observed at all</td></tr>
+        <tr><td><span class="mono-inline">knowledge_requirements</span></td><td>the epistemic conditions the action needs</td></tr>
+        <tr><td><span class="mono-inline">epistemic_action</span></td><td>the action's name in the planner's own vocabulary</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      A classical planner sets none of them, and such a plan is read exactly the way
+      PlanSys2 writes it. So every plan is a policy here, and the distinction that
+      matters is not classical-versus-epistemic but whether the policy branches.
+      That reading is plan-wide rather than per item: once any node names a
+      continuation, a node without one <em class="term">ends its branch</em> rather
+      than falling through to the next item, which would be a different plan
+      entirely.
+    </p>
+
+    <p>
+      One subtlety cost real work. The executor keys its table of running actions by
+      action expression and start time in milliseconds. Two branches running the
+      same action at the same time would collide onto one entry and drive one action
+      executor from two places — invisible until the day the second branch is taken,
+      because branches are alternatives that never both run. Times are therefore
+      assigned uniquely across the whole policy, each node strictly after its parent
+      ends.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE TREE -->
+<section>
+  <div class="container">
+    <p class="sec-label">The behavior tree</p>
+    <h3>PlanSys2's subtree, with three things around it</h3>
+
+    <p>
+      Each policy node renders as the PlanSys2 action subtree, unchanged — the same
+      nodes driving the same action performers against the same problem expert —
+      wrapped in what a sequence cannot express.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">One policy node, rendered</span>
+        <span class="note" style="font-size:.7rem">coin-in-the-box · multi-pointed</span>
+      </div>
+      <div class="fig-body">
+        <svg viewBox="0 0 760 636" width="100%" role="img"
+             aria-label="Behavior tree for one policy node: a knowledge guard, the PlanSys2 action subtree, an epistemic update, and a switch with one branch per observed outcome, followed by a goal check.">
+          <defs>
+            <marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L7,3.5 L0,7 z" fill="#5A5A5A"/>
+            </marker>
+          </defs>
+          <style>
+            .bx{fill:#fff;stroke:#D6D6D6;stroke-width:1}
+            .bx-e{fill:#fff;stroke:#C8102E;stroke-width:1.6}
+            .bx-p{fill:#F4F4F4;stroke:#D6D6D6;stroke-width:1}
+            .bx-o{fill:none;stroke:#111;stroke-width:1.4}
+            .t{font-family:'Space Grotesk',sans-serif;font-size:12.5px;fill:#111}
+            .t-s{font-family:'Space Grotesk',sans-serif;font-size:11px;fill:#5A5A5A}
+            .t-m{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#5A5A5A}
+            .t-r{font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:#C8102E;letter-spacing:.06em}
+            .ln{stroke:#5A5A5A;stroke-width:1;fill:none}
+          </style>
+
+          <!-- outer sequence -->
+          <rect class="bx-o" x="16" y="14" width="728" height="472" rx="2"/>
+          <text class="t" x="34" y="40" font-weight="600">Sequence</text>
+          <text class="t-m" x="108" y="40">node 0 &#183; (peek A):0</text>
+
+          <!-- 1. knowledge guard -->
+          <rect class="bx-e" x="40" y="56" width="680" height="52" rx="2"/>
+          <text class="t-r" x="56" y="76">EPISTEMIC</text>
+          <text class="t" x="56" y="96" font-weight="500">CheckKnowledge</text>
+          <text class="t-m" x="196" y="96">(K A looking_A) &#8212; asked of the epistemic state, not the problem expert</text>
+
+          <line class="ln" x1="380" y1="108" x2="380" y2="126" marker-end="url(#ar)"/>
+
+          <!-- 2. plansys2 subtree -->
+          <rect class="bx-p" x="40" y="130" width="680" height="112" rx="2"/>
+          <text class="t-s" x="56" y="150" font-weight="600">PLANSYS2 &#183; UNCHANGED</text>
+          <text class="t-m" x="56" y="172">WaitAtStartReq &#8594; ApplyAtStartEffect</text>
+          <text class="t-m" x="56" y="192">ReactiveSequence [ CheckOverAllReq, ExecuteAction ]</text>
+          <text class="t-m" x="56" y="212">CheckAtEndReq &#8594; ApplyAtEndEffect</text>
+          <text class="t-s" x="56" y="232">the action performer runs here</text>
+
+          <line class="ln" x1="380" y1="242" x2="380" y2="260" marker-end="url(#ar)"/>
+
+          <!-- 3. epistemic update -->
+          <rect class="bx-e" x="40" y="264" width="680" height="52" rx="2"/>
+          <text class="t-r" x="56" y="284">EPISTEMIC</text>
+          <text class="t" x="56" y="304" font-weight="500">ApplyEpistemicUpdate</text>
+          <text class="t-m" x="240" y="304">product update; writes the observed outcome</text>
+
+          <line class="ln" x1="380" y1="316" x2="380" y2="334" marker-end="url(#ar)"/>
+
+          <!-- 4. switch -->
+          <rect class="bx-e" x="40" y="338" width="680" height="54" rx="2"/>
+          <text class="t-r" x="56" y="357">EPISTEMIC</text>
+          <text class="t" x="56" y="377" font-weight="500">EpistemicSwitch</text>
+          <text class="t-m" x="196" y="377">outcomes = e-peek-pos ; e-peek-neg</text>
+
+          <!-- branch connectors -->
+          <line class="ln" x1="200" y1="392" x2="200" y2="404"/>
+          <line class="ln" x1="560" y1="392" x2="560" y2="404"/>
+          <line class="ln" x1="200" y1="404" x2="560" y2="404"/>
+          <line class="ln" x1="200" y1="404" x2="200" y2="420" marker-end="url(#ar)"/>
+          <line class="ln" x1="560" y1="404" x2="560" y2="420" marker-end="url(#ar)"/>
+
+          <!-- branches -->
+          <rect class="bx" x="40" y="424" width="330" height="48" rx="2"/>
+          <text class="t-m" x="56" y="444" fill="#C8102E">observed e-peek-pos</text>
+          <text class="t" x="56" y="462">Sequence &#183; node 1 &#183; (shout-tails A)</text>
+
+          <rect class="bx" x="390" y="424" width="330" height="48" rx="2"/>
+          <text class="t-m" x="406" y="444" fill="#C8102E">observed e-peek-neg</text>
+          <text class="t" x="406" y="462">AlwaysSuccess &#8212; the policy ends here</text>
+
+          <line class="ln" x1="380" y1="486" x2="380" y2="510" marker-end="url(#ar)"/>
+
+          <!-- goal check -->
+          <rect class="bx-e" x="16" y="514" width="728" height="52" rx="2"/>
+          <text class="t-r" x="34" y="534">EPISTEMIC</text>
+          <text class="t" x="34" y="554" font-weight="500">CheckEpistemicGoal</text>
+          <text class="t-m" x="196" y="554">(Kw A tails) &#8212; asked once, of the state that actually resulted</text>
+
+          <text class="t-s" x="16" y="596">A node with a single continuation renders without a switch, so a plan that</text>
+          <text class="t-s" x="16" y="614">never branches comes out as the flat sequence PlanSys2 would have built.</text>
+        </svg>
+      </div>
+      <div class="fig-cap">
+        <b>The extension is additive.</b> The grey block is PlanSys2's action subtree,
+        untouched. The four red nodes are what a policy needs on top of it, and the
+        switch is the only one with no classical counterpart at all.
+      </div>
+    </div>
+
+    <table class="data">
+      <thead>
+        <tr><th>Node</th><th>PlanSys2 counterpart</th><th>What it adds</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="mono-inline">CheckKnowledge</span></td>
+          <td>CheckOverAllReq</td>
+          <td>conditions about knowledge, which no predicate records</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">ApplyEpistemicUpdate</span></td>
+          <td>ApplyAtEndEffect</td>
+          <td>the DEL product update, one level above the effects</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">EpistemicSwitch</span></td>
+          <td>&#8212; none &#8212;</td>
+          <td>runs the continuation planned for what was observed</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">CheckEpistemicGoal</span></td>
+          <td>the executor's goal check</td>
+          <td>asks whether the goal holds, rather than assuming a leaf implies it</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      Two of these deserve their reasoning stated. <b>An action changes what agents
+      know by more than its own effects</b> — a public announcement informs everyone
+      who was listening, and an observation that finds nothing still rules worlds
+      out — which is why the update is a distinct node rather than part of applying
+      an effect.
+    </p>
+
+    <p>
+      And <b>the switch fails on an outcome the policy does not list</b>, rather than
+      defaulting to a branch. Every branch was built for a different belief; running
+      one anyway is a robot acting confidently on a belief nothing supports. The
+      failure propagates to the executor, whose answer to a failed plan is to
+      replan — from the state that actually resulted.
+    </p>
+
+    <div class="warn">
+      <h4>Reaching a leaf is not achieving the goal</h4>
+      <p>
+        Every leaf of a policy was believed to satisfy the goal, but that belief was
+        formed against the model at planning time. If execution diverged from it, a
+        policy can run to completion in a branch that no longer establishes anything.
+        The goal check runs once, after the tree, against the state that resulted.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE STATE -->
+<section>
+  <div class="container">
+    <p class="sec-label">The epistemic state</p>
+    <h3>To knowledge what the problem expert is to facts</h3>
+
+    <p>
+      The tree needs something to ask. A lifecycle node holds a pointed Kripke model
+      \(\mathcal{M} = (W, \{R_i\}, V, W^{*})\) and answers three questions, which are
+      exactly the three that executing a policy raises.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>Service</th><th>Question</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="mono-inline">load_task</span></td><td>be the model of <em>this</em> grounded task</td></tr>
+        <tr><td><span class="mono-inline">check_formula</span></td><td>does <span class="mono-inline">(K r1 (clear corridor))</span> hold now?</td></tr>
+        <tr><td><span class="mono-inline">apply_action</span></td><td>this action ran: update, and say what was observed</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      It advances by executed actions rather than by watching the world, which is
+      what makes it a belief state rather than a log. When it disagrees with what the
+      robot observed, the disagreement surfaces at
+      <span class="mono-inline">apply_action</span> as an outcome the model cannot
+      account for — a reason to replan, not to overwrite the model quietly.
+    </p>
+
+    <p>
+      Which outcome occurred is a question about the world, not about the model. When
+      the state designates a single world it already answers it. When it designates
+      several it genuinely does not know, and the observation has to come from
+      whoever did the sensing.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Live trace &#183; multi-pointed coin-in-the-box</span>
+        <span class="note" style="font-size:.7rem">verbatim service responses</span>
+      </div>
+      <div class="fig-body">
+<pre class="code"><span class="c"># A must come to know whether the coin lies tails. It starts not knowing.</span>
+check_formula  (Kw A tails)          <span class="k">&#8594;</span> holds=<span class="k">False</span>
+
+<span class="c"># The box is shut, so looking is not yet possible. The guard says so.</span>
+apply_action   peek_A                <span class="k">&#8594;</span> refused: not applicable in the
+                                        current epistemic state
+
+apply_action   open_A                <span class="k">&#8594;</span> ok &#183; 4 worlds, 2 designated
+
+<span class="c"># Now A can look. But the model designates two candidate worlds, so it
+# cannot know which outcome the world produced, and it declines to guess.</span>
+apply_action   peek_A                <span class="k">&#8594;</span> refused: 2 possible outcomes here
+                                        and none was observed
+
+<span class="c"># The robot reports what it saw. The model narrows to one world.</span>
+apply_action   peek_A  e-peek-pos    <span class="k">&#8594;</span> ok &#183; outcome=e-peek-pos
+                                        6 worlds, <span class="k">1 designated</span>
+
+check_formula  (Kw A tails)          <span class="k">&#8594;</span> holds=<span class="k">True</span>   <span class="c"># A looked</span>
+check_formula  (Kw B tails)          <span class="k">&#8594;</span> holds=<span class="k">False</span>  <span class="c"># B was not looking</span>
+</pre>
+      </div>
+      <div class="fig-cap">
+        <b>The last two lines are the point.</b> A looked and now knows; B was in the
+        room and still does not. Quasi-private sensing, surviving intact from the
+        event model through the product update to a service answer a behavior tree
+        can act on. The two refusals are the design working, not failing: a guard
+        that will not pass an inapplicable action, and a model that will not invent
+        an observation it cannot have.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ PACKAGES -->
+<section>
+  <div class="container">
+    <p class="sec-label">Structure</p>
+    <h3>Where the dependency falls</h3>
+
+    <p>
+      Extending an executor usually means depending on it. That was worth avoiding:
+      a package that needs <span class="mono-inline">plansys2_executor</span> can only
+      be built against this fork, while one that does not can be built and tested
+      against a released distribution.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>Package</th><th>Contents</th><th>Needs the executor</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="mono-inline">plansys2_epistemic_msgs</span></td><td>the three service definitions</td><td>no</td></tr>
+        <tr><td><span class="mono-inline">plansys2_epistemic_executor</span></td><td>policy, tree rendering, the four nodes, the state</td><td>no</td></tr>
+        <tr><td><span class="mono-inline">plansys2_epistemic_bt_builder</span></td><td>the tree-builder plugin</td><td>yes</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      The nodes reach the executor through a generic hook rather than a special case:
+      a parameter naming behavior tree node libraries to load before a tree is built,
+      and the plan already published on the blackboard. Twenty-four lines in the
+      executor, no new dependencies, and nothing in it that knows what an epistemic
+      node is.
+    </p>
+
+<pre class="code"><span class="c"># the whole configuration, on top of the ordinary PlanSys2 params</span>
+executor:
+  ros__parameters:
+    bt_builder_plugin: <span class="k">"EpistemicBTBuilder"</span>
+    bt_node_plugins:   [<span class="k">"libplansys2_epistemic_bt_nodes.so"</span>]
+</pre>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ VERIFICATION -->
+<section>
+  <div class="container">
+    <p class="sec-label">Verification</p>
+    <h3>What is checked, and what is not</h3>
+
+    <table class="data">
+      <thead>
+        <tr><th>Package</th><th>Tests</th><th>Failures</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>plansys2_epistemic_planner</td><td>38</td><td>0</td></tr>
+        <tr><td>plansys2_epistemic_executor</td><td>39</td><td>0</td></tr>
+        <tr><td>plansys2_epistemic_msgs</td><td>5</td><td>0</td></tr>
+        <tr class="sum"><td>from a clean build of six packages</td><td>82</td><td>0</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      Three of these are worth naming. Every rendered tree is handed to the real
+      BehaviorTree.CPP parser, because a tree that will not parse is worthless
+      however good it looks. The formula written by the planner is parsed back by
+      the state and compared as a <em class="term">formula</em>, not as a string —
+      the two are separate processes with separate interning, and nothing but that
+      agreement connects them. And the node library is loaded exactly as the
+      executor loads it, so the extension mechanism is checked rather than assumed.
+    </p>
+
+    <p>
+      Not checked here: the four nodes ticking against a live state node under a
+      full stack, and the builder inside a running executor. Both need the whole
+      PlanSys2 system up, which this fork's sources cannot build on the distribution
+      available locally; they are exercised in continuous integration. The live
+      trace above was produced against the real state node, driven by hand.
+    </p>
+
+    <div class="warn">
+      <h4>Open work</h4>
+      <p>
+        The observation a sensing action produces is supplied on a port that a
+        domain-specific tree binds to whatever its performer reports. Wiring that to
+        real perception — so the branch a robot takes is chosen by its sensors rather
+        than by a model that happens to designate one world — is the next step, and
+        the one that turns this from an architecture into a demonstration.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="eplansys_execution.pdf">Technical report (PDF)</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">3 packages &#183; 82 tests &#183; ROS 2</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
