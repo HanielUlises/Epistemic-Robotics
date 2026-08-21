@@ -4,10 +4,22 @@
   <name>epistemic_slam</name>
   <version>0.1.0</version>
   <description>
-    Bridge between SLAM Toolbox and the epistemic layer.
-    Converts LIDAR observations into EpistemicEvent messages by lifting
-    sensor readings into DEL event models (private sensing actions).
-    Handles MC-Dropout uncertainty from semantic classifiers.
+    The collaborative layer over SLAM Toolbox. Not a SLAM implementation:
+    slam_toolbox builds each robot's map, and this package answers the question
+    it does not, which is who knows what.
+
+    Two things live here. Per-robot bookkeeping of which regions a robot has
+    actually observed, as opposed to which regions exist in a merged map it was
+    handed. And the fusion that runs when two robots restore a link:
+    reconciling their maps, deciding what each of them now knows, and telling
+    the epistemic state about it. That is section 3.12.2 of the thesis, and
+    CU-03.
+
+    Turning one robot's occupancy grid into epistemic atoms is a different job
+    and is not done here. That is the extraction and translation of section
+    3.7, and it belongs in eplansys as plansys2_epistemic_perception: a bridge
+    from a map to a knowledge model is useful to anyone with a map, and is not
+    specific to this research.
   </description>
   <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
   <license>Apache-2.0</license>
@@ -15,9 +27,15 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>sensor_msgs</depend>
   <depend>nav_msgs</depend>
-  <depend>epistemic_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <!-- Fusion changes what the fleet knows, and the epistemic state has to hear
+       about it. Pulled into the workspace by ros2_ws/eplansys.repos. -->
+  <depend>plansys2_epistemic_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

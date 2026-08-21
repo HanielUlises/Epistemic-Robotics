@@ -1,0 +1,17 @@
+# The tool this thesis is built on, and what it needs.
+#
+# This replaces a symlink at src/eplansys that pointed at an absolute path on
+# one machine. Import it instead:
+#
+#   cd ros2_ws && vcs import src < eplansys.repos
+#
+# eplansys carries its own dependency_repos.repos for plank, popf and
+# cascade_lifecycle. Import that one too, from inside src, once eplansys is
+# checked out:
+#
+#   vcs import src < src/eplansys/dependency_repos.repos
+repositories:
+  eplansys:
+    type: git
+    url: https://github.com/ePlanSys/eplansys.git
+    version: rolling
