@@ -1,0 +1,31 @@
+\begin{table}[H]
+\centering
+\small
+\caption{The three shipped fleet scenarios, as \textsf{plank} grounds them and
+as Aletheia solves them. Worlds is $|W|$ of the grounded initial model and all
+of them are designated, so every world is a live possibility at planning time.
+Goal conjuncts counts the $\mathit{Kw}$ atoms of the goal. Times are single
+runs; see \S\ref{sec:method}.}
+\label{tab:fleet-scenarios}
+\begin{tabular}{@{}l r r r@{}}
+\toprule
+ & \textbf{Corridor} & \textbf{Depot} & \textbf{Survey} \\
+\midrule
+Robots                  & 2   & 3    & 4      \\
+Routes                  & 1   & 2    & 3      \\
+Atoms                   & 3   & 8    & 15     \\
+Ground actions          & 8   & 24   & 48     \\
+Worlds ($=$ designated) & 2   & 4    & 8      \\
+Goal conjuncts          & 2   & 6    & 12     \\
+\midrule
+Solution depth          & 3   & 6    & 9      \\
+Policy leaves           & 2   & 4    & 8      \\
+Branches checked        & 4   & 12   & 28     \\
+\midrule
+Nodes expanded          & 17  & 1\,670 & 5\,029\,063 \\
+Nodes generated         & 19  & 2\,010 & 5\,746\,557 \\
+Search time (s)         & 0.00 & 0.01 & 58.82  \\
+Peak RSS (MB)           & 4.34 & 4.47 & 4.85   \\
+\bottomrule
+\end{tabular}
+\end{table}

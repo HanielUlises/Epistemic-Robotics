@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Epistemic Robotics Project</title>
 <meta name="description" content="The Epistemic Robotics Project explores robotics, AI, epistemology, autonomous systems, and intelligent agents.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
 MathJax = {
   tex: {
@@ -34,19 +32,19 @@ body{animation:pageIn .38s ease-out both}
 :root{
   --black:#111111; --red:#C8102E; --gray:#5A5A5A;
   --border:#D6D6D6; --code-bg:#F4F4F4;
-  --sg:'Space Grotesk',sans-serif;
-  --ss:'Source Serif 4',Georgia,serif;
-  --mono:'JetBrains Mono',monospace;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
 }
-html{font-size:17px;scroll-behavior:smooth}
+html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
-  font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
+  font-weight:400;line-height:1.6}
 .container{max-width:800px;margin:0 auto;padding:0 2.2rem}
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
 .site-tag{font-family:var(--mono);font-size:.66rem;
-  color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+  color:var(--red);white-space:nowrap}
 header h1{font-family:var(--sg);font-size:1.18rem;
   font-weight:500;letter-spacing:-.01em}
 .hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
@@ -60,7 +58,7 @@ header h1{font-family:var(--sg);font-size:1.18rem;
 @media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
 .hero{padding:4.5rem 0 3.2rem;border-bottom:1px solid var(--border)}
 .eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
+  letter-spacing:.1em;margin-bottom:1.3rem}
 .hero h2{font-family:var(--sg);
   font-size:clamp(2rem,4.5vw,2.85rem);font-weight:600;
   line-height:1.15;letter-spacing:-.035em;max-width:640px}
@@ -70,7 +68,7 @@ header h1{font-family:var(--sg);font-size:1.18rem;
 section{padding:3.6rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
 .sec-label{font-family:var(--mono);font-size:.66rem;
-  color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6rem}
+  color:var(--red);margin-bottom:1.6rem}
 h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
   letter-spacing:-.02em;margin-bottom:.9rem}
 p{margin-bottom:1.05rem}
@@ -210,7 +208,7 @@ canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
 
 .ext-chip{
   display:inline-flex;align-items:center;gap:.35rem;
-  font-family:var(--mono);font-size:.67rem;letter-spacing:.06em;
+  font-family:var(--mono);font-size:.67rem;
   border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
   text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
   margin-left:.4rem;white-space:nowrap;
@@ -221,7 +219,7 @@ canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
 footer{border-top:2px solid var(--black);padding:2.2rem 0}
 .ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
 .ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
-.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);letter-spacing:.07em}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
 footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
 footer a:hover{color:var(--red)}
 </style>
@@ -249,7 +247,7 @@ footer a:hover{color:var(--red)}
     <div class="rule"></div>
     <p class="hero-p">
       Epistemic robotics is the study of autonomous systems that maintain formal representations
-      of knowledge, belief, and uncertainty — not only about the physical world, but about
+      of knowledge, belief, and uncertainty, not only about the physical world, but about
       the epistemic states of other agents operating within it. This project develops planning
       formalisms, runtime architectures, and geometric reasoning tools grounded in Dynamic
       Epistemic Logic and the µ-calculus, targeting heterogeneous multi-robot fleets
@@ -265,7 +263,7 @@ footer a:hover{color:var(--red)}
     <h3>Classical planning assumes a world fully known</h3>
     <p>
       A robot navigating a warehouse, a drone team conducting search-and-rescue, a fleet
-      of heterogeneous agents coordinating through communication blackouts — all share a
+      of heterogeneous agents coordinating through communication blackouts, all share a
       challenge that classical task planning cannot address. The world is not fully
       observable, and the agents within it hold genuinely different, potentially
       inconsistent views of what is true.
@@ -273,14 +271,14 @@ footer a:hover{color:var(--red)}
     <p>
       Planning under partial observability requires more than probabilistic state
       estimation. It requires a robot to represent not only <em>what it believes</em>
-      about the world, but <em>what it believes other agents believe</em> — and to plan
+      about the world, but <em>what it believes other agents believe</em>, and to plan
       actions that deliberately shape the epistemic state of the system as a whole.
       This is the problem of <em>epistemic planning</em>, and it demands a logic capable
       of reasoning about knowledge as a first-class object.
     </p>
     <p>
       The following goals are not expressible in any classical planning formalism.
-      They are epistemic goals — and they arise routinely in the deployment of
+      They are epistemic goals, and they arise routinely in the deployment of
       autonomous multi-robot systems.
     </p>
 
@@ -288,7 +286,7 @@ footer a:hover{color:var(--red)}
 
     <p>
       None of these goals have a representation in STRIPS, PDDL, or any classical
-      planning formalism. They require an epistemic planner — a system whose state
+      planning formalism. They require an epistemic planner: a system whose state
       space is not a set of ground atoms, but a structured model of what every agent
       knows, believes, and is uncertain about. The gap between classical planning and
       epistemic planning is not a matter of expressivity at the margins; it is a
@@ -304,8 +302,8 @@ footer a:hover{color:var(--red)}
     <h3>Dynamic Epistemic Logic and the product update</h3>
     <p>
       The project is grounded in Dynamic Epistemic Logic (DEL), a modal framework
-      for reasoning about how informational actions — sensing, announcement,
-      communication — transform the knowledge states of agents. The central semantic
+      for reasoning about how informational actions (sensing, announcement,
+      communication) transform the knowledge states of agents. The central semantic
       object is the <em>Kripke model</em>: a labeled graph whose nodes are possible
       worlds and whose edges, indexed by agent, encode what each agent considers
       epistemically indistinguishable from its current vantage point.
@@ -348,8 +346,7 @@ footer a:hover{color:var(--red)}
       <div class="def-item">
         <h4>Private sensing</h4>
         <p>The acting agent resolves its uncertainty about \(\varphi\). Others
-        may observe that an action occurred without learning its outcome —
-        a fundamental asymmetry in distributed systems.</p>
+        may observe that an action occurred without learning its outcome, a fundamental asymmetry in distributed systems.</p>
       </div>
       <div class="def-item">
         <h4>Ontic action</h4>
@@ -396,8 +393,8 @@ footer a:hover{color:var(--red)}
 
     <p>
       The operative correspondence is between the two kinds of fixed-point computation
-      that arise in epistemic planning. Reachability goals — the robot must be able
-      to reach a world satisfying \(\mathit{goal}\) through free worlds — are least
+      that arise in epistemic planning. Reachability goals, where the robot must be able
+      to reach a world satisfying \(\mathit{goal}\) through free worlds, are least
       fixed points of the operator \(\Phi(X) = \mathit{goal} \vee (\mathit{free} \wedge \Diamond X)\):
     </p>
 
@@ -407,8 +404,8 @@ footer a:hover{color:var(--red)}
     </div>
 
     <p>
-      Safety and coherence properties — the robot must remain within the region
-      of known-free worlds for all future steps — are greatest fixed points:
+      Safety and coherence properties, where the robot must remain within the region
+      of known-free worlds for all future steps, are greatest fixed points:
     </p>
 
     <div class="math-block">
@@ -418,13 +415,13 @@ footer a:hover{color:var(--red)}
 
     <p>
       Under epistemic uncertainty, unknown worlds are excluded from \(\mathit{free}\)
-      in the least fixed-point computation — the planner treats unresolved space as
+      in the least fixed-point computation. The planner treats unresolved space as
       unreachable until a sensing action contracts the epistemic state. This contraction
       is itself a form of greatest-fixed-point elimination: bisimulation contraction
       removes from \(W\) every world inconsistent with the observed outcome, exactly
       as \(\nu X.\,(\mathit{known} \wedge \Box X)\) removes worlds that fail the
-      coherence condition. The two reductions — sensing-driven contraction in DEL and
-      greatest-fixed-point elimination in the µ-calculus — operate on the same
+      coherence condition. The two reductions, sensing-driven contraction in DEL and
+      greatest-fixed-point elimination in the µ-calculus, operate on the same
       underlying lattice \(2^W\) and converge to the same canonical sub-model.
     </p>
 
@@ -477,8 +474,8 @@ footer a:hover{color:var(--red)}
       of nodes satisfying a formula together with its subformulas in a Kripke structure,
       and the µ-calculus backward wavefront identifies precisely the set of worlds from
       which the goal is reachable. Each map exercises a qualitatively distinct planning
-      scenario — multi-branch reachability, sensing-blocked propagation, dual-target
-      branching, and νX safety — to illustrate why fixed-point logic, rather than
+      scenario (multi-branch reachability, sensing-blocked propagation, dual-target
+      branching, and νX safety) to illustrate why fixed-point logic, rather than
       classical graph search, is the appropriate specification language.
     </p>
 
@@ -499,12 +496,12 @@ footer a:hover{color:var(--red)}
       </div>
       <canvas id="cv-pathbuild" style="max-width:100%"></canvas>
       <div class="step-lbl-wrap">
-        <span class="step-lbl" id="step-lbl-pathbuild">Phase 1 — backward wavefront from goal</span>
+        <span class="step-lbl" id="step-lbl-pathbuild">Phase 1: backward wavefront from goal</span>
         <button class="btn-reset" id="btn-reset-pathbuild">↺ replay</button>
       </div>
       <p class="fig-caption">
         Three-phase animated plan extraction. <em>Phase 1:</em> the µ-calculus backward
-        wavefront propagates from the goal, flooding all reachable free cells — each shell
+        wavefront propagates from the goal, flooding all reachable free cells. Each shell
         \(X_k\) is the set of worlds from which the goal is reachable in at most \(k\) steps.
         Unknown cells block propagation until resolved. <em>Phase 2:</em> a private sensing
         event at the unknown corridor reveals free space; the wavefront resumes and crosses
@@ -514,7 +511,7 @@ footer a:hover{color:var(--red)}
       </p>
     </div>
 
-    <!-- MAP 1: branching µX reachability — two targets, non-linear plan -->
+    <!-- MAP 1: branching µX reachability: two targets, non-linear plan -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
         \[\varphi_{\mathrm{branch}} \;=\; \mu X.\;\bigl(\mathit{goal}_1 \vee \mathit{goal}_2 \vee (\mathit{free} \wedge \Diamond X)\bigr)
@@ -531,7 +528,7 @@ footer a:hover{color:var(--red)}
       </div>
       <canvas id="cv-branch" style="max-width:100%"></canvas>
       <div class="step-lbl-wrap">
-        <span class="step-lbl" id="step-lbl-branch">S₀ — ∅</span>
+        <span class="step-lbl" id="step-lbl-branch">S₀ = ∅</span>
         <button class="btn-reset" id="btn-reset-branch">↺ replay</button>
       </div>
       <p class="fig-caption">
@@ -539,12 +536,12 @@ footer a:hover{color:var(--red)}
         backward from both \(\mathit{goal}_1\) (top-right) and \(\mathit{goal}_2\) (bottom-right)
         simultaneously. Because the two goals lie on opposite sides of a central horizontal wall,
         no linear path satisfies both; the plan is an irreducibly branching tree rooted at
-        \(w_0\), with one branch per target — a structure inexpressible in LTL but
+        \(w_0\), with one branch per target, a structure inexpressible in LTL but
         natural in the µ-calculus (Bárcenas et al. 2017, Theorem 6).
       </p>
     </div>
 
-    <!-- MAP 2: sensing-blocked µX — unknown corridor cuts the only path -->
+    <!-- MAP 2: sensing-blocked µX: unknown corridor cuts the only path -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
         \[\varphi_{\mathrm{reach}} = \mu X.\;\bigl(\mathit{goal} \vee (\mathit{free} \wedge \Diamond X)\bigr)
@@ -553,7 +550,7 @@ footer a:hover{color:var(--red)}
       <div class="legend">
         <span><span class="lsq" style="background:#E8F0E8"></span>free (known)</span>
         <span><span class="lsq" style="background:#222"></span>blocked</span>
-        <span><span class="lsq" style="background:#A8A8A8"></span>unknown — excluded from µX</span>
+        <span><span class="lsq" style="background:#A8A8A8"></span>unknown (excluded from µX)</span>
         <span><span class="lsq" style="background:#1A52A0"></span>goal</span>
         <span><span class="lsq" style="background:#3D7A3D"></span>∈ µX</span>
         <span><span class="lsq" style="background:#C8102E;border-radius:50%"></span>robot</span>
@@ -561,11 +558,11 @@ footer a:hover{color:var(--red)}
       <div class="canvas-pair">
         <div class="fig-unit">
           <canvas id="cv-sense-before" style="max-width:100%"></canvas>
-          <span class="fig-sub">before sensing — µX halted at unknown corridor</span>
+          <span class="fig-sub">before sensing: µX halted at unknown corridor</span>
         </div>
         <div class="fig-unit">
           <canvas id="cv-sense-after" style="max-width:100%"></canvas>
-          <span class="fig-sub">after sensing — corridor resolved, µX reaches goal</span>
+          <span class="fig-sub">after sensing: corridor resolved, µX reaches goal</span>
         </div>
       </div>
       <p class="fig-caption">
@@ -574,12 +571,12 @@ footer a:hover{color:var(--red)}
         \(\mathit{free}\), so the wavefront cannot cross the corridor and the goal is
         unreachable under the current epistemic state. After a private sensing event
         \(E_{\mathrm{sense}}\) at the corridor entrance, the cells are revealed free,
-        the product update contracts \(R_r\), and µX propagates through — establishing
+        the product update contracts \(R_r\), and µX propagates through, establishing
         \(K_r(\mathit{free}(c))\) for each corridor cell and unlocking the plan.
       </p>
     </div>
 
-    <!-- MAP 3: dual-branch patrol — µX ∧ µY two simultaneous tasks -->
+    <!-- MAP 3: dual-branch patrol: µX ∧ µY two simultaneous tasks -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
         \[(\mu X.\;\mathit{goal}_A \vee (\mathit{free} \wedge \Diamond X))
@@ -608,7 +605,7 @@ footer a:hover{color:var(--red)}
       </p>
     </div>
 
-    <!-- MAP 4: νX safety — greatest fixed point / safe known region -->
+    <!-- MAP 4: νX safety: greatest fixed point / safe known region -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
         \[\varphi_{\mathrm{safe}} = \nu X.\;\bigl(\mathit{known\_free} \wedge \Box X\bigr)
@@ -616,8 +613,8 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="legend">
         <span><span class="lsq" style="background:#0072B2"></span>∈ νX (safe known)</span>
-        <span><span class="lsq" style="background:#E6B800"></span>frontier — next sense targets</span>
-        <span><span class="lsq" style="background:#9C958C"></span>unknown — excluded from νX</span>
+        <span><span class="lsq" style="background:#E6B800"></span>frontier (next sense targets)</span>
+        <span><span class="lsq" style="background:#9C958C"></span>unknown (excluded from νX)</span>
         <span><span class="lsq" style="background:#262626"></span>blocked</span>
         <span><span class="lsq" style="background:#EEF1F0"></span>free (not yet in νX)</span>
         <span><span class="lsq" style="background:#D55E00;border-radius:50%"></span>robot</span>
@@ -628,7 +625,7 @@ footer a:hover{color:var(--red)}
         starts at \(S_0 = W\) and eliminates any cell failing \(\Box X\): cells with
         unknown neighbors are expelled because no guarantee holds for their successors.
         The surviving set is the maximal coherent known-free region; its boundary is
-        the exploration frontier — the set of νX cells with at least one unknown neighbor.
+        the exploration frontier, the set of νX cells with at least one unknown neighbor.
         An epistemic planner selects frontier cells as sense targets, maximally expanding
         νX per step. This νX contraction and the DEL bisimulation contraction are two
         descriptions of the same canonical reduction on \(2^W\).
@@ -695,7 +692,7 @@ footer a:hover{color:var(--red)}
             <rect x="324" y="130" width="94" height="24" rx="3"
                   fill="#F8F8F8" stroke="#888" stroke-width="1.2"/>
             <text x="371" y="146" text-anchor="middle"
-                  font-family="'Source Serif 4',serif" font-size="9" font-style="italic" fill="#555">
+                  font-family="Arial,Helvetica,sans-serif" font-size="9" font-style="italic" fill="#555">
               sense(w₃) → free
             </text>
             <line x1="338" y1="122" x2="338" y2="130" stroke="#888" stroke-width="1"
@@ -703,49 +700,49 @@ footer a:hover{color:var(--red)}
           </g>
 
           <circle id="n0" cx="80" cy="208" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="80" y="203" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₀</text>
-          <text x="80" y="216" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
+          <text x="80" y="203" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#333">w₀</text>
+          <text x="80" y="216" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">free</text>
           <circle cx="80" cy="178" r="6" fill="#C8102E"/>
 
           <circle id="n1" cx="208" cy="208" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="208" y="203" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₁</text>
-          <text x="208" y="216" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
+          <text x="208" y="203" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#333">w₁</text>
+          <text x="208" y="216" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">free</text>
 
           <circle id="n2" cx="208" cy="108" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="208" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₂</text>
-          <text x="208" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
+          <text x="208" y="103" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#333">w₂</text>
+          <text x="208" y="116" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">free</text>
 
           <circle id="n3" cx="338" cy="108" r="26" fill="#A8A8A8" stroke="#888" stroke-width="1.8"/>
-          <text id="n3-lbl" x="338" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#FFF">w₃</text>
-          <text id="n3-sub" x="338" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#EEE">unknown</text>
+          <text id="n3-lbl" x="338" y="103" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#FFF">w₃</text>
+          <text id="n3-sub" x="338" y="116" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#EEE">unknown</text>
 
           <circle id="n4" cx="338" cy="208" r="26" fill="#333" stroke="#111" stroke-width="1.8"/>
-          <text x="338" y="203" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#CCC">w₄</text>
-          <text x="338" y="216" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#999">blocked</text>
+          <text x="338" y="203" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#CCC">w₄</text>
+          <text x="338" y="216" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#999">blocked</text>
 
           <circle id="n5" cx="463" cy="108" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="463" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₅</text>
-          <text x="463" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
+          <text x="463" y="103" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#333">w₅</text>
+          <text x="463" y="116" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">free</text>
 
           <circle id="n6" cx="583" cy="108" r="26" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="583" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#333">w₆</text>
-          <text x="583" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">free</text>
+          <text x="583" y="103" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#333">w₆</text>
+          <text x="583" y="116" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">free</text>
 
           <circle id="n7" cx="703" cy="108" r="26" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
-          <text x="703" y="103" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#FFF">w₇</text>
-          <text x="703" y="116" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#BCD0F0">goal</text>
+          <text x="703" y="103" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#FFF">w₇</text>
+          <text x="703" y="116" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#BCD0F0">goal</text>
 
           <text id="shell-7" x="703" y="80" text-anchor="middle"
-                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₁</text>
+                font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₁</text>
           <text id="shell-6" x="583" y="80" text-anchor="middle"
-                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₂</text>
+                font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₂</text>
           <text id="shell-5" x="463" y="80" text-anchor="middle"
-                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₃</text>
+                font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₃</text>
           <text id="shell-2" x="208" y="80" text-anchor="middle"
-                font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₄</text>
+                font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#3D7A3D" opacity="0">S₄</text>
 
           <text id="reach-lbl" x="14" y="280"
-                font-family="'Source Serif 4',serif" font-size="9" font-style="italic" fill="#AAA">S₀ — ∅</text>
+                font-family="Arial,Helvetica,sans-serif" font-size="9" font-style="italic" fill="#AAA">S₀ = ∅</text>
         </svg>
       </div>
 
@@ -762,13 +759,13 @@ footer a:hover{color:var(--red)}
       </p>
     </div>
 
-    <!-- FIG 2: νX safety — greatest fixed point -->
+    <!-- FIG 2: νX safety: greatest fixed point -->
     <div class="fig-block">
       <div class="math-block" style="margin-bottom:.9rem">
         \[\varphi_{\mathrm{safe}} \;=\; \nu X.\;\bigl(\mathit{known} \wedge \Box X\bigr)\]
       </div>
       <div class="legend">
-        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>known — survives νX</span>
+        <span><span class="lsq" style="background:#3D7A3D;border-radius:50%"></span>known (survives νX)</span>
         <span><span class="lsq" style="background:#A8A8A8;border-radius:50%"></span>unknown</span>
         <span><span class="lsq" style="background:#eee;border-radius:50%;border:1px solid #C8102E"></span>eliminated</span>
       </div>
@@ -791,33 +788,33 @@ footer a:hover{color:var(--red)}
               <path d="M162,168 Q162,148 162,142" fill="none" stroke="#CCC" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arr-k2a)"/>
 
               <circle cx="60" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="60" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₀</text>
-              <text x="60" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
+              <text x="60" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₀</text>
+              <text x="60" y="130" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
               <circle cx="162" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="162" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₁</text>
-              <text x="162" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
+              <text x="162" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₁</text>
+              <text x="162" y="130" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
               <circle cx="162" cy="38" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="162" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₂</text>
-              <text x="162" y="46" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
+              <text x="162" y="34" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₂</text>
+              <text x="162" y="46" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
               <circle cx="262" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="1.8"/>
-              <text x="262" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₃</text>
-              <text x="262" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
+              <text x="262" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₃</text>
+              <text x="262" y="130" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">known</text>
 
               <circle cx="262" cy="38" r="22" fill="#A8A8A8" stroke="#888" stroke-width="1.8"/>
-              <text x="262" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₄</text>
-              <text x="262" y="46" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#EEE">unk</text>
+              <text x="262" y="34" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₄</text>
+              <text x="262" y="46" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#EEE">unk</text>
 
               <circle cx="162" cy="190" r="22" fill="#A8A8A8" stroke="#888" stroke-width="1.8"/>
-              <text x="162" y="186" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₅</text>
-              <text x="162" y="198" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#EEE">unk</text>
+              <text x="162" y="186" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₅</text>
+              <text x="162" y="198" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#EEE">unk</text>
 
-              <text x="14" y="222" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#AAA">S₀ = W (before ν)</text>
+              <text x="14" y="222" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#AAA">S₀ = W (before ν)</text>
             </svg>
           </div>
-          <span class="fig-sub">before — S₀ = W</span>
+          <span class="fig-sub">before: S₀ = W</span>
         </div>
         <div class="fig-unit">
           <div class="kripke-wrap" style="border:none;background:none">
@@ -836,40 +833,40 @@ footer a:hover{color:var(--red)}
               <path d="M248,138 Q214,154 176,138" fill="none" stroke="#3D7A3D" stroke-width="1.8" marker-end="url(#arr-k2b)"/>
 
               <circle cx="60" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="60" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₀</text>
-              <text x="60" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
+              <text x="60" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₀</text>
+              <text x="60" y="130" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
               <circle cx="162" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="162" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₁</text>
-              <text x="162" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
+              <text x="162" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₁</text>
+              <text x="162" y="130" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
               <circle cx="162" cy="38" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="162" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₂</text>
-              <text x="162" y="46" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
+              <text x="162" y="34" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₂</text>
+              <text x="162" y="46" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
               <circle cx="262" cy="122" r="22" fill="#3D7A3D" stroke="#2a5a2a" stroke-width="2"/>
-              <text x="262" y="118" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#fff">w₃</text>
-              <text x="262" y="130" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
+              <text x="262" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#fff">w₃</text>
+              <text x="262" y="130" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#c8eec8">⊨ νX</text>
 
               <circle cx="262" cy="38" r="22" fill="#FFF" stroke="#C8102E" stroke-width="1.5" opacity=".6"/>
-              <text x="262" y="34" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#C8102E" opacity=".6">w₄</text>
+              <text x="262" y="34" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#C8102E" opacity=".6">w₄</text>
               <line x1="244" y1="20" x2="280" y2="56" stroke="#C8102E" stroke-width="2" opacity=".5"/>
               <line x1="280" y1="20" x2="244" y2="56" stroke="#C8102E" stroke-width="2" opacity=".5"/>
 
               <circle cx="162" cy="190" r="22" fill="#FFF" stroke="#C8102E" stroke-width="1.5" opacity=".6"/>
-              <text x="162" y="186" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9" fill="#C8102E" opacity=".6">w₅</text>
+              <text x="162" y="186" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" fill="#C8102E" opacity=".6">w₅</text>
               <line x1="144" y1="172" x2="180" y2="208" stroke="#C8102E" stroke-width="2" opacity=".5"/>
               <line x1="180" y1="172" x2="144" y2="208" stroke="#C8102E" stroke-width="2" opacity=".5"/>
 
-              <text x="14" y="222" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#3D7A3D">S∞ — greatest fixed point</text>
+              <text x="14" y="222" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#3D7A3D">S∞: greatest fixed point</text>
             </svg>
           </div>
-          <span class="fig-sub">after — S∞ ⊨ νX</span>
+          <span class="fig-sub">after: S∞ ⊨ νX</span>
         </div>
       </div>
       <p class="fig-caption">
         Greatest fixed-point computation. Starting at \(S_0 = W\), worlds \(w_4\) and \(w_5\)
-        are expelled — they are unknown with successors outside the known sub-graph.
+        are expelled: they are unknown with successors outside the known sub-graph.
         The surviving set \(\{w_0, w_1, w_2, w_3\}\) is the DEL bisimulation contraction
         of the epistemic state to its maximal coherent sub-model.
       </p>
@@ -909,7 +906,7 @@ footer a:hover{color:var(--red)}
           </defs>
 
           <text x="155" y="22" text-anchor="middle"
-                font-family="'Space Grotesk',sans-serif" font-size="10" fill="#AAA" letter-spacing=".08em">BEFORE  s</text>
+                font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#AAA" letter-spacing=".08em">BEFORE  s</text>
 
           <path d="M108,94 Q155,72 196,94" fill="none" stroke="#C8102E" stroke-width="1.7" marker-end="url(#arr-ri2)"/>
           <path d="M196,110 Q155,132 108,110" fill="none" stroke="#C8102E" stroke-width="1.7" marker-end="url(#arr-ri2)"/>
@@ -921,55 +918,55 @@ footer a:hover{color:var(--red)}
           <path d="M196,186 Q178,158 196,128" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
 
           <circle cx="94" cy="102" r="28" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
-          <text x="94" y="97" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#fff">wₐ*</text>
-          <text x="94" y="111" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#BCD0F0">p = T</text>
+          <text x="94" y="97" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" fill="#fff">wₐ*</text>
+          <text x="94" y="111" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#BCD0F0">p = T</text>
 
           <circle cx="216" cy="102" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="216" y="97" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#333">w_b</text>
-          <text x="216" y="111" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">p = T</text>
+          <text x="216" y="97" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" fill="#333">w_b</text>
+          <text x="216" y="111" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">p = T</text>
 
           <circle cx="94" cy="198" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="94" y="193" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#333">w_c</text>
-          <text x="94" y="207" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">p = F</text>
+          <text x="94" y="193" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" fill="#333">w_c</text>
+          <text x="94" y="207" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">p = F</text>
 
           <circle cx="216" cy="198" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="216" y="193" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="9.5" fill="#333">w_d</text>
-          <text x="216" y="207" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">p = F</text>
+          <text x="216" y="193" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" fill="#333">w_d</text>
+          <text x="216" y="207" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">p = F</text>
 
           <line x1="270" y1="150" x2="362" y2="150" stroke="#555" stroke-width="2" marker-end="url(#arr-prod)"/>
-          <text x="316" y="142" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="9.5" font-style="italic" fill="#555">⊗ E_sense</text>
+          <text x="316" y="142" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-style="italic" fill="#555">⊗ E_sense</text>
           <rect x="276" y="156" width="80" height="18" rx="2" fill="#F4F4F4" stroke="#999" stroke-width=".8"/>
-          <text x="316" y="169" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">pre(e) = p</text>
+          <text x="316" y="169" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">pre(e) = p</text>
 
           <text x="580" y="22" text-anchor="middle"
-                font-family="'Space Grotesk',sans-serif" font-size="10" fill="#AAA" letter-spacing=".08em">AFTER  s ⊗ E_sense</text>
+                font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#AAA" letter-spacing=".08em">AFTER  s ⊗ E_sense</text>
 
           <path d="M492,128 Q474,158 492,186" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
           <path d="M518,186 Q536,158 518,128" fill="none" stroke="#1A52A0" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arr-rj2)"/>
 
           <circle cx="504" cy="102" r="28" fill="#1A52A0" stroke="#0d3570" stroke-width="2"/>
-          <text x="504" y="93" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#fff">(wₐ,e)*</text>
-          <text x="504" y="106" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#BCD0F0">Kᵢ(p)</text>
-          <text x="504" y="118" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#888">⊨ φ_goal</text>
+          <text x="504" y="93" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#fff">(wₐ,e)*</text>
+          <text x="504" y="106" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#BCD0F0">Kᵢ(p)</text>
+          <text x="504" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#888">⊨ φ_goal</text>
 
           <circle cx="504" cy="198" r="28" fill="#E8F0E8" stroke="#AAAAAA" stroke-width="1.8"/>
-          <text x="504" y="189" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#333">(w_b,e)</text>
-          <text x="504" y="202" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#666">Kᵢ(p)</text>
+          <text x="504" y="189" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#333">(w_b,e)</text>
+          <text x="504" y="202" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">Kᵢ(p)</text>
 
           <circle cx="636" cy="102" r="28" fill="#FFF" stroke="#C8102E" stroke-width="1.4" opacity=".45"/>
-          <text x="636" y="97" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#C8102E" opacity=".5">(w_c,e)</text>
-          <text x="636" y="110" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#C8102E" opacity=".5">pre fails</text>
+          <text x="636" y="97" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#C8102E" opacity=".5">(w_c,e)</text>
+          <text x="636" y="110" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#C8102E" opacity=".5">pre fails</text>
           <line x1="612" y1="78" x2="660" y2="126" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
           <line x1="660" y1="78" x2="612" y2="126" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
 
           <circle cx="636" cy="198" r="28" fill="#FFF" stroke="#C8102E" stroke-width="1.4" opacity=".45"/>
-          <text x="636" y="193" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="8.5" fill="#C8102E" opacity=".5">(w_d,e)</text>
-          <text x="636" y="206" text-anchor="middle" font-family="'Source Serif 4',serif" font-size="7.5" font-style="italic" fill="#C8102E" opacity=".5">pre fails</text>
+          <text x="636" y="193" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#C8102E" opacity=".5">(w_d,e)</text>
+          <text x="636" y="206" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-style="italic" fill="#C8102E" opacity=".5">pre fails</text>
           <line x1="612" y1="174" x2="660" y2="222" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
           <line x1="660" y1="174" x2="612" y2="222" stroke="#C8102E" stroke-width="1.8" opacity=".4"/>
 
-          <text x="504" y="244" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#C8102E">Rᵢ collapsed → Kᵢ(p) holds</text>
-          <text x="504" y="256" font-family="'Source Serif 4',serif" font-size="8" font-style="italic" fill="#1A52A0">Rⱼ unchanged (j unobserved)</text>
+          <text x="504" y="244" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#C8102E">Rᵢ collapsed → Kᵢ(p) holds</text>
+          <text x="504" y="256" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#1A52A0">Rⱼ unchanged (j unobserved)</text>
         </svg>
       </div>
 
@@ -1011,7 +1008,7 @@ footer a:hover{color:var(--red)}
       first-order reasoners.
     </p>
 
-    <!-- MAP 5: multi-agent notify — public announcement / common knowledge -->
+    <!-- MAP 5: multi-agent notify: public announcement / common knowledge -->
     <div class="fig-block">
       <div style="margin-bottom:.9rem;font-size:.92rem">
         <div class="math-block">
@@ -1085,8 +1082,7 @@ footer a:hover{color:var(--red)}
         <div class="action-formula">|E*| ≥ 2,  Qi ⊂ E × E  (partial observability)</div>
         <p>The acting agent resolves its uncertainty about \(\varphi\); other agents
         observe that an action occurred but not its outcome. The product update
-        contracts \(R_i\) while leaving \(R_j\) for \(j \neq i\) unchanged —
-        the fundamental asymmetry modelled by the split product update in ALETHEIA.</p>
+        contracts \(R_i\) while leaving \(R_j\) for \(j \neq i\) unchanged, the fundamental asymmetry modelled by the split product update in ALETHEIA.</p>
       </div>
       <div class="action-card">
         <h4>Ontic action</h4>
@@ -1132,14 +1128,13 @@ footer a:hover{color:var(--red)}
       <div class="feature-item">
         <h5>Bisimulation contraction</h5>
         <p>After every product update, the resulting Kripke model is reduced to its
-        coarsest bisimilar quotient via partition refinement — preserving the truth
+        coarsest bisimilar quotient via partition refinement, preserving the truth
         of all modal formulae while keeping world counts tractable across iterated
         ontic and sensing sequences.</p>
       </div>
       <div class="feature-item">
         <h5>Domain-aware heuristics</h5>
-        <p>Four heuristics — \(h_{ug}\), \(h_{ed}\), \(h_{ks}\), \(h_{wc}\) —
-        target distinct goal structures: unsatisfied conjunct count, epistemic
+        <p>Four heuristics (\(h_{ug}\), \(h_{ed}\), \(h_{ks}\), \(h_{wc}\)) target distinct goal structures: unsatisfied conjunct count, epistemic
         distance in accessibility relations, knowledge-spread for Kw-goals,
         and designated world count for uncertainty reduction.</p>
       </div>
@@ -1147,7 +1142,7 @@ footer a:hover{color:var(--red)}
 
     <p>
       The goal language includes \(K_i\,\varphi\), \(\mathrm{Kw}_i\,\varphi\), and
-      \(C_G\,\varphi\) — each a fixed-point formula when unfolded — allowing goals
+      \(C_G\,\varphi\), each a fixed-point formula when unfolded, allowing goals
       of mixed epistemic depth to be satisfied simultaneously:
     </p>
 
@@ -1210,7 +1205,7 @@ footer a:hover{color:var(--red)}
 <!--
   CHANGES IN THIS VERSION (see chat for full explanation):
 
-  1. PALETTE — replaced the red-path-on-green-fill scheme everywhere with an
+  1. PALETTE: replaced the red-path-on-green-fill scheme everywhere with an
      Okabe-Ito colorblind-safe set, so "explored/safe" vs "path/robot" never
      relies on a red/green distinction:
        SAT (certified-safe / explored)   green -> blue   #0072B2
@@ -1223,13 +1218,13 @@ footer a:hover{color:var(--red)}
      Blue / vermillion / teal / purple remain distinguishable under
      protanopia, deuteranopia and tritanopia, unlike the old red/green pair.
 
-  2. BUG FIX — Map 0 (pathbuild): the dividing wall at col 7 had no gap at
+  2. BUG FIX, Map 0: (pathbuild): the dividing wall at col 7 had no gap at
      all (rows 1-11 solid), so even after the unknown corridor was revealed
-     the robot still could not reach the goal — the path silently failed to
+     the robot still could not reach the goal, the path silently failed to
      draw. Rebuilt as a single dividing wall with the *unknown region itself*
      as the only gap, verified reachable-after / unreachable-before by BFS.
 
-  3. BUG FIX — Map 4 (νX safety): the erosion rule removed any safe cell
+  3. BUG FIX, Map 4: (νX safety): the erosion rule removed any safe cell
      touching an unknown cell *or* touching an already-removed cell, with no
      bound, which converges to zero safe cells on this map's geometry
      (verified: 105 -> 0 over 6 iterations). Replaced with a bounded
@@ -1237,13 +1232,13 @@ footer a:hover{color:var(--red)}
      fixed point is non-empty and the frontier is visible.
 
   4. Map 1 previously recomputed the *same full* reachable zone on every
-     animation frame while the label claimed a growing wavefront — i.e. it
+     animation frame while the label claimed a growing wavefront, i.e. it
      never actually animated. Rebuilt with real per-frame shell expansion
      from both goals, mirroring the Map 0 style. Also removed ~80 lines of
      abandoned grid-layout attempts that were left as dead code.
 
   Maps 2 and 3 were already geometrically correct (verified by BFS +
-  adjacency checks) — only restyled to the new palette, logic untouched.
+  adjacency checks), only restyled to the new palette, logic untouched.
 -->
 <script>
 /* ── Goal strip ─────────────────────────────────────────────── */
@@ -1260,7 +1255,7 @@ const GOALS = [
     formal: '\\(K_{R_1} K_{R_2}(\\mathit{delivered}(p))\\)' },
   { natural: 'Every robot knows whether its assigned task has been completed.',
     formal: '\\(\\bigwedge_{i \\in \\mathcal{A}} \\mathrm{Kw}_i(\\mathit{done}(\\tau_i))\\)' },
-  { natural: 'No robot knows the identity of the adversarial agent — and every robot knows this.',
+  { natural: 'No robot knows the identity of the adversarial agent, and every robot knows this.',
     formal: '\\(C_{\\mathcal{A}}\\bigl(\\bigwedge_{i \\in \\mathcal{A}} \\neg K_i(\\mathit{adv}(j))\\bigr)\\)' },
   { natural: 'After the gossip round, every robot knows what every other robot last observed.',
     formal: '\\(\\bigwedge_{i,j \\in \\mathcal{A}} K_i K_j(\\mathit{obs}_j^{(t)})\\)' },
@@ -1313,13 +1308,13 @@ const GOALS = [
   const BLOCKED = '#262626';
 
   const steps = [
-    { lbl:'S₀ — ∅ (initial)', colored:[], sense:false },
-    { lbl:'S₁ — w₇ ∈ µX (goal base case)', colored:['n7'], sense:false },
-    { lbl:'S₂ — w₆ ∈ µX', colored:['n7','n6'], sense:false },
-    { lbl:'S₃ — w₅ ∈ µX', colored:['n7','n6','n5'], sense:false },
-    { lbl:'S₄ — sense(w₃) → free; w₃, w₂ enter µX', colored:['n7','n6','n5','n3','n2'], sense:true },
-    { lbl:'S₅ — w₁ ∈ µX', colored:['n7','n6','n5','n3','n2','n1'], sense:false },
-    { lbl:'S₆ = µX — fixed point reached', colored:['n7','n6','n5','n3','n2','n1','n0'], sense:false },
+    { lbl:'S₀ = ∅ (initial)', colored:[], sense:false },
+    { lbl:'S₁: w₇ ∈ µX (goal base case)', colored:['n7'], sense:false },
+    { lbl:'S₂: w₆ ∈ µX', colored:['n7','n6'], sense:false },
+    { lbl:'S₃: w₅ ∈ µX', colored:['n7','n6','n5'], sense:false },
+    { lbl:'S₄: sense(w₃) → free; w₃, w₂ enter µX', colored:['n7','n6','n5','n3','n2'], sense:true },
+    { lbl:'S₅: w₁ ∈ µX', colored:['n7','n6','n5','n3','n2','n1'], sense:false },
+    { lbl:'S₆ = µX (fixed point reached)', colored:['n7','n6','n5','n3','n2','n1','n0'], sense:false },
   ];
 
   function setNode(id, fill, stroke, textFill) {
@@ -1406,14 +1401,14 @@ const W = COLS * CELL, H = ROWS * CELL;
 const C = {
   FREE:'#EEF1F0',      // known free space
   OCC:'#262626',       // obstacle / wall
-  UNK:'#9C958C',       // unknown — neutral warm gray, always paired with "?" glyph
-  GOAL1:'#009E73',      // primary goal — teal
-  GOAL2:'#7B3F9E',      // secondary goal — purple
-  SAT:'#0072B2',        // certified-safe / explored backward-reachable region — blue
-  PATH:'#D55E00',       // extracted path — vermillion
-  ROBOT:'#D55E00',      // robot marker — vermillion (matches path)
+  UNK:'#9C958C',       // unknown: neutral warm gray, always paired with "?" glyph
+  GOAL1:'#009E73',      // primary goal: teal
+  GOAL2:'#7B3F9E',      // secondary goal: purple
+  SAT:'#0072B2',        // certified-safe / explored backward-reachable region: blue
+  PATH:'#D55E00',       // extracted path: vermillion
+  ROBOT:'#D55E00',      // robot marker: vermillion (matches path)
   GRID:'#CFCFCF',
-  FRONTIER:'#E6B800',   // boundary of a fixed point — gold
+  FRONTIER:'#E6B800',   // boundary of a fixed point: gold
 };
 
 function makeG(fill){ return Array.from({length:ROWS},()=>new Array(COLS).fill(fill)); }
@@ -1427,7 +1422,7 @@ function drawCell(ctx,c,r,color){
 }
 function drawUnknownGlyph(ctx,c,r){
   ctx.save();
-  ctx.font="bold 9px 'Space Grotesk',sans-serif";
+  ctx.font="bold 9px Arial,Helvetica,sans-serif";
   ctx.fillStyle='#5b564e'; ctx.textAlign='center';
   ctx.fillText('?', c*CELL+CELL/2, (ROWS-1-r)*CELL+CELL/2+3);
   ctx.restore();
@@ -1516,7 +1511,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 }
 
 /* ═══════════════════════════════════════════════════
-   MAP 0 — Animated path-building, 3 phases
+   MAP 0: Animated path-building, 3 phases
    FIXED LAYOUT: a single dividing wall at col 9 spans the whole map; its
    only gap (rows 3–4) is the UNKNOWN region itself, so "is the gap open"
    *is* the epistemic question. Verified by BFS: robot at (2,6) is
@@ -1623,7 +1618,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
       ctx.stroke();
       ctx.setLineDash([]);
       if(isSenseFrame){
-        ctx.font="italic 8.5px 'Source Serif 4',serif";
+        ctx.font="italic 8.5px Arial,Helvetica,sans-serif";
         ctx.fillStyle='#555';ctx.textAlign='center';
         ctx.fillText('E_sense', senseX, senseY-CELL*2.4);
       }
@@ -1634,10 +1629,10 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
     const lbl=document.getElementById('step-lbl-pathbuild');
     if(lbl){
-      if(f<PHASE1_END) lbl.textContent=`Phase 1 — µX backward shell S${f} (gap unknown, treated as blocked)`;
-      else if(f===SENSE_FRAME) lbl.textContent='Phase 2 — private sensing event resolves the gap';
-      else if(f<PATH_START) lbl.textContent=`Phase 2 — wavefront resumes through the gap (S${f-SENSE_FRAME} new shells)`;
-      else if(pathProgress<PATH.length) lbl.textContent=`Phase 3 — path step ${pathProgress+1}/${PATH.length-1}`;
+      if(f<PHASE1_END) lbl.textContent=`Phase 1: µX backward shell S${f} (gap unknown, treated as blocked)`;
+      else if(f===SENSE_FRAME) lbl.textContent='Phase 2: private sensing event resolves the gap';
+      else if(f<PATH_START) lbl.textContent=`Phase 2: wavefront resumes through the gap (S${f-SENSE_FRAME} new shells)`;
+      else if(pathProgress<PATH.length) lbl.textContent=`Phase 3: path step ${pathProgress+1}/${PATH.length-1}`;
       else lbl.textContent='µX certified path extracted';
     }
   }
@@ -1662,7 +1657,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
 
 /* ═══════════════════════════════════════════════════
-   MAP 1 — Branching µX/µY, two goals, non-linear plan
+   MAP 1: Branching µX/µY, two goals, non-linear plan
    FIXED: this previously recomputed the same full reachable zone on every
    frame while the label claimed a growing wavefront, so it never actually
    animated. Now both goals expand shell-by-shell, frame by frame, and the
@@ -1711,7 +1706,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
       if(g[r][c]!==C.FREE) continue;
       const k=`${c},${r}`;
       const in1=sat1.has(k), in2=sat2.has(k);
-      if(in1&&in2) g[r][c]='#7a8a86';      // overlap — shared approach
+      if(in1&&in2) g[r][c]='#7a8a86';      // overlap: shared approach
       else if(in1)  g[r][c]='#5aa8d4';      // µX only (upper, lighter blue tint)
       else if(in2)  g[r][c]='#b894d4';      // µY only (lower, lighter purple tint)
     }
@@ -1736,7 +1731,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
                      c2*CELL+CELL/2,(ROWS-1-r2)*CELL+CELL/2,C.GOAL2,2.5);
       }
       ctx.save();
-      ctx.font="italic 8.5px 'Source Serif 4',serif";
+      ctx.font="italic 8.5px Arial,Helvetica,sans-serif";
       ctx.textAlign='left';
       ctx.fillStyle=C.SAT;
       ctx.fillText('R₁ (µX)',5*CELL,(ROWS-1-9)*CELL-3);
@@ -1755,7 +1750,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
     if(lbl){
       lbl.textContent = settled
         ? 'µX ∧ µY = fixed point · branching plan extracted'
-        : `S${f} — backward wavefront from both goals`;
+        : `S${f}: backward wavefront from both goals`;
     }
   }
 
@@ -1778,10 +1773,10 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
 
 /* ═══════════════════════════════════════════════════
-   MAP 2 — Sensing-blocked µX, before/after pair
+   MAP 2: Sensing-blocked µX, before/after pair
    Geometry and hardcoded path verified correct by BFS + adjacency check
    (row-7 wall gap at cols 8–9, unknown rows 4–6 sit just above it). Logic
-   unchanged — only restyled to the new palette and given the "?" glyph.
+   unchanged, only restyled to the new palette and given the "?" glyph.
    ═══════════════════════════════════════════════════ */
 (function(){
   const ctxB=initCanvas('cv-sense-before'), ctxA=initCanvas('cv-sense-after');
@@ -1861,7 +1856,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
 
 /* ═══════════════════════════════════════════════════
-   MAP 3 — Dual-branch patrol (µX ∧ µY), static
+   MAP 3: Dual-branch patrol (µX ∧ µY), static
    Geometry identical to (and shares the verified arrays from) Map 1.
    Restyled only.
    ═══════════════════════════════════════════════════ */
@@ -1934,7 +1929,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
   drawRobot(ctx,2,6);
 
   ctx.save();
-  ctx.font="italic 8.5px 'Source Serif 4',serif";
+  ctx.font="italic 8.5px Arial,Helvetica,sans-serif";
   ctx.textAlign='left';
   ctx.fillStyle=C.SAT;
   ctx.fillText('R₁ (µX)', 5*CELL, (ROWS-1-9)*CELL-2);
@@ -1949,11 +1944,11 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
 
 /* ═══════════════════════════════════════════════════
-   MAP 4 — νX safety, greatest fixed point
+   MAP 4: νX safety, greatest fixed point
    FIXED: the old erosion rule ("remove a safe cell if it touches an
    unknown cell OR a just-removed cell", repeated to a fixpoint) cascades
    through this map's connected free region and converges to ZERO safe
-   cells — verified 105 -> 0 over 6 iterations, i.e. it silently drew
+   cells, verified 105 -> 0 over 6 iterations, i.e. it silently drew
    nothing. Replaced with a bounded 2-round erosion: a safety margin
    around each unknown region, which is still an iterative fixed-point
    computation but settles on a non-empty, legible safe core with a
@@ -2036,7 +2031,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 })();
 
 /* ═══════════════════════════════════════════════════
-   MAP 5 — Multi-agent notify: scouting + public announcement
+   MAP 5: Multi-agent notify: scouting + public announcement
    R1 walks to an unknown gap and scouts it. R2 is sitting at a decision
    point and, lacking that information, can only commit to the long way
    around (verified 21 steps). Once R1 broadcasts what it found, R2 is
@@ -2052,7 +2047,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
   const R2_C=2, R2_R=6;
   const GOAL_C=16, GOAL_R=6;
   const R1_START_C=8, R1_START_R=4;
-  const GAP_SHORT=[5,6];   // unknown shortcut gap, col 9 — the thing R1 scouts
+  const GAP_SHORT=[5,6];   // unknown shortcut gap, col 9, the thing R1 scouts
   const GAP_LONG=[9,10];   // always-known detour gap, col 9
   const GAP_SCOUT_C=9, GAP_SCOUT_R=5; // exact cell R1 walks into to resolve it
 
@@ -2069,9 +2064,9 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
     return g;
   }
 
-  const R1_COLOR = C.ROBOT;   // vermillion — scout / mover
-  const R2_COLOR = C.GOAL2;   // purple — second agent (matches R2 convention in maps 1/3)
-  const NOTIFY_COLOR = '#56B4E9'; // sky blue — communication signal, distinct from every fill already in use
+  const R1_COLOR = C.ROBOT;   // vermillion: scout / mover
+  const R2_COLOR = C.GOAL2;   // purple: second agent (matches R2 convention in maps 1/3)
+  const NOTIFY_COLOR = '#56B4E9'; // sky blue: communication signal, distinct from every fill already in use
 
   const gUninformed = makeBase();
   const gInformed = makeBase();
@@ -2123,7 +2118,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
       ctx.beginPath(); ctx.arc(gapPx.x,gapPx.y,CELL*1.8,0,Math.PI*2); ctx.stroke();
       ctx.setLineDash([]);
       if(f===SENSE_FRAME){
-        ctx.font="italic 8.5px 'Source Serif 4',serif";
+        ctx.font="italic 8.5px Arial,Helvetica,sans-serif";
         ctx.fillStyle='#555'; ctx.textAlign='center';
         ctx.fillText('E_sense', gapPx.x, gapPx.y-CELL*2);
       }
@@ -2140,7 +2135,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
       ctx.globalAlpha=0.85;
       ctx.beginPath(); ctx.arc(gapPx.x,gapPx.y,radius,0,Math.PI*2); ctx.stroke();
       ctx.setLineDash([]); ctx.globalAlpha=1;
-      ctx.font="italic 8.5px 'Source Serif 4',serif";
+      ctx.font="italic 8.5px Arial,Helvetica,sans-serif";
       ctx.fillStyle=NOTIFY_COLOR; ctx.textAlign='center';
       ctx.fillText('notify(gap free)', gapPx.x, gapPx.y-CELL*2);
       ctx.restore();
@@ -2180,7 +2175,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
     // thought / notify bubble above R2
     ctx.save();
-    ctx.font="bold 10px 'Space Grotesk',sans-serif";
+    ctx.font="bold 10px Arial,Helvetica,sans-serif";
     ctx.textAlign='center';
     if(f<MOVE_START){
       ctx.fillStyle = (f>=NOTIFY_START) ? NOTIFY_COLOR : '#9C958C';
@@ -2190,7 +2185,7 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
     // agent labels
     ctx.save();
-    ctx.font="italic 8px 'Source Serif 4',serif"; ctx.textAlign='center';
+    ctx.font="italic 8px Arial,Helvetica,sans-serif"; ctx.textAlign='center';
     ctx.fillStyle=R1_COLOR; ctx.fillText('R₁ (scout)', r1c*CELL+CELL/2, (ROWS-1-r1r)*CELL+CELL+10);
     ctx.fillStyle=R2_COLOR; ctx.fillText('R₂', R2_C*CELL+CELL/2, (ROWS-1-R2_R)*CELL+CELL+10+ (f<MOVE_START?0:0));
     ctx.restore();
@@ -2200,11 +2195,11 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
       if(f<R1_WALK_N){
         lbl.textContent = `R₁ moves toward the unknown gap (step ${f+1}/${R1_WALK_N-1})`;
       } else if(f===SENSE_FRAME){
-        lbl.textContent = 'R₁ scouts the gap — privately resolves blocked(gap)';
+        lbl.textContent = 'R₁ scouts the gap: privately resolves blocked(gap)';
       } else if(f<MOVE_START){
         lbl.textContent = `R₁ broadcasts: public announcement reaches R₂ (${f-NOTIFY_START+1}/${NOTIFY_FRAMES})`;
       } else if(f<MOVE_START+MOVE_FRAMES-1){
-        lbl.innerHTML = `\\(C_G(\\neg\\mathit{blocked}(c_{\\mathrm{gap}}))\\) established — R₂ commits to shortcut (step ${f-MOVE_START+1}/${MOVE_FRAMES-1})`;
+        lbl.innerHTML = `\\(C_G(\\neg\\mathit{blocked}(c_{\\mathrm{gap}}))\\) established. R₂ commits to shortcut (step ${f-MOVE_START+1}/${MOVE_FRAMES-1})`;
         MathJax.typesetPromise([lbl]);
       } else {
         lbl.innerHTML = `\\(C_G\\) resolved: 15-step shortcut vs. 21-step detour without notify`;

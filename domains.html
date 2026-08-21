@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coordination Domains · The Epistemic Robotics Project</title>
 <meta name="description" content="Four DEL coordination domains for UGV fleets: the planning task, the observability models, and animated policy execution.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
 MathJax = {
   tex: {
@@ -31,21 +29,21 @@ body{animation:pageIn .38s ease-out both}
   --black:#111111; --red:#C8102E; --gray:#5A5A5A;
   --border:#D6D6D6; --code-bg:#F4F4F4;
   --steel:#1A52A0; --panel:#FAFAFA;
-  --sg:'Space Grotesk',sans-serif;
-  --ss:'Source Serif 4',Georgia,serif;
-  --mono:'JetBrains Mono',monospace;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
 }
-html{font-size:17px;scroll-behavior:smooth}
+html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
-  font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
+  font-weight:400;line-height:1.6}
 .container{max-width:800px;margin:0 auto;padding:0 2.2rem}
 .container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
 
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
 .site-tag{font-family:var(--mono);font-size:.66rem;
-  color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+  color:var(--red);white-space:nowrap}
 header h1{font-family:var(--sg);font-size:1.18rem;
   font-weight:500;letter-spacing:-.01em}
 header h1 a{color:inherit;text-decoration:none}
@@ -62,7 +60,7 @@ header h1 a:hover{color:var(--red)}
 
 .hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
 .eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
+  letter-spacing:.1em;margin-bottom:1.3rem}
 .hero h2{font-family:var(--sg);
   font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
   line-height:1.15;letter-spacing:-.035em;max-width:660px}
@@ -73,7 +71,7 @@ header h1 a:hover{color:var(--red)}
 section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
 .sec-label{font-family:var(--mono);font-size:.66rem;
-  color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6rem}
+  color:var(--red);margin-bottom:1.6rem}
 h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
   letter-spacing:-.02em;margin-bottom:.9rem}
 h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
@@ -93,7 +91,7 @@ em.term{font-style:italic;color:#333}
 
 .ext-chip{
   display:inline-flex;align-items:center;gap:.35rem;
-  font-family:var(--mono);font-size:.67rem;letter-spacing:.06em;
+  font-family:var(--mono);font-size:.67rem;
   border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
   text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
   margin-left:.4rem;white-space:nowrap;
@@ -126,14 +124,14 @@ em.term{font-style:italic;color:#333}
 .seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
 .seg .btn:last-child{border-right:none}
 .ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
-  letter-spacing:.1em;text-transform:uppercase;margin-right:.15rem}
+  letter-spacing:.1em;margin-right:.15rem}
 
 /* ── theatre layout ───────────────────────────────────────── */
 .theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
 @media(max-width:860px){.theatre{grid-template-columns:1fr}}
 .panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
-.panel h5{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
 .kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
   font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
 .kw-row:last-child{border-bottom:none}
@@ -156,13 +154,13 @@ em.term{font-style:italic;color:#333}
 /* ── map / model pair ─────────────────────────────────────── */
 .mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
 @media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
-.mm-cap{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+.mm-cap{font-family:var(--sg);font-size:.68rem;
   color:var(--gray);margin-bottom:.5rem}
 .mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
   border-top:1px solid var(--border);padding-top:.8rem}
 @media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
 .mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
-.mm-k{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
 .mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
   border-left:2.5px solid var(--red);padding-left:.75rem}
 .bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
@@ -187,7 +185,7 @@ pre.code .c{color:var(--gray);font-style:italic}
 /* ── tables ───────────────────────────────────────────────── */
 table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
 table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
-  text-transform:uppercase;color:var(--gray);font-weight:400;
+  color:var(--gray);font-weight:400;
   text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
 table.data th:first-child{text-align:left}
 table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
@@ -204,7 +202,7 @@ table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font
 footer{border-top:2px solid var(--black);padding:2.2rem 0}
 .ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
 .ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
-.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);letter-spacing:.07em}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
 footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
 footer a:hover{color:var(--red)}
 
@@ -330,7 +328,7 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="fig-body">
         <svg id="pu-svg" viewBox="0 0 760 220" width="100%" style="max-width:760px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+             xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
           <defs>
             <marker id="pu-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
               <path d="M0,1 L7,4 L0,7" fill="none" stroke="#888" stroke-width="1.2"/>
@@ -381,7 +379,7 @@ footer a:hover{color:var(--red)}
             <text x="659" y="60" font-size="9" fill="#1A52A0" text-anchor="middle">R₂</text>
             <text x="596" y="128" font-size="9.5" fill="#111" text-anchor="middle">R₁ separates ⇒ Kw₁ p</text>
             <text x="596" y="146" font-size="9.5" fill="#1A52A0" text-anchor="middle">R₂ still reaches ¬p ⇒ ¬Kw₂ p</text>
-            <text x="596" y="170" font-size="10" font-family="'Source Serif 4',serif" font-style="italic" fill="#5A5A5A" text-anchor="middle">the null copies are exactly what keeps R₂ ignorant</text>
+            <text x="596" y="170" font-size="10" font-family="Arial,Helvetica,sans-serif" font-style="italic" fill="#5A5A5A" text-anchor="middle">the null copies are exactly what keeps R₂ ignorant</text>
           </g>
         </svg>
       </div>
@@ -486,7 +484,7 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="fig-body">
         <svg id="rx-svg" viewBox="0 0 700 170" width="100%" style="max-width:700px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+             xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
           <g id="rx-bays"></g>
           <circle id="rx-wave" class="wave" cx="0" cy="76" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
           <g id="rx-agents"></g>
@@ -532,7 +530,7 @@ footer a:hover{color:var(--red)}
           <div>
             <div class="mm-cap">metric layer, occupancy grid</div>
             <svg id="mm-map" viewBox="0 0 512 282" width="100%" style="display:block"
-                 xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+                 xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
               <g id="mm-cells"></g>
               <g id="mm-fov"></g>
               <g id="mm-bays"></g>
@@ -548,7 +546,7 @@ footer a:hover{color:var(--red)}
           <div>
             <div class="mm-cap">epistemic layer, state space</div>
             <svg id="mm-model" viewBox="0 0 300 286" width="100%" style="display:block"
-                 xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+                 xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
               <g id="mm-edges"></g>
               <g id="mm-worlds"></g>
               <text id="mm-mcap" x="150" y="266" font-size="10.5" fill="#5A5A5A" text-anchor="middle"></text>
@@ -615,7 +613,7 @@ footer a:hover{color:var(--red)}
         <div class="theatre">
           <div>
             <svg id="th-svg" viewBox="0 0 660 250" width="100%" style="display:block"
-                 xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+                 xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
               <g id="th-bays"></g>
               <circle id="th-wave" class="wave" cx="0" cy="96" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
               <circle id="th-scan" class="scanring" cx="0" cy="96" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>
@@ -636,7 +634,7 @@ footer a:hover{color:var(--red)}
             <div class="panel" style="margin-bottom:.7rem">
               <h5>Epistemic model</h5>
               <svg id="th-model" viewBox="0 0 240 96" width="100%"
-                   xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+                   xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
                 <circle id="m-w1" class="wnode" cx="66" cy="44" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
                 <text x="66" y="38" font-size="9" text-anchor="middle" fill="#111">target</text>
                 <text x="66" y="55" font-size="9" text-anchor="middle" fill="#111">b3</text>
@@ -693,7 +691,7 @@ footer a:hover{color:var(--red)}
       </div>
       <div class="fig-body">
         <svg id="fc-svg" viewBox="0 0 660 200" width="100%" style="max-width:660px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk',sans-serif">
+             xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
           <g id="fc-bays"></g>
           <circle id="fc-wave" class="wave" cx="0" cy="86" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
           <circle id="fc-scan" class="scanring" cx="0" cy="86" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>

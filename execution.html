@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Execution &#183; The Epistemic Robotics Project</title>
 <meta name="description" content="Executing epistemic policies on ROS 2: the policy on the wire, a behavior tree with knowledge guards and DEL updates, and the epistemic state it consults.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
 MathJax = {
   tex: {
@@ -31,21 +29,21 @@ body{animation:pageIn .38s ease-out both}
   --black:#111111; --red:#C8102E; --gray:#5A5A5A;
   --border:#D6D6D6; --code-bg:#F4F4F4;
   --steel:#1A52A0; --panel:#FAFAFA;
-  --sg:'Space Grotesk',sans-serif;
-  --ss:'Source Serif 4',Georgia,serif;
-  --mono:'JetBrains Mono',monospace;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
 }
-html{font-size:17px;scroll-behavior:smooth}
+html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
-  font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased}
+  font-weight:400;line-height:1.6}
 .container{max-width:800px;margin:0 auto;padding:0 2.2rem}
 .container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
 
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
 .site-tag{font-family:var(--mono);font-size:.66rem;
-  color:var(--red);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+  color:var(--red);white-space:nowrap}
 header h1{font-family:var(--sg);font-size:1.18rem;
   font-weight:500;letter-spacing:-.01em}
 header h1 a{color:inherit;text-decoration:none}
@@ -62,7 +60,7 @@ header h1 a:hover{color:var(--red)}
 
 .hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
 .eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
-  letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.3rem}
+  letter-spacing:.1em;margin-bottom:1.3rem}
 .hero h2{font-family:var(--sg);
   font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
   line-height:1.15;letter-spacing:-.035em;max-width:660px}
@@ -73,7 +71,7 @@ header h1 a:hover{color:var(--red)}
 section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
 .sec-label{font-family:var(--mono);font-size:.66rem;
-  color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6rem}
+  color:var(--red);margin-bottom:1.6rem}
 h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
   letter-spacing:-.02em;margin-bottom:.9rem}
 h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
@@ -93,7 +91,7 @@ em.term{font-style:italic;color:#333}
 
 .ext-chip{
   display:inline-flex;align-items:center;gap:.35rem;
-  font-family:var(--mono);font-size:.67rem;letter-spacing:.06em;
+  font-family:var(--mono);font-size:.67rem;
   border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
   text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
   margin-left:.4rem;white-space:nowrap;
@@ -126,14 +124,14 @@ em.term{font-style:italic;color:#333}
 .seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
 .seg .btn:last-child{border-right:none}
 .ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
-  letter-spacing:.1em;text-transform:uppercase;margin-right:.15rem}
+  letter-spacing:.1em;margin-right:.15rem}
 
 /* ── theatre layout ───────────────────────────────────────── */
 .theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
 @media(max-width:860px){.theatre{grid-template-columns:1fr}}
 .panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
-.panel h5{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
 .kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
   font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
 .kw-row:last-child{border-bottom:none}
@@ -156,13 +154,13 @@ em.term{font-style:italic;color:#333}
 /* ── map / model pair ─────────────────────────────────────── */
 .mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
 @media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
-.mm-cap{font-family:var(--sg);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+.mm-cap{font-family:var(--sg);font-size:.68rem;
   color:var(--gray);margin-bottom:.5rem}
 .mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
   border-top:1px solid var(--border);padding-top:.8rem}
 @media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
 .mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
-.mm-k{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
 .mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
   border-left:2.5px solid var(--red);padding-left:.75rem}
 .bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
@@ -187,7 +185,7 @@ pre.code .c{color:var(--gray);font-style:italic}
 /* ── tables ───────────────────────────────────────────────── */
 table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
 table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
-  text-transform:uppercase;color:var(--gray);font-weight:400;
+  color:var(--gray);font-weight:400;
   text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
 table.data th:first-child{text-align:left}
 table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
@@ -204,7 +202,7 @@ table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font
 footer{border-top:2px solid var(--black);padding:2.2rem 0}
 .ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
 .ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
-.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);letter-spacing:.07em}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
 footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
 footer a:hover{color:var(--red)}
 
@@ -272,7 +270,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     <div class="rule"></div>
     <p class="hero-p">
       A planner that reasons about knowledge is only half of an autonomous system.
-      The other half has to execute what it returns — and what it returns is not a
+      The other half has to execute what it returns, and what it returns is not a
       sequence of actions but a policy, branching on what the robot turns out to
       observe. This page reports the execution layer built for that: the shape a
       policy takes on the wire, the behavior tree that runs it, and the epistemic
@@ -295,7 +293,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     <p>
       PlanSys2 executes a plan by rendering it as a behavior tree: one subtree per
       action, in order, each guarding its action with the PDDL conditions around
-      it. Nothing about that is wrong — it is exactly right for a plan that commits
+      it. Nothing about that is wrong. It is exactly right for a plan that commits
       to one future. Every assumption in it fails for a plan that does not.
     </p>
 
@@ -309,7 +307,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
     <p>
       <b>An action has one name.</b> The grounder writes an action as a single
-      token — <span class="mono-inline">pickup-A-hold_r2</span> — while the executor
+      token, <span class="mono-inline">pickup-A-hold_r2</span>, while the executor
       splits <span class="mono-inline">(pickup r2 A)</span> into a name and
       parameters and looks the name up in the PDDL domain to find the behavior tree
       that drives the hardware. These are two vocabularies, not two spellings of
@@ -372,7 +370,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       One subtlety cost real work. The executor keys its table of running actions by
       action expression and start time in milliseconds. Two branches running the
       same action at the same time would collide onto one entry and drive one action
-      executor from two places — invisible until the day the second branch is taken,
+      executor from two places, invisible until the day the second branch is taken,
       because branches are alternatives that never both run. Times are therefore
       assigned uniquely across the whole policy, each node strictly after its parent
       ends.
@@ -387,9 +385,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     <h3>PlanSys2's subtree, with three things around it</h3>
 
     <p>
-      Each policy node renders as the PlanSys2 action subtree, unchanged — the same
-      nodes driving the same action performers against the same problem expert —
-      wrapped in what a sequence cannot express.
+      Each policy node renders as the PlanSys2 action subtree, unchanged, the same       nodes driving the same action performers against the same problem expert, wrapped in what a sequence cannot express.
     </p>
 
     <div class="fig">
@@ -410,10 +406,10 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
             .bx-e{fill:#fff;stroke:#C8102E;stroke-width:1.6}
             .bx-p{fill:#F4F4F4;stroke:#D6D6D6;stroke-width:1}
             .bx-o{fill:none;stroke:#111;stroke-width:1.4}
-            .t{font-family:'Space Grotesk',sans-serif;font-size:12.5px;fill:#111}
-            .t-s{font-family:'Space Grotesk',sans-serif;font-size:11px;fill:#5A5A5A}
-            .t-m{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#5A5A5A}
-            .t-r{font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:#C8102E;letter-spacing:.06em}
+            .t{font-family:Arial,Helvetica,sans-serif;font-size:12.5px;fill:#111}
+            .t-s{font-family:Arial,Helvetica,sans-serif;font-size:11px;fill:#5A5A5A}
+            .t-m{font-family:'Courier New',Courier,monospace;font-size:10px;fill:#5A5A5A}
+            .t-r{font-family:'Courier New',Courier,monospace;font-size:9.5px;fill:#C8102E;}
             .ln{stroke:#5A5A5A;stroke-width:1;fill:none}
           </style>
 
@@ -519,9 +515,9 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
     <p>
       Two of these deserve their reasoning stated. <b>An action changes what agents
-      know by more than its own effects</b> — a public announcement informs everyone
+      know by more than its own effects</b>. A public announcement informs everyone
       who was listening, and an observation that finds nothing still rules worlds
-      out — which is why the update is a distinct node rather than part of applying
+      out, which is why the update is a distinct node rather than part of applying
       an effect.
     </p>
 
@@ -530,7 +526,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       defaulting to a branch. Every branch was built for a different belief; running
       one anyway is a robot acting confidently on a belief nothing supports. The
       failure propagates to the executor, whose answer to a failed plan is to
-      replan — from the state that actually resulted.
+      replan, from the state that actually resulted.
     </p>
 
     <div class="warn">
@@ -573,7 +569,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       what makes it a belief state rather than a log. When it disagrees with what the
       robot observed, the disagreement surfaces at
       <span class="mono-inline">apply_action</span> as an outcome the model cannot
-      account for — a reason to replan, not to overwrite the model quietly.
+      account for, a reason to replan, not to overwrite the model quietly.
     </p>
 
     <p>
@@ -686,8 +682,7 @@ executor:
       Three of these are worth naming. Every rendered tree is handed to the real
       BehaviorTree.CPP parser, because a tree that will not parse is worthless
       however good it looks. The formula written by the planner is parsed back by
-      the state and compared as a <em class="term">formula</em>, not as a string —
-      the two are separate processes with separate interning, and nothing but that
+      the state and compared as a <em class="term">formula</em>, not as a string. The two are separate processes with separate interning, and nothing but that
       agreement connects them. And the node library is loaded exactly as the
       executor loads it, so the extension mechanism is checked rather than assumed.
     </p>
@@ -705,8 +700,8 @@ executor:
       <p>
         The observation a sensing action produces is supplied on a port that a
         domain-specific tree binds to whatever its performer reports. Wiring that to
-        real perception — so the branch a robot takes is chosen by its sensors rather
-        than by a model that happens to designate one world — is the next step, and
+        real perception, so that the branch a robot takes is chosen by its sensors rather
+        than by a model that happens to designate one world, is the next step, and
         the one that turns this from an architecture into a demonstration.
       </p>
     </div>
