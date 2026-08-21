@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.27)  21 AUG 2026 12:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.27)  21 AUG 2026 15:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -31,13 +31,6 @@ Package: inputenc 2021/02/14 v1.3d Input encoding file
 (/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
 )
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/helvet.sty
-Package: helvet 2020/03/25 PSNFSS-v9.3 (WaS) 
-
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
-Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks18
-))
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2022/01/26 3.70 The Babel package
 \babel@savecnt=\count193
@@ -64,6 +57,10 @@ Package babel Info: Hyphen rules for 'newzealand' set to \l@english
 (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
 
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks18
+)
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 
@@ -502,15 +499,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip74
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 41.
-LaTeX Font Info:    Trying to load font information for T1+phv on input line 78
-.
-
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd
-File: t1phv.fd 2020/03/25 scalable font definitions for T1/phv.
-)
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 10.40245pt on input line 78.
+Package hyperref Info: Option `colorlinks' set `true' on input line 39.
 
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
@@ -520,24 +509,24 @@ File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 (./fleet_scenarios.aux)
 \openout1 = `fleet_scenarios.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -595,26 +584,26 @@ Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Info: Redefining \microtypecontext on input line 78.
-Package microtype Info: Applying patch `item' on input line 78.
-Package microtype Info: Applying patch `toc' on input line 78.
-Package microtype Info: Applying patch `eqnum' on input line 78.
-Package microtype Info: Applying patch `footnote' on input line 78.
+LaTeX Info: Redefining \microtypecontext on input line 76.
+Package microtype Info: Applying patch `item' on input line 76.
+Package microtype Info: Applying patch `toc' on input line 76.
+Package microtype Info: Applying patch `eqnum' on input line 76.
+Package microtype Info: Applying patch `footnote' on input line 76.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 78.
+LaTeX Info: Redefining \showhyphens on input line 76.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `phv' (encoding: T1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
 
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
+(RS)
+)
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count312
@@ -638,7 +627,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \c@lstlisting=\count318
-Package hyperref Info: Link coloring ON on input line 78.
+Package hyperref Info: Link coloring ON on input line 76.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
@@ -651,28 +640,25 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count319
 )
-LaTeX Info: Redefining \ref on input line 78.
-LaTeX Info: Redefining \pageref on input line 78.
-LaTeX Info: Redefining \nameref on input line 78.
+LaTeX Info: Redefining \ref on input line 76.
+LaTeX Info: Redefining \pageref on input line 76.
+LaTeX Info: Redefining \nameref on input line 76.
 
 (./fleet_scenarios.out) (./fleet_scenarios.out)
 \@outlinefile=\write3
 \openout3 = `fleet_scenarios.out'.
 
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 16.41594pt on input line 80.
-LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 16.41594pt on input line 80.
-LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 11.39996pt on input line 80.
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 11.39996pt on input line 80.
+LaTeX Font Info:    Trying to load font information for T1+cmss on input line 7
+8.
 
-(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-cmr.cfg
-File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
-(RS)
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1cmss.fd
+File: t1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 80.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `cmss' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 78.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -681,7 +667,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 80.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 78.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -689,35 +675,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-)
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 9.49997pt on input line 83.
-LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 9.49997pt on input line 83.
-LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 86.
-LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
-(Font)              scaled to size 9.49997pt on input line 86.
-LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10.95> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 117.
-LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
-(Font)              scaled to size 10.40245pt on input line 117.
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 7.59998pt on input line 124.
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 5.69998pt on input line 124.
-LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 10.40245pt on input line 131.
+) [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-(./tables/fleet_scenarios.tex
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 8.54997pt on input line 8.
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
-
-])
+] (./tables/fleet_scenarios.tex)
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
-54.
- (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
+52.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -725,19 +689,10 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
  [2]
-Overfull \hbox (0.68117pt too wide) in paragraph at lines 207--210
-[] []\T1/phv/b/n/10.95 (-20) Ver-sions.[] \T1/phv/m/n/10.95 (-20) ePlan-Sys \T1
-/cmtt/m/n/10.95 feature/epddl-front-end \T1/phv/m/n/10.95 (-20) at \T1/cmtt/m/n
-/10.95 0050a87\T1/phv/m/n/10.95 (-20) ; Aletheia at \T1/cmtt/m/n/10.95 d530d25\
-T1/phv/m/n/10.95 (-20) ; plank at \T1/cmtt/m/n/10.95 a682480\T1/phv/m/n/10.95 (
--20) . 
- []
-
-
-Overfull \hbox (23.19426pt too wide) in paragraph at lines 238--246
-[] []\T1/phv/b/n/10.95 (-20) Both routes to the plan-ner agree.[] \T1/phv/m/n/1
-0.95 (-20) ePlan-Sys reaches Aletheia two ways: \T1/cmtt/m/n/10.95 plansys2_epi
-stemic_planner
+Overfull \hbox (40.63358pt too wide) in paragraph at lines 236--244
+[] []\T1/cmr/bx/n/10.95 (-20) Both routes to the plan-ner agree.[] \T1/cmr/m/n/
+10.95 (-20) ePlan-Sys reaches Aletheia two ways: \T1/cmtt/m/n/10.95 plansys2_ep
+istemic_planner
  []
 
 [3] [4] (./fleet_scenarios.aux)
@@ -745,30 +700,37 @@ Package rerunfilecheck Info: File `fleet_scenarios.out' has not changed.
 (rerunfilecheck)             Checksum: 0828DCAEA08B5531A5ED3D4F1623DB50;896.
  ) 
 Here is how much of TeX's memory you used:
- 18547 strings out of 480247
- 293115 string characters out of 5896151
- 690780 words of memory out of 5000000
- 35902 multiletter control sequences out of 15000+600000
- 527392 words of font info for 258 fonts, out of 8000000 for 9000
+ 18417 strings out of 480247
+ 291949 string characters out of 5896151
+ 697897 words of memory out of 5000000
+ 35852 multiletter control sequences out of 15000+600000
+ 501099 words of font info for 188 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,12n,63p,1012b,1871s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texliv
-e/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cms
-y10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/share/
-texmf/fonts/type1/public/cm-super/sftt0900.pfb></usr/share/texmf/fonts/type1/pu
-blic/cm-super/sftt1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helve
-tic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on fleet_scenarios.pdf (4 pages, 177478 bytes).
+ 60i,11n,63p,1012b,1086s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+ti9.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/
+texmf/fonts/type1/public/cm-super/sfbx1095.pfb></usr/share/texmf/fonts/type1/pu
+blic/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx17
+28.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0900.pfb></usr/share/t
+exmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/pub
+lic/cm-super/sfrm1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm120
+0.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfss0900.pfb></usr/share/te
+xmf/fonts/type1/public/cm-super/sfss1095.pfb></usr/share/texmf/fonts/type1/publ
+ic/cm-super/sfss1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1000
+.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1095.pfb></usr/share/tex
+mf/fonts/type1/public/cm-super/sftt0900.pfb></usr/share/texmf/fonts/type1/publi
+c/cm-super/sftt1095.pfb>
+Output written on fleet_scenarios.pdf (4 pages, 373877 bytes).
 PDF statistics:
- 179 PDF objects out of 1000 (max. 8388607)
- 144 compressed objects within 2 object streams
+ 228 PDF objects out of 1000 (max. 8388607)
+ 173 compressed objects within 2 object streams
  55 named destinations out of 1000 (max. 500000)
- 78905 words of extra memory for PDF output out of 89155 (max. 10000000)
+ 64569 words of extra memory for PDF output out of 74296 (max. 10000000)
 
