@@ -56,6 +56,33 @@ header h1{font-family:var(--sg);font-size:1.18rem;
 .hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
   border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
 @media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+@media(max-width:560px){
+  .nav-menu{width:100%;margin:.6rem 0 0}
+  .nav-panel{left:0;right:auto;width:100%;min-width:0}
+}
 .hero{padding:4.5rem 0 3.2rem;border-bottom:1px solid var(--border)}
 .eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
   letter-spacing:.1em;margin-bottom:1.3rem}
@@ -231,11 +258,21 @@ footer a:hover{color:var(--red)}
     <div class="hdr-inner">
       <span class="site-tag">epistemic-robotics</span>
       <h1>The Epistemic Robotics Project</h1>
-      <nav class="hdr-nav" aria-label="Sections">
-        <a href="index.html" aria-current="page">Overview</a>
-        <a href="domains.html">Domains</a>
-        <a href="execution.html">Execution</a>
-      </nav>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel">
+          <h6>Pages</h6>
+          <a href="index.html" aria-current="page">Overview</a>
+          <a href="domains.html">Domains</a>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <h6>Reports (PDF)</h6>
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+        </div>
+      </details>
     </div>
   </div>
 </header>
@@ -2228,6 +2265,20 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 })();
 
 })(); // end canvas IIFE
+</script>
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  document.addEventListener('click', function(e){
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
 </script>
 </body>
 </html>
