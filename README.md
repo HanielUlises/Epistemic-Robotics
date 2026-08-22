@@ -16,19 +16,17 @@ A cell that has never been observed is excluded from the reachability computatio
 
 When two goals must both be reached, the plan is a tree rather than a sequence: a shared approach followed by a branch, each subtree the winning region of its own reachability formula.
 
-<p align="center">
+<figure align="center">
   <img src="docs/img/branching-plan.png" alt="A shared approach followed by a branch toward two goals" />
-</p>
-
-**Figure 2.** Branching plan over two targets.
+  <figcaption><b>Figure 2.</b> Branching plan over two targets.</figcaption>
+</figure>
 
 The dual computation bounds where an agent may go rather than where it can arrive. The greatest fixed point retains the cells that remain within the known-free region under every step; its boundary is the exploration frontier, and the frontier is where a further sensing action is worth spending.
 
-<p align="center">
+<figure align="center">
   <img src="docs/img/safe-region.png" alt="The greatest fixed point and its frontier" />
-</p>
-
-**Figure 3.** Safe known region and exploration frontier.
+  <figcaption><b>Figure 3.</b> Safe known region and exploration frontier.</figcaption>
+</figure>
 
 ## Components
 
