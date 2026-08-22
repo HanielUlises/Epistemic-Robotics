@@ -17,7 +17,11 @@
 
     The planner is deliberately decoupled from the epistemic world manager:
     it receives a snapshot of the current Kripke model on /epistemic/state
-    and publishes a Nav2-compatible path on /mu_planner/path.
+    and publishes a Nav2-compatible path on /mu_planner/path, together with
+    the poses a sensing action has to be taken from on /mu_planner/sensing.
+
+    The snapshot format, and how a zone name in a query becomes a set of
+    cells, are documented in include/mu_path_planner/epistemic_state.hpp.
   </description>
   <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
   <license>Apache-2.0</license>
@@ -29,6 +33,7 @@
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>epistemic_msgs</depend>
+  <depend>nlohmann-json-dev</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -139,10 +139,10 @@ MuReachResult mu_reach(
 //
 // ⟨sense⟩Z: from a sensing cell s, executing sense may produce K_i(at_goal).
 // We model this as: s ∈ sensing_cells ∧ s ∈ safe → s ∈ Z_{k+1} if at_goal
-// is *potentially* true at s (captured by sensing_cells being pre-computed
-// as the set of cells within sensor range of the goal zone).
-//
-// In TT-II this will be tightened to depend on the actual KD45/S5 model.
+// is *potentially* true at s. Which cells those are is read off the model in
+// epistemic_state.hpp: the cells within sensor range of a cell the agent
+// cannot yet decide the goal zone about, together with the goal cells it
+// already knows to be goal cells.
 // ---------------------------------------------------------------------------
 
 EpistemicMuReachResult mu_reach_epistemic(
@@ -155,9 +155,8 @@ EpistemicMuReachResult mu_reach_epistemic(
     EpistemicMuReachResult result;
 
     // The epistemic goal set = ontic goal cells where the agent can *know*
-    // it is there.  For now: K_i(at_goal) holds at cells where at_goal
-    // is true AND the agent has sensed it (i.e., cell is in sensing_cells
-    // and ontic_goal_set).
+    // it is there: K_i(at_goal) holds at cells where at_goal is true and the
+    // agent has settled it, which is to say the cell is in both sets.
     std::unordered_set<CellIdx> epistemic_goal;
     for (CellIdx c : ontic_goal_set)
         if (sensing_cells.count(c))

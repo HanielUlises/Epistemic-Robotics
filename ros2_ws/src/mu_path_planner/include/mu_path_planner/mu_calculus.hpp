@@ -98,8 +98,10 @@ MuReachResult mu_reach(
 // would make K_i(at_goal) true.  We model this as a set of "sensing cells"
 // where the agent can observe whether at_goal holds.
 //
-// This is a conservative approximation: in TT-II, sensing_cells will be
-// derived from the current epistemic model's uncertainty over at_goal.
+// The sensing cells are derived from the agent's uncertainty over the goal
+// zone in the current Kripke model: the cells some world it cannot rule out
+// counts as goal cells and another does not. That derivation is in
+// epistemic_state.hpp; this file only takes the fixed point.
 // ---------------------------------------------------------------------------
 
 struct EpistemicMuReachResult : MuReachResult {
