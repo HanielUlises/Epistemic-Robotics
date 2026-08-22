@@ -18,7 +18,13 @@
 \usepackage{listings}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{adjustbox}
 \usepackage[hidelinks]{hyperref}
+
+\usetikzlibrary{arrows.meta, positioning, fit, backgrounds, shapes.geometric, calc}
+\pgfplotsset{compat=1.18}
 
 %  ---  Palette shared with the companion reports  ---
 \definecolor{ink}{RGB}{26,30,36}
@@ -66,10 +72,33 @@
 }
 
 \newcommand{\Kw}{\mathit{Kw}}
+\newcommand{\blocked}{\mathit{blocked}}
+\newcommand{\atj}{\mathit{atJ}}
+
+%  ---  Shared TikZ styles, so every figure in the note reads the same  ---
+\tikzset{
+  world/.style     = {circle, draw=steel, thick, minimum size=15mm,
+                      inner sep=0pt, align=center, font=\scriptsize},
+  designated/.style= {world, double, double distance=1pt},
+  rel/.style       = {draw=steellight, thick},
+  rellabel/.style  = {font=\scriptsize\itshape, text=slate, inner sep=1.5pt,
+                      fill=white},
+  act/.style       = {rectangle, rounded corners=2pt, draw=steel, thick,
+                      fill=mist, align=center, font=\scriptsize,
+                      inner sep=3.5pt, minimum height=7mm},
+  sense/.style     = {act, fill=steellight!25, draw=steel},
+  leaf/.style      = {ellipse, draw=rulegrey, thick, align=center,
+                      font=\scriptsize, inner sep=2pt},
+  flow/.style      = {-{Stealth[length=2.4mm]}, draw=slate, thick},
+  flowlabel/.style = {font=\scriptsize, text=slate, inner sep=2pt},
+  panel/.style     = {draw=rulegrey, dashed, rounded corners=2pt,
+                      inner sep=3.5mm},
+  paneltitle/.style= {font=\scriptsize\bfseries, text=slate},
+}
 
 \title{\bfseries Three Fleet Scenarios for ePlanSys\\[2pt]
-\large\normalfont\color{slate}EPDDL survey missions, grounded with \textsf{plank}
-and solved with Aletheia}
+\large\normalfont\color{slate}EPDDL survey missions, grounded with \textsf{plank},
+solved with Aletheia, executed as behavior trees}
 \author{}
 \date{}
 
@@ -80,108 +109,528 @@ and solved with Aletheia}
 
 \begin{abstract}
 \noindent
-ePlanSys shipped one worked example, the muddy children puzzle. It is the right
-example for explaining what an epistemic goal \emph{is} and the wrong one for a
-robotics user, who has no children and no mud. This note records three
-robot-fleet scenarios written to replace it, at three sizes, together with what
-Aletheia does on each. All three are checked into the ePlanSys tree as EPDDL
-sources with matching action mappings; the two smaller ones are also regression
-tests. The scenarios are deliberately the same three mechanisms at every size,
-namely drive, look and say what you saw, so that what grows between them is
-the search and not the modelling. Across the three, ground actions go from 8 to 48 and
-expanded nodes from 17 to 5.03~million, while peak resident memory moves from
-4.34~MB to 4.85~MB.
+A fleet of survey robots shares a depot. The routes out of it may be blocked by
+debris; only a robot standing at a junction can see down a route; and a robot
+watching another one look learns \emph{that} it looked, not \emph{what} it saw.
+Before the fleet commits to a route, every robot has to know which routes are
+passable. This note records three scenarios built around that situation, at
+three sizes, together with their formalization in EPDDL, the policies Aletheia
+returns for them, what those policies cost to find, and how ePlanSys executes
+them. The scenarios are deliberately the same three mechanisms at every size
+--- drive, look, and say what you saw --- so that what grows between them is the
+search and not the modelling. Across the three, ground actions go from 8 to 48
+and expanded nodes from 17 to 5.03~million, while peak resident memory moves
+from 4.34~MB to 4.85~MB. The two smaller scenarios are regression tests of the
+whole stack, planner through executor; the third is shipped as an example
+because a minute of search does not belong in a suite that runs on every push.
 \end{abstract}
 
-\section{Why a fleet}
+\setcounter{tocdepth}{1}
+{\small\tableofcontents}
+\vspace{0.6em}
 
-The muddy children puzzle is a good teaching instance and a poor advertisement.
-Nothing in it moves, nobody has a sensor, and the only action is a
-simultaneous public announcement that no robot performs. A reader wanting to
-know whether epistemic planning is worth the trouble on a real platform learns
-nothing from it about what an action costs, what a sensor observes, or what a
-radio does.
+\section{The situation}
 
-The scenarios below are built around a single situation that is common in fleet
-robotics and inexpressible in PDDL:
+The scenarios are built around one situation that is common in fleet robotics
+and inexpressible in classical planning:
 
 \begin{quote}
 A corridor may be blocked. Only a robot standing at the junction can see it.
 The rest of the fleet has to route around it, so the rest of the fleet has to
-know, and watching a robot look tells you that it looked, not what it saw.
+know --- and watching a robot look tells you that it looked, not what it saw.
 \end{quote}
 
-Three things follow, and they are the three mechanisms every scenario uses.
-\emph{Driving} is ontic and public: it changes the world, and the fleet tracks
-its members' positions. \emph{Looking} is semi-private sensing: the robot at
-the junction learns the answer and the others learn only that a look happened.
-\emph{Reporting} is a public announcement guarded by the speaker's knowledge,
-so a robot can broadcast only what it actually found; because knowledge is
-factive, hearing it settles the matter for everyone.
+Three properties of that paragraph put it outside PDDL, and each of them is a
+mechanism the scenarios use.
 
-The goal is always of the form $\Kw_i(\text{blocked})$, knowing
-\emph{whether} rather than knowing \emph{that}. This is not a stylistic choice. A goal
-of $K_i(\text{blocked})$ is unachievable in the worlds where the corridor is
-clear, so a plan for it would be unexecutable about half the time.
+\paragraph{The initial state is not a state} Whether the corridor is blocked is
+not something the mission planner knows. A PDDL problem must assert it or deny
+it; either assertion produces a plan that is correct only if the assertion
+happens to hold. What is needed instead is an initial \emph{model} in which both
+possibilities are live.
 
-\section{The three scenarios}
+\paragraph{An action's effect can be on knowledge alone} Looking down the
+corridor changes nothing about the corridor. Broadcasting what was found
+changes nothing about the corridor either. Both change what the fleet can act
+on, and a formalism whose actions only add and delete facts has to encode that
+as a fiction --- a \texttt{told} predicate, an \texttt{observed} flag --- which
+then has to be maintained by hand and cannot express the difference between
+seeing something and being told it.
 
-\paragraph{Corridor} Two robots, one route. Either could drive out and look,
-but looking is semi-private, so one robot sensing does not inform the other.
-Both could go and look, at four actions; one can go, look and broadcast, at
-three. The planner finds the second, which is to say it works out that talking
-is cheaper than everybody going to see for themselves.
+\paragraph{Who observes what is part of the action} A camera on one robot is
+neither private nor public. The fleet sees the behaviour and not the image, and
+that distinction is the entire reason the mission needs a radio.
 
-\paragraph{Depot} Three robots, two routes, and a depot rule: a robot
-dispatched down a route stays on it. No robot can survey both routes, so the
-fleet must split the work, and the robot that never moves ends up knowing both
-answers purely by listening.
+The consequence is that a solution to any of these scenarios is not a sequence
+of actions. It is a policy: a tree that senses and then branches on what the
+sensing turned out to observe, with one continuation per outcome and a
+guarantee on every branch.
 
-\paragraph{Survey} Four robots, three routes, same rules. Written to be big
-rather than clever: it adds no mechanism, only size. Eight worlds the fleet
-cannot tell apart to begin with, twelve goal conjuncts, and forty-eight ground
-actions.
+\subsection{The pipeline}
+
+Figure~\ref{fig:pipeline} is the route from the two source files to a robot
+that moves. It is worth having in view because the three scenarios exercise
+different parts of it: the numbers in \S\ref{sec:results} are the middle of the
+diagram, and the claims in \S\ref{sec:execution} are the right-hand end.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max width=\textwidth}
+\begin{tikzpicture}[x=1cm, y=1cm]
+  % --- row 1: from sources to a policy, left to right ---
+  \node[act, minimum width=26mm] (epddl)  at (0,0)    {domain\,+\,problem\\\textsf{.epddl}};
+  \node[act, minimum width=20mm] (plank)  at (3.7,0)  {\textsf{plank}\\grounder};
+  \node[act, minimum width=24mm] (task)   at (7.4,0)  {grounded task\\IePC \textsf{.json}};
+  \node[sense, minimum width=24mm] (search) at (11.1,0) {Aletheia\\AO$^{*}$ search};
+  \node[act, minimum width=26mm] (policy) at (14.9,0) {policy\\\textsf{plansys2\_msgs/Plan}};
+
+  \draw[flow] (epddl)  -- (plank);
+  \draw[flow] (plank)  -- (task);
+  \draw[flow] (task)   -- (search);
+  \draw[flow] (search) -- (policy);
+
+  % --- row 2: from a policy to a robot, right to left ---
+  \node[act, minimum width=26mm] (builder) at (14.9,-2.7) {\textsf{EpistemicBTBuilder}};
+  \node[act, minimum width=26mm] (bt)      at (11.1,-2.7) {behavior tree\\4 epistemic nodes};
+  \node[act, minimum width=26mm] (perf)    at (7.4,-2.7)  {action performers\\(the robots)};
+
+  \draw[flow] (policy)  -- (builder);
+  \draw[flow] (builder) -- (bt);
+  \draw[flow] (bt)      -- (perf);
+
+  % --- the model, consulted by the tree and advanced by what was seen ---
+  \node[sense, minimum width=32mm] (state) at (9.25,-5.4)
+    {\textsf{epistemic\_state}\\the model of what is known};
+
+  % the tree asks the model; the performers advance it; both read one task
+  \draw[flow] (bt.south) -- (11.1,-4.3) -- (state.east|-11.1,-4.3) -- (state.east);
+  \node[flowlabel, fill=white, anchor=west] at (11.35,-3.75) {does $K_i\varphi$ hold?};
+
+  \draw[flow] (perf.south) -- (7.4,-4.05) -- (9.25,-4.05) -- (state.north);
+  \node[flowlabel, fill=white, anchor=east] at (7.15,-3.6) {what was seen};
+
+  \draw[flow] (task.south) -- (7.4,-1.05) -- (4.4,-1.05) -- (4.4,-5.4) -- (state.west);
+  \node[flowlabel, fill=white, anchor=south, rotate=90] at (4.25,-4.4) {the same task};
+\end{tikzpicture}
+\end{adjustbox}
+\caption{From two source files to a fleet that moves. The grounded task is read
+twice: once by the planner that searches it, and once by the node that holds
+the model the executed policy is checked against.}
+\label{fig:pipeline}
+\end{figure}
+
+\section{The three mechanisms}
+\label{sec:mechanisms}
+
+All three scenarios use the same three actions, and nothing else. This section
+states them once, semantically; the scenarios then differ only in how many
+routes and robots they apply to.
+
+\subsection{Models, and what an action does to one}
+
+An epistemic state is a multi-pointed S5 model
+$M = \langle W, \{\sim_i\}_{i \in \mathcal{A}}, V, W_d \rangle$: a set of
+worlds, an equivalence relation per agent, a valuation, and a non-empty
+$W_d \subseteq W$ of \emph{designated} worlds --- the ones still live as
+candidates for the actual world. Knowledge is truth in every world an agent
+cannot distinguish from the actual one, and the goals in this note are all of
+the form
+\[
+  \Kw_i \varphi \;\equiv\; K_i \varphi \vee K_i \neg\varphi ,
+\]
+knowing \emph{whether} rather than knowing \emph{that}. That is not a stylistic
+choice. A goal of $K_i(\blocked)$ is unachievable in the worlds where the
+corridor is clear, so a plan for it would be unexecutable about half the time.
+
+An action is an event model
+$E = \langle \mathcal{E}, \{\sim_i\}, \mathit{pre}, \mathit{post} \rangle$, and
+executing it is the product update $M \otimes E$, whose worlds are the pairs
+$(w,e)$ with $M,w \models \mathit{pre}(e)$, whose valuation is $V(w)$ amended by
+$\mathit{post}(e)$, and whose relations are
+\[
+  (w,e) \sim_i (w',e') \quad\text{iff}\quad w \sim_i w' \ \text{ and }\ e \sim_i e' .
+\]
+Everything the three mechanisms do is a choice of $\mathcal{E}$ and of the
+per-agent relation over it.
+
+\subsection{Drive, look, report}
+
+\paragraph{Driving} It is \emph{public ontic}: one event, a precondition on where
+the robot is not, a postcondition putting it at the junction, and every agent
+distinguishing nothing --- there is nothing to distinguish, since there is only
+one event. The world changes and the fleet sees it change.
+
+\paragraph{Looking} It is \emph{semi-private sensing}: two events with
+contradictory preconditions, $\blocked$ and $\neg\blocked$, neither with a
+postcondition. The robot that looks distinguishes them; every other agent does
+not. The product update therefore splits the model into one successor per event
+whose precondition some designated world satisfies, and in the successors the
+looking robot's relation no longer joins a blocked world to a clear one.
+
+\paragraph{Reporting} It is a \emph{public announcement} guarded by the speaker's
+knowledge: the event's precondition is $K_i(\blocked)$, so a robot can broadcast
+only what it actually found. Because knowledge is factive, hearing it settles
+the matter for every listener. There are two report actions rather than one
+with a parameter, because a robot can only report what it found, and which one
+the mission uses is not known when the plan is built.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max width=\textwidth}
+\begin{tikzpicture}[x=1cm, y=1cm]
+  % --- public ontic ---
+  \node[paneltitle, anchor=west] (ot) at (0,0.85) {public ontic: \textsf{goto-junction r1}};
+  \node[act, minimum width=24mm] (o1) at (1.6,0) {r1 drives};
+  \node[act, minimum width=52mm] (o2) at (7.8,0) {r1, r2 know r1 is at the junction};
+  \draw[flow] (o1) -- node[flowlabel, above] {one event} (o2);
+  \begin{scope}[on background layer]
+    \node[panel, fit=(ot)(o1)(o2)] {};
+  \end{scope}
+
+  % --- semi-private sensing ---
+  \node[paneltitle, anchor=west] (st) at (0,-1.75) {semi-private sensing: \textsf{inspect r1}};
+  \node[sense, minimum width=24mm] (s1) at (1.6,-3.1) {r1 looks};
+  \node[act, minimum width=52mm] (s2) at (7.8,-2.45) {r1 knows whether the corridor is blocked};
+  \node[act, minimum width=52mm] (s3) at (7.8,-3.75) {r2 knows only that r1 looked};
+  \draw[flow] (s1) -- node[flowlabel, above, pos=0.45] {\textsf{Fully}} (s2);
+  \draw[flow] (s1) -- node[flowlabel, below, pos=0.45] {\textsf{Partially}} (s3);
+  \begin{scope}[on background layer]
+    \node[panel, fit=(st)(s1)(s2)(s3)] {};
+  \end{scope}
+
+  % --- public announcement ---
+  \node[paneltitle, anchor=west] (at) at (0,-5.35) {public announcement: \textsf{report-blocked r1}};
+  \node[act, minimum width=24mm] (a1) at (1.6,-6.2) {r1 broadcasts};
+  \node[act, minimum width=52mm] (a2) at (7.8,-6.2) {r1, r2 know the corridor is blocked};
+  \draw[flow] (a1) -- node[flowlabel, above] {factive} (a2);
+  \begin{scope}[on background layer]
+    \node[panel, fit=(at)(a1)(a2)] {};
+  \end{scope}
+\end{tikzpicture}
+\end{adjustbox}
+\caption{The three mechanisms, by what each does to the fleet's knowledge.
+Semi-private sensing is the one with no classical counterpart, and the one that
+makes the mission need a radio: if looking were public no announcement would be
+needed, and if it were private the others would not know a look had happened.}
+\label{fig:mechanisms}
+\end{figure}
+
+\section{Scenario 1: the corridor}
+\label{sec:corridor}
+
+Two robots, one route, and the smallest instance that is recognisably a
+contingent plan rather than a sequence.
+
+\subsection{Mission and formalization}
+
+Two predicates carry the whole scenario:
+
+\begin{lstlisting}
+(:predicates
+  (blocked)                  ; the corridor is obstructed
+  (at-junction ?i - agent))  ; ?i is where the corridor can be seen
+\end{lstlisting}
+
+\noindent
+and the three mechanisms are one action each. Sensing is where the observability
+conditions do the work:
+
+\begin{lstlisting}
+(:event e-inspect-blocked
+  :parameters (?i - agent)
+  :precondition (and (at-junction ?i) (blocked) (<Kw. ?i> (blocked))))
+
+(:event e-inspect-clear
+  :parameters (?i - agent)
+  :precondition (and (at-junction ?i) (not (blocked)) (<Kw. ?i> (blocked))))
+
+(:action inspect
+  :parameters (?i - agent)
+  :action-type (semi-private-sensing (e-inspect-blocked ?i) (e-inspect-clear ?i))
+  :observability-conditions (:and (?i Fully) (default Partially)))
+\end{lstlisting}
+
+\noindent
+The $\langle \Kw_i \rangle$ conjunct in both preconditions --- "$i$ does not yet
+know whether" --- keeps a robot from inspecting twice to no effect, which is a
+modelling detail with a search consequence: it prunes a whole family of
+useless successors before the heuristic ever sees them.
+
+The problem file states what is common knowledge at the depot, and, just as
+importantly, what it leaves open:
+
+\begin{lstlisting}
+(:agents r1 r2)
+(:init
+  (:and
+    (:forall (?i - agent) ([C. All] (not (at-junction ?i))))
+    (:forall (?i - agent) ([C. All] (<Kw. ?i> (blocked))))))
+(:goal
+  (and ([Kw. r1] (blocked)) ([Kw. r2] (blocked))))
+\end{lstlisting}
+
+\noindent
+It never says whether the corridor is blocked. The finitary S5 theory is
+therefore satisfied by two worlds, and \textsf{plank} designates both.
+
+\subsection{What the update does}
+
+Figure~\ref{fig:corridor-models} is the whole scenario in three models. The
+sensing action removes \textsf{r1}'s edge and the announcement removes
+\textsf{r2}'s; the goal is exactly the absence of both.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max width=\textwidth}
+\begin{tikzpicture}[x=1cm, y=1cm]
+  % --- initial ---
+  \node[designated] (ib) at (0,0)   {$\blocked$};
+  \node[designated] (ic) at (2.7,0) {$\neg\blocked$};
+  \draw[rel] (ib) -- node[rellabel] {r1, r2} (ic);
+  \node[paneltitle] (it) at (1.35,-1.5) {initial: nobody knows};
+  \begin{scope}[on background layer]
+    \node[panel, fit=(ib)(ic)(it)] (ipanel) {};
+  \end{scope}
+
+  % --- after inspect ---
+  \node[designated] (sb) at (7.1,0) {$\blocked$};
+  \node[world]      (sc) at (9.8,0) {$\neg\blocked$};
+  \draw[rel] (sb) -- node[rellabel] {r2} (sc);
+  \node[paneltitle] (st) at (8.45,-1.5) {after \textsf{inspect r1}};
+  \begin{scope}[on background layer]
+    \node[panel, fit=(sb)(sc)(st)] (spanel) {};
+  \end{scope}
+
+  % --- after report ---
+  \node[designated] (rb) at (15.0,0) {$\blocked$};
+  \node[paneltitle] (rt) at (15.0,-1.5) {after \textsf{report-blocked r1}};
+  \begin{scope}[on background layer]
+    \node[panel, fit=(rb)(rt)] (rpanel) {};
+  \end{scope}
+
+  \draw[flow] (ipanel.east) -- node[flowlabel, above, fill=white] {\textsf{inspect r1}} (spanel.west);
+  \draw[flow] (spanel.east) -- node[flowlabel, above, fill=white] {\textsf{report-blocked r1}} (rpanel.west);
+\end{tikzpicture}
+\end{adjustbox}
+\caption{One execution of the corridor policy, as models. A double circle is a
+designated world; an edge labelled $i$ is agent $i$ being unable to tell the two
+apart. Sensing splits the model and drops the sensing agent's edge in each half
+--- only the blocked half is drawn --- and the announcement drops everyone
+else's. The mission is over when no edge is left, which is what $\Kw$ asks for.}
+\label{fig:corridor-models}
+\end{figure}
+
+\subsection{The policy}
+
+AO$^{*}$ returns four nodes at depth three.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=9mm]
+  \node[act] (n0) {0\quad \textsf{goto-junction r1}};
+  \node[sense, below=of n0] (n1) {1\quad \textsf{inspect r1}};
+  \node[act, below left=11mm and 6mm of n1] (n2) {2\quad \textsf{report-blocked r1}\\[1pt]
+        \scriptsize guard $K_{r1}\,\blocked$};
+  \node[act, below right=11mm and 6mm of n1] (n3) {3\quad \textsf{report-clear r1}\\[1pt]
+        \scriptsize guard $K_{r1}\,\neg\blocked$};
+  \node[leaf, below=9mm of n2] (l2) {goal holds};
+  \node[leaf, below=9mm of n3] (l3) {goal holds};
+
+  \draw[flow] (n0) -- (n1);
+  \draw[flow] (n1) -- node[flowlabel, left, pos=0.55] {\textsf{e-inspect-blocked}} (n2);
+  \draw[flow] (n1) -- node[flowlabel, right, pos=0.55] {\textsf{e-inspect-clear}} (n3);
+  \draw[flow] (n2) -- (l2);
+  \draw[flow] (n3) -- (l3);
+\end{tikzpicture}
+\caption{The corridor policy. Both continuations are in the tree; which one runs
+is decided while the robot is standing at the junction with its camera on. The
+guards are epistemic preconditions, checked against the model rather than
+against any predicate.}
+\label{fig:corridor-policy}
+\end{figure}
+
+Two things in that tree are worth reading carefully. The guard on each
+announcement is not a PDDL precondition and cannot be checked against a problem
+expert, because no predicate records it; it is what stops the fleet from
+broadcasting a guess. And the branch is the planner declining to commit --- a
+flattened version of this plan would be correct half the time.
+
+Note also what the search worked out. Both robots could have driven out and
+looked, at four actions; one robot going, looking and broadcasting costs three.
+It found the second, which is to say it worked out that talking is cheaper than
+everybody going to see for themselves.
+
+\section{Scenario 2: the depot}
+\label{sec:depot}
+
+Three robots, two routes, and one added rule: a robot dispatched down a route
+stays on it.
+
+\begin{lstlisting}
+(:event e-goto-north
+  :parameters (?i - agent)
+  :precondition (and (not (at-north ?i)) (not (at-south ?i)))
+  :effects (at-north ?i))
+\end{lstlisting}
+
+\noindent
+That precondition is what forbids driving from one junction to the other, and it
+is a depot rule rather than a modelling shortcut: it is what makes this a fleet
+problem instead of one robot's tour. No robot can survey both routes, so the
+work has to be divided, and whoever stays behind has to be told.
+
+Two independent unknowns give four worlds, all designated
+(Figure~\ref{fig:depot-worlds}), and a goal of six conjuncts --- three robots
+$\times$ two routes --- of which no robot can satisfy more than two by itself.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.46\textwidth}
+\centering
+\begin{tikzpicture}
+  \node[designated] (w0) {$\blocked_N$\\$\blocked_S$};
+  \node[designated, right=18mm of w0] (w1) {$\blocked_N$\\$\neg\blocked_S$};
+  \node[designated, below=15mm of w0] (w2) {$\neg\blocked_N$\\$\blocked_S$};
+  \node[designated, below=15mm of w1] (w3) {$\neg\blocked_N$\\$\neg\blocked_S$};
+  \draw[rel] (w0) -- (w1);
+  \draw[rel] (w2) -- (w3);
+  \draw[rel] (w0) -- (w2);
+  \draw[rel] (w1) -- (w3);
+  \draw[rel, dotted] (w0) -- (w3);
+  \draw[rel, dotted] (w1) -- (w2);
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}{0.5\textwidth}
+\small
+Every robot's relation is the whole square: at the depot nobody knows anything
+about either route, and each robot knows that of the others. Sensing the north
+route cuts the square into its two columns; sensing the south route then cuts a
+column into its two cells. Two sensings are therefore necessary as well as
+sufficient, whoever performs them --- which is what makes the division of
+labour a search problem rather than a modelling one.
+\end{minipage}
+\caption{The four initial worlds of the depot scenario, and what the two
+sensings do to them.}
+\label{fig:depot-worlds}
+\end{figure}
+
+\subsection{The policy}
+
+AO$^{*}$ solves it at depth six and returns twelve nodes
+(Figure~\ref{fig:depot-policy}). Read down the left edge: \textsf{r1} drives
+north, looks, and broadcasts; then \textsf{r2} drives south, looks, and
+broadcasts. The whole of that second half appears twice, once inside each
+outcome of the first look --- not because the plan repeats itself, but because
+those are different plans. They run against different epistemic states, and the
+announcement that ends each one differs.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max width=\textwidth}
+\begin{tikzpicture}[node distance=7mm, every node/.style={font=\scriptsize}]
+  \node[act] (n0) {0\ \ \textsf{goto-north r1}};
+  \node[sense, below=6mm of n0] (n1) {1\ \ \textsf{inspect-north r1}};
+  \node[act, below left=8mm and 14mm of n1]  (n2) {2\ \ \textsf{report-north-blocked r1}};
+  \node[act, below right=8mm and 14mm of n1] (n7) {7\ \ \textsf{report-north-clear r1}};
+  \node[act, below=6mm of n2] (n3) {3\ \ \textsf{goto-south r2}};
+  \node[act, below=6mm of n7] (n8) {8\ \ \textsf{goto-south r2}};
+  \node[sense, below=6mm of n3] (n4) {4\ \ \textsf{inspect-south r2}};
+  \node[sense, below=6mm of n8] (n9) {9\ \ \textsf{inspect-south r2}};
+  \node[act, below left=8mm and -6mm of n4]  (n5)  {5\ \ \textsf{rep.-south-blocked r2}};
+  \node[act, below right=8mm and -6mm of n4] (n6)  {6\ \ \textsf{rep.-south-clear r2}};
+  \node[act, below left=8mm and -6mm of n9]  (n10) {10\ \ \textsf{rep.-south-blocked r2}};
+  \node[act, below right=8mm and -6mm of n9] (n11) {11\ \ \textsf{rep.-south-clear r2}};
+
+  \draw[flow] (n0) -- (n1);
+  \draw[flow] (n1) -- node[flowlabel, above left, pos=0.35] {north blocked} (n2);
+  \draw[flow] (n1) -- node[flowlabel, above right, pos=0.35] {north clear} (n7);
+  \draw[flow] (n2) -- (n3);
+  \draw[flow] (n7) -- (n8);
+  \draw[flow] (n3) -- (n4);
+  \draw[flow] (n8) -- (n9);
+  \draw[flow] (n4) -- node[flowlabel, left, pos=0.6] {bl.} (n5);
+  \draw[flow] (n4) -- node[flowlabel, right, pos=0.6] {cl.} (n6);
+  \draw[flow] (n9) -- node[flowlabel, left, pos=0.6] {bl.} (n10);
+  \draw[flow] (n9) -- node[flowlabel, right, pos=0.6] {cl.} (n11);
+\end{tikzpicture}
+\end{adjustbox}
+\caption{The depot policy: twelve nodes, four leaves, a branch inside a branch.
+\textsf{r3} appears nowhere in it and finishes the mission knowing the state of
+both routes, purely by listening.}
+\label{fig:depot-policy}
+\end{figure}
+
+The division of labour is the planner's choice and not the domain's. One robot
+walking both routes is impossible here, but \textsf{r1} and \textsf{r3}
+splitting them would cost exactly what \textsf{r1} and \textsf{r2} splitting
+them costs; the search has to consider both allocations and settles on one. Six
+actions on every path, and never a robot going to see something it has already
+been told.
+
+\textsf{r3} finishing the mission informed without leaving the depot is the
+entire argument for modelling communication epistemically rather than as an
+ontic effect on a \texttt{told} predicate. Nothing in the domain says that
+hearing an announcement informs a listener; it follows from the announcement
+being public and knowledge being factive.
+
+\section{Scenario 3: the survey}
+\label{sec:survey}
+
+Four robots, three routes, and nothing new. It is written to be big rather than
+clever, so that the comparison across the three sizes says something about the
+search and nothing about the modelling: 15 atoms, 48 ground actions, eight
+worlds the fleet cannot tell apart, and a goal of twelve conjuncts.
+
+AO$^{*}$ solves it at depth nine and returns 28 nodes with eight leaves. Each
+survey trip is three actions --- drive, look, broadcast --- and the look in the
+middle of each is where the policy branches; Figure~\ref{fig:survey-shape} is
+the resulting skeleton.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max width=\textwidth}
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \node[sense] (e) {\textsf{inspect east r1}};
+
+  \node[sense, below left=10mm and 30mm of e]  (n0) {\textsf{inspect north r2}};
+  \node[sense, below right=10mm and 30mm of e] (n1) {\textsf{inspect north r2}};
+
+  \node[sense, below left=10mm and 8mm of n0]  (s0) {\textsf{inspect south r3}};
+  \node[sense, below right=10mm and 8mm of n0] (s1) {\textsf{inspect south r3}};
+  \node[sense, below left=10mm and 8mm of n1]  (s2) {\textsf{inspect south r3}};
+  \node[sense, below right=10mm and 8mm of n1] (s3) {\textsf{inspect south r3}};
+
+  \node[leaf, below left=9mm and -4mm of s0]  (l0) {B\,B\,B};
+  \node[leaf, below right=9mm and -4mm of s0] (l1) {B\,B\,C};
+  \node[leaf, below left=9mm and -4mm of s1]  (l2) {B\,C\,B};
+  \node[leaf, below right=9mm and -4mm of s1] (l3) {B\,C\,C};
+  \node[leaf, below left=9mm and -4mm of s2]  (l4) {C\,B\,B};
+  \node[leaf, below right=9mm and -4mm of s2] (l5) {C\,B\,C};
+  \node[leaf, below left=9mm and -4mm of s3]  (l6) {C\,C\,B};
+  \node[leaf, below right=9mm and -4mm of s3] (l7) {C\,C\,C};
+
+  \draw[flow] (e) -- node[flowlabel, above left, pos=0.4] {blocked} (n0);
+  \draw[flow] (e) -- node[flowlabel, above right, pos=0.4] {clear} (n1);
+  \foreach \p/\c in {n0/s0, n0/s1, n1/s2, n1/s3} {\draw[flow] (\p) -- (\c);}
+  \foreach \p/\c in {s0/l0, s0/l1, s1/l2, s1/l3, s2/l4, s2/l5, s3/l6, s3/l7}
+    {\draw[flow] (\p) -- (\c);}
+\end{tikzpicture}
+\end{adjustbox}
+\caption{The sensing skeleton of the survey policy. Every edge also carries the
+drive that precedes the next look and the broadcast that follows the last one;
+each leaf is one of the eight ways the depot can turn out, written as the three
+route states in the order the policy senses them --- east, north, south --- with
+B for blocked and C for clear.}
+\label{fig:survey-shape}
+\end{figure}
+
+The order the search settles on is east, then north, then south, with
+\textsf{r1}, \textsf{r2} and \textsf{r3} taking one route each. \textsf{r4}
+never acts. Four of the twelve goal conjuncts are about what \textsf{r4} knows,
+and it satisfies all four by listening: the depot scenario's point, restated at
+a size where it is no longer a curiosity of a small instance.
 
 \input{tables/fleet_scenarios}
-
-\section{What the policies look like}
-
-The corridor policy is the smallest thing that is recognisably a contingent
-plan rather than a sequence:
-
-\begin{lstlisting}
-goto-junction_r1
-  inspect_r1
-    report-blocked_r1     <- if the camera saw debris
-    report-clear_r1       <- if it did not
-\end{lstlisting}
-
-\noindent
-The depot policy is the one worth reading twice, because the division of labour
-is not something the domain states anywhere:
-
-\begin{lstlisting}
-goto-north_r1
-  inspect-north_r1
-    report-north-blocked_r1
-      goto-south_r2
-        inspect-south_r2
-          report-south-blocked_r2
-          report-south-clear_r2
-    report-north-clear_r1
-      goto-south_r2
-        inspect-south_r2
-          report-south-blocked_r2
-          report-south-clear_r2
-\end{lstlisting}
-
-\noindent
-\textsf{r1} takes the north route, \textsf{r2} the south, and \textsf{r3} never
-moves. Nothing assigns those roles; the search arrives at them because the
-depot rule makes any other allocation longer. \textsf{r3} finishes the mission
-knowing the state of both corridors without having left the depot, which is the
-entire argument for modelling communication epistemically rather than as an
-ontic effect on a \texttt{told} predicate.
 
 \section{Method and environment}
 \label{sec:method}
@@ -206,7 +655,60 @@ figures in particular are at the resolution floor of the tool.
 \texttt{0050a87}; Aletheia at \texttt{d530d25}; \textsf{plank} at
 \texttt{a682480}.
 
-\section{Observations}
+\section{Results}
+\label{sec:results}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+  \begin{axis}[
+      name=expanded,
+      width=0.47\textwidth, height=5.2cm,
+      ymode=log,
+      symbolic x coords={corridor, depot, survey},
+      xtick=data,
+      ymin=5, ymax=2e7,
+      ylabel={nodes},
+      ylabel style={font=\scriptsize, text=slate},
+      tick label style={font=\scriptsize, text=slate},
+      legend style={font=\scriptsize, draw=rulegrey, at={(0.03,0.97)},
+                    anchor=north west, fill=white},
+      grid=major,
+      grid style={draw=mist},
+      axis line style={draw=rulegrey},
+    ]
+    \addplot+[mark=*, thick, color=steel, mark options={fill=steel}]
+      coordinates {(corridor,17) (depot,1670) (survey,5029063)};
+    \addplot+[mark=square*, thick, color=steellight, mark options={fill=steellight}]
+      coordinates {(corridor,19) (depot,2010) (survey,5746557)};
+    \legend{expanded, generated}
+  \end{axis}
+
+  \begin{axis}[
+      name=memory,
+      at={($(expanded.east)+(1.6cm,0)$)}, anchor=west,
+      width=0.47\textwidth, height=5.2cm,
+      symbolic x coords={corridor, depot, survey},
+      xtick=data,
+      ymin=0, ymax=6,
+      ylabel={peak RSS (MB)},
+      ylabel style={font=\scriptsize, text=slate},
+      tick label style={font=\scriptsize, text=slate},
+      grid=major,
+      grid style={draw=mist},
+      axis line style={draw=rulegrey},
+      ybar,
+      bar width=10pt,
+    ]
+    \addplot+[draw=steel, fill=steellight!45]
+      coordinates {(corridor,4.34) (depot,4.47) (survey,4.85)};
+  \end{axis}
+\end{tikzpicture}
+\caption{Five orders of magnitude of search on the left, a 12\,\% change in
+memory on the right, over the same three instances. Note the log scale on the
+left and the linear one on the right.}
+\label{fig:scaling}
+\end{figure}
 
 \paragraph{The search explodes and the representation does not} Expanded nodes
 grow by roughly two orders of magnitude per size step: 17, then 1\,670, then
@@ -217,30 +719,128 @@ store 128-bit fingerprints rather than states, so the cost of a large search is
 time rather than memory. A planner storing states outright would not have
 finished the third instance on this machine.
 
-\paragraph{Depth is what hurts} The three instances differ in every parameter
-at once, but the one that tracks the cost is solution depth, which AO* reaches
-by iterative deepening: 3, 6, 9. Each survey trip adds three actions to the
-depth and doubles the number of worlds, and the product of those two is what
-the 3011$\times$ jump is made of.
+\paragraph{Depth is what hurts} The three instances differ in every parameter at
+once, but the one that tracks the cost is solution depth, which AO$^{*}$ reaches
+by iterative deepening: 3, 6, 9. Each route added contributes three actions to
+the depth --- a drive, a look and a broadcast --- and doubles the number of
+worlds, and the product of those two is what the $3011\times$ jump is made of.
+
+\paragraph{The policy grows with the branching, not with the search} Four nodes,
+then twelve, then twenty-eight: $2^{k+1}$ minus something for the shared prefix,
+where $k$ is the number of sensings. That is the number of subtrees the executor
+has to be handed, and it is also the number of distinct futures the fleet is
+committing to in advance. It grows fast enough to be worth noting that a policy
+is not a plan you can read at a glance, and slowly enough that rendering all of
+it into one behavior tree remains reasonable at these sizes.
 
 \paragraph{The grounder produces multi-pointed models} Before these scenarios,
 every task \textsf{plank} produced from the available EPDDL instances was
 single-pointed, with one designated world, so sensing had exactly one possible
-outcome and AO* returned a chain. The only branching fixture in the ePlanSys
-tree was a file edited by hand. All three scenarios here ground to genuinely
-multi-pointed models, because their \texttt{:init} theories leave the corridors
-open rather than asserting a state for them. They are the first grounded
-branching instances in that tree, and the first that exercise the executor's
-branch node on a policy nobody hand-wrote.
+outcome and AO$^{*}$ returned a chain. The only branching fixture in the
+ePlanSys tree was a file edited by hand. All three scenarios here ground to
+genuinely multi-pointed models, because their \texttt{:init} theories leave the
+corridors open rather than asserting a state for them. They are the first
+grounded branching instances in that tree, and the first that exercise the
+executor's branch node on a policy nobody hand-wrote.
 
-\paragraph{Both routes to the planner agree} ePlanSys reaches Aletheia two
-ways: \texttt{plansys2\_epistemic\_planner} links the search in, and
-\texttt{plansys2\_aletheia\_plan\_solver} runs the binary as a subprocess and
+\paragraph{Both routes to the planner agree} ePlanSys reaches Aletheia two ways:
+\texttt{plansys2\_epistemic\_\allowbreak planner} links the search in, and
+\texttt{plansys2\_aletheia\_\allowbreak plan\_solver} runs the binary as a subprocess and
 reads its plan file back. On the corridor and depot instances the in-process
 route reports node counts identical to the standalone binary, 17/19 and
-1670/2010, and the subprocess route returns the same policy, translated
-through the action mapping into PlanSys2 action expressions. The two are the
-same planner and now have a shared test to say so.
+1670/2010, and the subprocess route returns the same policy, translated through
+the action mapping into PlanSys2 action expressions. The two are the same
+planner and now have a shared test to say so.
+
+\section{Executing the policies}
+\label{sec:execution}
+
+A policy that is only ever solved is half a result. The corridor and depot
+scenarios are executed end to end in the ePlanSys test suite, over a live ROS
+graph, with the planner, the executor, the epistemic state and one action
+performer per action all running as nodes.
+
+\subsection{How a policy becomes a behavior tree}
+
+\texttt{EpistemicBTBuilder} renders each policy node as the PlanSys2 action
+subtree with three additions, shown in Figure~\ref{fig:bt}: a knowledge guard
+before the action, the DEL update after it, and --- for a node that branches ---
+a switch that runs the continuation planned for what was observed. The whole
+tree is followed by a goal check, because reaching a leaf of a policy is not the
+same as having achieved the goal it was built for.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max width=\textwidth}
+\begin{tikzpicture}[every node/.style={font=\scriptsize}, node distance=5mm]
+  \node[act, minimum width=30mm] (guard)  {\textsf{CheckKnowledge}\\node 1};
+  \node[act, below=of guard, minimum width=30mm] (wait) {\textsf{WaitAtStartReq} $\to$ \textsf{ApplyAtStartEffect}};
+  \node[act, below=of wait, minimum width=30mm]  (exec) {\textsf{CheckOverAllReq} $\to$ \textsf{ExecuteAction}\\\textsf{(inspect\_corridor r1)}};
+  \node[act, below=of exec, minimum width=30mm]  (end)  {\textsf{CheckAtEndReq} $\to$ \textsf{ApplyAtEndEffect}};
+  \node[sense, below=of end, minimum width=30mm] (upd)  {\textsf{ApplyEpistemicUpdate}\\DEL product update, reports the outcome};
+  \node[sense, below=of upd, minimum width=30mm] (sw)   {\textsf{EpistemicSwitch}};
+  \node[act, below left=7mm and 2mm of sw]  (b1) {subtree for\\\textsf{e-inspect-blocked}};
+  \node[act, below right=7mm and 2mm of sw] (b2) {subtree for\\\textsf{e-inspect-clear}};
+
+  \foreach \a/\b in {guard/wait, wait/exec, exec/end, end/upd, upd/sw} {\draw[flow] (\a) -- (\b);}
+  \draw[flow] (sw) -- (b1);
+  \draw[flow] (sw) -- (b2);
+
+  \node[right=16mm of exec, align=left, text=slate, font=\scriptsize\itshape,
+        text width=52mm]
+    {The middle three rows are PlanSys2's own action subtree, unchanged: the
+     same nodes drive the same performers against the same problem expert.
+     What the epistemic builder adds is the guard above them, the update below
+     them, and the switch that follows.};
+\end{tikzpicture}
+\end{adjustbox}
+\caption{One policy node, as rendered. A node with a single continuation is
+rendered without a switch, so a classical plan comes out as the flat sequence
+PlanSys2 would have built.}
+\label{fig:bt}
+\end{figure}
+
+\subsection{Where the observation comes from}
+
+The epistemic state can name the outcome of a sensing action by itself only when
+its model already designates a single world. All three scenarios designate
+several --- which is what makes them worth testing with, and what means the
+observation has to come from whoever did the sensing.
+\texttt{ApplyEpistemicUpdate} therefore takes it on an \texttt{observed} port
+that the packaged action template leaves unbound, and a deployment binds that
+port to whatever its performer reports. In the tests the binding is a small
+behavior tree node reading the corridor states from a topic; on a robot it would
+be the perception stack.
+
+This is the one piece of wiring the stack does not supply, and it is deliberate:
+what a robot saw is domain-specific, and PlanSys2 carries nothing back from an
+action performer.
+
+\subsection{What the end-to-end tests assert}
+
+Each scenario is run twice with the world in different states, and the two runs
+must diverge. The corridor test asserts that one run executes
+\texttt{report\_clear} and the other \texttt{report\_blocked}, and that neither
+runs the branch it did not take. The depot test does the same for two routes in
+opposite states, which is the case that exercises a switch nested inside another
+switch's continuation --- and, incidentally, the case a flattened plan gets
+wrong three times in four. The epistemic state's own log is the clearest record
+of a run:
+
+\begin{lstlisting}
+applied goto-north_r1:                            4 worlds, 4 designated
+applied inspect-north_r1 -> e-inspect-north-blocked: 4 worlds, 2 designated
+applied report-north-blocked_r1:                  4 worlds, 2 designated
+applied goto-south_r2:                            4 worlds, 2 designated
+applied inspect-south_r2 -> e-inspect-south-clear:  4 worlds, 1 designated
+applied report-south-clear_r2:                    4 worlds, 1 designated
+[goal] (and (Kw r1 blocked-north) ... (Kw r3 blocked-south)) holds
+\end{lstlisting}
+
+\noindent
+Four candidate worlds at the start, two after the first sensing, one after the
+second, and the goal checked against the state that actually resulted rather
+than the one planning assumed.
 
 \section{Reproducing}
 
@@ -257,27 +857,52 @@ epistemic_planner --task /tmp/out/robot-fleet-depot-problem.json \
 
 \noindent
 Inside a built ePlanSys workspace the grounding step is implicit: the plan
-solver is given the \texttt{.epddl} sources directly:
+solver is given the \texttt{.epddl} sources directly, and \texttt{policy} is
+what keeps the branches.
 
 \begin{lstlisting}
 planner:
   ros__parameters:
+    plan_solver_timeout: 120.0          # the survey needs it; 15 s is the default
     EPISTEMIC:
       epddl_domain:  ".../robot-fleet-depot-domain.epddl"
       epddl_problem: ".../robot-fleet-depot-problem.epddl"
       action_mapping: ".../mappings/robot-fleet-depot.json"
+      strategy: "aostar"
+      conditional_plan: "policy"
+
+executor:
+  ros__parameters:
+    bt_builder_plugin: "EpistemicBTBuilder"
+    bt_node_plugins: ["libplansys2_epistemic_bt_nodes.so"]
 \end{lstlisting}
+
+\noindent
+The \texttt{plan\_solver\_timeout} line is the one worth copying. Its default of
+15 seconds is four times short of what the survey scenario needs, and the
+symptom of leaving it is a planner that returns no plan rather than one that
+reports a timeout.
 
 \section{Limitations}
 
-The timings are single runs on one machine and the three instances differ in
+The timings are single runs on one machine, and the three instances differ in
 several parameters simultaneously, so nothing here isolates the effect of any
-one of them; the scaling study in the companion report does that properly. The
-survey instance takes about a minute, which is why it is shipped as an example
-rather than as a regression test; the corridor and depot instances carry
-that role. Nothing here has been executed on hardware: the policies are
-validated by Aletheia and translated into PlanSys2 action expressions, but the
-behaviour trees behind those expressions are stubs, so the claim is about
-planning and not about a fleet that drove anywhere.
+one of them; the scaling study in the companion report does that properly.
+
+The survey instance takes about a minute, which is why it is shipped as an
+example rather than as a regression test; the corridor and depot instances carry
+that role.
+
+Execution has been demonstrated but not deployed. The policies are validated by
+Aletheia, rendered as behavior trees, and run end to end over a real ROS graph
+against real epistemic state --- but the performers behind the action
+expressions are stubs that report success after a fixed time, and the
+observations they report are supplied by the test. The claim is therefore about
+planning and about the executor, and not about a fleet that drove anywhere.
+
+One case remains untested: an outcome the policy does not plan for, where the
+branch node must fail rather than guess so that the executor can replan. It
+needs a performer that reports something the model cannot account for, which is
+straightforward to write and has not been written.
 
 \end{document}

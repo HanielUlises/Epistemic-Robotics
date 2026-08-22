@@ -1,0 +1,33 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}The situation}{1}{section.1}%
+\contentsline {paragraph}{The initial state is not a state}{2}{paragraph*.1}%
+\contentsline {paragraph}{An action's effect can be on knowledge alone}{2}{paragraph*.2}%
+\contentsline {paragraph}{Who observes what is part of the action}{2}{paragraph*.3}%
+\contentsline {subsection}{\numberline {1.1}The pipeline}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}The three mechanisms}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Models, and what an action does to one}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Drive, look, report}{3}{subsection.2.2}%
+\contentsline {paragraph}{Driving}{3}{paragraph*.5}%
+\contentsline {paragraph}{Looking}{3}{paragraph*.6}%
+\contentsline {paragraph}{Reporting}{3}{paragraph*.7}%
+\contentsline {section}{\numberline {3}Scenario 1: the corridor}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Mission and formalization}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}What the update does}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}The policy}{5}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Scenario 2: the depot}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The policy}{6}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Scenario 3: the survey}{6}{section.5}%
+\contentsline {section}{\numberline {6}Method and environment}{7}{section.6}%
+\contentsline {paragraph}{Versions}{8}{paragraph*.15}%
+\contentsline {section}{\numberline {7}Results}{8}{section.7}%
+\contentsline {paragraph}{The search explodes and the representation does not}{8}{paragraph*.17}%
+\contentsline {paragraph}{Depth is what hurts}{8}{paragraph*.18}%
+\contentsline {paragraph}{The policy grows with the branching, not with the search}{8}{paragraph*.19}%
+\contentsline {paragraph}{The grounder produces multi-pointed models}{8}{paragraph*.20}%
+\contentsline {paragraph}{Both routes to the planner agree}{9}{paragraph*.21}%
+\contentsline {section}{\numberline {8}Executing the policies}{9}{section.8}%
+\contentsline {subsection}{\numberline {8.1}How a policy becomes a behavior tree}{9}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Where the observation comes from}{9}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}What the end-to-end tests assert}{10}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Reproducing}{10}{section.9}%
+\contentsline {section}{\numberline {10}Limitations}{10}{section.10}%

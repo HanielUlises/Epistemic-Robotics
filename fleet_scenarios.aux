@@ -18,24 +18,66 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
+\providecommand \oddpage@label [2]{}
 \babel@aux{english}{}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Why a fleet}{1}{section.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}The three scenarios}{1}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Corridor}{1}{paragraph*.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Depot}{1}{paragraph*.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Survey}{2}{paragraph*.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The three shipped fleet scenarios, as \textsf  {plank} grounds them and as Aletheia solves them. Worlds is $|W|$ of the grounded initial model and all of them are designated, so every world is a live possibility at planning time. Goal conjuncts counts the $\mathit  {Kw}$ atoms of the goal. Times are single runs; see \S  \ref  {sec:method}.\relax }}{2}{table.caption.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}The situation}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The initial state is not a state}{2}{paragraph*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{An action's effect can be on knowledge alone}{2}{paragraph*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Who observes what is part of the action}{2}{paragraph*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}The pipeline}{2}{subsection.1.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces From two source files to a fleet that moves. The grounded task is read twice: once by the planner that searches it, and once by the node that holds the model the executed policy is checked against.\relax }}{2}{figure.caption.4}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:fleet-scenarios}{{1}{2}{The three shipped fleet scenarios, as \textsf {plank} grounds them and as Aletheia solves them. Worlds is $|W|$ of the grounded initial model and all of them are designated, so every world is a live possibility at planning time. Goal conjuncts counts the $\mathit {Kw}$ atoms of the goal. Times are single runs; see \S \ref {sec:method}.\relax }{table.caption.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}What the policies look like}{2}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Method and environment}{2}{section.4}\protected@file@percent }
-\newlabel{sec:method}{{4}{2}{Method and environment}{section.4}{}}
-\@writefile{toc}{\contentsline {paragraph}{Versions}{3}{paragraph*.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Observations}{3}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The search explodes and the representation does not}{3}{paragraph*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Depth is what hurts}{3}{paragraph*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The grounder produces multi-pointed models}{3}{paragraph*.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Both routes to the planner agree}{3}{paragraph*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Reproducing}{3}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Limitations}{4}{section.7}\protected@file@percent }
-\gdef \@abspage@last{4}
+\newlabel{fig:pipeline}{{1}{2}{From two source files to a fleet that moves. The grounded task is read twice: once by the planner that searches it, and once by the node that holds the model the executed policy is checked against.\relax }{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}The three mechanisms}{2}{section.2}\protected@file@percent }
+\newlabel{sec:mechanisms}{{2}{2}{The three mechanisms}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Models, and what an action does to one}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Drive, look, report}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Driving}{3}{paragraph*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Looking}{3}{paragraph*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reporting}{3}{paragraph*.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The three mechanisms, by what each does to the fleet's knowledge. Semi-private sensing is the one with no classical counterpart, and the one that makes the mission need a radio: if looking were public no announcement would be needed, and if it were private the others would not know a look had happened.\relax }}{3}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:mechanisms}{{2}{3}{The three mechanisms, by what each does to the fleet's knowledge. Semi-private sensing is the one with no classical counterpart, and the one that makes the mission need a radio: if looking were public no announcement would be needed, and if it were private the others would not know a look had happened.\relax }{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Scenario 1: the corridor}{4}{section.3}\protected@file@percent }
+\newlabel{sec:corridor}{{3}{4}{Scenario 1: the corridor}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Mission and formalization}{4}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}What the update does}{4}{subsection.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces One execution of the corridor policy, as models. A double circle is a designated world; an edge labelled $i$ is agent $i$ being unable to tell the two apart. Sensing splits the model and drops the sensing agent's edge in each half --- only the blocked half is drawn --- and the announcement drops everyone else's. The mission is over when no edge is left, which is what $\mathit  {Kw}$ asks for.\relax }}{5}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:corridor-models}{{3}{5}{One execution of the corridor policy, as models. A double circle is a designated world; an edge labelled $i$ is agent $i$ being unable to tell the two apart. Sensing splits the model and drops the sensing agent's edge in each half --- only the blocked half is drawn --- and the announcement drops everyone else's. The mission is over when no edge is left, which is what $\Kw $ asks for.\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}The policy}{5}{subsection.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces The corridor policy. Both continuations are in the tree; which one runs is decided while the robot is standing at the junction with its camera on. The guards are epistemic preconditions, checked against the model rather than against any predicate.\relax }}{5}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:corridor-policy}{{4}{5}{The corridor policy. Both continuations are in the tree; which one runs is decided while the robot is standing at the junction with its camera on. The guards are epistemic preconditions, checked against the model rather than against any predicate.\relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Scenario 2: the depot}{5}{section.4}\protected@file@percent }
+\newlabel{sec:depot}{{4}{5}{Scenario 2: the depot}{section.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces The four initial worlds of the depot scenario, and what the two sensings do to them.\relax }}{6}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:depot-worlds}{{5}{6}{The four initial worlds of the depot scenario, and what the two sensings do to them.\relax }{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}The policy}{6}{subsection.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces The depot policy: twelve nodes, four leaves, a branch inside a branch. \textsf  {r3} appears nowhere in it and finishes the mission knowing the state of both routes, purely by listening.\relax }}{6}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:depot-policy}{{6}{6}{The depot policy: twelve nodes, four leaves, a branch inside a branch. \textsf {r3} appears nowhere in it and finishes the mission knowing the state of both routes, purely by listening.\relax }{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Scenario 3: the survey}{6}{section.5}\protected@file@percent }
+\newlabel{sec:survey}{{5}{6}{Scenario 3: the survey}{section.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces The sensing skeleton of the survey policy. Every edge also carries the drive that precedes the next look and the broadcast that follows the last one; each leaf is one of the eight ways the depot can turn out, written as the three route states in the order the policy senses them --- east, north, south --- with B for blocked and C for clear.\relax }}{7}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:survey-shape}{{7}{7}{The sensing skeleton of the survey policy. Every edge also carries the drive that precedes the next look and the broadcast that follows the last one; each leaf is one of the eight ways the depot can turn out, written as the three route states in the order the policy senses them --- east, north, south --- with B for blocked and C for clear.\relax }{figure.caption.13}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The three shipped fleet scenarios, as \textsf  {plank} grounds them and as Aletheia solves them. Worlds is $|W|$ of the grounded initial model and all of them are designated, so every world is a live possibility at planning time. Goal conjuncts counts the $\mathit  {Kw}$ atoms of the goal. Times are single runs; see \S  \ref  {sec:method}.\relax }}{7}{table.caption.14}\protected@file@percent }
+\newlabel{tab:fleet-scenarios}{{1}{7}{The three shipped fleet scenarios, as \textsf {plank} grounds them and as Aletheia solves them. Worlds is $|W|$ of the grounded initial model and all of them are designated, so every world is a live possibility at planning time. Goal conjuncts counts the $\mathit {Kw}$ atoms of the goal. Times are single runs; see \S \ref {sec:method}.\relax }{table.caption.14}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Method and environment}{7}{section.6}\protected@file@percent }
+\newlabel{sec:method}{{6}{7}{Method and environment}{section.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Versions}{8}{paragraph*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Results}{8}{section.7}\protected@file@percent }
+\newlabel{sec:results}{{7}{8}{Results}{section.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Five orders of magnitude of search on the left, a 12\,\% change in memory on the right, over the same three instances. Note the log scale on the left and the linear one on the right.\relax }}{8}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:scaling}{{8}{8}{Five orders of magnitude of search on the left, a 12\,\% change in memory on the right, over the same three instances. Note the log scale on the left and the linear one on the right.\relax }{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {paragraph}{The search explodes and the representation does not}{8}{paragraph*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Depth is what hurts}{8}{paragraph*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The policy grows with the branching, not with the search}{8}{paragraph*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The grounder produces multi-pointed models}{8}{paragraph*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Both routes to the planner agree}{9}{paragraph*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Executing the policies}{9}{section.8}\protected@file@percent }
+\newlabel{sec:execution}{{8}{9}{Executing the policies}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}How a policy becomes a behavior tree}{9}{subsection.8.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces One policy node, as rendered. A node with a single continuation is rendered without a switch, so a classical plan comes out as the flat sequence PlanSys2 would have built.\relax }}{9}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:bt}{{9}{9}{One policy node, as rendered. A node with a single continuation is rendered without a switch, so a classical plan comes out as the flat sequence PlanSys2 would have built.\relax }{figure.caption.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Where the observation comes from}{9}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}What the end-to-end tests assert}{10}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Reproducing}{10}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}Limitations}{10}{section.10}\protected@file@percent }
+\gdef \@abspage@last{11}
