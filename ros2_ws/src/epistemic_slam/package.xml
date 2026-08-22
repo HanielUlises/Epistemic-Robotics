@@ -29,9 +29,11 @@
   <depend>rclcpp</depend>
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
-  <!-- Fusion changes what the fleet knows, and the epistemic state has to hear
-       about it. Pulled into the workspace by ros2_ws/eplansys.repos. -->
-  <depend>plansys2_epistemic_msgs</depend>
+  <depend>std_srvs</depend>
+  <!-- Announcing a fusion to the epistemic state needs plansys2_epistemic_msgs,
+       which arrives with eplansys through ros2_ws/eplansys.repos. Declared
+       when that node lands, so the fusion library and its tests build on
+       their own until then. -->
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
