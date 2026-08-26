@@ -1,0 +1,360 @@
+{
+  "planning-task-info": {
+    "problem": "east-wing-survey",
+    "domain": "building-rooms",
+    "libraries": [
+      "intermediate"
+    ],
+    "requirements": [
+      ":common-knowledge",
+      ":disjunctive-list-formulas",
+      ":disjunctive-preconditions",
+      ":equality",
+      ":events-conditions",
+      ":finitary-S5-theories",
+      ":group-modalities",
+      ":knowing-whether",
+      ":list-comprehensions",
+      ":lists",
+      ":modal-goals",
+      ":modal-preconditions",
+      ":multi-pointed-models",
+      ":negative-list-formulas",
+      ":negative-preconditions",
+      ":ontic-actions",
+      ":partial-observability",
+      ":static-common-knowledge"
+    ],
+    "agents-number": 1,
+    "atoms-number": 4,
+    "facts-number": 0,
+    "actions-number": 4,
+    "initial-worlds-number": 4,
+    "goal-modal-depth": 1,
+    "goal-size": 5
+  },
+  "language": {
+    "atoms": [
+      "at-door3_r1",
+      "blocked-r6",
+      "at-door6_r1",
+      "blocked-r3"
+    ],
+    "agents": [
+      "r1"
+    ]
+  },
+  "facts": [],
+  "initial-state": {
+    "worlds": [
+      "w0",
+      "w1",
+      "w2",
+      "w3"
+    ],
+    "relations": {
+      "r1": {
+        "w0": [
+          "w0",
+          "w1",
+          "w2",
+          "w3"
+        ],
+        "w1": [
+          "w0",
+          "w1",
+          "w2",
+          "w3"
+        ],
+        "w2": [
+          "w0",
+          "w1",
+          "w2",
+          "w3"
+        ],
+        "w3": [
+          "w0",
+          "w1",
+          "w2",
+          "w3"
+        ]
+      }
+    },
+    "labels": {
+      "w0": [],
+      "w1": [
+        "blocked-r3"
+      ],
+      "w2": [
+        "blocked-r6"
+      ],
+      "w3": [
+        "blocked-r6",
+        "blocked-r3"
+      ]
+    },
+    "designated": [
+      "w3",
+      "w2",
+      "w1",
+      "w0"
+    ]
+  },
+  "actions": {
+    "goto-door3_r1": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-goto-door3"
+      ],
+      "relations": {
+        "Fully": {
+          "e-goto-door3": [
+            "e-goto-door3"
+          ]
+        }
+      },
+      "designated": [
+        "e-goto-door3"
+      ],
+      "preconditions": {
+        "e-goto-door3": {
+          "formula": {
+            "connective": "not",
+            "formula": "at-door3_r1"
+          }
+        }
+      },
+      "effects": {
+        "e-goto-door3": {
+          "at-door3_r1": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "goto-door6_r1": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-goto-door6"
+      ],
+      "relations": {
+        "Fully": {
+          "e-goto-door6": [
+            "e-goto-door6"
+          ]
+        }
+      },
+      "designated": [
+        "e-goto-door6"
+      ],
+      "preconditions": {
+        "e-goto-door6": {
+          "formula": {
+            "connective": "not",
+            "formula": "at-door6_r1"
+          }
+        }
+      },
+      "effects": {
+        "e-goto-door6": {
+          "at-door6_r1": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "inspect3_r1": {
+      "action-type": "semi-private-sensing",
+      "events": [
+        "e-inspect3-blocked",
+        "e-inspect3-clear"
+      ],
+      "relations": {
+        "Fully": {
+          "e-inspect3-blocked": [
+            "e-inspect3-blocked"
+          ],
+          "e-inspect3-clear": [
+            "e-inspect3-clear"
+          ]
+        },
+        "Partially": {
+          "e-inspect3-blocked": [
+            "e-inspect3-blocked",
+            "e-inspect3-clear"
+          ],
+          "e-inspect3-clear": [
+            "e-inspect3-blocked",
+            "e-inspect3-clear"
+          ]
+        }
+      },
+      "designated": [
+        "e-inspect3-blocked",
+        "e-inspect3-clear"
+      ],
+      "preconditions": {
+        "e-inspect3-blocked": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-door3_r1",
+              "blocked-r3",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "blocked-r3"
+              }
+            ]
+          }
+        },
+        "e-inspect3-clear": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-door3_r1",
+              {
+                "connective": "not",
+                "formula": "blocked-r3"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "blocked-r3"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-inspect3-blocked": null,
+        "e-inspect3-clear": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "inspect6_r1": {
+      "action-type": "semi-private-sensing",
+      "events": [
+        "e-inspect6-blocked",
+        "e-inspect6-clear"
+      ],
+      "relations": {
+        "Fully": {
+          "e-inspect6-blocked": [
+            "e-inspect6-blocked"
+          ],
+          "e-inspect6-clear": [
+            "e-inspect6-clear"
+          ]
+        },
+        "Partially": {
+          "e-inspect6-blocked": [
+            "e-inspect6-blocked",
+            "e-inspect6-clear"
+          ],
+          "e-inspect6-clear": [
+            "e-inspect6-blocked",
+            "e-inspect6-clear"
+          ]
+        }
+      },
+      "designated": [
+        "e-inspect6-blocked",
+        "e-inspect6-clear"
+      ],
+      "preconditions": {
+        "e-inspect6-blocked": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-door6_r1",
+              "blocked-r6",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "blocked-r6"
+              }
+            ]
+          }
+        },
+        "e-inspect6-clear": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-door6_r1",
+              {
+                "connective": "not",
+                "formula": "blocked-r6"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "blocked-r6"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-inspect6-blocked": null,
+        "e-inspect6-clear": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    }
+  },
+  "goal": {
+    "formula": {
+      "connective": "and",
+      "formulas": [
+        {
+          "modality-name": "Kw.box",
+          "modality-index": [
+            "r1"
+          ],
+          "formula": "blocked-r3"
+        },
+        {
+          "modality-name": "Kw.box",
+          "modality-index": [
+            "r1"
+          ],
+          "formula": "blocked-r6"
+        }
+      ]
+    }
+  }
+}

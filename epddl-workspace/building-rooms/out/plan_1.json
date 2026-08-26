@@ -1,0 +1,61 @@
+{
+  "action": "goto-door3_r1",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "inspect3_r1",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "goto-door6_r1",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "inspect6_r1",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": null
+                      },
+                      {
+                        "event": 1,
+                        "subtree": null
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "event": 1,
+            "subtree": {
+              "action": "goto-door6_r1",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "inspect6_r1",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": null
+                      },
+                      {
+                        "event": 1,
+                        "subtree": null
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
