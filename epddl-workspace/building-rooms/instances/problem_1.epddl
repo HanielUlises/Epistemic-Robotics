@@ -1,0 +1,46 @@
+(define (problem east-wing-survey)
+
+  ;; One robot, starting in room 1 at the west end of the building, which is
+  ;; neither doorway. What the initial state does *not* say is whether room 3
+  ;; or room 6 is obstructed: the theory leaves both open, so the model
+  ;; designates four worlds rather than one. A building nobody has surveyed is
+  ;; genuinely undetermined, and that is what makes the solution branch.
+
+  (:domain building-rooms)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models
+  )
+
+  (:agents r1)
+
+  (:init
+    (:and
+      (:forall (?i - agent)
+        ([C. All] (not (at-door3 ?i))))
+      (:forall (?i - agent)
+        ([C. All] (not (at-door6 ?i))))
+      (:forall (?i - agent)
+        ([C. All] (<Kw. ?i> (blocked-r3))))
+      (:forall (?i - agent)
+        ([C. All] (<Kw. ?i> (blocked-r6))))
+    )
+  )
+
+  ;; Survey the east wing: come to know, for each of the two rooms, whether it
+  ;; is passable. Knowing *whether*, not knowing *that* — a mission that only
+  ;; succeeds when the rooms turn out to be clear is not a mission, and a plan
+  ;; for it would be unexecutable in the half of the worlds where they are not.
+  ;;
+  ;; Neither conjunct can be discharged by driving alone. The robot has to
+  ;; stand at each door and look, and the planner has to work that out from the
+  ;; observability conditions rather than from anything the goal says.
+  (:goal
+    (and
+      ([Kw. r1] (blocked-r3))
+      ([Kw. r1] (blocked-r6))
+    )
+  )
+)

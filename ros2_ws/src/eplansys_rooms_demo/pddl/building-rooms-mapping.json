@@ -1,0 +1,7 @@
+{
+  "goto-door3_r1": {"action": "(goto_door r1 start door3)", "duration": 60.0},
+  "goto-door6_r1": {"action": "(goto_door r1 door3 door6)", "duration": 60.0},
+
+  "inspect3_r1":   {"action": "(look_into r1 door3)", "duration": 8.0},
+  "inspect6_r1":   {"action": "(look_into r1 door6)", "duration": 8.0}
+}
