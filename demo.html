@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Six-Room Run &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="A recorded run of the mu-calculus route planner over a six-room building: what a robot can reach, what it can know, and the difference between them.">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:#fff;color:var(--black);
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
+.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+@media(max-width:560px){
+  .nav-menu{width:100%;margin:.6rem 0 0}
+  .nav-panel{left:0;right:auto;width:100%;min-width:0}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+</style>
+
+<style>
+/* The six-room run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <a href="domains.html">Domains</a>
+          <a href="execution.html">Execution</a>
+          <a href="demo.html" aria-current="page">The six-room run</a>
+          <a href="six_room_survey.html">The six-room survey</a>
+          <hr>
+          <h6>Reports (PDF)</h6>
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">An EPDDL domain where the map supplies the knowledge</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Simulation &#183; mu-calculus routing &#183; ROS 2</p>
+    <h2>What it can reach, and what it can <em>know</em></h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      A route planner asks whether a goal is reachable. This one asks a second
+      question first: whether the cells it would drive through are known to be
+      free, and whether the agent would be able to tell it had arrived. The two
+      questions come apart, and a six-room building is enough to show where.
+      Below is a single recorded run over one of the worlds in this repository,
+      with the planner's own output at each step.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      Implemented in <a href="https://github.com/HanielUlises/Epistemic-Robotics">Epistemic-Robotics</a>,
+      routing with <span class="mono-inline">mu_path_planner</span> over <span class="mono-inline">02_building_rooms.sdf</span>.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The run</p>
+    <h3>Nine queries, in order</h3>
+
+    <p>
+      Gazebo on the left, RViz on the right. The map RViz draws is the one the
+      planner is given: white where the occupancy grid reports free, teal where
+      nobody has observed anything yet. Green is the route the fixed point
+      returns, blue the polyline the base actually drives, red the cells where
+      sensing would pay.
+    </p>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline
+             poster="" width="100%">
+        <source src="media/epistemic_rooms_demo.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/epistemic_rooms_demo.mp4">Download it instead</a>.
+      </video>
+      <figcaption>
+        140&#8201;s, unedited apart from the trim. The robot is a TurtleBot3
+        burger; the laser fan visible in Gazebo is what the local planner is
+        avoiding obstacles with.
+      </figcaption>
+    </figure>
+
+    <p>
+      The steps are chosen to separate the two questions rather than to show a
+      robot getting somewhere:
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>Step</th><th>What it asks</th><th>What comes back</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1&#8211;2</td><td>Ontic goals: room&#8202;2, then room&#8202;5</td><td>Routes, driven</td></tr>
+        <tr><td>3</td><td>The target, lying in rooms nobody observed</td><td><strong>No route.</strong> Unknown is not free</td></tr>
+        <tr><td>4&#8211;5</td><td>Room&#8202;3 sensed; the same query again</td><td>A route, because the cells became free</td></tr>
+        <tr><td>6&#8211;7</td><td>An epistemic goal over a disputed target</td><td>Sensing waypoints, not a route</td></tr>
+        <tr><td>8&#8211;9</td><td>The observation collapses the model</td><td>One world left: it knows, and goes</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ WHAT THE PLANNER SAID -->
+<section>
+  <div class="container">
+    <p class="sec-label">What the planner said</p>
+    <h3>The same query, three answers</h3>
+
+    <p>
+      Every query in the run is logged with the sets the fixed point was taken
+      over. Three lines carry the whole argument, and they differ only in what
+      was known when they were asked:
+    </p>
+
+    <pre class="code"><span class="c"># nobody has looked into the room the target lies in</span>
+zone='target' epistemic=0:  goal=<span class="k">0</span>    known=0    disputed=804  region=0      path=<span class="k">0</span>
+
+<span class="c"># the same query, after a sensing action resolves that room</span>
+zone='target' epistemic=0:  goal=<span class="k">356</span>  known=0    disputed=804  region=24907  path=<span class="k">113</span>
+
+<span class="c"># asking to *know* it arrived, once the model has collapsed to one world</span>
+zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed=<span class="k">0</span>    region=30167  path=<span class="k">107</span></pre>
+
+    <p>
+      The first is asked while the target's room has never been observed.
+      <span class="mono-inline">goal=0</span>: not one cell of the zone is known free, so the least
+      fixed point halts with an empty winning region and there is no route, in a
+      building whose corridors are entirely open. Nothing was blocking the
+      robot except that it had not looked.
+    </p>
+
+    <p>
+      The second is the same query after a sensing action resolves the room.
+      The zone did not move and the walls did not change; 356 cells became
+      known free, and a 113-cell route appears.
+    </p>
+
+    <p>
+      The third asks for knowledge rather than arrival. Between the two worlds
+      the agent holds possible the target lies in different rooms, so while
+      <span class="mono-inline">disputed=804</span> the agent cannot come to know it has arrived,
+      however easily it can stand on the cell &#8212; and what comes back is
+      where to sense, not where to drive. Only once the observation collapses
+      the model to a single world does <span class="mono-inline">known</span> catch up with
+      <span class="mono-inline">goal</span>, and the route follow.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DRIVING IT -->
+<section>
+  <div class="container">
+    <p class="sec-label">Driving it</p>
+    <h3>From a cell path to a velocity</h3>
+
+    <p>
+      The fixed point returns a path over a 4-connected grid, which is a
+      staircase grazing every inside corner: not something a differential base
+      can drive. Three layers sit between it and the wheels. Line-of-sight
+      shortcutting removes the corners that can be seen past; a smoother pulls
+      what remains towards a curve, undoing any step that would put a point
+      somewhere the map does not call free; and a dynamic window samples the
+      velocities one acceleration step away, rolls each forward as an arc, and
+      scores the survivors on progress, clearance and speed. The laser has the
+      final say, so an obstacle the map never had is still avoided.
+    </p>
+
+    <p>
+      Measured against Gazebo's own poses for the robot rather than against its
+      odometry &#8212; wheel odometry keeps integrating while a base is held
+      against a wall, and so cannot answer this question at all:
+    </p>
+
+    <table class="data">
+      <tbody>
+        <tr><td>Distance driven</td><td>24.71&#8201;m</td></tr>
+        <tr><td>Closest approach to any obstacle</td><td>0.225&#8201;m</td></tr>
+        <tr><td>Robot body radius</td><td>0.105&#8201;m</td></tr>
+        <tr><td>Contacts</td><td><strong>0</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCING -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproducing it</p>
+    <h3>Running the same nine steps</h3>
+
+    <p>
+      The harness lives in <span class="mono-inline">demo/</span> and is deliberately outside the
+      ROS packages, so that nothing in them depends on it. It rasterises the
+      world SDF into the occupancy grid the planner subscribes to, publishes a
+      Kripke snapshot grounding the six rooms as zones, and walks the script.
+    </p>
+
+    <pre class="code">colcon build &amp;&amp; source install/setup.bash
+
+./demo/run_demo.sh out.mp4      <span class="c"># gazebo and rviz side by side, recorded</span>
+REHEARSE=1 ./demo/run_demo.sh   <span class="c"># the same, without recording</span>
+./demo/smoke.sh                 <span class="c"># headless, for checking the logic alone</span></pre>
+
+    <p class="note">
+      Both controllers run on <span class="mono-inline">/clock</span>. The GUI does not simulate at
+      wall-clock speed, and a controller ticking on wall time issues several
+      commands per simulated step: the window opens faster than the base can
+      accelerate, and the robot overshoots into whatever it was rounding.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="eplansys_execution.pdf">Technical report (PDF)</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">3 packages &#183; 82 tests &#183; ROS 2</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  document.addEventListener('click', function(e){
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+</body>
+</html>

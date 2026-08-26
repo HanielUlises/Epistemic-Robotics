@@ -265,11 +265,14 @@ footer a:hover{color:var(--red)}
           <a href="index.html" aria-current="page">Overview</a>
           <a href="domains.html">Domains</a>
           <a href="execution.html">Execution</a>
+          <a href="demo.html">The six-room run</a>
+          <a href="six_room_survey.html">The six-room survey</a>
           <hr>
           <h6>Reports (PDF)</h6>
           <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
           <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
           <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">An EPDDL domain where the map supplies the knowledge</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
         </div>
       </details>
@@ -1218,6 +1221,25 @@ footer a:hover{color:var(--red)}
         </svg>
       </a>
     </div>
+
+    <div class="cta">
+      <div class="cta-txt">
+        <h4>Watching a robot come to know something</h4>
+        <p>
+          A recorded run of the whole stack: an EPDDL mission whose goal is
+          knowledge, a policy that branches on an observation not yet made, and
+          the observation itself supplied by a map the robot builds with its own
+          laser while it drives.
+        </p>
+      </div>
+      <a class="cta-go" href="six_room_survey.html">
+        The six-room survey
+        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+          <path d="M1 5h8M5.5 1.5L9 5l-3.5 3.5" stroke="currentColor" stroke-width="1.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -1226,6 +1248,8 @@ footer a:hover{color:var(--red)}
     <div class="ftr">
       <span class="ftr-l">
         <a href="execution.html">Execution layer</a>
+        &nbsp;&middot;&nbsp;
+        <a href="six_room_survey.html">The six-room survey</a>
         &nbsp;&middot;&nbsp;
         <a href="https://github.com/HanielUlises/epistemic-robotics">epistemic-robotics</a>
         &nbsp;·&nbsp;

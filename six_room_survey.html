@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Six-Room Survey &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="An EPDDL domain whose goal is knowledge, solved as a branching policy and executed on ePlanSys, with the observation supplied by a SLAM map rather than by the planner.">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:#fff;color:var(--black);
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
+.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+@media(max-width:560px){
+  .nav-menu{width:100%;margin:.6rem 0 0}
+  .nav-panel{left:0;right:auto;width:100%;min-width:0}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+</style>
+
+<style>
+/* The six-room run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <a href="domains.html">Domains</a>
+          <a href="execution.html">Execution</a>
+          <a href="demo.html">The six-room run</a>
+          <a href="six_room_survey.html" aria-current="page">The six-room survey</a>
+          <hr>
+          <h6>Reports (PDF)</h6>
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">An EPDDL domain where the map supplies the knowledge</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">EPDDL &#183; ePlanSys &#183; DEL policies on ROS 2</p>
+    <h2>A goal that is <em>knowledge</em></h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      The companion page on this site routes a robot with a mu-calculus fixed
+      point. This one asks a different question of the same building. The
+      mission is not to reach the east wing but to come to <em>know</em>
+      whether it is passable, the mission is written in EPDDL, and the answer
+      is supplied by a map the robot builds with its own laser rather than by
+      anything the planner imagines.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      Domain and instance in
+      <span class="mono-inline">epddl-workspace/building-rooms</span>; executed on
+      <a href="https://github.com/ePlanSys/eplansys">ePlanSys</a>, grounded with
+      <a href="https://github.com/HanielUlises/plank">plank</a>, solved by
+      <a href="https://github.com/HanielUlises/Aletheia">Aletheia</a>.
+      <a class="ext-chip" href="six_room_survey.pdf">Technical report (PDF)</a>
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ THE RUN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The run</p>
+    <h3>Watching a robot come to know something</h3>
+
+    <p>
+      Gazebo on the left, RViz on the right. The map RViz draws is the one the
+      robot is building as it drives, and the captions name the mission's goal,
+      the epistemic action running at that moment, and how far through the
+      policy the executor has got.
+    </p>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%">
+        <source src="media/eplansys_six_room_survey.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/eplansys_six_room_survey.mp4">Download it instead</a>.
+      </video>
+      <figcaption>
+        202&#8201;s, unedited. The blue fan is the laser the map is built from;
+        the orange block in room&#8202;3 is the obstruction the robot has to
+        find out about.
+      </figcaption>
+    </figure>
+
+    <p>
+      What to watch for: the robot drives into room&#8202;3, turns to face it,
+      and holds still. The caption changes from
+      <span class="mono-inline">ONTIC goto-door3_r1</span> to
+      <span class="mono-inline">SENSING inspect3_r1</span>, and a moment later
+      the map fills in and the region resolves. That observation is what the
+      policy branches on &#8212; and only then does the robot set off for
+      room&#8202;6.
+    </p>
+
+    <pre class="code">[planner]    [epistemic] policy with 6 nodes, branching
+[perception] 'room3' is <span class="k">blocked</span>: inspect3_r1 observed e-inspect3-blocked
+[epistemic]  applied inspect3_r1 -&gt; e-inspect3-blocked
+[bt]         (look_into r1 door3) observed e-inspect3-blocked
+[epistemic]  applied goto-door6_r1
+[perception] 'room6' is <span class="k">clear</span>: inspect6_r1 observed e-inspect6-clear
+[bt]         (look_into r1 door6) observed e-inspect6-clear
+[bt] [goal]  (and (Kw r1 blocked-r3) (Kw r1 blocked-r6))
+<span class="k">Successfully finished</span></pre>
+
+    <p>
+      The two rooms answer differently, which is the point: the branch is
+      exercised rather than implied. Nothing in the stack decided those answers
+      &#8212; both came from the occupancy grid the robot built with its own
+      laser.
+    </p>
+
+    <table class="data">
+      <tbody>
+        <tr><td>Distance driven</td><td>27.88&#8201;m</td></tr>
+        <tr><td>Closest approach to any obstacle</td><td>0.307&#8201;m</td></tr>
+        <tr><td>Robot body radius</td><td>0.105&#8201;m</td></tr>
+        <tr><td>Contacts</td><td><strong>0</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      Measured against Gazebo's own poses for the robot, not its odometry:
+      wheel odometry keeps integrating while a base is held against a wall, so
+      it cannot answer whether anything was hit.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE DOMAIN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The domain</p>
+    <h3>Four propositions, and two ways of finding out</h3>
+
+    <p>
+      Rooms 3 and 6 lie east of the cross corridor; the robot starts in room 1
+      at the west end. Whether either east room is obstructed is not stated in
+      the initial condition, so the model designates <strong>four worlds</strong>
+      rather than one. A building nobody has surveyed is genuinely undetermined,
+      and that is what makes the solution branch.
+    </p>
+
+    <pre class="code"><span class="c">;; the sensing action: two events, one per answer, neither known in advance</span>
+(:action inspect3
+  :parameters (?i - agent)
+  :action-type (<span class="k">semi-private-sensing</span>
+    (e-inspect3-blocked ?i)
+    (e-inspect3-clear ?i) )
+  :observability-conditions
+    (:and
+      (?i <span class="k">Fully</span>)
+      (default <span class="k">Partially</span>) ) )
+
+<span class="c">;; knowing *whether*, not knowing *that*</span>
+(:goal (and ([<span class="k">Kw.</span> r1] (blocked-r3)) ([<span class="k">Kw.</span> r1] (blocked-r6))))</pre>
+
+    <p>
+      Semi-private sensing says the agent that looks learns the answer, and
+      anyone else present sees it look without learning what it saw. With one
+      robot the distinction is invisible &#8212; and modelling it as fully
+      public would still be a lie, one that stops being harmless the moment a
+      second robot joins.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE POLICY -->
+<section>
+  <div class="container">
+    <p class="sec-label">The policy</p>
+    <h3>Four leaves, six branches, depth four</h3>
+
+    <p>
+      Aletheia picks its heuristic and strategy from the task's own features
+      rather than from a flag, and reports which rule decided each:
+    </p>
+
+    <pre class="code">[main] Heuristic: knowledge-spread (auto, rule <span class="k">'kw-only-goal'</span>)
+[main] Strategy:  AO* (auto, rule <span class="k">'sensing-small-designated'</span>)
+[aostar] Solution found at depth 4  Expanded=32 Generated=35 Memo=6/6
+[validator] OK &#8212; 4 leaves, 6 branches checked
+
+goto-door3_r1
+  ev0: inspect3_r1
+    ev0: goto-door6_r1 -&gt; inspect6_r1     <span class="c"># room 3 seen blocked</span>
+    ev1: goto-door6_r1 -&gt; inspect6_r1     <span class="c"># room 3 seen clear</span></pre>
+
+    <p>
+      Both branches continue to the second room, and they are distinct nodes
+      rather than a shared subtree. Which one runs is decided by an observation
+      that has not been made when the plan is built &#8212; the definition of a
+      policy as against a sequence.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE MAP -->
+<section>
+  <div class="container">
+    <p class="sec-label">Where the knowledge comes from</p>
+    <h3>The map, read as an observation</h3>
+
+    <p>
+      Nothing in the stack invents the answer. The perception node classifies a
+      named region of the occupancy grid and reports what it found as the
+      outcome of the sensing action the policy branched on:
+    </p>
+
+    <pre class="code">epistemic_perception:
+  ros__parameters:
+    regions: ["room3", "room6"]
+    room3:
+      boxes: [4.25, 0.25, 11.8, 7.8]
+      atom: <span class="k">"blocked-r3"</span>
+      atom_true_when_clear: <span class="k">false</span>
+      sensing_action: <span class="k">"inspect3_r1"</span>
+      outcome_when_clear: <span class="k">"e-inspect3-clear"</span>
+      outcome_when_blocked: <span class="k">"e-inspect3-blocked"</span></pre>
+
+    <p>
+      A region is <em class="term">clear</em> only when every cell in it has
+      been observed and settled, <em class="term">blocked</em> when any one cell
+      is occupied, and undecided otherwise. Occupied beats unobserved, since no
+      further looking removes an obstacle; unobserved beats free, since a region
+      is clear only when all of it is.
+    </p>
+
+    <p>
+      The grid is built by <span class="mono-inline">slam_toolbox</span> from
+      the robot's own laser while it drives, and this is what makes the
+      demonstration honest rather than arranged: a room the robot has not
+      entered is unobserved in the grid and undetermined in the Kripke model at
+      the same time. Those are two views of one fact. No prepared map is
+      published anywhere in the system.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS -->
+<section>
+  <div class="container">
+    <p class="sec-label">What building it found</p>
+    <h3>Five defects, and a modelling question</h3>
+
+    <p>
+      Getting this to run end to end turned up five faults in the stack, each of
+      which stopped the mission outright. All are fixed.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>Where</th><th>What was wrong</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="mono-inline">plansys2_executor</span></td>
+          <td>Rendering any policy killed the node with SIGSEGV: a range-<span class="mono-inline">for</span> over
+              <span class="mono-inline">get_parameter(...).as_string_array()</span> iterated a destroyed vector and handed
+              <span class="mono-inline">dlopen</span> freed memory. Only bites when BT node plugins are configured &#8212; that is, only in the epistemic setup.</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">plansys2_bringup</span></td>
+          <td><span class="mono-inline">regions: []</span> in the shipped params: an empty list has no element type, so perception threw at construction every time it was launched.</td>
+        </tr>
+        <tr>
+          <td>five packages</td>
+          <td>Rolling-only <span class="mono-inline">EventsExecutor</span> and <span class="mono-inline">ServicesQoS</span> made the fork unbuildable on the Humble its own CI targets.</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">plansys2_epistemic_perception</span></td>
+          <td>An observation arriving 78&#8201;ms before the executor's own update was refused as a model/world divergence and, by design, never retried &#8212; losing a reading the model was about to accept.</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">plansys2_epistemic_executor</span></td>
+          <td>With the observation applied first, the behaviour tree applied the same sensing action again and was refused, because its <span class="mono-inline">Kw</span> precondition no longer held &#8212; it had succeeded.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      The demonstration also settled a modelling question the domain does not
+      answer: what a robot should physically <em>do</em> when the policy says
+      <span class="mono-inline">inspect3</span>. A timed pause cannot tell success from failure. A
+      rotating sweep only ever kept a stalled mapper alive. What the action does
+      now is drive in, turn to face the room, hold still, and end exactly when
+      <span class="mono-inline">(Kw r1 blocked-r3)</span> holds &#8212; or fail and say so. A sensing action
+      exists to acquire knowledge, so knowledge is what ends it.
+    </p>
+
+    <p class="note">
+      One consequence is about sensors rather than models. A region is
+      <em class="term">blocked</em> the instant one cell in it is occupied, but
+      <em class="term">clear</em> only when every cell has been observed and
+      settled &#8212; which cannot be decided for a patch lying in open floor,
+      because a 3.5&#8201;m laser returns nothing across a 7.5&#8201;m room and
+      free space is traced only along beams that come back. The region a robot
+      can settle is the one its beams cross on the way to a wall.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="eplansys_execution.pdf">Technical report (PDF)</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">3 packages &#183; 82 tests &#183; ROS 2</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  document.addEventListener('click', function(e){
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+</body>
+</html>

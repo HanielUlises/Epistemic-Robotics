@@ -1,0 +1,402 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, fit, backgrounds, calc, shapes.geometric}
+\usepackage[hidelinks]{hyperref}
+
+%  ---  Palette shared with the companion report  ---
+\definecolor{ink}{RGB}{26,30,36}
+\definecolor{slate}{RGB}{92,101,112}
+\definecolor{mist}{RGB}{233,235,238}
+\definecolor{rulegrey}{RGB}{188,194,201}
+\definecolor{steel}{RGB}{47,72,102}
+\definecolor{steellight}{RGB}{124,146,172}
+\definecolor{signal}{RGB}{160,32,45}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=steel,
+    citecolor=steel,
+    urlcolor=steel,
+    pdftitle={The Six-Room Survey: An EPDDL Domain Executed on ePlanSys},
+    pdfauthor={Haniel Ulises},
+}
+
+\color{ink}
+
+\setlength{\headheight}{22pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{slate}{\itshape The Six-Room Survey}}
+\fancyhead[R]{\small\textcolor{slate}{\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulegrey}\leaders\hrule height \headrulewidth\hfill}}
+
+\titleformat{\section}{\normalfont\large\bfseries\color{ink}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries\color{ink}}{\thesubsection}{0.7em}{}
+\titleformat{\paragraph}[runin]{\normalfont\bfseries\color{slate}}{}{0em}{}[.]
+
+\captionsetup{font=small, labelfont={bf,color=slate}, textfont=footnotesize}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\lstdefinestyle{sys}{
+    backgroundcolor=\color{mist},
+    basicstyle=\ttfamily\scriptsize\color{ink},
+    keywordstyle=\color{steel}\bfseries,
+    commentstyle=\color{slate}\itshape,
+    stringstyle=\color{slate},
+    morecomment=[l]{\#},
+    morekeywords={executor,ros__parameters,bt_builder_plugin,bt_node_plugins,
+        planner,plan_solver_plugins,EPISTEMIC,conditional_plan,action_mapping,
+        Sequence,ReactiveSequence,CheckKnowledge,ApplyEpistemicUpdate,
+        EpistemicSwitch,CheckEpistemicGoal,ExecuteAction,true,false,ok,refused},
+    frame=single,
+    rulecolor=\color{rulegrey},
+    framesep=5pt,
+    xleftmargin=6pt,
+    xrightmargin=0pt,
+    breaklines=true,
+    showstringspaces=false,
+    columns=fullflexible,
+    captionpos=b,
+}
+\lstset{style=sys}
+
+%  ---  Notation  ---
+\newcommand{\Ag}{\mathcal{A}}
+\newcommand{\Mod}{\mathcal{M}}
+\newcommand{\Ev}{\mathcal{E}}
+\newcommand{\prd}{\otimes}
+\newcommand{\Kop}[1]{K_{#1}}
+\newcommand{\Kw}[1]{\mathit{Kw}_{#1}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2.4cm}
+{\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[0.9cm]
+{\LARGE\bfseries The Six-Room Survey\par}
+\vspace{0.5cm}
+{\large\color{slate} An EPDDL Domain Where the Map Supplies the Knowledge,\\ Executed on ePlanSys\par}
+\vspace{0.7cm}
+{\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[1.4cm]
+
+{\large Haniel Ulises\par}
+\vspace{0.3cm}
+{\color{slate} Epistemic Robotics}\\
+\vspace{0.15cm}
+{\color{slate}\today}
+
+\vfill
+{\color{slate}\small
+A single robot, six rooms, and a goal that no classical planner can state:
+not to reach the east wing, but to \emph{know} whether it is passable.
+The observation is not imagined by the planner --- it is produced by
+\code{plansys2\_epistemic\_perception} from an occupancy grid the robot's own
+laser builds while it drives.}
+\vspace{1.2cm}
+\end{titlepage}
+
+\section{What the domain has to express}
+
+A survey mission over a building is a poor fit for classical planning, and the
+reason is not the geometry. A robot can be told to drive to the far side of a
+building and a metric planner will route it there. What it cannot be told is
+that the mission succeeds only once the robot \emph{knows} whether the far side
+is passable --- a condition about the robot's information, not about the world.
+
+The distinction has teeth when the answer is not determined in advance. Rooms
+nobody has entered are neither known to be clear nor known to be blocked, and a
+plan that assumes either is unexecutable in half of the situations it will meet.
+What the mission needs is a policy: drive somewhere the question can be
+answered, answer it, and continue accordingly.
+
+This report describes such a domain --- \code{building-rooms} --- its solution,
+and its execution on ePlanSys, together with the defect that currently stops the
+execution half short.
+
+\section{The domain}
+
+The building has six rooms. Rooms~3 and~6 lie east of a cross corridor and are
+the subject of the survey; the robot starts in room~1 at the west end. Four
+propositions suffice:
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\code{blocked-r3}, \code{blocked-r6} & whether each east room is obstructed \\
+\code{at-door3 ?i}, \code{at-door6 ?i} & whether \code{?i} stands where that room can be seen into \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two ontic actions drive to the doorways, and are public: in a fleet every robot
+tracks the others' positions, so the effect is common knowledge. Two sensing
+actions look in. Their type is what carries the epistemic content:
+
+\begin{lstlisting}
+(:action inspect3
+  :parameters (?i - agent)
+  :action-type (semi-private-sensing
+    (e-inspect3-blocked ?i)
+    (e-inspect3-clear ?i) )
+  :observability-conditions
+    (:and
+      (?i Fully)
+      (default Partially) ) )
+\end{lstlisting}
+
+Semi-private sensing says that the agent which looks learns the answer, while
+anyone else present sees it look without learning what it saw. With one robot
+the distinction is invisible; modelling it as fully public would nevertheless be
+a lie, and one that stops being harmless the moment a second robot is added.
+
+Each sensing action carries two events, one per answer, and neither is known to
+apply when the plan is built. That is precisely what makes the solution branch.
+
+\subsection{The instance}
+
+What the initial state does \emph{not} say is whether either room is
+obstructed. The theory leaves both open, so the model designates four worlds
+rather than one --- a building nobody has surveyed is genuinely undetermined:
+
+\begin{lstlisting}
+(:init
+  (:and
+    (:forall (?i - agent) ([C. All] (not (at-door3 ?i))))
+    (:forall (?i - agent) ([C. All] (not (at-door6 ?i))))
+    (:forall (?i - agent) ([C. All] (<Kw. ?i> (blocked-r3))))
+    (:forall (?i - agent) ([C. All] (<Kw. ?i> (blocked-r6)))) ) )
+
+(:goal (and ([Kw. r1] (blocked-r3)) ([Kw. r1] (blocked-r6))))
+\end{lstlisting}
+
+The goal is $\Kw{r_1}\,\mathit{blocked}\text{-}r_3 \wedge
+\Kw{r_1}\,\mathit{blocked}\text{-}r_6$: knowing \emph{whether}, not knowing
+\emph{that}. A mission that succeeds only when the rooms turn out to be clear is
+not a mission, and a plan for it would be unexecutable in the half of the worlds
+where they are not.
+
+\section{Grounding and search}
+
+Grounding with \textsc{plank} yields one agent, four atoms, four grounded
+actions and an initial model of four worlds, all designated:
+
+\begin{lstlisting}
+agents: ['r1']
+atoms:  ['at-door3_r1', 'blocked-r6', 'at-door6_r1', 'blocked-r3']
+actions: ['goto-door3_r1', 'goto-door6_r1', 'inspect3_r1', 'inspect6_r1']
+initial worlds: 4   designated: 4
+\end{lstlisting}
+
+\textsc{Aletheia} selects its heuristic and strategy from the task's own
+features rather than from a flag --- a goal of \code{Kw} conjuncts and a small
+designated set --- and solves it at depth four:
+
+\begin{lstlisting}
+[main] Heuristic: knowledge-spread (auto, rule 'kw-only-goal')
+[main] Strategy:  AO* (auto, rule 'sensing-small-designated')
+[aostar] Solution found at depth 4  Expanded=32 Generated=35 Memo=6/6
+[validator] OK -- 4 leaves, 6 branches checked
+\end{lstlisting}
+
+The policy is a tree, not a sequence:
+
+\begin{lstlisting}
+goto-door3_r1
+  ev0: inspect3_r1
+    ev0: goto-door6_r1 -> inspect6_r1     # room 3 seen blocked
+    ev1: goto-door6_r1 -> inspect6_r1     # room 3 seen clear
+\end{lstlisting}
+
+Both branches continue to the second room, and they are distinct nodes rather
+than a shared subtree: the executor runs one of them, and which one is decided
+by an observation that has not been made when the plan is built.
+
+\section{Where the observation comes from}
+
+The point of the demonstration is that nothing in the stack invents the answer.
+The perception node watches an occupancy grid, classifies a named region of it,
+and reports what it found as the outcome of the sensing action the policy
+branched on:
+
+\begin{lstlisting}
+epistemic_perception:
+  ros__parameters:
+    regions: ["room3", "room6"]
+    room3:
+      boxes: [4.25, 0.25, 11.8, 7.8]
+      atom: "blocked-r3"
+      atom_true_when_clear: false
+      sensing_action: "inspect3_r1"
+      outcome_when_clear: "e-inspect3-clear"
+      outcome_when_blocked: "e-inspect3-blocked"
+\end{lstlisting}
+
+A region counts as \emph{clear} only when every cell in it has been observed and
+settled, and as \emph{blocked} when any one cell is occupied; anything else is
+undecided. Occupied beats unobserved, because no further looking removes an
+obstacle, and unobserved beats free, because a region is clear only when all of
+it is.
+
+The grid is built by \code{slam\_toolbox} from the robot's own laser as it
+drives. This is what makes the demonstration honest rather than arranged: a room
+the robot has not entered is unobserved in the grid and undetermined in the
+Kripke model at the same time, and those are two views of one fact. Nothing
+publishes a prepared map.
+
+\section{Execution}
+
+The six-node epistemic bringup comes up on this domain --- domain expert,
+problem expert, planner, executor, epistemic state, epistemic perception ---
+and the planner answers with the policy above. The action mapping joins the two
+vocabularies, \code{inspect3\_r1} on the epistemic side being
+\code{(look\_into r1 door3)} in PDDL, and the executor dispatches it:
+
+\begin{lstlisting}
+[planner]    [epistemic] policy with 6 nodes, branching
+[executor]   Accepted new goal
+[perception] 'room3' is blocked: inspect3_r1 observed e-inspect3-blocked
+[epistemic]  applied inspect3_r1 -> e-inspect3-blocked
+[bt]         (look_into r1 door3) observed e-inspect3-blocked
+[epistemic]  applied goto-door6_r1
+[perception] 'room6' is clear: inspect6_r1 observed e-inspect6-clear
+[bt]         (look_into r1 door6) observed e-inspect6-clear
+[bt] [goal]  (and (Kw r1 blocked-r3) (Kw r1 blocked-r6))
+Successfully finished
+\end{lstlisting}
+
+The two rooms answer differently, so the branch is exercised rather than
+implied: the policy takes its blocked continuation out of room~3 and its clear
+one out of room~6, and the goal holds because the agent has come to know both
+propositions --- from a map it built itself while driving.
+
+\subsection{What the run cost}
+
+Measured against Gazebo's own poses for the robot rather than against its
+odometry, which keeps integrating while a base is held against a wall and so
+cannot answer the question at all:
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Distance driven & 27.88\,m \\
+Closest approach to any obstacle & 0.307\,m \\
+Robot body radius & 0.105\,m \\
+Contacts & 0 \\
+Recoveries from a stall & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Five defects the demonstration found}
+
+Building it was the test. Each of these stopped the run, and each is fixed.
+
+\paragraph{A dangling reference in the executor} \code{EpistemicBTBuilder}
+terminated with \code{SIGSEGV} whenever a policy was rendered.
+\code{ExecutorNode} iterated
+\code{get\_parameter("bt\_node\_plugins").as\_string\_array()} directly in a
+range-\code{for}. That accessor returns a reference \emph{into} the
+\code{rclcpp::Parameter} the call returned by value; the Parameter is a
+temporary and dies at the end of the full expression, so the loop walked a
+destroyed vector and handed \code{dlopen} a freed pointer --- a fault inside
+\code{strchr}, as the loader scanned the name for a dynamic string token. It
+bites only when \code{bt\_node\_plugins} is non-empty, which is exactly the
+epistemic configuration and never the classical one, which is why no existing
+test caught it.
+
+\paragraph{A parameters file that could not be loaded} The shipped
+\code{plansys2\_epistemic\_params.yaml} wrote \code{regions: []}. An empty list
+in a parameters file has no element type, so the override reaches the node with
+no value and construction throws --- the very trap the same file documents
+twenty lines earlier for \code{epddl\_libraries}. Launching with
+\code{epistemic\_perception:=True} therefore aborted every time.
+
+\paragraph{Rolling-only APIs on a Humble target} Five packages used
+\code{rclcpp::experimental::executors::EventsExecutor} and
+\code{rclcpp::ServicesQoS()}, neither of which exists in Humble, so the fork
+could not be built on the distribution its own CI names.
+\code{plansys2\_core/Compat.hpp} now selects between them by asking whether the
+header exists rather than what the distribution is called.
+
+\paragraph{A refusal that was only a race} Perception reports the moment a
+region resolves; the epistemic state learns the robot reached the doorway only
+when the executor applies the preceding action. Observed gap: 78\,ms. The state
+refused the early observation as a divergence between model and world, and
+perception --- by design --- never retried a refusal. A reading the model was
+about to be ready for was thrown away permanently. Perception now distinguishes
+\emph{not applicable yet} from a real disagreement and retries the first for a
+bounded number of grids.
+
+\paragraph{An update applied twice} With the observation landing first, the
+behaviour tree's own \code{ApplyEpistemicUpdate} then applied the same sensing
+action again and was refused, because its \code{Kw} precondition no longer held
+--- it had succeeded. The state now answers a re-applied action with the
+outcome it already produced, and repeats no update. Every other inapplicable
+action is still refused exactly as before.
+
+\section{What a sensing action turned out to be}
+
+The demonstration also settled a modelling question the domain alone does not
+answer: what a robot should physically \emph{do} when the policy says
+\code{inspect3}.
+
+A timed pause is the obvious reading and the wrong one --- it cannot tell
+success from failure, and it ends on a stopwatch rather than on knowledge. A
+rotating sweep works but only as a workaround: \code{slam\_toolbox} integrates
+nothing from a base that never moves, so the robot was spinning to keep its own
+mapper alive, which reads as confusion rather than intent.
+
+What the action does now is drive into the room, turn to face the region, hold
+still, and end exactly when \code{(Kw r1 blocked-r3)} holds in the epistemic
+state --- or fail, and say so, if the region never settles. A sensing action
+exists to acquire knowledge, so knowledge is what ends it.
+
+One consequence is worth recording, because it is a fact about sensors and not
+about the model. A region is \emph{blocked} as soon as one cell in it is
+occupied, and \emph{clear} only when every cell has been observed and settled.
+The first is decided in an instant; the second cannot be decided at all for a
+region lying in open floor, because a 3.5\,m laser returns nothing in a
+7.5\,m room and free space is only traced along beams that come back. The
+region a robot can settle is the region its beams cross on the way to a wall.
+
+\section{Reproducing}
+
+\begin{lstlisting}
+# ground and solve, without ROS
+plank export -d building-rooms.epddl -p instances/problem_1.epddl \
+      -l intermediate.epddl -o out
+epistemic_planner --task out/problem_1.json --plan out/plan_1.json --explain
+
+# the full system
+ros2 launch eplansys_rooms_demo rooms_demo_launch.py
+\end{lstlisting}
+
+The domain and instance are in \code{epddl-workspace/building-rooms}; the ROS
+side, including the two action nodes, the parameters and the launch file, is in
+\code{ros2\_ws/src/eplansys\_rooms\_demo}.
+
+\end{document}
