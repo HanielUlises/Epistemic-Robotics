@@ -84,6 +84,10 @@ header h1 a:hover{color:var(--red)}
 .nav-panel a[aria-current="page"]{font-weight:600}
 .nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
   border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
 .nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
 .nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
 @media(max-width:560px){
@@ -303,14 +307,18 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
           <a href="index.html">Overview</a>
           <a href="domains.html">Domains</a>
           <a href="execution.html">Execution</a>
-          <a href="demo.html">The six-room run</a>
-          <a href="six_room_survey.html" aria-current="page">The six-room survey</a>
+          <div class="nav-sub">
+            <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+            <a href="six_room_survey.html" aria-current="page">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+          </div>
           <hr>
           <h6>Reports (PDF)</h6>
           <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
           <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <div class="nav-sub">
+            <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          </div>
           <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
-          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">An EPDDL domain where the map supplies the knowledge</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
         </div>
       </details>
