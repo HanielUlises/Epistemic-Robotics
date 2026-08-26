@@ -113,7 +113,7 @@
 {\color{slate}\small
 A single robot, six rooms, and a goal that no classical planner can state:
 not to reach the east wing, but to \emph{know} whether it is passable.
-The observation is not imagined by the planner --- it is produced by
+The observation is not imagined by the planner: it is produced by
 \code{plansys2\_epistemic\_perception} from an occupancy grid the robot's own
 laser builds while it drives.}
 \vspace{1.2cm}
@@ -125,7 +125,8 @@ A survey mission over a building is a poor fit for classical planning, and the
 reason is not the geometry. A robot can be told to drive to the far side of a
 building and a metric planner will route it there. What it cannot be told is
 that the mission succeeds only once the robot \emph{knows} whether the far side
-is passable --- a condition about the robot's information, not about the world.
+is passable, a condition about the robot's information rather than about the
+world.
 
 The distinction has teeth when the answer is not determined in advance. Rooms
 nobody has entered are neither known to be clear nor known to be blocked, and a
@@ -133,7 +134,8 @@ plan that assumes either is unexecutable in half of the situations it will meet.
 What the mission needs is a policy: drive somewhere the question can be
 answered, answer it, and continue accordingly.
 
-This report describes such a domain --- \code{building-rooms} --- its solution,
+This report describes such a domain, \code{building-rooms}, together with its
+solution,
 and its execution on ePlanSys, together with the defect that currently stops the
 execution half short.
 
@@ -180,7 +182,8 @@ apply when the plan is built. That is precisely what makes the solution branch.
 
 What the initial state does \emph{not} say is whether either room is
 obstructed. The theory leaves both open, so the model designates four worlds
-rather than one --- a building nobody has surveyed is genuinely undetermined:
+rather than one, since a building nobody has surveyed is genuinely
+undetermined:
 
 \begin{lstlisting}
 (:init
@@ -212,8 +215,8 @@ initial worlds: 4   designated: 4
 \end{lstlisting}
 
 \textsc{Aletheia} selects its heuristic and strategy from the task's own
-features rather than from a flag --- a goal of \code{Kw} conjuncts and a small
-designated set --- and solves it at depth four:
+features rather than from a flag, a goal of \code{Kw} conjuncts over a small
+designated set, and solves it at depth four:
 
 \begin{lstlisting}
 [main] Heuristic: knowledge-spread (auto, rule 'kw-only-goal')
@@ -269,8 +272,8 @@ publishes a prepared map.
 
 \section{Execution}
 
-The six-node epistemic bringup comes up on this domain --- domain expert,
-problem expert, planner, executor, epistemic state, epistemic perception ---
+The six-node epistemic bringup comes up on this domain (domain expert,
+problem expert, planner, executor, epistemic state, epistemic perception)
 and the planner answers with the policy above. The action mapping joins the two
 vocabularies, \code{inspect3\_r1} on the epistemic side being
 \code{(look\_into r1 door3)} in PDDL, and the executor dispatches it:
@@ -291,7 +294,7 @@ Successfully finished
 The two rooms answer differently, so the branch is exercised rather than
 implied: the policy takes its blocked continuation out of room~3 and its clear
 one out of room~6, and the goal holds because the agent has come to know both
-propositions --- from a map it built itself while driving.
+propositions, from a map it built itself while driving.
 
 \subsection{What the run cost}
 
@@ -315,6 +318,7 @@ Recoveries from a stall & 0 \\
 
 Building it was the test. Each of these stopped the run, and each is fixed.
 
+\begin{sloppypar}
 \paragraph{A dangling reference in the executor} \code{EpistemicBTBuilder}
 terminated with \code{SIGSEGV} whenever a policy was rendered.
 \code{ExecutorNode} iterated
@@ -322,31 +326,34 @@ terminated with \code{SIGSEGV} whenever a policy was rendered.
 range-\code{for}. That accessor returns a reference \emph{into} the
 \code{rclcpp::Parameter} the call returned by value; the Parameter is a
 temporary and dies at the end of the full expression, so the loop walked a
-destroyed vector and handed \code{dlopen} a freed pointer --- a fault inside
+destroyed vector and handed \code{dlopen} a freed pointer, faulting inside
 \code{strchr}, as the loader scanned the name for a dynamic string token. It
 bites only when \code{bt\_node\_plugins} is non-empty, which is exactly the
 epistemic configuration and never the classical one, which is why no existing
 test caught it.
+\end{sloppypar}
 
 \paragraph{A parameters file that could not be loaded} The shipped
 \code{plansys2\_epistemic\_params.yaml} wrote \code{regions: []}. An empty list
 in a parameters file has no element type, so the override reaches the node with
-no value and construction throws --- the very trap the same file documents
+no value and construction throws: the very trap the same file documents
 twenty lines earlier for \code{epddl\_libraries}. Launching with
 \code{epistemic\_perception:=True} therefore aborted every time.
 
+\begin{sloppypar}
 \paragraph{Rolling-only APIs on a Humble target} Five packages used
 \code{rclcpp::experimental::executors::EventsExecutor} and
 \code{rclcpp::ServicesQoS()}, neither of which exists in Humble, so the fork
 could not be built on the distribution its own CI names.
 \code{plansys2\_core/Compat.hpp} now selects between them by asking whether the
 header exists rather than what the distribution is called.
+\end{sloppypar}
 
 \paragraph{A refusal that was only a race} Perception reports the moment a
 region resolves; the epistemic state learns the robot reached the doorway only
 when the executor applies the preceding action. Observed gap: 78\,ms. The state
 refused the early observation as a divergence between model and world, and
-perception --- by design --- never retried a refusal. A reading the model was
+perception, by design, never retried a refusal. A reading the model was
 about to be ready for was thrown away permanently. Perception now distinguishes
 \emph{not applicable yet} from a real disagreement and retries the first for a
 bounded number of grids.
@@ -354,7 +361,7 @@ bounded number of grids.
 \paragraph{An update applied twice} With the observation landing first, the
 behaviour tree's own \code{ApplyEpistemicUpdate} then applied the same sensing
 action again and was refused, because its \code{Kw} precondition no longer held
---- it had succeeded. The state now answers a re-applied action with the
+because it had succeeded. The state now answers a re-applied action with the
 outcome it already produced, and repeats no update. Every other inapplicable
 action is still refused exactly as before.
 
@@ -364,7 +371,7 @@ The demonstration also settled a modelling question the domain alone does not
 answer: what a robot should physically \emph{do} when the policy says
 \code{inspect3}.
 
-A timed pause is the obvious reading and the wrong one --- it cannot tell
+A timed pause is the obvious reading and the wrong one: it cannot tell
 success from failure, and it ends on a stopwatch rather than on knowledge. A
 rotating sweep works but only as a workaround: \code{slam\_toolbox} integrates
 nothing from a base that never moves, so the robot was spinning to keep its own
@@ -372,7 +379,7 @@ mapper alive, which reads as confusion rather than intent.
 
 What the action does now is drive into the room, turn to face the region, hold
 still, and end exactly when \code{(Kw r1 blocked-r3)} holds in the epistemic
-state --- or fail, and say so, if the region never settles. A sensing action
+state, or fail and say so if the region never settles. A sensing action
 exists to acquire knowledge, so knowledge is what ends it.
 
 One consequence is worth recording, because it is a fact about sensors and not

@@ -66,6 +66,12 @@ header h1 a:hover{color:var(--red)}
   transition:color .18s,background .18s}
 .nav-menu>summary::-webkit-details-marker{display:none}
 .nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
 .nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
 .nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
   min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
@@ -369,7 +375,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       <span class="mono-inline">ONTIC goto-door3_r1</span> to
       <span class="mono-inline">SENSING inspect3_r1</span>, and a moment later
       the map fills in and the region resolves. That observation is what the
-      policy branches on &#8212; and only then does the robot set off for
+      policy branches on, and only then does the robot set off for
       room&#8202;6.
     </p>
 
@@ -386,7 +392,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     <p>
       The two rooms answer differently, which is the point: the branch is
       exercised rather than implied. Nothing in the stack decided those answers
-      &#8212; both came from the occupancy grid the robot built with its own
+      both came from the occupancy grid the robot built with its own
       laser.
     </p>
 
@@ -438,7 +444,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     <p>
       Semi-private sensing says the agent that looks learns the answer, and
       anyone else present sees it look without learning what it saw. With one
-      robot the distinction is invisible &#8212; and modelling it as fully
+      robot the distinction is invisible, and modelling it as fully
       public would still be a lie, one that stops being harmless the moment a
       second robot joins.
     </p>
@@ -459,7 +465,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     <pre class="code">[main] Heuristic: knowledge-spread (auto, rule <span class="k">'kw-only-goal'</span>)
 [main] Strategy:  AO* (auto, rule <span class="k">'sensing-small-designated'</span>)
 [aostar] Solution found at depth 4  Expanded=32 Generated=35 Memo=6/6
-[validator] OK &#8212; 4 leaves, 6 branches checked
+[validator] OK: 4 leaves, 6 branches checked
 
 goto-door3_r1
   ev0: inspect3_r1
@@ -469,7 +475,7 @@ goto-door3_r1
     <p>
       Both branches continue to the second room, and they are distinct nodes
       rather than a shared subtree. Which one runs is decided by an observation
-      that has not been made when the plan is built &#8212; the definition of a
+      that has not been made when the plan is built: the definition of a
       policy as against a sequence.
     </p>
   </div>
@@ -537,7 +543,7 @@ goto-door3_r1
           <td><span class="mono-inline">plansys2_executor</span></td>
           <td>Rendering any policy killed the node with SIGSEGV: a range-<span class="mono-inline">for</span> over
               <span class="mono-inline">get_parameter(...).as_string_array()</span> iterated a destroyed vector and handed
-              <span class="mono-inline">dlopen</span> freed memory. Only bites when BT node plugins are configured &#8212; that is, only in the epistemic setup.</td>
+              <span class="mono-inline">dlopen</span> freed memory. Only bites when BT node plugins are configured, that is, only in the epistemic setup.</td>
         </tr>
         <tr>
           <td><span class="mono-inline">plansys2_bringup</span></td>
@@ -549,11 +555,11 @@ goto-door3_r1
         </tr>
         <tr>
           <td><span class="mono-inline">plansys2_epistemic_perception</span></td>
-          <td>An observation arriving 78&#8201;ms before the executor's own update was refused as a model/world divergence and, by design, never retried &#8212; losing a reading the model was about to accept.</td>
+          <td>An observation arriving 78&#8201;ms before the executor's own update was refused as a model/world divergence and, by design, never retried, losing a reading the model was about to accept.</td>
         </tr>
         <tr>
           <td><span class="mono-inline">plansys2_epistemic_executor</span></td>
-          <td>With the observation applied first, the behaviour tree applied the same sensing action again and was refused, because its <span class="mono-inline">Kw</span> precondition no longer held &#8212; it had succeeded.</td>
+          <td>With the observation applied first, the behaviour tree applied the same sensing action again and was refused, because its <span class="mono-inline">Kw</span> precondition no longer held: it had succeeded.</td>
         </tr>
       </tbody>
     </table>
@@ -564,7 +570,7 @@ goto-door3_r1
       <span class="mono-inline">inspect3</span>. A timed pause cannot tell success from failure. A
       rotating sweep only ever kept a stalled mapper alive. What the action does
       now is drive in, turn to face the room, hold still, and end exactly when
-      <span class="mono-inline">(Kw r1 blocked-r3)</span> holds &#8212; or fail and say so. A sensing action
+      <span class="mono-inline">(Kw r1 blocked-r3)</span> holds, or fail and say so. A sensing action
       exists to acquire knowledge, so knowledge is what ends it.
     </p>
 
@@ -572,7 +578,7 @@ goto-door3_r1
       One consequence is about sensors rather than models. A region is
       <em class="term">blocked</em> the instant one cell in it is occupied, but
       <em class="term">clear</em> only when every cell has been observed and
-      settled &#8212; which cannot be decided for a patch lying in open floor,
+      settled, which cannot be decided for a patch lying in open floor,
       because a 3.5&#8201;m laser returns nothing across a 7.5&#8201;m room and
       free space is traced only along beams that come back. The region a robot
       can settle is the one its beams cross on the way to a wall.

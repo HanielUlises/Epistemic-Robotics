@@ -66,6 +66,12 @@ header h1 a:hover{color:var(--red)}
   transition:color .18s,background .18s}
 .nav-menu>summary::-webkit-details-marker{display:none}
 .nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
 .nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
 .nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
   min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
@@ -462,7 +468,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
           <rect class="bx-e" x="40" y="56" width="680" height="52" rx="2"/>
           <text class="t-r" x="56" y="76">EPISTEMIC</text>
           <text class="t" x="56" y="96" font-weight="500">CheckKnowledge</text>
-          <text class="t-m" x="196" y="96">(K A looking_A) &#8212; asked of the epistemic state, not the problem expert</text>
+          <text class="t-m" x="196" y="96">(K A looking_A): asked of the epistemic state, not the problem expert</text>
 
           <line class="ln" x1="380" y1="108" x2="380" y2="126" marker-end="url(#ar)"/>
 
@@ -504,7 +510,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
           <rect class="bx" x="390" y="424" width="330" height="48" rx="2"/>
           <text class="t-m" x="406" y="444" fill="#C8102E">observed e-peek-neg</text>
-          <text class="t" x="406" y="462">AlwaysSuccess &#8212; the policy ends here</text>
+          <text class="t" x="406" y="462">AlwaysSuccess: the policy ends here</text>
 
           <line class="ln" x1="380" y1="486" x2="380" y2="510" marker-end="url(#ar)"/>
 
@@ -512,7 +518,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
           <rect class="bx-e" x="16" y="514" width="728" height="52" rx="2"/>
           <text class="t-r" x="34" y="534">EPISTEMIC</text>
           <text class="t" x="34" y="554" font-weight="500">CheckEpistemicGoal</text>
-          <text class="t-m" x="196" y="554">(Kw A tails) &#8212; asked once, of the state that actually resulted</text>
+          <text class="t-m" x="196" y="554">(Kw A tails): asked once, of the state that actually resulted</text>
 
           <text class="t-s" x="16" y="596">A node with a single continuation renders without a switch, so a plan that</text>
           <text class="t-s" x="16" y="614">never branches comes out as the flat sequence PlanSys2 would have built.</text>
@@ -542,7 +548,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
         </tr>
         <tr>
           <td><span class="mono-inline">EpistemicSwitch</span></td>
-          <td>&#8212; none &#8212;</td>
+          <td>none</td>
           <td>runs the continuation planned for what was observed</td>
         </tr>
         <tr>
@@ -747,6 +753,39 @@ executor:
     </div>
   </div>
 </section>
+<!-- ═══════════════════════════════════════════════ SEE IT RUN -->
+<section>
+  <div class="container">
+    <p class="sec-label">See it run</p>
+    <h3>The same layer, on a robot</h3>
+
+    <p>
+      Everything above is the architecture: the policy on the wire, the tree
+      that runs it, the epistemic state it consults. The six-room survey is that
+      layer executing a mission end to end, with the knowledge coming from a map
+      the robot builds with its own laser while it drives.
+    </p>
+
+    <div class="cta">
+      <div class="cta-txt">
+        <h4>A goal that is knowledge, executed</h4>
+        <p>
+          An EPDDL mission over six rooms, a policy that branches on an
+          observation not yet made, and a recorded run in which the branch is
+          decided by what the occupancy grid turns out to say.
+        </p>
+      </div>
+      <a class="cta-go" href="six_room_survey.html">
+        The six-room survey
+        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+          <path d="M1 5h8M5.5 1.5L9 5l-3.5 3.5" stroke="currentColor" stroke-width="1.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
 
 <footer>
   <div class="container-wide">
@@ -757,6 +796,8 @@ executor:
         <a href="domains.html">Domains</a>
         &nbsp;&#183;&nbsp;
         <a href="eplansys_execution.pdf">Technical report (PDF)</a>
+        &nbsp;&#183;&nbsp;
+        <a href="six_room_survey.html">The six-room survey</a>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
         &nbsp;&#183;&nbsp;

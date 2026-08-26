@@ -66,6 +66,12 @@ header h1 a:hover{color:var(--red)}
   transition:color .18s,background .18s}
 .nav-menu>summary::-webkit-details-marker{display:none}
 .nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
 .nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
 .nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
   min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
@@ -419,7 +425,7 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
       The third asks for knowledge rather than arrival. Between the two worlds
       the agent holds possible the target lies in different rooms, so while
       <span class="mono-inline">disputed=804</span> the agent cannot come to know it has arrived,
-      however easily it can stand on the cell &#8212; and what comes back is
+      however easily it can stand on the cell, and what comes back is
       where to sense, not where to drive. Only once the observation collapses
       the model to a single world does <span class="mono-inline">known</span> catch up with
       <span class="mono-inline">goal</span>, and the route follow.
@@ -447,7 +453,7 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
 
     <p>
       Measured against Gazebo's own poses for the robot rather than against its
-      odometry &#8212; wheel odometry keeps integrating while a base is held
+      odometry: wheel odometry keeps integrating while a base is held
       against a wall, and so cannot answer this question at all:
     </p>
 
