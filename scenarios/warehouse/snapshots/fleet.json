@@ -1,0 +1,11 @@
+{
+  "worlds": ["w0", "w1"],
+  "designated": ["w0"],
+  "relations": {
+    "r1": {"w0": ["w0", "w1"], "w1": ["w0", "w1"]},
+    "r2": {"w0": ["w0"], "w1": ["w1"]}
+  },
+  "labels": {"w0": ["link_up"], "w1": ["link_up"]},
+  "agents": {"1": {"name": "r1", "pose": {"x": 2, "y": 1.6}}, "2": {"name": "r2", "pose": {"x": 2, "y": 12.4}}},
+  "zones": {"dock_1": {"bounds": {"min_x": 21, "min_y": 2, "max_x": 23.5, "max_y": 4.5}}, "dock_2": {"bounds": {"min_x": 21, "min_y": 9.5, "max_x": 23.5, "max_y": 12}}, "pallet": {"worlds": {"w0": {"bounds": {"min_x": 6, "min_y": 3.4, "max_x": 7.6, "max_y": 4.6}}, "w1": {"bounds": {"min_x": 10, "min_y": 3.4, "max_x": 11.6, "max_y": 4.6}}}}}
+}

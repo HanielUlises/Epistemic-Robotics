@@ -1,0 +1,8 @@
+{
+  "worlds": ["w0"],
+  "designated": ["w0"],
+  "relations": {"r1": {"w0": ["w0"]}, "r2": {"w0": ["w0"]}},
+  "labels": {"w0": ["link_up"]},
+  "agents": {"1": {"name": "r1", "pose": {"x": 2, "y": 1.6}}, "2": {"name": "r2", "pose": {"x": 2, "y": 12.4}}},
+  "zones": {"dock_1": {"bounds": {"min_x": 21, "min_y": 2, "max_x": 23.5, "max_y": 4.5}}, "dock_2": {"bounds": {"min_x": 21, "min_y": 9.5, "max_x": 23.5, "max_y": 12}}}
+}

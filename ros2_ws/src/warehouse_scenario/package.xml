@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>warehouse_scenario</name>
+  <version>0.1.0</version>
+  <description>
+    The Amazon-warehouse scenario, in the epistemic reading.
+
+    The floor plan follows the RoboticsAcademy multi-robot Amazon warehouse
+    exercise: shelf blocks with aisles between them, a cross corridor at each
+    end, and loading docks on the east wall. What it adds is what the robots
+    do not know, and it adds it to the map rather than around it: a corridor
+    nobody has looked into is unknown rather than free, and which aisle holds
+    the pallet is a disagreement between two worlds one robot can tell apart
+    and another cannot.
+
+    Four executables: make_maps writes the floor where map_server and rviz
+    can read it, run_offline answers every case with no ROS in the way,
+    scenario_driver puts the same cases to a running mu_path_planner node
+    over topics, and render_scenario draws the answers.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>epistemic_msgs</depend>
+  <depend>mu_path_planner</depend>
+  <depend>nlohmann-json-dev</depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
