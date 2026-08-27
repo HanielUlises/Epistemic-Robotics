@@ -1,0 +1,144 @@
+(define (domain building-rooms)
+
+  ;; One robot in a six-room building, and the question a map can answer but a
+  ;; classical planner cannot ask: is the far side of the building passable,
+  ;; and does the robot *know* it is?
+  ;;
+  ;; Rooms 3 and 6 lie east of the cross corridor. Nobody has been down there,
+  ;; so whether either is obstructed is genuinely open — the initial model
+  ;; designates four worlds, one per combination. A robot at the door of a room
+  ;; can see into it; from anywhere else it cannot. Looking is what closes the
+  ;; question, and the plan therefore has to include looking.
+  ;;
+  ;; The sensing here is not a camera the planner imagines: the observation is
+  ;; produced by plansys2_epistemic_perception, which classifies the occupancy
+  ;; grid over the named region and reports the outcome of the inspect action
+  ;; below. What the robot comes to know is what the map says.
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:predicates
+    (blocked-r3)              ; room 3 is obstructed
+    (blocked-r6)              ; room 6 is obstructed
+    (at-door3 ?i - agent)     ; ?i stands where room 3 can be seen into
+    (at-door6 ?i - agent)     ; ?i stands where room 6 can be seen into
+  )
+
+  (:event nil)
+
+  ;--------------------DRIVE TO THE DOOR OF ROOM 3------------------
+  ;
+  ; The ontic actions: they change where the robot is, not what anyone
+  ; believes. Driving is public — in a fleet every robot tracks the others'
+  ; positions — so the effect is common knowledge even though this instance
+  ; has one robot in it.
+  ;
+  ; The precondition keeps the planner from driving somewhere it already is,
+  ; which would otherwise pad every policy with no-ops.
+
+  (:event e-goto-door3
+    :parameters (?i - agent)
+    :precondition (not (at-door3 ?i))
+    :effects (at-door3 ?i)
+  )
+
+  (:action goto-door3
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-door3 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------DRIVE TO THE DOOR OF ROOM 6------------------
+
+  (:event e-goto-door6
+    :parameters (?i - agent)
+    :precondition (not (at-door6 ?i))
+    :effects (at-door6 ?i)
+  )
+
+  (:action goto-door6
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-door6 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------LOOK INTO ROOM 3------------------
+  ;
+  ; Two events for one action, because what the robot will see is exactly what
+  ; the plan cannot know in advance. That is what makes the solution a policy
+  ; with a branch rather than a sequence.
+  ;
+  ; Semi-private sensing: the agent that looks learns the answer, and anyone
+  ; else present sees it look without learning what it saw. With one robot the
+  ; distinction is invisible, but modelling it as fully public would be a lie
+  ; that stops being harmless the moment a second robot is added.
+  ;
+  ; Requiring that ?i does not already know whether the room is blocked keeps
+  ; a robot from inspecting the same room twice to no effect.
+
+  (:event e-inspect3-blocked
+    :parameters (?i - agent)
+    :precondition
+      (and
+        (at-door3 ?i)
+        (blocked-r3)
+        (<Kw. ?i> (blocked-r3)) )
+  )
+
+  (:event e-inspect3-clear
+    :parameters (?i - agent)
+    :precondition
+      (and
+        (at-door3 ?i)
+        (not (blocked-r3))
+        (<Kw. ?i> (blocked-r3)) )
+  )
+
+  (:action inspect3
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing
+      (e-inspect3-blocked ?i)
+      (e-inspect3-clear ?i) )
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (default Partially) )
+  )
+
+  ;--------------------LOOK INTO ROOM 6------------------
+
+  (:event e-inspect6-blocked
+    :parameters (?i - agent)
+    :precondition
+      (and
+        (at-door6 ?i)
+        (blocked-r6)
+        (<Kw. ?i> (blocked-r6)) )
+  )
+
+  (:event e-inspect6-clear
+    :parameters (?i - agent)
+    :precondition
+      (and
+        (at-door6 ?i)
+        (not (blocked-r6))
+        (<Kw. ?i> (blocked-r6)) )
+  )
+
+  (:action inspect6
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing
+      (e-inspect6-blocked ?i)
+      (e-inspect6-clear ?i) )
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (default Partially) )
+  )
+)

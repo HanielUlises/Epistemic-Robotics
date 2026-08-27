@@ -1,0 +1,313 @@
+<?xml version="1.0" ?>
+<!--
+  MUNDO 2: Edificio con Habitaciones (Planta Baja)
+  =================================================
+  Propósito: Modelar conocimiento parcial por habitación.
+             Cada cuarto no visitado = conjunto de mundos posibles
+             desde la perspectiva de la lógica epistémica.
+  Características:
+    - 6 habitaciones interconectadas por pasillos de 1.2m
+    - Planta rectangular de 24m x 16m
+    - Pasillos centrales en cruz
+    - Obstáculos distintos en cada cuarto (mobiliario simplificado)
+  Uso en proyecto:
+    - Un agente en Hab.1 no sabe lo que hay en Hab.4 → mundo posible
+    - Al entrar a Hab.4 actualiza su modelo epistémico (acción de observación DEL)
+    - Coordinar con segundo agente para cubrir más habitaciones en paralelo
+-->
+<sdf version="1.6">
+  <world name="building_rooms">
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <gravity>0 0 -9.8</gravity>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 15 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- Suelo -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>40 30</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>40 30</size></plane></geometry>
+          <material><ambient>0.7 0.7 0.65 1</ambient><diffuse>0.7 0.7 0.65 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- MUROS EXTERIORES DEL EDIFICIO (24m x 16m)                    -->
+    <!-- ============================================================ -->
+
+    <model name="ext_north">
+      <static>true</static><pose>0 8 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>24 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>24 0.2 2</size></box></geometry>
+          <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="ext_south">
+      <static>true</static><pose>0 -8 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>24 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>24 0.2 2</size></box></geometry>
+          <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="ext_east">
+      <static>true</static><pose>12 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 16 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 16 2</size></box></geometry>
+          <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="ext_west">
+      <static>true</static><pose>-12 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 16 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 16 2</size></box></geometry>
+          <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- MUROS INTERNOS - DIVISIONES DE HABITACIONES                   -->
+    <!-- Layout: 3 columnas x 2 filas = 6 habitaciones                -->
+    <!-- Hab1(NO) | Hab2(NC) | Hab3(NE)                               -->
+    <!-- Hab4(SO) | Hab5(SC) | Hab6(SE)                               -->
+    <!-- ============================================================ -->
+
+    <!-- Muro horizontal central (divide norte/sur) -->
+    <!-- Segmento oeste con apertura en pasillo central -->
+    <model name="int_h_west">
+      <static>true</static><pose>-5.5 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>13 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>13 0.2 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Segmento este (apertura de 1.2m en x=1.5 a x=2.7) -->
+    <model name="int_h_east">
+      <static>true</static><pose>7.85 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>8.3 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>8.3 0.2 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Muro vertical izquierdo (divide Hab1/Hab2 y Hab4/Hab5) -->
+    <!-- Norte: apertura en y=5 a y=6.2 -->
+    <model name="int_v_left_n">
+      <static>true</static><pose>-4 5.4 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 5.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 5.2 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="int_v_left_s">
+      <static>true</static><pose>-4 -4.4 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 6.1 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 6.1 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Muro vertical derecho (divide Hab2/Hab3 y Hab5/Hab6) -->
+    <model name="int_v_right_n">
+      <static>true</static><pose>4 7 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 2 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="int_v_right_ns">
+      <static>true</static><pose>4 4.45 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 5.1 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 5.1 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="int_v_right_s">
+      <static>true</static><pose>4 -4.95 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 6.1 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 6.1 2</size></box></geometry>
+          <material><ambient>0.6 0.6 0.6 1</ambient><diffuse>0.6 0.6 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- MOBILIARIO / OBSTÁCULOS POR HABITACIÓN                        -->
+    <!-- Cada hab tiene obstáculos únicos para forzar exploración SLAM  -->
+    <!-- ============================================================ -->
+
+    <!-- HAB 1 (Noroeste) - Contenedores apilados -->
+    <model name="hab1_box1"><static>true</static><pose>-9 5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1 1 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1 1 1</size></box></geometry>
+          <material><ambient>0.5 0.2 0.1 1</ambient><diffuse>0.5 0.2 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="hab1_box2"><static>true</static><pose>-10 2 0.5 0 0 0.3</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>2 0.5 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2 0.5 1</size></box></geometry>
+          <material><ambient>0.5 0.2 0.1 1</ambient><diffuse>0.5 0.2 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- HAB 2 (Norcentro) - Mesa central (cilindro) -->
+    <model name="hab2_table"><static>true</static><pose>0 5 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.8</radius><length>0.8</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.8</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.2 0.4 0.6 1</ambient><diffuse>0.2 0.4 0.6 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- HAB 3 (Noreste) - Paredes internas en L -->
+    <model name="hab3_lwall1"><static>true</static><pose>9 6 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>3 0.3 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3 0.3 1</size></box></geometry>
+          <material><ambient>0.3 0.6 0.3 1</ambient><diffuse>0.3 0.6 0.3 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="hab3_lwall2"><static>true</static><pose>10.5 4.5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.3 3 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.3 3 1</size></box></geometry>
+          <material><ambient>0.3 0.6 0.3 1</ambient><diffuse>0.3 0.6 0.3 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- HAB 4 (Suroeste) - Columna central -->
+    <model name="hab4_pillar"><static>true</static><pose>-9 -4 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.5</radius><length>1.5</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.5</radius><length>1.5</length></cylinder></geometry>
+          <material><ambient>0.6 0.6 0.1 1</ambient><diffuse>0.6 0.6 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- HAB 5 (Surcentro) - Obstáculos dispersos -->
+    <model name="hab5_obj1"><static>true</static><pose>0 -5 0.4 0 0 0.4</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.5 0.4 0.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.5 0.4 0.8</size></box></geometry>
+          <material><ambient>0.6 0.2 0.5 1</ambient><diffuse>0.6 0.2 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="hab5_obj2"><static>true</static><pose>1.5 -6.5 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.8 0.8 0.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.8 0.8 0.8</size></box></geometry>
+          <material><ambient>0.6 0.2 0.5 1</ambient><diffuse>0.6 0.2 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- HAB 6 (Sureste) - Zona de objetivo (marcador rojo) -->
+    <model name="hab6_target"><static>true</static><pose>9 -5 0.05 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.5</radius><length>0.1</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.5</radius><length>0.1</length></cylinder></geometry>
+          <material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Spawn sugerido agentes:                                        -->
+    <!-- Agente 1: pose="-10 -7 0.1 0 0 0"  (entrada Hab4, Suroeste)  -->
+    <!-- Agente 2: pose="-10  7 0.1 0 0 0"  (entrada Hab1, Noroeste)  -->
+    <!-- Objetivo: pose="9   -5 0.1 0 0 0"  (Hab6, Sureste)           -->
+
+
+    <!-- The agent r1, in room 1 at the west end. It carries the laser that
+         builds the map, so where it has not been is unobserved in the grid and
+         undetermined in the epistemic model at the same time. -->
+    <include>
+      <uri>model://turtlebot3_burger</uri>
+      <name>r1</name>
+      <pose>-10.5 6.0 0.01 0 0 0</pose>
+    </include>
+
+    <!-- Debris in the entry of room 3. The mission is to find out whether the
+         east rooms are passable, and a mission whose answer is the same for
+         both rooms would not show the policy branching. -->
+    <model name="r3_debris">
+      <static>true</static><pose>6.2 1.6 0.3 0 0 0.4</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.9 0.6 0.6</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.9 0.6 0.6</size></box></geometry>
+          <material><ambient>0.7 0.35 0.2 1</ambient><diffuse>0.7 0.35 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Publishes /gazebo/model_states: the robot's true pose. Wheel odometry
+         keeps integrating while a base is held against a wall, so it cannot
+         answer whether the robot actually moved, and that is precisely the
+         question a demonstration has to answer honestly. -->
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/gazebo</namespace>
+      </ros>
+      <update_rate>10.0</update_rate>
+    </plugin>
+
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>0 -26 24 0 0.72 1.5708</pose>
+      </camera>
+    </gui>
+
+  </world>
+</sdf>

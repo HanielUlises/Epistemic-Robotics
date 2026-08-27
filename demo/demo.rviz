@@ -1,0 +1,136 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded: ~
+    Tree Height: 600
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Map
+      Enabled: true
+      Name: Map
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map
+      Update Topic:
+        Value: /map_updates
+      Use Timestamp: false
+      Color Scheme: map
+      Draw Behind: true
+      Alpha: 0.9
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Zones
+      Namespaces:
+        {}
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /demo/zones
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Robot
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /demo/robot
+      Value: true
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: Route
+      Color: 60; 255; 120
+      Alpha: 1
+      Line Style: Billboards
+      Line Width: 0.25
+      Buffer Length: 1
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.15
+      Pose Style: None
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /mu_planner/path
+      Value: true
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: Smoothed
+      Color: 90; 170; 255
+      Alpha: 1
+      Line Style: Billboards
+      Line Width: 0.12
+      Buffer Length: 1
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.25
+      Pose Style: None
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /demo/smoothed
+      Value: true
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: Sensing
+      Color: 255; 80; 60
+      Alpha: 1
+      Line Style: Billboards
+      Line Width: 0.35
+      Buffer Length: 1
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.05
+      Pose Style: None
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /mu_planner/sensing
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 24; 24; 28
+    Fixed Frame: map
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Current View
+      Angle: 0
+      Scale: 38
+      Target Frame: map
+      X: 0
+      Y: 0
+      Invert Z Axis: false
+      Near Clip Distance: 0.01
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 900
+  Width: 950
+  QMainWindow State: ""
