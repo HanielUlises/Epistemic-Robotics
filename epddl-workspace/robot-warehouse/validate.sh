@@ -1,106 +1,69 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # =============================================================================
-# validate.sh — Ejecuta parse, ground y validate para warehouse-inspection-1
-# Requiere: plank (https://github.com/a-burigana/plank)
-# Uso: bash validate.sh
+# The warehouse domain, end to end: parse, ground, solve, and two plans that
+# must be rejected.
+#
+# Requires plank (https://github.com/a-burigana/plank) and the epistemic
+# planner. Both are found on PATH, or through PLANK and EPISTEMIC_PLANNER.
 # =============================================================================
+set -eo pipefail
 
-LIB=~/plank/benchmarks/libraries/intermediate.epddl
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${HERE}"
+
+PLANK="${PLANK:-$(command -v plank || echo "${HOME}/plank/build/plank")}"
+PLANNER="${EPISTEMIC_PLANNER:-$(command -v epistemic_planner || echo "${HOME}/aletheia/team-3/build/epistemic_planner")}"
+LIB="${PLANK_LIB:-${HOME}/plank/benchmarks/libraries/intermediate.epddl}"
+
 DOMAIN=warehouse-domain.epddl
 PROBLEM=warehouse-problem.epddl
+OUT=out
+
+mkdir -p "${OUT}"
 
 echo "============================================================"
-echo " PARSE"
+echo " PARSE and GROUND"
 echo "============================================================"
-plank parse \
-  -d $DOMAIN \
-  -p $PROBLEM \
-  -l $LIB
+"${PLANK}" export -d "${DOMAIN}" -p "${PROBLEM}" -l "${LIB}" -o "${OUT}"
 
-echo ""
+echo
 echo "============================================================"
-echo " GROUND"
+echo " SOLVE"
 echo "============================================================"
-plank ground \
-  -d $DOMAIN \
-  -p $PROBLEM \
-  -l $LIB
+# The solution branches, so the search has to be AO*: after r1 looks into
+# bay2 there are two situations, and one plan cannot serve both.
+"${PLANNER}" \
+  --task "${OUT}/warehouse-problem.json" \
+  --plan "${OUT}/warehouse-plan.json" \
+  --conditional --timeout 120
 
-# =============================================================================
-# Plan A: Scout va a Z3, inspecciona en privado, reporta al supervisor,
-#         carrier recoge la pieza, supervisor activa alarma
-# =============================================================================
-echo ""
+echo
 echo "============================================================"
-echo " VALIDATE — Plan A (inspección + reporte + recogida + alarma)"
+echo " REJECT - a sequence, where a policy is needed"
 echo "============================================================"
-plank validate \
-  -d $DOMAIN \
-  -p $PROBLEM \
-  -l $LIB \
-  -a \
-    "move-Z1-to-Z2-arrive_r_scout" \
-    "move-Z1-to-Z2-leave_r_scout" \
-    "move-Z2-to-Z3-arrive_r_scout" \
-    "move-Z2-to-Z3-leave_r_scout" \
-    "inspect-private-Z3_r_scout" \
-    "report-damage-Z3_r_scout_r_super" \
-    "move-Z1-to-Z2-arrive_r_carrier" \
-    "move-Z1-to-Z2-leave_r_carrier" \
-    "move-Z2-to-Z3-arrive_r_carrier" \
-    "move-Z2-to-Z3-leave_r_carrier" \
-    "pickup-damaged-Z3-carry_r_carrier" \
-    "pickup-damaged-Z3-remove_r_carrier" \
-    "pickup-damaged-Z3-mark_r_carrier" \
-    "raise-alarm-Z3_r_super"
+# Everything here is right except its shape. After the inspection the model
+# still designates two worlds, and picking up in bay2 is applicable in only
+# one of them: a plan that does it anyway is a robot reaching for a pallet
+# that is somewhere else half the time.
+"${PLANK}" validate -d "${DOMAIN}" -p "${PROBLEM}" -l "${LIB}" -a \
+  "go_r1_depot_bay2" \
+  "inspect_r1_bay2" \
+  "pickup_r1_bay2" \
+  "go_r1_bay2_bay3" \
+  "go_r1_bay3_dock1" \
+  "unload_r1_dock1"
 
-# =============================================================================
-# Plan B (inválido): carrier recoge sin reporte previo.
-#         La meta epistémica ([r_super](piece-removed-Z3)) debe FALLAR.
-# =============================================================================
-echo ""
+echo
 echo "============================================================"
-echo " VALIDATE — Plan B (sin reporte: meta epistémica debe FALLAR)"
+echo " REJECT - picking up without looking"
 echo "============================================================"
-plank validate \
-  -d $DOMAIN \
-  -p $PROBLEM \
-  -l $LIB \
-  -a \
-    "move-Z1-to-Z2-arrive_r_carrier" \
-    "move-Z1-to-Z2-leave_r_carrier" \
-    "move-Z2-to-Z3-arrive_r_carrier" \
-    "move-Z2-to-Z3-leave_r_carrier" \
-    "pickup-damaged-Z3-carry_r_carrier" \
-    "pickup-damaged-Z3-remove_r_carrier" \
-    "pickup-damaged-Z3-mark_r_carrier" \
-    "raise-alarm-Z3_r_super"
+# The modal precondition of pickup: a robot may lift the pallet only where it
+# knows the pallet is. Drop that conjunct from the domain and this plan
+# becomes valid, which is exactly the classical domain this one is not.
+"${PLANK}" validate -d "${DOMAIN}" -p "${PROBLEM}" -l "${LIB}" -a \
+  "go_r1_depot_bay2" \
+  "pickup_r1_bay2"
 
-# =============================================================================
-# Plan C: Scout también despeja el obstáculo de Z2 antes de ir a Z3
-# =============================================================================
-echo ""
-echo "============================================================"
-echo " VALIDATE — Plan C (scout despeja Z2 primero)"
-echo "============================================================"
-plank validate \
-  -d $DOMAIN \
-  -p $PROBLEM \
-  -l $LIB \
-  -a \
-    "move-Z1-to-Z2-arrive_r_scout" \
-    "move-Z1-to-Z2-leave_r_scout" \
-    "clear-obstacle-Z2-remove_r_scout" \
-    "clear-obstacle-Z2-mark_r_scout" \
-    "move-Z2-to-Z3-arrive_r_scout" \
-    "move-Z2-to-Z3-leave_r_scout" \
-    "inspect-private-Z3_r_scout" \
-    "report-damage-Z3_r_scout_r_super" \
-    "move-Z1-to-Z2-arrive_r_carrier" \
-    "move-Z1-to-Z2-leave_r_carrier" \
-    "move-Z2-to-Z3-arrive_r_carrier" \
-    "move-Z2-to-Z3-leave_r_carrier" \
-    "pickup-damaged-Z3-carry_r_carrier" \
-    "pickup-damaged-Z3-remove_r_carrier" \
-    "pickup-damaged-Z3-mark_r_carrier" \
-    "raise-alarm-Z3_r_super"
+echo
+echo "Both rejections are the expected result. The plan that is accepted is"
+echo "the conditional one, in ${OUT}/warehouse-plan.json."

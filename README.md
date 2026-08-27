@@ -28,6 +28,25 @@ The dual computation bounds where an agent may go rather than where it can arriv
   <sub><b>Figure 3.</b> Safe known region and exploration frontier.</sub>
 </p>
 
+## A warehouse to run it on
+
+The floor plan of the RoboticsAcademy multi-robot Amazon warehouse exercise,
+restated so that what the robots do not know is part of the map: a corridor
+nobody has looked into is unknown rather than free, and which bay holds the
+pallet is a disagreement between two worlds one robot can tell apart and
+another cannot.
+
+```bash
+bash scenarios/warehouse/run_demo.sh          # cells: routes and where to look
+bash epddl-workspace/robot-warehouse/validate.sh   # zones: what must be known
+```
+
+The first runs six questions past the µ-calculus planner, twice each — once in
+process and once over ROS topics — and fails if the two answers differ. The
+second grounds the warehouse domain, solves it into a branching plan, and
+shows the two plans that must be rejected. Both are written up in
+[`scenarios/warehouse/README.md`](scenarios/warehouse/README.md).
+
 ## Components
 
 | Component | Role |
@@ -38,4 +57,4 @@ The dual computation bounds where an agent may go rather than where it can arriv
 | [SLAM Toolbox](https://github.com/SteveMacenski/slam_toolbox) | 2D mapping. Each robot's occupancy grid. |
 | [Nav2](https://github.com/ros-navigation/navigation2) | Navigation. Executes the ontic actions of a plan. |
 
-This repository holds what is specific to the work: the simulated fleet and its worlds, the collaborative layer that tracks which regions each robot has observed and reconciles two maps when a link is restored, µ-calculus route planning, and the experiments. The EPDDL domains and instances are under `epddl-workspace/`. Papers and the project site are on the `gh-pages` branch.
+This repository holds what is specific to the work: the simulated fleet and its worlds, the collaborative layer that tracks which regions each robot has observed and reconciles two maps when a link is restored, µ-calculus route planning, the warehouse scenario, and the experiments. The EPDDL domains and instances are under `epddl-workspace/`. Papers and the project site are on the `gh-pages` branch.
