@@ -47,10 +47,17 @@ ament_target_dependencies(mu_path_planner_node
   epistemic_msgs
 )
 
+# Exported so that another package can link the bridge and the fixed point
+# rather than reimplement either: the scenario package does, and so would any
+# node that wants to read a snapshot without going through this node.
 install(TARGETS mu_calculus epistemic_state
-  EXPORT mu_calculus_targets
+  EXPORT export_mu_path_planner
   ARCHIVE DESTINATION lib
+  INCLUDES DESTINATION include
 )
+ament_export_targets(export_mu_path_planner HAS_LIBRARY_TARGET)
+ament_export_include_directories(include)
+ament_export_dependencies(nlohmann_json)
 install(TARGETS mu_path_planner_node
   DESTINATION lib/${PROJECT_NAME}
 )

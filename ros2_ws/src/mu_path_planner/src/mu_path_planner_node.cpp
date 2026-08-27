@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <sstream>
+
 #include <rclcpp/rclcpp.hpp>
 #include <nav_msgs/msg/path.hpp>
 #include <nav_msgs/msg/occupancy_grid.hpp>
@@ -81,6 +83,16 @@ public:
         path_pub_    = create_publisher<nav_msgs::msg::Path>("/mu_planner/path", 10);
         sensing_pub_ = create_publisher<nav_msgs::msg::Path>("/mu_planner/sensing", 10);
 
+        // What the node is currently holding, latched. A query is answered
+        // against one map and one snapshot, and which ones those are is not
+        // otherwise visible from outside: a process that has just put a new
+        // map on the wire cannot tell whether the answer it is about to read
+        // was computed with that map or with the one before it. This says so,
+        // and says it by content rather than by a sequence number nobody
+        // else keeps.
+        status_pub_ = create_publisher<std_msgs::msg::String>(
+            "/mu_planner/status", rclcpp::QoS(1).transient_local());
+
         RCLCPP_INFO(get_logger(), "MuPathPlannerNode ready");
     }
 
@@ -120,6 +132,9 @@ private:
         // grid, so a snapshot held from before this map has to be reread.
         if (!last_state_json_.empty()) reparse_state();
 
+        map_hash_ = content_hash(msg->data.data(), msg->data.size());
+        publish_status();
+
         RCLCPP_INFO(get_logger(), "Map updated: %ux%u", graph_.width, graph_.height);
     }
 
@@ -134,6 +149,9 @@ private:
     void reparse_state()
     {
         snapshot_ = parse_snapshot(last_state_json_, grid_);
+        state_hash_ = content_hash(last_state_json_);
+        publish_status();
+
         if (!snapshot_.ok) {
             RCLCPP_ERROR(get_logger(), "Unusable epistemic state: %s",
                          snapshot_.error.c_str());
@@ -156,6 +174,13 @@ private:
             RCLCPP_WARN(get_logger(), "No epistemic state yet — ignoring query");
             return;
         }
+
+        // The answer carries the stamp of the question, so that a consumer
+        // can tell which query a path is the answer to. Without it a second
+        // planner on the same graph -- one left running from an earlier
+        // session is enough -- makes every subscriber read someone else's
+        // answer as its own, and nothing in the message says otherwise.
+        answering_ = msg->header.stamp;
 
         QuerySpec spec;
         spec.agent_id              = msg->agent_id;
@@ -223,11 +248,31 @@ private:
     }
 
     // ------------------------------------------------------------------
+    void publish_status()
+    {
+        std::ostringstream out;
+        out << "{\"map_hash\": " << map_hash_
+            << ", \"state_hash\": " << state_hash_
+            << ", \"width\": " << graph_.width
+            << ", \"height\": " << graph_.height
+            << ", \"state_ok\": " << (snapshot_.ok ? "true" : "false")
+            << ", \"worlds\": " << snapshot_.worlds.size()
+            << ", \"designated\": " << snapshot_.designated.size()
+            << ", \"zones\": " << snapshot_.zones.size()
+            << ", \"agents\": " << snapshot_.agents.size()
+            << "}";
+
+        std_msgs::msg::String message;
+        message.data = out.str();
+        status_pub_->publish(message);
+    }
+
+    // ------------------------------------------------------------------
     void publish_path(const rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr& pub,
                       const std::vector<CellIdx>& cell_path)
     {
         nav_msgs::msg::Path ros_path;
-        ros_path.header.stamp    = get_clock()->now();
+        ros_path.header.stamp    = answering_;
         ros_path.header.frame_id = map_frame_;
 
         const double res = map_meta_.resolution;
@@ -268,6 +313,11 @@ private:
     rclcpp::Subscription<epistemic_msgs::msg::MuPathQuery>::SharedPtr query_sub_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr               path_pub_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr               sensing_pub_;
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr             status_pub_;
+
+    uint64_t map_hash_{0};
+    uint64_t state_hash_{0};
+    builtin_interfaces::msg::Time answering_;
 };
 
 }  // namespace mu_path_planner

@@ -236,13 +236,52 @@ CellState state_of(CellIdx cell, const EvalContext& ctx) {
 std::optional<CellIdx> GridInfo::cell_at(double x, double y) const {
     if (width == 0 || height == 0 || resolution <= 0.0) return std::nullopt;
 
-    const double fc = std::floor((x - origin_x) / resolution);
-    const double fr = std::floor((y - origin_y) / resolution);
+    // A pose sitting on a cell boundary must not be placed by the last bit of
+    // the number it was divided by. The resolution of an OccupancyGrid travels
+    // as a float, so x = 2.0 m over 0.1 m/cell arrives here as 19.9999997
+    // cells and floors to 19, while the same map built with a double gives
+    // exactly 20: the robot would resolve one cell away from itself depending
+    // on which side of the wire the map came from. A quotient within a
+    // millionth of an integer is taken to be that integer.
+    // The tolerance is relative, because the error is: a float32 resolution
+    // is wrong in the seventh significant digit, so the quotient it produces
+    // is off by that much *of the quotient*. A fixed tolerance snaps y = 1.6 m
+    // and misses y = 12.4 m, which is the same bug one aisle further north.
+    // It stays far below half a cell either way, so a pose genuinely inside a
+    // cell is never moved out of it.
+    constexpr double kRelativeSlack = 1e-6;
+    auto snapped = [](double quotient) {
+        const double nearest = std::round(quotient);
+        const double slack = kRelativeSlack * std::max(1.0, std::abs(quotient));
+        return std::abs(quotient - nearest) < slack ? nearest : quotient;
+    };
+
+    const double fc = std::floor(snapped((x - origin_x) / resolution));
+    const double fr = std::floor(snapped((y - origin_y) / resolution));
     if (fc < 0.0 || fr < 0.0) return std::nullopt;
     if (fc >= static_cast<double>(width) || fr >= static_cast<double>(height))
         return std::nullopt;
 
     return static_cast<CellIdx>(fr) * width + static_cast<CellIdx>(fc);
+}
+
+// ---------------------------------------------------------------------------
+// Content hashing
+// ---------------------------------------------------------------------------
+
+uint64_t content_hash(const void* data, size_t bytes) {
+    // FNV-1a, 64 bit: the offset basis and the prime are the published ones.
+    uint64_t hash = 1469598103934665603ull;
+    const auto* bytes_in = static_cast<const unsigned char*>(data);
+    for (size_t i = 0; i < bytes; ++i) {
+        hash ^= bytes_in[i];
+        hash *= 1099511628211ull;
+    }
+    return hash;
+}
+
+uint64_t content_hash(const std::string& text) {
+    return content_hash(text.data(), text.size());
 }
 
 // ---------------------------------------------------------------------------

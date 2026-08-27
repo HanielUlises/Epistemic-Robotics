@@ -136,6 +136,58 @@ TEST(Snapshot, ResolvesAPoseAndMetricBounds) {
     EXPECT_EQ(depot->size(), 4u);
 }
 
+TEST(Snapshot, APoseOnACellBoundaryDoesNotDependOnHowTheResolutionArrived) {
+    // The resolution of an OccupancyGrid is a float, and a map built in a test
+    // is a double. Both must place a robot standing at a cell corner in the
+    // same cell, or the offline answer and the answer over the wire differ by
+    // one cell for no reason a reader could see.
+    const std::string text = R"({
+      "worlds": ["w0"], "designated": ["w0"],
+      "agents": { "1": { "name": "r1", "pose": { "x": 2.0, "y": 1.6 } } }
+    })";
+
+    GridInfo exact = make_grid();
+    exact.width = 240;
+    exact.height = 140;
+    exact.resolution = 0.1;                     // as a double
+
+    GridInfo over_the_wire = exact;
+    over_the_wire.resolution = static_cast<float>(0.1);   // as float32
+
+    const auto a = parse_snapshot(text, exact);
+    const auto b = parse_snapshot(text, over_the_wire);
+    ASSERT_TRUE(a.ok) << a.error;
+    ASSERT_TRUE(b.ok) << b.error;
+
+    ASSERT_TRUE(a.agents.at(1u).cell.has_value());
+    ASSERT_TRUE(b.agents.at(1u).cell.has_value());
+    EXPECT_EQ(*a.agents.at(1u).cell, *b.agents.at(1u).cell);
+    EXPECT_EQ(*a.agents.at(1u).cell, 16u * 240u + 20u);
+
+    // Further from the origin the float32 error is larger, and a tolerance
+    // that does not grow with it snaps one robot into place and leaves the
+    // other one cell short.
+    const std::string north = R"({
+      "worlds": ["w0"], "designated": ["w0"],
+      "agents": { "2": { "name": "r2", "pose": { "x": 2.0, "y": 12.4 } } }
+    })";
+    const auto north_exact = parse_snapshot(north, exact);
+    const auto north_wire = parse_snapshot(north, over_the_wire);
+    ASSERT_TRUE(north_exact.ok) << north_exact.error;
+    ASSERT_TRUE(north_wire.ok) << north_wire.error;
+    EXPECT_EQ(*north_exact.agents.at(2u).cell, *north_wire.agents.at(2u).cell);
+    EXPECT_EQ(*north_exact.agents.at(2u).cell, 124u * 240u + 20u);
+
+    // A pose that is genuinely inside a cell still lands where it stands.
+    const std::string inside = R"({
+      "worlds": ["w0"], "designated": ["w0"],
+      "agents": { "1": { "name": "r1", "pose": { "x": 2.07, "y": 1.63 } } }
+    })";
+    const auto c = parse_snapshot(inside, exact);
+    ASSERT_TRUE(c.ok) << c.error;
+    EXPECT_EQ(*c.agents.at(1u).cell, 16u * 240u + 20u);
+}
+
 TEST(Snapshot, MalformedInputIsRejectedRatherThanHalfRead) {
     for (const char* text : {
              "{ not json",

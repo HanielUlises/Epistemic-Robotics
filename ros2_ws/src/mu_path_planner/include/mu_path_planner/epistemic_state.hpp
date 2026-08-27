@@ -117,6 +117,21 @@ struct Formula {
 FormulaPtr parse_formula(const std::string& json_text, std::string& error);
 
 // ---------------------------------------------------------------------------
+// Content hashing
+// ---------------------------------------------------------------------------
+
+/// FNV-1a over a block of bytes.
+///
+/// It is here so that a node can say *which* map and *which* snapshot it is
+/// currently holding, and a second process can check that against what it
+/// sent without either of them agreeing on a message format first. Spelled
+/// out rather than taken from std::hash because two processes have to get the
+/// same number out of the same bytes, and std::hash promises that only within
+/// one run of one program.
+uint64_t content_hash(const void* data, size_t bytes);
+uint64_t content_hash(const std::string& text);
+
+// ---------------------------------------------------------------------------
 // The snapshot
 // ---------------------------------------------------------------------------
 
