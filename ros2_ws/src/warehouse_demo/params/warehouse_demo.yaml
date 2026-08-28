@@ -17,17 +17,40 @@ planner_client:
 planner:
   ros__parameters:
     plan_solver_timeout: 60.0
-    plan_solver_plugins: ["EPISTEMIC"]
-    EPISTEMIC:
-      plugin: "plansys2/EpistemicPlanSolver"
-      epddl_domain: "EPDDL_DOMAIN"
-      epddl_problem: "EPDDL_PROBLEM"
-      plank_command: ""
-      task_file: ""
-      heuristic: ""
-      strategy: ""
-      policy_file: ""
+    # ALETHEIA, not EPISTEMIC.
+    #
+    # Both plugins solve epistemic tasks and they are not the same searcher.
+    # `plansys2/EpistemicPlanSolver` is ePlanSys's own AO* implementation, and
+    # it solves the one-robot instance in about a second. Given the two-robot
+    # instance -- the same 2 worlds, the same 132 ground actions, the same goal
+    # -- it spent its whole sixty-second budget and returned no solution, under
+    # both of the heuristics worth trying.
+    # `plansys2/AletheiaPlanSolver` shells out to ALETHEIA, which solves that
+    # same task at depth 11 after 18254 expansions in 0.21 s and validates the
+    # policy it returns. ALETHEIA is the planner this project is built on; the
+    # in-process solver was simply the wrong default here.
+    #
+    # It reads a grounded task only, which is why the groundings are checked in
+    # and installed beside the EPDDL rather than made at launch.
+    plan_solver_plugins: ["ALETHEIA"]
+    ALETHEIA:
+      plugin: "plansys2/AletheiaPlanSolver"
+      command: "ALETHEIA_COMMAND"
+      task_file: "EPDDL_TASK"
+      # `--conditional`, which is AO*, and it is not optional here.
+      #
+      # Without it ALETHEIA runs GBFS, which searches for a *sequence*. This
+      # mission has none: every sequence commits in advance to one of the two
+      # bays and is wrong in the world where the pallet is in the other. GBFS
+      # duly exhausts the space and reports no solution, the plugin returns an
+      # empty plan, and the executor succeeds at doing nothing -- which is the
+      # worst of the failure modes here, because it looks like success.
+      arguments: "--conditional"
       action_mapping: "ACTION_MAPPING"
+      # Keep the branches. The Plan message carries them in its epistemic
+      # fields and EpistemicBTBuilder runs whichever the world turns out to
+      # take; flattening would throw away the half of the policy that makes it
+      # a policy.
       conditional_plan: "policy"
 
 executor:
@@ -40,8 +63,13 @@ executor:
 # planner's task, so neither node depends on the other's start-up order.
 epistemic_state:
   ros__parameters:
-    epddl_domain: "EPDDL_DOMAIN"
-    epddl_problem: "EPDDL_PROBLEM"
+    # The pair, already ground. See the note in CMakeLists.txt: grounding at
+    # configure time is what makes a three-agent bringup fail for no reason.
+    #
+    # The sources are deliberately *not* named beside it. Given both, the node
+    # says so and grounds the sources anyway, which is the slow path this is
+    # here to avoid.
+    task_file: "EPDDL_TASK"
 
 # The map, read as knowledge.
 #

@@ -71,25 +71,25 @@ public:
             static_cast<uint32_t>(declare_parameter<int>("inflation_cells", 0));
 
         map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
-            "/map", rclcpp::QoS(1).transient_local(),
+            "map", rclcpp::QoS(1).transient_local(),
             [this](const nav_msgs::msg::OccupancyGrid::SharedPtr msg) {
                 on_map(msg);
             });
 
         state_sub_ = create_subscription<std_msgs::msg::String>(
-            "/epistemic/state", rclcpp::QoS(1).transient_local(),
+            "epistemic/state", rclcpp::QoS(1).transient_local(),
             [this](const std_msgs::msg::String::SharedPtr msg) {
                 on_state(msg);
             });
 
         query_sub_ = create_subscription<epistemic_msgs::msg::MuPathQuery>(
-            "/mu_planner/query", 10,
+            "mu_planner/query", 10,
             [this](const epistemic_msgs::msg::MuPathQuery::SharedPtr msg) {
                 on_query(msg);
             });
 
-        path_pub_    = create_publisher<nav_msgs::msg::Path>("/mu_planner/path", 10);
-        sensing_pub_ = create_publisher<nav_msgs::msg::Path>("/mu_planner/sensing", 10);
+        path_pub_    = create_publisher<nav_msgs::msg::Path>("mu_planner/path", 10);
+        sensing_pub_ = create_publisher<nav_msgs::msg::Path>("mu_planner/sensing", 10);
 
         // What the node is currently holding, latched. A query is answered
         // against one map and one snapshot, and which ones those are is not
@@ -99,7 +99,7 @@ public:
         // and says it by content rather than by a sequence number nobody
         // else keeps.
         status_pub_ = create_publisher<std_msgs::msg::String>(
-            "/mu_planner/status", rclcpp::QoS(1).transient_local());
+            "mu_planner/status", rclcpp::QoS(1).transient_local());
 
         RCLCPP_INFO(get_logger(), "MuPathPlannerNode ready");
     }

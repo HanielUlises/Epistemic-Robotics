@@ -64,8 +64,25 @@ public:
     declare_parameter<std::vector<double>>("face_bay2", {4.50, -2.14});
     declare_parameter<std::vector<double>>("face_bay3", {4.50, -3.94});
 
-    cmd_ = create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
-    state_ = std::make_shared<plansys2::EpistemicStateClient>("look_action_state_client");
+    // The robot's own base link. The `map` frame is deliberately *not* a
+    // parameter: every robot starts in this world and measures the same
+    // building, so they share one coordinate frame and rviz can draw the
+    // fleet in it. What differs per robot is the odometry below it, and what
+    // each has actually measured -- which is a difference in the maps, not in
+    // the frame they are expressed in.
+    declare_parameter<std::string>("base_frame", "base_footprint");
+
+    // Which robot is looking. It names this node's client on the epistemic
+    // state, and it has to: a client is a node, a node name must be unique,
+    // and three look actions sharing one name means two of them lose their
+    // rosout publisher and, worse, answer to each other's service replies.
+    declare_parameter<std::string>("robot", "r1");
+
+    // Relative, so that launched inside a robot's namespace this drives that
+    // robot and nothing else.
+    cmd_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+    state_ = std::make_shared<plansys2::EpistemicStateClient>(
+      "look_action_state_client_" + get_parameter("robot").as_string());
     buffer_ = std::make_shared<tf2_ros::Buffer>(get_clock());
     listener_ = std::make_shared<tf2_ros::TransformListener>(*buffer_);
   }
@@ -74,7 +91,8 @@ private:
   bool pose(double & x, double & y, double & yaw)
   {
     try {
-      const auto t = buffer_->lookupTransform("map", "base_footprint", tf2::TimePointZero);
+      const auto t = buffer_->lookupTransform(
+        "map", get_parameter("base_frame").as_string(), tf2::TimePointZero);
       x = t.transform.translation.x;
       y = t.transform.translation.y;
       const auto & q = t.transform.rotation;

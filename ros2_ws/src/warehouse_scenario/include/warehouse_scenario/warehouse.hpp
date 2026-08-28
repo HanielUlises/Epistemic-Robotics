@@ -125,6 +125,14 @@ inline constexpr Box kDockNorth{-4.4, 5.5, -2.8, 7.0};
 inline constexpr Point kR1Start{-3.5, -9.3};
 inline constexpr Point kR2Start{-3.5, 6.2};
 
+/// The third robot of the fleet instance, which comes on shift halfway up the
+/// west corridor rather than at either dock. It is in the middle of the
+/// corridor box drive_action_node names, and it is there because the corridor
+/// is the one zone of the graph with no cargo in it: a robot standing there is
+/// out of the way of the one doing the work, and still close enough to both
+/// ends that a plan can send it somewhere useful.
+inline constexpr Point kR3Start{-3.5, -1.3};
+
 /// The range of the TurtleBot3's LDS, which is what makes a stage a stage.
 inline constexpr double kLaserRangeM = 3.5;
 

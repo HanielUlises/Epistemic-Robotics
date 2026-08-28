@@ -158,23 +158,46 @@ public:
   {
     declare_parameter<double>("timeout", 240.0);
 
-    // Nav2 does the driving. This node never writes to /cmd_vel: two things
+    // Which robot this node drives. It is only used to sign what the node
+    // says: which drives it may accept at all is `specialized_arguments`,
+    // which the executor matches positionally against the action's own
+    // arguments, so a node started for r2 never claims r1's drive.
+    declare_parameter<std::string>("robot", "r1");
+
+    // See look_action_node: `map` is shared by the fleet, the base link is
+    // not.
+    declare_parameter<std::string>("base_frame", "base_footprint");
+
+    // Nav2 does the driving. This node never writes to cmd_vel: two things
     // publishing velocities is how a robot ends up doing neither thing.
+    //
+    // Every name below is relative, and that is what makes a fleet possible.
+    // Launched inside the namespace of one robot they resolve to that robot's
+    // own Nav2, its own SLAM map, and its own route planner; launched without
+    // one they resolve exactly as the absolute names they replaced. A robot
+    // reasoning over the fleet's shared map would be the wrong thing anyway:
+    // sensing here is semi-private, and what r2 has measured is not something
+    // r1 knows.
     nav_ = rclcpp_action::create_client<NavigateToPose>(this, "navigate_to_pose");
     // A plain sentence about what the drive is doing right now, for the
     // caption in rviz. Watching a robot cross a warehouse tells you nothing
     // about why it chose that direction; this is the why.
+    //
+    // This one *is* absolute: the caption is the fleet's, not a robot's, and
+    // three of these interleaving on one topic is what it wants to show. Each
+    // line is signed, because an unattributed sentence about a warehouse with
+    // three robots in it says nothing.
     activity_ = create_publisher<std_msgs::msg::String>(
       "/warehouse/activity", rclcpp::QoS(1).transient_local());
     state_ = create_publisher<std_msgs::msg::String>(
-      "/epistemic/state", rclcpp::QoS(1).transient_local());
-    query_ = create_publisher<epistemic_msgs::msg::MuPathQuery>("/mu_planner/query", 10);
+      "epistemic/state", rclcpp::QoS(1).transient_local());
+    query_ = create_publisher<epistemic_msgs::msg::MuPathQuery>("mu_planner/query", 10);
 
     map_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
-      "/map", rclcpp::QoS(1).transient_local(),
+      "map", rclcpp::QoS(1).transient_local(),
       [this](const nav_msgs::msg::OccupancyGrid::SharedPtr msg) {grid_ = msg;});
     path_ = create_subscription<nav_msgs::msg::Path>(
-      "/mu_planner/path", 10,
+      "mu_planner/path", 10,
       [this](const nav_msgs::msg::Path::SharedPtr msg) {on_path(msg);});
 
     buffer_ = std::make_shared<tf2_ros::Buffer>(get_clock());
@@ -197,7 +220,8 @@ private:
   bool pose()
   {
     try {
-      const auto t = buffer_->lookupTransform("map", "base_footprint", tf2::TimePointZero);
+      const auto t = buffer_->lookupTransform(
+        "map", get_parameter("base_frame").as_string(), tf2::TimePointZero);
       x_ = t.transform.translation.x;
       y_ = t.transform.translation.y;
       check_frames();
@@ -798,6 +822,7 @@ private:
         saying.data = "driving to " + destination + ": following a route of " +
           std::to_string(route_.size()) + " legs";
       }
+      saying.data = get_parameter("robot").as_string() + ": " + saying.data;
       activity_->publish(saying);
 
       RCLCPP_INFO(get_logger(),

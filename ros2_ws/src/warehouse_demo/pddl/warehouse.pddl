@@ -32,6 +32,11 @@ zone
 ;; only says the looking happened.
 (looked ?r - robot ?z - zone)
 
+;; Likewise for a radio call: that ?r said something about ?z, not what it
+;; said. The content is the announcement's epistemic effect and lives in the
+;; model; this only says the fleet was on the channel to hear it.
+(announced ?r - robot ?z - zone)
+
 (holding ?r - robot)
 (delivered ?r - robot)
 
@@ -73,6 +78,29 @@ zone
     )
     :effect (and
         (at end(holding ?r))
+    )
+)
+
+;; Radioing the fleet what this robot knows about a bay.
+;;
+;; Only reachable with three robots or more. With two, `pick_up` is already
+;; public -- the fleet watching r1 lift the pallet out of a bay learns which
+;; bay it was -- and the planner declines to spend an action on saying so. A
+;; third robot that must also know, on the branch where r1 found bay 2 *empty*,
+;; is the case where watching a lift settles the wrong bay and the fleet has to
+;; be told.
+;;
+;; There is no classical condition on what may be said, because there is no
+;; classical way to say it. That a robot may only announce what it knows is
+;; `([?i] (pallet-at ?z))` on the epistemic side, and it is enforced there.
+(:durative-action announce
+    :parameters (?r - robot ?z - zone)
+    :duration ( = ?duration 4)
+    :condition (and
+        (at start(is_bay ?z))
+    )
+    :effect (and
+        (at end(announced ?r ?z))
     )
 )
 
