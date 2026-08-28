@@ -1,10 +1,9 @@
 # The warehouse scenario
 
-The floor plan is the one from the RoboticsAcademy [multi-robot Amazon
-warehouse exercise](https://jderobot.github.io/RoboticsAcademy/exercises/MobileRobots/multi_robot_amazon_warehouse/):
-shelf blocks with aisles between them, a cross corridor at each end, and
-loading docks on the east wall. Two robots, a pallet to move, a dock to bring
-it to.
+The floor is the one the RoboticsAcademy [multi-robot Amazon warehouse
+exercise](https://jderobot.github.io/RoboticsAcademy/exercises/MobileRobots/multi_robot_amazon_warehouse/)
+runs on: AWS RoboMaker's small warehouse world. Not a drawing that resembles
+it — that world's own geometry, at that world's own coordinates.
 
 What that exercise asks for is a centralised task planner that assigns the
 jobs. What it never asks is how a robot comes to *know* where the pallet is,
@@ -12,66 +11,106 @@ or what a robot should do about a part of the floor it has never seen. Both
 questions are the subject here, and both are answered on the map rather than
 around it.
 
-Twenty-four metres by fourteen, at ten centimetres a cell: 240 x 140.
+Fourteen metres by twenty-one, at five centimetres a cell: 281 x 421.
 
 | | |
 | --- | --- |
-| ![No route: the east corridor was never observed](out/unknown-is-not-free.png) | ![The same query after it was](out/after-sensing.png) |
+| ![No route: the floor between the two ends was never measured](out/unknown-is-not-free.png) | ![The same query after the sweep](out/after-sensing.png) |
 
-**Left:** the grey band is the east corridor, which nobody has looked into.
-Unknown is not free, so the least fixed point excludes it and there is no
-route to the dock at all. **Right:** the same query on the same warehouse
-after a sensing action resolved that corridor. Nothing else changed.
+**Left:** two islands of white in a grey building. r1 came on shift at
+shipping in the south and r2 at receiving in the north, and neither has walked
+the length of the warehouse. The floor between them is not free — it is
+unmeasured — so the least fixed point stops at the edge of what r1 has seen
+and there is no route to receiving at all. **Right:** the same query on the
+same warehouse after the sweep. Nothing else changed.
 
-## The two stages and the three snapshots
+## Where the floor comes from
 
-| grid | what it is |
-| --- | --- |
-| `stage_a` | the east corridor has never been observed: every cell of it is `-1` |
-| `stage_b` | the same warehouse after a sensing action settled it |
+The two maps AWS ships beside that world are SLAM captures: sparse, noisy, and
+missing most of the racks. Planning on them would make every result an artefact
+of whoever drove the robot that day. So the grid is rasterised from the
+collision meshes Gazebo itself uses for that world — the building shell, six
+rack rows, the tall shelf on the west wall, and the clutter between them —
+sliced at the heights a ground robot can hit.
+
+```bash
+python3 scenarios/warehouse/tools/rasterize_world.py
+```
+
+That writes `maps/aws_small_warehouse.pgm` for rviz and nav2, and the run
+lengths the scenario library carries with it. Both are checked in, so nothing
+in the build depends on the script or on the AWS package being installed. Run
+it again after upgrading that package; the diff is the floor moving.
+
+The building is what a laser measures. The grid the fixed point plans on is
+that building grown by the robot's radius, and the difference is not cosmetic:
+the racks stop 0.15 m short of the east wall, which to a planner that treats a
+robot as a point is a corridor running the length of the rack block and joining
+every aisle to every other. Routes down it are routes no TurtleBot could drive.
+Growing the obstacles by 0.105 m closes it and leaves 0.7 m of each aisle.
+
+## The two stages
+
+Neither stage is painted on. Each is ray cast: the set of cells a laser
+standing where the fleet has stood could actually have returned, cast against
+the building at the 3.5 m range of the TurtleBot3's LDS. What separates the two
+is only where the fleet has been.
+
+| grid | what has been measured | free | unknown |
+| --- | --- | ---: | ---: |
+| `stage_a` | each robot has looked around its own end of the building | 15793 | 100250 |
+| `stage_b` | and then the sweep: up the west corridor, along the south wall, up the service lane | 50570 | 61441 |
+
+Neither stage has seen everything — after the sweep the cluttered north-east is
+still unread — which is the point. A map is what has been measured, not what
+is there.
 
 | snapshot | what the robots know |
 | --- | --- |
-| `docks` | nothing in dispute: one world, both docks grounded on the map |
-| `pallet` | the pallet is in the bay at aisle 2 or the one at aisle 3, and r1 cannot tell which: the zone has one extent in `w0` and another in `w1` |
-| `fleet` | the same disagreement, plus r2, whose relation is the discrete partition — r2 has been down the aisles and tells the worlds apart |
+| `docks` | nothing in dispute: one world, both docks and aisle 4 grounded on the map |
+| `pallet` | the pallet is in the bay in aisle 2 or the one in aisle 3, and r1 cannot tell which: the zone has one extent in `w0` and another in `w1` |
+| `fleet` | the same disagreement, plus r2, whose relation is the discrete partition — r2 has driven the lane past both mouths and tells the worlds apart |
 
 ## The cases
 
 ```
 case                    goal   known  disputed sensing  region   iters  path   look
-unknown-is-not-free     625    625    0        0        3834     98     0      0
-after-sensing           625    625    0        0        25916    301    195    0
-ontic-pallet            192    0      384      0        25916    254    59     0
-epistemic-pallet        192    0      384      1072     25916    208    53     1
-second-robot-knows      192    192    0        192      25916    254    120    0
-safety-behind-the-link  625    625    0        0        25916    301    270    0
+unknown-is-not-free     960    960    0        0        9347     90     0      0
+after-sensing           960    960    0        0        50570    487    297    0
+ontic-pallet            336    0      672      0        50570    427    280    0
+epistemic-pallet        336    0      672      2523     50570    397    214    1
+second-robot-knows      336    336    0        336      50570    427    305    0
+safety-behind-the-link  392    392    0        0        50570    499    206    0
 ```
 
 Four things worth reading off that table.
 
-**`unknown-is-not-free` against `after-sensing`.** Same robot, same dock, same
-625 goal cells. The winning region is 3834 cells in the first and the whole
-free floor in the second, and the route goes from nothing to 195 cells. The
-difference is one corridor's worth of cells having been looked at.
+**`unknown-is-not-free` against `after-sensing`.** Same robot, same goal, the
+same 960 goal cells — and those cells are *known free* in both, because r2 has
+been standing in them the whole time. The winning region is 9347 cells in the
+first and the whole measured floor in the second, and the route goes from
+nothing to 297 cells. The difference is a corridor's worth of floor having been
+driven. Note which way round this is: the goal was never in doubt, the way
+there was.
 
 **`ontic-pallet` against `epistemic-pallet`.** Same map, same snapshot, same
-zone; the goals differ in whether the robot has to *know* it arrived. The
-ontic query drives 59 cells to the bay the designated world puts the pallet
-in and settles nothing — 384 cells stay in dispute and the robot could not say
-which bay it is standing in. The epistemic query stops 53 cells out, at the
-one place from which the question is decidable, and sends the robot there
-instead.
+zone; the goals differ in whether the robot has to *know* it arrived. The ontic
+query drives 280 cells into the aisle the designated world puts the pallet in
+and settles nothing — 672 cells stay in dispute and the robot could not say
+which aisle it is standing in. The epistemic query stops 66 cells earlier, on the
+service lane at (2.12, -4.22) — the mouth of aisle 3, and the nearest cell from
+which the question is decidable — and spends its one look there instead.
 
 **`second-robot-knows`.** The same epistemic goal for r2, who can tell `w0`
-from `w1`. Nothing is in dispute, 192 goal cells are already known to be goal
-cells, and no sensing waypoint is produced. Knowing already is cheaper than
-finding out, and the planner does not spend a look on it.
+from `w1`. Nothing is in dispute, 336 goal cells are already known to be goal
+cells, no sensing waypoint is produced, and the route runs all the way into the
+bay — r2 drives to the pallet because r2 already knows which bay it is in.
+Knowing already is cheaper than finding out.
 
 **`safety-behind-the-link`.** The safety constraint is `free ∧ link_up`, a
 formula evaluated against the model rather than a mask over the map. With the
-link up it is every free cell; take the link down — the test does — and the
-safe set is empty, so there is no route rather than a longer one.
+link up it is every measured free cell; take the link down — the test does —
+and the safe set is empty, so there is no route rather than a longer one.
 
 ## Running it
 
@@ -98,19 +137,24 @@ The scenario is also asserted rather than looked at:
 colcon test --packages-select warehouse_scenario
 ```
 
+Twelve tests, and the ones worth reading are the ones about the floor: that the
+rack rows are where the world puts them, that a cell behind a rack is not
+observed from in front of it, and that the strip behind the racks is open on
+the building's plan and shut on the planner's.
+
 ## What the wire changed, twice
 
 Two defects showed up only because the same question was asked both ways, and
 both are fixed in `mu_path_planner`:
 
 **A pose landed in a different cell depending on where the map came from.**
-`OccupancyGrid.resolution` is a float32, so `x = 2.0 m` over `0.1 m/cell`
-arrives as 19.9999997 cells and floors to 19, while the same map built with a
-double gives exactly 20. `GridInfo::cell_at` now snaps a quotient that is
-within a relative millionth of an integer, which is far below half a cell and
-well above the float32 error — and the error is relative, so the tolerance is
-too: a fixed one placed the robot at y = 1.6 m correctly and left the one at
-y = 12.4 m a cell short.
+`OccupancyGrid.resolution` is a float32, so a metric pose over `0.05 m/cell`
+arrives a hair under an integer number of cells and floors one short, while the
+same map built with a double gives exactly the right cell. `GridInfo::cell_at`
+now snaps a quotient that is within a relative millionth of an integer, which
+is far below half a cell and well above the float32 error — and the error is
+relative, so the tolerance is too: a fixed one placed a robot near the origin
+correctly and left one at the far wall a cell short.
 
 **Answers were read as answers to the wrong question.** A planner left running
 from an earlier session answers these queries too, and every subscriber reads
@@ -122,26 +166,16 @@ planner has actually taken what it just sent instead of sleeping and hoping.
 ## The domain over the same warehouse
 
 `epddl-workspace/robot-warehouse/` is this warehouse at the other altitude:
-zones rather than cells, and knowledge rather than routes. The pallet is in
-one of two bays, `pickup` has a modal precondition — a robot may lift the
-pallet only where it *knows* the pallet is — and the goal asks both that the
-pallet reach the dock and that r2 know which bay it came out of.
+zones rather than cells, and knowledge rather than routes. The zone graph is
+the building's own — shipping and receiving at the two ends of the west
+corridor, the service lane along the rack fronts, and the two candidate aisles
+off it, with no edge between them, because there is no way through.
 
 ```bash
 bash epddl-workspace/robot-warehouse/validate.sh
 ```
 
-The solution branches at depth 7 with two leaves, and the division of labour
-is not written anywhere in the domain: r1 walks to bay 2 while r2 walks to
-bay 3, and whichever of them finds the pallet carries it to the dock. Note
-what does *not* appear in the plan — the announcement. `pickup` is public, so
-the fleet's seeing it happen is already enough for r2 to learn which bay the
-pallet was in, and the planner works that out rather than spending an action
-on saying so.
-
-Two plans are rejected in the same run, and both rejections are the point: a
-sequence that inspects and then picks up regardless is not applicable, because
-after the inspection the model still designates two worlds; and a plan that
-picks up without looking fails on the modal precondition. Drop that conjunct
-and the domain is the classical one, in which a robot reaches for a pallet it
-has no reason to believe is there.
+That runs two instances and two rejections, and prints for each the pointed
+model it starts from, the goal, the actions the plan uses with their events and
+preconditions, and the policy the planner returned. Written up in
+[`epddl-workspace/robot-warehouse/README.md`](../../epddl-workspace/robot-warehouse/README.md).

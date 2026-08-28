@@ -3,6 +3,6 @@
   "designated": ["w0"],
   "relations": {"r1": {"w0": ["w0", "w1"], "w1": ["w0", "w1"]}},
   "labels": {"w0": ["link_up"], "w1": ["link_up"]},
-  "agents": {"1": {"name": "r1", "pose": {"x": 2, "y": 1.6}}},
-  "zones": {"dock_1": {"bounds": {"min_x": 21, "min_y": 2, "max_x": 23.5, "max_y": 4.5}}, "dock_2": {"bounds": {"min_x": 21, "min_y": 9.5, "max_x": 23.5, "max_y": 12}}, "pallet": {"worlds": {"w0": {"bounds": {"min_x": 6, "min_y": 3.4, "max_x": 7.6, "max_y": 4.6}}, "w1": {"bounds": {"min_x": 10, "min_y": 3.4, "max_x": 11.6, "max_y": 4.6}}}}}
+  "agents": {"1": {"name": "r1", "pose": {"x": -3.5, "y": -9.3}}},
+  "zones": {"dock_south": {"bounds": {"min_x": -4.4, "min_y": -9.9, "max_x": -2.8, "max_y": -8.5}}, "dock_north": {"bounds": {"min_x": -4.4, "min_y": 5.5, "max_x": -2.8, "max_y": 7}}, "aisle_4": {"bounds": {"min_x": 3.6, "min_y": -6.15, "max_x": 5, "max_y": -5.43}}, "pallet": {"worlds": {"w0": {"bounds": {"min_x": 3.6, "min_y": -2.45, "max_x": 5, "max_y": -1.83}}, "w1": {"bounds": {"min_x": 3.6, "min_y": -4.24, "max_x": 5, "max_y": -3.63}}}}}
 }

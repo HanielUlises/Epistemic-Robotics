@@ -1,0 +1,99 @@
+# ePlanSys over the warehouse.
+#
+# Everything the demo does beyond driving and looking is configuration, and
+# this is it. The planner is given the EPDDL pair; the epistemic state is given
+# the same pair, so that the policy and the model it is checked against speak
+# one vocabulary; and perception is given the two bays, each named with the
+# sensing action whose outcome it reports.
+
+plansys2:
+  ros__parameters:
+    use_real_time: false
+
+planner_client:
+  ros__parameters:
+    plan_solver_timeout: 60.0
+
+planner:
+  ros__parameters:
+    plan_solver_timeout: 60.0
+    plan_solver_plugins: ["EPISTEMIC"]
+    EPISTEMIC:
+      plugin: "plansys2/EpistemicPlanSolver"
+      epddl_domain: "EPDDL_DOMAIN"
+      epddl_problem: "EPDDL_PROBLEM"
+      plank_command: ""
+      task_file: ""
+      heuristic: ""
+      strategy: ""
+      policy_file: ""
+      action_mapping: "ACTION_MAPPING"
+      conditional_plan: "policy"
+
+executor:
+  ros__parameters:
+    bt_builder_plugin: "EpistemicBTBuilder"
+    bt_node_plugins: ["libplansys2_epistemic_bt_nodes.so"]
+
+# The same two EPDDL files the solver is given. Naming them twice is
+# deliberate: the state grounds them itself rather than being handed the
+# planner's task, so neither node depends on the other's start-up order.
+epistemic_state:
+  ros__parameters:
+    epddl_domain: "EPDDL_DOMAIN"
+    epddl_problem: "EPDDL_PROBLEM"
+
+# The map, read as knowledge.
+#
+# Two regions, one per bay, in metres in the map frame -- which is the AWS
+# world's own frame, so these are the bays where warehouse_scenario says they
+# are, with no shift. Getting that wrong is silent: perception watches a patch
+# of empty floor, every inspection times out with "(Kw r1 pallet-at_bay2)
+# still does not hold", and nothing says the regions were in the wrong place.
+#
+# Each names the atom its occupancy decides and the sensing action whose
+# outcome it reports, so an observation arrives as the event the policy
+# branched on rather than as an announcement from nowhere. The pallet is a
+# thing standing in a bay: the atom is true when the region reads *blocked*,
+# which is why atom_true_when_clear is false.
+#
+# The boxes sit on the near face of where a pallet stands, not over the whole
+# bay and not behind it. A laser reads the first surface it meets and nothing
+# past it, so cells on the far side of a pallet stay unobserved no matter how
+# long the robot stares: a region reaching back there never reads *blocked*,
+# it reads *unknown*, and the inspection times out with the pallet plainly in
+# view. The region has to be where a reading can actually be made.
+epistemic_perception:
+  ros__parameters:
+    map_topic: "/map"
+    regions: ["bay2", "bay3"]
+
+    bay2:
+      boxes: [4.05, -2.30, 4.45, -1.98]
+      atom: "pallet-at_bay2"
+      atom_true_when_clear: false
+      sensing_action: "inspect_r1_bay2"
+      outcome_when_clear: "e-inspect-empty"
+      outcome_when_blocked: "e-inspect-found"
+
+    bay3:
+      boxes: [4.05, -4.09, 4.45, -3.78]
+      atom: "pallet-at_bay3"
+      atom_true_when_clear: false
+      sensing_action: "inspect_r1_bay3"
+      outcome_when_clear: "e-inspect-empty"
+      outcome_when_blocked: "e-inspect-found"
+
+    # The drive that precedes a look here is a warehouse aisle away -- thirty
+    # to sixty seconds -- and the bays are visible from the corridor long
+    # before the robot reaches them. Perception therefore has to keep offering
+    # what it read until the executor has applied the drive and the model
+    # believes the robot is where it can see it. Forty grids is a few seconds
+    # and would give up on a reading that was never in dispute.
+    applicability_retries: 240
+
+    # nav2 and slam_toolbox convention. A cell between the two has been seen
+    # without being settled and counts as unobserved: calling it free would
+    # hand the robot knowledge it does not have.
+    free_below: 25
+    occupied_above: 65

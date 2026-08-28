@@ -1,17 +1,28 @@
 (define (problem warehouse-pickup)
 
-  ;; Two robots on the warehouse floor of scenarios/warehouse.
+  ;; Two robots on the floor of the AWS RoboMaker small warehouse -- the world
+  ;; the RoboticsAcademy multi-robot Amazon warehouse exercise runs on, and the
+  ;; same floor scenarios/warehouse routes over cell by cell.
   ;;
-  ;; r1 is at the depot end of the bottom corridor, r2 is waiting at the dock.
-  ;; The pallet is in one of the two bays and neither robot knows which, so the
-  ;; initial model designates two worlds: one where it is in bay2, one where it
-  ;; is in bay3.
+  ;; The zones are that building's own, and so is the shape of the graph
+  ;; between them.  The rack block fills the east half in six rows; the gaps
+  ;; between the rows are aisles, and because the racks stop 0.15 m short of
+  ;; the east wall -- nothing at all to a robot 0.21 m across -- an aisle is a
+  ;; pocket with one mouth, on the service lane.  So there is no edge from one
+  ;; bay to the next: a robot that has looked into bay2 and found it empty has
+  ;; to come back out to the lane before it can try bay3, and the plan pays
+  ;; for that.  The west corridor runs the length of the building and is what
+  ;; joins shipping in the south to receiving in the north.
   ;;
-  ;; The goal asks for two things at once. The pallet has to be at the dock,
+  ;; r1 comes on shift at shipping, r2 is waiting at receiving.  The pallet is
+  ;; in one of the two bays and neither robot knows which, so the initial model
+  ;; designates two worlds: one where it is in bay2, one where it is in bay3.
+  ;;
+  ;; The goal asks for two things at once.  The pallet has to reach receiving,
   ;; which is ontic and could be had by luck; and r2 has to know which bay it
-  ;; came out of, which cannot. r2 never leaves the dock in any plan worth
-  ;; finding, so the second conjunct is satisfiable only by r1 going, looking
-  ;; and saying so.
+  ;; came out of, which cannot.  r2 never leaves receiving in any plan worth
+  ;; finding, so the second conjunct is satisfiable only by r1 going, looking,
+  ;; and the fleet seeing what follows.
 
   (:domain robot-warehouse)
 
@@ -24,32 +35,43 @@
 
   (:agents r1 r2)
 
-  (:objects depot bay2 bay3 dock1 - zone)
+  (:objects dock_south corridor dock_north lane bay2 bay3 - zone)
 
   (:facts-init
-    ;; The bottom corridor of the map: the depot end, the two bay mouths, and
-    ;; the way east to the dock.
-    (adjacent depot bay2) (adjacent bay2 depot)
-    (adjacent bay2 bay3)  (adjacent bay3 bay2)
-    (adjacent bay3 dock1) (adjacent dock1 bay3)
-    (adjacent depot dock1) (adjacent dock1 depot)
+    ;; The west corridor: shipping at one end, receiving at the other.
+    (adjacent dock_south corridor) (adjacent corridor dock_south)
+    (adjacent corridor dock_north) (adjacent dock_north corridor)
+
+    ;; Along the south wall to the service lane in front of the racks.
+    (adjacent dock_south lane) (adjacent lane dock_south)
+
+    ;; And off the lane, the two aisles.  Each has one mouth and no way
+    ;; through to the other; that is the building, not a simplification.
+    (adjacent lane bay2) (adjacent bay2 lane)
+    (adjacent lane bay3) (adjacent bay3 lane)
+
     (bay bay2) (bay bay3)
-    (dock dock1)
+    (dock dock_north)
   )
 
   (:init
     (:and
-      ;; r1 at the depot, r2 already at the dock, and that much is common
+      ;; r1 at shipping, r2 already at receiving, and that much is common
       ;; knowledge: the fleet sees its own members move.
-      (at-ag r1 depot)
-      (not (at-ag r1 bay2)) (not (at-ag r1 bay3)) (not (at-ag r1 dock1))
-      (at-ag r2 dock1)
-      (not (at-ag r2 depot)) (not (at-ag r2 bay2)) (not (at-ag r2 bay3))
+      (at-ag r1 dock_south)
+      (not (at-ag r1 corridor)) (not (at-ag r1 dock_north))
+      (not (at-ag r1 lane)) (not (at-ag r1 bay2)) (not (at-ag r1 bay3))
+      (at-ag r2 dock_north)
+      (not (at-ag r2 dock_south)) (not (at-ag r2 corridor))
+      (not (at-ag r2 lane)) (not (at-ag r2 bay2)) (not (at-ag r2 bay3))
       ([C. All]
-        (and (at-ag r1 depot)
-             (not (at-ag r1 bay2)) (not (at-ag r1 bay3)) (not (at-ag r1 dock1))
-             (at-ag r2 dock1)
-             (not (at-ag r2 depot)) (not (at-ag r2 bay2)) (not (at-ag r2 bay3))))
+        (and (at-ag r1 dock_south)
+             (not (at-ag r1 corridor)) (not (at-ag r1 dock_north))
+             (not (at-ag r1 lane)) (not (at-ag r1 bay2)) (not (at-ag r1 bay3))
+             (at-ag r2 dock_north)
+             (not (at-ag r2 dock_south)) (not (at-ag r2 corridor))
+             (not (at-ag r2 lane)) (not (at-ag r2 bay2))
+             (not (at-ag r2 bay3))))
 
       ;; Nobody is carrying anything and nothing has been delivered.
       (:forall (?i - agent) (not (carrying ?i)))
@@ -60,7 +82,8 @@
       ;; knowledge that it is in one of them -- which bay is the open question.
       ([C. All] (and (or (pallet-at bay2) (pallet-at bay3))
                      (not (and (pallet-at bay2) (pallet-at bay3)))
-                     (not (pallet-at depot)) (not (pallet-at dock1))))
+                     (not (pallet-at dock_south)) (not (pallet-at corridor))
+                     (not (pallet-at dock_north)) (not (pallet-at lane))))
       (:forall (?i - agent) ([C. All] (<Kw. ?i> (pallet-at bay2))))
       (:forall (?i - agent) ([C. All] (<Kw. ?i> (pallet-at bay3))))
     )

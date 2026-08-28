@@ -383,3 +383,12 @@ TSWLatexianTemp*
 # option is specified. Footnotes are the stored in a file with suffix Notes.bib.
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
+
+# Sources brought in by `vcs import src < eplansys.repos`: eplansys itself and
+# the AWS warehouse world the scenario is built on. They are other people's
+# repositories and carry their own history; the repos file is what pins them.
+ros2_ws/src/eplansys/
+ros2_ws/src/ThirdParty/
+
+# Recordings of the warehouse demo. The published ones live on gh-pages.
+scenarios/warehouse/out/*.mp4

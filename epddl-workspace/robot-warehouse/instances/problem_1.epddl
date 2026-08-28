@@ -1,0 +1,79 @@
+(define (problem warehouse-solo)
+
+  ;; One robot on the floor of the AWS RoboMaker small warehouse -- the world
+  ;; the RoboticsAcademy multi-robot Amazon warehouse exercise runs on -- and
+  ;; the instance the ROS demo executes in Gazebo.
+  ;;
+  ;; The zones and the graph between them are that building's: r1 comes on
+  ;; shift at shipping in the south, the service lane runs along the fronts of
+  ;; the rack rows, and the two candidate aisles open off it.  There is no edge
+  ;; from one aisle to the other, because there is no way through: the racks
+  ;; stop 0.15 m short of the east wall and a robot is 0.21 m across.  A robot
+  ;; that looks into bay2 and finds it empty comes back out to the lane.
+  ;;
+  ;; The goal asks for both halves of the mission at once: the pallet at
+  ;; receiving, which is ontic and could in principle be had by luck, and r1
+  ;; knowing which bay it came out of, which cannot.  The plan therefore has to
+  ;; branch: r1 looks into one bay, and what it finds decides whether it lifts
+  ;; the pallet there or backs out and tries the other.
+
+  (:domain robot-warehouse)
+
+  (:requirements
+    :typing :facts :equality
+    :finitary-S5-theories :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions
+  )
+
+  (:agents r1)
+
+  (:objects dock_south corridor dock_north lane bay2 bay3 - zone)
+
+  (:facts-init
+    ;; The west corridor, which is the length of the building.
+    (adjacent dock_south corridor) (adjacent corridor dock_south)
+    (adjacent corridor dock_north) (adjacent dock_north corridor)
+
+    ;; Along the south wall to the lane in front of the racks.
+    (adjacent dock_south lane) (adjacent lane dock_south)
+
+    ;; And off the lane, the two aisles.  One mouth each, and no way through.
+    (adjacent lane bay2) (adjacent bay2 lane)
+    (adjacent lane bay3) (adjacent bay3 lane)
+
+    (bay bay2) (bay bay3)
+    (dock dock_north)
+  )
+
+  (:init
+    (:and
+      (at-ag r1 dock_south)
+      (not (at-ag r1 corridor)) (not (at-ag r1 dock_north))
+      (not (at-ag r1 lane)) (not (at-ag r1 bay2)) (not (at-ag r1 bay3))
+      ([C. All]
+        (and (at-ag r1 dock_south)
+             (not (at-ag r1 corridor)) (not (at-ag r1 dock_north))
+             (not (at-ag r1 lane)) (not (at-ag r1 bay2))
+             (not (at-ag r1 bay3))))
+
+      (:forall (?i - agent) (not (carrying ?i)))
+      (not (delivered))
+      ([C. All] (and (forall (?i - agent) (not (carrying ?i))) (not (delivered))))
+
+      ([C. All] (and (or (pallet-at bay2) (pallet-at bay3))
+                     (not (and (pallet-at bay2) (pallet-at bay3)))
+                     (not (pallet-at dock_south)) (not (pallet-at corridor))
+                     (not (pallet-at dock_north)) (not (pallet-at lane))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (pallet-at bay2))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (pallet-at bay3))))
+    )
+  )
+
+  (:goal
+    (and
+      (delivered)
+      ([Kw. r1] (pallet-at bay2))
+    )
+  )
+)

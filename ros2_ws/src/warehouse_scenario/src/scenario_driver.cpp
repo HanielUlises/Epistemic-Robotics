@@ -126,7 +126,7 @@ private:
   /// hashes the planner will report once it has actually taken them.
   std::pair<uint64_t, uint64_t> publish_inputs(const Case & c)
   {
-    const auto grid = build_grid(c.east_corridor_observed);
+    const auto grid = build_grid(c.stage);
 
     nav_msgs::msg::OccupancyGrid map;
     map.header.frame_id = "map";
@@ -134,6 +134,8 @@ private:
     map.info.resolution = static_cast<float>(kResolution);
     map.info.width = kWidth;
     map.info.height = kHeight;
+    map.info.origin.position.x = kOriginX;
+    map.info.origin.position.y = kOriginY;
     map.info.origin.orientation.w = 1.0;
     map.data.assign(grid.begin(), grid.end());
     map_pub_->publish(map);

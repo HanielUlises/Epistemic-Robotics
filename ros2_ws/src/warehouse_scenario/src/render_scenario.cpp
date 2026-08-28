@@ -50,7 +50,7 @@ constexpr Colour kSensingColour{194, 24, 91};
 constexpr Colour kSettledZone{31, 111, 74};
 constexpr Colour kOpenZone{184, 134, 11};
 
-constexpr int kScale = 3;   // image pixels per cell
+constexpr int kScale = 2;   // image pixels per cell
 
 class Canvas
 {
@@ -72,8 +72,8 @@ public:
 
   void disc(double mx, double my, int radius, const Colour & colour)
   {
-    const int cx = static_cast<int>(mx / kResolution * kScale);
-    const int cy = static_cast<int>(my / kResolution * kScale);
+    const int cx = static_cast<int>((mx - kOriginX) / kResolution * kScale);
+    const int cy = static_cast<int>((my - kOriginY) / kResolution * kScale);
     for (int dy = -radius; dy <= radius; ++dy) {
       for (int dx = -radius; dx <= radius; ++dx) {
         if (dx * dx + dy * dy <= radius * radius) {set(cx + dx, cy + dy, colour);}
@@ -85,10 +85,10 @@ public:
   /// floor under it.
   void frame(const Box & box, const Colour & colour)
   {
-    const int x0 = static_cast<int>(box.min_x / kResolution * kScale);
-    const int x1 = static_cast<int>(box.max_x / kResolution * kScale);
-    const int y0 = static_cast<int>(box.min_y / kResolution * kScale);
-    const int y1 = static_cast<int>(box.max_y / kResolution * kScale);
+    const int x0 = static_cast<int>((box.min_x - kOriginX) / kResolution * kScale);
+    const int x1 = static_cast<int>((box.max_x - kOriginX) / kResolution * kScale);
+    const int y0 = static_cast<int>((box.min_y - kOriginY) / kResolution * kScale);
+    const int y1 = static_cast<int>((box.max_y - kOriginY) / kResolution * kScale);
     for (int x = x0; x <= x1; ++x) {
       set(x, y0, colour);
       set(x, y1, colour);
@@ -151,10 +151,13 @@ bool render(const fs::path & result_file, const fs::path & out_dir)
   if (!result.contains("case")) {return false;}
 
   Canvas canvas;
-  draw_floor(canvas, build_grid(result.value("east_corridor_observed", true)));
+  const Stage stage = result.value("stage", "") == "first-pass" ?
+    Stage::FirstPass : Stage::AfterTheSweep;
+  draw_floor(canvas, build_grid(stage));
 
-  canvas.frame(kDock1, kSettledZone);
-  canvas.frame(kDock2, kSettledZone);
+  canvas.frame(kDockSouth, kSettledZone);
+  canvas.frame(kDockNorth, kSettledZone);
+  canvas.frame(kBayAisle4, kSettledZone);
   if (result.value("snapshot", "") != "docks") {
     canvas.frame(kBayAisle2, kOpenZone);
     canvas.frame(kBayAisle3, kOpenZone);

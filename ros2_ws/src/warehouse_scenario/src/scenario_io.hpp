@@ -44,7 +44,7 @@ inline nlohmann::json to_json(const Case & c, const Route & route,
   nlohmann::json result;
   result["case"] = c.name;
   result["source"] = source;
-  result["east_corridor_observed"] = c.east_corridor_observed;
+  result["stage"] = c.stage == Stage::FirstPass ? "first-pass" : "after-the-sweep";
   result["snapshot"] = c.snapshot;
   result["agent_id"] = c.agent_id;
   result["goal_zone"] = c.goal_zone;

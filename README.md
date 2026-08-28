@@ -30,22 +30,38 @@ The dual computation bounds where an agent may go rather than where it can arriv
 
 ## A warehouse to run it on
 
-The floor plan of the RoboticsAcademy multi-robot Amazon warehouse exercise,
-restated so that what the robots do not know is part of the map: a corridor
-nobody has looked into is unknown rather than free, and which bay holds the
-pallet is a disagreement between two worlds one robot can tell apart and
-another cannot.
+The world the RoboticsAcademy [multi-robot Amazon warehouse
+exercise](https://jderobot.github.io/RoboticsAcademy/exercises/MobileRobots/multi_robot_amazon_warehouse/)
+runs on — AWS RoboMaker's small warehouse — restated so that what the robots do
+not know is part of the map. Not a floor plan that resembles it: the grid is
+rasterised from the collision meshes Gazebo uses for that world, and the demo
+launches that world unmodified, so the racks the planner drives around are the
+racks the laser hits.
+
+What the exercise asks for is a centralised task planner that assigns the jobs;
+it is simply told where the pallet is. Here that is the whole problem. A part
+of the floor nobody has measured is unknown rather than free, and which aisle
+holds the pallet is a disagreement between two worlds one robot can tell apart
+and another cannot.
 
 ```bash
-bash scenarios/warehouse/run_demo.sh          # cells: routes and where to look
-bash epddl-workspace/robot-warehouse/validate.sh   # zones: what must be known
+ros2 launch warehouse_demo warehouse_demo_launch.py   # the mission, executed
+bash scenarios/warehouse/run_demo.sh                  # cells: routes and where to look
+bash epddl-workspace/robot-warehouse/validate.sh      # zones: what must be known
 ```
 
-The first runs six questions past the µ-calculus planner, twice each — once in
-process and once over ROS topics — and fails if the two answers differ. The
-second grounds the warehouse domain, solves it into a branching plan, and
-shows the two plans that must be rejected. Both are written up in
-[`scenarios/warehouse/README.md`](scenarios/warehouse/README.md).
+The first drives the policy in Gazebo through ePlanSys on PlanSys2, with
+SLAM Toolbox building the map the µ-calculus planner routes over. The second
+runs six questions past that planner, twice each — once in process and once
+over ROS topics — and fails if the two answers differ. The third grounds the
+warehouse domain with plank, solves it with Aletheia into a branching policy,
+and prints the pointed model, the goal, the actions and the plan for one agent
+and then for two — followed by two plans that must be rejected.
+
+Written up in [`scenarios/warehouse/README.md`](scenarios/warehouse/README.md)
+(the map and the routes) and
+[`epddl-workspace/robot-warehouse/README.md`](epddl-workspace/robot-warehouse/README.md)
+(the domain and the policies).
 
 ## Components
 

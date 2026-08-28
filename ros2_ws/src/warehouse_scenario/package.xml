@@ -30,6 +30,10 @@
   <depend>geometry_msgs</depend>
   <depend>epistemic_msgs</depend>
   <depend>mu_path_planner</depend>
+  <depend>sensor_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
   <depend>nlohmann-json-dev</depend>
 
   <test_depend>ament_cmake_gtest</test_depend>
