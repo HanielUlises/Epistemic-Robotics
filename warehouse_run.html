@@ -5,13 +5,13 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Warehouse Run &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy.">
+<meta name="description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy. Run for one robot, then two, then three.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
 <meta property="og:title" content="The Warehouse Run">
-<meta property="og:description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy.">
+<meta property="og:description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy. Run for one robot, then two, then three.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/warehouse_run.html">
 <meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-run.jpg">
 <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
 <meta property="og:image:alt" content="Gazebo and RViz side by side: the AWS small warehouse, and the map the robot has measured of it">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Warehouse Run">
-<meta name="twitter:description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy.">
+<meta name="twitter:description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy. Run for one robot, then two, then three.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-run.jpg">
 
 <script>
@@ -306,6 +306,11 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
   background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
 /* The log-timing table reads as prose, so its middle column is left-aligned;
    the default right-alignment is for numbers. */
 table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
@@ -433,6 +438,299 @@ table.logtab td:first-child,table.logtab th:first-child{
       would have paid three extra moves (out of the aisle, along the lane, into
       the other one), because there is no way through from one aisle to the
       next.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE FLEET -->
+<section>
+  <div class="container">
+    <p class="sec-label">The fleet</p>
+    <h3>Two robots, then three, and the branch that was never filmed</h3>
+
+    <p>
+      The run above takes the easy leaf. r1 looks into bay&#8202;2, the pallet is
+      there, and it lifts it. Nothing on screen distinguishes that from a
+      scripted fetch, which is a fair complaint to make of it: the claim that
+      the plan is a <em>policy</em> is in the caption and not in the picture.
+    </p>
+
+    <p>
+      So here is the same mission with the pallet in the other aisle. Nobody is
+      told: the domain, the instance and the goal are unchanged, and the only
+      difference in the world is one coordinate in the simulator.
+    </p>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%">
+        <source src="media/warehouse_run_3robots_empty.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/warehouse_run_3robots_empty.mp4">Download it instead</a>.
+      </video>
+      <figcaption>
+        Three robots, 70&#8201;s at 6&#215;. r1 drives to bay&#8202;2, looks,
+        and finds it <strong>empty</strong> &#8212; then radios the fleet, backs
+        out to the lane, and goes into bay&#8202;3.
+      </figcaption>
+    </figure>
+
+    <p>
+      Two things happen here that cannot happen on the other leaf. The first is
+      the backtrack: the racks stop 0.15&#8201;m short of the east wall, which
+      is nothing to a robot 0.21&#8201;m across, so there is no way through from
+      one aisle to the next and a wrong guess costs three extra moves. The
+      building charges for it.
+    </p>
+
+    <p>
+      The second is the announcement. With two robots the planner never spends
+      one: <span class="mono-inline">pickup</span> is public, so the fleet
+      watching r1 lift the pallet out of a bay already learns which bay it was.
+      Add a third robot who must also know, and on <em>this</em> branch that
+      stops working &#8212; what r2 and r3 have to know is about bay&#8202;2, and
+      watching a lift in bay&#8202;3 settles bay&#8202;3. An absence is not
+      something you can watch. So r1 has to say so:
+    </p>
+
+    <pre class="code">[epistemic_perception_r1] 'bay2' is clear: inspect_r1_bay2 observed <span class="k">e-inspect-empty</span>
+[look_action_r1] (Kw r1 pallet-at_bay2) holds after 0.8s
+[epistemic_bt] [(look_into r1 bay2)] observed <span class="k">e-inspect-empty</span>
+[announce_action_r1] <span class="k">radioing the fleet at bay3</span>
+[warehouse_mission] executing announce
+...
+[warehouse_mission] mission complete: the policy reached its goal</pre>
+
+    <p class="note">
+      Note which way the epistemic line reads at that moment. It goes green on
+      <span class="mono-inline">[Kw. r1] pallet-at_bay2 = TRUE</span> the instant
+      the bay is found <em>empty</em>, because <span class="mono-inline">Kw</span>
+      is knowing <em>whether</em>. Coming to know a thing is false is coming to
+      know it.
+    </p>
+
+    <h4>The two-robot run, where one robot never moves</h4>
+
+    <p>
+      Worth watching for what does <em>not</em> happen. r2 waits at receiving
+      for the whole run and issues no action at all &#8212; the log has zero
+      lines for it &#8212; and the goal is still about r2's knowledge. It comes
+      to know which bay the pallet was in by watching r1 lift it, without going
+      anywhere. That is the cheapest way to learn something, and the planner
+      finds it without being told.
+    </p>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%">
+        <source src="media/warehouse_run_2robots.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/warehouse_run_2robots.mp4">Download it instead</a>.
+      </video>
+      <figcaption>
+        Two robots, 55&#8201;s at 6&#215;. Both are in the world; only one of
+        them has anywhere to be.
+      </figcaption>
+    </figure>
+
+    <table class="data">
+      <thead>
+        <tr><th>Run</th><th>Policy</th><th>Branch taken</th><th>Announcement</th><th>Robots that move</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 robot</td><td>17 nodes</td><td>found</td><td>&#8212;</td><td>r1</td></tr>
+        <tr><td>2 robots</td><td>17 nodes</td><td>found</td><td>none needed</td><td>r1</td></tr>
+        <tr><td>3 robots</td><td>21 nodes</td><td>found</td><td>none needed</td><td>r1, r3</td></tr>
+        <tr><td>3 robots, pallet moved</td><td>21 nodes</td><td><strong>empty</strong></td><td><strong>r1 radios bay&#8202;3</strong></td><td>r1, r3</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE NODE GRAPH -->
+<section>
+  <div class="container-wide">
+    <p class="sec-label">What is actually running</p>
+    <h3>Fifty-five nodes, and which of them is allowed to know things</h3>
+
+    <p style="max-width:800px">
+      One planning layer for the fleet, one set of action nodes per robot, and
+      one navigation stack per robot in a namespace of its own. Where the line
+      falls between them is not arrangement: it is the difference between what
+      the fleet knows and what a robot has seen.
+    </p>
+
+    <div class="graph-wrap">
+<svg class="graph" viewBox="0 0 1000 670" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="The node graph of the warehouse demonstration with three robots: one planning layer for the fleet, one set of action nodes per robot in the global namespace, and one navigation stack per robot in its own namespace.">
+  <defs>
+    <marker id="wh-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5A5A5A"/>
+    </marker>
+    <marker id="wh-arrow-red" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#C8102E"/>
+    </marker>
+  </defs>
+
+  <!-- ── band 1: one for the fleet ─────────────────────────────── -->
+  <rect x="8" y="8" width="984" height="150" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="20" y="28" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">ONE FOR THE FLEET &#183; global namespace</text>
+
+  <rect x="24" y="42" width="150" height="44" rx="2" fill="#fff" stroke="#111" stroke-width="1.4"/>
+  <text x="99" y="61" font-size="12.5" text-anchor="middle" fill="#111" font-weight="600">warehouse_mission</text>
+  <text x="99" y="76" font-size="10" text-anchor="middle" fill="#5A5A5A">seeds the fleet, asks</text>
+
+  <rect x="212" y="42" width="546" height="100" rx="2" fill="#fff" stroke="#111" stroke-width="1.4"/>
+  <text x="224" y="58" font-size="10.5" fill="#5A5A5A" font-family="'Courier New',monospace">plansys2_node &#8212; ePlanSys</text>
+  <rect x="224" y="66" width="118" height="30" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+  <text x="283" y="85" font-size="10.5" text-anchor="middle" fill="#333">domain_expert</text>
+  <rect x="350" y="66" width="118" height="30" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+  <text x="409" y="85" font-size="10.5" text-anchor="middle" fill="#333">problem_expert</text>
+  <rect x="476" y="66" width="132" height="30" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.4"/>
+  <text x="542" y="80" font-size="10.5" text-anchor="middle" fill="#C8102E" font-weight="600">planner</text>
+  <text x="542" y="91" font-size="9" text-anchor="middle" fill="#5A5A5A">ALETHEIA plugin</text>
+  <rect x="616" y="66" width="130" height="30" rx="2" fill="#fff" stroke="#1A52A0" stroke-width="1.4"/>
+  <text x="681" y="80" font-size="10.5" text-anchor="middle" fill="#1A52A0" font-weight="600">executor</text>
+  <text x="681" y="91" font-size="9" text-anchor="middle" fill="#5A5A5A">EpistemicBTBuilder</text>
+  <rect x="224" y="104" width="244" height="30" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.4"/>
+  <text x="346" y="118" font-size="10.5" text-anchor="middle" fill="#C8102E" font-weight="600">epistemic_state</text>
+  <text x="346" y="129" font-size="9" text-anchor="middle" fill="#5A5A5A">the Kripke model: what each robot knows</text>
+  <rect x="476" y="104" width="270" height="30" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+  <text x="611" y="123" font-size="10.5" text-anchor="middle" fill="#333">floorplan_server &#8594; /floorplan (the building)</text>
+
+  <rect x="790" y="42" width="186" height="100" rx="2" fill="#fff" stroke="#D6D6D6"/>
+  <text x="883" y="60" font-size="10.5" text-anchor="middle" fill="#5A5A5A" font-family="'Courier New',monospace">gazebo</text>
+  <text x="883" y="78" font-size="10.5" text-anchor="middle" fill="#333">AWS small warehouse,</text>
+  <text x="883" y="92" font-size="10.5" text-anchor="middle" fill="#333">unmodified</text>
+  <text x="883" y="112" font-size="10.5" text-anchor="middle" fill="#333">3 &#215; TurtleBot3 burger</text>
+  <text x="883" y="130" font-size="10.5" text-anchor="middle" fill="#5A5A5A">+ the pallet, in one bay</text>
+
+  <line x1="174" y1="64" x2="210" y2="64" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#wh-arrow)"/>
+
+  <!-- ── band 2: one set per robot, still global ───────────────── -->
+  <rect x="8" y="176" width="984" height="128" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="20" y="196" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">ONE SET PER ROBOT &#183; global, because the action hub is</text>
+
+  <g font-size="10">
+    <rect x="24" y="208" width="300" height="84" rx="2" fill="#fff" stroke="#111"/>
+    <text x="174" y="224" font-size="11" text-anchor="middle" fill="#111" font-weight="600">drive / look / pick / drop / announce _r1</text>
+    <text x="174" y="240" font-size="9.5" text-anchor="middle" fill="#5A5A5A">specialized_arguments: [r1, &#8230;]</text>
+    <text x="174" y="256" font-size="9.5" text-anchor="middle" fill="#5A5A5A">so r1's node declines r2's action</text>
+    <rect x="40" y="264" width="268" height="22" rx="2" fill="#fff" stroke="#C8102E"/>
+    <text x="174" y="279" font-size="10" text-anchor="middle" fill="#C8102E">epistemic_perception_r1 &#8212; reads /r1/map</text>
+  </g>
+  <g font-size="10">
+    <rect x="348" y="208" width="300" height="84" rx="2" fill="#fff" stroke="#111"/>
+    <text x="498" y="224" font-size="11" text-anchor="middle" fill="#111" font-weight="600">&#8230; _r2</text>
+    <text x="498" y="248" font-size="9.5" text-anchor="middle" fill="#5A5A5A">r2 never leaves receiving in any policy;</text>
+    <text x="498" y="261" font-size="9.5" text-anchor="middle" fill="#5A5A5A">it still has to come to know</text>
+    <rect x="364" y="264" width="268" height="22" rx="2" fill="#fff" stroke="#C8102E"/>
+    <text x="498" y="279" font-size="10" text-anchor="middle" fill="#C8102E">epistemic_perception_r2 &#8212; reads /r2/map</text>
+  </g>
+  <g font-size="10">
+    <rect x="672" y="208" width="304" height="84" rx="2" fill="#fff" stroke="#111"/>
+    <text x="824" y="224" font-size="11" text-anchor="middle" fill="#111" font-weight="600">&#8230; _r3</text>
+    <text x="824" y="248" font-size="9.5" text-anchor="middle" fill="#5A5A5A">drives to the other aisle on the</text>
+    <text x="824" y="261" font-size="9.5" text-anchor="middle" fill="#5A5A5A">branch where bay&#8202;2 came back empty</text>
+    <rect x="688" y="264" width="272" height="22" rx="2" fill="#fff" stroke="#C8102E"/>
+    <text x="824" y="279" font-size="10" text-anchor="middle" fill="#C8102E">epistemic_perception_r3 &#8212; reads /r3/map</text>
+  </g>
+
+  <path d="M681 96 L681 168 L174 168 L174 206" fill="none" stroke="#1A52A0"
+        stroke-width="1.4" marker-end="url(#wh-arrow)"/>
+  <path d="M681 96 L681 168 L498 168 L498 206" fill="none" stroke="#1A52A0" stroke-width="1.1"/>
+  <path d="M681 96 L681 168 L824 168 L824 206" fill="none" stroke="#1A52A0" stroke-width="1.1"/>
+  <rect x="828" y="160" width="90" height="14" fill="#FAFAFA"/>
+  <text x="873" y="171" font-size="9.5" text-anchor="middle" fill="#1A52A0" font-family="'Courier New',monospace">/actions_hub</text>
+
+  <path d="M40 275 L16 275 L16 166 L346 166 L346 136" fill="none" stroke="#C8102E"
+        stroke-width="1.4" marker-end="url(#wh-arrow-red)"/>
+  <rect x="352" y="158" width="128" height="15" fill="#FAFAFA"/>
+  <text x="356" y="170" font-size="9.5" fill="#C8102E">the observation it made</text>
+
+  <!-- ── band 3: per robot, own namespace ──────────────────────── -->
+  <rect x="8" y="322" width="984" height="230" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="20" y="342" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">ONE STACK PER ROBOT &#183; /r1 &#183; /r2 &#183; /r3</text>
+
+  <g>
+    <rect x="24" y="354" width="300" height="186" rx="2" fill="#fff" stroke="#111" stroke-dasharray="3 2"/>
+    <text x="36" y="370" font-size="10.5" fill="#5A5A5A" font-family="'Courier New',monospace">/r1</text>
+
+    <rect x="38" y="378" width="272" height="34" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.4"/>
+    <text x="174" y="392" font-size="11" text-anchor="middle" fill="#C8102E" font-weight="600">slam_toolbox &#8594; /r1/map</text>
+    <text x="174" y="405" font-size="9" text-anchor="middle" fill="#5A5A5A">what this robot has measured, and nobody else</text>
+
+    <rect x="38" y="420" width="272" height="32" rx="2" fill="#fff" stroke="#111"/>
+    <text x="174" y="434" font-size="11" text-anchor="middle" fill="#111" font-weight="600">mu_path_planner</text>
+    <text x="174" y="446" font-size="9" text-anchor="middle" fill="#5A5A5A">least fixed point: unknown is not free</text>
+
+    <rect x="38" y="460" width="272" height="34" rx="2" fill="#fff" stroke="#111"/>
+    <text x="174" y="474" font-size="11" text-anchor="middle" fill="#111" font-weight="600">nav2 &#215; 5 servers</text>
+    <text x="174" y="486" font-size="9" text-anchor="middle" fill="#5A5A5A">controller, planner, behaviors, bt, smoother</text>
+
+    <rect x="38" y="502" width="272" height="26" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+    <text x="174" y="519" font-size="10" text-anchor="middle" fill="#333">robot_state_publisher &#8212; r1/base_footprint</text>
+  </g>
+
+  <rect x="348" y="354" width="300" height="186" rx="2" fill="#fff" stroke="#D6D6D6" stroke-dasharray="3 2"/>
+  <text x="360" y="370" font-size="10.5" fill="#5A5A5A" font-family="'Courier New',monospace">/r2</text>
+  <text x="498" y="440" font-size="11" text-anchor="middle" fill="#5A5A5A">the same eight nodes</text>
+  <text x="498" y="458" font-size="11" text-anchor="middle" fill="#5A5A5A">again, for r2</text>
+
+  <rect x="672" y="354" width="304" height="186" rx="2" fill="#fff" stroke="#D6D6D6" stroke-dasharray="3 2"/>
+  <text x="684" y="370" font-size="10.5" fill="#5A5A5A" font-family="'Courier New',monospace">/r3</text>
+  <text x="824" y="440" font-size="11" text-anchor="middle" fill="#5A5A5A">and again, for r3</text>
+  <text x="824" y="462" font-size="10" text-anchor="middle" fill="#5A5A5A">55 nodes in all</text>
+
+  <path d="M96 292 L96 436 L36 436" fill="none" stroke="#5A5A5A" stroke-width="1.2"
+        marker-end="url(#wh-arrow)"/>
+  <rect x="102" y="304" width="120" height="26" fill="#FAFAFA"/>
+  <text x="106" y="314" font-size="9" fill="#5A5A5A">/r1/map, routes,</text>
+  <text x="106" y="325" font-size="9" fill="#5A5A5A">/r1/navigate_to_pose</text>
+
+  <text x="500" y="574" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">Read it as one question asked twice.</text>
+  <text x="500" y="592" font-size="11" text-anchor="middle" fill="#5A5A5A">ePlanSys decides which zone to be in and what has to be known there; the &#181;-calculus decides how to</text>
+  <text x="500" y="607" font-size="11" text-anchor="middle" fill="#5A5A5A">cross a floor that is still half unmeasured. Perception is what joins them: it turns a patch of one</text>
+  <text x="500" y="622" font-size="11" text-anchor="middle" fill="#5A5A5A">robot's occupancy grid into an event in that robot's sensing action.</text>
+  <text x="500" y="646" font-size="10.5" text-anchor="middle" fill="#C8102E">A shared map would make the sensing public, and the domain says it is semi-private.</text>
+</svg>
+
+    </div>
+
+    <h4>Three places the boundary is load-bearing</h4>
+
+    <p>
+      <strong>Each robot maps for itself.</strong> Every mapper writes to that
+      robot's own <span class="mono-inline">/rN/map</span>, and perception reads
+      only its own robot's. This costs three SLAM instances and it is not an
+      optimisation to collapse: sensing in this domain is semi-private, so a
+      shared map would make everything one robot sees immediately known to all
+      of them, and the demonstration would be quietly proving something the
+      domain does not say. It is also, mundanely, a trap &#8212;
+      <span class="mono-inline">slam_toolbox</span> names its services relative
+      to the node and its map <em>absolutely</em>, so three mappers in three
+      namespaces all publish the same <span class="mono-inline">/map</span>
+      unless it is remapped by hand.
+    </p>
+
+    <p>
+      <strong>The action nodes are not namespaced.</strong> They cannot be: the
+      executor's <span class="mono-inline">actions_hub</span> is a relative
+      name, so a node inside a robot's namespace would advertise its own hub and
+      never hear the fleet's. They live in the global namespace and decline each
+      other's work through
+      <span class="mono-inline">specialized_arguments</span>, which the executor
+      matches positionally against the action's own arguments.
+    </p>
+
+    <p>
+      <strong>The building is shared; the map is not.</strong> Nav2 plans over
+      <span class="mono-inline">/floorplan</span>, the rasterised AWS world,
+      served once for the fleet &#8212; a warehouse robot is given the building.
+      What it is not given is a record of what it has looked at, and that is the
+      per-robot <span class="mono-inline">/rN/map</span> the &micro;-calculus
+      planner and perception both reason over.
     </p>
   </div>
 </section>

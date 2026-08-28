@@ -18,6 +18,7 @@
 \usepackage{listings}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+\usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{positioning, arrows.meta, fit, backgrounds, calc, shapes.geometric}
 \usepackage[hidelinks]{hyperref}
@@ -421,6 +422,108 @@ geometry in the 3-D scene. It scales with the camera, spaces its words oddly,
 and once a 3840-pixel capture is scaled down for viewing it is a row of thin
 grey smudges. Several attempts at making it legible that way failed, and they
 failed for a reason that was not going to be tuned away.
+
+\section{The fleet, executed}
+
+The two- and three-robot instances were run in the same simulator, and the
+execution is not the same shape as the search. Every policy the planner returns
+has $r_1$ do the fetching, because $r_1$ is the one that comes on shift at
+shipping; what a second and third robot add is the requirement that they come
+to \emph{know}, and only the three-robot instance makes that cost an action.
+
+\begin{center}
+\begin{tabular}{@{}llllr@{}}
+\toprule
+Run & Policy & Branch & Announcement & Robots that move \\
+\midrule
+1 robot & 17 nodes & found & --- & $r_1$ \\
+2 robots & 17 nodes & found & none needed & $r_1$ \\
+3 robots & 21 nodes & found & none needed & $r_1$, $r_3$ \\
+3 robots, pallet moved & 21 nodes & \textbf{empty} & \textbf{$r_1$ radios bay 3} & $r_1$, $r_3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{The branch nobody films} The first three runs take the same leaf.
+$r_1$ looks into bay 2, the pallet is there, and it lifts it --- and nothing on
+screen distinguishes that from a scripted fetch, which is a fair thing to say
+about it. The claim that the plan is a policy is then in the narration rather
+than in the behaviour.
+
+Moving the pallet to the other aisle fixes that, and nothing else changes: the
+domain, the instance and the goal are untouched, and no component is told. The
+run that follows exercises the other leaf, and two things happen on it that
+cannot happen on the first.
+
+The first is the backtrack. The racks stop $0.15$\,m short of the east wall,
+which is nothing to a robot $0.21$\,m across, so an aisle is a pocket with one
+mouth and a wrong guess costs three extra moves.
+
+The second is the announcement, and it is the only place in the whole
+demonstration where an agent has to \emph{tell} another agent something.
+
+\begin{lstlisting}
+[epistemic_perception_r1] 'bay2' is clear: inspect_r1_bay2 observed e-inspect-empty
+[look_action_r1] (Kw r1 pallet-at_bay2) holds after 0.8s
+[epistemic_bt] [(look_into r1 bay2)] observed e-inspect-empty
+[announce_action_r1] radioing the fleet at bay3
+[warehouse_mission] executing announce
+...
+[warehouse_mission] mission complete: the policy reached its goal
+\end{lstlisting}
+
+With two robots the planner spends no announcement, because \code{pickup} is
+public and the fleet watching $r_1$ lift the pallet out of a bay already learns
+which bay it was. On \emph{this} branch that stops working: what $r_2$ and $r_3$
+have to know is about bay 2, watching a lift in bay 3 settles bay 3, and an
+absence is not something anyone can watch.
+
+Note also which way the epistemic condition reads at that moment. It becomes
+true the instant the bay is found \emph{empty}, because $\Kw{}$ is knowing
+whether: coming to know a thing is false is coming to know it.
+
+\paragraph{The robot that never moves} In the two-robot run $r_2$ issues no
+action at all --- the log has no lines for it --- and the goal is still about
+$r_2$'s knowledge. It comes to know which bay the pallet was in by watching
+$r_1$ lift it, without leaving receiving. That is the cheapest way to learn
+something, and the planner finds it without being told to look for it.
+
+\section{What is actually running}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures_warehouse_graph.pdf}
+\caption{The node graph with three robots. One planning layer for the fleet,
+one set of action nodes per robot in the global namespace, and one navigation
+stack per robot in a namespace of its own: 55 nodes in all.}
+\end{figure}
+
+Where the line falls between those bands is not an arrangement. It is the
+difference between what the fleet knows and what one robot has seen, and three
+places carry weight.
+
+\paragraph{Each robot maps for itself} Every mapper writes that robot's own
+\code{/rN/map}, and its perception node reads only that one. This costs three
+SLAM instances and it is not an optimisation to collapse: sensing here is
+semi-private, so a shared map would make everything one robot sees immediately
+known to all of them, and the demonstration would quietly be proving something
+the domain does not say. It is also a trap in the plainest sense ---
+\code{slam\_toolbox} names its services relative to the node and its map
+\emph{absolutely}, so three mappers in three namespaces all publish the same
+\code{/map} until it is remapped by hand.
+
+\paragraph{The action nodes are not namespaced} They cannot be. The executor's
+\code{actions\_hub} is a relative name, so a node inside a robot's namespace
+advertises its own hub and never hears the fleet's. They run in the global
+namespace and decline each other's work through
+\code{specialized\_arguments}, which the executor matches positionally against
+the action's own arguments.
+
+\paragraph{The building is shared and the map is not} Nav2 plans over
+\code{/floorplan}, the rasterised AWS world, served once for the fleet: a
+warehouse robot is given the building. What it is not given is a record of what
+it has looked at, and that is the per-robot \code{/rN/map} that the
+$\mu$-calculus planner and perception both reason over.
 
 \section{What it costs to add a robot}
 
