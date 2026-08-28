@@ -50,6 +50,7 @@ STEP_TEXT = {
     'look_into': 'LOOKING INTO THE BAY',
     'pick_up': 'PICKING UP THE PALLET',
     'drop_off': 'UNLOADING AT RECEIVING',
+    'announce': 'RADIOING THE FLEET',
 }
 
 WHY = {
@@ -57,6 +58,24 @@ WHY = {
     'look_into': 'the two worlds disagree; the laser settles it',
     'pick_up': 'allowed only because r1 KNOWS the pallet is here',
     'drop_off': 'the pallet reaches its dock',
+    # Only ever on the empty branch, and only with a third robot. Watching r1
+    # lift a pallet out of bay3 tells the fleet about bay3; what r2 and r3 have
+    # to know is about bay2, and an absence is not something you can watch.
+    'announce': 'r1 says so, because seeing the lift would settle the wrong bay',
+}
+
+# What the robot actually found. This is the moment the whole demonstration is
+# about and it lasts a fraction of a second, so it is called out rather than
+# left to be inferred from the robot changing direction.
+OUTCOME = re.compile(
+    r'\[(\d+\.\d+)\].*\[epistemic_bt\].*observed (e-inspect-\S+)')
+OUTCOME_TEXT = {
+    'e-inspect-found': ('THE PALLET IS HERE',
+                        'the branch the policy takes now was not chosen when '
+                        'the plan was made'),
+    'e-inspect-empty': ('THE BAY IS EMPTY',
+                        'so it is in the other aisle, and there is no way '
+                        'through: back out to the lane'),
 }
 
 
@@ -84,6 +103,12 @@ def events(log_path, start, speed):
         elif what.startswith('mission complete'):
             out.append((when, 'DONE',
                         'delivered, and r1 knows which bay it came from'))
+
+    for match in OUTCOME.finditer(text):
+        when, event = float(match.group(1)), match.group(2)
+        if event in OUTCOME_TEXT:
+            head, why = OUTCOME_TEXT[event]
+            out.append((when, head, why))
 
     step = 0
     for match in EXECUTING.finditer(text):

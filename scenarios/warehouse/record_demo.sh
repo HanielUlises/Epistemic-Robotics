@@ -40,12 +40,39 @@ set -u
 
 export TURTLEBOT3_MODEL=burger
 
+# How many robots come on shift. One is the original demo; two and three are
+# the fleet, and each has its own EPDDL instance and its own output file, so a
+# run of one never overwrites the film of another.
+ROBOTS="${ROBOTS:-1}"
+
+# Which bay the pallet is really in. bay2 is the one the policy looks into
+# first, so the run takes the found branch; bay3 makes that first look come
+# back empty and the robot back out and try the other aisle, which is the
+# branch worth filming. Nobody in the domain is told either way.
+PALLET="${PALLET:-bay2}"
+
 OUT="${HERE}/out"
 mkdir -p "${OUT}"
-LOG="${OUT}/demo.log"
-VIDEO="${OUT}/warehouse_demo.mp4"
+# The default run keeps the names it has always had, because the README and
+# the report both point at them.
+stem="warehouse_demo"
+[ "${ROBOTS}" != "1" ] && stem="${stem}_${ROBOTS}robots"
+[ "${PALLET}" != "bay2" ] && stem="${stem}_${PALLET}"
+VIDEO="${OUT}/${stem}.mp4"
+if [ "${stem}" = "warehouse_demo" ]; then
+  LOG="${OUT}/demo.log"
+else
+  LOG="${OUT}/${stem}.log"
+fi
 
-SECONDS_TO_RECORD="${SECONDS_TO_RECORD:-200}"
+# A fleet is slower: the robots go in one at a time and each Nav2 stack comes
+# up after the one before it, so the mission starts minutes rather than seconds
+# after the launch.
+if [ "${ROBOTS}" = "1" ]; then
+  SECONDS_TO_RECORD="${SECONDS_TO_RECORD:-200}"
+else
+  SECONDS_TO_RECORD="${SECONDS_TO_RECORD:-330}"
+fi
 
 # The mission is a robot crossing a twenty-metre warehouse at a fifth of a
 # metre a second, and most of that is driving in a straight line. SPEED is the
@@ -88,7 +115,8 @@ else
 fi
 
 
-setsid ros2 launch warehouse_demo warehouse_demo_launch.py > "${LOG}" 2>&1 &
+setsid ros2 launch warehouse_demo warehouse_demo_launch.py \
+  robots:="${ROBOTS}" pallet:="${PALLET}" > "${LOG}" 2>&1 &
 LAUNCH=$!
 trap 'kill -TERM -"${LAUNCH}" 2>/dev/null || true; bash "${HERE}/stop.sh" > /dev/null; [ -n "${XVFB_PID}" ] && kill "${XVFB_PID}" 2>/dev/null' EXIT
 
@@ -124,7 +152,25 @@ fi
 
 # The mission node waits for the map to settle before it plans; start filming
 # just before it does, so the policy arrives on camera.
-sleep 8
+#
+# For one robot that wait is a fixed few seconds. For a fleet it is minutes --
+# the robots are spawned one at a time and each Nav2 stack is brought up after
+# the one before it -- and guessing at it films either an empty warehouse or
+# the back half of the mission. So watch the log for the plan instead, and
+# start when the mission does.
+if [ "${ROBOTS}" = "1" ]; then
+  sleep 8
+else
+  echo "waiting for the fleet to come up and the policy to arrive"
+  for _ in $(seq 1 400); do
+    grep -aq "problem seeded" "${LOG}" && break
+    sleep 1
+  done
+  if ! grep -aq "problem seeded" "${LOG}"; then
+    echo "the mission never asked for a plan; refusing to film a warehouse" >&2
+    exit 1
+  fi
+fi
 
 # Fifteen frames a second, not thirty. The grab is 3840 px wide and the
 # machine is also running Gazebo, SLAM and Nav2; at thirty the encoder falls

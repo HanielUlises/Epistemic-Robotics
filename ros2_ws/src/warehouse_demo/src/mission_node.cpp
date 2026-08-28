@@ -23,6 +23,7 @@
 // sees the branching, and could not have caused it.
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -50,6 +51,25 @@ public:
     // the map, and starting before there is one only means the first drive
     // begins blind.
     declare_parameter<double>("settle", 12.0);
+
+    // The fleet, and where each of its robots comes on shift.
+    //
+    // These have to agree with the EPDDL instance the planner is given: it
+    // names the agents and their starting zones, and a policy that moves a
+    // robot this node never declared is a policy the executor cannot
+    // dispatch. The launch file reads both from the same place, so there is
+    // one statement of the fleet and not two.
+    declare_parameter<std::vector<std::string>>("agents", {"r1"});
+    declare_parameter<std::vector<std::string>>("starts", {"dock_south"});
+
+    // Who the epistemic half of the goal is about, for the caption alone. The
+    // condition itself is `[Kw. ?i] (pallet-at bay2)` in the EPDDL problem and
+    // is checked there; this node only has to be able to say whose knowledge
+    // the run was for, and with three robots it is not the one that drove.
+    declare_parameter<std::string>("knower", "r1");
+
+    // The robot the classical goal is about: the one that fetches. See seed().
+    declare_parameter<std::string>("deliverer", "r1");
 
     domain_ = std::make_shared<plansys2::DomainExpertClient>();
     problem_ = std::make_shared<plansys2::ProblemExpertClient>();
@@ -79,7 +99,19 @@ private:
 
   void seed()
   {
-    problem_->addInstance(plansys2::Instance{"r1", "robot"});
+    const auto agents = get_parameter("agents").as_string_array();
+    const auto starts = get_parameter("starts").as_string_array();
+    if (agents.size() != starts.size() || agents.empty()) {
+      RCLCPP_ERROR(
+        get_logger(),
+        "agents (%zu) and starts (%zu) have to be the same non-empty length: "
+        "each robot comes on shift somewhere", agents.size(), starts.size());
+      throw std::runtime_error("agents and starts do not line up");
+    }
+
+    for (const auto & agent : agents) {
+      problem_->addInstance(plansys2::Instance{agent, "robot"});
+    }
     // The zones of the AWS warehouse floor, the same six the EPDDL instance
     // names: shipping and receiving at the two ends of the west corridor, the
     // service lane along the rack fronts, and the two aisles off it.
@@ -89,17 +121,33 @@ private:
       problem_->addInstance(plansys2::Instance{zone, "zone"});
     }
 
-    problem_->addPredicate(plansys2::Predicate("(robot_at r1 dock_south)"));
+    for (std::size_t i = 0; i < agents.size(); ++i) {
+      problem_->addPredicate(
+        plansys2::Predicate("(robot_at " + agents[i] + " " + starts[i] + ")"));
+    }
     problem_->addPredicate(plansys2::Predicate("(is_bay bay2)"));
     problem_->addPredicate(plansys2::Predicate("(is_bay bay3)"));
     problem_->addPredicate(plansys2::Predicate("(is_dock dock_north)"));
 
-    // The classical goal. What the mission is really for -- that r1 knows
-    // which bay the pallet came out of -- is in the EPDDL problem, and the
-    // executor checks it at the end of the policy through CheckEpistemicGoal.
-    // Neither goal is redundant: this one is about the pallet, that one is
-    // about the robot's knowledge of it.
-    problem_->setGoal(plansys2::Goal("(and (delivered r1))"));
+    // The classical goal: the pallet reaches a dock. What the mission is
+    // really for -- that a robot which never went to look comes to *know*
+    // which bay it came out of -- is in the EPDDL problem, and the executor
+    // checks it at the end of the policy through CheckEpistemicGoal. Neither
+    // goal is redundant: this one is about the pallet, that one is about a
+    // robot's knowledge of it.
+    //
+    // It names one robot rather than saying "somebody delivered it". The
+    // disjunction reads better and does not work: the epistemic solver spent
+    // its whole sixty-second budget on `(or (delivered r1) (delivered r2))`
+    // and returned no solution, for a task the same planner solves standalone
+    // in a fifth of a second. Naming the robot that starts at shipping is not
+    // a weaker mission -- it is what every policy the planner returns does
+    // anyway, r1 being the one with the pallet in front of it -- and the
+    // epistemic conjunct, which is the half that cannot be had by luck, is
+    // untouched and still about a robot that never leaves its dock.
+    problem_->setGoal(
+      plansys2::Goal("(and (delivered " +
+        get_parameter("deliverer").as_string() + "))"));
   }
 
   void step()
@@ -167,7 +215,8 @@ private:
             result.value().result == plansys2_msgs::action::ExecutePlan::Result::SUCCESS;
           if (reached) {
             RCLCPP_INFO(get_logger(), "mission complete: the policy reached its goal");
-            say("DONE: delivered, and r1 knows which bay");
+            say("DONE: delivered, and " +
+              get_parameter("knower").as_string() + " knows which bay");
           } else {
             RCLCPP_ERROR(get_logger(), "the policy did not reach its goal");
             for (const auto & action : executor_->getFeedBack().action_execution_status) {

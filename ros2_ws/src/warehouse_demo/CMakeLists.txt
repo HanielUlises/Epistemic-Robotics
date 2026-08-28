@@ -75,4 +75,17 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../../epddl-workspace/robot-war
   DESTINATION share/${PROJECT_NAME}/epddl
   FILES_MATCHING PATTERN "*.epddl")
 
+# The grounded tasks, which plank made from those very files and which are
+# checked in beside them.
+#
+# The epistemic state is given the grounded task rather than the pair, so it
+# does not have to shell out to plank while it is configuring. Grounding the
+# three-agent instance is 198 actions and takes a few seconds, and a lifecycle
+# node cannot answer `get_state` while it is doing it: its manager times out
+# and declares the bringup failed about a second before the grounding finishes,
+# with nothing whatsoever wrong with the node.
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../../epddl-workspace/robot-warehouse/out/
+  DESTINATION share/${PROJECT_NAME}/epddl/out
+  FILES_MATCHING PATTERN "*.json")
+
 ament_package()
