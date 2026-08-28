@@ -332,7 +332,8 @@ model is \code{plansys2\_epistemic\_perception}, classifying the two bays over
 the occupancy grid \code{slam\_toolbox} has built from the robot's own laser,
 and reporting to the epistemic state which of the two events fired.
 
-If the action node decided it, the demonstration would be a puppet show.
+The action node does not determine the outcome, which is what distinguishes the
+observation from a scripted one.
 
 One parameter earns its place here. A bay is visible from the service lane
 thirty to sixty seconds before the robot reaches it, and the epistemic state
@@ -358,12 +359,12 @@ to lane: at (-1.76, -9.03), asked 'lane', 15 legs, and the zone is not on the ma
 to lane: at (0.36, -8.83), asked 'frontier', 24 legs; 285 cells of lane measured
 \end{lstlisting}
 
-Standing still is not a reply to that, so when the destination comes back
-unreachable the drive picks a \emph{frontier}: a cell that is known free, has
-room for the robot and the planner's inflation around it, and has unmeasured
-floor within sensor range. It routes to that instead, and asks again. Three
-details are load-bearing, and each of them was, at some point, a robot going
-nowhere:
+When the destination is unreachable the drive action selects a
+\emph{frontier}: a cell that is known free, admits the robot and the planner's
+inflation radius, and has unobserved cells within sensor range. It requests a
+route to that cell, drives it, and re-issues the original query against the
+enlarged map. Three properties of the selection are required for termination,
+and each was established by a run that failed without it:
 
 \begin{itemize}[leftmargin=1.2em]
 \item \textbf{The target must border the unknown.} Score by closeness to the
@@ -444,11 +445,11 @@ Run & Policy & Branch & Announcement & Robots that move \\
 \end{tabular}
 \end{center}
 
-\paragraph{The branch nobody films} The first three runs take the same leaf.
-$r_1$ looks into bay 2, the pallet is there, and it lifts it --- and nothing on
-screen distinguishes that from a scripted fetch, which is a fair thing to say
-about it. The claim that the plan is a policy is then in the narration rather
-than in the behaviour.
+\paragraph{The branch the first three runs do not reach} Each of them follows
+the same leaf: $r_1$ inspects bay 2, the pallet is present, and it is lifted.
+That trace is observationally indistinguishable from a fixed sequence, so it
+does not by itself establish that the plan is conditional. The branch structure
+is stated in the narration rather than exhibited by the robot.
 
 Moving the pallet to the other aisle fixes that, and nothing else changes: the
 domain, the instance and the goal are untouched, and no component is told. The
@@ -485,8 +486,9 @@ whether: coming to know a thing is false is coming to know it.
 \paragraph{The robot that never moves} In the two-robot run $r_2$ issues no
 action at all --- the log has no lines for it --- and the goal is still about
 $r_2$'s knowledge. It comes to know which bay the pallet was in by watching
-$r_1$ lift it, without leaving receiving. That is the cheapest way to learn
-something, and the planner finds it without being told to look for it.
+$r_1$ lift it, without leaving receiving. No preference for this solution is
+encoded in the domain: a policy in which $r_2$ travels to a bay and inspects it
+also satisfies the goal, and is longer.
 
 \section{What is actually running}
 
@@ -507,10 +509,10 @@ places carry weight.
 SLAM instances and it is not an optimisation to collapse: sensing here is
 semi-private, so a shared map would make everything one robot sees immediately
 known to all of them, and the demonstration would quietly be proving something
-the domain does not say. It is also a trap in the plainest sense ---
-\code{slam\_toolbox} names its services relative to the node and its map
-\emph{absolutely}, so three mappers in three namespaces all publish the same
-\code{/map} until it is remapped by hand.
+the domain does not say. The separation also has to be made explicitly, because
+\code{slam\_toolbox} names its services relative to the node and its map topic
+\emph{absolutely}: three mappers in three namespaces publish to the same
+\code{/map} until that topic is remapped.
 
 \paragraph{The action nodes are not namespaced} They cannot be. The executor's
 \code{actions\_hub} is a relative name, so a node inside a robot's namespace

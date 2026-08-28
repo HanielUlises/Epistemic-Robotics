@@ -359,16 +359,18 @@ table.logtab td:first-child,table.logtab th:first-child{
     <h2>The pallet is in one of two aisles, and nobody <em>knows</em> which</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      The RoboticsAcademy multi-robot Amazon warehouse exercise gives a fleet a
-      floor of racks, a pallet and a dock, and asks for a task planner that
-      assigns the jobs. It never asks how a robot comes to <em>know</em> where
-      the pallet is: somebody already knows, and the planner is that somebody.
-      Restore the uncertainty and no sequence of actions delivers the pallet at
-      all: every sequence commits in advance to an aisle, and half of them are
-      wrong. What is needed is a policy.
+      The RoboticsAcademy multi-robot Amazon warehouse exercise supplies a
+      fleet, a floor of racks, a pallet and a dock, and asks for a task planner
+      that assigns the jobs. The pallet's location is given to that planner as
+      part of the problem statement. This page states the same mission with the
+      assumption removed: the pallet stands in one of two aisles and no robot
+      knows which. Under that formulation no action sequence solves the problem,
+      since each sequence fixes an aisle in advance and is unexecutable in the
+      world where the pallet is in the other. The solution is a conditional
+      policy whose branch is selected during execution by a sensing action.
     </p>
     <p class="note" style="margin-top:1.4rem">
-      The same floor as the
+      The floor is the one used by the
       <a href="https://jderobot.github.io/RoboticsAcademy/exercises/MobileRobots/multi_robot_amazon_warehouse/">original exercise</a>:
       AWS RoboMaker's small warehouse, at its own coordinates. Domain in
       <span class="mono-inline">epddl-workspace/robot-warehouse</span>, execution in
@@ -383,18 +385,20 @@ table.logtab td:first-child,table.logtab th:first-child{
 <section>
   <div class="container">
     <p class="sec-label">The run</p>
-    <h3>One robot, one mission, one branch point</h3>
+    <h3>One robot executing a seventeen-node policy</h3>
 
     <p>
-      Gazebo on the left, RViz on the right. The map RViz draws is the one
-      <span class="mono-inline">slam_toolbox</span> is building from the robot's own laser as it
-      goes: white where it has measured free floor, teal where nobody has
-      measured anything yet. The caption band is burned in from the run's own
-      log (the actions ePlanSys dispatched, and the moment the epistemic state
-      settled), so it cannot drift from what the robot did. The
-      status in the corner is a live
-      <span class="mono-inline">check_formula</span> query against the epistemic state, and it
-      reads <strong>UNKNOWN</strong> until the robot has looked.
+      Gazebo is on the left, RViz on the right. The occupancy grid RViz
+      displays is produced by <span class="mono-inline">slam_toolbox</span> from
+      the robot's own laser during the run: white marks cells measured free,
+      teal marks cells not yet observed. The caption band is composed from the
+      run's log, using the actions ePlanSys dispatched and the timestamp at
+      which the epistemic state changed, and is burned in afterwards with
+      <span class="mono-inline">ffmpeg</span>; it therefore cannot diverge from
+      the recorded execution. The status in the upper right is the result of an
+      <span class="mono-inline">EpistemicStateClient::check_formula</span> query
+      issued during the run, and reports <strong>UNKNOWN</strong> until the
+      sensing action completes.
     </p>
 
     <figure class="demo-figure">
@@ -433,11 +437,11 @@ table.logtab td:first-child,table.logtab th:first-child{
     </table>
 
     <p>
-      The <em>found</em> branch was taken: the pallet was in bay&#8202;2, so the
-      policy went straight from looking to lifting. Had it been empty, the robot
-      would have paid three extra moves (out of the aisle, along the lane, into
-      the other one), because there is no way through from one aisle to the
-      next.
+      This execution followed the <em>found</em> branch: the pallet was in
+      bay&#8202;2, so the policy proceeded directly from the sensing action to
+      the pick-up. Had the bay been empty, the alternative branch adds three
+      moves, since the zone graph contains no edge between the two aisles and
+      the robot must return to the service lane before entering the other.
     </p>
   </div>
 </section>
@@ -446,19 +450,22 @@ table.logtab td:first-child,table.logtab th:first-child{
 <section>
   <div class="container">
     <p class="sec-label">The fleet</p>
-    <h3>Two robots, then three, and the branch that was never filmed</h3>
+    <h3>Two and three robots, and the second branch of the policy</h3>
 
     <p>
-      The run above takes the easy leaf. r1 looks into bay&#8202;2, the pallet is
-      there, and it lifts it. Nothing on screen distinguishes that from a
-      scripted fetch, which is a fair complaint to make of it: the claim that
-      the plan is a <em>policy</em> is in the caption and not in the picture.
+      The execution above follows the shorter of the two branches: r1 inspects
+      bay&#8202;2, the pallet is present, and it is lifted. That trace is
+      observationally indistinguishable from a fixed sequence, so it does not by
+      itself demonstrate that the plan is conditional. The branch structure is
+      stated in the caption rather than exhibited by the robot.
     </p>
 
     <p>
-      So here is the same mission with the pallet in the other aisle. Nobody is
-      told: the domain, the instance and the goal are unchanged, and the only
-      difference in the world is one coordinate in the simulator.
+      The following execution is the same mission with the pallet placed in the
+      other aisle. The domain, the instance and the goal are unchanged, and no
+      component is informed of the change: the only difference is the spawn
+      coordinate passed to Gazebo, which is a fact about the world and not about
+      the planning problem.
     </p>
 
     <figure class="demo-figure">
@@ -468,28 +475,33 @@ table.logtab td:first-child,table.logtab th:first-child{
         <a href="media/warehouse_run_3robots_empty.mp4">Download it instead</a>.
       </video>
       <figcaption>
-        Three robots, 70&#8201;s at 6&#215;. r1 drives to bay&#8202;2, looks,
-        and finds it <strong>empty</strong> &#8212; then radios the fleet, backs
-        out to the lane, and goes into bay&#8202;3.
+        Three robots, 70&#8201;s at 6&#215;. r1 drives to bay&#8202;2, executes
+        the sensing action, observes the bay <strong>empty</strong>, announces
+        the result to the fleet, returns to the service lane and enters
+        bay&#8202;3.
       </figcaption>
     </figure>
 
     <p>
-      Two things happen here that cannot happen on the other leaf. The first is
-      the backtrack: the racks stop 0.15&#8201;m short of the east wall, which
-      is nothing to a robot 0.21&#8201;m across, so there is no way through from
-      one aisle to the next and a wrong guess costs three extra moves. The
-      building charges for it.
+      Two behaviours occur on this branch that cannot occur on the other. The
+      first is the return to the lane. The rack rows terminate 0.15&#8201;m
+      short of the east wall, which is impassable to a robot 0.21&#8201;m
+      across, so the zone graph contains no edge between the two aisles and an
+      incorrect first inspection costs three additional moves. That cost is a
+      property of the building rather than of the encoding.
     </p>
 
     <p>
-      The second is the announcement. With two robots the planner never spends
-      one: <span class="mono-inline">pickup</span> is public, so the fleet
-      watching r1 lift the pallet out of a bay already learns which bay it was.
-      Add a third robot who must also know, and on <em>this</em> branch that
-      stops working &#8212; what r2 and r3 have to know is about bay&#8202;2, and
-      watching a lift in bay&#8202;3 settles bay&#8202;3. An absence is not
-      something you can watch. So r1 has to say so:
+      The second is the announcement. In the two-agent instance the planner
+      selects no announcement, because <span class="mono-inline">pickup</span>
+      is a public ontic action: observing r1 remove the pallet from a bay is
+      sufficient for r2 to determine which bay held it. In the three-agent
+      instance on this branch that inference is unavailable. The goal conjunct
+      concerns <span class="mono-inline">pallet-at_bay2</span>, and observing a
+      pick-up in bay&#8202;3 settles only bay&#8202;3; the fact that establishes
+      the conjunct is r1's failure to find the pallet in bay&#8202;2, which is
+      not a public event. The planner therefore spends
+      <span class="mono-inline">report-pallet-at_r1_bay3</span>:
     </p>
 
     <pre class="code">[epistemic_perception_r1] 'bay2' is clear: inspect_r1_bay2 observed <span class="k">e-inspect-empty</span>
@@ -501,22 +513,24 @@ table.logtab td:first-child,table.logtab th:first-child{
 [warehouse_mission] mission complete: the policy reached its goal</pre>
 
     <p class="note">
-      Note which way the epistemic line reads at that moment. It goes green on
-      <span class="mono-inline">[Kw. r1] pallet-at_bay2 = TRUE</span> the instant
-      the bay is found <em>empty</em>, because <span class="mono-inline">Kw</span>
-      is knowing <em>whether</em>. Coming to know a thing is false is coming to
-      know it.
+      The epistemic status becomes
+      <span class="mono-inline">[Kw. r1] pallet-at_bay2 = TRUE</span> at the
+      moment the bay is observed <em>empty</em>. This is correct:
+      <span class="mono-inline">Kw</span> is the knowing-whether modality, which
+      is satisfied by determining that the proposition is false as much as by
+      determining that it is true.
     </p>
 
-    <h4>The two-robot run, where one robot never moves</h4>
+    <h4>The two-robot instance: a robot that issues no action</h4>
 
     <p>
-      Worth watching for what does <em>not</em> happen. r2 waits at receiving
-      for the whole run and issues no action at all &#8212; the log has zero
-      lines for it &#8212; and the goal is still about r2's knowledge. It comes
-      to know which bay the pallet was in by watching r1 lift it, without going
-      anywhere. That is the cheapest way to learn something, and the planner
-      finds it without being told.
+      In this instance the goal conjunct is
+      <span class="mono-inline">[Kw. r2] pallet-at_bay2</span>, yet r2 remains at
+      receiving for the entire run and issues no action; the log contains no
+      action lines for it. The conjunct is established by the public effect of
+      r1's pick-up. The planner selects this without any preference for it being
+      encoded in the domain: a solution in which r2 travels to a bay and
+      inspects it also satisfies the goal, and is longer.
     </p>
 
     <figure class="demo-figure">
@@ -526,8 +540,8 @@ table.logtab td:first-child,table.logtab th:first-child{
         <a href="media/warehouse_run_2robots.mp4">Download it instead</a>.
       </video>
       <figcaption>
-        Two robots, 55&#8201;s at 6&#215;. Both are in the world; only one of
-        them has anywhere to be.
+        Two robots, 55&#8201;s at 6&#215;. Both are spawned and both are
+        subject to the goal; only r1 is assigned any action by the policy.
       </figcaption>
     </figure>
 
@@ -549,13 +563,14 @@ table.logtab td:first-child,table.logtab th:first-child{
 <section>
   <div class="container-wide">
     <p class="sec-label">What is actually running</p>
-    <h3>Fifty-five nodes, and which of them is allowed to know things</h3>
+    <h3>The running system: fifty-five nodes at three robots</h3>
 
     <p style="max-width:800px">
-      One planning layer for the fleet, one set of action nodes per robot, and
-      one navigation stack per robot in a namespace of its own. Where the line
-      falls between them is not arrangement: it is the difference between what
-      the fleet knows and what a robot has seen.
+      The system comprises one planning layer for the fleet, one set of action
+      nodes per robot, and one navigation stack per robot in a namespace of its
+      own. The placement of each node relative to that namespace boundary is
+      determined by whether it operates on fleet-wide state or on a single
+      robot's observations, and in three cases below the placement is forced.
     </p>
 
     <div class="graph-wrap">
@@ -689,48 +704,56 @@ table.logtab td:first-child,table.logtab th:first-child{
   <text x="106" y="314" font-size="9" fill="#5A5A5A">/r1/map, routes,</text>
   <text x="106" y="325" font-size="9" fill="#5A5A5A">/r1/navigate_to_pose</text>
 
-  <text x="500" y="574" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">Read it as one question asked twice.</text>
-  <text x="500" y="592" font-size="11" text-anchor="middle" fill="#5A5A5A">ePlanSys decides which zone to be in and what has to be known there; the &#181;-calculus decides how to</text>
-  <text x="500" y="607" font-size="11" text-anchor="middle" fill="#5A5A5A">cross a floor that is still half unmeasured. Perception is what joins them: it turns a patch of one</text>
-  <text x="500" y="622" font-size="11" text-anchor="middle" fill="#5A5A5A">robot's occupancy grid into an event in that robot's sensing action.</text>
-  <text x="500" y="646" font-size="10.5" text-anchor="middle" fill="#C8102E">A shared map would make the sensing public, and the domain says it is semi-private.</text>
+  <text x="500" y="574" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">Division of responsibility between the two planners.</text>
+  <text x="500" y="592" font-size="11" text-anchor="middle" fill="#5A5A5A">ePlanSys determines which zone each robot must occupy and what must be known there. The &#181;-calculus</text>
+  <text x="500" y="607" font-size="11" text-anchor="middle" fill="#5A5A5A">planner determines whether that zone is reachable over observed floor. Perception connects the two by</text>
+  <text x="500" y="622" font-size="11" text-anchor="middle" fill="#5A5A5A">classifying a region of one robot's occupancy grid as an event in that robot's sensing action.</text>
+  <text x="500" y="646" font-size="10.5" text-anchor="middle" fill="#C8102E">A shared map would make the sensing public; the domain declares it semi-private.</text>
 </svg>
 
     </div>
 
-    <h4>Three places the boundary is load-bearing</h4>
+    <h4>Three consequences of the namespace boundary</h4>
 
     <p>
-      <strong>Each robot maps for itself.</strong> Every mapper writes to that
-      robot's own <span class="mono-inline">/rN/map</span>, and perception reads
-      only its own robot's. This costs three SLAM instances and it is not an
-      optimisation to collapse: sensing in this domain is semi-private, so a
-      shared map would make everything one robot sees immediately known to all
-      of them, and the demonstration would be quietly proving something the
-      domain does not say. It is also, mundanely, a trap &#8212;
+      <strong>Each robot maintains its own map.</strong> Every mapper publishes
+      to that robot's <span class="mono-inline">/rN/map</span>, and each
+      perception node subscribes only to the map of the robot it reports for.
+      The cost is one SLAM instance per robot. Consolidating them would be
+      unsound rather than merely cheaper: the domain declares looking as
+      semi-private sensing, under which the observing agent learns the outcome
+      and the others learn only that an inspection occurred. A shared grid makes
+      every observation available to every agent, which is public sensing, and
+      the execution would then no longer correspond to the domain being solved.
+      The separation also has to be made explicitly, because
       <span class="mono-inline">slam_toolbox</span> names its services relative
-      to the node and its map <em>absolutely</em>, so three mappers in three
-      namespaces all publish the same <span class="mono-inline">/map</span>
-      unless it is remapped by hand.
+      to the node and its map topic <em>absolutely</em>: three mappers in three
+      namespaces publish to the same <span class="mono-inline">/map</span> until
+      that topic is remapped.
     </p>
 
     <p>
-      <strong>The action nodes are not namespaced.</strong> They cannot be: the
-      executor's <span class="mono-inline">actions_hub</span> is a relative
-      name, so a node inside a robot's namespace would advertise its own hub and
-      never hear the fleet's. They live in the global namespace and decline each
-      other's work through
+      <strong>The action nodes are not namespaced.</strong> PlanSys2's
+      <span class="mono-inline">ActionExecutorClient</span> advertises
+      <span class="mono-inline">actions_hub</span> under a relative name, so a
+      node placed in a robot's namespace would advertise a separate hub and
+      never receive the fleet's dispatches. The action nodes therefore run in
+      the global namespace, one set per robot, and are distinguished by
       <span class="mono-inline">specialized_arguments</span>, which the executor
-      matches positionally against the action's own arguments.
+      matches positionally against the arguments of the action being dispatched.
+      Every topic that belongs to a particular robot is remapped into that
+      robot's namespace individually.
     </p>
 
     <p>
-      <strong>The building is shared; the map is not.</strong> Nav2 plans over
-      <span class="mono-inline">/floorplan</span>, the rasterised AWS world,
-      served once for the fleet &#8212; a warehouse robot is given the building.
-      What it is not given is a record of what it has looked at, and that is the
-      per-robot <span class="mono-inline">/rN/map</span> the &micro;-calculus
-      planner and perception both reason over.
+      <strong>The building is shared; the measurement is not.</strong> Nav2
+      plans over <span class="mono-inline">/floorplan</span>, the rasterised AWS
+      world, served once for the whole fleet. This models the fact that a
+      warehouse robot is issued the building's layout. It is not issued a record
+      of which parts of that layout it has observed, and that record is the
+      per-robot <span class="mono-inline">/rN/map</span> over which the
+      &micro;-calculus planner computes reachability and from which perception
+      derives its observations.
     </p>
   </div>
 </section>
@@ -739,15 +762,16 @@ table.logtab td:first-child,table.logtab th:first-child{
 <section>
   <div class="container">
     <p class="sec-label">The domain</p>
-    <h3>One precondition is the whole point</h3>
+    <h3>The modal precondition on pick-up</h3>
 
     <p>
-      Six zones: shipping and receiving at the two ends of the west corridor,
-      the service lane along the rack fronts, and the two candidate aisles
-      opening off it. Driving, lifting and unloading are public ontic actions,
-      since a warehouse fleet tracks where its own members are. Looking is
-      semi-private sensing. And lifting carries a conjunct that is not about the
-      warehouse at all:
+      The domain declares six zones: shipping and receiving at the two ends of
+      the west corridor, the service lane along the rack fronts, and the two
+      candidate aisles opening off it. Driving, lifting and unloading are public
+      ontic actions, on the grounds that a warehouse fleet tracks the positions
+      of its own members. Looking is semi-private sensing. The pick-up event
+      carries a conjunct that constrains the agent's information rather than the
+      state of the warehouse:
     </p>
 
     <pre class="code">(<span class="k">:event</span> e-pickup
@@ -758,13 +782,15 @@ table.logtab td:first-child,table.logtab th:first-child{
   <span class="k">:effects</span> (:and (carrying ?i) (not (pallet-at ?z))))</pre>
 
     <p>
-      <span class="mono-inline">(pallet-at ?z)</span> is a claim about the warehouse;
-      <span class="mono-inline">([?i] (pallet-at ?z))</span> is a claim about the robot. The
-      first makes lifting <em>possible</em>, the second makes it
-      <em>permitted</em>. Delete the second and one recovers exactly the
-      classical domain: a robot that happens to be standing in the right aisle
-      lifts a pallet it has no reason to believe is there, and a plan that never
-      looks at anything is valid. The rejection is checked, not asserted:
+      <span class="mono-inline">(pallet-at ?z)</span> is a proposition about the
+      warehouse; <span class="mono-inline">([?i] (pallet-at ?z))</span> is a
+      proposition about the agent's knowledge. The first makes the lift
+      physically <em>possible</em>, the second makes it <em>applicable</em>.
+      Removing the second conjunct recovers the classical domain exactly: a
+      robot standing in the correct aisle may then lift a pallet it has no
+      grounds to believe is present, and a plan containing no sensing action
+      becomes valid. The following rejection is produced by
+      <span class="mono-inline">plank validate</span> rather than asserted:
     </p>
 
     <pre class="code"><span class="c"># plank validate -a go_r1_dock_south_lane go_r1_lane_bay2 pickup_r1_bay2</span>
@@ -772,18 +798,21 @@ false (pickup_r1_bay2 is not applicable in
        'init (X) go_r1_dock_south_lane (X) go_r1_lane_bay2')</pre>
 
     <p>
-      Looking is written as semi-private sensing, with one event per answer and
-      a <span class="mono-inline">&lt;Kw. ?i&gt;</span> conjunct in both preconditions: the robot
-      that looks learns the answer, anyone else present sees it look without
-      learning what it saw, and an inspection that settles nothing is not an
-      action but a no-op with a cost. With one robot the distinction is
-      invisible; modelling it as public would nevertheless be a lie, and one
-      that stops being harmless the moment a second robot is added.
+      Looking is declared as semi-private sensing with one event per outcome
+      and a <span class="mono-inline">&lt;Kw. ?i&gt;</span> conjunct in both
+      preconditions. The observing agent learns the outcome; any other agent
+      present learns that an inspection occurred but not its result; and an
+      inspection of a proposition the agent has already settled is inapplicable
+      rather than merely redundant. With a single agent this declaration has no
+      observable effect, since there is no second agent whose information could
+      differ. It is retained because the effect appears as soon as a second
+      agent is added, and the one- and multi-agent instances share a domain.
     </p>
 
     <p>
-      The two events are contradictory and neither is known to apply when the
-      plan is built, which is what makes the solution branch:
+      The two events have contradictory preconditions and neither is entailed
+      by the initial model, so at plan time it is undetermined which will occur.
+      This is the property that makes the solution a policy:
     </p>
 
     <pre class="code">go_r1_dock_south_lane           <span class="c">[public-ontic]</span>
@@ -800,11 +829,13 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
       unload_r1_dock_north                      <span class="c">=&gt; goal reached</span></pre>
 
     <p class="note">
-      The product update along that policy is reproduced independently of the
-      planner, from the model <span class="mono-inline">plank</span> exported and the events it
-      ground, and checked at every node: each action must apply, and the goal
-      must hold at every leaf. <span class="mono-inline">tools/show_plan.py</span> exits
-      non-zero if the two disagree.
+      The product update along this policy is reconstructed independently of
+      the planner, from the model <span class="mono-inline">plank</span> exported
+      and the events it ground, and is checked at every node: each action must be
+      applicable in the model reached at that point, and the goal must hold at
+      every leaf. <span class="mono-inline">tools/show_plan.py</span> performs
+      this check and exits non-zero if the reconstruction and the planner
+      disagree.
     </p>
   </div>
 </section>
@@ -813,28 +844,30 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
 <section>
   <div class="container">
     <p class="sec-label">The floor</p>
-    <h3>A gap of 0.15&#8201;m decides the shape of the domain</h3>
+    <h3>The floor plan, and the gap behind the rack rows</h3>
 
     <p>
-      The grid is not a drawing that resembles the exercise's warehouse. It is
-      rasterised from the collision meshes Gazebo itself loads for that world
-      (the shell, six rack rows, the tall shelf on the west wall and the clutter
-      between them), sliced at the heights a ground robot can strike. The two
-      maps AWS ships beside that world were not used: they are
-      SLAM captures, sparse and missing most of the racks, and planning on them
-      would make every result an artefact of whoever drove the robot that day.
+      The grid is rasterised from the collision meshes Gazebo loads for that
+      world &#8212; the building shell, six rack rows, the tall shelf on the west
+      wall and the clutter between them &#8212; sampled at the heights at which a
+      ground robot can strike them. It is therefore the same geometry the laser
+      measures at run time, and the two cannot diverge. The two occupancy grids
+      AWS distributes with the world were not used: both are SLAM captures, are
+      sparse, and omit most of the rack structure, which would make every result
+      contingent on the trajectory driven when they were recorded.
     </p>
 
     <p>
-      The rack rows stop 0.15&#8201;m short of the east wall. To a planner that
-      treats a robot as a point, that gap is a corridor running the length of
-      the rack block and joining every aisle to every other, and routes down it
-      are routes no TurtleBot could drive, since the robot is
-      0.21&#8201;m across. Growing the obstacles by the robot's 0.105&#8201;m
-      radius closes it and leaves 0.7&#8201;m of each aisle. So in the zone graph
-      an aisle is a <em>pocket with one mouth</em>, there is no edge from one bay
-      to the next, and a wrong guess costs three moves. That is the building, not
-      a simplification of it.
+      The rack rows terminate 0.15&#8201;m short of the east wall. A planner
+      treating the robot as a point admits that gap as a corridor running the
+      length of the rack block and connecting every aisle to every other; the
+      resulting routes are not drivable by a TurtleBot3 burger, which is
+      0.21&#8201;m across. Inflating the obstacles by the robot's 0.105&#8201;m
+      radius closes the gap and leaves 0.7&#8201;m of clearance in each aisle.
+      In the zone graph each aisle is consequently a pocket with a single mouth
+      on the service lane, there is no edge between bay&#8202;2 and bay&#8202;3,
+      and an incorrect first inspection costs three moves. This follows from the
+      geometry of the world rather than from a simplification of it.
     </p>
 
     <table class="data">
@@ -852,14 +885,15 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
 <section>
   <div class="container">
     <p class="sec-label">Crossing it</p>
-    <h3>Unmeasured floor is not free floor</h3>
+    <h3>Routing over a partially measured floor</h3>
 
     <p>
-      The robot starts at shipping with an empty occupancy grid. The service
-      lane is not blocked, it is <em>unmeasured</em>, and the &micro;-calculus
-      route planner will not route across cells nobody has measured. So early in
-      a run the honest answer to &#8220;how do I get to the lane&#8221; is that
-      there is no known way, and the log says exactly that:
+      The robot begins at shipping with an empty occupancy grid. The service
+      lane is not occupied; it is <em>unobserved</em>, and the &micro;-calculus
+      planner excludes unobserved cells from the least fixed point rather than
+      treating them as free. Early in a run the correct answer to a query for a
+      route to the lane is therefore that no route is known to exist, and the
+      planner returns that:
     </p>
 
     <pre class="code">to lane: at (-3.50, -9.30), asked 'lane', <span class="k">0 legs</span>; 0 cells of lane measured so far
@@ -868,27 +902,33 @@ to lane: at (-1.76, -9.03), asked 'lane', 15 legs, and the zone is not on the ma
 to lane: at (0.36, -8.83), asked 'frontier', 24 legs; <span class="k">285 cells</span> of lane measured</pre>
 
     <p>
-      Standing still is not a reply to that. When the destination comes back
-      unreachable the drive picks a <em>frontier</em>: a cell that is known
-      free, has room for the robot and the planner's inflation around it, and has
-      unmeasured floor within sensor range. It routes there instead, and asks
-      again. Three details are load-bearing, and each was at some point a robot
-      going nowhere: the target must border the unknown, or the map stops
-      growing; the score must reward travelling, or the robot creeps at the
-      blockage; and a chosen frontier must be committed to, or the robot
-      alternates between two of them and travels nowhere at all.
+      When the destination is unreachable the drive action selects a
+      <em>frontier</em>: a cell that is known free, admits the robot and the
+      planner's inflation radius, and has unobserved cells within sensor range.
+      It requests a route to that cell instead, drives it, and re-issues the
+      original query against the enlarged map. Three properties of the selection
+      are required for termination, and each was established by a run that
+      failed without it. The target must border unobserved space, or the map
+      ceases to grow and the destination remains unreachable. The score must
+      credit distance travelled, or the robot advances a short distance toward
+      the blockage and re-selects the same region. And a selected frontier must
+      be retained until it is reached, since arriving at one clears the
+      no-route condition, which causes the next cycle to query the destination,
+      fail, and select a different frontier indefinitely.
     </p>
 
     <p>
-      None of that decides anything epistemic. It is how the robot earns the map
-      that the route planner, and then perception, are entitled to reason about.
-      And nothing in the ROS package decides what was <em>seen</em>:
-      <span class="mono-inline">look_into</span> faces the bay, holds the robot there, and
-      ends when the <em>model</em> reports that r1 knows. What put that knowledge
-      in the model is
-      <span class="mono-inline">plansys2_epistemic_perception</span>, classifying the two bays
-      over the grid SLAM built and reporting which of the two events fired. If
-      the action node decided it, the demonstration would be a puppet show.
+      None of this selection is epistemic. It is the mechanism by which the
+      robot acquires the map that the route planner and perception subsequently
+      reason over. The determination of what was observed is made elsewhere:
+      <span class="mono-inline">look_into</span> orients the robot toward the bay,
+      holds it there, and terminates when the epistemic state reports that the
+      corresponding knowledge formula holds. That formula is established by
+      <span class="mono-inline">plansys2_epistemic_perception</span>, which
+      classifies the configured region of the occupancy grid and reports which of
+      the two sensing events occurred. The action node does not determine the
+      outcome, which is what distinguishes the observation from a scripted
+      one.
     </p>
   </div>
 </section>
@@ -900,10 +940,12 @@ to lane: at (0.36, -8.83), asked 'frontier', 24 legs; <span class="k">285 cells<
     <h3>What it costs to add a robot</h3>
 
     <p>
-      The two-agent instance moves the epistemic conjunct to the robot that
-      never leaves receiving; the three-agent instance asks it of two robots,
-      neither of whom goes to look. The mission does not get harder: the plan is
-      the same shape and r1 still does all the walking. The search does.
+      The two-agent instance assigns the epistemic conjunct to the robot that
+      remains at receiving; the three-agent instance assigns it to two robots,
+      neither of which performs the inspection. The mission itself does not
+      become harder: the plan has the same structure and r1 performs the same
+      physical work in each case. The search does, and the figures below are
+      produced by <span class="mono-inline">validate.sh</span>.
     </p>
 
     <table class="data">
@@ -918,29 +960,34 @@ to lane: at (0.36, -8.83), asked 'frontier', 24 legs; <span class="k">285 cells<
     </table>
 
     <p>
-      Roughly an order of magnitude per robot (&#215;18, then &#215;11). Every
-      agent is another relation over the worlds, and a formula about what
-      somebody knows has to be checked against all of them.
+      Expansions grow by roughly an order of magnitude per agent
+      (&#215;18, then &#215;11) while the number of worlds is unchanged at two.
+      Each additional agent contributes a further accessibility relation over
+      those worlds, and evaluating a formula about any agent's knowledge
+      requires checking every relation, so the growth is in the model checking
+      rather than in the size of the state space.
     </p>
 
-    <h4>The announcement the planner declines to make</h4>
+    <h4>When the planner selects an announcement, and when it does not</h4>
 
     <p>
-      The two-agent policy contains no announcement, although the domain offers
-      <span class="mono-inline">report-pallet-at</span>. It does not need one:
-      <span class="mono-inline">pickup</span> is public, so the fleet seeing r1 lift the
-      pallet out of a bay is already enough for r2 to know which bay it was. Add
-      a third robot who must also know, and the planner does spend an action on
-      it, inserting
-      <span class="mono-inline">report-pallet-at_r1_bay3</span> on the branch where r1 found
-      bay&#8202;2 <em>empty</em>, because there the knowledge comes from an
-      absence, and watching a lift in bay&#8202;3 settles bay&#8202;3, not
-      bay&#8202;2.
+      The two-agent policy contains no announcement, although the domain
+      declares <span class="mono-inline">report-pallet-at</span> and it is
+      ground in every instance. None is required:
+      <span class="mono-inline">pickup</span> is a public ontic action, so r2
+      observing r1 remove the pallet from a bay is sufficient to establish which
+      bay held it. In the three-agent instance the planner does select one,
+      inserting <span class="mono-inline">report-pallet-at_r1_bay3</span> on the
+      branch where bay&#8202;2 was found <em>empty</em>. On that branch the goal
+      conjunct concerns bay&#8202;2 and is established by the absence of the
+      pallet there, which produces no public event; the pick-up that follows
+      occurs in bay&#8202;3 and settles bay&#8202;3 only.
     </p>
 
     <p class="note">
-      That is not something the domain was written to demonstrate. It is what
-      the search found.
+      This behaviour was not encoded in the domain. Both announcement actions
+      are available in every instance, and the difference between the policies
+      is a result of the search.
     </p>
   </div>
 </section>
@@ -949,7 +996,7 @@ to lane: at (0.36, -8.83), asked 'frontier', 24 legs; <span class="k">285 cells<
 <section>
   <div class="container">
     <p class="sec-label">Reproducing it</p>
-    <h3>The domain, the floor, and the full system</h3>
+    <h3>Reproducing the domain, the floor and the full system</h3>
 
     <pre class="code"><span class="c"># one, two and three agents; the two rejections; the scaling table</span>
 bash epddl-workspace/robot-warehouse/validate.sh
@@ -963,13 +1010,13 @@ colcon test --packages-select warehouse_scenario     <span class="c"># 12 tests<
 ros2 launch warehouse_demo warehouse_demo_launch.py</pre>
 
     <p class="note">
-      A bay is visible from the service lane thirty to sixty seconds before the
-      robot reaches it, and the epistemic state will not accept an observation
-      from a robot it does not yet believe is in the bay. Perception keeps
-      re-offering the reading until the executor has applied the drive:
-      <span class="mono-inline">applicability_retries</span>, set to 240. The default
-      of 40 grids is a few seconds, which fits a building of small rooms and not
-      a warehouse aisle.
+      A bay becomes visible from the service lane thirty to sixty seconds before
+      the robot reaches it, and the epistemic state rejects an observation from a
+      robot it does not yet hold to be in that bay. Perception therefore re-offers
+      the reading until the executor has applied the preceding drive, bounded by
+      <span class="mono-inline">applicability_retries</span>, set here to 240. The
+      default of 40 grid updates is a few seconds, which is appropriate to a
+      building of small rooms and not to a warehouse aisle.
     </p>
   </div>
 </section>
