@@ -4,23 +4,23 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Six-Room Survey &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="An EPDDL domain whose goal is knowledge, solved as a branching policy and executed on ePlanSys, with the observation supplied by a SLAM map rather than by the planner.">
+<title>The Warehouse Run &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The Six-Room Survey">
-<meta property="og:description" content="An EPDDL mission whose goal is knowledge: a policy that branches on an observation not yet made, with the answer supplied by a map the robot builds with its own laser.">
-<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/six_room_survey.html">
-<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-six-room-survey.jpg">
+<meta property="og:title" content="The Warehouse Run">
+<meta property="og:description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/warehouse_run.html">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-run.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A six-room building in simulation, with a robot and the fan of its laser scanner">
+<meta property="og:image:alt" content="Gazebo and RViz side by side: the AWS small warehouse, and the map the robot has measured of it">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Six-Room Survey">
-<meta name="twitter:description" content="An EPDDL mission whose goal is knowledge: a policy that branches on an observation not yet made, with the answer supplied by a map the robot builds with its own laser.">
-<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-six-room-survey.jpg">
+<meta name="twitter:title" content="The Warehouse Run">
+<meta name="twitter:description" content="The RoboticsAcademy multi-robot Amazon warehouse exercise, recast as an epistemic domain: the pallet is in one of two aisles, nobody knows which, and the plan is a policy.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-run.jpg">
 
 <script>
 MathJax = {
@@ -300,15 +300,19 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 </style>
 
 <style>
-/* The six-room run */
+/* The warehouse run */
 .demo-figure{margin:2rem 0 2.4rem}
 .demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
   background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -325,8 +329,8 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
           <a href="execution.html">Execution</a>
           <div class="nav-sub">
             <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
-            <a href="six_room_survey.html" aria-current="page">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
-            <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            <a href="warehouse_run.html" aria-current="page">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
           </div>
           <hr>
           <h6>Reports (PDF)</h6>
@@ -346,95 +350,89 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; ePlanSys &#183; DEL policies on ROS 2</p>
-    <h2>A goal that is <em>knowledge</em></h2>
+    <p class="eyebrow">Gazebo &#183; EPDDL &#183; ePlanSys &#183; Nav2</p>
+    <h2>The pallet is in one of two aisles, and nobody <em>knows</em> which</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      The companion page on this site routes a robot with a mu-calculus fixed
-      point. This one asks a different question of the same building. The
-      mission is not to reach the east wing but to come to <em>know</em>
-      whether it is passable, the mission is written in EPDDL, and the answer
-      is supplied by a map the robot builds with its own laser rather than by
-      anything the planner imagines.
+      The RoboticsAcademy multi-robot Amazon warehouse exercise gives a fleet a
+      floor of racks, a pallet and a dock, and asks for a task planner that
+      assigns the jobs. It never asks how a robot comes to <em>know</em> where
+      the pallet is: somebody already knows, and the planner is that somebody.
+      Restore the uncertainty and no sequence of actions delivers the pallet at
+      all: every sequence commits in advance to an aisle, and half of them are
+      wrong. What is needed is a policy.
     </p>
     <p class="note" style="margin-top:1.4rem">
-      Domain and instance in
-      <span class="mono-inline">epddl-workspace/building-rooms</span>; executed on
-      <a href="https://github.com/ePlanSys/eplansys">ePlanSys</a>, grounded with
-      <a href="https://github.com/HanielUlises/plank">plank</a>, solved by
-      <a href="https://github.com/HanielUlises/Aletheia">Aletheia</a>.
-      <a class="ext-chip" href="six_room_survey.pdf">Technical report (PDF)</a>
+      The same floor as the
+      <a href="https://jderobot.github.io/RoboticsAcademy/exercises/MobileRobots/multi_robot_amazon_warehouse/">original exercise</a>:
+      AWS RoboMaker's small warehouse, at its own coordinates. Domain in
+      <span class="mono-inline">epddl-workspace/robot-warehouse</span>, execution in
+      <span class="mono-inline">ros2_ws/src/warehouse_demo</span>, both in
+      <a href="https://github.com/HanielUlises/Epistemic-Robotics">Epistemic-Robotics</a>.
+      <a class="ext-chip" href="warehouse_run.pdf">Full report (PDF)</a>
     </p>
   </div>
 </div>
-
 
 <!-- ═══════════════════════════════════════════════ THE RUN -->
 <section>
   <div class="container">
     <p class="sec-label">The run</p>
-    <h3>Watching a robot come to know something</h3>
+    <h3>One robot, one mission, one branch point</h3>
 
     <p>
-      Gazebo on the left, RViz on the right. The map RViz draws is the one the
-      robot is building as it drives, and the captions name the mission's goal,
-      the epistemic action running at that moment, and how far through the
-      policy the executor has got.
+      Gazebo on the left, RViz on the right. The map RViz draws is the one
+      <span class="mono-inline">slam_toolbox</span> is building from the robot's own laser as it
+      goes: white where it has measured free floor, teal where nobody has
+      measured anything yet. The caption band is burned in from the run's own
+      log (the actions ePlanSys dispatched, and the moment the epistemic state
+      settled), so it cannot drift from what the robot did. The
+      status in the corner is a live
+      <span class="mono-inline">check_formula</span> query against the epistemic state, and it
+      reads <strong>UNKNOWN</strong> until the robot has looked.
     </p>
 
     <figure class="demo-figure">
-      <video controls preload="metadata" playsinline width="100%">
-        <source src="media/eplansys_six_room_survey.mp4" type="video/mp4">
+      <video controls preload="metadata" playsinline
+             poster="media/og-warehouse-run.jpg" width="100%">
+        <source src="media/warehouse_run.mp4" type="video/mp4">
         Your browser will not play this video.
-        <a href="media/eplansys_six_room_survey.mp4">Download it instead</a>.
+        <a href="media/warehouse_run.mp4">Download it instead</a>.
       </video>
       <figcaption>
-        202&#8201;s, unedited. The blue fan is the laser the map is built from;
-        the orange block in room&#8202;3 is the obstruction the robot has to
-        find out about.
+        76&#8201;s at 5&#215; speed, 3840&#215;1040, unedited apart from the
+        caption band. The robot is a TurtleBot3 burger; the world is launched
+        unmodified.
       </figcaption>
     </figure>
 
     <p>
-      What to watch for: the robot drives into room&#8202;3, turns to face it,
-      and holds still. The caption changes from
-      <span class="mono-inline">ONTIC goto-door3_r1</span> to
-      <span class="mono-inline">SENSING inspect3_r1</span>, and a moment later
-      the map fills in and the region resolves. That observation is what the
-      policy branches on, and only then does the robot set off for
-      room&#8202;6.
+      Timings from the run's own log, relative to the first action dispatched:
     </p>
 
-    <pre class="code">[planner]    [epistemic] policy with 6 nodes, branching
-[perception] 'room3' is <span class="k">blocked</span>: inspect3_r1 observed e-inspect3-blocked
-[epistemic]  applied inspect3_r1 -&gt; e-inspect3-blocked
-[bt]         (look_into r1 door3) observed e-inspect3-blocked
-[epistemic]  applied goto-door6_r1
-[perception] 'room6' is <span class="k">clear</span>: inspect6_r1 observed e-inspect6-clear
-[bt]         (look_into r1 door6) observed e-inspect6-clear
-[bt] [goal]  (and (Kw r1 blocked-r3) (Kw r1 blocked-r6))
-<span class="k">Successfully finished</span></pre>
-
-    <p>
-      The two rooms answer differently, which is the point: the branch is
-      exercised rather than implied. Nothing in the stack decided those answers
-      both came from the occupancy grid the robot built with its own
-      laser.
-    </p>
-
-    <table class="data">
+    <table class="data logtab">
+      <thead>
+        <tr><th>t (s)</th><th>What the log says</th><th>&nbsp;</th></tr>
+      </thead>
       <tbody>
-        <tr><td>Distance driven</td><td>27.88&#8201;m</td></tr>
-        <tr><td>Closest approach to any obstacle</td><td>0.307&#8201;m</td></tr>
-        <tr><td>Robot body radius</td><td>0.105&#8201;m</td></tr>
-        <tr><td>Contacts</td><td><strong>0</strong></td></tr>
+        <tr><td>&#8722;2</td><td><span class="mono-inline">problem seeded; asking for a plan</span></td><td></td></tr>
+        <tr><td>&#8722;1</td><td><span class="mono-inline">policy: 17 nodes, 1 of them branching</span></td><td></td></tr>
+        <tr><td>0</td><td><span class="mono-inline">executing goto_zone</span></td><td>shipping &#8594; lane &#8594; bay&#8202;2</td></tr>
+        <tr><td>79</td><td><span class="mono-inline">executing look_into</span></td><td></td></tr>
+        <tr><td>79.2</td><td><span class="mono-inline">(Kw r1 pallet-at_bay2) holds after 0.4s</span></td><td><strong>the model settles</strong></td></tr>
+        <tr><td>80</td><td><span class="mono-inline">executing pick_up</span></td><td>now permitted</td></tr>
+        <tr><td>84</td><td><span class="mono-inline">executing goto_zone</span></td><td>bay&#8202;2 &#8594; &#8943; &#8594; receiving</td></tr>
+        <tr><td>212</td><td><span class="mono-inline">executing drop_off</span></td><td></td></tr>
+        <tr><td>227</td><td><span class="mono-inline">mission complete: the policy reached its goal</span></td><td></td></tr>
       </tbody>
     </table>
 
-    <p class="note">
-      Measured against Gazebo's own poses for the robot, not its odometry:
-      wheel odometry keeps integrating while a base is held against a wall, so
-      it cannot answer whether anything was hit.
+    <p>
+      The <em>found</em> branch was taken: the pallet was in bay&#8202;2, so the
+      policy went straight from looking to lifting. Had it been empty, the robot
+      would have paid three extra moves (out of the aisle, along the lane, into
+      the other one), because there is no way through from one aisle to the
+      next.
     </p>
   </div>
 </section>
@@ -443,171 +441,237 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 <section>
   <div class="container">
     <p class="sec-label">The domain</p>
-    <h3>Four propositions, and two ways of finding out</h3>
+    <h3>One precondition is the whole point</h3>
 
     <p>
-      Rooms 3 and 6 lie east of the cross corridor; the robot starts in room 1
-      at the west end. Whether either east room is obstructed is not stated in
-      the initial condition, so the model designates <strong>four worlds</strong>
-      rather than one. A building nobody has surveyed is genuinely undetermined,
-      and that is what makes the solution branch.
+      Six zones: shipping and receiving at the two ends of the west corridor,
+      the service lane along the rack fronts, and the two candidate aisles
+      opening off it. Driving, lifting and unloading are public ontic actions,
+      since a warehouse fleet tracks where its own members are. Looking is
+      semi-private sensing. And lifting carries a conjunct that is not about the
+      warehouse at all:
     </p>
 
-    <pre class="code"><span class="c">;; the sensing action: two events, one per answer, neither known in advance</span>
-(:action inspect3
-  :parameters (?i - agent)
-  :action-type (<span class="k">semi-private-sensing</span>
-    (e-inspect3-blocked ?i)
-    (e-inspect3-clear ?i) )
-  :observability-conditions
-    (:and
-      (?i <span class="k">Fully</span>)
-      (default <span class="k">Partially</span>) ) )
-
-<span class="c">;; knowing *whether*, not knowing *that*</span>
-(:goal (and ([<span class="k">Kw.</span> r1] (blocked-r3)) ([<span class="k">Kw.</span> r1] (blocked-r6))))</pre>
+    <pre class="code">(<span class="k">:event</span> e-pickup
+  <span class="k">:parameters</span> (?i - agent ?z - zone)
+  <span class="k">:precondition</span>
+    (and (at-ag ?i ?z) (bay ?z) (pallet-at ?z) <span class="k">([?i] (pallet-at ?z))</span>
+         (not (carrying ?i)))
+  <span class="k">:effects</span> (:and (carrying ?i) (not (pallet-at ?z))))</pre>
 
     <p>
-      Semi-private sensing says the agent that looks learns the answer, and
-      anyone else present sees it look without learning what it saw. With one
-      robot the distinction is invisible, and modelling it as fully
-      public would still be a lie, one that stops being harmless the moment a
-      second robot joins.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ THE POLICY -->
-<section>
-  <div class="container">
-    <p class="sec-label">The policy</p>
-    <h3>Four leaves, six branches, depth four</h3>
-
-    <p>
-      Aletheia picks its heuristic and strategy from the task's own features
-      rather than from a flag, and reports which rule decided each:
+      <span class="mono-inline">(pallet-at ?z)</span> is a claim about the warehouse;
+      <span class="mono-inline">([?i] (pallet-at ?z))</span> is a claim about the robot. The
+      first makes lifting <em>possible</em>, the second makes it
+      <em>permitted</em>. Delete the second and one recovers exactly the
+      classical domain: a robot that happens to be standing in the right aisle
+      lifts a pallet it has no reason to believe is there, and a plan that never
+      looks at anything is valid. The rejection is checked, not asserted:
     </p>
 
-    <pre class="code">[main] Heuristic: knowledge-spread (auto, rule <span class="k">'kw-only-goal'</span>)
-[main] Strategy:  AO* (auto, rule <span class="k">'sensing-small-designated'</span>)
-[aostar] Solution found at depth 4  Expanded=32 Generated=35 Memo=6/6
-[validator] OK: 4 leaves, 6 branches checked
-
-goto-door3_r1
-  ev0: inspect3_r1
-    ev0: goto-door6_r1 -&gt; inspect6_r1     <span class="c"># room 3 seen blocked</span>
-    ev1: goto-door6_r1 -&gt; inspect6_r1     <span class="c"># room 3 seen clear</span></pre>
+    <pre class="code"><span class="c"># plank validate -a go_r1_dock_south_lane go_r1_lane_bay2 pickup_r1_bay2</span>
+false (pickup_r1_bay2 is not applicable in
+       'init (X) go_r1_dock_south_lane (X) go_r1_lane_bay2')</pre>
 
     <p>
-      Both branches continue to the second room, and they are distinct nodes
-      rather than a shared subtree. Which one runs is decided by an observation
-      that has not been made when the plan is built: the definition of a
-      policy as against a sequence.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ THE MAP -->
-<section>
-  <div class="container">
-    <p class="sec-label">Where the knowledge comes from</p>
-    <h3>The map, read as an observation</h3>
-
-    <p>
-      Nothing in the stack invents the answer. The perception node classifies a
-      named region of the occupancy grid and reports what it found as the
-      outcome of the sensing action the policy branched on:
-    </p>
-
-    <pre class="code">epistemic_perception:
-  ros__parameters:
-    regions: ["room3", "room6"]
-    room3:
-      boxes: [4.25, 0.25, 11.8, 7.8]
-      atom: <span class="k">"blocked-r3"</span>
-      atom_true_when_clear: <span class="k">false</span>
-      sensing_action: <span class="k">"inspect3_r1"</span>
-      outcome_when_clear: <span class="k">"e-inspect3-clear"</span>
-      outcome_when_blocked: <span class="k">"e-inspect3-blocked"</span></pre>
-
-    <p>
-      A region is <em class="term">clear</em> only when every cell in it has
-      been observed and settled, <em class="term">blocked</em> when any one cell
-      is occupied, and undecided otherwise. Occupied beats unobserved, since no
-      further looking removes an obstacle; unobserved beats free, since a region
-      is clear only when all of it is.
+      Looking is written as semi-private sensing, with one event per answer and
+      a <span class="mono-inline">&lt;Kw. ?i&gt;</span> conjunct in both preconditions: the robot
+      that looks learns the answer, anyone else present sees it look without
+      learning what it saw, and an inspection that settles nothing is not an
+      action but a no-op with a cost. With one robot the distinction is
+      invisible; modelling it as public would nevertheless be a lie, and one
+      that stops being harmless the moment a second robot is added.
     </p>
 
     <p>
-      The grid is built by <span class="mono-inline">slam_toolbox</span> from
-      the robot's own laser while it drives, and this is what makes the
-      demonstration honest rather than arranged: a room the robot has not
-      entered is unobserved in the grid and undetermined in the Kripke model at
-      the same time. Those are two views of one fact. No prepared map is
-      published anywhere in the system.
+      The two events are contradictory and neither is known to apply when the
+      plan is built, which is what makes the solution branch:
+    </p>
+
+    <pre class="code">go_r1_dock_south_lane           <span class="c">[public-ontic]</span>
+go_r1_lane_bay2                 <span class="c">[public-ontic]</span>
+inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
+  +-- e-inspect-empty   <span class="c">(not pallet-at_bay2)</span>
+      go_r1_bay2_lane, go_r1_lane_bay3, <span class="k">pickup_r1_bay3</span>,
+      go_r1_bay3_lane, go_r1_lane_dock_south,
+      go_r1_dock_south_corridor, go_r1_corridor_dock_north,
+      unload_r1_dock_north                      <span class="c">=&gt; goal reached</span>
+  +-- e-inspect-found   <span class="c">(pallet-at_bay2)</span>
+      <span class="k">pickup_r1_bay2</span>, go_r1_bay2_lane, go_r1_lane_dock_south,
+      go_r1_dock_south_corridor, go_r1_corridor_dock_north,
+      unload_r1_dock_north                      <span class="c">=&gt; goal reached</span></pre>
+
+    <p class="note">
+      The product update along that policy is reproduced independently of the
+      planner, from the model <span class="mono-inline">plank</span> exported and the events it
+      ground, and checked at every node: each action must apply, and the goal
+      must hold at every leaf. <span class="mono-inline">tools/show_plan.py</span> exits
+      non-zero if the two disagree.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ FINDINGS -->
+<!-- ═══════════════════════════════════════════════ THE FLOOR -->
 <section>
   <div class="container">
-    <p class="sec-label">What building it found</p>
-    <h3>Five defects, and a modelling question</h3>
+    <p class="sec-label">The floor</p>
+    <h3>A gap of 0.15&#8201;m decides the shape of the domain</h3>
 
     <p>
-      Getting this to run end to end turned up five faults in the stack, each of
-      which stopped the mission outright. All are fixed.
+      The grid is not a drawing that resembles the exercise's warehouse. It is
+      rasterised from the collision meshes Gazebo itself loads for that world
+      (the shell, six rack rows, the tall shelf on the west wall and the clutter
+      between them), sliced at the heights a ground robot can strike. The two
+      maps AWS ships beside that world were not used: they are
+      SLAM captures, sparse and missing most of the racks, and planning on them
+      would make every result an artefact of whoever drove the robot that day.
+    </p>
+
+    <p>
+      The rack rows stop 0.15&#8201;m short of the east wall. To a planner that
+      treats a robot as a point, that gap is a corridor running the length of
+      the rack block and joining every aisle to every other, and routes down it
+      are routes no TurtleBot could drive, since the robot is
+      0.21&#8201;m across. Growing the obstacles by the robot's 0.105&#8201;m
+      radius closes it and leaves 0.7&#8201;m of each aisle. So in the zone graph
+      an aisle is a <em>pocket with one mouth</em>, there is no edge from one bay
+      to the next, and a wrong guess costs three moves. That is the building, not
+      a simplification of it.
+    </p>
+
+    <table class="data">
+      <tbody>
+        <tr><td>Grid</td><td>281 &#215; 421 cells at 0.05&#8201;m</td></tr>
+        <tr><td>Building</td><td>14&#8201;m &#215; 21&#8201;m</td></tr>
+        <tr><td>Robot body radius</td><td>0.105&#8201;m</td></tr>
+        <tr><td>Gap behind the racks</td><td>0.15&#8201;m: open on the plan, shut on the planner's grid</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ UNKNOWN IS NOT FREE -->
+<section>
+  <div class="container">
+    <p class="sec-label">Crossing it</p>
+    <h3>Unmeasured floor is not free floor</h3>
+
+    <p>
+      The robot starts at shipping with an empty occupancy grid. The service
+      lane is not blocked, it is <em>unmeasured</em>, and the &micro;-calculus
+      route planner will not route across cells nobody has measured. So early in
+      a run the honest answer to &#8220;how do I get to the lane&#8221; is that
+      there is no known way, and the log says exactly that:
+    </p>
+
+    <pre class="code">to lane: at (-3.50, -9.30), asked 'lane', <span class="k">0 legs</span>; 0 cells of lane measured so far
+no route to lane yet; going to look from (-1.96, -9.28)
+to lane: at (-1.76, -9.03), asked 'lane', 15 legs, and the zone is not on the map yet
+to lane: at (0.36, -8.83), asked 'frontier', 24 legs; <span class="k">285 cells</span> of lane measured</pre>
+
+    <p>
+      Standing still is not a reply to that. When the destination comes back
+      unreachable the drive picks a <em>frontier</em>: a cell that is known
+      free, has room for the robot and the planner's inflation around it, and has
+      unmeasured floor within sensor range. It routes there instead, and asks
+      again. Three details are load-bearing, and each was at some point a robot
+      going nowhere: the target must border the unknown, or the map stops
+      growing; the score must reward travelling, or the robot creeps at the
+      blockage; and a chosen frontier must be committed to, or the robot
+      alternates between two of them and travels nowhere at all.
+    </p>
+
+    <p>
+      None of that decides anything epistemic. It is how the robot earns the map
+      that the route planner, and then perception, are entitled to reason about.
+      And nothing in the ROS package decides what was <em>seen</em>:
+      <span class="mono-inline">look_into</span> faces the bay, holds the robot there, and
+      ends when the <em>model</em> reports that r1 knows. What put that knowledge
+      in the model is
+      <span class="mono-inline">plansys2_epistemic_perception</span>, classifying the two bays
+      over the grid SLAM built and reporting which of the two events fired. If
+      the action node decided it, the demonstration would be a puppet show.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ SCALING -->
+<section>
+  <div class="container">
+    <p class="sec-label">Scaling</p>
+    <h3>What it costs to add a robot</h3>
+
+    <p>
+      The two-agent instance moves the epistemic conjunct to the robot that
+      never leaves receiving; the three-agent instance asks it of two robots,
+      neither of whom goes to look. The mission does not get harder: the plan is
+      the same shape and r1 still does all the walking. The search does.
     </p>
 
     <table class="data">
       <thead>
-        <tr><th>Where</th><th>What was wrong</th></tr>
+        <tr><th>Agents</th><th>Atoms</th><th>Ground actions</th><th>Worlds</th><th>Depth</th><th>Expanded</th><th>Generated</th><th>Seconds</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td><span class="mono-inline">plansys2_executor</span></td>
-          <td>Rendering any policy killed the node with SIGSEGV: a range-<span class="mono-inline">for</span> over
-              <span class="mono-inline">get_parameter(...).as_string_array()</span> iterated a destroyed vector and handed
-              <span class="mono-inline">dlopen</span> freed memory. Only bites when BT node plugins are configured, that is, only in the epistemic setup.</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">plansys2_bringup</span></td>
-          <td><span class="mono-inline">regions: []</span> in the shipped params: an empty list has no element type, so perception threw at construction every time it was launched.</td>
-        </tr>
-        <tr>
-          <td>five packages</td>
-          <td>Rolling-only <span class="mono-inline">EventsExecutor</span> and <span class="mono-inline">ServicesQoS</span> made the fork unbuildable on the Humble its own CI targets.</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">plansys2_epistemic_perception</span></td>
-          <td>An observation arriving 78&#8201;ms before the executor's own update was refused as a model/world divergence and, by design, never retried, losing a reading the model was about to accept.</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">plansys2_epistemic_executor</span></td>
-          <td>With the observation applied first, the behaviour tree applied the same sensing action again and was refused, because its <span class="mono-inline">Kw</span> precondition no longer held: it had succeeded.</td>
-        </tr>
+        <tr><td>1</td><td>62</td><td>66</td><td>2</td><td>11</td><td>1&#8202;008</td><td>1&#8202;012</td><td>0.01</td></tr>
+        <tr><td>2</td><td>69</td><td>132</td><td>2</td><td>11</td><td>18&#8202;254</td><td>18&#8202;525</td><td>0.23</td></tr>
+        <tr><td>3</td><td>76</td><td>198</td><td>2</td><td>12</td><td>195&#8202;178</td><td>197&#8202;533</td><td>2.90</td></tr>
       </tbody>
     </table>
 
     <p>
-      The demonstration also settled a modelling question the domain does not
-      answer: what a robot should physically <em>do</em> when the policy says
-      <span class="mono-inline">inspect3</span>. A timed pause cannot tell success from failure. A
-      rotating sweep only ever kept a stalled mapper alive. What the action does
-      now is drive in, turn to face the room, hold still, and end exactly when
-      <span class="mono-inline">(Kw r1 blocked-r3)</span> holds, or fail and say so. A sensing action
-      exists to acquire knowledge, so knowledge is what ends it.
+      Roughly an order of magnitude per robot (&#215;18, then &#215;11). Every
+      agent is another relation over the worlds, and a formula about what
+      somebody knows has to be checked against all of them.
+    </p>
+
+    <h4>The announcement the planner declines to make</h4>
+
+    <p>
+      The two-agent policy contains no announcement, although the domain offers
+      <span class="mono-inline">report-pallet-at</span>. It does not need one:
+      <span class="mono-inline">pickup</span> is public, so the fleet seeing r1 lift the
+      pallet out of a bay is already enough for r2 to know which bay it was. Add
+      a third robot who must also know, and the planner does spend an action on
+      it, inserting
+      <span class="mono-inline">report-pallet-at_r1_bay3</span> on the branch where r1 found
+      bay&#8202;2 <em>empty</em>, because there the knowledge comes from an
+      absence, and watching a lift in bay&#8202;3 settles bay&#8202;3, not
+      bay&#8202;2.
     </p>
 
     <p class="note">
-      One consequence is about sensors rather than models. A region is
-      <em class="term">blocked</em> the instant one cell in it is occupied, but
-      <em class="term">clear</em> only when every cell has been observed and
-      settled, which cannot be decided for a patch lying in open floor,
-      because a 3.5&#8201;m laser returns nothing across a 7.5&#8201;m room and
-      free space is traced only along beams that come back. The region a robot
-      can settle is the one its beams cross on the way to a wall.
+      That is not something the domain was written to demonstrate. It is what
+      the search found.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCING -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproducing it</p>
+    <h3>The domain, the floor, and the full system</h3>
+
+    <pre class="code"><span class="c"># one, two and three agents; the two rejections; the scaling table</span>
+bash epddl-workspace/robot-warehouse/validate.sh
+
+<span class="c"># the floor, and the six route-planning cases, offline and over ROS</span>
+colcon build --packages-select epistemic_msgs mu_path_planner warehouse_scenario
+bash scenarios/warehouse/run_demo.sh
+colcon test --packages-select warehouse_scenario     <span class="c"># 12 tests</span>
+
+<span class="c"># the full system in Gazebo</span>
+ros2 launch warehouse_demo warehouse_demo_launch.py</pre>
+
+    <p class="note">
+      A bay is visible from the service lane thirty to sixty seconds before the
+      robot reaches it, and the epistemic state will not accept an observation
+      from a robot it does not yet believe is in the bay. Perception keeps
+      re-offering the reading until the executor has applied the drive:
+      <span class="mono-inline">applicability_retries</span>, set to 240. The default
+      of 40 grids is a few seconds, which fits a building of small rooms and not
+      a warehouse aisle.
     </p>
   </div>
 </section>
@@ -620,13 +684,13 @@ goto-door3_r1
         &nbsp;&#183;&nbsp;
         <a href="domains.html">Domains</a>
         &nbsp;&#183;&nbsp;
-        <a href="eplansys_execution.pdf">Technical report (PDF)</a>
+        <a href="warehouse_run.pdf">Technical report (PDF)</a>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">3 packages &#183; 82 tests &#183; ROS 2</span>
+      <span class="ftr-r">AWS small warehouse &#183; 17-node policy &#183; ROS 2</span>
     </div>
   </div>
 </footer>
