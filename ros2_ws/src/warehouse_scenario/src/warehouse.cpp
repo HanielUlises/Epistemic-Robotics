@@ -25,27 +25,6 @@ namespace
 
 using mu_path_planner::OccupancyGraph;
 
-/// Fills the half-open metric rectangle [x0, x1) x [y0, y1).
-///
-/// The bounds are rounded rather than truncated: every dimension in this file
-/// is a multiple of the resolution, and 20.6 / 0.1 is 205.999... in binary,
-/// which truncates one column short and leaves the corridor overlapping the
-/// wall beside it.
-void fill(std::vector<int8_t> & grid, double x0, double y0, double x1, double y1,
-  int8_t value)
-{
-  const auto c0 = static_cast<uint32_t>(std::lround(x0 / kResolution));
-  const auto c1 = static_cast<uint32_t>(std::lround(x1 / kResolution));
-  const auto r0 = static_cast<uint32_t>(std::lround(y0 / kResolution));
-  const auto r1 = static_cast<uint32_t>(std::lround(y1 / kResolution));
-
-  for (uint32_t row = r0; row < r1 && row < kHeight; ++row) {
-    for (uint32_t col = c0; col < c1 && col < kWidth; ++col) {
-      grid[static_cast<std::size_t>(row) * kWidth + col] = value;
-    }
-  }
-}
-
 std::string bounds_json(const Box & box)
 {
   std::ostringstream out;
@@ -62,47 +41,184 @@ std::string agent_json(uint32_t id, const char * name, const Point & at)
   return out.str();
 }
 
-/// The perimeter, the racks and the wall that makes the east corridor the
-/// only way through. Shared by both stages, since a stage differs from the
-/// other only in what has been looked at.
-void build_structure(std::vector<int8_t> & grid)
+/// The zones every snapshot grounds, whatever else it disputes.
+std::string common_zones_json()
 {
-  constexpr double kWall = 0.3;
-  fill(grid, 0.0, 0.0, kWidthM, kWall, kOccupied);
-  fill(grid, 0.0, kHeightM - kWall, kWidthM, kHeightM, kOccupied);
-  fill(grid, 0.0, 0.0, kWall, kHeightM, kOccupied);
-  fill(grid, kWidthM - kWall, 0.0, kWidthM, kHeightM, kOccupied);
-
-  constexpr double kShelfWidth = 1.6;
-  constexpr double kShelfY0 = 3.0;
-  constexpr double kShelfY1 = 11.0;
-  for (const double x : {4.0, 8.0, 12.0, 16.0}) {
-    fill(grid, x, kShelfY0, x + kShelfWidth, kShelfY1, kOccupied);
-  }
-
-  fill(grid, kEastCorridorX1, kShelfY0, kEastCorridorX1 + 0.4, kShelfY1, kOccupied);
+  std::ostringstream out;
+  out << "\"dock_south\": " << bounds_json(kDockSouth)
+      << ", \"dock_north\": " << bounds_json(kDockNorth)
+      << ", \"aisle_4\": " << bounds_json(kBayAisle4);
+  return out.str();
 }
+
+/// The number of rays a stage is cast with.
+///
+/// At 2880 the angular step is an eighth of a degree, so two neighbouring rays
+/// have not parted by a cell until 23 m out — further than the diagonal of the
+/// building. Fewer rays and a stage acquires speckle: single unobserved cells
+/// in the middle of observed floor, which the fixed point would then have to
+/// route around for no reason on the ground.
+constexpr int kRayCount = 2880;
 
 }  // namespace
 
 // ---------------------------------------------------------------------------
+// The floor
+// ---------------------------------------------------------------------------
 
-std::vector<int8_t> build_grid(bool east_corridor_observed)
+std::vector<int8_t> build_floorplan()
 {
-  std::vector<int8_t> grid(static_cast<std::size_t>(kWidth) * kHeight, kFree);
-  build_structure(grid);
+  std::vector<int8_t> grid;
+  grid.reserve(static_cast<std::size_t>(kWidth) * kHeight);
 
-  if (!east_corridor_observed) {
-    // A corridor nobody has looked into. Not free, not occupied: unknown.
-    fill(grid, kEastCorridorX0, 0.3, kEastCorridorX1, kHeightM - 0.3, kUnknown);
+  int8_t value = kFree;
+  for (std::size_t run = 0; run < kFloorplanRunCount; ++run) {
+    grid.insert(grid.end(), kFloorplanRuns[run], value);
+    value = value == kFree ? kOccupied : kFree;
+  }
+
+  if (grid.size() != static_cast<std::size_t>(kWidth) * kHeight) {
+    throw std::runtime_error("the generated floor plan is not " +
+            std::to_string(kWidth) + "x" + std::to_string(kHeight));
+  }
+  return grid;
+}
+
+std::vector<int8_t> inflate(const std::vector<int8_t> & floorplan, double radius_m)
+{
+  const auto reach = static_cast<int>(std::ceil(radius_m / kResolution));
+  const double radius_cells = radius_m / kResolution;
+
+  std::vector<int8_t> grown = floorplan;
+  for (int row = 0; row < static_cast<int>(kHeight); ++row) {
+    for (int col = 0; col < static_cast<int>(kWidth); ++col) {
+      if (floorplan[static_cast<std::size_t>(row) * kWidth + col] != kOccupied) {
+        continue;
+      }
+      // A disc, not a square: a square would clip the corner of every aisle
+      // by more than the robot takes up and shorten the bays for no reason.
+      for (int dr = -reach; dr <= reach; ++dr) {
+        for (int dc = -reach; dc <= reach; ++dc) {
+          if (dr * dr + dc * dc > radius_cells * radius_cells) {continue;}
+          const int r = row + dr;
+          const int c = col + dc;
+          if (r < 0 || c < 0 || r >= static_cast<int>(kHeight) ||
+            c >= static_cast<int>(kWidth))
+          {
+            continue;
+          }
+          grown[static_cast<std::size_t>(r) * kWidth + c] = kOccupied;
+        }
+      }
+    }
+  }
+  return grown;
+}
+
+std::vector<Point> vantages(Stage stage)
+{
+  // Where a robot has stood, not where it would be convenient for it to have
+  // stood: every one of these is on free floor, and the fleet could have
+  // driven from one to the next.
+  std::vector<Point> out;
+
+  // What both stages have: each robot has looked around the end of the
+  // building it started at, and no further. r1 came on shift at the shipping
+  // floor in the south, r2 at receiving in the north, and neither has yet had
+  // a reason to walk the length of the warehouse.
+  for (double y = -9.4; y < -7.9; y += 0.7) {
+    out.push_back(Point{kR1Start.x, y});
+  }
+  for (double y = 5.3; y < 7.6; y += 0.7) {
+    out.push_back(Point{kR2Start.x, y});
+  }
+  if (stage == Stage::FirstPass) {
+    return out;
+  }
+
+  // The sweep. Up the west corridor first, between the shelf on the west wall
+  // and the clutter down the middle, which is what joins the two ends of the
+  // building into one known floor.
+  for (double y = -8.2; y < 5.4; y += 1.2) {
+    out.push_back(Point{-3.5, y});
+  }
+
+  // Then along the south wall, which is how a robot gets from that corridor
+  // to the rack block without crossing it.
+  for (double x = -2.5; x < 2.4; x += 1.2) {
+    out.push_back(Point{x, -9.6});
+  }
+
+  // And up the service lane, which is the only floor the aisles open onto and
+  // therefore the only floor a laser can see down them from.
+  for (double y = -8.6; y < 0.7; y += 1.0) {
+    out.push_back(Point{kServiceLaneX, y});
+  }
+  return out;
+}
+
+std::vector<bool> observed_from(
+  const std::vector<int8_t> & floorplan, const std::vector<Point> & from,
+  double range_m)
+{
+  std::vector<bool> seen(floorplan.size(), false);
+  const auto steps = static_cast<int>(range_m / kResolution);
+
+  for (const Point & at : from) {
+    const auto origin_col = static_cast<int>((at.x - kOriginX) / kResolution);
+    const auto origin_row = static_cast<int>((at.y - kOriginY) / kResolution);
+    if (origin_col < 0 || origin_row < 0 ||
+      origin_col >= static_cast<int>(kWidth) ||
+      origin_row >= static_cast<int>(kHeight))
+    {
+      throw std::out_of_range("a vantage point is off the map");
+    }
+    seen[static_cast<std::size_t>(origin_row) * kWidth + origin_col] = true;
+
+    for (int ray = 0; ray < kRayCount; ++ray) {
+      const double angle = 2.0 * M_PI * ray / kRayCount;
+      const double dx = std::cos(angle);
+      const double dy = std::sin(angle);
+
+      for (int step = 1; step <= steps; ++step) {
+        const int col = origin_col + static_cast<int>(dx * step);
+        const int row = origin_row + static_cast<int>(dy * step);
+        if (col < 0 || row < 0 || col >= static_cast<int>(kWidth) ||
+          row >= static_cast<int>(kHeight))
+        {
+          break;
+        }
+        const auto cell = static_cast<std::size_t>(row) * kWidth + col;
+        seen[cell] = true;
+        // A return comes off the first thing the ray meets, and nothing
+        // behind it is measured. That is what leaves an aisle unknown.
+        if (floorplan[cell] == kOccupied) {
+          break;
+        }
+      }
+    }
+  }
+  return seen;
+}
+
+std::vector<int8_t> build_grid(Stage stage)
+{
+  const auto floorplan = build_floorplan();
+  const auto seen = observed_from(floorplan, vantages(stage), kLaserRangeM);
+
+  auto grid = inflate(floorplan, kRobotRadiusM);
+  for (std::size_t i = 0; i < grid.size(); ++i) {
+    if (!seen[i]) {
+      grid[i] = kUnknown;
+    }
   }
   return grid;
 }
 
 CellIdx cell_of(double x, double y)
 {
-  const auto col = static_cast<int64_t>(x / kResolution);
-  const auto row = static_cast<int64_t>(y / kResolution);
+  const auto col = static_cast<int64_t>((x - kOriginX) / kResolution);
+  const auto row = static_cast<int64_t>((y - kOriginY) / kResolution);
   if (col < 0 || row < 0 || col >= kWidth || row >= kHeight) {
     throw std::out_of_range("point is off the map");
   }
@@ -113,7 +229,8 @@ Point point_of(CellIdx cell)
 {
   const uint32_t col = cell % kWidth;
   const uint32_t row = cell / kWidth;
-  return Point{(col + 0.5) * kResolution, (row + 0.5) * kResolution};
+  return Point{kOriginX + (col + 0.5) * kResolution,
+    kOriginY + (row + 0.5) * kResolution};
 }
 
 std::vector<CellState> classify(const std::vector<int8_t> & grid)
@@ -155,11 +272,13 @@ mu_path_planner::GridInfo grid_info()
   info.width = kWidth;
   info.height = kHeight;
   info.resolution = kResolution;
-  info.origin_x = 0.0;
-  info.origin_y = 0.0;
+  info.origin_x = kOriginX;
+  info.origin_y = kOriginY;
   return info;
 }
 
+// ---------------------------------------------------------------------------
+// What the robots know
 // ---------------------------------------------------------------------------
 
 std::string snapshot_docks()
@@ -172,15 +291,14 @@ std::string snapshot_docks()
       << "  \"labels\": {\"w0\": [\"link_up\"]},\n"
       << "  \"agents\": {" << agent_json(1, "r1", kR1Start) << ", "
       << agent_json(2, "r2", kR2Start) << "},\n"
-      << "  \"zones\": {\"dock_1\": " << bounds_json(kDock1)
-      << ", \"dock_2\": " << bounds_json(kDock2) << "}\n"
+      << "  \"zones\": {" << common_zones_json() << "}\n"
       << "}\n";
   return out.str();
 }
 
 std::string snapshot_pallet()
 {
-  // r1 cannot tell w0 from w1, and the two disagree about which bay is the
+  // r1 cannot tell w0 from w1, and the two disagree about which aisle is the
   // pallet's. Every cell they disagree about is a cell sensing is for.
   std::ostringstream out;
   out << "{\n"
@@ -190,8 +308,7 @@ std::string snapshot_pallet()
       << "\"w1\": [\"w0\", \"w1\"]}},\n"
       << "  \"labels\": {\"w0\": [\"link_up\"], \"w1\": [\"link_up\"]},\n"
       << "  \"agents\": {" << agent_json(1, "r1", kR1Start) << "},\n"
-      << "  \"zones\": {\"dock_1\": " << bounds_json(kDock1)
-      << ", \"dock_2\": " << bounds_json(kDock2)
+      << "  \"zones\": {" << common_zones_json()
       << ", \"pallet\": {\"worlds\": {\"w0\": " << bounds_json(kBayAisle2)
       << ", \"w1\": " << bounds_json(kBayAisle3) << "}}}\n"
       << "}\n";
@@ -200,8 +317,9 @@ std::string snapshot_pallet()
 
 std::string snapshot_fleet()
 {
-  // r2's relation is the discrete partition: it has been down the aisles and
-  // tells the worlds apart. Same map, same zones, different knowledge.
+  // r2's relation is the discrete partition: it has driven the lane past both
+  // aisle mouths and tells the worlds apart. Same map, same zones, different
+  // knowledge.
   std::ostringstream out;
   out << "{\n"
       << "  \"worlds\": [\"w0\", \"w1\"],\n"
@@ -213,8 +331,7 @@ std::string snapshot_fleet()
       << "  \"labels\": {\"w0\": [\"link_up\"], \"w1\": [\"link_up\"]},\n"
       << "  \"agents\": {" << agent_json(1, "r1", kR1Start) << ", "
       << agent_json(2, "r2", kR2Start) << "},\n"
-      << "  \"zones\": {\"dock_1\": " << bounds_json(kDock1)
-      << ", \"dock_2\": " << bounds_json(kDock2)
+      << "  \"zones\": {" << common_zones_json()
       << ", \"pallet\": {\"worlds\": {\"w0\": " << bounds_json(kBayAisle2)
       << ", \"w1\": " << bounds_json(kBayAisle3) << "}}}\n"
       << "}\n";
@@ -226,24 +343,24 @@ std::string snapshot_fleet()
 std::vector<Case> cases()
 {
   return {
-    {"unknown-is-not-free", false, "docks", 1, "dock_1", false, "",
-      "no route: the east corridor has never been observed"},
+    {"unknown-is-not-free", Stage::FirstPass, "docks", 1, "dock_north", false,
+      "", "no route: the floor between the two ends has never been measured"},
 
-    {"after-sensing", true, "docks", 1, "dock_1", false, "",
-      "a route: the same fixed point completes once that corridor reads free"},
+    {"after-sensing", Stage::AfterTheSweep, "docks", 1, "dock_north", false, "",
+      "a route: the same fixed point completes once that floor reads free"},
 
-    {"ontic-pallet", true, "pallet", 1, "pallet", false, "",
-      "a route to the bay the designated world puts the pallet in"},
+    {"ontic-pallet", Stage::AfterTheSweep, "pallet", 1, "pallet", false, "",
+      "a route to the aisle the designated world puts the pallet in"},
 
-    {"epistemic-pallet", true, "pallet", 1, "pallet", true, "",
-      "a route through the cells that settle which bay it is"},
+    {"epistemic-pallet", Stage::AfterTheSweep, "pallet", 1, "pallet", true, "",
+      "a route through the cells that settle which aisle it is"},
 
-    {"second-robot-knows", true, "fleet", 2, "pallet", true, "",
+    {"second-robot-knows", Stage::AfterTheSweep, "fleet", 2, "pallet", true, "",
       "no sensing: r2 already tells the two worlds apart"},
 
-    {"safety-behind-the-link", true, "docks", 1, "dock_2", false,
-      R"({"connective":"and","formulas":["free","link_up"]})",
-      "a route, and none at all in a world where the link is down"},
+    {"safety-behind-the-link", Stage::AfterTheSweep, "docks", 1, "aisle_4",
+      false, R"({"connective":"and","formulas":["free","link_up"]})",
+      "a route into the deep aisle, and none at all with the link down"},
   };
 }
 
@@ -261,7 +378,7 @@ Outcome run(const Case & c)
 {
   Outcome outcome;
 
-  const auto grid = build_grid(c.east_corridor_observed);
+  const auto grid = build_grid(c.stage);
   const auto state = classify(grid);
   const auto graph = build_graph(state);
 
@@ -276,9 +393,7 @@ Outcome run(const Case & c)
   spec.goal_zone = c.goal_zone;
   spec.safety_formula_json = c.safety_formula_json;
   spec.require_epistemic_goal = c.require_epistemic_goal;
-  // Six cells at ten centimetres is sixty: a lidar resolves a bay from the
-  // aisle it opens onto, not only from on top of it.
-  spec.sensor_range_cells = 6;
+  spec.sensor_range_cells = kSensorRangeCells;
 
   const auto query = mu_path_planner::resolve_query(snapshot, graph, state, spec);
   if (!query.ok) {

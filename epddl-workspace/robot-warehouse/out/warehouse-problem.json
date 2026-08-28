@@ -30,54 +30,84 @@
       ":typing"
     ],
     "agents-number": 2,
-    "atoms-number": 39,
-    "facts-number": 11,
-    "actions-number": 72,
+    "atoms-number": 69,
+    "facts-number": 13,
+    "actions-number": 132,
     "initial-worlds-number": 2,
     "goal-modal-depth": 1,
     "goal-size": 4
   },
   "language": {
     "atoms": [
-      "dock_depot",
+      "dock_dock_south",
+      "dock_corridor",
+      "dock_dock_north",
+      "dock_lane",
       "dock_bay2",
       "dock_bay3",
-      "dock_dock1",
-      "bay_depot",
+      "bay_dock_south",
+      "bay_corridor",
+      "bay_dock_north",
+      "bay_lane",
       "bay_bay2",
       "bay_bay3",
-      "bay_dock1",
-      "adjacent_depot_depot",
-      "adjacent_depot_bay2",
-      "adjacent_depot_bay3",
-      "adjacent_depot_dock1",
-      "adjacent_bay2_depot",
+      "adjacent_dock_south_dock_south",
+      "adjacent_dock_south_corridor",
+      "adjacent_dock_south_dock_north",
+      "adjacent_dock_south_lane",
+      "adjacent_dock_south_bay2",
+      "adjacent_dock_south_bay3",
+      "adjacent_corridor_dock_south",
+      "adjacent_corridor_corridor",
+      "adjacent_corridor_dock_north",
+      "adjacent_corridor_lane",
+      "adjacent_corridor_bay2",
+      "adjacent_corridor_bay3",
+      "adjacent_dock_north_dock_south",
+      "adjacent_dock_north_corridor",
+      "adjacent_dock_north_dock_north",
+      "adjacent_dock_north_lane",
+      "adjacent_dock_north_bay2",
+      "adjacent_dock_north_bay3",
+      "adjacent_lane_dock_south",
+      "adjacent_lane_corridor",
+      "adjacent_lane_dock_north",
+      "adjacent_lane_lane",
+      "adjacent_lane_bay2",
+      "adjacent_lane_bay3",
+      "adjacent_bay2_dock_south",
+      "adjacent_bay2_corridor",
+      "adjacent_bay2_dock_north",
+      "adjacent_bay2_lane",
       "adjacent_bay2_bay2",
       "adjacent_bay2_bay3",
-      "adjacent_bay2_dock1",
-      "adjacent_bay3_depot",
+      "adjacent_bay3_dock_south",
+      "adjacent_bay3_corridor",
+      "adjacent_bay3_dock_north",
+      "adjacent_bay3_lane",
       "adjacent_bay3_bay2",
       "adjacent_bay3_bay3",
-      "adjacent_bay3_dock1",
-      "adjacent_dock1_depot",
-      "adjacent_dock1_bay2",
-      "adjacent_dock1_bay3",
-      "adjacent_dock1_dock1",
       "delivered",
-      "pallet-at_depot",
+      "pallet-at_dock_south",
+      "pallet-at_corridor",
+      "pallet-at_dock_north",
+      "pallet-at_lane",
       "pallet-at_bay2",
       "pallet-at_bay3",
-      "pallet-at_dock1",
       "carrying_r1",
       "carrying_r2",
-      "at-ag_r1_depot",
+      "at-ag_r1_dock_south",
+      "at-ag_r1_corridor",
+      "at-ag_r1_dock_north",
+      "at-ag_r1_lane",
       "at-ag_r1_bay2",
       "at-ag_r1_bay3",
-      "at-ag_r1_dock1",
-      "at-ag_r2_depot",
+      "at-ag_r2_dock_south",
+      "at-ag_r2_corridor",
+      "at-ag_r2_dock_north",
+      "at-ag_r2_lane",
       "at-ag_r2_bay2",
-      "at-ag_r2_bay3",
-      "at-ag_r2_dock1"
+      "at-ag_r2_bay3"
     ],
     "agents": [
       "r1",
@@ -85,17 +115,19 @@
     ]
   },
   "facts": [
-    "adjacent_depot_bay2",
-    "adjacent_bay2_depot",
-    "adjacent_bay2_bay3",
-    "adjacent_bay3_bay2",
-    "adjacent_bay3_dock1",
-    "adjacent_dock1_bay3",
-    "adjacent_depot_dock1",
-    "adjacent_dock1_depot",
+    "adjacent_dock_south_corridor",
+    "adjacent_corridor_dock_south",
+    "adjacent_corridor_dock_north",
+    "adjacent_dock_north_corridor",
+    "adjacent_dock_south_lane",
+    "adjacent_lane_dock_south",
+    "adjacent_lane_bay2",
+    "adjacent_bay2_lane",
+    "adjacent_lane_bay3",
+    "adjacent_bay3_lane",
     "bay_bay2",
     "bay_bay3",
-    "dock_dock1"
+    "dock_dock_north"
   ],
   "initial-state": {
     "worlds": [
@@ -126,36 +158,40 @@
     },
     "labels": {
       "w0": [
-        "dock_dock1",
+        "dock_dock_north",
         "bay_bay2",
         "bay_bay3",
-        "adjacent_depot_bay2",
-        "adjacent_depot_dock1",
-        "adjacent_bay2_depot",
-        "adjacent_bay2_bay3",
-        "adjacent_bay3_bay2",
-        "adjacent_bay3_dock1",
-        "adjacent_dock1_depot",
-        "adjacent_dock1_bay3",
+        "adjacent_dock_south_corridor",
+        "adjacent_dock_south_lane",
+        "adjacent_corridor_dock_south",
+        "adjacent_corridor_dock_north",
+        "adjacent_dock_north_corridor",
+        "adjacent_lane_dock_south",
+        "adjacent_lane_bay2",
+        "adjacent_lane_bay3",
+        "adjacent_bay2_lane",
+        "adjacent_bay3_lane",
         "pallet-at_bay3",
-        "at-ag_r1_depot",
-        "at-ag_r2_dock1"
+        "at-ag_r1_dock_south",
+        "at-ag_r2_dock_north"
       ],
       "w1": [
-        "dock_dock1",
+        "dock_dock_north",
         "bay_bay2",
         "bay_bay3",
-        "adjacent_depot_bay2",
-        "adjacent_depot_dock1",
-        "adjacent_bay2_depot",
-        "adjacent_bay2_bay3",
-        "adjacent_bay3_bay2",
-        "adjacent_bay3_dock1",
-        "adjacent_dock1_depot",
-        "adjacent_dock1_bay3",
+        "adjacent_dock_south_corridor",
+        "adjacent_dock_south_lane",
+        "adjacent_corridor_dock_south",
+        "adjacent_corridor_dock_north",
+        "adjacent_dock_north_corridor",
+        "adjacent_lane_dock_south",
+        "adjacent_lane_bay2",
+        "adjacent_lane_bay3",
+        "adjacent_bay2_lane",
+        "adjacent_bay3_lane",
         "pallet-at_bay2",
-        "at-ag_r1_depot",
-        "at-ag_r2_dock1"
+        "at-ag_r1_dock_south",
+        "at-ag_r2_dock_north"
       ]
     },
     "designated": [
@@ -164,7 +200,7 @@
     ]
   },
   "actions": {
-    "go_r1_depot_depot": {
+    "go_r1_dock_south_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -184,19 +220,19 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
+              "at-ag_r1_dock_south",
               {
                 "connective": "not",
-                "formula": "at-ag_r1_depot"
+                "formula": "at-ag_r1_dock_south"
               },
-              "adjacent_depot_depot"
+              "adjacent_dock_south_dock_south"
             ]
           }
         }
       },
       "effects": {
         "e-go": {
-          "at-ag_r1_depot": {
+          "at-ag_r1_dock_south": {
             "formula": {
               "connective": "and",
               "formulas": [
@@ -220,7 +256,7 @@
         }
       }
     },
-    "go_r1_depot_bay2": {
+    "go_r1_dock_south_corridor": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -240,12 +276,171 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
+              "at-ag_r1_dock_south",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_corridor"
+              },
+              "adjacent_dock_south_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_corridor": {
+            "formula": "true"
+          },
+          "at-ag_r1_dock_south": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_south_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_south",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_north"
+              },
+              "adjacent_dock_south_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_dock_north": {
+            "formula": "true"
+          },
+          "at-ag_r1_dock_south": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_south_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_south",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_lane"
+              },
+              "adjacent_dock_south_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_lane": {
+            "formula": "true"
+          },
+          "at-ag_r1_dock_south": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_south_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_south",
               {
                 "connective": "not",
                 "formula": "at-ag_r1_bay2"
               },
-              "adjacent_depot_bay2"
+              "adjacent_dock_south_bay2"
             ]
           }
         }
@@ -255,7 +450,7 @@
           "at-ag_r1_bay2": {
             "formula": "true"
           },
-          "at-ag_r1_depot": {
+          "at-ag_r1_dock_south": {
             "formula": "false"
           }
         }
@@ -273,7 +468,7 @@
         }
       }
     },
-    "go_r1_depot_bay3": {
+    "go_r1_dock_south_bay3": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -293,12 +488,12 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
+              "at-ag_r1_dock_south",
               {
                 "connective": "not",
                 "formula": "at-ag_r1_bay3"
               },
-              "adjacent_depot_bay3"
+              "adjacent_dock_south_bay3"
             ]
           }
         }
@@ -308,7 +503,7 @@
           "at-ag_r1_bay3": {
             "formula": "true"
           },
-          "at-ag_r1_depot": {
+          "at-ag_r1_dock_south": {
             "formula": "false"
           }
         }
@@ -326,7 +521,7 @@
         }
       }
     },
-    "go_r1_depot_dock1": {
+    "go_r1_corridor_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -346,22 +541,131 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
+              "at-ag_r1_corridor",
               {
                 "connective": "not",
-                "formula": "at-ag_r1_dock1"
+                "formula": "at-ag_r1_dock_south"
               },
-              "adjacent_depot_dock1"
+              "adjacent_corridor_dock_south"
             ]
           }
         }
       },
       "effects": {
         "e-go": {
-          "at-ag_r1_dock1": {
+          "at-ag_r1_corridor": {
+            "formula": "false"
+          },
+          "at-ag_r1_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_corridor_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_corridor"
+              },
+              "adjacent_corridor_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_corridor": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_corridor_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_north"
+              },
+              "adjacent_corridor_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_dock_north": {
             "formula": "true"
           },
-          "at-ag_r1_depot": {
+          "at-ag_r1_corridor": {
             "formula": "false"
           }
         }
@@ -379,7 +683,808 @@
         }
       }
     },
-    "go_r1_bay2_depot": {
+    "go_r1_corridor_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_lane"
+              },
+              "adjacent_corridor_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_lane": {
+            "formula": "true"
+          },
+          "at-ag_r1_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_corridor_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_bay2"
+              },
+              "adjacent_corridor_bay2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay2": {
+            "formula": "true"
+          },
+          "at-ag_r1_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_corridor_bay3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_bay3"
+              },
+              "adjacent_corridor_bay3"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay3": {
+            "formula": "true"
+          },
+          "at-ag_r1_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_north_dock_south": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_south"
+              },
+              "adjacent_dock_north_dock_south"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_dock_north": {
+            "formula": "false"
+          },
+          "at-ag_r1_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_north_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_corridor"
+              },
+              "adjacent_dock_north_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_dock_north": {
+            "formula": "false"
+          },
+          "at-ag_r1_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_north_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_north"
+              },
+              "adjacent_dock_north_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_dock_north": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_north_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_lane"
+              },
+              "adjacent_dock_north_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_lane": {
+            "formula": "true"
+          },
+          "at-ag_r1_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_north_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_bay2"
+              },
+              "adjacent_dock_north_bay2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay2": {
+            "formula": "true"
+          },
+          "at-ag_r1_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_dock_north_bay3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_bay3"
+              },
+              "adjacent_dock_north_bay3"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay3": {
+            "formula": "true"
+          },
+          "at-ag_r1_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_lane_dock_south": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_south"
+              },
+              "adjacent_lane_dock_south"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_lane": {
+            "formula": "false"
+          },
+          "at-ag_r1_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_lane_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_corridor"
+              },
+              "adjacent_lane_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_lane": {
+            "formula": "false"
+          },
+          "at-ag_r1_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_lane_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_north"
+              },
+              "adjacent_lane_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_lane": {
+            "formula": "false"
+          },
+          "at-ag_r1_dock_north": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_lane_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_lane"
+              },
+              "adjacent_lane_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_lane": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_lane_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_bay2"
+              },
+              "adjacent_lane_bay2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay2": {
+            "formula": "true"
+          },
+          "at-ag_r1_lane": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_lane_bay3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_bay3"
+              },
+              "adjacent_lane_bay3"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay3": {
+            "formula": "true"
+          },
+          "at-ag_r1_lane": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_bay2_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -402,9 +1507,9 @@
               "at-ag_r1_bay2",
               {
                 "connective": "not",
-                "formula": "at-ag_r1_depot"
+                "formula": "at-ag_r1_dock_south"
               },
-              "adjacent_bay2_depot"
+              "adjacent_bay2_dock_south"
             ]
           }
         }
@@ -414,7 +1519,166 @@
           "at-ag_r1_bay2": {
             "formula": "false"
           },
-          "at-ag_r1_depot": {
+          "at-ag_r1_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_bay2_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_bay2",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_corridor"
+              },
+              "adjacent_bay2_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay2": {
+            "formula": "false"
+          },
+          "at-ag_r1_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_bay2_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_bay2",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_north"
+              },
+              "adjacent_bay2_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay2": {
+            "formula": "false"
+          },
+          "at-ag_r1_dock_north": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_bay2_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_bay2",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_lane"
+              },
+              "adjacent_bay2_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay2": {
+            "formula": "false"
+          },
+          "at-ag_r1_lane": {
             "formula": "true"
           }
         }
@@ -541,60 +1805,7 @@
         }
       }
     },
-    "go_r1_bay2_dock1": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r1_bay2",
-              {
-                "connective": "not",
-                "formula": "at-ag_r1_dock1"
-              },
-              "adjacent_bay2_dock1"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r1_dock1": {
-            "formula": "true"
-          },
-          "at-ag_r1_bay2": {
-            "formula": "false"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r1_bay3_depot": {
+    "go_r1_bay3_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -617,9 +1828,9 @@
               "at-ag_r1_bay3",
               {
                 "connective": "not",
-                "formula": "at-ag_r1_depot"
+                "formula": "at-ag_r1_dock_south"
               },
-              "adjacent_bay3_depot"
+              "adjacent_bay3_dock_south"
             ]
           }
         }
@@ -629,7 +1840,166 @@
           "at-ag_r1_bay3": {
             "formula": "false"
           },
-          "at-ag_r1_depot": {
+          "at-ag_r1_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_bay3_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_bay3",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_corridor"
+              },
+              "adjacent_bay3_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay3": {
+            "formula": "false"
+          },
+          "at-ag_r1_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_bay3_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_bay3",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_dock_north"
+              },
+              "adjacent_bay3_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay3": {
+            "formula": "false"
+          },
+          "at-ag_r1_dock_north": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r1_bay3_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_bay3",
+              {
+                "connective": "not",
+                "formula": "at-ag_r1_lane"
+              },
+              "adjacent_bay3_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r1_bay3": {
+            "formula": "false"
+          },
+          "at-ag_r1_lane": {
             "formula": "true"
           }
         }
@@ -756,7 +2126,7 @@
         }
       }
     },
-    "go_r1_bay3_dock1": {
+    "go_r2_dock_south_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -776,231 +2146,19 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_bay3",
+              "at-ag_r2_dock_south",
               {
                 "connective": "not",
-                "formula": "at-ag_r1_dock1"
+                "formula": "at-ag_r2_dock_south"
               },
-              "adjacent_bay3_dock1"
+              "adjacent_dock_south_dock_south"
             ]
           }
         }
       },
       "effects": {
         "e-go": {
-          "at-ag_r1_dock1": {
-            "formula": "true"
-          },
-          "at-ag_r1_bay3": {
-            "formula": "false"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r1_dock1_depot": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r1_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r1_depot"
-              },
-              "adjacent_dock1_depot"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r1_dock1": {
-            "formula": "false"
-          },
-          "at-ag_r1_depot": {
-            "formula": "true"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r1_dock1_bay2": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r1_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r1_bay2"
-              },
-              "adjacent_dock1_bay2"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r1_dock1": {
-            "formula": "false"
-          },
-          "at-ag_r1_bay2": {
-            "formula": "true"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r1_dock1_bay3": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r1_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r1_bay3"
-              },
-              "adjacent_dock1_bay3"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r1_dock1": {
-            "formula": "false"
-          },
-          "at-ag_r1_bay3": {
-            "formula": "true"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r1_dock1_dock1": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r1_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r1_dock1"
-              },
-              "adjacent_dock1_dock1"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r1_dock1": {
+          "at-ag_r2_dock_south": {
             "formula": {
               "connective": "and",
               "formulas": [
@@ -1024,7 +2182,7 @@
         }
       }
     },
-    "go_r2_depot_depot": {
+    "go_r2_dock_south_corridor": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -1044,26 +2202,23 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
+              "at-ag_r2_dock_south",
               {
                 "connective": "not",
-                "formula": "at-ag_r2_depot"
+                "formula": "at-ag_r2_corridor"
               },
-              "adjacent_depot_depot"
+              "adjacent_dock_south_corridor"
             ]
           }
         }
       },
       "effects": {
         "e-go": {
-          "at-ag_r2_depot": {
-            "formula": {
-              "connective": "and",
-              "formulas": [
-                "false",
-                "true"
-              ]
-            }
+          "at-ag_r2_corridor": {
+            "formula": "true"
+          },
+          "at-ag_r2_dock_south": {
+            "formula": "false"
           }
         }
       },
@@ -1080,7 +2235,7 @@
         }
       }
     },
-    "go_r2_depot_bay2": {
+    "go_r2_dock_south_dock_north": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -1100,12 +2255,118 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
+              "at-ag_r2_dock_south",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_north"
+              },
+              "adjacent_dock_south_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_dock_north": {
+            "formula": "true"
+          },
+          "at-ag_r2_dock_south": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_south_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_south",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_lane"
+              },
+              "adjacent_dock_south_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_lane": {
+            "formula": "true"
+          },
+          "at-ag_r2_dock_south": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_south_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_south",
               {
                 "connective": "not",
                 "formula": "at-ag_r2_bay2"
               },
-              "adjacent_depot_bay2"
+              "adjacent_dock_south_bay2"
             ]
           }
         }
@@ -1115,7 +2376,7 @@
           "at-ag_r2_bay2": {
             "formula": "true"
           },
-          "at-ag_r2_depot": {
+          "at-ag_r2_dock_south": {
             "formula": "false"
           }
         }
@@ -1133,7 +2394,7 @@
         }
       }
     },
-    "go_r2_depot_bay3": {
+    "go_r2_dock_south_bay3": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -1153,12 +2414,12 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
+              "at-ag_r2_dock_south",
               {
                 "connective": "not",
                 "formula": "at-ag_r2_bay3"
               },
-              "adjacent_depot_bay3"
+              "adjacent_dock_south_bay3"
             ]
           }
         }
@@ -1168,7 +2429,7 @@
           "at-ag_r2_bay3": {
             "formula": "true"
           },
-          "at-ag_r2_depot": {
+          "at-ag_r2_dock_south": {
             "formula": "false"
           }
         }
@@ -1186,7 +2447,7 @@
         }
       }
     },
-    "go_r2_depot_dock1": {
+    "go_r2_corridor_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -1206,22 +2467,131 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
+              "at-ag_r2_corridor",
               {
                 "connective": "not",
-                "formula": "at-ag_r2_dock1"
+                "formula": "at-ag_r2_dock_south"
               },
-              "adjacent_depot_dock1"
+              "adjacent_corridor_dock_south"
             ]
           }
         }
       },
       "effects": {
         "e-go": {
-          "at-ag_r2_dock1": {
+          "at-ag_r2_corridor": {
+            "formula": "false"
+          },
+          "at-ag_r2_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_corridor_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_corridor"
+              },
+              "adjacent_corridor_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_corridor": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_corridor_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_north"
+              },
+              "adjacent_corridor_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_dock_north": {
             "formula": "true"
           },
-          "at-ag_r2_depot": {
+          "at-ag_r2_corridor": {
             "formula": "false"
           }
         }
@@ -1239,7 +2609,808 @@
         }
       }
     },
-    "go_r2_bay2_depot": {
+    "go_r2_corridor_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_lane"
+              },
+              "adjacent_corridor_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_lane": {
+            "formula": "true"
+          },
+          "at-ag_r2_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_corridor_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_bay2"
+              },
+              "adjacent_corridor_bay2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay2": {
+            "formula": "true"
+          },
+          "at-ag_r2_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_corridor_bay3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_corridor",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_bay3"
+              },
+              "adjacent_corridor_bay3"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay3": {
+            "formula": "true"
+          },
+          "at-ag_r2_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_north_dock_south": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_south"
+              },
+              "adjacent_dock_north_dock_south"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_dock_north": {
+            "formula": "false"
+          },
+          "at-ag_r2_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_north_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_corridor"
+              },
+              "adjacent_dock_north_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_dock_north": {
+            "formula": "false"
+          },
+          "at-ag_r2_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_north_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_north"
+              },
+              "adjacent_dock_north_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_dock_north": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_north_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_lane"
+              },
+              "adjacent_dock_north_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_lane": {
+            "formula": "true"
+          },
+          "at-ag_r2_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_north_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_bay2"
+              },
+              "adjacent_dock_north_bay2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay2": {
+            "formula": "true"
+          },
+          "at-ag_r2_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_dock_north_bay3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_bay3"
+              },
+              "adjacent_dock_north_bay3"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay3": {
+            "formula": "true"
+          },
+          "at-ag_r2_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_lane_dock_south": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_south"
+              },
+              "adjacent_lane_dock_south"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_lane": {
+            "formula": "false"
+          },
+          "at-ag_r2_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_lane_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_corridor"
+              },
+              "adjacent_lane_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_lane": {
+            "formula": "false"
+          },
+          "at-ag_r2_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_lane_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_north"
+              },
+              "adjacent_lane_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_lane": {
+            "formula": "false"
+          },
+          "at-ag_r2_dock_north": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_lane_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_lane"
+              },
+              "adjacent_lane_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_lane": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_lane_bay2": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_bay2"
+              },
+              "adjacent_lane_bay2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay2": {
+            "formula": "true"
+          },
+          "at-ag_r2_lane": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_lane_bay3": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_bay3"
+              },
+              "adjacent_lane_bay3"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay3": {
+            "formula": "true"
+          },
+          "at-ag_r2_lane": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_bay2_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -1262,9 +3433,9 @@
               "at-ag_r2_bay2",
               {
                 "connective": "not",
-                "formula": "at-ag_r2_depot"
+                "formula": "at-ag_r2_dock_south"
               },
-              "adjacent_bay2_depot"
+              "adjacent_bay2_dock_south"
             ]
           }
         }
@@ -1274,7 +3445,166 @@
           "at-ag_r2_bay2": {
             "formula": "false"
           },
-          "at-ag_r2_depot": {
+          "at-ag_r2_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_bay2_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_bay2",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_corridor"
+              },
+              "adjacent_bay2_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay2": {
+            "formula": "false"
+          },
+          "at-ag_r2_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_bay2_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_bay2",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_north"
+              },
+              "adjacent_bay2_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay2": {
+            "formula": "false"
+          },
+          "at-ag_r2_dock_north": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_bay2_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_bay2",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_lane"
+              },
+              "adjacent_bay2_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay2": {
+            "formula": "false"
+          },
+          "at-ag_r2_lane": {
             "formula": "true"
           }
         }
@@ -1401,60 +3731,7 @@
         }
       }
     },
-    "go_r2_bay2_dock1": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_bay2",
-              {
-                "connective": "not",
-                "formula": "at-ag_r2_dock1"
-              },
-              "adjacent_bay2_dock1"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r2_dock1": {
-            "formula": "true"
-          },
-          "at-ag_r2_bay2": {
-            "formula": "false"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r2_bay3_depot": {
+    "go_r2_bay3_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-go"
@@ -1477,9 +3754,9 @@
               "at-ag_r2_bay3",
               {
                 "connective": "not",
-                "formula": "at-ag_r2_depot"
+                "formula": "at-ag_r2_dock_south"
               },
-              "adjacent_bay3_depot"
+              "adjacent_bay3_dock_south"
             ]
           }
         }
@@ -1489,7 +3766,166 @@
           "at-ag_r2_bay3": {
             "formula": "false"
           },
-          "at-ag_r2_depot": {
+          "at-ag_r2_dock_south": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_bay3_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_bay3",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_corridor"
+              },
+              "adjacent_bay3_corridor"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay3": {
+            "formula": "false"
+          },
+          "at-ag_r2_corridor": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_bay3_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_bay3",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_dock_north"
+              },
+              "adjacent_bay3_dock_north"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay3": {
+            "formula": "false"
+          },
+          "at-ag_r2_dock_north": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r2_bay3_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_bay3",
+              {
+                "connective": "not",
+                "formula": "at-ag_r2_lane"
+              },
+              "adjacent_bay3_lane"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r2_bay3": {
+            "formula": "false"
+          },
+          "at-ag_r2_lane": {
             "formula": "true"
           }
         }
@@ -1616,275 +4052,7 @@
         }
       }
     },
-    "go_r2_bay3_dock1": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_bay3",
-              {
-                "connective": "not",
-                "formula": "at-ag_r2_dock1"
-              },
-              "adjacent_bay3_dock1"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r2_dock1": {
-            "formula": "true"
-          },
-          "at-ag_r2_bay3": {
-            "formula": "false"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r2_dock1_depot": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r2_depot"
-              },
-              "adjacent_dock1_depot"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r2_dock1": {
-            "formula": "false"
-          },
-          "at-ag_r2_depot": {
-            "formula": "true"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r2_dock1_bay2": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r2_bay2"
-              },
-              "adjacent_dock1_bay2"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r2_dock1": {
-            "formula": "false"
-          },
-          "at-ag_r2_bay2": {
-            "formula": "true"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r2_dock1_bay3": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r2_bay3"
-              },
-              "adjacent_dock1_bay3"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r2_dock1": {
-            "formula": "false"
-          },
-          "at-ag_r2_bay3": {
-            "formula": "true"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "go_r2_dock1_dock1": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-go"
-      ],
-      "relations": {
-        "Fully": {
-          "e-go": [
-            "e-go"
-          ]
-        }
-      },
-      "designated": [
-        "e-go"
-      ],
-      "preconditions": {
-        "e-go": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              {
-                "connective": "not",
-                "formula": "at-ag_r2_dock1"
-              },
-              "adjacent_dock1_dock1"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-go": {
-          "at-ag_r2_dock1": {
-            "formula": {
-              "connective": "and",
-              "formulas": [
-                "false",
-                "true"
-              ]
-            }
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "inspect_r1_depot": {
+    "inspect_r1_dock_south": {
       "action-type": "semi-private-sensing",
       "events": [
         "e-inspect-found",
@@ -1919,15 +4087,15 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
-              "bay_depot",
-              "pallet-at_depot",
+              "at-ag_r1_dock_south",
+              "bay_dock_south",
+              "pallet-at_dock_south",
               {
                 "modality-name": "Kw.diamond",
                 "modality-index": [
                   "r1"
                 ],
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_dock_south"
               }
             ]
           }
@@ -1936,18 +4104,276 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
-              "bay_depot",
+              "at-ag_r1_dock_south",
+              "bay_dock_south",
               {
                 "connective": "not",
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_dock_south"
               },
               {
                 "modality-name": "Kw.diamond",
                 "modality-index": [
                   "r1"
                 ],
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_dock_south"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-inspect-found": null,
+        "e-inspect-empty": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Partially": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "inspect_r1_corridor": {
+      "action-type": "semi-private-sensing",
+      "events": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "relations": {
+        "Fully": {
+          "e-inspect-found": [
+            "e-inspect-found"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-empty"
+          ]
+        },
+        "Partially": {
+          "e-inspect-found": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ]
+        }
+      },
+      "designated": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "preconditions": {
+        "e-inspect-found": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              "bay_corridor",
+              "pallet-at_corridor",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_corridor"
+              }
+            ]
+          }
+        },
+        "e-inspect-empty": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              "bay_corridor",
+              {
+                "connective": "not",
+                "formula": "pallet-at_corridor"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_corridor"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-inspect-found": null,
+        "e-inspect-empty": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Partially": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "inspect_r1_dock_north": {
+      "action-type": "semi-private-sensing",
+      "events": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "relations": {
+        "Fully": {
+          "e-inspect-found": [
+            "e-inspect-found"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-empty"
+          ]
+        },
+        "Partially": {
+          "e-inspect-found": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ]
+        }
+      },
+      "designated": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "preconditions": {
+        "e-inspect-found": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              "bay_dock_north",
+              "pallet-at_dock_north",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_dock_north"
+              }
+            ]
+          }
+        },
+        "e-inspect-empty": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              "bay_dock_north",
+              {
+                "connective": "not",
+                "formula": "pallet-at_dock_north"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_dock_north"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-inspect-found": null,
+        "e-inspect-empty": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Partially": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "inspect_r1_lane": {
+      "action-type": "semi-private-sensing",
+      "events": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "relations": {
+        "Fully": {
+          "e-inspect-found": [
+            "e-inspect-found"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-empty"
+          ]
+        },
+        "Partially": {
+          "e-inspect-found": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ]
+        }
+      },
+      "designated": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "preconditions": {
+        "e-inspect-found": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              "bay_lane",
+              "pallet-at_lane",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_lane"
+              }
+            ]
+          }
+        },
+        "e-inspect-empty": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              "bay_lane",
+              {
+                "connective": "not",
+                "formula": "pallet-at_lane"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_lane"
               }
             ]
           }
@@ -2142,7 +4568,7 @@
         }
       }
     },
-    "inspect_r1_dock1": {
+    "inspect_r2_dock_south": {
       "action-type": "semi-private-sensing",
       "events": [
         "e-inspect-found",
@@ -2177,15 +4603,15 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_dock1",
-              "bay_dock1",
-              "pallet-at_dock1",
+              "at-ag_r2_dock_south",
+              "bay_dock_south",
+              "pallet-at_dock_south",
               {
                 "modality-name": "Kw.diamond",
                 "modality-index": [
-                  "r1"
+                  "r2"
                 ],
-                "formula": "pallet-at_dock1"
+                "formula": "pallet-at_dock_south"
               }
             ]
           }
@@ -2194,18 +4620,18 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_dock1",
-              "bay_dock1",
+              "at-ag_r2_dock_south",
+              "bay_dock_south",
               {
                 "connective": "not",
-                "formula": "pallet-at_dock1"
+                "formula": "pallet-at_dock_south"
               },
               {
                 "modality-name": "Kw.diamond",
                 "modality-index": [
-                  "r1"
+                  "r2"
                 ],
-                "formula": "pallet-at_dock1"
+                "formula": "pallet-at_dock_south"
               }
             ]
           }
@@ -2217,18 +4643,18 @@
       },
       "observability-conditions": {
         "r1": {
-          "Fully": {
+          "Partially": {
             "formula": "true"
           }
         },
         "r2": {
-          "Partially": {
+          "Fully": {
             "formula": "true"
           }
         }
       }
     },
-    "inspect_r2_depot": {
+    "inspect_r2_corridor": {
       "action-type": "semi-private-sensing",
       "events": [
         "e-inspect-found",
@@ -2263,15 +4689,15 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
-              "bay_depot",
-              "pallet-at_depot",
+              "at-ag_r2_corridor",
+              "bay_corridor",
+              "pallet-at_corridor",
               {
                 "modality-name": "Kw.diamond",
                 "modality-index": [
                   "r2"
                 ],
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_corridor"
               }
             ]
           }
@@ -2280,18 +4706,190 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
-              "bay_depot",
+              "at-ag_r2_corridor",
+              "bay_corridor",
               {
                 "connective": "not",
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_corridor"
               },
               {
                 "modality-name": "Kw.diamond",
                 "modality-index": [
                   "r2"
                 ],
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_corridor"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-inspect-found": null,
+        "e-inspect-empty": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Partially": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "inspect_r2_dock_north": {
+      "action-type": "semi-private-sensing",
+      "events": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "relations": {
+        "Fully": {
+          "e-inspect-found": [
+            "e-inspect-found"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-empty"
+          ]
+        },
+        "Partially": {
+          "e-inspect-found": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ]
+        }
+      },
+      "designated": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "preconditions": {
+        "e-inspect-found": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              "bay_dock_north",
+              "pallet-at_dock_north",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r2"
+                ],
+                "formula": "pallet-at_dock_north"
+              }
+            ]
+          }
+        },
+        "e-inspect-empty": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              "bay_dock_north",
+              {
+                "connective": "not",
+                "formula": "pallet-at_dock_north"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r2"
+                ],
+                "formula": "pallet-at_dock_north"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-inspect-found": null,
+        "e-inspect-empty": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Partially": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "inspect_r2_lane": {
+      "action-type": "semi-private-sensing",
+      "events": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "relations": {
+        "Fully": {
+          "e-inspect-found": [
+            "e-inspect-found"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-empty"
+          ]
+        },
+        "Partially": {
+          "e-inspect-found": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ],
+          "e-inspect-empty": [
+            "e-inspect-found",
+            "e-inspect-empty"
+          ]
+        }
+      },
+      "designated": [
+        "e-inspect-found",
+        "e-inspect-empty"
+      ],
+      "preconditions": {
+        "e-inspect-found": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              "bay_lane",
+              "pallet-at_lane",
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r2"
+                ],
+                "formula": "pallet-at_lane"
+              }
+            ]
+          }
+        },
+        "e-inspect-empty": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              "bay_lane",
+              {
+                "connective": "not",
+                "formula": "pallet-at_lane"
+              },
+              {
+                "modality-name": "Kw.diamond",
+                "modality-index": [
+                  "r2"
+                ],
+                "formula": "pallet-at_lane"
               }
             ]
           }
@@ -2486,93 +5084,7 @@
         }
       }
     },
-    "inspect_r2_dock1": {
-      "action-type": "semi-private-sensing",
-      "events": [
-        "e-inspect-found",
-        "e-inspect-empty"
-      ],
-      "relations": {
-        "Fully": {
-          "e-inspect-found": [
-            "e-inspect-found"
-          ],
-          "e-inspect-empty": [
-            "e-inspect-empty"
-          ]
-        },
-        "Partially": {
-          "e-inspect-found": [
-            "e-inspect-found",
-            "e-inspect-empty"
-          ],
-          "e-inspect-empty": [
-            "e-inspect-found",
-            "e-inspect-empty"
-          ]
-        }
-      },
-      "designated": [
-        "e-inspect-found",
-        "e-inspect-empty"
-      ],
-      "preconditions": {
-        "e-inspect-found": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              "bay_dock1",
-              "pallet-at_dock1",
-              {
-                "modality-name": "Kw.diamond",
-                "modality-index": [
-                  "r2"
-                ],
-                "formula": "pallet-at_dock1"
-              }
-            ]
-          }
-        },
-        "e-inspect-empty": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              "bay_dock1",
-              {
-                "connective": "not",
-                "formula": "pallet-at_dock1"
-              },
-              {
-                "modality-name": "Kw.diamond",
-                "modality-index": [
-                  "r2"
-                ],
-                "formula": "pallet-at_dock1"
-              }
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-inspect-found": null,
-        "e-inspect-empty": null
-      },
-      "observability-conditions": {
-        "r1": {
-          "Partially": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "pickup_r1_depot": {
+    "pickup_r1_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-pickup"
@@ -2592,15 +5104,15 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
-              "bay_depot",
-              "pallet-at_depot",
+              "at-ag_r1_dock_south",
+              "bay_dock_south",
+              "pallet-at_dock_south",
               {
                 "modality-name": "box",
                 "modality-index": [
                   "r1"
                 ],
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_dock_south"
               },
               {
                 "connective": "not",
@@ -2615,7 +5127,190 @@
           "carrying_r1": {
             "formula": "true"
           },
-          "pallet-at_depot": {
+          "pallet-at_dock_south": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "pickup_r1_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-pickup"
+      ],
+      "relations": {
+        "Fully": {
+          "e-pickup": [
+            "e-pickup"
+          ]
+        }
+      },
+      "designated": [
+        "e-pickup"
+      ],
+      "preconditions": {
+        "e-pickup": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              "bay_corridor",
+              "pallet-at_corridor",
+              {
+                "modality-name": "box",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_corridor"
+              },
+              {
+                "connective": "not",
+                "formula": "carrying_r1"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-pickup": {
+          "carrying_r1": {
+            "formula": "true"
+          },
+          "pallet-at_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "pickup_r1_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-pickup"
+      ],
+      "relations": {
+        "Fully": {
+          "e-pickup": [
+            "e-pickup"
+          ]
+        }
+      },
+      "designated": [
+        "e-pickup"
+      ],
+      "preconditions": {
+        "e-pickup": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              "bay_dock_north",
+              "pallet-at_dock_north",
+              {
+                "modality-name": "box",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_dock_north"
+              },
+              {
+                "connective": "not",
+                "formula": "carrying_r1"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-pickup": {
+          "carrying_r1": {
+            "formula": "true"
+          },
+          "pallet-at_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "pickup_r1_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-pickup"
+      ],
+      "relations": {
+        "Fully": {
+          "e-pickup": [
+            "e-pickup"
+          ]
+        }
+      },
+      "designated": [
+        "e-pickup"
+      ],
+      "preconditions": {
+        "e-pickup": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              "bay_lane",
+              "pallet-at_lane",
+              {
+                "modality-name": "box",
+                "modality-index": [
+                  "r1"
+                ],
+                "formula": "pallet-at_lane"
+              },
+              {
+                "connective": "not",
+                "formula": "carrying_r1"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-pickup": {
+          "carrying_r1": {
+            "formula": "true"
+          },
+          "pallet-at_lane": {
             "formula": "false"
           }
         }
@@ -2755,7 +5450,7 @@
         }
       }
     },
-    "pickup_r1_dock1": {
+    "pickup_r2_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-pickup"
@@ -2775,19 +5470,19 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_dock1",
-              "bay_dock1",
-              "pallet-at_dock1",
+              "at-ag_r2_dock_south",
+              "bay_dock_south",
+              "pallet-at_dock_south",
               {
                 "modality-name": "box",
                 "modality-index": [
-                  "r1"
+                  "r2"
                 ],
-                "formula": "pallet-at_dock1"
+                "formula": "pallet-at_dock_south"
               },
               {
                 "connective": "not",
-                "formula": "carrying_r1"
+                "formula": "carrying_r2"
               }
             ]
           }
@@ -2795,10 +5490,10 @@
       },
       "effects": {
         "e-pickup": {
-          "carrying_r1": {
+          "carrying_r2": {
             "formula": "true"
           },
-          "pallet-at_dock1": {
+          "pallet-at_dock_south": {
             "formula": "false"
           }
         }
@@ -2816,7 +5511,7 @@
         }
       }
     },
-    "pickup_r2_depot": {
+    "pickup_r2_corridor": {
       "action-type": "public-ontic",
       "events": [
         "e-pickup"
@@ -2836,15 +5531,15 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
-              "bay_depot",
-              "pallet-at_depot",
+              "at-ag_r2_corridor",
+              "bay_corridor",
+              "pallet-at_corridor",
               {
                 "modality-name": "box",
                 "modality-index": [
                   "r2"
                 ],
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_corridor"
               },
               {
                 "connective": "not",
@@ -2859,7 +5554,129 @@
           "carrying_r2": {
             "formula": "true"
           },
-          "pallet-at_depot": {
+          "pallet-at_corridor": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "pickup_r2_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-pickup"
+      ],
+      "relations": {
+        "Fully": {
+          "e-pickup": [
+            "e-pickup"
+          ]
+        }
+      },
+      "designated": [
+        "e-pickup"
+      ],
+      "preconditions": {
+        "e-pickup": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              "bay_dock_north",
+              "pallet-at_dock_north",
+              {
+                "modality-name": "box",
+                "modality-index": [
+                  "r2"
+                ],
+                "formula": "pallet-at_dock_north"
+              },
+              {
+                "connective": "not",
+                "formula": "carrying_r2"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-pickup": {
+          "carrying_r2": {
+            "formula": "true"
+          },
+          "pallet-at_dock_north": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "pickup_r2_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-pickup"
+      ],
+      "relations": {
+        "Fully": {
+          "e-pickup": [
+            "e-pickup"
+          ]
+        }
+      },
+      "designated": [
+        "e-pickup"
+      ],
+      "preconditions": {
+        "e-pickup": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              "bay_lane",
+              "pallet-at_lane",
+              {
+                "modality-name": "box",
+                "modality-index": [
+                  "r2"
+                ],
+                "formula": "pallet-at_lane"
+              },
+              {
+                "connective": "not",
+                "formula": "carrying_r2"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-pickup": {
+          "carrying_r2": {
+            "formula": "true"
+          },
+          "pallet-at_lane": {
             "formula": "false"
           }
         }
@@ -2999,68 +5816,7 @@
         }
       }
     },
-    "pickup_r2_dock1": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-pickup"
-      ],
-      "relations": {
-        "Fully": {
-          "e-pickup": [
-            "e-pickup"
-          ]
-        }
-      },
-      "designated": [
-        "e-pickup"
-      ],
-      "preconditions": {
-        "e-pickup": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              "bay_dock1",
-              "pallet-at_dock1",
-              {
-                "modality-name": "box",
-                "modality-index": [
-                  "r2"
-                ],
-                "formula": "pallet-at_dock1"
-              },
-              {
-                "connective": "not",
-                "formula": "carrying_r2"
-              }
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-pickup": {
-          "carrying_r2": {
-            "formula": "true"
-          },
-          "pallet-at_dock1": {
-            "formula": "false"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "unload_r1_depot": {
+    "unload_r1_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-unload"
@@ -3080,8 +5836,158 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_depot",
-              "dock_depot",
+              "at-ag_r1_dock_south",
+              "dock_dock_south",
+              "carrying_r1"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-unload": {
+          "carrying_r1": {
+            "formula": "false"
+          },
+          "delivered": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "unload_r1_corridor": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-unload"
+      ],
+      "relations": {
+        "Fully": {
+          "e-unload": [
+            "e-unload"
+          ]
+        }
+      },
+      "designated": [
+        "e-unload"
+      ],
+      "preconditions": {
+        "e-unload": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_corridor",
+              "dock_corridor",
+              "carrying_r1"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-unload": {
+          "carrying_r1": {
+            "formula": "false"
+          },
+          "delivered": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "unload_r1_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-unload"
+      ],
+      "relations": {
+        "Fully": {
+          "e-unload": [
+            "e-unload"
+          ]
+        }
+      },
+      "designated": [
+        "e-unload"
+      ],
+      "preconditions": {
+        "e-unload": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_dock_north",
+              "dock_dock_north",
+              "carrying_r1"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-unload": {
+          "carrying_r1": {
+            "formula": "false"
+          },
+          "delivered": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "unload_r1_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-unload"
+      ],
+      "relations": {
+        "Fully": {
+          "e-unload": [
+            "e-unload"
+          ]
+        }
+      },
+      "designated": [
+        "e-unload"
+      ],
+      "preconditions": {
+        "e-unload": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r1_lane",
+              "dock_lane",
               "carrying_r1"
             ]
           }
@@ -3210,7 +6116,7 @@
         }
       }
     },
-    "unload_r1_dock1": {
+    "unload_r2_dock_south": {
       "action-type": "public-ontic",
       "events": [
         "e-unload"
@@ -3230,16 +6136,16 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r1_dock1",
-              "dock_dock1",
-              "carrying_r1"
+              "at-ag_r2_dock_south",
+              "dock_dock_south",
+              "carrying_r2"
             ]
           }
         }
       },
       "effects": {
         "e-unload": {
-          "carrying_r1": {
+          "carrying_r2": {
             "formula": "false"
           },
           "delivered": {
@@ -3260,7 +6166,7 @@
         }
       }
     },
-    "unload_r2_depot": {
+    "unload_r2_corridor": {
       "action-type": "public-ontic",
       "events": [
         "e-unload"
@@ -3280,8 +6186,108 @@
           "formula": {
             "connective": "and",
             "formulas": [
-              "at-ag_r2_depot",
-              "dock_depot",
+              "at-ag_r2_corridor",
+              "dock_corridor",
+              "carrying_r2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-unload": {
+          "carrying_r2": {
+            "formula": "false"
+          },
+          "delivered": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "unload_r2_dock_north": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-unload"
+      ],
+      "relations": {
+        "Fully": {
+          "e-unload": [
+            "e-unload"
+          ]
+        }
+      },
+      "designated": [
+        "e-unload"
+      ],
+      "preconditions": {
+        "e-unload": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_dock_north",
+              "dock_dock_north",
+              "carrying_r2"
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-unload": {
+          "carrying_r2": {
+            "formula": "false"
+          },
+          "delivered": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "unload_r2_lane": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-unload"
+      ],
+      "relations": {
+        "Fully": {
+          "e-unload": [
+            "e-unload"
+          ]
+        }
+      },
+      "designated": [
+        "e-unload"
+      ],
+      "preconditions": {
+        "e-unload": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r2_lane",
+              "dock_lane",
               "carrying_r2"
             ]
           }
@@ -3410,57 +6416,7 @@
         }
       }
     },
-    "unload_r2_dock1": {
-      "action-type": "public-ontic",
-      "events": [
-        "e-unload"
-      ],
-      "relations": {
-        "Fully": {
-          "e-unload": [
-            "e-unload"
-          ]
-        }
-      },
-      "designated": [
-        "e-unload"
-      ],
-      "preconditions": {
-        "e-unload": {
-          "formula": {
-            "connective": "and",
-            "formulas": [
-              "at-ag_r2_dock1",
-              "dock_dock1",
-              "carrying_r2"
-            ]
-          }
-        }
-      },
-      "effects": {
-        "e-unload": {
-          "carrying_r2": {
-            "formula": "false"
-          },
-          "delivered": {
-            "formula": "true"
-          }
-        }
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "report-pallet-at_r1_depot": {
+    "report-pallet-at_r1_dock_south": {
       "action-type": "public-announcement",
       "events": [
         "e-knows-pallet-at",
@@ -3486,7 +6442,7 @@
             "modality-index": [
               "r1"
             ],
-            "formula": "pallet-at_depot"
+            "formula": "pallet-at_dock_south"
           }
         },
         "e-not-knows-pallet-at": {
@@ -3497,7 +6453,184 @@
               "modality-index": [
                 "r1"
               ],
-              "formula": "pallet-at_depot"
+              "formula": "pallet-at_dock_south"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-at": null,
+        "e-not-knows-pallet-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-at_r1_corridor": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-at",
+        "e-not-knows-pallet-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-at": [
+            "e-knows-pallet-at"
+          ],
+          "e-not-knows-pallet-at": [
+            "e-not-knows-pallet-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r1"
+            ],
+            "formula": "pallet-at_corridor"
+          }
+        },
+        "e-not-knows-pallet-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r1"
+              ],
+              "formula": "pallet-at_corridor"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-at": null,
+        "e-not-knows-pallet-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-at_r1_dock_north": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-at",
+        "e-not-knows-pallet-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-at": [
+            "e-knows-pallet-at"
+          ],
+          "e-not-knows-pallet-at": [
+            "e-not-knows-pallet-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r1"
+            ],
+            "formula": "pallet-at_dock_north"
+          }
+        },
+        "e-not-knows-pallet-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r1"
+              ],
+              "formula": "pallet-at_dock_north"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-at": null,
+        "e-not-knows-pallet-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-at_r1_lane": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-at",
+        "e-not-knows-pallet-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-at": [
+            "e-knows-pallet-at"
+          ],
+          "e-not-knows-pallet-at": [
+            "e-not-knows-pallet-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r1"
+            ],
+            "formula": "pallet-at_lane"
+          }
+        },
+        "e-not-knows-pallet-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r1"
+              ],
+              "formula": "pallet-at_lane"
             }
           }
         }
@@ -3637,66 +6770,7 @@
         }
       }
     },
-    "report-pallet-at_r1_dock1": {
-      "action-type": "public-announcement",
-      "events": [
-        "e-knows-pallet-at",
-        "e-not-knows-pallet-at"
-      ],
-      "relations": {
-        "Fully": {
-          "e-knows-pallet-at": [
-            "e-knows-pallet-at"
-          ],
-          "e-not-knows-pallet-at": [
-            "e-not-knows-pallet-at"
-          ]
-        }
-      },
-      "designated": [
-        "e-knows-pallet-at"
-      ],
-      "preconditions": {
-        "e-knows-pallet-at": {
-          "formula": {
-            "modality-name": "box",
-            "modality-index": [
-              "r1"
-            ],
-            "formula": "pallet-at_dock1"
-          }
-        },
-        "e-not-knows-pallet-at": {
-          "formula": {
-            "connective": "not",
-            "formula": {
-              "modality-name": "box",
-              "modality-index": [
-                "r1"
-              ],
-              "formula": "pallet-at_dock1"
-            }
-          }
-        }
-      },
-      "effects": {
-        "e-knows-pallet-at": null,
-        "e-not-knows-pallet-at": null
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "report-pallet-at_r2_depot": {
+    "report-pallet-at_r2_dock_south": {
       "action-type": "public-announcement",
       "events": [
         "e-knows-pallet-at",
@@ -3722,7 +6796,7 @@
             "modality-index": [
               "r2"
             ],
-            "formula": "pallet-at_depot"
+            "formula": "pallet-at_dock_south"
           }
         },
         "e-not-knows-pallet-at": {
@@ -3733,7 +6807,184 @@
               "modality-index": [
                 "r2"
               ],
-              "formula": "pallet-at_depot"
+              "formula": "pallet-at_dock_south"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-at": null,
+        "e-not-knows-pallet-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-at_r2_corridor": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-at",
+        "e-not-knows-pallet-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-at": [
+            "e-knows-pallet-at"
+          ],
+          "e-not-knows-pallet-at": [
+            "e-not-knows-pallet-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r2"
+            ],
+            "formula": "pallet-at_corridor"
+          }
+        },
+        "e-not-knows-pallet-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r2"
+              ],
+              "formula": "pallet-at_corridor"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-at": null,
+        "e-not-knows-pallet-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-at_r2_dock_north": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-at",
+        "e-not-knows-pallet-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-at": [
+            "e-knows-pallet-at"
+          ],
+          "e-not-knows-pallet-at": [
+            "e-not-knows-pallet-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r2"
+            ],
+            "formula": "pallet-at_dock_north"
+          }
+        },
+        "e-not-knows-pallet-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r2"
+              ],
+              "formula": "pallet-at_dock_north"
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-at": null,
+        "e-not-knows-pallet-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-at_r2_lane": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-at",
+        "e-not-knows-pallet-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-at": [
+            "e-knows-pallet-at"
+          ],
+          "e-not-knows-pallet-at": [
+            "e-not-knows-pallet-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r2"
+            ],
+            "formula": "pallet-at_lane"
+          }
+        },
+        "e-not-knows-pallet-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r2"
+              ],
+              "formula": "pallet-at_lane"
             }
           }
         }
@@ -3873,66 +7124,7 @@
         }
       }
     },
-    "report-pallet-at_r2_dock1": {
-      "action-type": "public-announcement",
-      "events": [
-        "e-knows-pallet-at",
-        "e-not-knows-pallet-at"
-      ],
-      "relations": {
-        "Fully": {
-          "e-knows-pallet-at": [
-            "e-knows-pallet-at"
-          ],
-          "e-not-knows-pallet-at": [
-            "e-not-knows-pallet-at"
-          ]
-        }
-      },
-      "designated": [
-        "e-knows-pallet-at"
-      ],
-      "preconditions": {
-        "e-knows-pallet-at": {
-          "formula": {
-            "modality-name": "box",
-            "modality-index": [
-              "r2"
-            ],
-            "formula": "pallet-at_dock1"
-          }
-        },
-        "e-not-knows-pallet-at": {
-          "formula": {
-            "connective": "not",
-            "formula": {
-              "modality-name": "box",
-              "modality-index": [
-                "r2"
-              ],
-              "formula": "pallet-at_dock1"
-            }
-          }
-        }
-      },
-      "effects": {
-        "e-knows-pallet-at": null,
-        "e-not-knows-pallet-at": null
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "report-pallet-not-at_r1_depot": {
+    "report-pallet-not-at_r1_dock_south": {
       "action-type": "public-announcement",
       "events": [
         "e-knows-pallet-not-at",
@@ -3960,7 +7152,7 @@
             ],
             "formula": {
               "connective": "not",
-              "formula": "pallet-at_depot"
+              "formula": "pallet-at_dock_south"
             }
           }
         },
@@ -3974,7 +7166,202 @@
               ],
               "formula": {
                 "connective": "not",
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_dock_south"
+              }
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-not-at": null,
+        "e-not-knows-pallet-not-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-not-at_r1_corridor": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-not-at",
+        "e-not-knows-pallet-not-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-not-at": [
+            "e-knows-pallet-not-at"
+          ],
+          "e-not-knows-pallet-not-at": [
+            "e-not-knows-pallet-not-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-not-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-not-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r1"
+            ],
+            "formula": {
+              "connective": "not",
+              "formula": "pallet-at_corridor"
+            }
+          }
+        },
+        "e-not-knows-pallet-not-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r1"
+              ],
+              "formula": {
+                "connective": "not",
+                "formula": "pallet-at_corridor"
+              }
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-not-at": null,
+        "e-not-knows-pallet-not-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-not-at_r1_dock_north": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-not-at",
+        "e-not-knows-pallet-not-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-not-at": [
+            "e-knows-pallet-not-at"
+          ],
+          "e-not-knows-pallet-not-at": [
+            "e-not-knows-pallet-not-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-not-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-not-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r1"
+            ],
+            "formula": {
+              "connective": "not",
+              "formula": "pallet-at_dock_north"
+            }
+          }
+        },
+        "e-not-knows-pallet-not-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r1"
+              ],
+              "formula": {
+                "connective": "not",
+                "formula": "pallet-at_dock_north"
+              }
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-not-at": null,
+        "e-not-knows-pallet-not-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-not-at_r1_lane": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-not-at",
+        "e-not-knows-pallet-not-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-not-at": [
+            "e-knows-pallet-not-at"
+          ],
+          "e-not-knows-pallet-not-at": [
+            "e-not-knows-pallet-not-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-not-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-not-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r1"
+            ],
+            "formula": {
+              "connective": "not",
+              "formula": "pallet-at_lane"
+            }
+          }
+        },
+        "e-not-knows-pallet-not-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r1"
+              ],
+              "formula": {
+                "connective": "not",
+                "formula": "pallet-at_lane"
               }
             }
           }
@@ -4127,72 +7514,7 @@
         }
       }
     },
-    "report-pallet-not-at_r1_dock1": {
-      "action-type": "public-announcement",
-      "events": [
-        "e-knows-pallet-not-at",
-        "e-not-knows-pallet-not-at"
-      ],
-      "relations": {
-        "Fully": {
-          "e-knows-pallet-not-at": [
-            "e-knows-pallet-not-at"
-          ],
-          "e-not-knows-pallet-not-at": [
-            "e-not-knows-pallet-not-at"
-          ]
-        }
-      },
-      "designated": [
-        "e-knows-pallet-not-at"
-      ],
-      "preconditions": {
-        "e-knows-pallet-not-at": {
-          "formula": {
-            "modality-name": "box",
-            "modality-index": [
-              "r1"
-            ],
-            "formula": {
-              "connective": "not",
-              "formula": "pallet-at_dock1"
-            }
-          }
-        },
-        "e-not-knows-pallet-not-at": {
-          "formula": {
-            "connective": "not",
-            "formula": {
-              "modality-name": "box",
-              "modality-index": [
-                "r1"
-              ],
-              "formula": {
-                "connective": "not",
-                "formula": "pallet-at_dock1"
-              }
-            }
-          }
-        }
-      },
-      "effects": {
-        "e-knows-pallet-not-at": null,
-        "e-not-knows-pallet-not-at": null
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "report-pallet-not-at_r2_depot": {
+    "report-pallet-not-at_r2_dock_south": {
       "action-type": "public-announcement",
       "events": [
         "e-knows-pallet-not-at",
@@ -4220,7 +7542,7 @@
             ],
             "formula": {
               "connective": "not",
-              "formula": "pallet-at_depot"
+              "formula": "pallet-at_dock_south"
             }
           }
         },
@@ -4234,7 +7556,202 @@
               ],
               "formula": {
                 "connective": "not",
-                "formula": "pallet-at_depot"
+                "formula": "pallet-at_dock_south"
+              }
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-not-at": null,
+        "e-not-knows-pallet-not-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-not-at_r2_corridor": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-not-at",
+        "e-not-knows-pallet-not-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-not-at": [
+            "e-knows-pallet-not-at"
+          ],
+          "e-not-knows-pallet-not-at": [
+            "e-not-knows-pallet-not-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-not-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-not-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r2"
+            ],
+            "formula": {
+              "connective": "not",
+              "formula": "pallet-at_corridor"
+            }
+          }
+        },
+        "e-not-knows-pallet-not-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r2"
+              ],
+              "formula": {
+                "connective": "not",
+                "formula": "pallet-at_corridor"
+              }
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-not-at": null,
+        "e-not-knows-pallet-not-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-not-at_r2_dock_north": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-not-at",
+        "e-not-knows-pallet-not-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-not-at": [
+            "e-knows-pallet-not-at"
+          ],
+          "e-not-knows-pallet-not-at": [
+            "e-not-knows-pallet-not-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-not-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-not-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r2"
+            ],
+            "formula": {
+              "connective": "not",
+              "formula": "pallet-at_dock_north"
+            }
+          }
+        },
+        "e-not-knows-pallet-not-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r2"
+              ],
+              "formula": {
+                "connective": "not",
+                "formula": "pallet-at_dock_north"
+              }
+            }
+          }
+        }
+      },
+      "effects": {
+        "e-knows-pallet-not-at": null,
+        "e-not-knows-pallet-not-at": null
+      },
+      "observability-conditions": {
+        "r1": {
+          "Fully": {
+            "formula": "true"
+          }
+        },
+        "r2": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "report-pallet-not-at_r2_lane": {
+      "action-type": "public-announcement",
+      "events": [
+        "e-knows-pallet-not-at",
+        "e-not-knows-pallet-not-at"
+      ],
+      "relations": {
+        "Fully": {
+          "e-knows-pallet-not-at": [
+            "e-knows-pallet-not-at"
+          ],
+          "e-not-knows-pallet-not-at": [
+            "e-not-knows-pallet-not-at"
+          ]
+        }
+      },
+      "designated": [
+        "e-knows-pallet-not-at"
+      ],
+      "preconditions": {
+        "e-knows-pallet-not-at": {
+          "formula": {
+            "modality-name": "box",
+            "modality-index": [
+              "r2"
+            ],
+            "formula": {
+              "connective": "not",
+              "formula": "pallet-at_lane"
+            }
+          }
+        },
+        "e-not-knows-pallet-not-at": {
+          "formula": {
+            "connective": "not",
+            "formula": {
+              "modality-name": "box",
+              "modality-index": [
+                "r2"
+              ],
+              "formula": {
+                "connective": "not",
+                "formula": "pallet-at_lane"
               }
             }
           }
@@ -4365,71 +7882,6 @@
               "formula": {
                 "connective": "not",
                 "formula": "pallet-at_bay3"
-              }
-            }
-          }
-        }
-      },
-      "effects": {
-        "e-knows-pallet-not-at": null,
-        "e-not-knows-pallet-not-at": null
-      },
-      "observability-conditions": {
-        "r1": {
-          "Fully": {
-            "formula": "true"
-          }
-        },
-        "r2": {
-          "Fully": {
-            "formula": "true"
-          }
-        }
-      }
-    },
-    "report-pallet-not-at_r2_dock1": {
-      "action-type": "public-announcement",
-      "events": [
-        "e-knows-pallet-not-at",
-        "e-not-knows-pallet-not-at"
-      ],
-      "relations": {
-        "Fully": {
-          "e-knows-pallet-not-at": [
-            "e-knows-pallet-not-at"
-          ],
-          "e-not-knows-pallet-not-at": [
-            "e-not-knows-pallet-not-at"
-          ]
-        }
-      },
-      "designated": [
-        "e-knows-pallet-not-at"
-      ],
-      "preconditions": {
-        "e-knows-pallet-not-at": {
-          "formula": {
-            "modality-name": "box",
-            "modality-index": [
-              "r2"
-            ],
-            "formula": {
-              "connective": "not",
-              "formula": "pallet-at_dock1"
-            }
-          }
-        },
-        "e-not-knows-pallet-not-at": {
-          "formula": {
-            "connective": "not",
-            "formula": {
-              "modality-name": "box",
-              "modality-index": [
-                "r2"
-              ],
-              "formula": {
-                "connective": "not",
-                "formula": "pallet-at_dock1"
               }
             }
           }

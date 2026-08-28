@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>warehouse_demo</name>
+  <version>0.1.0</version>
+  <description>
+    The warehouse, executed by ePlanSys.
+
+    The floor is the RoboticsAcademy multi-robot Amazon warehouse; the mission
+    is to bring the pallet to the dock and to know which bay it came out of.
+    Which bay that is nobody knows at the start, so the plan is a policy: the
+    robot looks, and what the map then says decides which branch runs.
+
+    This package supplies the two things the planning stack cannot: actions
+    that move and look, and a node that starts the mission. Everything else is
+    ePlanSys configuration -- the EPDDL pair, the classical domain the executor
+    dispatches on, the mapping between the two vocabularies, and the regions
+    perception reads the map over.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>epistemic_msgs</depend>
+  <depend>warehouse_scenario</depend>
+  <depend>mu_path_planner</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_epistemic_executor</depend>
+  <depend>plansys2_domain_expert</depend>
+  <depend>plansys2_problem_expert</depend>
+  <depend>plansys2_planner</depend>
+  <depend>plansys2_msgs</depend>
+  <depend>nav2_msgs</depend>
+  <depend>rclcpp_action</depend>
+  <depend>plansys2_pddl_parser</depend>
+  <depend>slam_toolbox</depend>
+  <exec_depend>aws_robomaker_small_warehouse_world</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_behaviors</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_velocity_smoother</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <depend>robot_state_publisher</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

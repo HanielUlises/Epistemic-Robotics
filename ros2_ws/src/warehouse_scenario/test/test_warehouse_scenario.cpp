@@ -54,8 +54,8 @@ bool visits(const std::vector<CellIdx> & cells, const Box & box)
 
 TEST(Warehouse, TheTwoStagesDifferOnlyInWhatWasObserved)
 {
-  const auto before = build_grid(false);
-  const auto after = build_grid(true);
+  const auto before = build_grid(Stage::FirstPass);
+  const auto after = build_grid(Stage::AfterTheSweep);
   ASSERT_EQ(before.size(), after.size());
 
   std::size_t unknown_before = 0, unknown_after = 0, occupied_before = 0,
@@ -66,39 +66,136 @@ TEST(Warehouse, TheTwoStagesDifferOnlyInWhatWasObserved)
     occupied_before += before[i] == kOccupied;
     occupied_after += after[i] == kOccupied;
 
-    // Wherever the stages disagree, the disagreement is unknown-versus-free.
-    // A rack that moved between stages would make the comparison worthless.
+    // A stage only ever settles cells; it never unsettles one and never
+    // contradicts one. So wherever they differ, the first stage is the one
+    // that had not looked -- and a cell it had looked at reads in the second
+    // exactly as it read in the first.
     if (before[i] != after[i]) {
-      EXPECT_EQ(before[i], kUnknown);
-      EXPECT_EQ(after[i], kFree);
+      EXPECT_EQ(before[i], kUnknown) << "a settled cell changed its mind";
+      EXPECT_NE(after[i], kUnknown);
     }
   }
 
-  EXPECT_GT(unknown_before, 0u);
-  EXPECT_EQ(unknown_after, 0u);
-  EXPECT_EQ(occupied_before, occupied_after);
+  // The sweep is the whole of the difference, and it settles a great deal:
+  // the length of the building and every aisle off the service lane.
+  EXPECT_GT(unknown_before, unknown_after);
+  EXPECT_GT(occupied_after, occupied_before);
+
+  // Neither stage has been everywhere -- a laser that drove the west corridor
+  // and the lane has still not been into the cluttered north-east -- which is
+  // the point: a map is what has been measured, not what is there.
+  EXPECT_GT(unknown_after, 0u);
+
+  // And underneath both, the building did not move: every cell either stage
+  // has settled reads exactly as the floor the planner is entitled to. A rack
+  // that shifted between stages would make the comparison worthless.
+  const auto floor = inflate(build_floorplan(), kRobotRadiusM);
+  for (std::size_t i = 0; i < floor.size(); ++i) {
+    if (before[i] != kUnknown) {EXPECT_EQ(before[i], floor[i]);}
+    if (after[i] != kUnknown) {EXPECT_EQ(after[i], floor[i]);}
+  }
+}
+
+TEST(Warehouse, TheFloorPlanIsTheOneTheWorldHas)
+{
+  // Not a resemblance: these are the AWS world's own model poses, and the
+  // rasteriser is only allowed to have put obstacles where they are.
+  const auto floorplan = build_floorplan();
+  ASSERT_EQ(floorplan.size(), static_cast<std::size_t>(kWidth) * kHeight);
+
+  // Nothing is unknown in the floor plan itself; a stage is what adds that.
+  for (const int8_t value : floorplan) {
+    EXPECT_NE(value, kUnknown);
+  }
+
+  // The six rack rows: solid down their length, with the aisles between them
+  // free the whole way.
+  for (const double y : {1.02, -0.80, -2.60, -4.39, -6.31, -8.23}) {
+    EXPECT_EQ(floorplan[cell_of(4.7, y - 0.4)], kOccupied)
+      << "no rack at y = " << y;
+  }
+  for (const Box & aisle : {kBayAisle2, kBayAisle3, kBayAisle4}) {
+    for (double x = aisle.min_x; x <= aisle.max_x; x += kResolution) {
+      for (double y = aisle.min_y; y <= aisle.max_y; y += kResolution) {
+        ASSERT_EQ(floorplan[cell_of(x, y)], kFree)
+          << "the aisle is blocked at " << x << ", " << y;
+      }
+    }
+  }
+
+  // Behind the racks the world leaves 0.15 m of bare floor before the east
+  // wall. On the building's own plan it is free, and it runs the length of
+  // the rack block joining every aisle to every other.
+  EXPECT_EQ(floorplan[cell_of(6.75, -2.14)], kFree);
+  EXPECT_EQ(floorplan[cell_of(6.75, -1.20)], kFree);
+}
+
+TEST(Warehouse, TheGridThePlannerSeesIsTheFloorMinusTheRobot)
+{
+  // 0.15 m of floor is no corridor at all to something 0.21 m across, and the
+  // grid the fixed point runs on has to say so -- otherwise it returns routes
+  // behind the racks that no robot could drive. Growing the obstacles by the
+  // radius is what closes it.
+  const auto floorplan = build_floorplan();
+  const auto grown = inflate(floorplan, kRobotRadiusM);
+
+  EXPECT_EQ(grown[cell_of(6.75, -2.14)], kOccupied) << "the gap stayed open";
+  EXPECT_EQ(grown[cell_of(6.75, -1.20)], kOccupied);
+
+  // And it costs the aisles a robot's radius at each rack and no more, so
+  // every bay is still floor the robot's centre may stand on.
+  for (const Box & bay : {kBayAisle2, kBayAisle3, kBayAisle4}) {
+    for (double x = bay.min_x; x <= bay.max_x; x += kResolution) {
+      for (double y = bay.min_y; y <= bay.max_y; y += kResolution) {
+        ASSERT_EQ(grown[cell_of(x, y)], kFree)
+          << "the robot cannot stand at " << x << ", " << y;
+      }
+    }
+  }
+
+  // Growing obstacles never frees a cell.
+  for (std::size_t i = 0; i < floorplan.size(); ++i) {
+    if (floorplan[i] == kOccupied) {EXPECT_EQ(grown[i], kOccupied);}
+  }
+}
+
+TEST(Warehouse, AStageIsWhatALaserCouldHaveReturned)
+{
+  // The stage is ray cast, not painted, and the test says so by casting one
+  // ray of its own: a cell behind a rack is not observed from in front of it,
+  // however close the two are.
+  const auto floorplan = build_floorplan();
+  const auto seen = observed_from(floorplan, {Point{kServiceLaneX, -2.14}},
+      kLaserRangeM);
+
+  EXPECT_TRUE(seen[cell_of(3.6, -2.14)]) << "down the aisle it is looking at";
+  EXPECT_FALSE(seen[cell_of(3.6, -3.9)]) << "the next aisle over, behind a rack";
+  EXPECT_FALSE(seen[cell_of(-3.5, -2.14)]) << "beyond the range of the laser";
 }
 
 TEST(Warehouse, AnUnobservedCellIsAnObstacleToTheFixedPoint)
 {
-  const auto state = classify(build_grid(false));
+  const auto state = classify(build_grid(Stage::FirstPass));
   const auto graph = build_graph(state);
 
-  const CellIdx in_corridor = cell_of(
-    (kEastCorridorX0 + kEastCorridorX1) / 2.0, 7.0);
-  EXPECT_EQ(state[in_corridor], CellState::Unknown);
-  EXPECT_TRUE(graph.obstacle[in_corridor]);
+  // The floor of aisle 4 is free in the world and unknown to a fleet that has
+  // only driven the west corridor, and it is the second of those the fixed
+  // point is entitled to act on.
+  const CellIdx in_aisle = cell_of(4.3, -5.8);
+  EXPECT_EQ(build_floorplan()[in_aisle], kFree);
+  EXPECT_EQ(state[in_aisle], CellState::Unknown);
+  EXPECT_TRUE(graph.obstacle[in_aisle]);
 
-  const CellIdx in_aisle = cell_of(2.0, 1.6);
-  EXPECT_EQ(state[in_aisle], CellState::Free);
-  EXPECT_FALSE(graph.obstacle[in_aisle]);
+  const CellIdx in_corridor = cell_of(kR1Start.x, kR1Start.y);
+  EXPECT_EQ(state[in_corridor], CellState::Free);
+  EXPECT_FALSE(graph.obstacle[in_corridor]);
 }
 
 // ---------------------------------------------------------------------------
 // Unknown is not free
 // ---------------------------------------------------------------------------
 
-TEST(Scenario, WithoutObservingTheCorridorThereIsNoRouteToTheDock)
+TEST(Scenario, WithoutLookingDownTheAisleThereIsNoRouteIntoIt)
 {
   const Outcome outcome = run(case_named("unknown-is-not-free"));
   ASSERT_TRUE(outcome.ok) << outcome.error;
@@ -121,9 +218,10 @@ TEST(Scenario, ObservingItIsTheWholeDifference)
   EXPECT_EQ(before.start, after.start);
   EXPECT_EQ(before.goal_cells, after.goal_cells);
 
-  // And the route it now finds goes through the corridor that was unknown.
-  EXPECT_TRUE(visits(after.path,
-    Box{kEastCorridorX0, 0.0, kEastCorridorX1, kHeightM}));
+  // And the route it now finds runs up the west corridor -- the floor between
+  // the two ends of the building, which is exactly what the first stage had
+  // never measured and the sweep settled.
+  EXPECT_TRUE(visits(after.path, Box{-4.6, -4.5, -2.5, 1.5}));
 }
 
 // ---------------------------------------------------------------------------
@@ -158,15 +256,17 @@ TEST(Scenario, AnEpistemicGoalHasToSettleWhichBayItIs)
   EXPECT_FALSE(outcome.sensing_waypoints.empty());
 
   // Sensing is only worth spending where the worlds disagree, so every
-  // waypoint stands within reach of one of the two bays.
+  // waypoint stands within a sensor's reach of one of the two bays -- the
+  // same reach the query was resolved with, not a number picked to fit.
+  const double reach = kSensorRangeCells * kResolution;
   for (const CellIdx cell : outcome.sensing_waypoints) {
     const Point at = point_of(cell);
-    const bool near_a_bay =
-      (at.x > kBayAisle2.min_x - 1.0 && at.x < kBayAisle2.max_x + 1.0 &&
-      at.y > kBayAisle2.min_y - 1.0 && at.y < kBayAisle2.max_y + 1.0) ||
-      (at.x > kBayAisle3.min_x - 1.0 && at.x < kBayAisle3.max_x + 1.0 &&
-      at.y > kBayAisle3.min_y - 1.0 && at.y < kBayAisle3.max_y + 1.0);
-    EXPECT_TRUE(near_a_bay) << "sensing waypoint at " << at.x << ", " << at.y;
+    const auto within = [&at, reach](const Box & bay) {
+        return at.x > bay.min_x - reach && at.x < bay.max_x + reach &&
+               at.y > bay.min_y - reach && at.y < bay.max_y + reach;
+      };
+    EXPECT_TRUE(within(kBayAisle2) || within(kBayAisle3))
+      << "sensing waypoint at " << at.x << ", " << at.y;
   }
 }
 
@@ -199,14 +299,14 @@ TEST(Scenario, ASafetyConstraintIsEvaluatedAgainstTheModel)
 
   // free ∧ link_up, and the link is up in the only world there is.
   ASSERT_FALSE(outcome.path.empty());
-  EXPECT_TRUE(visits(outcome.path, kDock2));
+  EXPECT_TRUE(visits(outcome.path, kBayAisle4));
   EXPECT_GT(outcome.safe_cells, 0u);
 
   // Take the link down and the same query has nowhere safe to stand: not a
   // longer route, no route, and no cell in the safe set at all.
   Case down = case_named("safety-behind-the-link");
   down.name = "safety-behind-the-link-down";
-  const auto grid = build_grid(down.east_corridor_observed);
+  const auto grid = build_grid(down.stage);
   const auto state = classify(grid);
   const auto graph = build_graph(state);
 
@@ -224,7 +324,7 @@ TEST(Scenario, ASafetyConstraintIsEvaluatedAgainstTheModel)
   spec.goal_zone = down.goal_zone;
   spec.safety_formula_json = down.safety_formula_json;
   spec.require_epistemic_goal = false;
-  spec.sensor_range_cells = 6;
+  spec.sensor_range_cells = kSensorRangeCells;
 
   const auto query = mu_path_planner::resolve_query(snapshot, graph, state, spec);
   ASSERT_TRUE(query.ok) << query.error;

@@ -1,0 +1,142 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded: ~
+    Splitter Ratio: 0.5
+Visualization Manager:
+  Class: ""
+  Displays:
+    # The building, underneath everything.
+    #
+    # Without it the view is a growing blob of SLAM on an empty background and
+    # the racks, the aisles and the shape of the warehouse are invisible until
+    # the robot has driven past them. This is the floor plan Nav2 plans over --
+    # what the robot is *given* -- and drawing the measured map on top of it is
+    # the whole distinction the demo is about, visible in one picture.
+    - Class: rviz_default_plugins/Map
+      Enabled: true
+      Name: floor plan
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Value: /floorplan
+      Use Timestamp: false
+      Color Scheme: map
+      Draw Behind: true
+      Alpha: 0.35
+    - Class: rviz_default_plugins/Map
+      Enabled: true
+      Name: SLAM map
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Value: /map
+      Use Timestamp: false
+      Color Scheme: map
+      Draw Behind: false
+      Alpha: 0.85
+    - Class: rviz_default_plugins/RobotModel
+      Description Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Value: /robot_description
+      Enabled: true
+      Name: r1
+      Visual Enabled: true
+      Collision Enabled: false
+    - Class: rviz_default_plugins/LaserScan
+      Enabled: true
+      Name: laser
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Best Effort
+        Value: /scan
+      Size (m): 0.05
+      Style: Points
+      Color: 255; 90; 40
+      Color Transformer: FlatColor
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: mu route
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+        Value: /mu_planner/path
+      Color: 31; 79; 216
+      Line Style: Lines
+      Alpha: 1
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: sensing
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+        Value: /mu_planner/sensing
+      Color: 194; 24; 91
+      Line Style: Billboards
+      Line Width: 0.25
+      Alpha: 1
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: handling
+      Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Value: /warehouse/handling
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: epistemic state
+      Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Value: /warehouse/markers
+      Namespaces:
+        {}
+    - Class: rviz_default_plugins/TF
+      Enabled: false
+      Name: TF
+  Global Options:
+    Background Color: 32; 34; 40
+    Fixed Frame: map
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+  Value: true
+  Views:
+    Current:
+      # Top-down orthographic, not an orbit camera.
+      #
+      # An Orbit view pitched to look straight down still carries a yaw, and
+      # at 3.1416 it mirrors the floor: east appears on the left and the whole
+      # building sits in a corner of the frame with the caption stranded in
+      # empty space beside it. TopDownOrtho has no such trap -- X and Y are
+      # the centre of the view, Scale is pixels per metre, and north is up.
+      #
+      # Scale 36 over a ~950 px viewport shows about 26 m of floor. The
+      # building is 21 m tall and the caption block sits just above it, so the
+      # centre is nudged north of the building's own centre to leave the
+      # caption room rather than clipping its first line off the top.
+      Class: rviz_default_plugins/TopDownOrtho
+      X: 0
+      Y: 2.0
+      Scale: 36
+      Angle: 0
+      Name: Current View
+      Target Frame: map
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 1000
+  Width: 1900
+  Hide Left Dock: false
+  Hide Right Dock: true

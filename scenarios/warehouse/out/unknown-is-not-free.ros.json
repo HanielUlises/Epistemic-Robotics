@@ -3,9 +3,8 @@
   "agrees_with_offline": true,
   "answered": true,
   "case": "unknown-is-not-free",
-  "east_corridor_observed": false,
-  "expect": "no route: the east corridor has never been observed",
-  "goal_zone": "dock_1",
+  "expect": "no route: the floor between the two ends has never been measured",
+  "goal_zone": "dock_north",
   "offline_path_length": 0,
   "offline_sensing_length": 0,
   "path": [],
@@ -14,5 +13,6 @@
   "sensing": [],
   "sensing_length": 0,
   "snapshot": "docks",
-  "source": "ros"
+  "source": "ros",
+  "stage": "first-pass"
 }

@@ -44,7 +44,7 @@ fi
 # leaves the node alive. setsid puts both in their own process group, and the
 # trap takes the group down.
 setsid ros2 run mu_path_planner mu_path_planner_node --ros-args \
-  -p free_below:=25 -p occupied_above:=65 -p sensor_range_cells:=6 \
+  -p free_below:=25 -p occupied_above:=65 -p sensor_range_cells:=30 \
   > "${LOG}" 2>&1 &
 PLANNER=$!
 trap 'kill -TERM -"${PLANNER}" 2>/dev/null || pkill -f mu_path_planner_node || true' EXIT

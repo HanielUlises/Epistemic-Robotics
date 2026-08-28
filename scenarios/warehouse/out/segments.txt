@@ -1,0 +1,7 @@
+# start_seconds end_seconds | case | headline | caption
+0 3.4|unknown-is-not-free|dock_1: no route|no route: the east corridor has never been observed
+3.4 8.4|after-sensing|dock_1: 195 cells|a route: the same fixed point completes once that corridor reads free
+8.4 13.4|ontic-pallet|pallet: 59 cells|a route to the bay the designated world puts the pallet in
+13.4 20.4|epistemic-pallet|pallet: 53 cells, 1 stop to look|a route through the cells that settle which bay it is
+20.4 25.4|second-robot-knows|pallet: 120 cells|no sensing: r2 already tells the two worlds apart
+25.4 30.4|safety-behind-the-link|dock_2: 270 cells|a route, and none at all in a world where the link is down

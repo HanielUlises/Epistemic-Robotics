@@ -3,6 +3,6 @@
   "designated": ["w0"],
   "relations": {"r1": {"w0": ["w0"]}, "r2": {"w0": ["w0"]}},
   "labels": {"w0": ["link_up"]},
-  "agents": {"1": {"name": "r1", "pose": {"x": 2, "y": 1.6}}, "2": {"name": "r2", "pose": {"x": 2, "y": 12.4}}},
-  "zones": {"dock_1": {"bounds": {"min_x": 21, "min_y": 2, "max_x": 23.5, "max_y": 4.5}}, "dock_2": {"bounds": {"min_x": 21, "min_y": 9.5, "max_x": 23.5, "max_y": 12}}}
+  "agents": {"1": {"name": "r1", "pose": {"x": -3.5, "y": -9.3}}, "2": {"name": "r2", "pose": {"x": -3.5, "y": 6.2}}},
+  "zones": {"dock_south": {"bounds": {"min_x": -4.4, "min_y": -9.9, "max_x": -2.8, "max_y": -8.5}}, "dock_north": {"bounds": {"min_x": -4.4, "min_y": 5.5, "max_x": -2.8, "max_y": 7}}, "aisle_4": {"bounds": {"min_x": 3.6, "min_y": -6.15, "max_x": 5, "max_y": -5.43}}}
 }

@@ -61,7 +61,7 @@ void write_yaml(const std::string & image_name, const fs::path & path)
   std::ofstream out(path);
   out << "image: " << image_name << "\n"
       << "resolution: " << kResolution << "\n"
-      << "origin: [0.0, 0.0, 0.0]\n"
+      << "origin: [" << kOriginX << ", " << kOriginY << ", 0.0]\n"
       << "negate: 0\n"
       << "occupied_thresh: 0.65\n"
       << "free_thresh: 0.25\n";
@@ -94,10 +94,11 @@ int main(int argc, char ** argv)
   fs::create_directories(maps);
   fs::create_directories(snapshots);
 
-  for (const auto & [name, observed] :
-    std::vector<std::pair<std::string, bool>>{{"stage_a", false}, {"stage_b", true}})
+  for (const auto & [name, stage] :
+    std::vector<std::pair<std::string, Stage>>{
+      {"stage_a", Stage::FirstPass}, {"stage_b", Stage::AfterTheSweep}})
   {
-    const auto grid = build_grid(observed);
+    const auto grid = build_grid(stage);
     write_pgm(grid, maps / (name + ".pgm"));
     write_yaml(name + ".pgm", maps / (name + ".yaml"));
     report(name, grid);

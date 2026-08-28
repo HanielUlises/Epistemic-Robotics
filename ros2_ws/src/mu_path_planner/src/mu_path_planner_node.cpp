@@ -62,6 +62,14 @@ public:
         sensor_range_cells_ =
             static_cast<uint32_t>(declare_parameter<int>("sensor_range_cells", 1));
 
+        // How far to grow every obstacle before the fixed point runs, in
+        // cells. A cell is a point and a robot is not: a route that threads a
+        // gap one cell wide is a route only a point can drive. Zero keeps the
+        // graph exactly as the map draws it, which is what the tests expect;
+        // a real base wants its own radius here.
+        inflation_cells_ =
+            static_cast<uint32_t>(declare_parameter<int>("inflation_cells", 0));
+
         map_sub_ = create_subscription<nav_msgs::msg::OccupancyGrid>(
             "/map", rclcpp::QoS(1).transient_local(),
             [this](const nav_msgs::msg::OccupancyGrid::SharedPtr msg) {
@@ -126,6 +134,7 @@ private:
 
             graph_.obstacle[i] = (cell_state_[i] != CellState::Free);
         }
+        inflate_obstacles();
         graph_.build_adjacency();
 
         // Poses and metric zone bounds were resolved against the previous
@@ -247,6 +256,43 @@ private:
         publish_path(sensing_pub_, sensing_waypoints);
     }
 
+    /// Grows what the robot can hit by the inflation radius.
+    ///
+    /// Occupied cells only. An unobserved cell stays impassable -- unknown is
+    /// not free -- but it is not something to keep a robot's radius away from,
+    /// and inflating it eats three cells into the free strip along every
+    /// frontier. Early in a run that strip is all the robot has, so inflating
+    /// ignorance walls the robot in and the fixed point reports, correctly,
+    /// that there is nowhere to go.
+    ///
+    /// The cell states are left as they are: what a region reads as, and
+    /// whether a cell was observed, are questions about the map, and this is a
+    /// question about the robot.
+    void inflate_obstacles()
+    {
+        if (inflation_cells_ == 0) return;
+
+        const int radius = static_cast<int>(inflation_cells_);
+        const int width = static_cast<int>(graph_.width);
+        const int height = static_cast<int>(graph_.height);
+        std::vector<bool> grown = graph_.obstacle;
+
+        for (int row = 0; row < height; ++row) {
+            for (int col = 0; col < width; ++col) {
+                const size_t at = static_cast<size_t>(row) * width + col;
+                if (cell_state_[at] != CellState::Occupied) continue;
+                for (int dr = -radius; dr <= radius; ++dr) {
+                    for (int dc = -radius; dc <= radius; ++dc) {
+                        const int r = row + dr, c = col + dc;
+                        if (r < 0 || c < 0 || r >= height || c >= width) continue;
+                        grown[static_cast<size_t>(r) * width + c] = true;
+                    }
+                }
+            }
+        }
+        graph_.obstacle = std::move(grown);
+    }
+
     // ------------------------------------------------------------------
     void publish_status()
     {
@@ -307,6 +353,7 @@ private:
     int free_below_{25};
     int occupied_above_{65};
     uint32_t sensor_range_cells_{1};
+    uint32_t inflation_cells_{0};
 
     rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr  map_sub_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr          state_sub_;

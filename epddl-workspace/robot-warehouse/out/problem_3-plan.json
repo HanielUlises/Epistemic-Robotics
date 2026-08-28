@@ -1,0 +1,173 @@
+{
+  "action": "go_r1_dock_south_lane",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "go_r1_lane_bay2",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "inspect_r1_bay2",
+              "branches": [
+                {
+                  "event": 1,
+                  "subtree": {
+                    "action": "report-pallet-at_r1_bay3",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": {
+                          "action": "go_r1_bay2_lane",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": {
+                                "action": "go_r1_lane_bay3",
+                                "branches": [
+                                  {
+                                    "event": 0,
+                                    "subtree": {
+                                      "action": "pickup_r1_bay3",
+                                      "branches": [
+                                        {
+                                          "event": 0,
+                                          "subtree": {
+                                            "action": "go_r1_bay3_lane",
+                                            "branches": [
+                                              {
+                                                "event": 0,
+                                                "subtree": {
+                                                  "action": "go_r1_lane_dock_south",
+                                                  "branches": [
+                                                    {
+                                                      "event": 0,
+                                                      "subtree": {
+                                                        "action": "go_r1_dock_south_corridor",
+                                                        "branches": [
+                                                          {
+                                                            "event": 0,
+                                                            "subtree": {
+                                                              "action": "go_r1_corridor_dock_north",
+                                                              "branches": [
+                                                                {
+                                                                  "event": 0,
+                                                                  "subtree": {
+                                                                    "action": "unload_r1_dock_north",
+                                                                    "branches": [
+                                                                      {
+                                                                        "event": 0,
+                                                                        "subtree": null
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "pickup_r1_bay2",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": {
+                          "action": "go_r1_bay2_lane",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": {
+                                "action": "go_r3_corridor_dock_south",
+                                "branches": [
+                                  {
+                                    "event": 0,
+                                    "subtree": {
+                                      "action": "go_r3_dock_south_lane",
+                                      "branches": [
+                                        {
+                                          "event": 0,
+                                          "subtree": {
+                                            "action": "go_r3_lane_bay3",
+                                            "branches": [
+                                              {
+                                                "event": 0,
+                                                "subtree": {
+                                                  "action": "go_r1_lane_dock_south",
+                                                  "branches": [
+                                                    {
+                                                      "event": 0,
+                                                      "subtree": {
+                                                        "action": "go_r1_dock_south_corridor",
+                                                        "branches": [
+                                                          {
+                                                            "event": 0,
+                                                            "subtree": {
+                                                              "action": "go_r1_corridor_dock_north",
+                                                              "branches": [
+                                                                {
+                                                                  "event": 0,
+                                                                  "subtree": {
+                                                                    "action": "unload_r1_dock_north",
+                                                                    "branches": [
+                                                                      {
+                                                                        "event": 0,
+                                                                        "subtree": null
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

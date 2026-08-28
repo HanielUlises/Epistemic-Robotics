@@ -15,3 +15,12 @@ repositories:
     type: git
     url: https://github.com/ePlanSys/eplansys.git
     version: rolling
+
+  # The world the RoboticsAcademy multi-robot Amazon warehouse exercise runs
+  # on. warehouse_scenario's floor plan is rasterised from these very collision
+  # meshes, and warehouse_demo launches this world unmodified, so the grid the
+  # planner reasons over and the building the laser measures cannot drift.
+  ThirdParty/aws-robomaker-small-warehouse-world:
+    type: git
+    url: https://github.com/aws-robotics/aws-robomaker-small-warehouse-world.git
+    version: ros2

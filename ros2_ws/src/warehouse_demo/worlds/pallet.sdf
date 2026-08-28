@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- The pallet the mission is about.
+
+     The AWS warehouse ships with its aisles empty, so without this there is
+     nothing in either bay: perception reads both as clear, every inspection
+     comes back "empty", and the policy runs out of bays to try. One box, in
+     one of the two bays, is the whole of the fact the robots are uncertain
+     about.
+
+     Half a metre tall on purpose. A pallet is ankle-high and the burger's
+     laser sits at about 0.18 m, so a realistically flat pallet is invisible to
+     the only sensor the robot has, and the demo would turn on something it
+     cannot see. -->
+<sdf version="1.6">
+  <model name="pallet">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry><box><size>0.8 0.6 0.5</size></box></geometry>
+      </collision>
+      <visual name="visual">
+        <geometry><box><size>0.8 0.6 0.5</size></box></geometry>
+        <material>
+          <ambient>0.75 0.55 0.20 1</ambient>
+          <diffuse>0.85 0.62 0.24 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
