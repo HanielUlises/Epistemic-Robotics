@@ -159,8 +159,11 @@ p:last-child{margin-bottom:0}
   font-family:var(--ss);
   font-size:.95rem;font-style:italic;color:#333;
   margin-bottom:.55rem;line-height:1.6;
+  /* The English sentence and the formula are two readings of one statement,
+     so they are set on a shared centre line instead of both ranging left. */
+  text-align:center;
 }
-.goal-formal{font-size:1rem;color:var(--black);line-height:1.9;}
+.goal-formal{font-size:1rem;color:var(--black);line-height:1.9;text-align:center;}
 .math-block{
   background:var(--code-bg);
   border-left:2.5px solid var(--red);
@@ -212,20 +215,27 @@ p:last-child{margin-bottom:0}
 .feature-item p{font-size:.78rem;color:#555;margin:0;line-height:1.55}
 
 .fig-block{margin:2.2rem 0}
-.fig-row{display:flex;gap:1.6rem;align-items:flex-start;flex-wrap:wrap}
+.fig-row{display:flex;gap:1.6rem;align-items:flex-start;flex-wrap:wrap;
+  justify-content:center}
+.fig-row>.fig-unit{flex:1 1 320px}
+/* `.fig-unit` centres its children, which also stops them stretching, so the
+   wrapper shrank to the drawing's intrinsic size and `width:100%` on the svg
+   resolved against that instead of against the column. */
+.fig-unit>.kripke-wrap{align-self:stretch;width:100%}
 .fig-unit{display:flex;flex-direction:column;align-items:center;gap:.45rem}
 .fig-sub{font-family:var(--ss);font-size:.78rem;font-style:italic;
   color:var(--gray);text-align:center}
 .fig-caption{font-family:var(--ss);font-size:.82rem;
   font-style:italic;color:var(--gray);margin-top:.8rem;line-height:1.6}
-canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
-.legend{display:flex;gap:.9rem;flex-wrap:wrap;margin:.45rem 0 .15rem;
+canvas{display:block;image-rendering:pixelated;border:1px solid var(--border);
+  margin-left:auto;margin-right:auto}
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center;margin:.45rem 0 .15rem;
   font-family:var(--ss);font-size:.75rem;color:var(--gray);font-style:italic}
 .legend span{display:flex;align-items:center;gap:.3rem}
 .lsq{width:9px;height:9px;display:inline-block;flex-shrink:0;
   border:1px solid rgba(0,0,0,.14)}
-.step-lbl-wrap{display:flex;align-items:center;gap:.6rem;margin-top:.45rem}
-.step-lbl{font-family:var(--ss);font-size:.75rem;font-style:italic;color:var(--gray);flex:1}
+.step-lbl-wrap{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-top:.45rem}
+.step-lbl{font-family:var(--ss);font-size:.75rem;font-style:italic;color:var(--gray);text-align:center}
 .cta{
   border:1px solid var(--border);
   border-left:2.5px solid var(--red);
@@ -256,7 +266,7 @@ canvas{display:block;image-rendering:pixelated;border:1px solid var(--border)}
   transition:color .2s,border-color .2s;
 }
 .btn-reset:hover{color:var(--black);border-color:var(--black)}
-.canvas-pair{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-start;margin:.5rem 0}
+.canvas-pair{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-start;justify-content:center;margin:.5rem 0}
 .canvas-pair .fig-unit{flex:1;min-width:220px}
 
 .kripke-wrap{
@@ -784,8 +794,6 @@ sup.cite a:hover{text-decoration:underline}
           <path d="M676.7,120.2 Q648,131 609.6,119.5" fill="none" stroke="#AAA" stroke-width="1.5" marker-end="url(#arr-nav)"/>
 
           <g id="sense-evt" opacity="0" style="transition:opacity .5s">
-            <rect x="324" y="130" width="94" height="24" rx="3"
-                  fill="#F8F8F8" stroke="#888" stroke-width="1.2"/>
             <text x="371" y="146" text-anchor="middle"
                   font-family="Arial,Helvetica,sans-serif" font-size="9" font-style="italic" fill="#555">
               sense(w₃) → free
@@ -868,7 +876,7 @@ sup.cite a:hover{text-decoration:underline}
         <div class="fig-unit">
           <div class="kripke-wrap" style="border:none;background:none">
             <svg viewBox="0 0 330 230" xmlns="http://www.w3.org/2000/svg"
-                 style="width:100%;min-width:260px;max-width:330px;display:block;border:1px solid var(--border);background:#FAFAFA">
+                 style="width:100%;min-width:260px;max-width:520px;display:block;border:1px solid var(--border);background:#FAFAFA">
               <defs>
                 <marker id="arr-k2a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
                   <path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/>
@@ -914,7 +922,7 @@ sup.cite a:hover{text-decoration:underline}
         <div class="fig-unit">
           <div class="kripke-wrap" style="border:none;background:none">
             <svg viewBox="0 0 330 230" xmlns="http://www.w3.org/2000/svg"
-                 style="width:100%;min-width:260px;max-width:330px;display:block;border:1px solid var(--border);background:#FAFAFA">
+                 style="width:100%;min-width:260px;max-width:520px;display:block;border:1px solid var(--border);background:#FAFAFA">
               <defs>
                 <marker id="arr-k2b" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
                   <path d="M0,0 L7,3.5 L0,7 Z" fill="#3D7A3D"/>
@@ -1030,7 +1038,6 @@ sup.cite a:hover{text-decoration:underline}
 
           <line x1="270" y1="150" x2="362" y2="150" stroke="#555" stroke-width="2" marker-end="url(#arr-prod)"/>
           <text x="316" y="142" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-style="italic" fill="#555">⊗ E_sense</text>
-          <rect x="276" y="156" width="80" height="18" rx="2" fill="#F4F4F4" stroke="#999" stroke-width=".8"/>
           <text x="316" y="169" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-style="italic" fill="#666">pre(e) = p</text>
 
           <text x="580" y="22" text-anchor="middle"
