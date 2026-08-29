@@ -283,6 +283,20 @@ footer{border-top:2px solid var(--black);padding:2.2rem 0}
 .ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
 footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
 footer a:hover{color:var(--red)}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -382,7 +396,7 @@ footer a:hover{color:var(--red)}
     <p class="sec-label">Formal Framework</p>
     <h3>Dynamic Epistemic Logic and the product update</h3>
     <p>
-      The project is grounded in Dynamic Epistemic Logic (DEL), a modal framework
+      The project is grounded in Dynamic Epistemic Logic (DEL)<sup class="cite">[<a href="#ref-bms1998" id="cite-bms1998">1</a>,&#8202;<a href="#ref-ditmarsch2007" id="cite-ditmarsch2007">2</a>]</sup>, a modal framework
       for reasoning about how informational actions (sensing, announcement,
       communication) transform the knowledge states of agents. The central semantic
       object is the <em>Kripke model</em>: a labeled graph whose nodes are possible
@@ -557,7 +571,7 @@ footer a:hover{color:var(--red)}
       which the goal is reachable. Each map exercises a qualitatively distinct planning
       scenario (multi-branch reachability, sensing-blocked propagation, dual-target
       branching, and νX safety) to illustrate why fixed-point logic, and not
-      classical graph search, is the appropriate specification language.
+      classical graph search, is the appropriate specification language<sup class="cite">[<a href="#ref-kozen1983" id="cite-kozen1983">3</a>,&#8202;<a href="#ref-barcenas2017" id="cite-barcenas2017">4</a>]</sup>.
     </p>
 
     <!-- MAP 0: Animated path-building on belief-state grid -->
@@ -1066,7 +1080,7 @@ footer a:hover{color:var(--red)}
 <section>
   <div class="container">
     <p class="sec-label">Multi-Agent Coordination</p>
-    <h3>Heterogeneous fleets under communication restrictions</h3>
+    <h3>Heterogeneous fleets under communication restrictions<sup class="cite">[<a href="#ref-bramblett2023het" id="cite-bramblett2023het">5</a>,&#8202;<a href="#ref-bramblett2023frontiers" id="cite-bramblett2023frontiers">6</a>,&#8202;<a href="#ref-bramblett2023icra" id="cite-bramblett2023icra">7</a>,&#8202;<a href="#ref-bramblett2025" id="cite-bramblett2025">8</a>]</sup></h3>
     <p>
       The hardest problems arise when multiple robots must coordinate while operating
       in communication-restricted environments. Each robot maintains a local Kripke
@@ -1131,7 +1145,7 @@ footer a:hover{color:var(--red)}
 <section>
   <div class="container">
     <p class="sec-label">Planning System</p>
-    <h3>Epistemic action types and the ALETHEIA planner
+    <h3>Epistemic action types and the ALETHEIA planner<sup class="cite">[<a href="#ref-bolander2011" id="cite-bolander2011">9</a>,&#8202;<a href="#ref-epddl2026" id="cite-epddl2026">10</a>,&#8202;<a href="#ref-aletheia" id="cite-aletheia">11</a>]</sup>
       <a class="ext-chip" href="https://arxiv.org/abs/2601.20969" target="_blank" rel="noopener">
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
           <path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" stroke-width="1.2"/>
@@ -1299,6 +1313,27 @@ footer a:hover{color:var(--red)}
         </svg>
       </a>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<section>
+  <div class="container">
+    <p class="sec-label">References</p>
+    <h3>Works cited</h3>
+    <ol class="ref-list">
+      <li id="ref-bms1998">A.&nbsp;Baltag, L.&nbsp;S. Moss and S.&nbsp;Solecki. <em>The Logic of Public Announcements, Common Knowledge, and Private Suspicions</em>. Proceedings of TARK, 1998.</li>
+      <li id="ref-ditmarsch2007">H.&nbsp;van Ditmarsch, W.&nbsp;van der Hoek and B.&nbsp;Kooi. <em>Dynamic Epistemic Logic</em>. Synthese Library vol.&nbsp;337, Springer, 2007.</li>
+      <li id="ref-kozen1983">D.&nbsp;Kozen. <em>Results on the Propositional &micro;-Calculus</em>. Theoretical Computer Science, 27(3):333&#8211;354, 1983.</li>
+      <li id="ref-barcenas2017">E.&nbsp;B&aacute;rcenas, E.&nbsp;Ben&iacute;tez-Guerrero, A.&nbsp;Benitez, J.&nbsp;de la Calleja and M.&nbsp;A. Medina. <em>Branching Path Planning with Modal Logics</em>. Computaci&oacute;n y Sistemas, 21(3):407&#8211;418, 2017. <a href="https://doi.org/10.13053/cys-21-3-2444">doi:10.13053/cys-21-3-2444</a>.</li>
+      <li id="ref-bramblett2023het">L.&nbsp;Bramblett and N.&nbsp;Bezzo. <em>Epistemic Planning for Heterogeneous Robotic Systems</em>. arXiv:2308.00579, 2023.</li>
+      <li id="ref-bramblett2023frontiers">L.&nbsp;Bramblett and N.&nbsp;Bezzo. <em>Epistemic Planning for Multi-Robot Systems in Communication-Restricted Environments</em>. Frontiers in Robotics and AI, 10:1149439, 2023. <a href="https://doi.org/10.3389/frobt.2023.1149439">doi:10.3389/frobt.2023.1149439</a>.</li>
+      <li id="ref-bramblett2023icra">L.&nbsp;Bramblett, S.&nbsp;Gao and N.&nbsp;Bezzo. <em>Epistemic Prediction and Planning with Implicit Coordination for Multi-Robot Teams in Communication Restricted Environments</em>. Proceedings of IEEE ICRA, 2023. arXiv:2302.10393.</li>
+      <li id="ref-bramblett2025">L.&nbsp;Bramblett, J.&nbsp;Reasoner and N.&nbsp;Bezzo. <em>Implicit Coordination using Active Epistemic Inference for Multi-Robot Systems</em>. arXiv:2501.03907, 2025.</li>
+      <li id="ref-bolander2011">T.&nbsp;Bolander and M.&nbsp;B. Andersen. <em>Epistemic Planning for Single- and Multi-Agent Systems</em>. Journal of Applied Non-Classical Logics, 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-epddl2026">A.&nbsp;Burigana and F.&nbsp;Fabiano. <em>The Epistemic Planning Domain Definition Language: Official Guideline</em>. Reference for the Epistemic Planning Track at IPC&nbsp;2026.</li>
+      <li id="ref-aletheia">ALETHEIA: an explicit-state DEL epistemic planner. Software, <a href="https://github.com/HanielUlises/Aletheia">github.com/HanielUlises/Aletheia</a>.</li>
+    </ol>
   </div>
 </section>
 

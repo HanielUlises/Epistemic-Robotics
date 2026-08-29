@@ -369,6 +369,20 @@ table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
    the column on a narrow screen instead of forcing it to scroll sideways. */
 .fig .graph{min-width:0}
 @media(max-width:900px){.fig .graph{min-width:700px}}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -494,7 +508,7 @@ table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
 <section>
   <div class="container">
     <p class="sec-label">The three goals</p>
-    <h3>G1, G2 and G3, in the repository's own syntax</h3>
+    <h3>G1, G2 and G3, in the repository's own syntax<sup class="cite">[<a href="#ref-epddl2026" id="cite-epddl2026">1</a>]</sup></h3>
 
     <p>
       The three instances are generated from one text and diverge at the goal.
@@ -595,7 +609,7 @@ table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
       <span class="mono-inline">pallet-at_bay3</span>. An epistemic state is a
       pointed Kripke model \(\mathcal{M} = \langle W, \{\sim_i\}_{i \in
       \mathcal{A}}, V \rangle\) with a set of designated worlds, each
-      \(\sim_i\) an equivalence relation, and
+      \(\sim_i\) an equivalence relation, and<sup class="cite">[<a href="#ref-fagin1995" id="cite-fagin1995">2</a>,&#8202;<a href="#ref-ditmarsch2007" id="cite-ditmarsch2007">3</a>]</sup>
     </p>
 
     <div class="math-block">
@@ -611,7 +625,7 @@ table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
       The initial state is \(\mathcal{M}_0\) with \(W_0 = \{w_2, w_3\}\),
       \(V(w_2) \ni P\), \(V(w_3) \ni Q\), both designated, and
       \(\sim_i \;=\; W_0 \times W_0\) for every agent: it is common knowledge
-      that the pallet is in exactly one aisle, and nobody knows which. In this
+      that the pallet is in exactly one aisle, and nobody knows which.<sup class="cite">[<a href="#ref-son2014" id="cite-son2014">4</a>]</sup> In this
       notation the three goals of the previous section are
     </p>
 
@@ -665,7 +679,7 @@ table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
     </div>
 
     <p>
-      The product update \(\mathcal{M} \otimes \mathcal{E}\) has worlds
+      The product update \(\mathcal{M} \otimes \mathcal{E}\) has worlds<sup class="cite">[<a href="#ref-bms1998" id="cite-bms1998">5</a>]</sup>
       \(\{(w,e) : \mathcal{M},w \models \mathsf{pre}(e)\}\), valuation inherited
       from \(w\), and
       \((w,e) \sim_i (v,f) \iff w \sim_i v \text{ and } e \sim_i f\).
@@ -822,7 +836,7 @@ table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
 
     <p>
       Each instance is ground by <span class="mono-inline">plank</span> and
-      solved by ALETHEIA under AO*, and the returned policy is validated by the
+      solved by ALETHEIA under AO*<sup class="cite">[<a href="#ref-plank" id="cite-plank">6</a>,&#8202;<a href="#ref-aletheia" id="cite-aletheia">7</a>]</sup>, and the returned policy is validated by the
       planner's own checker against the model plank exported. The three tasks
       are the same size in every respect that is not the goal: 76 atoms, 198
       ground actions, three agents and two designated worlds.
@@ -957,7 +971,7 @@ table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
 
   <!-- the behaviour tree -->
   <rect x="8" y="414" width="984" height="138" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-  <text x="20" y="434" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">WHAT THE EXECUTOR MAKES OF ONE POLICY NODE &#183; EpistemicBTBuilder</text>
+  <text x="20" y="434" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">WHAT THE EXECUTOR MAKES OF ONE POLICY NODE &#183; EpistemicBTBuilder<sup class="cite">[<a href="#ref-plansys2" id="cite-plansys2">8</a>,&#8202;<a href="#ref-btcpp" id="cite-btcpp">9</a>]</sup></text>
   <g font-size="10.5">
     <rect x="24"  y="450" width="150" height="42" rx="2" fill="#fff" stroke="#111"/>
     <text x="99"  y="467" text-anchor="middle" fill="#111" font-weight="600">knowledge guard</text>
@@ -1614,6 +1628,25 @@ ros2 launch warehouse_demo warehouse_demo_launch.py \
       measurement is the next thing to run, and it is not on this page because
       it has not been.
     </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<section>
+  <div class="container">
+    <p class="sec-label">References</p>
+    <h3>Works cited</h3>
+    <ol class="ref-list">
+      <li id="ref-epddl2026">A.&nbsp;Burigana and F.&nbsp;Fabiano. <em>The Epistemic Planning Domain Definition Language: Official Guideline</em>. Reference for the Epistemic Planning Track at IPC&nbsp;2026.</li>
+      <li id="ref-fagin1995">R.&nbsp;Fagin, J.&nbsp;Y. Halpern, Y.&nbsp;Moses and M.&nbsp;Y. Vardi. <em>Reasoning About Knowledge</em>. MIT Press, 1995.</li>
+      <li id="ref-ditmarsch2007">H.&nbsp;van Ditmarsch, W.&nbsp;van der Hoek and B.&nbsp;Kooi. <em>Dynamic Epistemic Logic</em>. Synthese Library vol.&nbsp;337, Springer, 2007.</li>
+      <li id="ref-son2014">T.&nbsp;C. Son, E.&nbsp;Pontelli, C.&nbsp;Baral and G.&nbsp;Gelfond. <em>Finitary S5-Theories</em>. Proceedings of JELIA, LNCS vol.&nbsp;8761, Springer, 2014.</li>
+      <li id="ref-bms1998">A.&nbsp;Baltag, L.&nbsp;S. Moss and S.&nbsp;Solecki. <em>The Logic of Public Announcements, Common Knowledge, and Private Suspicions</em>. Proceedings of TARK, 1998.</li>
+      <li id="ref-plank">A.&nbsp;Burigana. <span class="mono-inline">plank</span>: a DEL-based epistemic planning toolkit. Software, <a href="https://github.com/a-burigana/plank">github.com/a-burigana/plank</a>.</li>
+      <li id="ref-aletheia">ALETHEIA: an explicit-state DEL epistemic planner. Software, <a href="https://github.com/HanielUlises/Aletheia">github.com/HanielUlises/Aletheia</a>.</li>
+      <li id="ref-plansys2">F.&nbsp;Mart&iacute;n, J.&nbsp;Gin&eacute;s, F.&nbsp;J. Rodr&iacute;guez-Lera and V.&nbsp;Matell&aacute;n. <em>PlanSys2: A Planning System Framework for ROS2</em>. Proceedings of IEEE/RSJ IROS, 2021.</li>
+      <li id="ref-btcpp">M.&nbsp;Colledanchise and P.&nbsp;&Ouml;gren. <em>Behavior Trees in Robotics and AI: An Introduction</em>. CRC Press, 2018.</li>
+    </ol>
   </div>
 </section>
 

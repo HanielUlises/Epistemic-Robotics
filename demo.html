@@ -324,6 +324,20 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
   background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
 </style>
 </head>
 
@@ -491,7 +505,7 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
       of the grid and let \(R \subseteq C \times C\) relate a cell to the cells
       a step can reach from it. Write \(\mathit{Free}\) for the cells observed
       and settled free, \(\mathit{Goal}\) for the cells of the queried zone that
-      are in \(\mathit{Free}\), and take the least fixed point
+      are in \(\mathit{Free}\), and take the least fixed point<sup class="cite">[<a href="#ref-kozen1983" id="cite-kozen1983">1</a>]</sup>
     </p>
 
     <div class="math-block">
@@ -507,7 +521,7 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
       &#8212; the smallest set containing the goal cells and closed under taking
       a free predecessor. A route exists exactly when the robot's own cell lies
       in it. The operator is monotone in \(X\) over the powerset lattice of
-      \(C\), so the fixed point exists and the iteration terminates; the
+      \(C\)<sup class="cite">[<a href="#ref-kozen1983" id="cite-kozen1983">1</a>,&#8202;<a href="#ref-barcenas2017" id="cite-barcenas2017">2</a>]</sup>, so the fixed point exists and the iteration terminates; the
       planner's <span class="mono-inline">region</span> figure is its
       cardinality.
     </p>
@@ -684,6 +698,18 @@ REHEARSE=1 ./demo/run_demo.sh   <span class="c"># the same, without recording</s
       commands per simulated step: the window opens faster than the base can
       accelerate, and the robot overshoots into whatever it was rounding.
     </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<section>
+  <div class="container">
+    <p class="sec-label">References</p>
+    <h3>Works cited</h3>
+    <ol class="ref-list">
+      <li id="ref-kozen1983">D.&nbsp;Kozen. <em>Results on the Propositional &micro;-Calculus</em>. Theoretical Computer Science, 27(3):333&#8211;354, 1983.</li>
+      <li id="ref-barcenas2017">E.&nbsp;B&aacute;rcenas, E.&nbsp;Ben&iacute;tez-Guerrero, A.&nbsp;Benitez, J.&nbsp;de la Calleja and M.&nbsp;A. Medina. <em>Branching Path Planning with Modal Logics</em>. Computaci&oacute;n y Sistemas, 21(3):407&#8211;418, 2017. <a href="https://doi.org/10.13053/cys-21-3-2444">doi:10.13053/cys-21-3-2444</a>.</li>
+    </ol>
   </div>
 </section>
 

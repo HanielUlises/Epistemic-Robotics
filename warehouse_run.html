@@ -334,6 +334,20 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
 table.logtab td:first-child,table.logtab th:first-child{
   text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -873,7 +887,7 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
       <span class="mono-inline">pallet-at_bay3</span>. An epistemic state is a
       Kripke model \(\mathcal{M} = \langle W, \{\sim_i\}_{i\in\mathcal{A}}, V
       \rangle\) with a set \(W_d \subseteq W\) of designated worlds, each
-      \(\sim_i\) an equivalence relation, and
+      \(\sim_i\) an equivalence relation, and<sup class="cite">[<a href="#ref-fagin1995" id="cite-fagin1995">1</a>,&#8202;<a href="#ref-ditmarsch2007" id="cite-ditmarsch2007">2</a>]</sup>
     </p>
 
     <div class="math-block">
@@ -902,7 +916,7 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
     <h4>The modal precondition, and what it rules out</h4>
 
     <p>
-      A solution is a policy \(\pi\), and it must reach \(\gamma\) from
+      A solution is a policy \(\pi\)<sup class="cite">[<a href="#ref-bolander2011" id="cite-bolander2011">3</a>]</sup>, and it must reach \(\gamma\) from
       <em>every</em> designated world. The pick-up event carries
     </p>
 
@@ -941,7 +955,7 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
     </div>
 
     <p>
-      and \(\mathcal{M}\otimes\mathcal{E}\) keeps the pairs \((w,e)\) whose
+      and \(\mathcal{M}\otimes\mathcal{E}\) keeps the pairs<sup class="cite">[<a href="#ref-bms1998" id="cite-bms1998">4</a>]</sup> \((w,e)\) whose
       precondition holds, with
       \((w,e)\sim_i(v,f)\) exactly when \(w \sim_i v\) and \(e \sim_i f\). The
       acting agent's event relation is the identity, so
@@ -1205,6 +1219,20 @@ ros2 launch warehouse_demo warehouse_demo_launch.py</pre>
       default of 40 grid updates is a few seconds, which is appropriate to a
       building of small rooms and not to a warehouse aisle.
     </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<section>
+  <div class="container">
+    <p class="sec-label">References</p>
+    <h3>Works cited</h3>
+    <ol class="ref-list">
+      <li id="ref-fagin1995">R.&nbsp;Fagin, J.&nbsp;Y. Halpern, Y.&nbsp;Moses and M.&nbsp;Y. Vardi. <em>Reasoning About Knowledge</em>. MIT Press, 1995.</li>
+      <li id="ref-ditmarsch2007">H.&nbsp;van Ditmarsch, W.&nbsp;van der Hoek and B.&nbsp;Kooi. <em>Dynamic Epistemic Logic</em>. Synthese Library vol.&nbsp;337, Springer, 2007.</li>
+      <li id="ref-bolander2011">T.&nbsp;Bolander and M.&nbsp;B. Andersen. <em>Epistemic Planning for Single- and Multi-Agent Systems</em>. Journal of Applied Non-Classical Logics, 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-bms1998">A.&nbsp;Baltag, L.&nbsp;S. Moss and S.&nbsp;Solecki. <em>The Logic of Public Announcements, Common Knowledge, and Private Suspicions</em>. Proceedings of TARK, 1998.</li>
+    </ol>
   </div>
 </section>
 
