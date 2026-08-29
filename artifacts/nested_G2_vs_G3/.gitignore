@@ -1,0 +1,10 @@
+# The raw screen captures: 80 MB each, and every frame in them survives in the
+# captioned videos that are published. Kept locally so a caption can be redrawn
+# without re-running the warehouse, and out of the repository because they are
+# an intermediate.
+*-raw.mp4
+
+# The captioned videos too: they are published on gh-pages, which is where the
+# page that shows them lives, and a second copy here is 12 MB of duplicate.
+G2.mp4
+G3.mp4
