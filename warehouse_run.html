@@ -53,8 +53,26 @@ html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
   font-weight:400;line-height:1.6}
-.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
-.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
 
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
@@ -336,6 +354,7 @@ table.logtab td:first-child,table.logtab th:first-child{
             <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
             <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             <a href="warehouse_run.html" aria-current="page">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
           </div>
           <hr>
           <h6>Reports (PDF)</h6>
@@ -456,8 +475,8 @@ table.logtab td:first-child,table.logtab th:first-child{
       The execution above follows the shorter of the two branches: r1 inspects
       bay&#8202;2, the pallet is present, and it is lifted. That trace is
       observationally indistinguishable from a fixed sequence, so it does not by
-      itself demonstrate that the plan is conditional. The branch structure is
-      stated in the caption rather than exhibited by the robot.
+      itself demonstrate that the plan is conditional. The caption states the branch
+      structure; the robot does not exhibit it.
     </p>
 
     <p>
@@ -487,8 +506,8 @@ table.logtab td:first-child,table.logtab th:first-child{
       first is the return to the lane. The rack rows terminate 0.15&#8201;m
       short of the east wall, which is impassable to a robot 0.21&#8201;m
       across, so the zone graph contains no edge between the two aisles and an
-      incorrect first inspection costs three additional moves. That cost is a
-      property of the building rather than of the encoding.
+      incorrect first inspection costs three additional moves. That cost belongs to
+      the building, not to the encoding.
     </p>
 
     <p>
@@ -719,8 +738,8 @@ table.logtab td:first-child,table.logtab th:first-child{
       <strong>Each robot maintains its own map.</strong> Every mapper publishes
       to that robot's <span class="mono-inline">/rN/map</span>, and each
       perception node subscribes only to the map of the robot it reports for.
-      The cost is one SLAM instance per robot. Consolidating them would be
-      unsound rather than merely cheaper: the domain declares looking as
+      The cost is one SLAM instance per robot. Consolidating them would be cheaper and
+      unsound: the domain declares looking as
       semi-private sensing, under which the observing agent learns the outcome
       and the others learn only that an inspection occurred. A shared grid makes
       every observation available to every agent, which is public sensing, and
@@ -770,8 +789,8 @@ table.logtab td:first-child,table.logtab th:first-child{
       candidate aisles opening off it. Driving, lifting and unloading are public
       ontic actions, on the grounds that a warehouse fleet tracks the positions
       of its own members. Looking is semi-private sensing. The pick-up event
-      carries a conjunct that constrains the agent's information rather than the
-      state of the warehouse:
+      carries a conjunct that constrains the agent's information, not the state
+      of the warehouse:
     </p>
 
     <pre class="code">(<span class="k">:event</span> e-pickup
@@ -790,7 +809,7 @@ table.logtab td:first-child,table.logtab th:first-child{
       robot standing in the correct aisle may then lift a pallet it has no
       grounds to believe is present, and a plan containing no sensing action
       becomes valid. The following rejection is produced by
-      <span class="mono-inline">plank validate</span> rather than asserted:
+      <span class="mono-inline">plank validate</span>:
     </p>
 
     <pre class="code"><span class="c"># plank validate -a go_r1_dock_south_lane go_r1_lane_bay2 pickup_r1_bay2</span>
@@ -802,8 +821,8 @@ false (pickup_r1_bay2 is not applicable in
       and a <span class="mono-inline">&lt;Kw. ?i&gt;</span> conjunct in both
       preconditions. The observing agent learns the outcome; any other agent
       present learns that an inspection occurred but not its result; and an
-      inspection of a proposition the agent has already settled is inapplicable
-      rather than merely redundant. With a single agent this declaration has no
+      inspection of a proposition the agent has already settled is inapplicable,
+      not merely redundant. With a single agent this declaration has no
       observable effect, since there is no second agent whose information could
       differ. It is retained because the effect appears as soon as a second
       agent is added, and the one- and multi-agent instances share a domain.
@@ -840,6 +859,175 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ THE SEMANTICS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The semantics</p>
+    <h3>Why no sequence solves this instance</h3>
+
+    <p>
+      The informal claim above &#8212; that each action sequence fixes an aisle
+      in advance and is unexecutable in the world where the pallet is in the
+      other &#8212; is a statement about a model, and it is worth writing down
+      as one. Let \(P\) abbreviate
+      <span class="mono-inline">pallet-at_bay2</span> and \(Q\) abbreviate
+      <span class="mono-inline">pallet-at_bay3</span>. An epistemic state is a
+      Kripke model \(\mathcal{M} = \langle W, \{\sim_i\}_{i\in\mathcal{A}}, V
+      \rangle\) with a set \(W_d \subseteq W\) of designated worlds, each
+      \(\sim_i\) an equivalence relation, and
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathcal{M},w \models K_i\varphi
+          \iff \mathcal{M},v \models \varphi \text{ for all } v \sim_i w,
+        \qquad
+        \mathit{Kw}_i\varphi \;:=\; K_i\varphi \vee K_i\neg\varphi .
+      \]
+    </div>
+
+    <p>
+      The instance designates two worlds, \(W_d = W = \{w_2,w_3\}\) with \(P\)
+      true at \(w_2\) and \(Q\) true at \(w_3\), and every agent's relation is
+      all of \(W \times W\): it is common knowledge that the pallet is in
+      exactly one aisle, and it is common knowledge that nobody knows which.
+      The goal of the two-agent instance is
+    </p>
+
+    <div class="math-block">
+      \[
+        \gamma \;=\; \mathit{delivered} \wedge \mathit{Kw}_{r_2} P .
+      \]
+    </div>
+
+    <h4>The modal precondition, and what it rules out</h4>
+
+    <p>
+      A solution is a policy \(\pi\), and it must reach \(\gamma\) from
+      <em>every</em> designated world. The pick-up event carries
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathsf{pre}(\textsf{e-pickup}_{i,z})
+          = \mathit{at}(i,z) \wedge \mathit{bay}(z) \wedge \mathit{pallet}(z)
+            \wedge \underbrace{K_i\,\mathit{pallet}(z)}_{\text{modal}}
+            \wedge \neg\mathit{carrying}(i),
+      \]
+    </div>
+
+    <p>
+      and an event is applicable in \(\mathcal{M}\) only when its precondition
+      holds at every designated world. Before any sensing,
+      \(\mathcal{M}_0 \not\models K_{r_1}P\) &#8212; \(w_3 \sim_{r_1} w_2\) and
+      \(P\) fails at \(w_3\) &#8212; so
+      \(\textsf{e-pickup}_{r_1,\textit{bay2}}\) is inapplicable at the initial
+      state no matter where r1 is standing. Dropping the underbraced conjunct
+      recovers the classical domain, in which applicability is a question about
+      the warehouse alone and a plan that never inspects anything is valid.
+    </p>
+
+    <p>
+      What makes the pick-up applicable is the product update at the
+      inspection. <span class="mono-inline">inspect</span> is an event model
+      with one event per outcome and no postconditions,
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathsf{pre}(e^{+}) = \mathit{at}(r_1,\textit{bay2}) \wedge P \wedge \neg\mathit{Kw}_{r_1}P,
+        \qquad
+        \mathsf{pre}(e^{-}) = \mathit{at}(r_1,\textit{bay2}) \wedge \neg P \wedge \neg\mathit{Kw}_{r_1}P,
+      \]
+    </div>
+
+    <p>
+      and \(\mathcal{M}\otimes\mathcal{E}\) keeps the pairs \((w,e)\) whose
+      precondition holds, with
+      \((w,e)\sim_i(v,f)\) exactly when \(w \sim_i v\) and \(e \sim_i f\). The
+      acting agent's event relation is the identity, so
+      \((w_2,e^{+}) \not\sim_{r_1} (w_3,e^{-})\): r1's classes become
+      singletons and \(K_{r_1}P\) holds in one of them. The update also splits
+      the designated set in two, and a plan whose next action was chosen before
+      the split is applicable in only one half. That is the formal content of
+      &#8220;the plan is a policy&#8221;.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">One inspection, two continuations</span>
+        <span class="note">M<sub>0</sub> &#8855; E, and the goal at each leaf</span>
+      </div>
+      <div class="fig-body">
+<svg class="graph" viewBox="0 0 1000 350" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="The initial model with two designated worlds, the inspection splitting it into two single-world states, and the different continuation the policy runs on each. The pick-up is applicable in each branch and in neither before the split.">
+  <defs>
+    <marker id="wf-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5A5A5A"/>
+    </marker>
+  </defs>
+
+  <rect x="8" y="8" width="984" height="334" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+
+  <!-- before -->
+  <text x="30" y="36" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">BEFORE THE LOOK &#183; two designated worlds, one plan</text>
+  <rect x="30" y="52" width="230" height="120" rx="2" fill="#fff" stroke="#111"/>
+  <circle cx="92" cy="96" r="26" fill="#fff" stroke="#111" stroke-width="1.5"/>
+  <text x="92" y="100" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">w₂</text>
+  <circle cx="196" cy="96" r="26" fill="#fff" stroke="#111" stroke-width="1.5"/>
+  <text x="196" y="100" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">w₃</text>
+  <line x1="118" y1="96" x2="170" y2="96" stroke="#5A5A5A" stroke-width="1.4"/>
+  <text x="144" y="88" font-size="10" text-anchor="middle" fill="#5A5A5A">all agents</text>
+  <text x="145" y="140" font-size="10.5" text-anchor="middle" fill="#5A5A5A">P holds at w₂, Q at w₃</text>
+  <text x="145" y="158" font-size="10.5" text-anchor="middle" fill="#C8102E">pickup applicable at neither</text>
+
+  <!-- the action -->
+  <path d="M262 112 L322 112" stroke="#5A5A5A" stroke-width="1.4" marker-end="url(#wf-arrow)"/>
+  <rect x="330" y="86" width="180" height="52" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.6"/>
+  <text x="420" y="106" font-size="11.5" text-anchor="middle" fill="#C8102E" font-weight="600">inspect_r1_bay2</text>
+  <text x="420" y="124" font-size="9.5" text-anchor="middle" fill="#5A5A5A">semi-private, two events</text>
+  <path d="M510 112 L560 76" stroke="#5A5A5A" stroke-width="1.4" marker-end="url(#wf-arrow)"/>
+  <path d="M510 112 L560 214" stroke="#5A5A5A" stroke-width="1.4" marker-end="url(#wf-arrow)"/>
+
+  <!-- found branch -->
+  <text x="576" y="42" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">e⁺ &#183; THE PALLET IS HERE</text>
+  <rect x="576" y="52" width="392" height="76" rx="2" fill="#fff" stroke="#111"/>
+  <circle cx="626" cy="90" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+  <text x="626" y="94" font-size="10.5" text-anchor="middle" fill="#111" font-weight="600">(w₂,e⁺)</text>
+  <text x="676" y="86" font-size="10.5" fill="#5A5A5A">K</text>
+  <text x="686" y="89" font-size="8" fill="#5A5A5A">r₁</text>
+  <text x="694" y="86" font-size="10.5" fill="#5A5A5A">P holds &#8212; pickup_r1_bay2 now applicable</text>
+  <text x="676" y="106" font-size="10.5" fill="#5A5A5A">6 more actions to the dock</text>
+
+  <!-- empty branch -->
+  <text x="576" y="196" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">e⁻ &#183; THE BAY IS EMPTY</text>
+  <rect x="576" y="206" width="392" height="90" rx="2" fill="#fff" stroke="#111"/>
+  <circle cx="626" cy="252" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
+  <text x="626" y="256" font-size="10.5" text-anchor="middle" fill="#111" font-weight="600">(w₃,e⁻)</text>
+  <text x="676" y="238" font-size="10.5" fill="#5A5A5A">K</text>
+  <text x="686" y="241" font-size="8" fill="#5A5A5A">r₁</text>
+  <text x="694" y="238" font-size="10.5" fill="#5A5A5A">Q holds &#8212; but pickup_r1_bay2 is not</text>
+  <text x="676" y="256" font-size="10.5" fill="#5A5A5A">back to the lane, into bay3, and 6 more</text>
+  <text x="676" y="276" font-size="10.5" fill="#C8102E">three moves the building charges for a wrong guess</text>
+
+  <line x1="30" y1="312" x2="968" y2="312" stroke="#D6D6D6"/>
+  <text x="30" y="332" font-size="11" fill="#5A5A5A">A sequence must name its next action before the split, and each choice is inapplicable in one of the two halves. The solution is the pair of continuations.</text>
+</svg>
+      </div>
+      <div class="fig-cap">
+        <b>The split is what makes the plan a policy.</b> Before the
+        inspection the state designates both worlds and the pick-up is
+        applicable at neither, because its modal conjunct fails. After it,
+        each branch designates one world and a different continuation is
+        applicable in each. The branch taken at run time is chosen by
+        perception, from the occupancy grid the robot has measured.
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════════ THE FLOOR -->
 <section>
   <div class="container">
@@ -867,7 +1055,7 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
       In the zone graph each aisle is consequently a pocket with a single mouth
       on the service lane, there is no edge between bay&#8202;2 and bay&#8202;3,
       and an incorrect first inspection costs three moves. This follows from the
-      geometry of the world rather than from a simplification of it.
+      geometry of the world, and not from a simplification of it.
     </p>
 
     <table class="data">
@@ -890,7 +1078,7 @@ inspect_r1_bay2                 <span class="c">[semi-private-sensing]</span>
     <p>
       The robot begins at shipping with an empty occupancy grid. The service
       lane is not occupied; it is <em>unobserved</em>, and the &micro;-calculus
-      planner excludes unobserved cells from the least fixed point rather than
+      planner excludes unobserved cells from the least fixed point instead of
       treating them as free. Early in a run the correct answer to a query for a
       route to the lane is therefore that no route is known to exist, and the
       planner returns that:
@@ -964,8 +1152,8 @@ to lane: at (0.36, -8.83), asked 'frontier', 24 legs; <span class="k">285 cells<
       (&#215;18, then &#215;11) while the number of worlds is unchanged at two.
       Each additional agent contributes a further accessibility relation over
       those worlds, and evaluating a formula about any agent's knowledge
-      requires checking every relation, so the growth is in the model checking
-      rather than in the size of the state space.
+      requires checking every relation, so the growth is in the model checking,
+      not in the size of the state space.
     </p>
 
     <h4>When the planner selects an announcement, and when it does not</h4>

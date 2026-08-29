@@ -53,8 +53,26 @@ html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
   font-weight:400;line-height:1.6}
-.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
-.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
 
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
@@ -327,6 +345,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
             <a href="demo.html" aria-current="page">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
             <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
           </div>
           <hr>
           <h6>Reports (PDF)</h6>
@@ -393,7 +412,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     </figure>
 
     <p>
-      The steps are chosen to separate the two questions rather than to show a
+      The steps are chosen to separate the two questions and not to show a
       robot getting somewhere:
     </p>
 
@@ -448,7 +467,7 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
     </p>
 
     <p>
-      The third asks for knowledge rather than arrival. Between the two worlds
+      The third asks for knowledge, not arrival. Between the two worlds
       the agent holds possible the target lies in different rooms, so while
       <span class="mono-inline">disputed=804</span> the agent cannot come to know it has arrived,
       however easily it can stand on the cell, and what comes back is
@@ -460,6 +479,152 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
 </section>
 
 <!-- ═══════════════════════════════════════════════ DRIVING IT -->
+<!-- ═══════════════════════════════════════════════ THE FIXED POINT -->
+<section>
+  <div class="container">
+    <p class="sec-label">The fixed point</p>
+    <h3>What <span class="mono-inline">goal=0</span> means, written out</h3>
+
+    <p>
+      The three log lines above differ in the sets the fixed point was taken
+      over, and those sets are what the planner computes. Let \(C\) be the cells
+      of the grid and let \(R \subseteq C \times C\) relate a cell to the cells
+      a step can reach from it. Write \(\mathit{Free}\) for the cells observed
+      and settled free, \(\mathit{Goal}\) for the cells of the queried zone that
+      are in \(\mathit{Free}\), and take the least fixed point
+    </p>
+
+    <div class="math-block">
+      \[
+        \mu X.\;
+        \bigl( \mathit{Goal} \;\cup\;
+               \{\, c \in \mathit{Free} \;:\; \exists c' \in X,\; (c,c') \in R \,\}
+        \bigr)
+      \]
+    </div>
+
+    <p>
+      &#8212; the smallest set containing the goal cells and closed under taking
+      a free predecessor. A route exists exactly when the robot's own cell lies
+      in it. The operator is monotone in \(X\) over the powerset lattice of
+      \(C\), so the fixed point exists and the iteration terminates; the
+      planner's <span class="mono-inline">region</span> figure is its
+      cardinality.
+    </p>
+
+    <h4>Why an empty goal set empties the whole region</h4>
+
+    <p>
+      The first query answers \(\mathit{Goal} = \emptyset\), and the least fixed
+      point of an operator whose base case is empty is empty:
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathit{Goal} = \emptyset
+        \;\Longrightarrow\;
+        \mu X.\,\bigl(\emptyset \cup \{c \in \mathit{Free} : \exists c' \in X,\;(c,c') \in R\}\bigr)
+        \;=\; \emptyset .
+      \]
+    </div>
+
+    <p>
+      Nothing is unreachable in the building; the set the iteration would have
+      grown from does not exist yet. This is the whole content of
+      <span class="mono-inline">goal=0 &#8230; path=0</span> in a building whose
+      corridors are open, and it is why the honest answer to the first query is
+      that no route is <em>known</em> to exist. Treating unobserved cells as
+      free would replace \(\mathit{Free}\) with \(C \setminus
+      \mathit{Occupied}\) and return a route across floor nobody has measured.
+    </p>
+
+    <h4>The second question, and why its answer is a place to look</h4>
+
+    <p>
+      The third query asks something the first two do not. Let \(W\) be the
+      worlds the agent holds possible and \(\mathit{Goal}_w\) the goal cells in
+      world \(w\). Arrival is a fact about one world; knowing one has arrived is
+      a fact about all of them, so the target set is the intersection
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathit{Goal}^{K} \;=\; \bigcap_{w \in W} \mathit{Goal}_w ,
+        \qquad
+        \mathit{Goal}^{K} = \emptyset \text{ whenever the worlds disagree.}
+      \]
+    </div>
+
+    <p>
+      With <span class="mono-inline">disputed=804</span> the two worlds place
+      the target in different rooms, the intersection is empty, and by the
+      argument above the winning region is empty as well. No amount of driving
+      changes that, because driving does not change \(W\). What the planner
+      returns instead is a cell from which a sensing action would collapse
+      \(W\), which is why the answer to a query about knowledge is a place to
+      look and not a place to stand.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">The same query, three answers</span>
+        <span class="note">the sets the fixed point was taken over</span>
+      </div>
+      <div class="fig-body">
+<svg class="graph" viewBox="0 0 1000 300" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="Three queries over the same zone. In the first the goal set is empty because nothing in the room has been observed, so the least fixed point is empty. In the second an observation makes 356 cells free and a route appears. In the third the target set is the intersection over the worlds the agent holds possible, which is empty while they disagree, and the planner returns somewhere to sense instead.">
+  <rect x="8" y="8" width="984" height="284" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="30" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">ONE ZONE, THREE QUERIES &#183; what differs is what was known when each was asked</text>
+
+  <g font-size="10.5">
+    <!-- 1 -->
+    <rect x="30" y="52" width="300" height="196" rx="2" fill="#fff" stroke="#111"/>
+    <text x="180" y="76" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">1 &#183; nobody has looked</text>
+    <circle cx="180" cy="132" r="40" fill="#fff" stroke="#D6D6D6" stroke-dasharray="4 3"/>
+    <text x="180" y="130" font-size="10" text-anchor="middle" fill="#5A5A5A">the zone,</text>
+    <text x="180" y="144" font-size="10" text-anchor="middle" fill="#5A5A5A">unobserved</text>
+    <text x="180" y="196" text-anchor="middle" fill="#C8102E">Goal = &#8709;</text>
+    <text x="180" y="216" text-anchor="middle" fill="#5A5A5A">region = 0, path = 0</text>
+    <text x="180" y="236" font-size="10" text-anchor="middle" fill="#5A5A5A">no route is known to exist</text>
+
+    <!-- 2 -->
+    <rect x="350" y="52" width="300" height="196" rx="2" fill="#fff" stroke="#111"/>
+    <text x="500" y="76" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">2 &#183; after one observation</text>
+    <circle cx="500" cy="132" r="40" fill="#F4F4F4" stroke="#111"/>
+    <text x="500" y="130" font-size="10" text-anchor="middle" fill="#111">356 cells</text>
+    <text x="500" y="144" font-size="10" text-anchor="middle" fill="#111">known free</text>
+    <text x="500" y="196" text-anchor="middle" fill="#111" font-weight="600">Goal &#8800; &#8709;</text>
+    <text x="500" y="216" text-anchor="middle" fill="#5A5A5A">region = 24 907, path = 113</text>
+    <text x="500" y="236" font-size="10" text-anchor="middle" fill="#5A5A5A">the walls did not move</text>
+
+    <!-- 3 -->
+    <rect x="670" y="52" width="300" height="196" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.5"/>
+    <text x="820" y="76" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">3 &#183; asking to <tspan font-style="italic">know</tspan> it arrived</text>
+    <circle cx="784" cy="132" r="36" fill="#fff" stroke="#111"/>
+    <text x="768" y="136" font-size="10" text-anchor="middle" fill="#5A5A5A">world A</text>
+    <circle cx="856" cy="132" r="36" fill="#fff" stroke="#111"/>
+    <text x="872" y="136" font-size="10" text-anchor="middle" fill="#5A5A5A">world B</text>
+    <text x="820" y="196" text-anchor="middle" fill="#C8102E">Goal&#7488; = &#8745;&#8202;Goal&#8339; = &#8709;</text>
+    <text x="820" y="216" text-anchor="middle" fill="#5A5A5A">disputed = 804</text>
+    <text x="820" y="236" font-size="10" text-anchor="middle" fill="#5A5A5A">what comes back is where to sense</text>
+  </g>
+
+  <line x1="30" y1="266" x2="968" y2="266" stroke="#D6D6D6"/>
+  <text x="30" y="286" font-size="11" fill="#5A5A5A">The first two differ in what the robot has measured; the third differs in how many worlds it still holds possible. Only the third is answered by looking rather than by driving.</text>
+</svg>
+      </div>
+      <div class="fig-cap">
+        <b>An empty base case makes an empty fixed point.</b> The first query
+        fails because \(\mathit{Goal}\) is empty, the second succeeds because an
+        observation filled it, and the third fails for a different reason
+        entirely: its target set is an intersection over the worlds the agent
+        holds possible, and those worlds disagree.
+      </div>
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="container">
     <p class="sec-label">Driving it</p>
@@ -478,7 +643,7 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
     </p>
 
     <p>
-      Measured against Gazebo's own poses for the robot rather than against its
+      Measured against Gazebo's own poses for the robot and not against its
       odometry: wheel odometry keeps integrating while a base is held
       against a wall, and so cannot answer this question at all:
     </p>

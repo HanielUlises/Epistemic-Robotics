@@ -53,8 +53,26 @@ html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
   font-weight:400;line-height:1.6}
-.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
-.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
 
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
@@ -318,6 +336,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
             <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
             <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
           </div>
           <hr>
           <h6>Reports (PDF)</h6>
@@ -406,7 +425,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 <section>
   <div class="container">
     <p class="sec-label">The policy on the wire</p>
-    <h3>One message type, extended rather than replaced</h3>
+    <h3>One message type, extended and not replaced</h3>
 
     <p>
       Two interfaces stand between the planner and the executor and both take a flat
@@ -432,9 +451,8 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       A classical planner sets none of them, and such a plan is read exactly the way
       PlanSys2 writes it. So every plan is a policy here, and the distinction that
       matters is not classical-versus-epistemic but whether the policy branches.
-      That reading is plan-wide rather than per item: once any node names a
-      continuation, a node without one <em class="term">ends its branch</em> rather
-      than falling through to the next item, which would be a different plan
+      That reading is plan-wide and not per item: once any node names a
+      continuation, a node without one <em class="term">ends its branch</em> instead of falling through to the next item, which would be a different plan
       entirely.
     </p>
 
@@ -580,7 +598,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
         <tr>
           <td><span class="mono-inline">CheckEpistemicGoal</span></td>
           <td>the executor's goal check</td>
-          <td>asks whether the goal holds, rather than assuming a leaf implies it</td>
+          <td>asks whether the goal holds, and does not assume assuming a leaf implies it</td>
         </tr>
       </tbody>
     </table>
@@ -589,13 +607,13 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       Two of these deserve their reasoning stated. <b>An action changes what agents
       know by more than its own effects</b>. A public announcement informs everyone
       who was listening, and an observation that finds nothing still rules worlds
-      out, which is why the update is a distinct node rather than part of applying
+      out, which is why the update is a distinct node and not part of applying
       an effect.
     </p>
 
     <p>
-      And <b>the switch fails on an outcome the policy does not list</b>, rather than
-      defaulting to a branch. Every branch was built for a different belief; running
+      And <b>the switch fails on an outcome the policy does not list</b>, and does not
+      default to a branch. Every branch was built for a different belief; running
       one anyway is a robot acting confidently on a belief nothing supports. The
       failure propagates to the executor, whose answer to a failed plan is to
       replan, from the state that actually resulted.
@@ -637,8 +655,8 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     </table>
 
     <p>
-      It advances by executed actions rather than by watching the world, which is
-      what makes it a belief state rather than a log. When it disagrees with what the
+      It advances by executed actions and not by watching the world, which is
+      what makes it a belief state and not a log. When it disagrees with what the
       robot observed, the disagreement surfaces at
       <span class="mono-inline">apply_action</span> as an outcome the model cannot
       account for, a reason to replan, not to overwrite the model quietly.
@@ -716,7 +734,7 @@ check_formula  (Kw B tails)          <span class="k">&#8594;</span> holds=<span 
     </table>
 
     <p>
-      The nodes reach the executor through a generic hook rather than a special case:
+      The nodes reach the executor through a generic hook and not a special case:
       a parameter naming behavior tree node libraries to load before a tree is built,
       and the plan already published on the blackboard. Twenty-four lines in the
       executor, no new dependencies, and nothing in it that knows what an epistemic
@@ -756,7 +774,7 @@ executor:
       however good it looks. The formula written by the planner is parsed back by
       the state and compared as a <em class="term">formula</em>, not as a string. The two are separate processes with separate interning, and nothing but that
       agreement connects them. And the node library is loaded exactly as the
-      executor loads it, so the extension mechanism is checked rather than assumed.
+      executor loads it, so the extension mechanism is checked.
     </p>
 
     <p>
@@ -772,8 +790,7 @@ executor:
       <p>
         The observation a sensing action produces is supplied on a port that a
         domain-specific tree binds to whatever its performer reports. Wiring that to
-        real perception, so that the branch a robot takes is chosen by its sensors rather
-        than by a model that happens to designate one world, is the next step, and
+        real perception, so that the branch a robot takes is chosen by its sensors and not by a model that happens to designate one world, is the next step, and
         the one that turns this from an architecture into a demonstration.
       </p>
     </div>

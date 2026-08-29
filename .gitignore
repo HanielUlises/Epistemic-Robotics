@@ -1,0 +1,9 @@
+
+# LaTeX build byproducts. The .tex sources and the built .pdf are tracked; the
+# intermediates the toolchain leaves beside them are not.
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc

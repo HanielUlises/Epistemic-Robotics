@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nested Epistemic Goals &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Three goals over one warehouse, differing only in where the modal operators sit. r2 knowing that r1 knows-whether is settled by the look alone; r2 knowing whether is not, and costs an announcement.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="Nested Epistemic Goals">
+<meta property="og:description" content="Three goals over one warehouse, differing only in where the modal operators sit. r2 knowing that r1 knows-whether is settled by the look alone; r2 knowing whether is not, and costs an announcement.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/nested_run.html">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-run.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gazebo and RViz side by side: the AWS small warehouse, and the map the robot has measured of it">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nested Epistemic Goals">
+<meta name="twitter:description" content="Three goals over one warehouse, differing only in where the modal operators sit. r2 knowing that r1 knows-whether is settled by the look alone; r2 knowing whether is not, and costs an announcement.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-run.jpg">
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:#fff;color:var(--black);
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+@media(max-width:560px){
+  .nav-menu{width:100%;margin:.6rem 0 0}
+  .nav-panel{left:0;right:auto;width:100%;min-width:0}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+</style>
+
+<style>
+/* Nested epistemic goals */
+/* The three-formula panel, which is the page's one recurring object: the
+   same three rows the probe writes and the video burns in, so a reader who
+   has watched the run recognises them on the page. */
+.kw-panel{border:1px solid var(--border);background:#fff;border-radius:2px;
+  margin:1.6rem 0;overflow:hidden}
+.kw-panel h6{font-family:var(--mono);font-size:.64rem;color:var(--gray);
+  padding:.6rem .95rem;border-bottom:1px solid var(--border);background:var(--panel)}
+.kw-line{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;
+  padding:.52rem .95rem;border-bottom:1px dotted var(--border);font-size:.86rem}
+.kw-line:last-child{border-bottom:none}
+.kw-line .f{font-family:var(--mono);font-size:.82rem;flex:1 1 20rem}
+.kw-line .v{font-family:var(--sg);font-size:.74rem;font-weight:600;
+  letter-spacing:.04em;width:7rem;text-align:right}
+.kw-line .v.yes{color:#111}
+.kw-line .v.no{color:var(--red)}
+.kw-line.goal{background:#F7FAFF}
+.kw-line.goal .f{color:var(--steel);font-weight:600}
+.kw-tag{font-family:var(--mono);font-size:.64rem;color:var(--steel)}
+/* Two policies side by side. They are read against each other or not at all. */
+.side{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.6rem 0}
+@media(max-width:760px){.side{grid-template-columns:1fr}}
+.side pre{margin:0;height:100%}
+.side h5{font-family:var(--sg);font-size:.78rem;font-weight:600;
+  margin-bottom:.45rem;color:#333}
+.ins{color:var(--red);font-weight:600}
+table.data td.num,table.data th.num{text-align:right;font-family:var(--sg)}
+/* The diagrams are drawn on a 1000-unit canvas, which is what the content
+   width was chosen to hold: they render very close to 1:1 and scale down with
+   the column on a narrow screen instead of forcing it to scroll sideways. */
+.fig .graph{min-width:0}
+@media(max-width:900px){.fig .graph{min-width:700px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <a href="domains.html">Domains</a>
+          <a href="execution.html">Execution</a>
+          <div class="nav-sub">
+            <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+            <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="nested_run.html" aria-current="page">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
+          </div>
+          <hr>
+          <h6>Reports (PDF)</h6>
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <div class="nav-sub">
+            <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+            <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          </div>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">EPDDL &#183; plank &#183; ALETHEIA &#183; ePlanSys &#183; Gazebo</p>
+    <h2>One warehouse, three goals, and only <em>where the operators sit</em> is different</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      The warehouse run states a mission whose goal is knowledge, and every
+      goal it states has modal depth one: some named robot must come to know
+      whether the pallet is in a given aisle. This page keeps that domain, that
+      floor and that fleet exactly, and varies one thing. Three EPDDL instances
+      are identical to the last line of their initial state and differ only in
+      the goal formula. One of the three has an operator inside another. The
+      question is whether that alone changes what the robots do, and it does:
+      two of the goals are discharged by the sensing action, the third is not
+      and the planner spends an announcement on it.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      Same world as <a href="warehouse_run.html">the warehouse run</a>: AWS
+      RoboMaker's small warehouse, three TurtleBot3 burgers, the domain in
+      <span class="mono-inline">epddl-workspace/robot-warehouse</span> and the
+      execution in <span class="mono-inline">ros2_ws/src/warehouse_demo</span>.
+      Nothing in the domain, the world or the action nodes was changed for this
+      page; the instances and one logging node were added.
+      <a class="ext-chip" href="https://github.com/HanielUlises/Epistemic-Robotics">Epistemic-Robotics</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ WHAT WAS MISSING -->
+<section>
+  <div class="container">
+    <p class="sec-label">What this is for</p>
+    <h3>What the warehouse run could not show</h3>
+
+    <p>
+      The earlier page demonstrates that a goal about knowledge forces a
+      conditional policy, and that a fleet member which never moves can still
+      be required to know something. Both are true and neither needs a nested
+      operator. Reading it back, four things it does not show stand out, and
+      they have one cause.
+    </p>
+
+    <p>
+      <strong>Every goal is depth one.</strong> Each conjunct is
+      <span class="mono-inline">[Kw. <em>i</em>] pallet-at_bay2</span> for some
+      agent. No formula in the repository asks what one agent knows about
+      another's knowledge, so nothing in the search or the execution has ever
+      been asked to distinguish the two.
+    </p>
+
+    <p>
+      <strong>The two-agent case is discharged for free.</strong>
+      <span class="mono-inline">pickup</span> is a public ontic action whose
+      precondition names the pallet's location, so the whole fleet observing r1
+      lift the pallet out of an aisle learns which aisle held it. r2's conjunct
+      is settled by the fetch, and would be settled by it whatever the goal
+      said. The three-agent instance does select an announcement, but what it
+      announces is an atom, broadcast to everyone.
+    </p>
+
+    <p>
+      <strong>The semi-private sensing is invisible in the policy.</strong>
+      The domain declares <span class="mono-inline">inspect</span> as
+      <span class="mono-inline">(:and (?i Fully) (default Partially))</span>:
+      the agent that looks learns the outcome, and the rest of the fleet learns
+      only that an inspection occurred. That distinction is in the event model
+      and has been since the domain was written. No goal ever depended on it,
+      so no plan ever exhibited it.
+    </p>
+
+    <p>
+      <strong>One goal per instance.</strong> Without two goals over one world
+      there is no controlled comparison &#8212; nothing that holds the physical
+      trace fixed and varies only the formula.
+    </p>
+
+    <p class="pull">
+      The common cause is that no goal was ever written that needed the depth.
+      Nothing below required a change to the domain, the planner, the epistemic
+      state or its formula parser.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE THREE GOALS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The three goals</p>
+    <h3>G1, G2 and G3, in the repository's own syntax</h3>
+
+    <p>
+      The three instances are generated from one text and diverge at the goal.
+      Each carries two ontic conjuncts and one modal conjunct; the ontic pair
+      is the same in all three. In EPDDL as this project writes it,
+      <span class="mono-inline">[<em>i</em>]&#8202;&#966;</span> is knowledge,
+      <span class="mono-inline">[Kw.&#8202;<em>i</em>]&#8202;&#966;</span> is
+      knowing-whether, and a formula nests by appearing where
+      <span class="mono-inline">&#966;</span> does:
+    </p>
+
+    <pre class="code"><span class="c">; G1  the control: the robot that looks is the one that has to know</span>
+(<span class="k">:goal</span> (and (at-ag r2 corridor) (at-ag r3 lane)
+           <span class="k">([Kw. r1] (pallet-at bay2))</span> ))
+
+<span class="c">; G2  depth two: r2 has to know that r1 knows whether</span>
+(<span class="k">:goal</span> (and (at-ag r2 corridor) (at-ag r3 lane)
+           <span class="k">([r2] ([Kw. r1] (pallet-at bay2)))</span> ))
+
+<span class="c">; G3  depth one again, but about the robot that never looks</span>
+(<span class="k">:goal</span> (and (at-ag r2 corridor) (at-ag r3 lane)
+           <span class="k">([Kw. r2] (pallet-at bay2))</span> ))</pre>
+
+    <p>
+      Written as formulas, and abbreviating the two ontic literals the three
+      share as \(\delta = \mathit{at}(r_2,\textit{corridor}) \wedge
+      \mathit{at}(r_3,\textit{lane})\):
+    </p>
+
+    <div class="math-block">
+      \[
+        \begin{aligned}
+          \gamma_1 &= \delta \wedge \mathit{Kw}_{r_1} P
+            &&\text{depth } 1, \text{ about the agent that looks}\\
+          \gamma_2 &= \delta \wedge K_{r_2}\,\mathit{Kw}_{r_1} P
+            &&\text{depth } 2\\
+          \gamma_3 &= \delta \wedge \mathit{Kw}_{r_2} P
+            &&\text{depth } 1, \text{ about an agent that does not}
+        \end{aligned}
+      \]
+    </div>
+
+    <p>
+      G3 is not a weaker G2 and G2 is not a stronger G3; they are independent.
+      \(K_{r_2}\mathit{Kw}_{r_1}P\) says r2 has established that the
+      question is settled for r1, and says nothing about the answer;
+      \(\mathit{Kw}_{r_2}P\) says r2 has the answer, and says nothing about
+      r1. Neither entails the other. In this domain the
+      first is obtainable by watching and the second is not. What decides that is
+      the observability declared on the sensing action.
+    </p>
+
+    <h4>Why <span class="mono-inline">delivered</span> is not in any of them</h4>
+
+    <p>
+      The warehouse mission's goal conjunct
+      <span class="mono-inline">(delivered)</span> is deliberately absent. Its
+      presence is what makes the two formulas above indistinguishable: the
+      fetch itself broadcasts the pallet's location, so both are satisfied as a
+      side effect whatever was asked for. This was
+      checked.
+      Adding <span class="mono-inline">(delivered)</span> to all three goals and
+      re-solving yields policies of twenty-one actions in which G1 and G2 are
+      identical and both contain announcements the goal does not need, and the
+      contrast collapses into which announcement is spent where. The instances
+      here ask only who must know what, and the physical work is set by the two
+      ontic conjuncts.
+    </p>
+
+    <p class="note">
+      Those two conjuncts &#8212; <span class="mono-inline">(at-ag r2 corridor)</span>
+      and <span class="mono-inline">(at-ag r3 lane)</span> &#8212; are there so
+      that the fleet is visibly a fleet, and they are identical in all three
+      instances, so they cannot be what makes the policies differ.
+      <span class="mono-inline">go</span> is public ontic and reports positions,
+      not pallets: every robot finishes the run exactly as uncertain about which
+      aisle holds the pallet as it began. Sending r2 to the corridor and not to
+      the lane is not arbitrary either. Parked on the lane, r2 is one move from
+      bay&#8202;3, and the planner then discovers that the cheapest way to
+      satisfy G3 is to let r2 look for itself &#8212; a correct plan that
+      answers a different question. From the corridor a bay is three moves
+      away, and being told is cheaper than going.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ THE SEMANTICS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The semantics</p>
+    <h3>Why watching settles one formula and not the other</h3>
+
+    <p>
+      The claim of this page is a semantic one and is worth stating as such
+      before it is measured. Write \(P\) for
+      <span class="mono-inline">pallet-at_bay2</span> and \(Q\) for
+      <span class="mono-inline">pallet-at_bay3</span>. An epistemic state is a
+      pointed Kripke model \(\mathcal{M} = \langle W, \{\sim_i\}_{i \in
+      \mathcal{A}}, V \rangle\) with a set of designated worlds, each
+      \(\sim_i\) an equivalence relation, and
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathcal{M},w \models K_i\varphi
+          \iff \mathcal{M},v \models \varphi \text{ for every } v \sim_i w,
+        \qquad
+        \mathit{Kw}_i\,\varphi \;:=\; K_i\varphi \vee K_i\neg\varphi .
+      \]
+    </div>
+
+    <p>
+      The initial state is \(\mathcal{M}_0\) with \(W_0 = \{w_2, w_3\}\),
+      \(V(w_2) \ni P\), \(V(w_3) \ni Q\), both designated, and
+      \(\sim_i \;=\; W_0 \times W_0\) for every agent: it is common knowledge
+      that the pallet is in exactly one aisle, and nobody knows which. In this
+      notation the three goals of the previous section are
+    </p>
+
+    <div class="math-block">
+      \[
+        \gamma_1 = \mathit{Kw}_{r_1} P,
+        \qquad
+        \gamma_2 = K_{r_2}\,\mathit{Kw}_{r_1} P,
+        \qquad
+        \gamma_3 = \mathit{Kw}_{r_2} P,
+      \]
+    </div>
+
+    <p>
+      each conjoined with the same two ontic literals
+      \(\mathit{at}(r_2,\textit{corridor}) \wedge \mathit{at}(r_3,\textit{lane})\),
+      which are common knowledge throughout and play no part in what follows.
+      \(\gamma_2\) is the only formula in this repository of modal depth two.
+    </p>
+
+    <h4>The event model of a semi-private look</h4>
+
+    <p>
+      <span class="mono-inline">inspect</span> is an event model
+      \(\mathcal{E} = \langle E, \{\sim_i\}, \mathsf{pre}, \mathsf{post}\rangle\)
+      with one event per outcome, both designated, and no postconditions
+      &#8212; looking changes what is known, not what is the case:
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathsf{pre}(e^{+}) = \mathit{at}(r_1,\textit{bay2}) \wedge P \wedge \neg\mathit{Kw}_{r_1}P,
+        \qquad
+        \mathsf{pre}(e^{-}) = \mathit{at}(r_1,\textit{bay2}) \wedge \neg P \wedge \neg\mathit{Kw}_{r_1}P .
+      \]
+    </div>
+
+    <p>
+      The observability declaration is the whole of the difference. The acting
+      agent is <span class="mono-inline">Fully</span> and everyone else is
+      <span class="mono-inline">Partially</span>, which in the action-type
+      library are the relations
+    </p>
+
+    <div class="math-block">
+      \[
+        {\sim_{r_1}} \;=\; \{(e^{+},e^{+}),\,(e^{-},e^{-})\},
+        \qquad
+        {\sim_{j}} \;=\; E \times E \quad (j \neq r_1).
+      \]
+    </div>
+
+    <p>
+      The product update \(\mathcal{M} \otimes \mathcal{E}\) has worlds
+      \(\{(w,e) : \mathcal{M},w \models \mathsf{pre}(e)\}\), valuation inherited
+      from \(w\), and
+      \((w,e) \sim_i (v,f) \iff w \sim_i v \text{ and } e \sim_i f\).
+      Applying it to \(\mathcal{M}_0\) at the point where r1 stands in
+      bay&#8202;2, exactly \((w_2,e^{+})\) and \((w_3,e^{-})\) survive, and the
+      relations separate:
+    </p>
+
+    <div class="math-block">
+      \[
+        (w_2,e^{+}) \not\sim_{r_1} (w_3,e^{-}),
+        \qquad
+        (w_2,e^{+}) \sim_{r_2} (w_3,e^{-}) .
+      \]
+    </div>
+
+    <p>
+      r1's relation is cut because \(e^{+} \not\sim_{r_1} e^{-}\); r2's survives
+      because \(w_2 \sim_{r_2} w_3\) and \(e^{+} \sim_{r_2} e^{-}\) both hold.
+      Everything else follows.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">The product update at the inspection</span>
+        <span class="note">M<sub>0</sub> &#8855; E &#8594; M<sub>1</sub></span>
+      </div>
+      <div class="fig-body">
+<svg class="graph" viewBox="0 0 1000 430" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="The initial two-world model, the two-event model of the semi-private inspection, and their product. In the product r1's accessibility relation between the two worlds is cut and r2's is not, so r1 knows which aisle holds the pallet and r2 knows only that r1 knows.">
+  <defs>
+    <marker id="nx-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5A5A5A"/>
+    </marker>
+  </defs>
+
+  <!-- M0 -->
+  <rect x="8" y="30" width="252" height="230" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="20" y="20" font-size="11.5" fill="#C8102E" font-family="'Courier New',monospace">M₀ — nobody knows which</text>
+  <circle cx="86" cy="96" r="34" fill="#fff" stroke="#111" stroke-width="1.6"/>
+  <text x="86" y="93" font-size="13" text-anchor="middle" fill="#111" font-weight="600">w₂</text>
+  <text x="86" y="109" font-size="10.5" text-anchor="middle" fill="#5A5A5A">P</text>
+  <circle cx="184" cy="196" r="34" fill="#fff" stroke="#111" stroke-width="1.6"/>
+  <text x="184" y="193" font-size="13" text-anchor="middle" fill="#111" font-weight="600">w₃</text>
+  <text x="184" y="209" font-size="10.5" text-anchor="middle" fill="#5A5A5A">Q</text>
+  <line x1="110" y1="120" x2="160" y2="172" stroke="#5A5A5A" stroke-width="1.6"/>
+  <rect x="94" y="133" width="82" height="18" fill="#FAFAFA"/>
+  <text x="135" y="146" font-size="11" text-anchor="middle" fill="#5A5A5A">r₁, r₂, r₃</text>
+  <text x="134" y="243" font-size="10.5" text-anchor="middle" fill="#5A5A5A">both designated</text>
+
+  <!-- ⊗ -->
+  <text x="288" y="152" font-size="24" text-anchor="middle" fill="#111">&#8855;</text>
+
+  <!-- E -->
+  <rect x="318" y="30" width="252" height="230" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="330" y="20" font-size="11.5" fill="#C8102E" font-family="'Courier New',monospace">E — inspect_r1_bay2</text>
+  <circle cx="396" cy="96" r="34" fill="#fff" stroke="#1A52A0" stroke-width="1.6"/>
+  <text x="396" y="93" font-size="13" text-anchor="middle" fill="#1A52A0" font-weight="600">e⁺</text>
+  <text x="396" y="109" font-size="10" text-anchor="middle" fill="#5A5A5A">pre: P</text>
+  <circle cx="494" cy="196" r="34" fill="#fff" stroke="#1A52A0" stroke-width="1.6"/>
+  <text x="494" y="193" font-size="13" text-anchor="middle" fill="#1A52A0" font-weight="600">e⁻</text>
+  <text x="494" y="209" font-size="10" text-anchor="middle" fill="#5A5A5A">pre: ¬P</text>
+  <line x1="420" y1="120" x2="470" y2="172" stroke="#5A5A5A" stroke-width="1.6"/>
+  <rect x="412" y="135" width="66" height="18" fill="#FAFAFA"/>
+  <text x="445" y="148" font-size="11" text-anchor="middle" fill="#5A5A5A">r₂, r₃</text>
+  <text x="444" y="243" font-size="10.5" text-anchor="middle" fill="#5A5A5A">r₁ relates each event only to itself</text>
+
+  <!-- = -->
+  <text x="596" y="150" font-size="20" text-anchor="middle" fill="#111">=</text>
+
+  <!-- M1 -->
+  <rect x="624" y="30" width="368" height="230" rx="3" fill="#fff" stroke="#C8102E"/>
+  <text x="636" y="20" font-size="11.5" fill="#C8102E" font-family="'Courier New',monospace">M₁ — r₁ knows, r₂ knows that r₁ knows</text>
+  <circle cx="710" cy="96" r="38" fill="#fff" stroke="#111" stroke-width="1.6"/>
+  <text x="710" y="93" font-size="12.5" text-anchor="middle" fill="#111" font-weight="600">(w₂,e⁺)</text>
+  <text x="710" y="109" font-size="10.5" text-anchor="middle" fill="#5A5A5A">P</text>
+  <circle cx="836" cy="196" r="38" fill="#fff" stroke="#111" stroke-width="1.6"/>
+  <text x="836" y="193" font-size="12.5" text-anchor="middle" fill="#111" font-weight="600">(w₃,e⁻)</text>
+  <text x="836" y="209" font-size="10.5" text-anchor="middle" fill="#5A5A5A">Q</text>
+  <line x1="738" y1="123" x2="808" y2="169" stroke="#1A52A0" stroke-width="2"/>
+  <rect x="742" y="136" width="66" height="18" fill="#fff"/>
+  <text x="775" y="149" font-size="11.5" text-anchor="middle" fill="#1A52A0" font-weight="600">r₂, r₃</text>
+  <line x1="700" y1="140" x2="758" y2="86" stroke="#C8102E" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <line x1="700" y1="86" x2="758" y2="140" stroke="#C8102E" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="900" y="96" font-size="11" fill="#C8102E">r₁ cut</text>
+  <text x="808" y="248" font-size="10.5" text-anchor="middle" fill="#5A5A5A">the branch decides which world is actual</text>
+
+  <!-- the readings -->
+  <line x1="8" y1="292" x2="992" y2="292" stroke="#D6D6D6"/>
+  <text x="8" y="316" font-size="11.5" fill="#C8102E" font-family="'Courier New',monospace">WHAT HOLDS IN M₁</text>
+
+  <text x="8" y="346" font-size="13" fill="#111">M₁ ⊨ Kw<tspan font-size="10" dy="3">r₁</tspan><tspan dy="-3">&#8202;P</tspan></text>
+  <text x="150" y="346" font-size="12" fill="#5A5A5A">each r₁-class is a singleton, so r₁ has the answer</text>
+  <text x="836" y="346" font-size="12.5" fill="#111" font-weight="600">γ₁ HOLDS</text>
+
+  <text x="8" y="374" font-size="13" fill="#1A52A0" font-weight="600">M₁ ⊨ K<tspan font-size="10" dy="3">r₂</tspan><tspan dy="-3">&#8202;Kw</tspan><tspan font-size="10" dy="3">r₁</tspan><tspan dy="-3">&#8202;P</tspan></text>
+  <text x="150" y="374" font-size="12" fill="#5A5A5A">both r₂-accessible worlds are ones in which r₁ has it</text>
+  <text x="836" y="374" font-size="12.5" fill="#111" font-weight="600">γ₂ HOLDS</text>
+
+  <text x="8" y="402" font-size="13" fill="#111">M₁ ⊭ Kw<tspan font-size="10" dy="3">r₂</tspan><tspan dy="-3">&#8202;P</tspan></text>
+  <text x="150" y="402" font-size="12" fill="#5A5A5A">the r₂-class contains one P-world and one ¬P-world</text>
+  <text x="836" y="402" font-size="12.5" fill="#C8102E" font-weight="600">γ₃ FAILS</text>
+</svg>
+      </div>
+      <div class="fig-cap">
+        <b>The inspection cuts one relation and leaves the other.</b> Both
+        events leave r1 knowing whether, so every world r2 still considers
+        possible is one in which the question is settled for r1 and
+        \(\gamma_2\) holds. The two events disagree about \(P\), so r2's own
+        equivalence class spans a \(P\)-world and a \(\neg P\)-world and
+        \(\gamma_3\) fails. Seeing that a question was answered is not seeing
+        the answer.
+      </div>
+    </div>
+
+    <p>
+      What restores \(\gamma_3\) is a public event whose precondition entails
+      the answer. On the branch where bay&#8202;2 came back empty the actual
+      world is \((w_3,e^{-})\), r1 knows \(Q\), and the announcement
+      <span class="mono-inline">report-pallet-at_r1_bay3</span> is the public
+      event with \(\mathsf{pre} = K_{r_1}Q\) and \({\sim_i} = \mathit{id}\) for
+      every \(i\). Its product update deletes \((w_2,e^{+})\), leaving one
+      world, and then
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathcal{M}_2 \models K_{r_2} Q
+        \;\Longrightarrow\;
+        \mathcal{M}_2 \models K_{r_2} \neg P
+        \;\Longrightarrow\;
+        \mathcal{M}_2 \models \mathit{Kw}_{r_2} P = \gamma_3 ,
+      \]
+    </div>
+
+    <p>
+      the first implication by the common knowledge that exactly one aisle
+      holds the pallet. This is the step that costs the extra action, and the
+      three and a half seconds between \(\gamma_2\) becoming true and
+      \(\gamma_3\) becoming true in the recorded G3 run are the interval
+      between the two updates.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ WHAT THE PLANNER DOES -->
+<section>
+  <div class="container">
+    <p class="sec-label">The policies</p>
+    <h3>Two of the three are the same policy; the third pays for an announcement</h3>
+
+    <p>
+      Each instance is ground by <span class="mono-inline">plank</span> and
+      solved by ALETHEIA under AO*, and the returned policy is validated by the
+      planner's own checker against the model plank exported. The three tasks
+      are the same size in every respect that is not the goal: 76 atoms, 198
+      ground actions, three agents and two designated worlds.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>Goal</th><th>Formula</th><th class="num">Modal depth</th>
+            <th class="num">Plan depth</th><th class="num">Expanded</th>
+            <th class="num">Actions</th><th>Announcement</th>
+            <th>Does the look suffice?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>G1</td><td><span class="mono-inline">[Kw. r1] P</span></td>
+            <td class="num">1</td><td class="num">6</td><td class="num">3&#8202;952</td>
+            <td class="num">6</td><td>no</td><td>yes</td></tr>
+        <tr><td><strong>G2</strong></td>
+            <td><span class="mono-inline">[r2] [Kw. r1] P</span></td>
+            <td class="num"><strong>2</strong></td><td class="num">6</td>
+            <td class="num">3&#8202;952</td><td class="num">6</td>
+            <td>no</td><td><strong>yes</strong></td></tr>
+        <tr><td><strong>G3</strong></td>
+            <td><span class="mono-inline">[Kw. r2] P</span></td>
+            <td class="num">1</td><td class="num">7</td>
+            <td class="num">8&#8202;543</td><td class="num">8</td>
+            <td><strong>yes</strong></td><td><strong>no</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      G1 and G2 are solved by the same six-action policy \(\pi\), expanding
+      the same 3&#8202;952 nodes. That is the result for G2, and not a failure
+      to find one: the deeper formula is discharged by the same sensing action
+      that discharges the shallow one, and costs nothing beyond it. G3 is shallower
+      and costs more.
+    </p>
+
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">The two policies, and what the executor runs</span>
+        <span class="note">AO* solution &#8594; behaviour tree</span>
+      </div>
+      <div class="fig-body">
+<svg class="graph" viewBox="0 0 1000 560" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="The G2 and G3 policies side by side. Both share five drives and one semi-private inspection, then branch on the observed event. G2's branches are both leaves; G3 adds one public action on each branch before its leaves. Below, the behaviour tree the executor builds from a policy node.">
+  <defs>
+    <marker id="pl-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5A5A5A"/>
+    </marker>
+  </defs>
+
+  <!-- the shared spine -->
+  <rect x="8" y="8" width="984" height="96" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="20" y="28" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">IDENTICAL IN BOTH POLICIES &#183; five public-ontic drives, then one semi-private look</text>
+  <g font-size="10.5">
+    <rect x="24"  y="40" width="150" height="30" rx="2" fill="#fff" stroke="#111"/>
+    <text x="99"  y="59" font-size="9.5" text-anchor="middle" fill="#111">go r₂ dock_north→corridor</text>
+    <rect x="186" y="40" width="150" height="30" rx="2" fill="#fff" stroke="#111"/>
+    <text x="261" y="59" font-size="9.5" text-anchor="middle" fill="#111">go r₃ corridor→dock_south</text>
+    <rect x="348" y="40" width="128" height="30" rx="2" fill="#fff" stroke="#111"/>
+    <text x="412" y="59" text-anchor="middle" fill="#111">go r₃ dock_south→lane</text>
+    <rect x="488" y="40" width="128" height="30" rx="2" fill="#fff" stroke="#111"/>
+    <text x="552" y="59" text-anchor="middle" fill="#111">go r₁ dock_south→lane</text>
+    <rect x="628" y="40" width="112" height="30" rx="2" fill="#fff" stroke="#111"/>
+    <text x="684" y="59" text-anchor="middle" fill="#111">go r₁ lane→bay2</text>
+    <rect x="752" y="40" width="216" height="30" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.6"/>
+    <text x="860" y="53" font-size="11" text-anchor="middle" fill="#C8102E" font-weight="600">inspect r₁ bay2</text>
+    <text x="860" y="65" font-size="9" text-anchor="middle" fill="#5A5A5A">semi-private-sensing, two events</text>
+  </g>
+  <text x="500" y="88" font-size="10.5" text-anchor="middle" fill="#5A5A5A">the fleet observes every one of these; only the last one's outcome is private to r₁</text>
+
+  <path d="M860 70 L860 118 L300 118 L300 146" fill="none" stroke="#5A5A5A"
+        stroke-width="1.3" marker-end="url(#pl-arrow)"/>
+  <path d="M860 70 L860 118 L740 118 L740 146" fill="none" stroke="#5A5A5A"
+        stroke-width="1.3" marker-end="url(#pl-arrow)"/>
+
+  <!-- G2 -->
+  <rect x="8" y="146" width="480" height="248" rx="3" fill="#fff" stroke="#D6D6D6"/>
+  <text x="24" y="170" font-size="12.5" fill="#111" font-weight="600">G2 &#183; γ₂ = K<tspan font-size="9.5" dy="3">r₂</tspan><tspan dy="-3">&#8202;Kw</tspan><tspan font-size="9.5" dy="3">r₁</tspan><tspan dy="-3">&#8202;P</tspan></text>
+  <text x="330" y="170" font-size="11" fill="#5A5A5A">6 actions &#183; 3 952 expanded</text>
+
+  <line x1="248" y1="184" x2="130" y2="214" stroke="#5A5A5A" stroke-width="1.2"/>
+  <line x1="248" y1="184" x2="366" y2="214" stroke="#5A5A5A" stroke-width="1.2"/>
+  <rect x="52" y="216" width="156" height="26" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+  <text x="130" y="233" font-size="10.5" text-anchor="middle" fill="#333">observed e-inspect-empty</text>
+  <rect x="288" y="216" width="156" height="26" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+  <text x="366" y="233" font-size="10.5" text-anchor="middle" fill="#333">observed e-inspect-found</text>
+
+  <rect x="66" y="268" width="128" height="44" rx="2" fill="#fff" stroke="#111"/>
+  <text x="130" y="288" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">γ₂ holds</text>
+  <text x="130" y="302" font-size="9.5" text-anchor="middle" fill="#111">leaf — nothing to do</text>
+  <rect x="302" y="268" width="128" height="44" rx="2" fill="#fff" stroke="#111"/>
+  <text x="366" y="288" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">γ₂ holds</text>
+  <text x="366" y="302" font-size="9.5" text-anchor="middle" fill="#111">leaf — nothing to do</text>
+  <line x1="130" y1="242" x2="130" y2="266" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <line x1="366" y1="242" x2="366" y2="266" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <text x="248" y="344" font-size="11" text-anchor="middle" fill="#5A5A5A">The look discharges the goal on both branches.</text>
+  <text x="248" y="362" font-size="11" text-anchor="middle" fill="#5A5A5A">Both announcements are available and neither is spent.</text>
+
+  <!-- G3 -->
+  <rect x="512" y="146" width="480" height="248" rx="3" fill="#fff" stroke="#C8102E"/>
+  <text x="528" y="170" font-size="12.5" fill="#111" font-weight="600">G3 &#183; γ₃ = Kw<tspan font-size="9.5" dy="3">r₂</tspan><tspan dy="-3">&#8202;P</tspan></text>
+  <text x="828" y="170" font-size="11" fill="#5A5A5A">8 actions &#183; 8 543 expanded</text>
+
+  <line x1="752" y1="184" x2="634" y2="214" stroke="#5A5A5A" stroke-width="1.2"/>
+  <line x1="752" y1="184" x2="870" y2="214" stroke="#5A5A5A" stroke-width="1.2"/>
+  <rect x="556" y="216" width="156" height="26" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+  <text x="634" y="233" font-size="10.5" text-anchor="middle" fill="#333">observed e-inspect-empty</text>
+  <rect x="792" y="216" width="156" height="26" rx="2" fill="#F4F4F4" stroke="#D6D6D6"/>
+  <text x="870" y="233" font-size="10.5" text-anchor="middle" fill="#333">observed e-inspect-found</text>
+
+  <rect x="548" y="256" width="172" height="40" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.6"/>
+  <text x="634" y="272" font-size="11" text-anchor="middle" fill="#C8102E" font-weight="600">report-pallet-at r₁ bay3</text>
+  <text x="634" y="286" font-size="9" text-anchor="middle" fill="#5A5A5A">public announcement, pre = K<tspan font-size="7" dy="2">r₁</tspan><tspan dy="-2">&#8202;Q</tspan></text>
+  <rect x="786" y="256" width="172" height="40" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.6"/>
+  <text x="872" y="272" font-size="11" text-anchor="middle" fill="#C8102E" font-weight="600">pickup r₁ bay2</text>
+  <text x="872" y="286" font-size="9" text-anchor="middle" fill="#5A5A5A">public ontic, pre names the pallet</text>
+  <line x1="634" y1="242" x2="634" y2="254" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <line x1="870" y1="242" x2="870" y2="254" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+
+  <rect x="570" y="316" width="128" height="26" rx="2" fill="#fff" stroke="#111"/>
+  <text x="634" y="333" font-size="11" text-anchor="middle" fill="#111" font-weight="600">γ₃ holds</text>
+  <rect x="808" y="316" width="128" height="26" rx="2" fill="#fff" stroke="#111"/>
+  <text x="872" y="333" font-size="11" text-anchor="middle" fill="#111" font-weight="600">γ₃ holds</text>
+  <line x1="634" y1="296" x2="634" y2="314" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <line x1="871" y1="296" x2="871" y2="314" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <text x="752" y="362" font-size="11" text-anchor="middle" fill="#5A5A5A">One more action per branch, and each is a public event whose</text>
+  <text x="752" y="378" font-size="11" text-anchor="middle" fill="#5A5A5A">precondition entails the answer, not the question.</text>
+
+  <!-- the behaviour tree -->
+  <rect x="8" y="414" width="984" height="138" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="20" y="434" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">WHAT THE EXECUTOR MAKES OF ONE POLICY NODE &#183; EpistemicBTBuilder</text>
+  <g font-size="10.5">
+    <rect x="24"  y="450" width="150" height="42" rx="2" fill="#fff" stroke="#111"/>
+    <text x="99"  y="467" text-anchor="middle" fill="#111" font-weight="600">knowledge guard</text>
+    <text x="99"  y="481" font-size="9" text-anchor="middle" fill="#5A5A5A">skip if it already holds</text>
+    <rect x="200" y="450" width="150" height="42" rx="2" fill="#fff" stroke="#111"/>
+    <text x="275" y="467" text-anchor="middle" fill="#111" font-weight="600">PlanSys2 action</text>
+    <text x="275" y="481" font-size="9" text-anchor="middle" fill="#5A5A5A">via warehouse-mapping.json</text>
+    <rect x="376" y="450" width="150" height="42" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.4"/>
+    <text x="451" y="467" text-anchor="middle" fill="#C8102E" font-weight="600">apply_action</text>
+    <text x="451" y="481" font-size="9" text-anchor="middle" fill="#5A5A5A">the DEL update, with the outcome</text>
+    <rect x="552" y="450" width="150" height="42" rx="2" fill="#fff" stroke="#1A52A0" stroke-width="1.4"/>
+    <text x="627" y="467" text-anchor="middle" fill="#1A52A0" font-weight="600">switch on the event</text>
+    <text x="627" y="481" font-size="9" text-anchor="middle" fill="#5A5A5A">which subtree runs next</text>
+    <rect x="728" y="450" width="240" height="42" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.4"/>
+    <text x="848" y="467" text-anchor="middle" fill="#C8102E" font-weight="600">CheckEpistemicGoal</text>
+    <text x="848" y="481" font-size="9" text-anchor="middle" fill="#5A5A5A">once, outside the policy — the goal formula itself</text>
+  </g>
+  <line x1="174" y1="471" x2="198" y2="471" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <line x1="350" y1="471" x2="374" y2="471" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <line x1="526" y1="471" x2="550" y2="471" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <line x1="702" y1="471" x2="726" y2="471" stroke="#5A5A5A" stroke-width="1.2" marker-end="url(#pl-arrow)"/>
+  <text x="500" y="518" font-size="11" text-anchor="middle" fill="#5A5A5A">The outcome is not decided here. `look_into` faces the bay and holds; perception classifies r₁'s occupancy grid and</text>
+  <text x="500" y="534" font-size="11" text-anchor="middle" fill="#5A5A5A">reports which event fired, and that report is what the switch reads. The goal check is the run's last word, and for G2 it is a depth-two formula.</text>
+</svg>
+      </div>
+      <div class="fig-cap">
+        <b>Same spine, different tails.</b> The five drives and the inspection
+        are common to both policies and are dispatched identically; the
+        divergence is one node per branch. The lower band is the shape
+        <span class="mono-inline">EpistemicBTBuilder</span> renders each policy
+        node into, and the last box is where
+        \(\gamma_2 = K_{r_2}\mathit{Kw}_{r_1}P\) is evaluated at the end of the
+        G2 run &#8212; through the same recursive parser that reads the
+        depth-one formulas.
+      </div>
+    </div>
+
+    <div class="side">
+      <div>
+        <h5>G2 &#8212; <span class="mono-inline">[r2] [Kw. r1] P</span></h5>
+        <pre class="code">go_r2_dock_north_corridor
+go_r3_corridor_dock_south
+go_r3_dock_south_lane
+go_r1_dock_south_lane
+go_r1_lane_bay2
+inspect_r1_bay2   <span class="c">[semi-private]</span>
+ ├ e-inspect-empty  <span class="c">=&gt; goal</span>
+ └ e-inspect-found  <span class="c">=&gt; goal</span></pre>
+      </div>
+      <div>
+        <h5>G3 &#8212; <span class="mono-inline">[Kw. r2] P</span></h5>
+        <pre class="code">go_r2_dock_north_corridor
+go_r3_corridor_dock_south
+go_r3_dock_south_lane
+go_r1_dock_south_lane
+go_r1_lane_bay2
+inspect_r1_bay2   <span class="c">[semi-private]</span>
+ ├ e-inspect-empty
+ │   <span class="ins">report-pallet-at_r1_bay3</span>  <span class="c">=&gt; goal</span>
+ └ e-inspect-found
+     <span class="ins">pickup_r1_bay2</span>          <span class="c">=&gt; goal</span></pre>
+      </div>
+    </div>
+
+    <p>
+      The two policies agree on all six actions and then diverge. Every robot
+      drives to the same place, r1 inspects the same aisle, and both branch on
+      the same observation. G3 adds one action on each branch, and each is a
+      public act that makes the answer available to the fleet: on the empty
+      branch an announcement, and on the found branch the pick-up, which is
+      public ontic and settles bay&#8202;2 by occurring. The planner was not
+      told to prefer either. Both announcements are ground in all three
+      instances, and G2 declines to spend one.
+    </p>
+
+    <h4>Why watching is enough for G2 and not for G3</h4>
+
+    <p>
+      <span class="mono-inline">inspect</span> is declared as
+      <span class="mono-inline">semi-private-sensing</span> over two events, one
+      per outcome. The acting agent's observability is
+      <span class="mono-inline">Fully</span>, which relates each event to itself;
+      every other agent's is <span class="mono-inline">Partially</span>, which
+      relates every event of the action to every other. So after the update r2
+      considers both events possible.
+    </p>
+
+    <p>
+      That is exactly the difference between the two goals, worked through in
+      the product update above: \(\mathcal{M}_1 \models
+      K_{r_2}\mathit{Kw}_{r_1}P\) because both events leave r1 knowing
+      whether, and \(\mathcal{M}_1 \not\models \mathit{Kw}_{r_2}P\)
+      because the two events disagree about \(P\) and r2 cannot tell them
+      apart. The event model has said so since the domain was written.
+    </p>
+
+    <h4>The same four lines from an independent checker</h4>
+
+    <p>
+      <span class="mono-inline">plank validate</span> reconstructs the product
+      update itself and reports whether a given action sequence is applicable
+      and whether the goal holds at the end. It is given the six actions the two
+      policies share, against each goal in turn:
+    </p>
+
+    <pre class="code"><span class="c"># the six actions G2 and G3 agree on, and nothing else</span>
+<span class="c">$ plank validate -p nested_g1.epddl -a go_r2_dock_north_corridor … inspect_r1_bay2</span>
+true
+<span class="c">$ plank validate -p nested_g2.epddl -a go_r2_dock_north_corridor … inspect_r1_bay2</span>
+true
+<span class="c">$ plank validate -p nested_g3.epddl -a go_r2_dock_north_corridor … inspect_r1_bay2</span>
+false
+<span class="c">$ plank validate -p nested_g3.epddl -a … inspect_r1_bay2 report-pallet-at_r1_bay3</span>
+false (report-pallet-at_r1_bay3 is not applicable in
+       'init (X) … (X) go_r1_lane_bay2 (X) inspect_r1_bay2')</pre>
+
+    <p>
+      The first three lines are the result. The same trace satisfies the nested
+      goal and the depth-one goal about r1, and fails the depth-one goal about
+      r2. The fourth line is worth the space: appending the announcement does
+      not repair the sequence, because the announcement is applicable on only
+      one of the two branches. A sequence cannot be the answer to G3, and the
+      policy that is has a different action on each branch.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>The same warehouse twice, with one line of EPDDL different</h3>
+
+    <p>
+      Both runs are three TurtleBot3 burgers in the AWS small warehouse with the
+      pallet standing in bay&#8202;3, launched with the same command and one
+      argument changed. Nothing is told where the pallet is: the robots map the
+      building with their own lasers, and
+      <span class="mono-inline">plansys2_epistemic_perception</span> classifies
+      the region of r1's occupancy grid and reports which of the two sensing
+      events occurred. The pallet in bay&#8202;3 is the branch worth recording,
+      because it is the one where the first look comes back <em>empty</em>.
+    </p>
+
+    <p>
+      Gazebo is on the left, RViz on the right. Each robot maps separately and
+      is drawn in its own colour, which is not decoration: the domain declares
+      sensing semi-private, and a shared grid would quietly make every
+      observation public and the demonstration would be proving something else.
+      The band across the top and the three-row panel below it are burned in
+      afterwards from the run's own log, so they cannot diverge from it. The
+      panel is the probe's output: three formulas over one model, asked twice a
+      second, in both runs.
+    </p>
+
+    <h4>G2 &#8212; <span class="mono-inline">[r2] [Kw. r1] pallet-at_bay2</span></h4>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%">
+        <source src="media/nested_run_G2.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/nested_run_G2.mp4">Download it instead</a>.
+      </video>
+      <figcaption>
+        40&#8201;s at 5&#215;, from the moment the problem is seeded. Six-node
+        policy: r2 to the corridor, r3 to the service lane, r1 to bay&#8202;2,
+        and one inspection. No robot says anything, and the run ends at the
+        look.
+      </figcaption>
+    </figure>
+
+    <table class="data logtab">
+      <thead><tr><th>t (s)</th><th>What the log says</th><th>&nbsp;</th></tr></thead>
+      <tbody>
+        <tr><td>&#8722;2</td><td><span class="mono-inline">problem seeded; asking for a plan</span></td><td></td></tr>
+        <tr><td>&#8722;1</td><td><span class="mono-inline">policy: 6 nodes, 1 of them branching</span></td><td></td></tr>
+        <tr><td>0</td><td><span class="mono-inline">executing goto_zone</span></td><td>all three robots</td></tr>
+        <tr><td>158</td><td><span class="mono-inline">executing look_into</span></td><td></td></tr>
+        <tr><td>158.7</td><td><span class="mono-inline">inspect_r1_bay2 observed e-inspect-empty</span></td><td>perception, from r1's grid</td></tr>
+        <tr><td>158.9</td><td><span class="mono-inline">Kw_r1_P&nbsp;&nbsp;TRUE</span> and <span class="mono-inline">K_r2_Kw_r1_P&nbsp;&nbsp;TRUE</span></td><td><strong>both, in one probe tick</strong></td></tr>
+        <tr><td>158.8</td><td><span class="mono-inline">[goal] (&#8230; (K r2 (Kw r1 pallet-at_bay2))) holds</span></td><td>the executor's own check</td></tr>
+        <tr><td>170</td><td><span class="mono-inline">mission complete: the policy reached its goal</span></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      <span class="mono-inline">Kw_r2_P</span> does not appear in that table,
+      and that is the point. Across all 575 probe ticks of the G2 run it was
+      never once true. r2 spent the run in the corridor, learned that the
+      question had been settled, and never learned the answer &#8212; which is
+      precisely what its goal asked for and precisely what the other goal would
+      not accept.
+    </p>
+
+    <h4>G3 &#8212; <span class="mono-inline">[Kw. r2] pallet-at_bay2</span></h4>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%">
+        <source src="media/nested_run_G3.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/nested_run_G3.mp4">Download it instead</a>.
+      </video>
+      <figcaption>
+        42&#8201;s at 5&#215;. Eight-node policy over the same six drives and
+        the same inspection, and then one more action: r1 radios the fleet.
+        Watch the third row of the panel between the look and the radio call.
+      </figcaption>
+    </figure>
+
+    <table class="data logtab">
+      <thead><tr><th>t (s)</th><th>What the log says</th><th>&nbsp;</th></tr></thead>
+      <tbody>
+        <tr><td>&#8722;2</td><td><span class="mono-inline">problem seeded; asking for a plan</span></td><td></td></tr>
+        <tr><td>&#8722;1</td><td><span class="mono-inline">policy: 8 nodes, 1 of them branching</span></td><td>two more than G2</td></tr>
+        <tr><td>0</td><td><span class="mono-inline">executing goto_zone</span></td><td>the same six drives</td></tr>
+        <tr><td>159</td><td><span class="mono-inline">executing look_into</span></td><td></td></tr>
+        <tr><td>162.7</td><td><span class="mono-inline">inspect_r1_bay2 observed e-inspect-empty</span></td><td>the same observation</td></tr>
+        <tr><td>163.1</td><td><span class="mono-inline">Kw_r1_P&nbsp;&nbsp;TRUE</span> and <span class="mono-inline">K_r2_Kw_r1_P&nbsp;&nbsp;TRUE</span></td><td><strong>G2's goal now holds</strong></td></tr>
+        <tr><td>164</td><td><span class="mono-inline">executing announce</span></td><td><span class="mono-inline">report-pallet-at_r1_bay3</span></td></tr>
+        <tr><td>166.6</td><td><span class="mono-inline">Kw_r2_P&nbsp;&nbsp;TRUE</span></td><td><strong>and only now G3's</strong></td></tr>
+        <tr><td>166.3</td><td><span class="mono-inline">[goal] (&#8230; (Kw r2 pallet-at_bay2)) holds</span></td><td></td></tr>
+        <tr><td>178</td><td><span class="mono-inline">mission complete: the policy reached its goal</span></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <p class="pull">
+      Between t&#8202;=&#8202;163.1 and t&#8202;=&#8202;166.6 of the G3 run there
+      is a window three and a half seconds long in which G2's goal holds and
+      G3's does not, in one execution, over one model, with one robot standing
+      in one aisle.
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathcal{M}_1 \models K_{r_2}\,\mathit{Kw}_{r_1} P
+        \quad\text{and}\quad
+        \mathcal{M}_1 \not\models \mathit{Kw}_{r_2} P
+        \qquad
+        \text{for } t \in [163.1,\; 166.6]
+      \]
+    </div>
+
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">The G3 run, second by second, as the probe recorded it</span>
+        <span class="note">2&#8201;Hz over three formulas</span>
+      </div>
+      <div class="fig-body">
+<svg class="graph" viewBox="0 0 1000 320" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="Three tracks across the last seconds of the G3 run. The inspection turns the upper two formulas true in the same probe tick; the third stays undecided for three and a half seconds until the announcement is dispatched.">
+  <rect x="8" y="8" width="984" height="304" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+  <text x="28" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">ONE RUN, THREE FORMULAS &#183; the five drives and the look, 0&#8211;161 s, are off the left of this axis</text>
+
+  <rect x="440.2" y="78" width="233.3" height="148" fill="#F4F4F4" stroke="#C8102E" stroke-dasharray="4 3"/>
+  <text x="556.9" y="70" font-size="11.5" text-anchor="middle" fill="#C8102E" font-weight="600">&#947;&#8322; holds, &#947;&#8323; does not &#183; 3.5 s</text>
+  <line x1="413.6" y1="78" x2="413.6" y2="252" stroke="#5A5A5A" stroke-width="1.1" stroke-dasharray="3 3"/>
+  <text x="407.6" y="262" font-size="10.5" text-anchor="end" fill="#5A5A5A">inspect_r1_bay2 &#8594; e-inspect-empty</text>
+  <line x1="500.0" y1="78" x2="500.0" y2="272" stroke="#5A5A5A" stroke-width="1.1" stroke-dasharray="3 3"/>
+  <text x="506.0" y="282" font-size="10.5" text-anchor="start" fill="#5A5A5A">report-pallet-at_r1_bay3 dispatched</text>
+  <text x="28" y="108" font-size="11.5" fill="#111">[Kw r1] P</text>
+  <line x1="300.0" y1="104" x2="440.2" y2="104" stroke="#D6D6D6" stroke-width="8"/>
+  <line x1="440.2" y1="104" x2="900.0" y2="104" stroke="#111" stroke-width="8"/>
+  <circle cx="440.2" cy="104" r="6.5" fill="#fff" stroke="#111" stroke-width="1.8"/>
+  <text x="452.2" y="90.0" font-size="10" text-anchor="start" fill="#5A5A5A">t = 163.1</text>
+  <text x="910.0" y="108" font-size="10.5" fill="#111" font-weight="600">HOLDS</text>
+  <text x="370.1" y="107.5" font-size="10" text-anchor="middle" fill="#5A5A5A">undecided</text>
+  <text x="28" y="154" font-size="11.5" fill="#1A52A0" font-weight="600">[K r2] [Kw r1] P</text>
+  <line x1="300.0" y1="150" x2="440.2" y2="150" stroke="#D6D6D6" stroke-width="8"/>
+  <line x1="440.2" y1="150" x2="900.0" y2="150" stroke="#111" stroke-width="8"/>
+  <circle cx="440.2" cy="150" r="6.5" fill="#fff" stroke="#111" stroke-width="1.8"/>
+  <text x="452.2" y="136.0" font-size="10" text-anchor="start" fill="#5A5A5A">t = 163.1</text>
+  <text x="910.0" y="154" font-size="10.5" fill="#111" font-weight="600">HOLDS</text>
+  <text x="370.1" y="153.5" font-size="10" text-anchor="middle" fill="#5A5A5A">undecided</text>
+  <text x="28" y="200" font-size="11.5" fill="#111">[Kw r2] P</text>
+  <line x1="300.0" y1="196" x2="673.5" y2="196" stroke="#D6D6D6" stroke-width="8"/>
+  <line x1="673.5" y1="196" x2="900.0" y2="196" stroke="#111" stroke-width="8"/>
+  <circle cx="673.5" cy="196" r="6.5" fill="#fff" stroke="#111" stroke-width="1.8"/>
+  <text x="685.5" y="182.0" font-size="10" text-anchor="start" fill="#5A5A5A">t = 166.6</text>
+  <text x="910.0" y="200" font-size="10.5" fill="#111" font-weight="600">HOLDS</text>
+  <text x="486.8" y="199.5" font-size="10" text-anchor="middle" fill="#5A5A5A">undecided</text>
+  <line x1="300.0" y1="226" x2="900.0" y2="226" stroke="#5A5A5A" stroke-width="1"/>
+  <line x1="366.7" y1="226" x2="366.7" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <line x1="433.3" y1="226" x2="433.3" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <text x="433.3" y="244" font-size="9.5" text-anchor="middle" fill="#5A5A5A">163</text>
+  <line x1="500.0" y1="226" x2="500.0" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <line x1="566.7" y1="226" x2="566.7" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <text x="566.7" y="244" font-size="9.5" text-anchor="middle" fill="#5A5A5A">165</text>
+  <line x1="633.3" y1="226" x2="633.3" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <line x1="700.0" y1="226" x2="700.0" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <text x="700.0" y="244" font-size="9.5" text-anchor="middle" fill="#5A5A5A">167</text>
+  <line x1="766.7" y1="226" x2="766.7" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <line x1="833.3" y1="226" x2="833.3" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <text x="833.3" y="244" font-size="9.5" text-anchor="middle" fill="#5A5A5A">169</text>
+  <line x1="900.0" y1="226" x2="900.0" y2="231" stroke="#5A5A5A" stroke-width="1"/>
+  <text x="286.0" y="244" font-size="10" text-anchor="end" fill="#5A5A5A">seconds since the first drive was dispatched</text>
+</svg>
+      </div>
+      <div class="fig-cap">
+        <b>Every mark on this figure is a line in the run's log.</b> The two
+        upper tracks turn over in the same probe tick, at the inspection. The
+        lower track stays undecided across the shaded window and turns over only
+        after <span class="mono-inline">report-pallet-at_r1_bay3</span> is
+        dispatched. In the G2 run, whose policy stops at the look, the lower
+        track never turns over at all.
+      </div>
+    </div>
+
+
+
+    <div class="kw-panel">
+      <h6>THE EPISTEMIC STATE AT t = 164 s OF THE G3 RUN &#183; AFTER THE LOOK, BEFORE THE RADIO CALL</h6>
+      <div class="kw-line">
+        <span class="f">[Kw r1] pallet-at_bay2</span>
+        <span class="v yes">HOLDS</span></div>
+      <div class="kw-line">
+        <span class="f">[K r2] [Kw r1] pallet-at_bay2 <span class="kw-tag">&#8212; G2's goal</span></span>
+        <span class="v yes">HOLDS</span></div>
+      <div class="kw-line goal">
+        <span class="f">[Kw r2] pallet-at_bay2 <span class="kw-tag">&#8212; G3's goal, this run's</span></span>
+        <span class="v no">UNDECIDED</span></div>
+    </div>
+
+
+    <h4>What <span class="mono-inline">UNDECIDED</span> means, and what it does not</h4>
+
+    <p>
+      The third row of the panel reads <span class="mono-inline">UNDECIDED</span>
+      and not <span class="mono-inline">FALSE</span>, and the distinction is not
+      presentational. \(\mathit{Kw}_{r_2}P\) is itself a formula, and what the
+      state reports is that this formula fails:
+      \(\mathcal{M}_1 \not\models \mathit{Kw}_{r_2}P\). By the definition
+      \(\mathit{Kw}_i\varphi = K_i\varphi \vee K_i\neg\varphi\), its failure is
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathcal{M}_1 \not\models \mathit{Kw}_{r_2} P
+        \iff
+        \mathcal{M}_1 \not\models K_{r_2} P
+        \;\text{ and }\;
+        \mathcal{M}_1 \not\models K_{r_2} \neg P ,
+      \]
+    </div>
+
+    <p>
+      which says that r2 knows neither that the pallet is in bay&#8202;2 nor
+      that it is not. It is not the claim that \(P\) is false, and it is not the
+      claim that r2 believes anything false. The pallet is in fact in
+      bay&#8202;3 in both runs, so \(P\) is false at the actual world
+      throughout; r2 simply has no view on the matter, because its equivalence
+      class after the update contains one world in which \(P\) holds and one in
+      which it does not.
+    </p>
+
+    <p>
+      Three readings have to be kept apart, and only the panel's three states
+      make that possible. A formula that <em>holds</em>; a formula that
+      <em>fails</em>, which for a \(\mathit{Kw}\) formula is an open question
+      and never an answer; and a formula the state could not be asked at all,
+      which the probe records as
+      <span class="mono-inline">no-answer</span> and never as either of the
+      other two.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Why the third row is undecided</span>
+        <span class="note">the equivalence classes of M<sub>1</sub></span>
+      </div>
+      <div class="fig-body">
+<svg class="graph" viewBox="0 0 1000 260" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="The two worlds of the updated model with r1's and r2's equivalence classes drawn over them. r1's classes are singletons, so r1 knows whether. r2's single class spans a P-world and a not-P-world, so r2 knows neither P nor its negation and the knowing-whether formula fails.">
+  <rect x="8" y="8" width="984" height="240" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+
+  <!-- the two worlds -->
+  <circle cx="300" cy="96" r="42" fill="#fff" stroke="#111" stroke-width="1.6"/>
+  <text x="300" y="92" font-size="12.5" text-anchor="middle" fill="#111" font-weight="600">(w₂,e⁺)</text>
+  <text x="300" y="110" font-size="11" text-anchor="middle" fill="#111">P true</text>
+  <circle cx="620" cy="96" r="42" fill="#fff" stroke="#111" stroke-width="1.6"/>
+  <text x="620" y="92" font-size="12.5" text-anchor="middle" fill="#111" font-weight="600">(w₃,e⁻)</text>
+  <text x="620" y="110" font-size="11" text-anchor="middle" fill="#C8102E">P false</text>
+  <text x="620" y="152" font-size="10.5" text-anchor="middle" fill="#5A5A5A">← the actual world in both runs</text>
+
+  <!-- r1's classes: two singletons -->
+  <ellipse cx="300" cy="96" rx="60" ry="60" fill="none" stroke="#C8102E" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <ellipse cx="620" cy="96" rx="60" ry="60" fill="none" stroke="#C8102E" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <text x="152" y="52" font-size="11.5" fill="#C8102E" font-weight="600">r₁'s classes</text>
+  <text x="152" y="68" font-size="10.5" fill="#5A5A5A">two singletons</text>
+
+  <!-- r2's class: one, spanning both -->
+  <rect x="212" y="20" width="496" height="152" rx="76" fill="none" stroke="#1A52A0" stroke-width="2"/>
+  <text x="792" y="52" font-size="11.5" fill="#1A52A0" font-weight="600">r₂'s class</text>
+  <text x="792" y="68" font-size="10.5" fill="#5A5A5A">one, spanning both</text>
+
+  <!-- readings -->
+  <line x1="8" y1="186" x2="992" y2="186" stroke="#D6D6D6"/>
+  <text x="28" y="212" font-size="12" fill="#C8102E" font-weight="600">r₁ : every class agrees on P</text>
+  <text x="28" y="232" font-size="11.5" fill="#5A5A5A">so K<tspan font-size="9" dy="3">r₁</tspan><tspan dy="-3">&#8202;¬P holds here, and Kw</tspan><tspan font-size="9" dy="3">r₁</tspan><tspan dy="-3">&#8202;P holds at both worlds</tspan></text>
+  <text x="416" y="232" font-size="12" fill="#111" font-weight="600">HOLDS</text>
+
+  <text x="530" y="212" font-size="12" fill="#1A52A0" font-weight="600">r₂ : its one class disagrees on P</text>
+  <text x="530" y="232" font-size="11.5" fill="#5A5A5A">so neither K<tspan font-size="9" dy="3">r₂</tspan><tspan dy="-3">&#8202;P nor K</tspan><tspan font-size="9" dy="3">r₂</tspan><tspan dy="-3">&#8202;¬P holds</tspan></text>
+  <text x="740" y="232" font-size="12" fill="#C8102E" font-weight="600">UNDECIDED</text>
+</svg>
+      </div>
+      <div class="fig-cap">
+        <b>Undecided is a property of the class, not of the world.</b> Both
+        agents are looking at the same two worlds and the same actual world. r1
+        can tell them apart and so has an answer either way; r2 cannot, and
+        holds no view. The announcement removes the left-hand world from r2's
+        class, which is what turns the third row over.
+      </div>
+    </div>
+
+    <p>
+      That is the whole result, and it is visible in a frame of video. The robot has done everything it is going to do about
+      bay&#8202;2; it has looked, and the fleet watched it look. One formula
+      about r2 is settled by that and the other is not. Three and a half seconds
+      later r1 says out loud which aisle the pallet is in, and the third row
+      turns over.
+    </p>
+
+    <p class="note">
+      The announcement on this branch is
+      <span class="mono-inline">report-pallet-at_r1_bay3</span> &#8212; r1 says
+      where the pallet <em>is</em>, not where it is not. Having found
+      bay&#8202;2 empty and it being common knowledge that the pallet is in
+      exactly one of the two aisles, r1 knows it is in bay&#8202;3, and
+      announcing that settles bay&#8202;2 for everyone. Either announcement
+      would do; the planner picked one.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ THE INSTRUMENT -->
+<section>
+  <div class="container">
+    <p class="sec-label">The instrument</p>
+    <h3>Asking the model, twice a second, about formulas that were not the goal</h3>
+
+    <p>
+      The result of a nested run is not an event in the warehouse. It is an
+      instant at which one formula over the epistemic model becomes true while
+      another over the same model does not, and on screen that instant looks
+      like a small robot finishing a turn. So it is measured. <span class="mono-inline">formula_probe</span> is a node that
+      dispatches nothing and is dispatched by nobody; it calls
+      <span class="mono-inline">epistemic_state/check_formula</span> every
+      500&#8202;ms for each of three formulas and writes what came back:
+    </p>
+
+    <pre class="code">(Kw r1 pallet-at_bay2)                  <span class="c">r1 knows whether</span>
+(K r2 (Kw r1 pallet-at_bay2))           <span class="c">r2 knows that r1 knows whether</span>
+(Kw r2 pallet-at_bay2)                  <span class="c">r2 knows whether</span></pre>
+
+    <p>
+      All three are asked in both runs, whichever was the goal. That is what
+      makes the log evidence: two of the three formulas were never the
+      planner's goal in either run, so what the model
+      says about them cannot have been arranged by what the planner was asked
+      to achieve.
+    </p>
+
+    <p>
+      A formula the service could not be asked is recorded as
+      <span class="mono-inline">no-answer</span> and never as false. The whole
+      result is that one formula is true while another is false at one instant;
+      an unreachable service reported as <span class="mono-inline">false</span>
+      would manufacture exactly that.
+    </p>
+
+    <h4>Nesting required no change to anything</h4>
+
+    <p>
+      This is worth stating plainly, because the opposite was the expected
+      outcome. <span class="mono-inline">CheckFormula</span>'s parser is
+      recursive over <span class="mono-inline">K</span>,
+      <span class="mono-inline">B</span>, <span class="mono-inline">Kw</span>,
+      <span class="mono-inline">C</span> and the connectives, and always was;
+      <span class="mono-inline">render_formula</span> on the planner's side is
+      recursive in the same shape. The depth-one formulas the warehouse asked
+      of them were a use of that parser, not its limit. Grounding a nested goal
+      needed no change to <span class="mono-inline">plank</span> either, which
+      reports it as a field in the ground task:
+    </p>
+
+    <pre class="code"><span class="c"># plank export, nested_g2.json</span>
+"goal": { "modality-name": <span class="k">"box"</span>, "modality-index": ["r2"],
+          "formula": { "modality-name": <span class="k">"Kw.box"</span>,
+                       "modality-index": ["r1"],
+                       "formula": "pallet-at_bay2" } }
+"planning-task-info": { …, <span class="k">"goal-modal-depth": 2</span>, "goal-size": 3 }</pre>
+
+    <p>
+      And the executor checks the nested goal at the end of the policy through
+      the same path, having rendered it back out of the task it was given:
+    </p>
+
+    <pre class="code">[epistemic_bt] [goal] (and at-ag_r2_corridor at-ag_r3_lane
+                           <span class="k">(K r2 (Kw r1 pallet-at_bay2))</span>) holds</pre>
+
+    <p class="note">
+      So the gap this page closes was never in the machinery. The domain
+      declared semi-private sensing, the grounder accepted arbitrary modal
+      depth, the planner searched it and the state could be asked about it. What
+      was missing was a goal that needed any of it &#8212; and with no such
+      goal, none of it was ever exercised or shown.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCING -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproducing it</p>
+    <h3>The three instances, and the two runs</h3>
+
+    <pre class="code"><span class="c"># ground, solve and validate the three instances</span>
+cd epddl-workspace/robot-warehouse
+for g in g1 g2 g3; do
+  plank export -d warehouse-domain.epddl -p instances/nested_$g.epddl \
+        -l intermediate.epddl -o out
+  epistemic_planner --task out/nested_$g.json --plan out/nested_$g-plan.json \
+        --conditional --timeout 300
+done
+
+<span class="c"># the comparison table, read out of what those two tools wrote</span>
+python3 artifacts/nested_G2_vs_G3/table.py
+
+<span class="c"># the model half alone, with no simulator: walk one branch and ask</span>
+<span class="c"># the three formulas after every step</span>
+python3 artifacts/nested_G2_vs_G3/trace.py out/nested_g3.json \
+  go_r2_dock_north_corridor go_r3_corridor_dock_south go_r3_dock_south_lane \
+  go_r1_dock_south_lane go_r1_lane_bay2 \
+  inspect_r1_bay2@e-inspect-empty report-pallet-at_r1_bay3
+
+<span class="c"># the two runs, in Gazebo, recorded and captioned</span>
+artifacts/nested_G2_vs_G3/run.sh G2
+artifacts/nested_G2_vs_G3/run.sh G3
+
+<span class="c"># or by hand: same launch, same world, same pallet, one argument different</span>
+ros2 launch warehouse_demo warehouse_demo_launch.py \
+     robots:=3 goal:=G2 pallet:=bay3 probe_csv:=G2.csv</pre>
+
+    <p>
+      Everything the two runs produced is under
+      <span class="mono-inline">artifacts/nested_G2_vs_G3/</span>: the three
+      instances and their ground tasks, the three policies, the search logs, the
+      full ROS logs, and the probe's CSV for both runs at 2&#8202;Hz over all
+      three formulas.
+    </p>
+
+    <p class="note">
+      Two things about the recording, both of which cost a run to find. The
+      RViz configuration shipped with the demo watches
+      <span class="mono-inline">/map</span>,
+      <span class="mono-inline">/scan</span> and
+      <span class="mono-inline">/robot_description</span>, which is right for
+      one robot and shows nothing at all for a fleet, since every one of those
+      topics moves into a robot's namespace as soon as there is more than one;
+      the launch now generates one set of displays per robot, each in its own
+      colour, while the floor plan and the epistemic markers stay single because
+      the building and the model are single. And the run script places the two
+      windows itself, because a capture is a rectangle of somebody's desktop and
+      ought not to depend on where the desktop last put things.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ WHAT IS CLOSED -->
+<section>
+  <div class="container">
+    <p class="sec-label">Where this leaves it</p>
+    <h3>What is settled, and the instance that comes next</h3>
+
+    <p>
+      <strong>Depth.</strong> There is now a goal in the repository with an
+      operator inside another, and it is not decorative: it is ground with
+      <span class="mono-inline">goal-modal-depth: 2</span>, searched, validated,
+      dispatched as a policy and checked by the executor at the end of the run.
+    </p>
+
+    <p>
+      <strong>The contrast.</strong> Two goals over one world produce two
+      policies that agree on six actions and disagree on the seventh. Since
+      every other input is identical, the difference has one cause, and it is
+      where the operators sit.
+    </p>
+
+    <p>
+      <strong>The semi-private sensing.</strong> The distinction the event model
+      has always drawn &#8212; the agent that looks learns the outcome, the rest
+      of the fleet learns that a look occurred &#8212; is now visible in a
+      policy and in a video, because a goal finally depended on it.
+    </p>
+
+    <p>
+      <strong>The free lunch.</strong> Dropping
+      <span class="mono-inline">(delivered)</span> is what makes the two
+      formulas separable, and adding it back collapses them, which was measured.
+      That is a real limitation of the fetch mission as a vehicle for these
+      questions, and it is why this page is a second demonstration and not an
+      edit to the first.
+    </p>
+
+    <p>
+      <strong>The next instance.</strong> The three goals here range over
+      individual modalities only. The natural continuation is the group
+      modality: for a coalition \(G \subseteq \mathcal{A}\), the shared
+      operator \(E_G\varphi = \bigwedge_{i \in G} K_i\varphi\) and its
+      transitive closure
+    </p>
+
+    <div class="math-block">
+      \[
+        C_G\varphi \;=\; \bigwedge_{k \geq 1} E_G^{\,k}\varphi ,
+        \qquad
+        \mathcal{M},w \models C_G\varphi
+          \iff \mathcal{M},v \models \varphi
+          \text{ for every } v \text{ reachable from } w
+          \text{ by } \textstyle\bigcup_{i \in G} {\sim_i}.
+      \]
+    </div>
+
+    <p>
+      Two candidates follow directly from the present result. The first,
+      \(\gamma_4 = C_{\{r_1,r_2\}}\,\mathit{Kw}_{r_1}P\), asks whether
+      the fact established by the semi-private look becomes common knowledge in
+      the pair, and is the natural strengthening of \(\gamma_2\): the
+      inspection is observed by the whole fleet, so the question is whether
+      observing it is enough to close the reachability closure or whether a
+      public announcement is again required. The second,
+      \(\gamma_5 = K_{r_3}K_{r_2}Q\), is a relay at depth two over three
+      distinct agents, and separates &#8220;everyone was told&#8221; from
+      &#8220;everyone knows that everyone was told&#8221;.
+    </p>
+
+    <p>
+      Both are expressible without extending anything. The
+      <span class="mono-inline">C</span> operator is in plank's grammar and in
+      the ground-task format, the epistemic state's parser reads
+      <span class="mono-inline">(C (r1 r2) &#966;)</span> recursively, and the
+      initial state of every instance on this page is already written with
+      <span class="mono-inline">[C. All]</span>. What each will cost is a
+      question about the search: \(C_G\) is evaluated over a transitive
+      closure and the model checking is where the expense of an extra agent
+      already lands, which the step from 3&#8202;952 to 8&#8202;543 expansions
+      between \(\gamma_2\) and \(\gamma_3\) only begins to indicate. That
+      measurement is the next thing to run, and it is not on this page because
+      it has not been.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="warehouse_run.html">The warehouse run</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">AWS small warehouse &#183; three goals, one model &#183; ROS 2</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  document.addEventListener('click', function(e){
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+</body>
+</html>
+

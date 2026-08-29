@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Six-Room Survey &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="An EPDDL domain whose goal is knowledge, solved as a branching policy and executed on ePlanSys, with the observation supplied by a SLAM map rather than by the planner.">
+<meta name="description" content="An EPDDL domain whose goal is knowledge, solved as a branching policy and executed on ePlanSys, with the observation supplied by a SLAM map and not by the planner.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
@@ -53,8 +53,26 @@ html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
   font-weight:400;line-height:1.6}
-.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
-.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
 
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
@@ -327,6 +345,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
             <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
             <a href="six_room_survey.html" aria-current="page">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
           </div>
           <hr>
           <h6>Reports (PDF)</h6>
@@ -354,7 +373,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       point. This one asks a different question of the same building. The
       mission is not to reach the east wing but to come to <em>know</em>
       whether it is passable, the mission is written in EPDDL, and the answer
-      is supplied by a map the robot builds with its own laser rather than by
+      is supplied by a map the robot builds with its own laser and not by
       anything the planner imagines.
     </p>
     <p class="note" style="margin-top:1.4rem">
@@ -417,7 +436,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
     <p>
       The two rooms answer differently, which is the point: the branch is
-      exercised rather than implied. Nothing in the stack decided those answers
+      exercised and not merely implied. Nothing in the stack decided those answers
       both came from the occupancy grid the robot built with its own
       laser.
     </p>
@@ -449,7 +468,7 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
       Rooms 3 and 6 lie east of the cross corridor; the robot starts in room 1
       at the west end. Whether either east room is obstructed is not stated in
       the initial condition, so the model designates <strong>four worlds</strong>
-      rather than one. A building nobody has surveyed is genuinely undetermined,
+      and not one. A building nobody has surveyed is genuinely undetermined,
       and that is what makes the solution branch.
     </p>
 
@@ -484,8 +503,8 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
     <h3>Four leaves, six branches, depth four</h3>
 
     <p>
-      Aletheia picks its heuristic and strategy from the task's own features
-      rather than from a flag, and reports which rule decided each:
+      Aletheia picks its heuristic and strategy from the task's own features,
+      and not from a flag, and reports which rule decided each:
     </p>
 
     <pre class="code">[main] Heuristic: knowledge-spread (auto, rule <span class="k">'kw-only-goal'</span>)
@@ -499,11 +518,206 @@ goto-door3_r1
     ev1: goto-door6_r1 -&gt; inspect6_r1     <span class="c"># room 3 seen clear</span></pre>
 
     <p>
-      Both branches continue to the second room, and they are distinct nodes
-      rather than a shared subtree. Which one runs is decided by an observation
+      Both branches continue to the second room, and they are distinct nodes,
+      not a shared subtree. Which one runs is decided by an observation
       that has not been made when the plan is built: the definition of a
       policy as against a sequence.
     </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE SEMANTICS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The semantics</p>
+    <h3>Four worlds, two independent questions, four leaves</h3>
+
+    <p>
+      That the model designates four worlds and that the policy has four leaves
+      are the same fact, and it is worth writing it out. Abbreviate the two
+      undetermined propositions as \(B_3\) for
+      <span class="mono-inline">blocked-r3</span> and \(B_6\) for
+      <span class="mono-inline">blocked-r6</span>. An epistemic state is a
+      Kripke model \(\mathcal{M} = \langle W, \sim_{r_1}, V\rangle\) with a set
+      \(W_d \subseteq W\) of designated worlds and
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathcal{M},w \models K_i\varphi
+          \iff \mathcal{M},v \models \varphi \text{ for all } v \sim_i w,
+        \qquad
+        \mathit{Kw}_i\varphi \;:=\; K_i\varphi \vee K_i\neg\varphi .
+      \]
+    </div>
+
+    <p>
+      Nothing in the initial condition constrains either proposition and
+      neither constrains the other, so the initial state is their product:
+      \(W_0 = \{0,1\}^2\), four worlds, with \(\sim_{r_1} = W_0 \times W_0\) and
+      every one of them designated. The goal is a conjunction of two
+      knowing-whether formulas over the same agent,
+    </p>
+
+    <div class="math-block">
+      \[
+        \gamma \;=\; \mathit{Kw}_{r_1} B_3 \;\wedge\; \mathit{Kw}_{r_1} B_6 ,
+      \]
+    </div>
+
+    <p>
+      and it is satisfied by four distinct states, one per assignment. Neither
+      conjunct is entailed by anything in the initial model, and no ontic action
+      in the domain affects either proposition: a wall does not move because a
+      robot drove past it. The only events that change \(\sim_{r_1}\) are the
+      two inspections.
+    </p>
+
+    <h4>Why each inspection halves the designated set</h4>
+
+    <p>
+      <span class="mono-inline">inspect3</span> is an event model with one event
+      per answer and no postconditions, whose preconditions partition the
+      worlds:
+    </p>
+
+    <div class="math-block">
+      \[
+        \mathsf{pre}(e_3^{\mathrm{blk}}) = B_3 \wedge \neg\mathit{Kw}_{r_1}B_3,
+        \qquad
+        \mathsf{pre}(e_3^{\mathrm{clr}}) = \neg B_3 \wedge \neg\mathit{Kw}_{r_1}B_3 .
+      \]
+    </div>
+
+    <p>
+      In the product \(\mathcal{M}\otimes\mathcal{E}\) a world survives paired
+      only with the one event whose precondition it satisfies, and the acting
+      agent's event relation is the identity, so no surviving pair is related to
+      a pair carrying the other event. Four designated worlds therefore become
+      two states of two worlds each, agreeing on \(B_3\) and still divided on
+      \(B_6\). The second inspection does the same to \(B_6\), and each of the
+      two states becomes two states of one world. Four leaves, and the depth is
+      four because each inspection is preceded by the drive that makes it
+      applicable.
+    </p>
+
+    <p>
+      The two conjuncts are independent, which is why the policy cannot share a
+      subtree: the state in which room&#8202;3 was found blocked and the state
+      in which it was found clear disagree about \(B_3\), and every formula
+      evaluated below them is evaluated in a different model. They carry the
+      same two action names and are distinct nodes.
+    </p>
+
+    <div class="fig">
+      <div class="fig-head">
+        <span class="fig-title">Two inspections, four leaves</span>
+        <span class="note">the designated set, halved and halved again</span>
+      </div>
+      <div class="fig-body">
+<svg class="graph" viewBox="0 0 1000 330" width="100%" xmlns="http://www.w3.org/2000/svg"
+     font-family="Arial,Helvetica,sans-serif" role="img"
+     aria-label="The initial state designates four worlds over two independent propositions. The first inspection splits it into two states of two worlds, agreeing on the third room and still divided on the sixth. The second inspection splits each of those into single-world states, giving the policy its four leaves.">
+  <defs>
+    <marker id="sr-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5A5A5A"/>
+    </marker>
+  </defs>
+  <rect x="8" y="8" width="984" height="314" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+
+  <text x="30" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">FOUR DESIGNATED WORLDS</text>
+  <text x="386" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">AFTER inspect3_r1</text>
+  <text x="726" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">AFTER inspect6_r1 &#183; four leaves</text>
+
+  <!-- initial -->
+  <rect x="30" y="50" width="212" height="212" rx="2" fill="#fff" stroke="#111" stroke-width="1.5"/>
+  <text x="136" y="72" font-size="10.5" text-anchor="middle" fill="#5A5A5A">nobody has looked anywhere</text>
+  <circle cx="90"  cy="118" r="24" fill="#fff" stroke="#111"/>
+  <text x="90"  y="122" font-size="10" text-anchor="middle" fill="#111">¬B₃¬B₆</text>
+  <circle cx="182" cy="118" r="24" fill="#fff" stroke="#111"/>
+  <text x="182" y="122" font-size="10" text-anchor="middle" fill="#111">¬B₃&#8202;B₆</text>
+  <circle cx="90"  cy="196" r="24" fill="#fff" stroke="#111"/>
+  <text x="90"  y="200" font-size="10" text-anchor="middle" fill="#111">B₃¬B₆</text>
+  <circle cx="182" cy="196" r="24" fill="#fff" stroke="#111"/>
+  <text x="182" y="200" font-size="10" text-anchor="middle" fill="#111">B₃&#8202;B₆</text>
+  <line x1="114" y1="118" x2="158" y2="118" stroke="#5A5A5A" stroke-width="1.2"/>
+  <line x1="114" y1="196" x2="158" y2="196" stroke="#5A5A5A" stroke-width="1.2"/>
+  <line x1="90"  y1="142" x2="90"  y2="172" stroke="#5A5A5A" stroke-width="1.2"/>
+  <line x1="182" y1="142" x2="182" y2="172" stroke="#5A5A5A" stroke-width="1.2"/>
+  <line x1="110" y1="140" x2="162" y2="176" stroke="#5A5A5A" stroke-width="1.2"/>
+  <line x1="110" y1="176" x2="162" y2="140" stroke="#5A5A5A" stroke-width="1.2"/>
+
+  <path d="M248 156 L296 120" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
+  <path d="M248 156 L296 200" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
+
+  <!-- after the first -->
+  <rect x="304" y="70" width="180" height="86" rx="2" fill="#fff" stroke="#111"/>
+  <text x="394" y="88" font-size="10" text-anchor="middle" fill="#5A5A5A">room 3 seen clear</text>
+  <circle cx="356" cy="122" r="22" fill="#fff" stroke="#111"/>
+  <text x="356" y="126" font-size="9.5" text-anchor="middle" fill="#111">¬B₃¬B₆</text>
+  <circle cx="434" cy="122" r="22" fill="#fff" stroke="#111"/>
+  <text x="434" y="126" font-size="9.5" text-anchor="middle" fill="#111">¬B₃&#8202;B₆</text>
+  <line x1="378" y1="122" x2="412" y2="122" stroke="#5A5A5A" stroke-width="1.2"/>
+
+  <rect x="304" y="168" width="180" height="86" rx="2" fill="#fff" stroke="#111"/>
+  <text x="394" y="186" font-size="10" text-anchor="middle" fill="#5A5A5A">room 3 seen blocked</text>
+  <circle cx="356" cy="220" r="22" fill="#fff" stroke="#111"/>
+  <text x="356" y="224" font-size="9.5" text-anchor="middle" fill="#111">B₃¬B₆</text>
+  <circle cx="434" cy="220" r="22" fill="#fff" stroke="#111"/>
+  <text x="434" y="224" font-size="9.5" text-anchor="middle" fill="#111">B₃&#8202;B₆</text>
+  <line x1="378" y1="220" x2="412" y2="220" stroke="#5A5A5A" stroke-width="1.2"/>
+
+  <path d="M490 100 L556 84"  stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
+  <path d="M490 136 L556 140" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
+  <path d="M490 198 L556 200" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
+  <path d="M490 234 L556 254" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
+
+  <!-- leaves -->
+  <g font-size="10">
+    <rect x="564" y="62" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
+    <circle cx="596" cy="84" r="17" fill="#fff" stroke="#111"/>
+    <text x="596" y="88" font-size="9" text-anchor="middle" fill="#111">¬B₃¬B₆</text>
+    <text x="626" y="88" fill="#5A5A5A">γ holds</text>
+
+    <rect x="564" y="118" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
+    <circle cx="596" cy="140" r="17" fill="#fff" stroke="#111"/>
+    <text x="596" y="144" font-size="9" text-anchor="middle" fill="#111">¬B₃B₆</text>
+    <text x="626" y="144" fill="#5A5A5A">γ holds</text>
+
+    <rect x="564" y="178" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
+    <circle cx="596" cy="200" r="17" fill="#fff" stroke="#111"/>
+    <text x="596" y="204" font-size="9" text-anchor="middle" fill="#111">B₃¬B₆</text>
+    <text x="626" y="204" fill="#5A5A5A">γ holds</text>
+
+    <rect x="564" y="234" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
+    <circle cx="596" cy="256" r="17" fill="#fff" stroke="#111"/>
+    <text x="596" y="260" font-size="9" text-anchor="middle" fill="#111">B₃B₆</text>
+    <text x="626" y="260" fill="#5A5A5A">γ holds</text>
+  </g>
+
+  <text x="736" y="88"  font-size="10.5" fill="#5A5A5A">Every leaf designates one world, so</text>
+  <text x="736" y="106" font-size="10.5" fill="#5A5A5A">each r₁-class is a singleton and both</text>
+  <text x="736" y="124" font-size="10.5" fill="#5A5A5A">conjuncts of γ hold there.</text>
+  <text x="736" y="160" font-size="10.5" fill="#C8102E">The run took the second and third of these:</text>
+  <text x="736" y="178" font-size="10.5" fill="#C8102E">room 3 blocked, room 6 clear.</text>
+  <text x="736" y="214" font-size="10.5" fill="#5A5A5A">The two subtrees below the first split are</text>
+  <text x="736" y="232" font-size="10.5" fill="#5A5A5A">separate nodes with the same two action</text>
+  <text x="736" y="250" font-size="10.5" fill="#5A5A5A">names, because they are evaluated in</text>
+  <text x="736" y="268" font-size="10.5" fill="#5A5A5A">models that disagree about B₃.</text>
+
+  <line x1="30" y1="288" x2="968" y2="288" stroke="#D6D6D6"/>
+  <text x="30" y="308" font-size="11" fill="#5A5A5A">Four designated worlds, two independent questions, two sensing actions that each halve the set: the policy has as many leaves as the initial model has worlds.</text>
+</svg>
+      </div>
+      <div class="fig-cap">
+        <b>The leaves of the policy are the worlds of the initial model.</b>
+        Nothing in the domain can change \(B_3\) or \(B_6\), so no ontic action
+        reduces the uncertainty and only the two inspections do. Each halves
+        the designated set exactly once, which is why depth four and four
+        leaves are not independent numbers.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -541,7 +755,7 @@ goto-door3_r1
     <p>
       The grid is built by <span class="mono-inline">slam_toolbox</span> from
       the robot's own laser while it drives, and this is what makes the
-      demonstration honest rather than arranged: a room the robot has not
+      demonstration honest: a room the robot has not
       entered is unobserved in the grid and undetermined in the Kripke model at
       the same time. Those are two views of one fact. No prepared map is
       published anywhere in the system.
@@ -601,7 +815,7 @@ goto-door3_r1
     </p>
 
     <p class="note">
-      One consequence is about sensors rather than models. A region is
+      One consequence is about sensors and not models. A region is
       <em class="term">blocked</em> the instant one cell in it is occupied, but
       <em class="term">clear</em> only when every cell has been observed and
       settled, which cannot be decided for a patch lying in open floor,

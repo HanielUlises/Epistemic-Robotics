@@ -53,8 +53,26 @@ html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
   font-weight:400;line-height:1.6}
-.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
-.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
 
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
@@ -306,6 +324,7 @@ footer a:hover{color:var(--red)}
             <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
             <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
           </div>
           <hr>
           <h6>Reports (PDF)</h6>
@@ -832,7 +851,7 @@ footer a:hover{color:var(--red)}
     <p class="note">
       Medians over solved instances. All eight unsolved instances are
       range-limited with four candidate bays and three or more vehicles; every
-      one is a search timeout rather than an error. Grounding, by contrast,
+      one is a search timeout and not an error. Grounding, by contrast,
       scales with \(N \times L\): from 0.02 s to 76 s across the same suite, an offline, cacheable cost, where search is the online one.
     </p>
   </div>
@@ -862,7 +881,7 @@ footer a:hover{color:var(--red)}
     </div>
 
     <p>
-      Three checks locate the fault in the planner rather than the encoding.
+      Three checks locate the fault in the planner and not the encoding.
       <span style="font-family:var(--mono);font-size:.85em">plank</span>'s
       independent validator reports the goal unsatisfied on the same history;
       the identical model with a goal naming only the last-sensed atom is solved

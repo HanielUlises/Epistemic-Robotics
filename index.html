@@ -56,7 +56,15 @@ html{font-size:16px;scroll-behavior:smooth}
 body{background:#fff;color:var(--black);
   font-family:var(--ss);
   font-weight:400;line-height:1.6}
-.container{max-width:800px;margin:0 auto;padding:0 2.2rem}
+/* One content width, for prose and for figures alike; see the other pages. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
 header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
 .hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
 .site-tag{font-family:var(--mono);font-size:.66rem;
@@ -295,6 +303,7 @@ footer a:hover{color:var(--red)}
             <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
             <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
+            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
           </div>
           <hr>
           <h6>Reports (PDF)</h6>
@@ -547,7 +556,7 @@ footer a:hover{color:var(--red)}
       and the µ-calculus backward wavefront identifies precisely the set of worlds from
       which the goal is reachable. Each map exercises a qualitatively distinct planning
       scenario (multi-branch reachability, sensing-blocked propagation, dual-target
-      branching, and νX safety) to illustrate why fixed-point logic, rather than
+      branching, and νX safety) to illustrate why fixed-point logic, and not
       classical graph search, is the appropriate specification language.
     </p>
 
@@ -1111,7 +1120,7 @@ footer a:hover{color:var(--red)}
       R&#x2081; then broadcasts via \(E_{\mathrm{announce}}\), collapsing \(R_{R_2}\)
       as well and establishing \(C_G(\neg\mathit{blocked}(c_{\mathrm{gap}}))\)
       in a single further update. R&#x2082;, now informed, commits to the 15-step
-      shortcut rather than the 21-step detour it would take under epistemic uncertainty.
+      shortcut instead of the 21-step detour it would take under epistemic uncertainty.
     </p>
     </div>
 
@@ -1232,8 +1241,7 @@ footer a:hover{color:var(--red)}
       developed on a companion page:
       <a href="domains.html" style="font-weight:500">Coordination domains for UGV
       fleets</a>. It executes the returned policies step by step, so the
-      difference a single observability condition makes can be watched rather
-      than argued.
+      difference a single observability condition makes can be watched.
     </p>
 
     <div class="cta">
