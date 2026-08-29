@@ -1,0 +1,142 @@
+(define (problem warehouse-nested-g1)
+
+  ;; Two robots on the floor of the AWS RoboMaker small warehouse -- the world
+  ;; the RoboticsAcademy multi-robot Amazon warehouse exercise runs on, and the
+  ;; same floor scenarios/warehouse routes over cell by cell.
+  ;;
+  ;; The zones are that building's own, and so is the shape of the graph
+  ;; between them.  The rack block fills the east half in six rows; the gaps
+  ;; between the rows are aisles, and because the racks stop 0.15 m short of
+  ;; the east wall -- nothing at all to a robot 0.21 m across -- an aisle is a
+  ;; pocket with one mouth, on the service lane.  So there is no edge from one
+  ;; bay to the next: a robot that has looked into bay2 and found it empty has
+  ;; to come back out to the lane before it can try bay3, and the plan pays
+  ;; for that.  The west corridor runs the length of the building and is what
+  ;; joins shipping in the south to receiving in the north.
+  ;;
+  ;; r1 comes on shift at shipping, r2 waits at receiving and r3 stands in the
+  ;; west corridor.  The pallet is in one of the two bays and none of them knows
+  ;; which, so the initial model designates two worlds.
+  ;;
+  ;; This file is one of three -- nested_g1, nested_g2, nested_g3 -- which are
+  ;; byte for byte identical down to the last line of (:init and differ only in
+  ;; the goal.  Same building, same fleet, same two worlds, same 198 ground
+  ;; actions.  What changes is where the modal operators sit in the formula,
+  ;; and the question the three of them together ask is whether that alone
+  ;; changes the policy.  It does, and the difference is an announcement.
+  ;;
+  ;; Note what is *not* in any of these goals: `delivered`.  It is left out on
+  ;; purpose.  `pickup` is public-ontic, so a robot lifting the pallet out of a
+  ;; bay tells the whole fleet which bay it was in -- and a goal that asks for
+  ;; delivery therefore hands every agent the answer as a side effect of the
+  ;; mission, whatever the epistemic conjunct says.  That is precisely what
+  ;; made the earlier warehouse instances unable to tell K_r2 Kw_r1 from
+  ;; Kw_r2: both were satisfied for free by the fetch.  Drop the fetch and the
+  ;; two formulas have to be paid for separately, which is what they cost.
+
+  (:domain robot-warehouse)
+
+  (:requirements
+    :typing :facts :equality
+    :finitary-S5-theories :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions
+  )
+
+  (:agents r1 r2 r3)
+
+  (:objects dock_south corridor dock_north lane bay2 bay3 - zone)
+
+  (:facts-init
+    ;; The west corridor: shipping at one end, receiving at the other.
+    (adjacent dock_south corridor) (adjacent corridor dock_south)
+    (adjacent corridor dock_north) (adjacent dock_north corridor)
+
+    ;; Along the south wall to the service lane in front of the racks.
+    (adjacent dock_south lane) (adjacent lane dock_south)
+
+    ;; And off the lane, the two aisles.  Each has one mouth and no way
+    ;; through to the other; that is the building, not a simplification.
+    (adjacent lane bay2) (adjacent bay2 lane)
+    (adjacent lane bay3) (adjacent bay3 lane)
+
+    (bay bay2) (bay bay3)
+    (dock dock_north)
+  )
+
+  (:init
+    (:and
+      ;; r1 at shipping, r2 already at receiving, and that much is common
+      ;; knowledge: the fleet sees its own members move.
+      (at-ag r1 dock_south)
+      (not (at-ag r1 corridor)) (not (at-ag r1 dock_north))
+      (not (at-ag r1 lane)) (not (at-ag r1 bay2)) (not (at-ag r1 bay3))
+      (at-ag r2 dock_north)
+      (not (at-ag r2 dock_south)) (not (at-ag r2 corridor))
+      (not (at-ag r2 lane)) (not (at-ag r2 bay2)) (not (at-ag r2 bay3))
+      (at-ag r3 corridor)
+      (not (at-ag r3 dock_south)) (not (at-ag r3 dock_north))
+      (not (at-ag r3 lane)) (not (at-ag r3 bay2)) (not (at-ag r3 bay3))
+      ([C. All]
+        (and (at-ag r1 dock_south)
+             (not (at-ag r1 corridor)) (not (at-ag r1 dock_north))
+             (not (at-ag r1 lane)) (not (at-ag r1 bay2)) (not (at-ag r1 bay3))
+             (at-ag r2 dock_north)
+             (not (at-ag r2 dock_south)) (not (at-ag r2 corridor))
+             (not (at-ag r2 lane)) (not (at-ag r2 bay2))
+             (not (at-ag r2 bay3))
+             (at-ag r3 corridor)
+             (not (at-ag r3 dock_south)) (not (at-ag r3 dock_north))
+             (not (at-ag r3 lane)) (not (at-ag r3 bay2))
+             (not (at-ag r3 bay3))))
+
+      ;; Nobody is carrying anything and nothing has been delivered.
+      (:forall (?i - agent) (not (carrying ?i)))
+      (not (delivered))
+      ([C. All] (and (forall (?i - agent) (not (carrying ?i))) (not (delivered))))
+
+      ;; The pallet is in exactly one of the two bays, and it is common
+      ;; knowledge that it is in one of them -- which bay is the open question.
+      ([C. All] (and (or (pallet-at bay2) (pallet-at bay3))
+                     (not (and (pallet-at bay2) (pallet-at bay3)))
+                     (not (pallet-at dock_south)) (not (pallet-at corridor))
+                     (not (pallet-at dock_north)) (not (pallet-at lane))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (pallet-at bay2))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (pallet-at bay3))))
+    )
+  )
+
+  ;; G1 -- the control.  Depth one, and the knower is the robot that looks.
+  ;;
+  ;;     [Kw r1] (pallet-at bay2)
+  ;;
+  ;; r1 has to end up knowing whether the pallet is in bay2.  Going there and
+  ;; inspecting it settles that, in either branch, and nothing else is needed:
+  ;; the fleet is not mentioned in the goal, so nothing the fleet does or does
+  ;; not hear about can be asked for.  This is the instance to read the other
+  ;; two against.
+
+  ;; Two of the three conjuncts below are about where robots stand and nothing
+  ;; else, and they are the same three words in all three instances.
+  ;;
+  ;; They are here so that the fleet is visibly a fleet. Without them r2 and r3
+  ;; are spawned into the warehouse and never move, because nothing in a goal
+  ;; about *knowledge* asks them to -- which is a true and rather bleak picture
+  ;; of what these formulas cost. `go` is public-ontic and says nothing
+  ;; whatever about the pallet, so driving r2 to the corridor and r3 to the
+  ;; service lane cannot settle anything: every robot ends the run exactly as
+  ;; ignorant of which aisle the pallet is in as it began, and the modal
+  ;; conjunct is still the only thing that has to be worked for.
+  ;;
+  ;; The corridor for r2 in particular. r2 is the agent the interesting goals
+  ;; are about, and it must not be parked next to an aisle: sent to the lane it
+  ;; is one move from bay3, and the planner duly discovers that the cheapest
+  ;; way to make r2 know is to let r2 look -- which is a perfectly good plan
+  ;; and answers a question nobody asked. The corridor is three moves from a
+  ;; bay, and going to look stops being cheaper than being told.
+  (:goal
+    (and
+      (at-ag r2 corridor) (at-ag r3 lane)
+      ([Kw. r1] (pallet-at bay2)) )
+  )
+)

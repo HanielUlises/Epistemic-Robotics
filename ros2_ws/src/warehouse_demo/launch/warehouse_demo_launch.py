@@ -107,6 +107,45 @@ TASKS = {
 }
 KNOWER = {1: 'r1', 2: 'r2', 3: 'r2'}
 
+# The nested-goal instances, and the whole of what `goal:=` selects.
+#
+# These are the second simulation. Same domain, same fleet of three, same two
+# worlds, same 198 ground actions and the same building -- the files are
+# identical to each other down to the last line of `(:init` and differ only in
+# the goal formula:
+#
+#   G1   [Kw r1] (pallet-at bay2)             the robot that looks has to know
+#   G2   [r2] ([Kw r1] (pallet-at bay2))      r2 has to know that r1 knows whether
+#   G3   [Kw r2] (pallet-at bay2)             r2 itself has to know whether
+#
+# G2 is the only goal in this repository with a modal operator inside another,
+# and it is satisfied by the look alone: `inspect` is semi-private, so r2 sees
+# *that* the bay was inspected without seeing the outcome, and every world it
+# still considers possible is one in which r1 has settled the question. G3 is
+# shallower and costs more: seeing that somebody looked says nothing about what
+# they found, so somebody has to say it out loud. The policies differ by one
+# announcement and nothing else.
+#
+# None of these goals asks for `delivered`, deliberately. `pickup` is
+# public-ontic, so the fetch itself tells the fleet which bay the pallet came
+# out of -- which is what made the earlier instances unable to tell these two
+# formulas apart.
+NESTED = {
+    'G1': ('nested_g1', 'r1'),
+    'G2': ('nested_g2', 'r2'),
+    'G3': ('nested_g3', 'r2'),
+}
+
+# The three formulas the probe asks of every nested run, whichever of them was
+# the goal. Asking all three in one run is the point: the answers cannot have
+# been decided by what the planner was told to achieve, because two of them
+# were never its goal.
+WATCHED = [
+    ('Kw_r1_P', '(Kw r1 pallet-at_bay2)'),
+    ('K_r2_Kw_r1_P', '(K r2 (Kw r1 pallet-at_bay2))'),
+    ('Kw_r2_P', '(Kw r2 pallet-at_bay2)'),
+]
+
 # Where a pallet stands in each bay, in the world's own frame. These are the
 # poses `look_action_node` turns to face and the poses perception's regions are
 # drawn on the near face of, so they are one fact with three readers and have
@@ -259,6 +298,79 @@ def perception_params(source, fleet, single):
     return head + '\n'.join(copies)
 
 
+# The colours the fleet is drawn in, in the order robots are added. One robot
+# per colour, and every display that belongs to that robot -- its map, its
+# laser, its route -- takes its own. Three maps in one grey are three maps
+# nobody can tell apart.
+LIVERY = [
+    ('r1', '255; 90; 40', '236; 118; 60'),
+    ('r2', '80; 200; 255', '90; 170; 230'),
+    ('r3', '150; 255; 130', '120; 210; 110'),
+]
+
+
+def rviz_for(source, fleet, single):
+    """The RViz config, with one set of displays per robot.
+
+    The shipped config watches `/map`, `/scan`, `/robot_description` and
+    `/mu_planner/path`, which is right for one robot and shows *nothing* for a
+    fleet: with more than one robot every one of those topics moves into that
+    robot's namespace, and the panel comes up with the floor plan alone --
+    a grey building with no robots on it, no measured map, and no routes,
+    for the whole length of the run.
+
+    So the per-robot displays are copied once per robot and repointed, each in
+    its own colour. What is deliberately *not* copied is the floor plan and the
+    epistemic markers: the building is one building, served to the fleet, and
+    the epistemic state is one model with the whole fleet in it. Drawing either
+    of them three times would say the opposite of what the demo is for.
+    """
+    with open(source) as handle:
+        text = handle.read()
+    if single:
+        return text
+
+    lines = text.splitlines(True)
+
+    # The block of displays belonging to one robot: from the SLAM map down to
+    # (but not including) the handling marker, which is fleet-wide.
+    start = next(i for i, l in enumerate(lines) if 'Name: SLAM map' in l)
+    start = next(i for i in range(start, -1, -1) if lines[i].lstrip().startswith('- Class:'))
+    end = next(i for i, l in enumerate(lines) if 'Name: handling' in l)
+    end = next(i for i in range(end, -1, -1) if lines[i].lstrip().startswith('- Class:'))
+
+    block = ''.join(lines[start:end])
+    copies = []
+    for robot, _zone, _pose in fleet:
+        laser, route = next(
+            (l, r) for name, l, r in LIVERY if name == robot)
+        one = block
+        for topic in ('/map', '/scan', '/robot_description',
+                      '/mu_planner/path', '/mu_planner/sensing'):
+            one = one.replace('Value: ' + topic + '\n',
+                              'Value: /' + robot + topic + '\n')
+        # The display names carry the robot too, because RViz lists them in one
+        # panel and three entries called "laser" are not a legend.
+        for name in ('SLAM map', 'laser', 'mu route', 'sensing'):
+            one = one.replace('Name: ' + name + '\n',
+                              'Name: ' + name + ' ' + robot + '\n')
+        one = one.replace('Name: r1\n', 'Name: ' + robot + '\n')
+        one = one.replace('Color: 255; 90; 40', 'Color: ' + laser)
+        one = one.replace('Color: 31; 79; 216', 'Color: ' + route)
+        copies.append(one)
+
+    text = ''.join(lines[:start]) + ''.join(copies) + ''.join(lines[end:])
+
+    # And the camera, because the window is not the window the scale was set
+    # for. `Scale` is pixels per metre over the 3-D viewport's shorter side;
+    # 36 fills the ~950 px panel one robot's config was written against. A
+    # fleet run is recorded two panes wide, the panel is a thousand pixels
+    # tall, and the same 36 draws a 21 m building small in the middle of it
+    # with the measured maps too fine to read. 42 fills the frame with the
+    # floor and leaves a margin.
+    return text.replace('Scale: 36', 'Scale: 42')
+
+
 def setup(context, *args, **kwargs):
     pkg = get_package_share_directory('warehouse_demo')
     gui = LaunchConfiguration('gui')
@@ -272,9 +384,31 @@ def setup(context, *args, **kwargs):
     fleet = FLEET[:count]
     single = count == 1
 
+    # Which goal, if this is a nested run. `goal:=` overrides the instance the
+    # fleet size would otherwise pick, and nothing else about the launch: the
+    # world, the robots, the perception regions and the action nodes are the
+    # ones above. That is what makes two nested runs comparable -- the only
+    # thing that differs between them is a formula.
+    goal = LaunchConfiguration('goal').perform(context)
+    if goal:
+        if goal not in NESTED:
+            raise RuntimeError(
+                'goal:={} -- the nested instances are {}, and a goal without '
+                'one is a formula nobody has written down'
+                .format(goal, ', '.join(sorted(NESTED))))
+        if count != 3:
+            raise RuntimeError(
+                'goal:={} needs robots:=3 -- the formula is about r2 and the '
+                'fleet has to contain it'.format(goal))
+        stem, knows = NESTED[goal]
+        instance = os.path.join('instances', stem + '.epddl')
+        task = os.path.join('out', stem + '.json')
+    else:
+        instance, task, knows = INSTANCES[count], TASKS[count], KNOWER[count]
+
     epddl = os.path.join(pkg, 'epddl')
     domain = os.path.join(epddl, 'warehouse-domain.epddl')
-    problem = os.path.join(epddl, INSTANCES[count])
+    problem = os.path.join(epddl, instance)
     mapping = os.path.join(pkg, 'pddl', 'warehouse-mapping.json')
     model = os.path.join(pkg, 'pddl', 'warehouse.pddl')
 
@@ -284,7 +418,7 @@ def setup(context, *args, **kwargs):
               .replace('EPDDL_DOMAIN', domain)
               .replace('EPDDL_PROBLEM', problem)
               .replace('ACTION_MAPPING', mapping)
-              .replace('EPDDL_TASK', os.path.join(epddl, TASKS[count]))
+              .replace('EPDDL_TASK', os.path.join(epddl, task))
               .replace('ALETHEIA_COMMAND', aletheia()))
     filled = written(params, '_warehouse_demo.yaml')
 
@@ -727,6 +861,24 @@ def setup(context, *args, **kwargs):
             TimerAction(period=at + 12.0, actions=[nav2_manager[index]]))
     last_nav2_up = settle + 12.0 + max(0, len(fleet) - 1) * nav2_every + 24.0
 
+    # The instrument. It runs only on a nested run, because it exists for the
+    # one thing those runs are for: putting a timestamp on the instant a
+    # formula becomes true. It asks all three formulas whichever is the goal,
+    # so what it writes down cannot have been decided by what was asked for.
+    probe = []
+    if goal:
+        csv = LaunchConfiguration('probe_csv').perform(context)
+        probe = [Node(
+            package='warehouse_demo', executable='formula_probe_node',
+            name='formula_probe', output='screen',
+            parameters=[{
+                'use_sim_time': True,
+                'goal': goal,
+                'formulas': [text for _label, text in WATCHED],
+                'labels': [label for label, _text in WATCHED],
+                'period': 0.5,
+                'csv': csv or ''}])]
+
     plansys2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('plansys2_bringup'),
@@ -745,7 +897,7 @@ def setup(context, *args, **kwargs):
     return [
         model_path, resource_path, gazebo_gui, gazebo_headless, pallet,
     ] + per_robot + [
-    ] + brought_up + [
+    ] + brought_up + probe + [
         plansys2,
         Node(package='warehouse_demo', executable='markers_node',
              name='warehouse_markers', output='screen',
@@ -755,14 +907,20 @@ def setup(context, *args, **kwargs):
              parameters=[{'use_sim_time': True,
                           'agents': [name for name, _z, _p in fleet],
                           'starts': [zone for _n, zone, _p in fleet],
-                          'knower': KNOWER[len(fleet)],
+                          'knower': knows,
+                          # The nested goals do not ask for delivery, so the
+                          # fetch mission's caption would be a lie about them.
+                          'done_caption': '' if not goal else
+                          'DONE: ' + goal + ' holds',
                           # A fleet is a slower simulator and a slower bringup,
                           # and planning before there is a map only means the
                           # first drive begins blind.
                           'settle': last_nav2_up + 10.0}]),
         Node(package='rviz2', executable='rviz2', name='rviz2',
              condition=IfCondition(gui),
-             arguments=['-d', os.path.join(pkg, 'config', 'warehouse_demo.rviz')],
+             arguments=['-d', written(rviz_for(
+                 os.path.join(pkg, 'config', 'warehouse_demo.rviz'),
+                 fleet, single), '_warehouse_demo.rviz')],
              parameters=[{'use_sim_time': True}],
              output='screen'),
     ]
@@ -778,6 +936,17 @@ def generate_launch_description():
                         'bay3. Nobody in the domain is told; it decides which '
                         'branch of the policy the run takes. bay3 is the one '
                         'where the first look comes back empty.'),
+        DeclareLaunchArgument(
+            'goal', default_value='',
+            description='Which nested-goal instance to run: G1, G2 or G3. '
+                        'Needs robots:=3. Empty runs the fetch mission the '
+                        'fleet size picks. The three instances differ from '
+                        'each other only in the goal formula, and running two '
+                        'of them over the same world is the demonstration.'),
+        DeclareLaunchArgument(
+            'probe_csv', default_value='',
+            description='Where the formula probe writes its log. Only used on '
+                        'a nested run; empty logs to the console alone.'),
         DeclareLaunchArgument(
             'robots', default_value='1',
             description='How many robots come on shift: 1, 2 or 3. Each has an '

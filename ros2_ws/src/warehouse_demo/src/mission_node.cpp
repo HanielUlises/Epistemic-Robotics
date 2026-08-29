@@ -71,6 +71,12 @@ public:
     // The robot the classical goal is about: the one that fetches. See seed().
     declare_parameter<std::string>("deliverer", "r1");
 
+    // What to say when the policy is done. The default is the fetch mission's
+    // caption and would be a lie about the nested runs, whose goals do not ask
+    // for delivery at all -- they ask only who has to know what, and the
+    // policy ends the moment the model says they do.
+    declare_parameter<std::string>("done_caption", "");
+
     domain_ = std::make_shared<plansys2::DomainExpertClient>();
     problem_ = std::make_shared<plansys2::ProblemExpertClient>();
     planner_ = std::make_shared<plansys2::PlannerClient>();
@@ -215,8 +221,11 @@ private:
             result.value().result == plansys2_msgs::action::ExecutePlan::Result::SUCCESS;
           if (reached) {
             RCLCPP_INFO(get_logger(), "mission complete: the policy reached its goal");
-            say("DONE: delivered, and " +
-              get_parameter("knower").as_string() + " knows which bay");
+            const auto caption = get_parameter("done_caption").as_string();
+            say(caption.empty()
+              ? "DONE: delivered, and " +
+                get_parameter("knower").as_string() + " knows which bay"
+              : caption);
           } else {
             RCLCPP_ERROR(get_logger(), "the policy did not reach its goal");
             for (const auto & action : executor_->getFeedBack().action_execution_status) {

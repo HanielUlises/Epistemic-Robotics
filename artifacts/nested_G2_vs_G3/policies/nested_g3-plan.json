@@ -1,0 +1,69 @@
+{
+  "action": "go_r2_dock_north_corridor",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "go_r3_corridor_dock_south",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "go_r3_dock_south_lane",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "go_r1_dock_south_lane",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": {
+                          "action": "go_r1_lane_bay2",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": {
+                                "action": "inspect_r1_bay2",
+                                "branches": [
+                                  {
+                                    "event": 1,
+                                    "subtree": {
+                                      "action": "report-pallet-at_r1_bay3",
+                                      "branches": [
+                                        {
+                                          "event": 0,
+                                          "subtree": null
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "event": 0,
+                                    "subtree": {
+                                      "action": "pickup_r1_bay2",
+                                      "branches": [
+                                        {
+                                          "event": 0,
+                                          "subtree": null
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -55,6 +55,14 @@ ament_target_dependencies(markers_node
   rclcpp std_msgs visualization_msgs plansys2_msgs warehouse_scenario
   tf2 tf2_ros plansys2_epistemic_executor)
 
+# Asks the epistemic state whether each of several formulas holds, twice a
+# second, and writes down what it said. An instrument, not a participant: the
+# result of the nested run is a moment in a Kripke model, and a model has no
+# picture of its own.
+add_executable(formula_probe_node src/formula_probe_node.cpp)
+ament_target_dependencies(formula_probe_node
+  rclcpp std_msgs plansys2_epistemic_executor)
+
 # Seeds the problem, asks for the policy, and hands it to the executor.
 add_executable(mission_node src/mission_node.cpp)
 ament_target_dependencies(mission_node
@@ -63,7 +71,7 @@ ament_target_dependencies(mission_node
   plansys2_planner plansys2_executor)
 
 install(TARGETS drive_action_node look_action_node handle_action_node mission_node
-  markers_node
+  markers_node formula_probe_node
   RUNTIME DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch params pddl config worlds

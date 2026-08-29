@@ -1,0 +1,44 @@
+[
+ {
+  "goal": "G1",
+  "formula": "[Kw r1] P",
+  "modal depth": 1,
+  "ground actions": 198,
+  "worlds": 2,
+  "plan depth": "6",
+  "expanded": "3952",
+  "policy actions": 6,
+  "leaves": "2",
+  "branches": "6",
+  "announce?": "no",
+  "inspect alone?": "yes"
+ },
+ {
+  "goal": "G2",
+  "formula": "[r2] [Kw r1] P",
+  "modal depth": 2,
+  "ground actions": 198,
+  "worlds": 2,
+  "plan depth": "6",
+  "expanded": "3952",
+  "policy actions": 6,
+  "leaves": "2",
+  "branches": "6",
+  "announce?": "no",
+  "inspect alone?": "yes"
+ },
+ {
+  "goal": "G3",
+  "formula": "[Kw r2] P",
+  "modal depth": 1,
+  "ground actions": 198,
+  "worlds": 2,
+  "plan depth": "7",
+  "expanded": "8543",
+  "policy actions": 8,
+  "leaves": "2",
+  "branches": "8",
+  "announce?": "yes",
+  "inspect alone?": "no"
+ }
+]
