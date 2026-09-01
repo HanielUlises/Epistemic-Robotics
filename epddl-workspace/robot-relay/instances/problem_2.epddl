@@ -1,0 +1,76 @@
+(define (problem relay-pair)
+
+  ;; Same facility, and now r2 waits at home the whole shift -- the courier's
+  ;; own starting zone, which the courier leaves on its very first move and
+  ;; never returns to. r2 is never in the bay when the package is picked up,
+  ;; never on the corridor for a relay hop, and never at the depot for the
+  ;; drop: every location-gated event in the plan happens somewhere r2 is
+  ;; not. Watching r1 walk out the door (public, ordinary telemetry) tells
+  ;; r2 nothing about where the package came from or where it ends up. The
+  ;; goal asks r2 to know which bay it was anyway, and the only way there is
+  ;; for r1 to say so.
+
+  (:domain robot-relay)
+
+  (:requirements
+    :KD45-frames :finitary-S5-theories :common-knowledge
+    :typing :facts :equality
+    :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions
+  )
+
+  (:agents r1 r2)
+
+  (:objects home lane bayA bayB relay1 relay2 depot - zone)
+
+  (:facts-init
+    (adjacent home lane) (adjacent lane home)
+    (adjacent lane bayA) (adjacent bayA lane)
+    (adjacent lane bayB) (adjacent bayB lane)
+    (adjacent lane relay1) (adjacent relay1 lane)
+    (adjacent relay1 relay2) (adjacent relay2 relay1)
+    (adjacent relay2 depot) (adjacent depot relay2)
+
+    (bay bayA) (bay bayB)
+    (depot depot)
+
+    (courier r1)
+  )
+
+  (:init
+    (:and
+      (at-ag r1 home)
+      (not (at-ag r1 lane)) (not (at-ag r1 bayA)) (not (at-ag r1 bayB))
+      (not (at-ag r1 relay1)) (not (at-ag r1 relay2)) (not (at-ag r1 depot))
+      (at-ag r2 home)
+      (not (at-ag r2 lane)) (not (at-ag r2 bayA)) (not (at-ag r2 bayB))
+      (not (at-ag r2 relay1)) (not (at-ag r2 relay2)) (not (at-ag r2 depot))
+      ([C. All]
+        (and (at-ag r1 home)
+             (not (at-ag r1 lane)) (not (at-ag r1 bayA)) (not (at-ag r1 bayB))
+             (not (at-ag r1 relay1)) (not (at-ag r1 relay2)) (not (at-ag r1 depot))
+             (at-ag r2 home)
+             (not (at-ag r2 lane)) (not (at-ag r2 bayA)) (not (at-ag r2 bayB))
+             (not (at-ag r2 relay1)) (not (at-ag r2 relay2)) (not (at-ag r2 depot))))
+
+      (:forall (?i - agent) (not (carrying ?i))) (not (delivered))
+      ([C. All] (and (forall (?i - agent) (not (carrying ?i))) (not (delivered))))
+
+      ([C. All] (and (or (package-at bayA) (package-at bayB))
+                     (not (and (package-at bayA) (package-at bayB)))
+                     (not (package-at home)) (not (package-at lane))
+                     (not (package-at relay1)) (not (package-at relay2))
+                     (not (package-at depot))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (package-at bayA))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (package-at bayB))))
+    )
+  )
+
+  (:goal
+    (and
+      (delivered)
+      ([Kw. r2] (package-at bayA))
+    )
+  )
+)

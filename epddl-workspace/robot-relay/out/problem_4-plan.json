@@ -1,0 +1,173 @@
+{
+  "action": "go_r1_home_lane",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "go_r1_lane_bayA",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "inspect_r1_bayA",
+              "branches": [
+                {
+                  "event": 1,
+                  "subtree": {
+                    "action": "broadcast_r1_bayB",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": {
+                          "action": "go_r1_bayA_lane",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": {
+                                "action": "go_r1_lane_bayB",
+                                "branches": [
+                                  {
+                                    "event": 0,
+                                    "subtree": {
+                                      "action": "pickup_r1_bayB",
+                                      "branches": [
+                                        {
+                                          "event": 0,
+                                          "subtree": {
+                                            "action": "relay_r1_bayB_lane",
+                                            "branches": [
+                                              {
+                                                "event": 0,
+                                                "subtree": {
+                                                  "action": "relay_r1_lane_relay1",
+                                                  "branches": [
+                                                    {
+                                                      "event": 0,
+                                                      "subtree": {
+                                                        "action": "relay_r1_relay1_relay2",
+                                                        "branches": [
+                                                          {
+                                                            "event": 0,
+                                                            "subtree": {
+                                                              "action": "relay_r1_relay2_depot",
+                                                              "branches": [
+                                                                {
+                                                                  "event": 0,
+                                                                  "subtree": {
+                                                                    "action": "deliver_r1_depot",
+                                                                    "branches": [
+                                                                      {
+                                                                        "event": 0,
+                                                                        "subtree": null
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "broadcast_r1_bayA",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": {
+                          "action": "radio_r2_r3_bayA",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": {
+                                "action": "radio_r2_r3_bayA",
+                                "branches": [
+                                  {
+                                    "event": 0,
+                                    "subtree": {
+                                      "action": "pickup_r1_bayA",
+                                      "branches": [
+                                        {
+                                          "event": 0,
+                                          "subtree": {
+                                            "action": "relay_r1_bayA_lane",
+                                            "branches": [
+                                              {
+                                                "event": 0,
+                                                "subtree": {
+                                                  "action": "relay_r1_lane_relay1",
+                                                  "branches": [
+                                                    {
+                                                      "event": 0,
+                                                      "subtree": {
+                                                        "action": "relay_r1_relay1_relay2",
+                                                        "branches": [
+                                                          {
+                                                            "event": 0,
+                                                            "subtree": {
+                                                              "action": "relay_r1_relay2_depot",
+                                                              "branches": [
+                                                                {
+                                                                  "event": 0,
+                                                                  "subtree": {
+                                                                    "action": "deliver_r1_depot",
+                                                                    "branches": [
+                                                                      {
+                                                                        "event": 0,
+                                                                        "subtree": null
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
