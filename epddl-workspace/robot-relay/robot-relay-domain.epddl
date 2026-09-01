@@ -1,0 +1,272 @@
+(define (domain robot-relay)
+
+  ;; A fleet of couriers moving one package across a facility, as a KD45_n
+  ;; (belief) epistemic planning domain.
+  ;;
+  ;; robot-warehouse asks a single question -- which of two bays holds the
+  ;; pallet -- and answers it once, by looking. Nothing a robot comes to
+  ;; believe there is ever false: inspecting only narrows an open disjunction,
+  ;; so that domain is finitary S5 throughout and stays there.
+  ;;
+  ;; This domain starts the same way -- the package is in one of two bays and
+  ;; a robot has to look -- but does not stop there. Once found, the package
+  ;; is *carried*, hop by hop, across the floor to a depot at the far end, and
+  ;; carrying is where the frame stops being S5. Unlike robot-warehouse's
+  ;; pickup, nothing here is fleet-wide by default: the courier's pickup, every
+  ;; leg of the carry, and the drop at the depot are each witnessed only by
+  ;; whoever happens to already be standing where it happens. A robot stationed
+  ;; anywhere else keeps believing the package is exactly where it last saw
+  ;; it -- nowhere, at the start -- and once the courier moves, that belief is
+  ;; not merely stale, it is false: the accessibility relation stops being
+  ;; reflexive at the world the courier is actually in, and the model is
+  ;; KD45_n rather than S5_n from that leg on. Only one robot per instance is
+  ;; the courier -- see :fact courier below -- so an idle robot's uncertainty
+  ;; is never a matter of the search happening to route the job through it
+  ;; instead.
+  ;;
+  ;; The domain supplies the means to create that divergence (relay), narrow
+  ;; it locally without telling anyone (scan), let it show through to
+  ;; bystanders without revealing it (inspect), and repair it either for
+  ;; everyone at once (broadcast) or for one named robot (radio). An instance
+  ;; chooses how many idle robots are left holding the stale belief, and
+  ;; whether the plan is asked to repair it or merely required not to need to.
+
+  (:requirements
+    :KD45-frames
+    :typing
+    :facts
+    :equality
+    :ontic-actions
+    :partial-observability
+    :multi-pointed-models
+    :lists :list-comprehensions
+    :negative-preconditions
+    :existential-preconditions
+    :modal-preconditions
+    :negative-obs-conditions
+    :existential-obs-conditions
+    :disjunctive-obs-conditions
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:types zone)
+
+  (:predicates
+    (at-ag      ?i - agent ?z - zone)
+    (package-at ?z - zone)
+    (carrying   ?i - agent)
+    (delivered)
+    ;; Rigid: the floor plan does not change while the fleet works.
+    (:fact adjacent ?z1 ?z2 - zone)
+    (:fact bay      ?z      - zone)
+    (:fact depot    ?z      - zone)
+    ;; Rigid: which robot is on courier duty this shift. Everyone else is
+    ;; idle -- present, mobile, able to sense and talk, never assigned to
+    ;; carry -- so an instance's epistemic story is never accidentally
+    ;; resolved by the search handing the job to a bystander instead.
+    (:fact courier  ?i      - agent)
+  )
+
+  (:event nil)
+
+  ;--------------------GO------------------
+  ;
+  ; Walking empty-handed is ordinary fleet telemetry: everybody's position
+  ; stays common knowledge. A robot that is carrying does not use this action
+  ; -- see relay below -- so publicity never leaks where the package is going.
+  ;
+  ; Only the courier moves. That is a job assignment, not a physical limit
+  ; on the other robots -- but without it, an idle robot could simply walk to
+  ; wherever the carry is headed and pick up the same information relay was
+  ; built to keep from it, by the same route relay itself uses: witnessing
+  ; one hop it happens to be standing on the near end of. Keeping everyone
+  ; else stationary is what makes broadcast and radio the only way to know.
+
+  (:event e-go
+    :parameters (?i - agent ?from ?to - zone)
+    :precondition
+      (and (courier ?i) (at-ag ?i ?from) (not (at-ag ?i ?to)) (adjacent ?from ?to)
+           (not (carrying ?i)))
+    :effects
+      (:and (not (at-ag ?i ?from)) (at-ag ?i ?to))
+  )
+
+  (:action go
+    :parameters (?i - agent ?from ?to - zone)
+    :action-type (public-ontic (e-go ?i ?from ?to))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------SCAN------------------
+  ;
+  ; Fully private sensing: ?i checks its own zone. Nobody else even notices,
+  ; so their beliefs -- true or already false -- are untouched.
+
+  (:event e-scan-pos
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (package-at ?z))
+  )
+  (:event e-scan-neg
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (not (package-at ?z)))
+  )
+  (:action scan
+    :parameters (?i - agent ?z - zone)
+    :action-type (private-sensing (e-scan-pos ?i ?z) (e-scan-neg ?i ?z) (nil))
+    :observability-conditions
+      (:and (?i Fully) (default Oblivious))
+  )
+
+  ;--------------------INSPECT------------------
+  ;
+  ; Semi-private sensing, one event per answer, for the origin search. The
+  ; fleet sees a robot inspect a bay and not what it found -- so inspecting
+  ; alone never settles anything for a bystander, the same reading
+  ; robot-warehouse gives this action.
+
+  (:event e-inspect-found
+    :parameters (?i - agent ?z - zone)
+    :precondition
+      (and (at-ag ?i ?z) (bay ?z) (package-at ?z))
+  )
+  (:event e-inspect-empty
+    :parameters (?i - agent ?z - zone)
+    :precondition
+      (and (at-ag ?i ?z) (bay ?z) (not (package-at ?z)))
+  )
+  (:action inspect
+    :parameters (?i - agent ?z - zone)
+    :action-type (semi-private-sensing (e-inspect-found ?i ?z) (e-inspect-empty ?i ?z))
+    :observability-conditions
+      (:and (?i Fully) (default Partially))
+  )
+
+  ;--------------------PICKUP------------------
+  ;
+  ; Need-to-know, not fleet-wide: only robots already standing in ?z see the
+  ; package change hands. That is unlike robot-warehouse's pickup, which is
+  ; public precisely so a distant robot learns the origin bay for free; here
+  ; the only unconditionally fleet-wide event is deliver, so an idle robot
+  ; that never shares a zone with the courier learns nothing about where the
+  ; package came from until somebody tells it. The modal precondition is the
+  ; same discipline as robot-warehouse's: a robot may lift the package only
+  ; where it *believes* the package is there.
+
+  (:event e-pickup
+    :parameters (?i - agent ?z - zone)
+    :precondition
+      (and (courier ?i) (at-ag ?i ?z) (bay ?z) (package-at ?z)
+           ([?i] (package-at ?z)) (not (carrying ?i)))
+    :effects (carrying ?i)
+  )
+  (:action pickup
+    :parameters (?i - agent ?z - zone)
+    :action-type (private-ontic (e-pickup ?i ?z) (nil))
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (:forall (?j - agent | (/= ?j ?i))
+          (?j (if (at-ag ?j ?z) Fully else Oblivious))
+        )
+      )
+  )
+
+  ;--------------------RELAY------------------
+  ;
+  ; The false-belief generator. ?i carries the package one hop while only the
+  ; robots already standing in ?from see it leave; everyone else stays
+  ; oblivious and goes on believing the package -- and ?i -- are still there.
+  ; Chained across several hops, a robot that witnessed none of them ends the
+  ; carry believing the package sits exactly where the public pickup put it,
+  ; which by then is simply false.
+
+  (:event e-relay
+    :parameters (?i - agent ?from ?to - zone)
+    :precondition (and (at-ag ?i ?from) (carrying ?i) (adjacent ?from ?to))
+    :effects
+      (:and (not (at-ag ?i ?from)) (at-ag ?i ?to)
+            (not (package-at ?from)) (package-at ?to))
+  )
+
+  (:action relay
+    :parameters (?i - agent ?from ?to - zone)
+    :action-type (private-ontic (e-relay ?i ?from ?to) (nil))
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (:forall (?j - agent | (/= ?j ?i))
+          (?j (if (at-ag ?j ?from) Fully else Oblivious))
+        )
+      )
+  )
+
+  ;--------------------DELIVER------------------
+  ;
+  ; The drop-off itself is need-to-know, same as pickup and relay: only a
+  ; robot already standing at the depot sees it happen. Nothing about this
+  ; domain gives the rest of the fleet a free look at where the courier ends
+  ; up -- (delivered) becomes true the moment the drop happens regardless of
+  ; who is watching, since it is an ontic goal, not a belief one, but any
+  ; agent that wants to *know* it, or to know which bay the package left,
+  ; needs telling.
+
+  (:event e-deliver
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (depot ?z) (carrying ?i))
+    :effects (:and (delivered) (not (carrying ?i)))
+  )
+  (:action deliver
+    :parameters (?i - agent ?z - zone)
+    :action-type (private-ontic (e-deliver ?i ?z) (nil))
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (:forall (?j - agent | (/= ?j ?i))
+          (?j (if (at-ag ?j ?z) Fully else Oblivious))
+        )
+      )
+  )
+
+  ;--------------------BROADCAST------------------
+  ;
+  ; Truthful public announcement over the fleet channel: it makes the
+  ; package's current location common knowledge in one action, however many
+  ; robots are listening.
+
+  (:event e-broadcast
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (package-at ?z) ([?i] (package-at ?z)))
+  )
+  (:event e-broadcast-neg
+    :parameters (?z - zone)
+    :precondition (not (package-at ?z))
+  )
+  (:action broadcast
+    :parameters (?i - agent ?z - zone)
+    :action-type (public-announcement (e-broadcast ?i ?z) (e-broadcast-neg ?z))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------RADIO------------------
+  ;
+  ; Truthful private announcement, point to point: ?i tells ?j alone where
+  ; the package is. The rest of the fleet hears nothing and keeps whatever
+  ; it believed, which is the tool for repairing one robot's belief without
+  ; paying for a fleet-wide broadcast.
+
+  (:event e-radio
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (package-at ?z) ([?i] (package-at ?z)))
+  )
+  (:action radio
+    :parameters (?i ?j - agent ?z - zone | (/= ?i ?j))
+    :action-type (private-announcement (e-radio ?i ?z) (nil))
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (?j Fully)
+        (:forall (?k - agent | (and (/= ?k ?i) (/= ?k ?j))) (?k Oblivious))
+      )
+  )
+)
