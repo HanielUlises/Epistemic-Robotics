@@ -17,6 +17,16 @@ set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RAW="$1"; VIDEO="$2"; LOG="$3"; REC_START="$4"
 SPEED="${SPEED:-4}"
+
+# Where each pane's drawn content sits in the grab, as ffmpeg crop rects.
+#
+# Without a window manager Qt never gets a proper resize event, so Gazebo keeps
+# its own idea of how big it is however large its window is made, and the rest
+# of that window stays black. Rather than publish the black, each pane is cut
+# out at the size it actually drew and the two are scaled to a common height
+# and set side by side.
+PANE_LEFT="${PANE_LEFT:-}"
+PANE_RIGHT="${PANE_RIGHT:-}"
 SEGMENTS="${VIDEO%.mp4}-segments.txt"
 
 FONT="${FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf}"
@@ -37,12 +47,37 @@ escape() { sed -e "s/'/\\\\\\\\'/g" -e 's/:/\\:/g' -e 's/%/\\%/g' <<< "$1"; }
 # footage. Rather than cut the ending short, the final frame is held until the
 # last caption has had its time.
 RAW_SECONDS=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "${RAW}")
+
+# The grab runs a few seconds past the end of the mission, and in those seconds
+# Gazebo and RViz are shutting down and going black. Holding the *last* frame
+# would freeze on that. The footage is cut at the moment the mission reported
+# done, so what the closing captions sit on is the finished building.
+END_STAMP=$(grep -aoE '\[[0-9]+\.[0-9]+\].*(mission complete|mission failed)' "${LOG}" \
+            | tail -1 | sed -E 's/^\[([0-9.]+)\].*/\1/')
+TRIM=""
+if [[ -n "${END_STAMP}" ]]; then
+  TRIM=$(awk -v e="${END_STAMP}" -v s="${REC_START}" -v raw="${RAW_SECONDS}" \
+    'BEGIN { t = e - s; if (t > 0 && t < raw) print t }')
+fi
+if [[ -n "${TRIM}" ]]; then
+  echo "cutting the grab at ${TRIM}s, where the mission reported done"
+  RAW_SECONDS="${TRIM}"
+fi
 PAD=$(awk -v raw="${RAW_SECONDS}" -v speed="${SPEED}" '
   !/^#/ && NF { end = $2 }
   END { need = end - raw / speed; print (need > 0 ? need + 0.5 : 0) }
 ' "${SEGMENTS}")
 
-filter="setpts=PTS/${SPEED}"
+if [[ -n "${PANE_LEFT}" && -n "${PANE_RIGHT}" ]]; then
+  echo "composing ${PANE_LEFT} and ${PANE_RIGHT} side by side"
+  compose="[0:v]crop=${PANE_LEFT},scale=-2:540[l];"
+  compose+="[0:v]crop=${PANE_RIGHT},scale=-2:540[r];"
+  compose+="[l][r]hstack=inputs=2,scale=1920:-2,"
+else
+  compose=""
+fi
+
+filter="${compose}setpts=PTS/${SPEED}"
 if awk -v p="${PAD}" 'BEGIN{exit !(p > 0)}'; then
   echo "holding the last frame for ${PAD}s so the closing captions fit"
   filter+=",tpad=stop_mode=clone:stop_duration=${PAD}"
@@ -65,9 +100,18 @@ while IFS='|' read -r window headline detail; do
   filter+=":x=32:y=h-54:fontsize=25:fontcolor=0xC8C8C8:enable='${on}'"
 done < "${SEGMENTS}"
 
-ffmpeg -hide_banner -loglevel error -y -i "${RAW}" \
-  -vf "${filter}" -c:v libx264 -preset veryfast -crf 24 -pix_fmt yuv420p \
-  "${VIDEO}"
+# Cutting two panes out of one grab reads the input twice, which makes the
+# graph a complex one; -vf only takes graphs with a single input.
+if [[ -n "${compose}" ]]; then
+  ffmpeg -hide_banner -loglevel error -y ${TRIM:+-t "${TRIM}"} -i "${RAW}" \
+    -filter_complex "${filter}[out]" -map "[out]" \
+    -c:v libx264 -preset veryfast -crf 24 -pix_fmt yuv420p \
+    "${VIDEO}"
+else
+  ffmpeg -hide_banner -loglevel error -y ${TRIM:+-t "${TRIM}"} -i "${RAW}" \
+    -vf "${filter}" -c:v libx264 -preset veryfast -crf 24 -pix_fmt yuv420p \
+    "${VIDEO}"
+fi
 
 echo "video:    ${VIDEO}"
 echo "captions: ${SEGMENTS}"
