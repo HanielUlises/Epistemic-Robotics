@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" width="900" height="330"
+     font-family="Arial, Helvetica, sans-serif" role="img"
+     aria-label="What ePlanSys decides, what Open-RMF decides, and the bridge between them">
+  <style>
+    .box   { fill:#FAFAFA; stroke:#D6D6D6; stroke-width:1.5 }
+    .bridge{ fill:#FFFFFF; stroke:#C8102E; stroke-width:2 }
+    .title { font-size:15px; font-weight:bold; fill:#111111 }
+    .item  { font-size:13px; fill:#5A5A5A }
+    .lab   { font-size:12px; fill:#5A5A5A; font-style:italic }
+    .mono  { font-family:'Courier New',Courier,monospace; font-size:12px; fill:#1A52A0 }
+    .arrow { stroke:#111111; stroke-width:1.5; fill:none; marker-end:url(#a) }
+    .thin  { stroke:#5A5A5A; stroke-width:1; fill:none; stroke-dasharray:4 3 }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#111111"/>
+    </marker>
+  </defs>
+
+  <rect class="box" x="20" y="40" width="250" height="180" rx="3"/>
+  <text class="title" x="40" y="68">ePlanSys decides</text>
+  <text class="item"  x="40" y="94">which suite is worth inspecting</text>
+  <text class="item"  x="40" y="116">who is told, and over which channel</text>
+  <text class="item"  x="40" y="138">who must not come to know</text>
+  <text class="item"  x="40" y="160">when a belief has gone stale</text>
+  <text class="lab"   x="40" y="196">Kripke model, product update</text>
+
+  <rect class="bridge" x="325" y="70" width="250" height="120" rx="3"/>
+  <text class="title" x="345" y="98">eplansys_rmf_bridge</text>
+  <text class="item"  x="345" y="122">one RMF task per action,</text>
+  <text class="item"  x="345" y="142">pinned to the named robot</text>
+  <text class="mono"  x="345" y="170">robot_task_request</text>
+
+  <rect class="box" x="630" y="40" width="250" height="180" rx="3"/>
+  <text class="title" x="650" y="68">Open-RMF decides</text>
+  <text class="item"  x="650" y="94">which lift, and who rides first</text>
+  <text class="item"  x="650" y="116">which door, and when it opens</text>
+  <text class="item"  x="650" y="138">which floor space is claimed</text>
+  <text class="item"  x="650" y="160">how the three fleets avoid</text>
+  <text class="item"  x="650" y="178">each other</text>
+  <text class="lab"   x="650" y="206">traffic schedule, negotiation</text>
+
+  <path class="arrow" d="M270,110 L318,110"/>
+  <text class="lab"   x="272" y="102">action</text>
+
+  <path class="arrow" d="M575,110 L623,110"/>
+  <text class="lab"   x="580" y="102">task</text>
+
+  <path class="arrow" d="M623,160 L577,160"/>
+  <text class="lab"   x="580" y="180">outcome</text>
+
+  <path class="arrow" d="M318,160 L272,160"/>
+  <text class="lab"   x="248" y="180">observation</text>
+
+  <path class="thin" d="M145,232 L145,272 L755,272 L755,232"/>
+  <text class="lab" x="450" y="292" text-anchor="middle">
+    Neither model contains the other's subject. There is no lift in the Kripke
+    model, and no knowledge in the traffic schedule.
+  </text>
+</svg>

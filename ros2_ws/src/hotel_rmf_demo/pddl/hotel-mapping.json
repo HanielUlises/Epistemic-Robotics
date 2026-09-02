@@ -1,0 +1,914 @@
+{
+  "brief-leak_guest_inspector_l2_suite": {
+    "action": "(radio guest inspector l2_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_guest_inspector_l3_suite": {
+    "action": "(radio guest inspector l3_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_guest_inspector_lobby": {
+    "action": "(radio guest inspector lobby)",
+    "duration": 4.0
+  },
+  "brief-leak_guest_porter_l2_suite": {
+    "action": "(radio guest porter l2_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_guest_porter_l3_suite": {
+    "action": "(radio guest porter l3_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_guest_porter_lobby": {
+    "action": "(radio guest porter lobby)",
+    "duration": 4.0
+  },
+  "brief-leak_inspector_guest_l2_suite": {
+    "action": "(radio inspector guest l2_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_inspector_guest_l3_suite": {
+    "action": "(radio inspector guest l3_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_inspector_guest_lobby": {
+    "action": "(radio inspector guest lobby)",
+    "duration": 4.0
+  },
+  "brief-leak_inspector_porter_l2_suite": {
+    "action": "(radio inspector porter l2_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_inspector_porter_l3_suite": {
+    "action": "(radio inspector porter l3_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_inspector_porter_lobby": {
+    "action": "(radio inspector porter lobby)",
+    "duration": 4.0
+  },
+  "brief-leak_porter_guest_l2_suite": {
+    "action": "(radio porter guest l2_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_porter_guest_l3_suite": {
+    "action": "(radio porter guest l3_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_porter_guest_lobby": {
+    "action": "(radio porter guest lobby)",
+    "duration": 4.0
+  },
+  "brief-leak_porter_inspector_l2_suite": {
+    "action": "(radio porter inspector l2_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_porter_inspector_l3_suite": {
+    "action": "(radio porter inspector l3_suite)",
+    "duration": 4.0
+  },
+  "brief-leak_porter_inspector_lobby": {
+    "action": "(radio porter inspector lobby)",
+    "duration": 4.0
+  },
+  "brief-safe_guest_inspector_l2_suite": {
+    "action": "(radio guest inspector l2_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_guest_inspector_l3_suite": {
+    "action": "(radio guest inspector l3_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_guest_inspector_lobby": {
+    "action": "(radio guest inspector lobby)",
+    "duration": 4.0
+  },
+  "brief-safe_guest_porter_l2_suite": {
+    "action": "(radio guest porter l2_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_guest_porter_l3_suite": {
+    "action": "(radio guest porter l3_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_guest_porter_lobby": {
+    "action": "(radio guest porter lobby)",
+    "duration": 4.0
+  },
+  "brief-safe_inspector_guest_l2_suite": {
+    "action": "(radio inspector guest l2_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_inspector_guest_l3_suite": {
+    "action": "(radio inspector guest l3_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_inspector_guest_lobby": {
+    "action": "(radio inspector guest lobby)",
+    "duration": 4.0
+  },
+  "brief-safe_inspector_porter_l2_suite": {
+    "action": "(radio inspector porter l2_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_inspector_porter_l3_suite": {
+    "action": "(radio inspector porter l3_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_inspector_porter_lobby": {
+    "action": "(radio inspector porter lobby)",
+    "duration": 4.0
+  },
+  "brief-safe_porter_guest_l2_suite": {
+    "action": "(radio porter guest l2_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_porter_guest_l3_suite": {
+    "action": "(radio porter guest l3_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_porter_guest_lobby": {
+    "action": "(radio porter guest lobby)",
+    "duration": 4.0
+  },
+  "brief-safe_porter_inspector_l2_suite": {
+    "action": "(radio porter inspector l2_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_porter_inspector_l3_suite": {
+    "action": "(radio porter inspector l3_suite)",
+    "duration": 4.0
+  },
+  "brief-safe_porter_inspector_lobby": {
+    "action": "(radio porter inspector lobby)",
+    "duration": 4.0
+  },
+  "contain_guest_l2_suite": {
+    "action": "(shut_valve guest l2_suite)",
+    "duration": 20.0
+  },
+  "contain_guest_l3_suite": {
+    "action": "(shut_valve guest l3_suite)",
+    "duration": 20.0
+  },
+  "contain_guest_lobby": {
+    "action": "(shut_valve guest lobby)",
+    "duration": 20.0
+  },
+  "contain_inspector_l2_suite": {
+    "action": "(shut_valve inspector l2_suite)",
+    "duration": 20.0
+  },
+  "contain_inspector_l3_suite": {
+    "action": "(shut_valve inspector l3_suite)",
+    "duration": 20.0
+  },
+  "contain_inspector_lobby": {
+    "action": "(shut_valve inspector lobby)",
+    "duration": 20.0
+  },
+  "contain_porter_l2_suite": {
+    "action": "(shut_valve porter l2_suite)",
+    "duration": 20.0
+  },
+  "contain_porter_l3_suite": {
+    "action": "(shut_valve porter l3_suite)",
+    "duration": 20.0
+  },
+  "contain_porter_lobby": {
+    "action": "(shut_valve porter lobby)",
+    "duration": 20.0
+  },
+  "deploy_guest_inspector_l2_suite_l3_suite_l2_suite_lobby": {
+    "action": "(deploy guest inspector l2_suite l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l2_suite_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy guest inspector l2_suite l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l2_suite_l3_suite_l3_suite_lobby": {
+    "action": "(deploy guest inspector l2_suite l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l2_suite_l3_suite_lobby_l2_suite": {
+    "action": "(deploy guest inspector l2_suite l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l2_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy guest inspector l2_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l2_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy guest inspector l2_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l2_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy guest inspector l2_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l2_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy guest inspector l2_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy guest inspector l3_suite l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_l2_suite_l2_suite_lobby": {
+    "action": "(deploy guest inspector l3_suite l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_l2_suite_l3_suite_lobby": {
+    "action": "(deploy guest inspector l3_suite l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_l2_suite_lobby_l3_suite": {
+    "action": "(deploy guest inspector l3_suite l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy guest inspector l3_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy guest inspector l3_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy guest inspector l3_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_l3_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy guest inspector l3_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy guest inspector lobby l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l2_suite_l2_suite_lobby": {
+    "action": "(deploy guest inspector lobby l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l2_suite_l3_suite_lobby": {
+    "action": "(deploy guest inspector lobby l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l2_suite_lobby_l3_suite": {
+    "action": "(deploy guest inspector lobby l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l3_suite_l2_suite_lobby": {
+    "action": "(deploy guest inspector lobby l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy guest inspector lobby l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l3_suite_l3_suite_lobby": {
+    "action": "(deploy guest inspector lobby l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_inspector_lobby_l3_suite_lobby_l2_suite": {
+    "action": "(deploy guest inspector lobby l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_l3_suite_l2_suite_lobby": {
+    "action": "(deploy guest porter l2_suite l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy guest porter l2_suite l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_l3_suite_l3_suite_lobby": {
+    "action": "(deploy guest porter l2_suite l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_l3_suite_lobby_l2_suite": {
+    "action": "(deploy guest porter l2_suite l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy guest porter l2_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy guest porter l2_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy guest porter l2_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l2_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy guest porter l2_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy guest porter l3_suite l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_l2_suite_l2_suite_lobby": {
+    "action": "(deploy guest porter l3_suite l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_l2_suite_l3_suite_lobby": {
+    "action": "(deploy guest porter l3_suite l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_l2_suite_lobby_l3_suite": {
+    "action": "(deploy guest porter l3_suite l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy guest porter l3_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy guest porter l3_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy guest porter l3_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_l3_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy guest porter l3_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy guest porter lobby l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l2_suite_l2_suite_lobby": {
+    "action": "(deploy guest porter lobby l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l2_suite_l3_suite_lobby": {
+    "action": "(deploy guest porter lobby l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l2_suite_lobby_l3_suite": {
+    "action": "(deploy guest porter lobby l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l3_suite_l2_suite_lobby": {
+    "action": "(deploy guest porter lobby l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy guest porter lobby l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l3_suite_l3_suite_lobby": {
+    "action": "(deploy guest porter lobby l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_guest_porter_lobby_l3_suite_lobby_l2_suite": {
+    "action": "(deploy guest porter lobby l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_l3_suite_l2_suite_lobby": {
+    "action": "(deploy inspector guest l2_suite l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy inspector guest l2_suite l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_l3_suite_l3_suite_lobby": {
+    "action": "(deploy inspector guest l2_suite l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_l3_suite_lobby_l2_suite": {
+    "action": "(deploy inspector guest l2_suite l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy inspector guest l2_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy inspector guest l2_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy inspector guest l2_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l2_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy inspector guest l2_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy inspector guest l3_suite l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_l2_suite_l2_suite_lobby": {
+    "action": "(deploy inspector guest l3_suite l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_l2_suite_l3_suite_lobby": {
+    "action": "(deploy inspector guest l3_suite l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_l2_suite_lobby_l3_suite": {
+    "action": "(deploy inspector guest l3_suite l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy inspector guest l3_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy inspector guest l3_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy inspector guest l3_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_l3_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy inspector guest l3_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy inspector guest lobby l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l2_suite_l2_suite_lobby": {
+    "action": "(deploy inspector guest lobby l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l2_suite_l3_suite_lobby": {
+    "action": "(deploy inspector guest lobby l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l2_suite_lobby_l3_suite": {
+    "action": "(deploy inspector guest lobby l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l3_suite_l2_suite_lobby": {
+    "action": "(deploy inspector guest lobby l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy inspector guest lobby l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l3_suite_l3_suite_lobby": {
+    "action": "(deploy inspector guest lobby l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_guest_lobby_l3_suite_lobby_l2_suite": {
+    "action": "(deploy inspector guest lobby l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_l3_suite_l2_suite_lobby": {
+    "action": "(deploy inspector porter l2_suite l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy inspector porter l2_suite l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_l3_suite_l3_suite_lobby": {
+    "action": "(deploy inspector porter l2_suite l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_l3_suite_lobby_l2_suite": {
+    "action": "(deploy inspector porter l2_suite l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy inspector porter l2_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy inspector porter l2_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy inspector porter l2_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l2_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy inspector porter l2_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy inspector porter l3_suite l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_l2_suite_l2_suite_lobby": {
+    "action": "(deploy inspector porter l3_suite l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_l2_suite_l3_suite_lobby": {
+    "action": "(deploy inspector porter l3_suite l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_l2_suite_lobby_l3_suite": {
+    "action": "(deploy inspector porter l3_suite l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy inspector porter l3_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy inspector porter l3_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy inspector porter l3_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_l3_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy inspector porter l3_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy inspector porter lobby l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l2_suite_l2_suite_lobby": {
+    "action": "(deploy inspector porter lobby l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l2_suite_l3_suite_lobby": {
+    "action": "(deploy inspector porter lobby l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l2_suite_lobby_l3_suite": {
+    "action": "(deploy inspector porter lobby l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l3_suite_l2_suite_lobby": {
+    "action": "(deploy inspector porter lobby l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy inspector porter lobby l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l3_suite_l3_suite_lobby": {
+    "action": "(deploy inspector porter lobby l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_inspector_porter_lobby_l3_suite_lobby_l2_suite": {
+    "action": "(deploy inspector porter lobby l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_l3_suite_l2_suite_lobby": {
+    "action": "(deploy porter guest l2_suite l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy porter guest l2_suite l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_l3_suite_l3_suite_lobby": {
+    "action": "(deploy porter guest l2_suite l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_l3_suite_lobby_l2_suite": {
+    "action": "(deploy porter guest l2_suite l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy porter guest l2_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy porter guest l2_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy porter guest l2_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l2_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy porter guest l2_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy porter guest l3_suite l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_l2_suite_l2_suite_lobby": {
+    "action": "(deploy porter guest l3_suite l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_l2_suite_l3_suite_lobby": {
+    "action": "(deploy porter guest l3_suite l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_l2_suite_lobby_l3_suite": {
+    "action": "(deploy porter guest l3_suite l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy porter guest l3_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy porter guest l3_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy porter guest l3_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_l3_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy porter guest l3_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy porter guest lobby l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l2_suite_l2_suite_lobby": {
+    "action": "(deploy porter guest lobby l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l2_suite_l3_suite_lobby": {
+    "action": "(deploy porter guest lobby l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l2_suite_lobby_l3_suite": {
+    "action": "(deploy porter guest lobby l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l3_suite_l2_suite_lobby": {
+    "action": "(deploy porter guest lobby l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy porter guest lobby l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l3_suite_l3_suite_lobby": {
+    "action": "(deploy porter guest lobby l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_guest_lobby_l3_suite_lobby_l2_suite": {
+    "action": "(deploy porter guest lobby l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_l3_suite_l2_suite_lobby": {
+    "action": "(deploy porter inspector l2_suite l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy porter inspector l2_suite l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_l3_suite_l3_suite_lobby": {
+    "action": "(deploy porter inspector l2_suite l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_l3_suite_lobby_l2_suite": {
+    "action": "(deploy porter inspector l2_suite l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy porter inspector l2_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy porter inspector l2_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy porter inspector l2_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l2_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy porter inspector l2_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy porter inspector l3_suite l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_l2_suite_l2_suite_lobby": {
+    "action": "(deploy porter inspector l3_suite l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_l2_suite_l3_suite_lobby": {
+    "action": "(deploy porter inspector l3_suite l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_l2_suite_lobby_l3_suite": {
+    "action": "(deploy porter inspector l3_suite l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_lobby_l2_suite_l3_suite": {
+    "action": "(deploy porter inspector l3_suite lobby l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_lobby_l3_suite_l2_suite": {
+    "action": "(deploy porter inspector l3_suite lobby l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_lobby_lobby_l2_suite": {
+    "action": "(deploy porter inspector l3_suite lobby lobby l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_l3_suite_lobby_lobby_l3_suite": {
+    "action": "(deploy porter inspector l3_suite lobby lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l2_suite_l2_suite_l3_suite": {
+    "action": "(deploy porter inspector lobby l2_suite l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l2_suite_l2_suite_lobby": {
+    "action": "(deploy porter inspector lobby l2_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l2_suite_l3_suite_lobby": {
+    "action": "(deploy porter inspector lobby l2_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l2_suite_lobby_l3_suite": {
+    "action": "(deploy porter inspector lobby l2_suite lobby l3_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l3_suite_l2_suite_lobby": {
+    "action": "(deploy porter inspector lobby l3_suite l2_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l3_suite_l3_suite_l2_suite": {
+    "action": "(deploy porter inspector lobby l3_suite l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l3_suite_l3_suite_lobby": {
+    "action": "(deploy porter inspector lobby l3_suite l3_suite lobby)",
+    "duration": 180.0
+  },
+  "deploy_porter_inspector_lobby_l3_suite_lobby_l2_suite": {
+    "action": "(deploy porter inspector lobby l3_suite lobby l2_suite)",
+    "duration": 180.0
+  },
+  "go_guest_l2_suite_l3_suite": {
+    "action": "(goto_zone guest l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "go_guest_l2_suite_lobby": {
+    "action": "(goto_zone guest l2_suite lobby)",
+    "duration": 180.0
+  },
+  "go_guest_l3_suite_l2_suite": {
+    "action": "(goto_zone guest l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "go_guest_l3_suite_lobby": {
+    "action": "(goto_zone guest l3_suite lobby)",
+    "duration": 180.0
+  },
+  "go_guest_lobby_l2_suite": {
+    "action": "(goto_zone guest lobby l2_suite)",
+    "duration": 180.0
+  },
+  "go_guest_lobby_l3_suite": {
+    "action": "(goto_zone guest lobby l3_suite)",
+    "duration": 180.0
+  },
+  "go_inspector_l2_suite_l3_suite": {
+    "action": "(goto_zone inspector l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "go_inspector_l2_suite_lobby": {
+    "action": "(goto_zone inspector l2_suite lobby)",
+    "duration": 180.0
+  },
+  "go_inspector_l3_suite_l2_suite": {
+    "action": "(goto_zone inspector l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "go_inspector_l3_suite_lobby": {
+    "action": "(goto_zone inspector l3_suite lobby)",
+    "duration": 180.0
+  },
+  "go_inspector_lobby_l2_suite": {
+    "action": "(goto_zone inspector lobby l2_suite)",
+    "duration": 180.0
+  },
+  "go_inspector_lobby_l3_suite": {
+    "action": "(goto_zone inspector lobby l3_suite)",
+    "duration": 180.0
+  },
+  "go_porter_l2_suite_l3_suite": {
+    "action": "(goto_zone porter l2_suite l3_suite)",
+    "duration": 180.0
+  },
+  "go_porter_l2_suite_lobby": {
+    "action": "(goto_zone porter l2_suite lobby)",
+    "duration": 180.0
+  },
+  "go_porter_l3_suite_l2_suite": {
+    "action": "(goto_zone porter l3_suite l2_suite)",
+    "duration": 180.0
+  },
+  "go_porter_l3_suite_lobby": {
+    "action": "(goto_zone porter l3_suite lobby)",
+    "duration": 180.0
+  },
+  "go_porter_lobby_l2_suite": {
+    "action": "(goto_zone porter lobby l2_suite)",
+    "duration": 180.0
+  },
+  "go_porter_lobby_l3_suite": {
+    "action": "(goto_zone porter lobby l3_suite)",
+    "duration": 180.0
+  },
+  "inspect_guest_l2_suite": {
+    "action": "(look_into guest l2_suite)",
+    "duration": 30.0
+  },
+  "inspect_guest_l3_suite": {
+    "action": "(look_into guest l3_suite)",
+    "duration": 30.0
+  },
+  "inspect_guest_lobby": {
+    "action": "(look_into guest lobby)",
+    "duration": 30.0
+  },
+  "inspect_inspector_l2_suite": {
+    "action": "(look_into inspector l2_suite)",
+    "duration": 30.0
+  },
+  "inspect_inspector_l3_suite": {
+    "action": "(look_into inspector l3_suite)",
+    "duration": 30.0
+  },
+  "inspect_inspector_lobby": {
+    "action": "(look_into inspector lobby)",
+    "duration": 30.0
+  },
+  "inspect_porter_l2_suite": {
+    "action": "(look_into porter l2_suite)",
+    "duration": 30.0
+  },
+  "inspect_porter_l3_suite": {
+    "action": "(look_into porter l3_suite)",
+    "duration": 30.0
+  },
+  "inspect_porter_lobby": {
+    "action": "(look_into porter lobby)",
+    "duration": 30.0
+  },
+  "page-leak-at_guest_l2_suite": {
+    "action": "(page guest l2_suite)",
+    "duration": 4.0
+  },
+  "page-leak-at_guest_l3_suite": {
+    "action": "(page guest l3_suite)",
+    "duration": 4.0
+  },
+  "page-leak-at_guest_lobby": {
+    "action": "(page guest lobby)",
+    "duration": 4.0
+  },
+  "page-leak-at_inspector_l2_suite": {
+    "action": "(page inspector l2_suite)",
+    "duration": 4.0
+  },
+  "page-leak-at_inspector_l3_suite": {
+    "action": "(page inspector l3_suite)",
+    "duration": 4.0
+  },
+  "page-leak-at_inspector_lobby": {
+    "action": "(page inspector lobby)",
+    "duration": 4.0
+  },
+  "page-leak-at_porter_l2_suite": {
+    "action": "(page porter l2_suite)",
+    "duration": 4.0
+  },
+  "page-leak-at_porter_l3_suite": {
+    "action": "(page porter l3_suite)",
+    "duration": 4.0
+  },
+  "page-leak-at_porter_lobby": {
+    "action": "(page porter lobby)",
+    "duration": 4.0
+  },
+  "page-safe_guest": {
+    "action": "(page guest l2_suite)",
+    "duration": 4.0
+  },
+  "page-safe_inspector": {
+    "action": "(page inspector l2_suite)",
+    "duration": 4.0
+  },
+  "page-safe_porter": {
+    "action": "(page porter l2_suite)",
+    "duration": 4.0
+  }
+}

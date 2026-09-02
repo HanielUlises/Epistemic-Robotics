@@ -1,0 +1,84 @@
+(define (problem hotel-incident-containment)
+
+  ;; The same hotel, and a mission that changes the world rather than only
+  ;; learning about it.
+  ;;
+  ;; Shutting off a leak is quiet work in a closed suite, and only the agents
+  ;; standing in that suite see it happen. So the moment the leak is contained,
+  ;; every agent still down in the lobby holds a belief that was true when it
+  ;; was formed and is false now: they believe the suite is flooded. That is
+  ;; not ignorance and it cannot be fixed by looking harder from the lobby.
+  ;;
+  ;; The goal asks for all three parts of that at once. The incident has to be
+  ;; over, which is ontic and needs somebody to know where the leak is before
+  ;; they are allowed to deal with it. The porter has to come to know it is
+  ;; over, which no amount of standing in the lobby will achieve. And the guest
+  ;; must not learn which suite was flooded, which is what makes the public
+  ;; address system -- the one channel that repairs everybody's belief in a
+  ;; single step -- unusable.
+  ;;
+  ;; The third conjunct is about the leak's location and not about `safe`, and
+  ;; the difference is worth stating. Asking that the guest not come to know
+  ;; whether the hotel is safe cannot be satisfied by any plan: at the outset
+  ;; it is common knowledge that the incident is not over, so the guest already
+  ;; knows whether, and a containment nobody tells it about leaves that belief
+  ;; exactly where it was -- stale, but settled. A secrecy requirement has to
+  ;; be about something the audience is uncertain of, and which suite flooded
+  ;; is the only such thing here.
+  ;;
+  ;; Three agents, because announcements ground quadratically in them and this
+  ;; instance is meant to be solved while a demo waits. problem_4 pays that
+  ;; cost deliberately.
+
+  (:domain hotel-incident)
+
+  (:requirements
+    :typing :facts :equality
+    :finitary-S5-theories :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions
+  )
+
+  (:agents inspector porter guest)
+
+  (:objects lobby l2_suite l3_suite - zone)
+
+  (:facts-init
+    (adjacent lobby l2_suite) (adjacent l2_suite lobby)
+    (adjacent lobby l3_suite) (adjacent l3_suite lobby)
+
+    (suite l2_suite) (suite l3_suite)
+    (desk lobby)
+  )
+
+  (:init
+    (:and
+      (at-ag inspector lobby) (at-ag porter lobby) (at-ag guest lobby)
+      (:forall (?i - agent)
+        (and (not (at-ag ?i l2_suite)) (not (at-ag ?i l3_suite))))
+      ([C. All]
+        (and (at-ag inspector lobby) (at-ag porter lobby) (at-ag guest lobby)
+             (forall (?i - agent)
+               (and (not (at-ag ?i l2_suite)) (not (at-ag ?i l3_suite))))))
+
+      (not (safe))
+      (:forall (?z - zone) (not (contained ?z)))
+      ([C. All] (and (not (safe))
+                     (forall (?z - zone) (not (contained ?z)))))
+
+      ([C. All] (and (or (leak-at l2_suite) (leak-at l3_suite))
+                     (not (and (leak-at l2_suite) (leak-at l3_suite)))
+                     (not (leak-at lobby))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (leak-at l2_suite))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (leak-at l3_suite))))
+    )
+  )
+
+  (:goal
+    (and
+      (safe)
+      ([porter]    (safe))
+      (<Kw. guest> (leak-at l2_suite))
+    )
+  )
+)

@@ -1,0 +1,269 @@
+(define (domain hotel-incident)
+
+  ;; A hotel of three floors, a leak in one of its suites, and a fleet that has
+  ;; to find it, deal with it, and tell the right people.
+  ;;
+  ;; The world of the Open-RMF hotel demo, written as an epistemic planning
+  ;; domain. That demo's difficulty is entirely physical: three fleets share
+  ;; two lifts and a corridor, and RMF decides who rides first. Nothing in it
+  ;; is ever in doubt. Here the doubt is the whole problem, and the physical
+  ;; part is handed back to RMF: a `go` between floors is one action in this
+  ;; model and a lift call, a door, a floor transition and a traffic
+  ;; negotiation on the other side of the bridge. The model contains no lift.
+  ;;
+  ;; Three things make this harder than the warehouse next door.
+  ;;
+  ;; The leak can be dealt with, and dealing with it is *private*: only agents
+  ;; standing in the suite see it happen. Everyone else goes on believing what
+  ;; they last had reason to believe, which is now false. The reachable state
+  ;; space is therefore KD45, not S5, and an agent's knowledge can go stale
+  ;; without anybody doing anything wrong.
+  ;;
+  ;; Repairing that belief is constrained. The obvious repair is to announce
+  ;; it, and the hotel has a public address system; but a guest is an agent of
+  ;; this model too, and a mission that must not alarm the guest cannot use it.
+  ;; Which channel to use is a consequence of the goal.
+  ;;
+  ;; And the goals go past the first order. Asking that the porter know where
+  ;; the leak is, is one thing; asking that the porter know that the inspector
+  ;; knows is another, and the two are not satisfied by the same plan.
+
+  (:requirements
+    :typing :facts :equality
+    :partial-observability :ontic-actions
+    :lists :list-comprehensions
+    :negative-preconditions :modal-preconditions :knowing-whether
+    :group-modalities :multi-pointed-models
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:types zone)
+
+  (:predicates
+    (at-ag     ?i - agent ?z - zone)
+    (leak-at   ?z - zone)
+    (contained ?z - zone)
+    ;; The incident is over. Zone-free on purpose: which suite the leak was in
+    ;; differs between the worlds the fleet cannot tell apart, so a goal naming
+    ;; one of them is unachievable in the other. What the mission owes the
+    ;; hotel is that the leak, wherever it was, has been dealt with.
+    (safe)
+    ;; Rigid: the building does not rearrange itself while the robots work.
+    (:fact adjacent ?z1 ?z2 - zone)
+    (:fact suite    ?z      - zone)
+    (:fact desk     ?z      - zone)
+  )
+
+  (:event nil)
+
+  ;--------------------MOVING------------------
+  ;
+  ; Public. A fleet tracks where its own members are, and RMF publishes every
+  ; robot's position to everything that asks. Only the leak is in doubt, and
+  ; keeping movement common knowledge is what keeps the doubt where it belongs.
+  ;
+  ; `adjacent` is the building's floor plan, not a route: two zones on
+  ; different floors are adjacent when a lift joins them, and how a robot gets
+  ; into the lift is not a question this model can even ask.
+
+  (:event e-go
+    :parameters (?i - agent ?from ?to - zone)
+    :precondition
+      (and (at-ag ?i ?from) (not (at-ag ?i ?to)) (adjacent ?from ?to))
+    :effects
+      (:and (not (at-ag ?i ?from)) (at-ag ?i ?to))
+  )
+
+  (:action go
+    :parameters (?i - agent ?from ?to - zone)
+    :action-type (public-ontic (e-go ?i ?from ?to))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------DEPLOYING------------------
+  ;
+  ; Two robots sent at once, as one action.
+  ;
+  ; A policy is a chain of product updates and the executor runs it in order,
+  ; so two consecutive `go` nodes are two robots moving one after the other. If
+  ; the fleet is to move together, the togetherness has to be in the model: one
+  ; event, applied once, that relocates both agents. Which is also the honest
+  ; reading. Sending the pair to the two candidate suites is a single decision
+  ; taken before anything is known, and splitting it into two actions suggests a
+  ; choice was made twice.
+  ;
+  ; Public, like `go`, and for the same reason: only the leak is in doubt.
+
+  (:event e-deploy
+    :parameters (?i ?j - agent ?from-i ?to-i ?from-j ?to-j - zone)
+    :precondition
+      (and (at-ag ?i ?from-i) (at-ag ?j ?from-j)
+           (adjacent ?from-i ?to-i) (adjacent ?from-j ?to-j)
+           (not (at-ag ?i ?to-i)) (not (at-ag ?j ?to-j))
+           (/= ?i ?j) (/= ?to-i ?to-j))
+    :effects
+      (:and (not (at-ag ?i ?from-i)) (at-ag ?i ?to-i)
+            (not (at-ag ?j ?from-j)) (at-ag ?j ?to-j))
+  )
+
+  (:action deploy
+    :parameters (?i ?j - agent ?from-i ?to-i ?from-j ?to-j - zone)
+    :action-type (public-ontic (e-deploy ?i ?j ?from-i ?to-i ?from-j ?to-j))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------INSPECTING------------------
+  ;
+  ; Semi-private sensing, one event per answer. Standing in a suite is what it
+  ; takes to tell, and the fleet sees a robot inspect a suite without seeing
+  ; what it found. That asymmetry is the reason a second agent that has to know
+  ; cannot simply watch.
+  ;
+  ; The precondition asks that the inspector not already know: an inspection
+  ; that settles nothing is not an action, it is a cost.
+
+  (:event e-inspect-wet
+    :parameters (?i - agent ?z - zone)
+    :precondition
+      (and (at-ag ?i ?z) (suite ?z) (leak-at ?z) (<Kw. ?i> (leak-at ?z)))
+  )
+
+  (:event e-inspect-dry
+    :parameters (?i - agent ?z - zone)
+    :precondition
+      (and (at-ag ?i ?z) (suite ?z) (not (leak-at ?z)) (<Kw. ?i> (leak-at ?z)))
+  )
+
+  (:action inspect
+    :parameters (?i - agent ?z - zone)
+    :action-type (semi-private-sensing
+      (e-inspect-wet ?i ?z)
+      (e-inspect-dry ?i ?z) )
+    :observability-conditions
+      (:and (?i Fully) (default Partially))
+  )
+
+  ;--------------------CONTAINING------------------
+  ;
+  ; The action that makes the mission change under its own feet.
+  ;
+  ; Shutting off a leak is quiet work in a closed suite. Only agents standing
+  ; in that suite see it, and everyone else keeps believing the suite is
+  ; flooded --- a belief that was true when it was formed and is false now.
+  ; This is where the accessibility relations lose reflexivity, and it is the
+  ; only action here that can make an agent wrong rather than merely ignorant.
+  ;
+  ; The modal precondition matters as much as the private observability: an
+  ; agent may only contain a leak it *knows* is there. Dropping it gives back
+  ; a domain in which a robot standing in the right suite fixes a leak it has
+  ; no reason to believe exists, and a plan that never inspects anything works.
+
+  (:event e-contain
+    :parameters (?i - agent ?z - zone)
+    :precondition
+      (and (at-ag ?i ?z) (suite ?z) (leak-at ?z) ([?i] (leak-at ?z)))
+    :effects
+      (:and (not (leak-at ?z)) (contained ?z) (safe))
+  )
+
+  (:action contain
+    :parameters (?i - agent ?z - zone)
+    :action-type (private-ontic (e-contain ?i ?z) (nil))
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (:forall (?j - agent | (/= ?j ?i))
+          (?j (if (at-ag ?j ?z) Fully else Oblivious)) )
+      )
+  )
+
+  ;--------------------PAGING------------------
+  ;
+  ; The public address system. One announcement per answer, truthful because
+  ; the speaker has to know what it says and knowledge is factive.
+  ;
+  ; This is the channel a mission reaches for when nothing forbids it, and it
+  ; is exactly what a goal that protects the guest rules out. Nothing marks it
+  ; as dangerous; it is inadmissible only because of who can hear it.
+
+  (:event e-knows-leak-at
+    :parameters (?i - agent ?z - zone)
+    :precondition ([?i] (leak-at ?z))
+  )
+  (:event e-not-knows-leak-at
+    :parameters (?i - agent ?z - zone)
+    :precondition (not ([?i] (leak-at ?z)))
+  )
+  (:action page-leak-at
+    :parameters (?i - agent ?z - zone)
+    :action-type (public-announcement
+      (e-knows-leak-at ?i ?z) (e-not-knows-leak-at ?i ?z) )
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-knows-safe
+    :parameters (?i - agent)
+    :precondition ([?i] (safe))
+  )
+  (:event e-not-knows-safe
+    :parameters (?i - agent)
+    :precondition (not ([?i] (safe)))
+  )
+  (:action page-safe
+    :parameters (?i - agent)
+    :action-type (public-announcement
+      (e-knows-safe ?i) (e-not-knows-safe ?i) )
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------BRIEFING------------------
+  ;
+  ; The handheld radio: ?i tells ?j, and anyone standing with them sees that
+  ; something was said without hearing it.
+  ;
+  ; Quasi-private rather than private, because that partial audience is what
+  ; second-order goals are made of. A bystander who saw the exchange knows that
+  ; ?j now knows something, without knowing what --- and an agent that wants
+  ; ?j to know *that it knows* has to arrange to be standing there.
+
+  (:event e-brief-leak-at
+    :parameters (?i ?j - agent ?z - zone)
+    :precondition (and ([?i] (leak-at ?z)) (/= ?i ?j))
+  )
+  (:event e-brief-leak-not-at
+    :parameters (?i ?j - agent ?z - zone)
+    :precondition (and ([?i] (not (leak-at ?z))) (/= ?i ?j))
+  )
+  (:action brief-leak
+    :parameters (?i ?j - agent ?z - zone)
+    :action-type (quasi-private-announcement
+      (e-brief-leak-at ?i ?j ?z) (e-brief-leak-not-at ?i ?j ?z) (nil) )
+    :observability-conditions
+      (:and
+        (?i Fully) (?j Fully)
+        (:forall (?k - agent | (and (/= ?k ?i) (/= ?k ?j)))
+          (?k (if (at-ag ?k ?z) Partially else Oblivious)) )
+      )
+  )
+
+  (:event e-brief-safe
+    :parameters (?i ?j - agent ?z - zone)
+    :precondition (and ([?i] (safe)) (/= ?i ?j))
+  )
+  (:event e-brief-not-safe
+    :parameters (?i ?j - agent ?z - zone)
+    :precondition (and ([?i] (not (safe))) (/= ?i ?j))
+  )
+  (:action brief-safe
+    :parameters (?i ?j - agent ?z - zone)
+    :action-type (quasi-private-announcement
+      (e-brief-safe ?i ?j ?z) (e-brief-not-safe ?i ?j ?z) (nil) )
+    :observability-conditions
+      (:and
+        (?i Fully) (?j Fully)
+        (:forall (?k - agent | (and (/= ?k ?i) (/= ?k ?j)))
+          (?k (if (at-ag ?k ?z) Partially else Oblivious)) )
+      )
+  )
+)

@@ -1,0 +1,10 @@
+# start end | headline | detail
+0.00 2.60 | A branching policy, 6 nodes | Two suites, one leak, and the plan splits the robots across both lifts before it knows which
+2.60 8.60 | 2 robots, one action, both lifts | The executor runs a policy strictly in order, so robots move together only when one event moves both of them
+86.10 88.70 | Both robots in position, one on each floor | Positions stay common knowledge: 2 worlds, 2 designated
+88.70 91.30 | Inspecting the L2 master suite | Only a robot standing in the suite can tell, and the rest of the fleet will see that it looked without seeing what it found
+91.30 93.90 | Inspected: dry | Sensing narrowed the model to 2 worlds, 1 designated
+93.90 96.50 | Told the porter which suite, over the radio | Private, so the guest learns nothing: 4 worlds, 1 designated
+96.50 99.10 | Shutting the valve in the L3 master suite | A closed suite, so only whoever is inside will know it happened
+99.10 101.70 | Valve shut, and only that suite saw it happen | A private change widened the model to 5 worlds, 1 designated: whoever was elsewhere still believes the suite is flooded
+101.70 107.70 | Mission complete | The porter knows, and the guest never learned which suite
