@@ -1,0 +1,53 @@
+{
+  "action": "deploy_inspector_porter_lobby_l2_suite_lobby_l3_suite",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "inspect_inspector_l2_suite",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "contain_inspector_l2_suite",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "brief-safe_inspector_porter_l2_suite",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": null
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "event": 1,
+            "subtree": {
+              "action": "brief-leak_inspector_porter_l3_suite",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "contain_porter_l3_suite",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": null
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

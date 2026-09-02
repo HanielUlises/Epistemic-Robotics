@@ -392,3 +392,10 @@ ros2_ws/src/ThirdParty/
 
 # Recordings of the warehouse demo. The published ones live on gh-pages.
 scenarios/warehouse/out/*.mp4
+
+# Recorded runs: the raw grab and the log are large and reproducible
+scenarios/*/out/*.mp4
+scenarios/*/out/*.log
+
+# Dropped by rmf_traffic_schedule into whatever directory it is run from
+.rmf_schedule_node.yaml
