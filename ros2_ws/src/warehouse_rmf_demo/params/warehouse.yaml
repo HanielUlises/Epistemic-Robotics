@@ -1,0 +1,27 @@
+# The warehouse mission, as parameters.
+#
+# The solver is given the EPDDL sources rather than a grounded task: it runs
+# plank on first use and again whenever the sources change. These are the same
+# files epddl-workspace/robot-warehouse holds and the same ones validate.sh
+# checks, unmodified.
+
+planner:
+  ros__parameters:
+    plan_solver_plugins: ["EPISTEMIC"]
+    EPISTEMIC:
+      plugin: "plansys2/EpistemicPlanSolver"
+      epddl_domain: "EPDDL_DOMAIN"
+      epddl_problem: "EPDDL_PROBLEM"
+      action_mapping: "MAPPING_FILE"
+      strategy: "aostar"
+      conditional_plan: "policy"
+
+executor:
+  ros__parameters:
+    bt_builder_plugin: "EpistemicBTBuilder"
+    bt_node_plugins: ["libplansys2_epistemic_bt_nodes.so"]
+
+epistemic_state:
+  ros__parameters:
+    epddl_domain: "EPDDL_DOMAIN"
+    epddl_problem: "EPDDL_PROBLEM"

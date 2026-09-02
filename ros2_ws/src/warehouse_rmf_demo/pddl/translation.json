@@ -1,0 +1,8 @@
+{
+  "go":                   {"action": "goto_zone", "duration": 120.0, "arity": 3},
+  "inspect":              {"action": "look_into", "duration": 30.0,  "arity": 2},
+  "pickup":               {"action": "pick_up",   "duration": 6.0,   "arity": 2},
+  "unload":               {"action": "drop_off",  "duration": 6.0,   "arity": 2},
+  "report-pallet-at":     {"action": "announce",  "duration": 4.0,   "arity": 2},
+  "report-pallet-not-at": {"action": "announce",  "duration": 4.0,   "arity": 2}
+}
