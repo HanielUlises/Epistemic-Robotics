@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" width="900" height="430"
+     font-family="Arial, Helvetica, sans-serif" role="img"
+     aria-label="The branching policy: both robots dispatched before the inspection, then two different continuations">
+  <style>
+    .node  { fill:#FAFAFA; stroke:#D6D6D6; stroke-width:1.5 }
+    .sense { fill:#FFFFFF; stroke:#C8102E; stroke-width:2 }
+    .priv  { fill:#FFFFFF; stroke:#1A52A0; stroke-width:2 }
+    .joint { fill:#FFFFFF; stroke:#111111; stroke-width:2.5 }
+    .act   { font-family:'Courier New',Courier,monospace; font-size:12.5px; fill:#111111 }
+    .who   { font-size:11.5px; fill:#5A5A5A }
+    .edge  { stroke:#5A5A5A; stroke-width:1.4; fill:none; marker-end:url(#b) }
+    .brlab { font-size:12px; fill:#C8102E; font-weight:bold }
+    .cap   { font-size:12px; fill:#5A5A5A; font-style:italic }
+  </style>
+  <defs>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5A5A5A"/>
+    </marker>
+  </defs>
+
+  <rect class="joint" x="250" y="16" width="400" height="58" rx="3"/>
+  <text class="act" x="264" y="36">deploy inspector porter</text>
+  <text class="act" x="264" y="52">  lobby l2_suite lobby l3_suite</text>
+  <text class="who" x="264" y="68">one action, two robots, one per floor; which lift each takes is RMF&#8217;s to decide</text>
+
+  <path class="edge" d="M450,74 L450,154"/>
+
+  <rect class="sense" x="290" y="156" width="320" height="42" rx="3"/>
+  <text class="act" x="304" y="176">inspect inspector l2_suite</text>
+  <text class="who" x="304" y="191">semi-private: the fleet sees that it looked</text>
+
+  <path class="edge" d="M330,198 L200,240"/>
+  <path class="edge" d="M570,198 L700,240"/>
+  <text class="brlab" x="228" y="222">flooded</text>
+  <text class="brlab" x="622" y="222">dry</text>
+
+  <rect class="priv" x="40" y="242" width="320" height="42" rx="3"/>
+  <text class="act" x="54" y="262">contain inspector l2_suite</text>
+  <text class="who" x="54" y="277">private: only whoever is in the suite sees it</text>
+
+  <path class="edge" d="M200,284 L200,310"/>
+
+  <rect class="priv" x="40" y="312" width="320" height="42" rx="3"/>
+  <text class="act" x="54" y="332">brief-safe inspector porter</text>
+  <text class="who" x="54" y="347">radio, not the public address: the guest is spared</text>
+
+  <rect class="priv" x="540" y="242" width="320" height="42" rx="3"/>
+  <text class="act" x="554" y="262">brief-leak inspector porter</text>
+  <text class="who" x="554" y="277">the porter is already on L3 and now knows why</text>
+
+  <path class="edge" d="M700,284 L700,310"/>
+
+  <rect class="priv" x="540" y="312" width="320" height="42" rx="3"/>
+  <text class="act" x="554" y="332">contain porter l3_suite</text>
+  <text class="who" x="554" y="347">no second lift ride: it was sent there first</text>
+
+  <text class="cap" x="450" y="392" text-anchor="middle">
+    One epistemic action moves both robots, before anybody knows which suite is flooded,
+    so whichever answer comes back one of them is already on the right floor.
+  </text>
+  <text class="cap" x="450" y="412" text-anchor="middle">
+    Black is the joint action. Red reveals something. Blue is observed by only part of the fleet.
+  </text>
+</svg>
