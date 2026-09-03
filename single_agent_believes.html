@@ -639,6 +639,274 @@ pre:has(> code){margin:1.3rem 0}
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ THE UPDATE -->
+<section>
+  <div class="container">
+    <p class="sec-label">The update</p>
+    <h3>Where the truth axiom is lost</h3>
+    <p>
+      The command is one application of the product update, and the step is
+      small enough to be drawn in full. The event model has two events, the one
+      that shuts the door and <span class="mono-inline">nil</span>; the only
+      agent is oblivious, so \(Q_{\texttt{r}}\) sends the event that
+      occurred to the one that did not. Everything the domain claims about
+      belief follows from that single pairing.
+    </p>
+
+<style>
+.pu-wrap{position:relative}
+.pu-note{font-size:.78rem;color:var(--gray);margin:.85rem 0 0;
+  border-top:1px solid var(--border);padding-top:.75rem;display:grid;gap:.3rem}
+.pu-note b{color:var(--black);font-weight:600}
+.pu-note .ag{display:inline-block;min-width:5.6rem;font-family:var(--mono);
+  font-size:.72rem;color:var(--black)}
+.pdlost{color:var(--red);font-weight:600}
+</style>
+<div class="fig">
+  <div class="fig-head">
+    <span class="fig-title">One product update: the command the agent does not observe</span>
+    <div class="ctrls"><button class="btn primary" id="door-pu-play">&#9654; Play</button><button class="btn" id="door-pu-step">Step</button><button class="btn" id="door-pu-reset">Reset</button></div>
+  </div>
+  <div class="fig-body"><div class="pu-wrap">
+    <svg id="door-pu" viewBox="0 0 1000 350" width="100%" style="max-width:1000px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif" role="img" aria-label="One product update: the command the agent does not observe"></svg>
+    <div class="pu-note"><div><span class="ag">r</span> \(1\) edge, \(S5\) &#8594; \(2\) edges, \(KD45\) &#183; <span class="pdlost">no longer reflexive</span></div></div>
+  </div></div>
+  <div class="fig-cap">One application of \(\mathcal{M} \otimes \mathcal{E}\), computed from the event model the domain declares and drawn from the result. A world of the product is a pair \((w, e)\) whose event is applicable at its world, and \((w,e)\,R'_i\,(v,f)\) holds exactly when \(w R_i v\) and \(f \in Q_i(e)\). The loop above a world is its reflexive edge; where that loop is missing at a designated world, the agent excludes the world that is the case.</div>
+</div>
+<script>
+(function(){
+'use strict';
+var D = {"action": "command-shut_r_plant", "type": "private-ontic", "agents": ["r"], "atoms": ["shut"], "M": {"worlds": ["w0"], "designated": ["w0"], "label": {"w0": ["\u2014"]}, "rel": {"r": {"w0": ["w0"]}}}, "E": {"events": ["e-command", "nil"], "designated": ["e-command"], "pre": {"e-command": "\\texttt{door-at}\\_\\texttt{plant} \\wedge \\neg \\texttt{at-ag}\\_\\texttt{r}\\_\\texttt{plant} \\wedge \\neg \\texttt{shut}", "nil": "\\texttt{true}"}, "klass": {"r": "Oblivious"}, "varies": {"r": false}, "q": {"r": {"e-command": ["nil"], "nil": ["nil"]}}}, "Mp": {"worlds": ["w0", "w1"], "designated": ["w0"], "from": {"w0": ["w0", "e-command"], "w1": ["w0", "nil"]}, "label": {"w0": ["shut"], "w1": ["\u2014"]}, "rel": {"r": {"w0": ["w1"], "w1": ["w1"]}}}, "before": {"r": {"reflexive": true, "serial": true, "frame": "S5", "edges": 1}}, "after": {"r": {"reflexive": false, "serial": true, "frame": "KD45", "edges": 2}}}, ID = 'door-pu';
+var svg = document.getElementById(ID);
+if (!svg) return;
+var RED = '#C8102E', INK = '#111', GRAY = '#5A5A5A', BORD = '#D6D6D6',
+    STEEL = '#1A52A0';
+var RM = window.matchMedia &&
+         window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+var agent = D.agents[0], stage = 0, timer = null;
+
+function el(tag, at){
+  var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in at) n.setAttribute(k, at[k]);
+  return n;
+}
+function text(x, y, s, at){
+  var t = el('text', at || {});
+  t.setAttribute('x', x); t.setAttribute('y', y);
+  t.textContent = s;
+  return t;
+}
+
+/* A node is a world; the ring marks it designated, and the loop above it is
+   the reflexive edge whose loss is what this figure exists to show. */
+/* The world's name goes inside the circle and everything else beneath it:
+   a valuation set never fits in a node, and shrinking it to make it fit is
+   how a diagram stops being readable. */
+function node(g, x, y, r, name, designated){
+  if (designated)
+    g.appendChild(el('circle', {cx:x, cy:y, r:r + 5, fill:'none',
+      stroke:RED, 'stroke-width':1.2}));
+  g.appendChild(el('circle', {cx:x, cy:y, r:r, fill:'#fff', stroke:INK,
+    'stroke-width':1.5}));
+  g.appendChild(text(x, y + 4, name,
+    {'font-size':11, 'text-anchor':'middle', fill:INK,
+     'font-family':"'Courier New',monospace"}));
+}
+
+function loop(g, x, y, r, colour){
+  var d = 'M' + (x - 7) + ' ' + (y - r + 1) +
+          ' C' + (x - 17) + ' ' + (y - r - 22) + ' ' +
+          (x + 17) + ' ' + (y - r - 22) + ' ' + (x + 7) + ' ' + (y - r + 1);
+  g.appendChild(el('path', {d:d, fill:'none', stroke:colour,
+    'stroke-width':1.4, 'marker-end':'url(#' + ID + '-a)'}));
+}
+
+function arc(g, a, b, colour, both){
+  var dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy);
+  if (!len) return;
+  var ux = dx / len, uy = dy / len;
+  var x1 = a.x + ux * (a.r + 3), y1 = a.y + uy * (a.r + 3);
+  var x2 = b.x - ux * (b.r + 6), y2 = b.y - uy * (b.r + 6);
+  var mx = (x1 + x2) / 2 - uy * 16, my = (y1 + y2) / 2 + ux * 16;
+  var p = el('path', {d:'M' + x1 + ' ' + y1 + ' Q' + mx + ' ' + my + ' ' +
+    x2 + ' ' + y2, fill:'none', stroke:colour, 'stroke-width':1.4,
+    'marker-end':'url(#' + ID + '-a)'});
+  if (both) p.setAttribute('marker-start', 'url(#' + ID + '-a)');
+  g.appendChild(p);
+}
+
+function relation(g, pos, rel, colour){
+  var seen = {};
+  Object.keys(rel).forEach(function(w){
+    rel[w].forEach(function(v){
+      if (w === v){ loop(g, pos[w].x, pos[w].y, pos[w].r, colour); return; }
+      if (seen[v + '|' + w]) return;
+      var both = (rel[v] || []).indexOf(w) >= 0;
+      seen[w + '|' + v] = 1;
+      arc(g, pos[w], pos[v], colour, both);
+    });
+  });
+}
+
+function row(gW, gR, worlds, designated, labels, rel, x0, x1, y, r, colour){
+  var pos = {}, n = worlds.length;
+  var step = n > 1 ? Math.min((x1 - x0) / (n - 1), 180) : 0;
+  var left = x0 + ((x1 - x0) - step * (n - 1)) / 2;
+  worlds.forEach(function(w, i){ pos[w] = {x:left + i * step, y:y, r:r}; });
+  worlds.forEach(function(w){
+    node(gW, pos[w].x, pos[w].y, r, w, designated.indexOf(w) >= 0);
+    labels[w].forEach(function(line, i){
+      gW.appendChild(text(pos[w].x, y + r + 15 + i * 11, line,
+        {'font-size':9, 'text-anchor':'middle', fill:GRAY}));
+    });
+    pos[w].below = y + r + 15 + labels[w].length * 11;
+  });
+  if (rel) relation(gR, pos, rel, colour);
+  return pos;
+}
+
+function draw(){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var defs = el('defs', {});
+  var m = el('marker', {id:ID + '-a', viewBox:'0 0 10 10', refX:9, refY:5,
+    markerWidth:5.5, markerHeight:5.5, orient:'auto'});
+  m.appendChild(el('path', {d:'M0 0 L10 5 L0 10 z', fill:STEEL}));
+  defs.appendChild(m);
+  svg.appendChild(defs);
+
+  var W = 1000;
+  svg.appendChild(text(150, 22, 'epistemic state \u{1D4DC}',
+    {'font-size':11, fill:GRAY, 'text-anchor':'middle'}));
+  svg.appendChild(text(620, 22, 'event model \u{1D4D4}  ·  ' + D.type,
+    {'font-size':11, fill:GRAY, 'text-anchor':'middle'}));
+  var gM = el('g', {}), gMr = el('g', {});
+  svg.appendChild(gMr); svg.appendChild(gM);
+  var mpos = row(gM, gMr, D.M.worlds, D.M.designated, D.M.label,
+                 D.M.rel[agent], 40, 300, 92, 21, STEEL);
+
+  /* The events, with the relation Q_i the selected agent is given. It is
+     the pairing of the event that occurred with one that did not that
+     survives into the product and keeps an agent uninformed. */
+  var gE = el('g', {}), gEr = el('g', {});
+  svg.appendChild(gEr); svg.appendChild(gE);
+  var epos = {}, ev = D.E.events;
+  var estep = ev.length > 1 ? Math.min(500 / (ev.length - 1), 170) : 0;
+  var eleft = 620 - estep * (ev.length - 1) / 2;
+  var mright = 0;
+  D.M.worlds.forEach(function(w){ mright = Math.max(mright, mpos[w].x + 21); });
+  svg.appendChild(text((mright + eleft - 19) / 2, 98, '⊗',
+    {'font-size':19, fill:INK, 'text-anchor':'middle'}));
+  ev.forEach(function(e, i){
+    epos[e] = {x:eleft + i * estep, y:92, r:19};
+    var des = D.E.designated.indexOf(e) >= 0;
+    if (des) gE.appendChild(el('circle', {cx:epos[e].x, cy:92, r:24,
+      fill:'none', stroke:RED, 'stroke-width':1.2}));
+    gE.appendChild(el('circle', {cx:epos[e].x, cy:92, r:19, fill:'#fff',
+      stroke:e === 'nil' ? GRAY : INK, 'stroke-width':e === 'nil' ? 1.2 : 1.5,
+      'stroke-dasharray':e === 'nil' ? '3,2' : ''}));
+    gE.appendChild(text(epos[e].x, 96,
+      e === 'nil' ? 'nil' : 'e' + (i + 1),
+      {'font-size':11, 'text-anchor':'middle',
+       fill:e === 'nil' ? GRAY : INK}));
+    gE.appendChild(text(epos[e].x, 130, e,
+      {'font-size':9, 'text-anchor':'middle', fill:GRAY,
+       'font-family':"'Courier New',monospace"}));
+  });
+  relation(gEr, epos, D.E.q[agent] || {}, STEEL);
+  svg.appendChild(text(620, 152,
+    agent + ' is ' + (D.E.klass[agent] || 'Fully').toLowerCase() +
+    ' here' + (D.E.varies[agent] ? ', and not everywhere' : ''),
+    {'font-size':9.5, fill:STEEL, 'text-anchor':'middle'}));
+
+  if (stage === 0) return;
+
+  svg.appendChild(text(500, 196, '\u{1D4DC} ⊗ \u{1D4D4}',
+    {'font-size':11, fill:GRAY, 'text-anchor':'middle'}));
+  var gP = el('g', {}), gPr = el('g', {});
+  svg.appendChild(gPr); svg.appendChild(gP);
+  var pos = row(gP, gPr, D.Mp.worlds, D.Mp.designated, D.Mp.label,
+                stage >= 2 ? D.Mp.rel[agent] : null,
+                40, 960, 262, 23, STEEL);
+  D.Mp.worlds.forEach(function(w){
+    gP.appendChild(text(pos[w].x, pos[w].below,
+      '(' + D.Mp.from[w][0] + ', ' + D.Mp.from[w][1] + ')',
+      {'font-size':8.5, 'text-anchor':'middle', fill:GRAY,
+       'font-family':"'Courier New',monospace"}));
+  });
+
+  if (stage >= 3){
+    var b = D.before[agent], a = D.after[agent];
+    var lost = b.reflexive && !a.reflexive;
+    svg.appendChild(text(500, 338,
+      'R_' + agent + ':  ' + b.edges + (b.edges === 1 ? ' edge, ' : ' edges, ') +
+      b.frame + '   →   ' +
+      a.edges + (a.edges === 1 ? ' edge, ' : ' edges, ') + a.frame +
+      (lost ? '   ·   the self-loop at the designated world is gone' : ''),
+      {'font-size':10.5, 'text-anchor':'middle',
+       fill:lost ? RED : INK}));
+  }
+}
+
+function step(){
+  stage = stage + 1;
+  if (stage > 3){ reset(); return false; }
+  draw();
+  return true;
+}
+function reset(){
+  if (timer) clearInterval(timer);
+  timer = null; stage = 0; draw();
+  document.getElementById(ID + '-play').textContent = '▶ Play';
+}
+document.getElementById(ID + '-step').onclick = function(){ step(); };
+document.getElementById(ID + '-reset').onclick = reset;
+document.getElementById(ID + '-play').onclick = function(){
+  if (timer){ reset(); return; }
+  this.textContent = '■ Stop';
+  step();
+  timer = setInterval(function(){ if (!step()) clearInterval(timer); },
+                      RM ? 1400 : 950);
+};
+var seg = document.getElementById(ID + '-seg');
+if (seg) seg.addEventListener('click', function(e){
+  var b = e.target.closest('button');
+  if (!b) return;
+  agent = b.getAttribute('data-agent');
+  this.querySelectorAll('button').forEach(function(x){
+    x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+  });
+  draw();
+});
+draw();
+})();
+</script>
+    <p>
+      Read the product on the second row. The two surviving pairs are
+      \((w_0, \textsf{e-command})\), where the door is shut, and
+      \((w_0, \textsf{nil})\), where it is not; the first is designated,
+      because the command is what actually happened. The relation is computed
+      from \(w_0 R_{\texttt{r}} w_0\) together with
+      \(\textsf{e-command}\,Q_{\texttt{r}}\,\textsf{nil}\), and
+      those two facts give one edge, from the designated world to the other
+      one:
+    </p>
+    <p style="text-align:center">
+      \(R_{\texttt{r}}(w_0) = \{w_1\} \not\ni w_0.\)
+    </p>
+    <p>
+      The loop above \(w_0\) in the first row is gone in the second, and
+      that missing loop is the whole of the difference between knowledge and
+      belief. Reflexivity is what makes \(K\varphi \to \varphi\)
+      valid, so an agent whose relation has lost the loop at the world that
+      obtains can satisfy \(K\varphi \wedge \neg\varphi\). The
+      relation remains serial, transitive and Euclidean &#8212; the loop at
+      \(w_1\) is still there, and it is the only world the agent reaches
+      &#8212; so the frame is \(\mathrm{KD45}\) and the agent is
+      consistent and fully introspective about a belief the world contradicts.
+    </p>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════════ RESULT -->
 <section>
   <div class="container">
@@ -670,6 +938,210 @@ pre:has(> code){margin:1.3rem 0}
       (command, drive, look). The repair path is stated in the domain and the
       goal is expressible, so the gap is in the search rather than the
       modelling. It is recorded here as an open item.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE PLAN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The plan</p>
+    <h3>The repair, and where the false belief sits</h3>
+    <p>
+      That the gap is in the search and not in the modelling is a claim about
+      two different things, and the two are separable. Whether a sequence
+      reaches the goal is decided by the product update and the satisfaction
+      relation; whether the search finds it is decided by the search. The first
+      is settled here by putting the three-action repair the domain states
+      &#8212; command the door shut, drive to the plant, look &#8212; through
+      the update
+    </p>
+    <p style="text-align:center">
+      \(W' = \{(w,e) \in W \times E : \mathcal{M}, w \models
+        \mathrm{pre}(e)\}, \qquad
+        (w,e)\,R'_i\,(v,f) \iff w R_i v \ \text{and}\ f \in Q_i(e),\)
+    </p>
+    <p>
+      and evaluating the goal in each state it produces. The sequence is not a
+      planner output and is not presented as one; it is a witness, written in
+      the plan format so that the same tool can check it.
+    </p>
+
+<style>
+.pdleg{margin:.8rem 0 0;padding:0;list-style:none;font-size:.79rem;
+  color:var(--gray);display:grid;gap:.3rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+.pdleg .ln{display:inline-block;min-width:1.3rem;font-weight:600;
+  color:var(--black);font-family:var(--mono);font-size:.72rem}
+.pdkey{display:flex;gap:1.15rem;flex-wrap:wrap;font-size:.74rem;
+  color:var(--gray);margin:.9rem 0 0;align-items:center}
+.pdkey span{display:inline-flex;align-items:center}
+.pdkey i{display:inline-block;width:14px;height:10px;
+  border:1.5px solid;border-radius:2px;margin-right:.34rem}
+.pdkey .dot b{display:inline-block;width:7px;height:7px;
+  border-radius:50%;background:#111;border:1px solid #111;
+  margin-right:.34rem}
+.pdkey .dot b.e{background:#fff}
+.pdkey .dot b.d{background:#fff;border:1.4px solid #C8102E;
+  width:9px;height:9px}
+</style>
+<div class="fig">
+  <div class="fig-head">
+    <span class="fig-title">The repair sequence, and the model at every node</span>
+    <span class="note">\(\gamma \equiv \texttt{shut} \wedge K_{\texttt{r}}\,\texttt{shut}\)</span>
+  </div>
+  <div class="fig-body">
+    <svg viewBox="0 0 308 440" width="100%" style="max-width:308px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The repair sequence, and the model at every node">
+      <defs>
+        <marker id="pd-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#9A9A9A"/>
+        </marker>
+      </defs>
+      <style>
+        .pd-h{font-family:'Courier New',Courier,monospace;font-size:13px;      fill:#111;font-weight:bold}
+        .pd-a{font-family:'Courier New',Courier,monospace;font-size:10.5px;      fill:#5A5A5A}
+        .pd-t{font-size:9px;fill:#5A5A5A;letter-spacing:.06em}
+        .pd-q{font-family:'Courier New',Courier,monospace;font-size:10px;      fill:#5A5A5A}
+        .pd-e{font-family:'Courier New',Courier,monospace;font-size:10px;      fill:#C8102E}
+        .pd-n{font-size:10px;fill:#111;font-weight:bold}
+      </style>
+      <path d="M154 102 L154 143" stroke="#9A9A9A" stroke-width="1.3" fill="none" marker-end="url(#pd-arr)"/>
+      <path d="M154 206 L154 247" stroke="#9A9A9A" stroke-width="1.3" fill="none" marker-end="url(#pd-arr)"/>
+      <path d="M154 310 L154 351" stroke="#9A9A9A" stroke-width="1.3" fill="none" marker-end="url(#pd-arr)"/>
+      <g>
+        <rect x="20" y="46" width="268" height="56" rx="3" fill="#fff" stroke="#111111" stroke-width="1.5"/>
+        <text class="pd-n" x="22" y="38">1</text>
+        <text class="pd-t" x="36" y="38" fill="#111111">ONTIC</text>
+        <text class="pd-h" x="33" y="68">command-shut</text>
+        <text class="pd-a" x="33" y="84">r plant</text>
+      <circle cx="275" cy="66" r="6.2" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+      <circle cx="275" cy="66" r="3.4" fill="#fff" stroke="#111" stroke-width="1"/>
+      <text class="pd-q" x="281" y="87" text-anchor="end">|W| = 1</text>
+      </g>
+      <g>
+        <rect x="20" y="150" width="268" height="56" rx="3" fill="#fff" stroke="#111111" stroke-width="1.5"/>
+        <text class="pd-n" x="22" y="142">2</text>
+        <text class="pd-t" x="36" y="142" fill="#111111">ONTIC</text>
+        <text class="pd-h" x="33" y="172">go</text>
+        <text class="pd-a" x="33" y="188">r office plant</text>
+      <circle cx="261" cy="170" r="6.2" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+      <circle cx="261" cy="170" r="3.4" fill="#fff" stroke="#111" stroke-width="1"/>
+      <circle cx="275" cy="170" r="3.4" fill="#fff" stroke="#111" stroke-width="1"/>
+      <text class="pd-q" x="281" y="191" text-anchor="end">|W| = 2</text>
+      </g>
+      <g>
+        <rect x="20" y="254" width="268" height="56" rx="3" fill="#fff" stroke="#C8102E" stroke-width="1.5"/>
+        <text class="pd-n" x="22" y="246">3</text>
+        <text class="pd-t" x="36" y="246" fill="#C8102E">SENSING</text>
+        <text class="pd-h" x="33" y="276">look</text>
+        <text class="pd-a" x="33" y="292">r plant</text>
+      <circle cx="261" cy="274" r="6.2" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+      <circle cx="261" cy="274" r="3.4" fill="#fff" stroke="#111" stroke-width="1"/>
+      <circle cx="275" cy="274" r="3.4" fill="#fff" stroke="#111" stroke-width="1"/>
+      <text class="pd-q" x="281" y="295" text-anchor="end">|W| = 2</text>
+      </g>
+      <circle cx="34" cy="374" r="5.5" fill="#111"/>
+      <text class="pd-h" x="48" y="378">goal reached</text>
+      <circle cx="274" cy="374" r="6.2" fill="none" stroke="#C8102E" stroke-width="1.1"/>
+      <circle cx="274" cy="374" r="3.4" fill="#111" stroke="#111" stroke-width="1"/>
+      <circle cx="288" cy="374" r="3.4" fill="#fff" stroke="#111" stroke-width="1"/>
+      <text class="pd-q" x="294" y="395" text-anchor="end">|W| = 2</text>
+    </svg>
+    <div class="pdkey"><span><i style="border-color:#C8102E"></i>sensing</span><span><i style="border-color:#111111"></i>ontic</span><span><i style="border-color:#1A52A0"></i>announcement</span><span class="dot"><b></b>a world at which the goal holds</span><span class="dot"><b class="e"></b>a world at which it does not</span><span class="dot"><b class="d"></b>a designated world</span></div>
+  </div>
+  <div class="fig-cap">The solution as the AND-OR tree it is, drawn from the planner&#8217;s output. Beside each action is the model that action is given: one dot per world, filled where \(\gamma\) holds and ringed where the world is designated, so a row in which every ringed dot is filled is a state satisfying the goal. An action with two outgoing edges has two designated events, and the continuation below each edge is applicable only in the state that edge produces, which is what makes a solution a policy rather than a sequence. The numbered notes give the modal conjuncts each action is guarded by; an action with no note has none, and is applicable on ontic grounds alone.</div>
+</div>
+
+    <p>
+      The command is the step the page exists to show. Its event model pairs
+      the event that shuts the door with
+      <span class="mono-inline">nil</span>, and the only agent is oblivious, so
+      \(Q_{\texttt{r}}\) sends the event that occurred to the one that did
+      not. The update therefore turns one world into two, and the agent's
+      relation at the designated world points at the copy in which nothing
+      happened:
+    </p>
+    <p style="text-align:center">
+      \(R_{\texttt{r}}(w_0) = \{w_1\}, \qquad w_0 \notin
+        R_{\texttt{r}}(w_0).\)
+    </p>
+    <p>
+      Reflexivity is lost at exactly that step and at exactly that world, and
+      with it the truth axiom. What remains is serial, transitive and
+      Euclidean, which is \(\mathrm{KD45}\), and the agent is consistent and
+      fully introspective about a belief the world contradicts.
+    </p>
+    <p>
+      The domain declares one box modality and the figures write it \(K\)
+      throughout. Whether that symbol is read as knowledge or as belief is a
+      property of the frame rather than of the notation: it is knowledge where
+      the relation is reflexive at the designated world, and belief where it is
+      not. The step at which the reading changes is the step at which the edge
+      above is lost, and it can be pointed at.
+    </p>
+
+<style>
+/* Extension matrix. One row per subformula of the goal, one column per step;
+   a cell draws the worlds of that step's model. Scoped to this figure. */
+.extmat{width:100%;border-collapse:collapse;font-size:.8rem}
+.extmat th{font-family:var(--sg);font-size:.68rem;font-weight:500;color:var(--gray);
+  letter-spacing:.04em;padding:.3rem .4rem;text-align:center;vertical-align:bottom;
+  border-bottom:1px solid var(--border)}
+.extmat th:first-child{text-align:left}
+.extmat th .st{display:block;font-family:var(--mono);font-size:.66rem;color:var(--black)}
+.extmat th .wc{display:block;font-size:.62rem;color:var(--gray);font-weight:400}
+.extmat td{padding:.34rem .4rem;text-align:center;border-bottom:1px solid var(--border);
+  border-bottom-color:rgba(0,0,0,.07)}
+.extmat td:first-child{text-align:left;white-space:nowrap;padding-right:1.1rem}
+.extmat tr.goal td{border-top:1.4px solid var(--black);border-bottom:none;
+  padding-top:.5rem}
+.extmat tr:last-child td{border-bottom:none}
+.extmat .wr{display:inline-flex;gap:3px;align-items:center}
+.extmat td.q{font-family:var(--mono);font-size:.72rem;color:var(--black)}
+.extmat tr.stat td{color:var(--gray)}
+.extmat tr.stat:first-of-type td{border-top:1px solid var(--border)}
+</style>
+<div class="fig">
+  <div class="fig-head">
+    <span class="fig-title">The extension of each formula along the repair</span>
+    <span class="note">\(\gamma \equiv \texttt{shut} \wedge K_{\texttt{r}}\,\texttt{shut}\)</span>
+  </div>
+  <div class="fig-body">
+    <table class="extmat">
+      <thead><tr><th>subformula</th><th>0<span class="st">initial state</span><span class="wc">|W| = 1</span></th><th>1<span class="st">command-shut</span><span class="wc">|W| = 2</span></th><th>2<span class="st">go</span><span class="wc">|W| = 2</span></th><th>3<span class="st">look</span><span class="wc">|W| = 2</span></th></tr></thead>
+      <tbody>
+        <tr><td>\(\texttt{shut}\)</td><td><svg class="wr" width="14" height="14" viewBox="0 0 14.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(K_{\texttt{r}}\,\texttt{shut}\)</td><td><svg class="wr" width="14" height="14" viewBox="0 0 14.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(\neg \texttt{shut}\)</td><td><svg class="wr" width="14" height="14" viewBox="0 0 14.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(K_{\texttt{r}}\,\neg \texttt{shut}\)</td><td><svg class="wr" width="14" height="14" viewBox="0 0 14.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr class="goal"><td>\(\gamma\)</td><td><svg class="wr" width="14" height="14" viewBox="0 0 14.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr class="stat"><td>\(|W|\)</td><td class="q">1</td><td class="q">2</td><td class="q">2</td><td class="q">2</td></tr>
+        <tr class="stat"><td>\(|W^{*}|\)</td><td class="q">1</td><td class="q">1</td><td class="q">1</td><td class="q">1</td></tr>
+        <tr class="stat"><td>\(|R_{\texttt{r}}|\)</td><td class="q">1</td><td class="q">2</td><td class="q">2</td><td class="q">1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="fig-cap">The command splits one world into two. At the designated world \(\texttt{shut}\) is true and \(K_{\texttt{r}}\,\neg\texttt{shut}\) holds there as well: the box modality is satisfied at a world its argument is false at, which is a false belief exhibited rather than argued for. The look removes one edge, and \(K_{\texttt{r}}\,\texttt{shut}\) acquires the designated world.</div>
+</div>
+
+    <p>
+      The false belief is the third row read against the first: \(w_0\) lies
+      in \([\![\texttt{shut}]\!]\) and in
+      \([\![K_{\texttt{r}}\,\neg\texttt{shut}]\!]\) at the same time, so
+      \(K_{\texttt{r}}\varphi \wedge \neg\varphi\) is satisfied at the
+      designated world. Nothing inside the agent's own perspective distinguishes
+      that state from the one before the command, which is precisely why it has
+      to be planned against rather than detected.
+    </p>
+    <p>
+      The look repairs it without repairing the frame. It removes one edge, and
+      \([\![K_{\texttt{r}}\,\texttt{shut}]\!]\) acquires \(w_0\), so the
+      goal \(\texttt{shut} \wedge K_{\texttt{r}}\,\texttt{shut}\) holds at
+      the designated world; \(R_{\texttt{r}}\) is still not reflexive, and
+      the agent has come to know something without the model returning to
+      \(\mathrm{S5}\). A solution of length three therefore exists and is
+      exhibited, and what the search reports exhausted at depth three is its own
+      space and not the problem's.
     </p>
   </div>
 </section>
