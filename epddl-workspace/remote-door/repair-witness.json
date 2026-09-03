@@ -1,0 +1,26 @@
+{
+  "_comment": "Not a planner output. The three-action repair the domain states -- command the door shut, drive to the plant, look -- written in the plan format so that tools/plan_trace.py can put it through the product update. Aletheia does not currently return it: the search reports its space exhausted at depth three. Checking it here separates the two claims, that the sequence reaches the goal and that the search does not find it.",
+  "action": "command-shut_r_plant",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "go_r_office_plant",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "look_r_plant",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
