@@ -935,30 +935,142 @@ sup.cite a:hover{text-decoration:underline}
     <h3>The goal, evaluated in the final model</h3>
 
     <p>
-      Each conjunct of the goal was evaluated in the model after every step. The
-      table gives the truth value at each stage.
+      A goal is a formula of the modal language and a model either satisfies it
+      or does not, but the bare verdict discards the quantity that decides it.
+      The semantics assigns a formula its <em>extension</em>
+    </p>
+    <p style="text-align:center">
+      \([\![\varphi]\!]^{\mathcal{M}} = \{w \in W : \mathcal{M}, w
+      \models \varphi\}, \qquad
+      [\![K_i\varphi]\!] = \{w : R_i(w) \subseteq [\![\varphi]\!]\},\)
+    </p>
+    <p>
+      and the goal is satisfied exactly when \(W^{*} \subseteq
+      [\![\gamma]\!]\). Extension and containment are what is reported below.
+      They are computed by the labelling algorithm, which evaluates every
+      subformula bottom-up over the subformula order in \(O(|\mathrm{Sub}
+      (\gamma)| \cdot (|W| + |R|))\), on the models recorded during the run.
+      Every verdict the executor reported is reproduced, which is what licenses
+      reading the rest of the figure.
     </p>
 
-    <table class="data">
-      <thead>
-        <tr><th>formula</th><th>initial</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
-      </thead>
+<style>
+/* Extension matrix. One row per subformula of the goal, one column per step;
+   a cell draws the worlds of that step's model. Scoped to this figure. */
+.extmat{width:100%;border-collapse:collapse;font-size:.8rem}
+.extmat th{font-family:var(--sg);font-size:.68rem;font-weight:500;color:var(--gray);
+  letter-spacing:.04em;padding:.3rem .4rem;text-align:center;vertical-align:bottom;
+  border-bottom:1px solid var(--border)}
+.extmat th:first-child{text-align:left}
+.extmat th .st{display:block;font-family:var(--mono);font-size:.66rem;color:var(--black)}
+.extmat th .wc{display:block;font-size:.62rem;color:var(--gray);font-weight:400}
+.extmat td{padding:.34rem .4rem;text-align:center;border-bottom:1px solid var(--border);
+  border-bottom-color:rgba(0,0,0,.07)}
+.extmat td:first-child{text-align:left;white-space:nowrap;padding-right:1.1rem}
+.extmat tr.goal td{border-top:1.4px solid var(--black);border-bottom:none;
+  padding-top:.5rem}
+.extmat tr:last-child td{border-bottom:none}
+.extmat .wr{display:inline-flex;gap:3px;align-items:center}
+.extmat td.q{font-family:var(--mono);font-size:.72rem;color:var(--black)}
+.extmat tr.stat td{color:var(--gray)}
+.extmat tr.stat:first-of-type td{border-top:1px solid var(--border)}
+</style>
+<div class="fig">
+  <div class="fig-head">
+    <span class="fig-title">The extension of each subformula of the goal, after every action</span>
+    <span class="note">\(\gamma \equiv \texttt{safe} \wedge K_{\texttt{porter}}\,\texttt{safe} \wedge \neg \mathit{Kw}_{\texttt{guest}}\,\texttt{leak-at}\_\texttt{l2}\_\texttt{suite}\)</span>
+  </div>
+  <div class="fig-body">
+    <table class="extmat">
+      <thead><tr><th>subformula</th><th>0<span class="st">initial state</span><span class="wc">|W| = 2</span></th><th>1<span class="st">deploy</span><span class="wc">|W| = 2</span></th><th>2<span class="st">inspect</span><span class="wc">|W| = 2</span></th><th>3<span class="st">brief-leak</span><span class="wc">|W| = 4</span></th><th>4<span class="st">contain</span><span class="wc">|W| = 5</span></th></tr></thead>
       <tbody>
-        <tr><td><span class="mono-inline">safe</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td><b>T</b></td></tr>
-        <tr><td><span class="mono-inline">(K porter safe)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td><b>T</b></td></tr>
-        <tr><td><span class="mono-inline">(Kw guest leak-at_l2_suite)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
-        <tr><td><span class="mono-inline">(Kw guest leak-at_l3_suite)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
-        <tr><td><span class="mono-inline">(Kw porter leak-at_l3_suite)</span></td><td>F</td><td>F</td><td>F</td><td><b>T</b></td><td><b>T</b></td></tr>
-        <tr><td><span class="mono-inline">(K inspector safe)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+        <tr><td>\(\texttt{safe}\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(K_{\texttt{porter}}\,\texttt{safe}\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(\texttt{leak-at}\_\texttt{l2}\_\texttt{suite}\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(\neg \texttt{leak-at}\_\texttt{l2}\_\texttt{suite}\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(\mathit{Kw}_{\texttt{guest}}\,\texttt{leak-at}\_\texttt{l2}\_\texttt{suite}\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(\neg \mathit{Kw}_{\texttt{guest}}\,\texttt{leak-at}\_\texttt{l2}\_\texttt{suite}\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr><td>\(K_{\texttt{inspector}}\,\texttt{safe}\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
+        <tr class="goal"><td>\(\gamma\)</td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="28" height="14" viewBox="0 0 28.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="56" height="14" viewBox="0 0 56.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td><td><svg class="wr" width="70" height="14" viewBox="0 0 70.0 14.0" aria-hidden="true"><circle cx="7.0" cy="7.0" r="5.8" fill="none" stroke="#C8102E" stroke-width="1.1"/><circle cx="7.0" cy="7.0" r="3.1" fill="#111111" stroke="#111111" stroke-width="1"/><circle cx="21.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="35.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="49.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/><circle cx="63.0" cy="7.0" r="3.1" fill="#FFFFFF" stroke="#111111" stroke-width="1"/></svg></td></tr>
       </tbody>
     </table>
+  </div>
+  <div class="fig-cap">A dot is a world of that step&#8217;s model, filled where the formula holds and ringed where the world is designated. The goal is satisfied exactly where every ringed dot in the bottom row is filled, which is the containment \(W^{*} \subseteq [\![\gamma]\!]\).</div>
+</div>
 
     <p>
-      All three conjuncts hold in the final model. The last row is outside the
-      goal and describes the agent that organised the outcome: the inspector
-      does not know that the incident is over, because the porter closed the
-      valve on another floor and nobody told it. The mission is satisfied while
-      the agent that began it holds a false belief about its result.
+      Two rows say more than a truth value could. The secrecy conjunct
+      \(\neg\mathit{Kw}_{\texttt{guest}}\,\texttt{leak-at}
+      \_\texttt{l2}\_\texttt{suite}\) holds at every world of every model in
+      the run: the guest is uncertain not merely where the world happens to be
+      but everywhere the model reaches, so the conjunct is satisfied with the
+      whole model as margin and no continuation of the run could falsify it by
+      moving the point. The ontic conjunct is the opposite case. In the final
+      model \([\![\texttt{safe}]\!] = \{w_0\}\) out of five worlds, so the
+      goal is met at one world and fails at the other four, and the margin is a
+      single world.
+    </p>
+    <p>
+      The last row is outside the goal and describes the agent that organised
+      the outcome. \([\![K_{\texttt{inspector}}\,\texttt{safe}]\!]\) is
+      empty in the final model: the inspector does not know that the incident is
+      over, because the porter closed the valve on another floor and nobody told
+      it. The mission is satisfied while the agent that began it holds a false
+      belief about its result.
+    </p>
+
+    <h4>The same question as a refutation</h4>
+
+    <p>
+      The labelling algorithm is one decision procedure and the reduction to
+      propositional satisfiability is another. Introduce a variable
+      \(x_{\psi,w}\) for each \(\psi \in \mathrm{Sub}(\gamma)\) and each
+      \(w \in W\), assert the defining clauses of each connective and each
+      modality, and assert \(\neg x_{\gamma,w}\) at a designated world. The
+      resulting formula is unsatisfiable exactly when
+      \(\mathcal{M}, W^{*} \models \gamma\), so the goal test is a
+      refutation and the refutation is a certificate.
+    </p>
+
+<style>
+.cnf{width:100%;border-collapse:collapse;font-size:.8rem}
+.cnf th{font-family:var(--sg);font-size:.68rem;font-weight:500;color:var(--gray);letter-spacing:.04em;text-align:left;padding:.3rem .5rem;border-bottom:1px solid var(--border)}
+.cnf td{padding:.4rem .5rem;border-bottom:1px solid rgba(0,0,0,.07)}
+.cnf td.n,.cnf th.n{text-align:right;font-family:var(--mono)}
+.cnf tr:last-child td{border-bottom:none}
+.verdict{margin-top:1rem;border:1px solid var(--border);background:#fff;padding:.7rem .9rem;border-radius:2px;font-size:.83rem}
+.verdict b{color:var(--red);text-transform:uppercase;letter-spacing:.05em;font-size:.78rem}
+</style>
+<div class="fig">
+  <div class="fig-head">
+    <span class="fig-title">The goal test on the final model, as a propositional refutation</span>
+    <span class="note">45 variables, 108 clauses</span>
+  </div>
+  <div class="fig-body">
+    <table class="cnf">
+      <thead><tr><th>clause family</th><th>defining shape</th><th class="n">clauses</th></tr></thead>
+      <tbody>
+        <tr><td>valuation</td><td>\(x_{p,w} \;\text{or}\; \neg x_{p,w}\)</td><td class="n">10</td></tr>
+        <tr><td>modality</td><td>\(x_{K_i\psi,w} \leftrightarrow \bigwedge_{v \in R_i(w)} x_{\psi,v}\)</td><td class="n">57</td></tr>
+        <tr><td>negation</td><td>\(x_{\neg\psi,w} \leftrightarrow \neg x_{\psi,w}\)</td><td class="n">20</td></tr>
+        <tr><td>conjunction</td><td>\(x_{\psi\wedge\chi,w} \leftrightarrow x_{\psi,w} \wedge x_{\chi,w}\)</td><td class="n">20</td></tr>
+        <tr><td>goal</td><td>\(\neg x_{\gamma,w} \ \text{ for each } w \in W^{*}\)</td><td class="n">1</td></tr>
+      </tbody>
+    </table>
+    <div class="verdict"><b>unsatisfiable</b> &#183; 45 unit propagations, <b style="color:var(--black)">0 decisions</b> &#183; \(\gamma\) is entailed at every designated world, so the goal holds.</div>
+  </div>
+  <div class="fig-cap">The same question decided as a propositional refutation. Every recorded verdict of the run is reproduced by both procedures.</div>
+</div>
+
+    <p>
+      The count that matters is the last one. The valuation fixes every atomic
+      variable as a unit clause, and the defining clauses propagate those
+      assignments up the subformula order without ever leaving a clause with two
+      unassigned literals, so DPLL closes the instance with no decision at all.
+      Model checking a fixed finite model is not the search problem planning is:
+      the search happens once, when the policy is built, and never again when a
+      state is asked whether it satisfies the goal. Both procedures agree with
+      each other and with the executor at every step of the run.
     </p>
   </div>
 </section>
