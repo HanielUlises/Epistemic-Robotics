@@ -55,7 +55,10 @@ from launch_ros.actions import Node
 # command is issued from somewhere the robot is not.
 SPAWN = [
     ('r1', -3.50, -9.30, 0.0),
-    ('r2', -3.50, 6.20, 0.0),
+    # Beside the receiving dock rather than on it: see the note in
+    # config/warehouse_fleet.yaml about zones holding several agents and
+    # waypoints holding one.
+    ('r2', -3.50, 6.80, 0.0),
 ]
 
 

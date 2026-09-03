@@ -4,6 +4,14 @@
 # Two robots, because the mission is `warehouse-problem.epddl`: r1 goes and
 # looks, r2 waits at receiving and has to come to know what r1 found. r2 never
 # moves, and that is the point of the instance rather than an oversight.
+#
+# r2 parks at r2_charger and not at dock_north, though the domain says it is in
+# zone dock_north and the mission node tells PlanSys2 so. The two statements do
+# not contradict each other: a zone in the domain is a region several agents
+# can occupy at once, and a waypoint in RMF holds one robot. Parking r2 on the
+# delivery waypoint makes r1's last leg impossible -- RMF reports "Failed
+# negotiation" forever, because the goal is occupied by a robot with no reason
+# to move -- and the mission never finishes.
 
 rmf_fleet:
   name: "warehouseBot"
@@ -60,7 +68,7 @@ robots:
       robot_state_update_frequency: 10.0
       start:
         map_name: "L1"
-        waypoint: "dock_north"
+        waypoint: "r2_charger"
         orientation: 0.0
       charger:
         waypoint: "r2_charger"
