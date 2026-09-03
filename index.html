@@ -2705,10 +2705,23 @@ function extractPath(dist, robotC, robotR, goalC, goalR){
 
   var phone = window.matchMedia('(max-width:720px)');
 
+
+  /* Opening the drawer drops the top level of the contents, so the four
+     sections are readable without a tap each. Their own submenus stay shut:
+     one level is a menu, two is the whole site poured into a phone. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var top = menu.querySelectorAll('.nav-panel > .nav-folder');
+    Array.prototype.forEach.call(top, function(f){ f.open = true; });
+    var nested = menu.querySelectorAll('.nav-panel .nav-folder .nav-folder');
+    Array.prototype.forEach.call(nested, function(f){ f.open = false; });
+  }
+
   function open(state){
     document.body.classList.toggle('drawer-open', state);
     burger.setAttribute('aria-expanded', state ? 'true' : 'false');
     if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
     if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
   }
 
