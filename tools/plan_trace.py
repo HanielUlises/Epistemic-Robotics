@@ -602,7 +602,11 @@ var RED = '#C8102E', INK = '#111', GRAY = '#5A5A5A', BORD = '#D6D6D6',
     STEEL = '#1A52A0';
 var RM = window.matchMedia &&
          window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-var agent = D.agents[0], stage = 0, timer = null;
+/* The figure loads finished. A diagram whose result appears only after a
+   button is pressed reads as a broken diagram, and the prose beneath it
+   refers to worlds that are not on the page yet; Play replays how the
+   product is built rather than being the only way to see it. */
+var STAGES = 3, agent = D.agents[0], stage = STAGES, timer = null;
 
 function el(tag, at){
   var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -766,25 +770,27 @@ function draw(){
   }
 }
 
-function step(){
-  stage = stage + 1;
-  if (stage > 3){ reset(); return false; }
-  draw();
-  return true;
-}
-function reset(){
+function stop(){
   if (timer) clearInterval(timer);
-  timer = null; stage = 0; draw();
+  timer = null;
   document.getElementById(ID + '-play').textContent = '▶ Play';
 }
-document.getElementById(ID + '-step').onclick = function(){ step(); };
+function reset(){ stop(); stage = STAGES; draw(); }
+document.getElementById(ID + '-step').onclick = function(){
+  stop();
+  stage = (stage + 1) % (STAGES + 1);
+  draw();
+};
 document.getElementById(ID + '-reset').onclick = reset;
 document.getElementById(ID + '-play').onclick = function(){
-  if (timer){ reset(); return; }
+  if (timer){ stop(); return; }
   this.textContent = '■ Stop';
-  step();
-  timer = setInterval(function(){ if (!step()) clearInterval(timer); },
-                      RM ? 1400 : 950);
+  stage = 0; draw();
+  timer = setInterval(function(){
+    stage = stage + 1;
+    draw();
+    if (stage >= STAGES) stop();
+  }, RM ? 1400 : 950);
 };
 var seg = document.getElementById(ID + '-seg');
 if (seg) seg.addEventListener('click', function(e){
