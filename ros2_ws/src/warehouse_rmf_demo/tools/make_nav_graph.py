@@ -127,10 +127,19 @@ EDGES = [
 ]
 
 # Where each robot parks. RMF wants a charger for every robot in the fleet.
+#
+# Well clear of the zones, not merely off them. A robot occupies its vicinity
+# radius as well as its footprint --- half a metre each for this fleet --- so a
+# robot parked 0.6 m from a delivery point makes that point unreachable: RMF
+# reports "Failed negotiation" and keeps reporting it, and the task neither
+# fails nor finishes. PARKING_CLEARANCE is what keeps them apart.
 CHARGERS = {
-    'r1_charger': (-3.50, -9.90),
-    'r2_charger': (-3.50, 6.80),
+    'r1_charger': (-3.50, -7.80),
+    'r2_charger': (-3.50, 7.70),
 }
+
+# Two vicinity radii, and a little room.
+PARKING_CLEARANCE = 1.4
 
 
 def main():
@@ -155,6 +164,15 @@ def main():
                                ('dock_north', 'r2_charger')]:
         if not floor.clear(lookup[a], lookup[b], args.margin):
             problems.append(f'lane {a} -> {b} crosses something')
+    for charger, point in CHARGERS.items():
+        for name, zone in WAYPOINTS:
+            distance = math.dist(point, zone)
+            if distance < PARKING_CLEARANCE:
+                problems.append(
+                    f'{charger} is {distance:.2f} m from {name}, closer than '
+                    f'the {PARKING_CLEARANCE} m two robots need; a robot parked '
+                    f'there makes {name} unreachable')
+
     if problems:
         raise SystemExit('this graph does not fit the building:\n  ' +
                          '\n  '.join(problems))

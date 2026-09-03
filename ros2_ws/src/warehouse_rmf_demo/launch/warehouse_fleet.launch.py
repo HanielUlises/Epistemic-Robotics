@@ -58,7 +58,7 @@ SPAWN = [
     # Beside the receiving dock rather than on it: see the note in
     # config/warehouse_fleet.yaml about zones holding several agents and
     # waypoints holding one.
-    ('r2', -3.50, 6.80, 0.0),
+    ('r2', -3.50, 7.70, 0.0),
 ]
 
 

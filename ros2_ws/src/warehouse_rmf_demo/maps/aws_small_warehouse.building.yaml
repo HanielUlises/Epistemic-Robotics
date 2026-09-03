@@ -57,13 +57,13 @@ levels:
       - bay3_mouth
       - {}
     - - -3.5
-      - -9.9
+      - -7.8
       - 0.0
       - r1_charger
       - is_charger: [4, true]
         is_parking_spot: [4, true]
     - - -3.5
-      - 6.8
+      - 7.7
       - 0.0
       - r2_charger
       - is_charger: [4, true]
