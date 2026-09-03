@@ -5,13 +5,13 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Hotel Incident &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="An epistemic mission whose world changes underneath it: a leak in one of two suites on two floors, shut off in private so that the fleet's belief goes stale, executed over an Open-RMF fleet through two lifts.">
+<meta name="description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with the agents' knowledge measured after every action: two of three agents end holding beliefs the world contradicts, and the frame leaves S5 for KD45 during execution.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
 <meta property="og:title" content="The Hotel Incident">
-<meta property="og:description" content="An epistemic mission whose world changes underneath it: a leak in one of two suites on two floors, shut off in private so that the fleet's belief goes stale, executed over an Open-RMF fleet through two lifts.">
+<meta property="og:description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with the agents' knowledge measured after every action: two of three agents end holding beliefs the world contradicts, and the frame leaves S5 for KD45 during execution.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/hotel_run.html">
 
 
@@ -24,7 +24,7 @@
 <meta property="og:image:alt" content="Gazebo and RViz side by side: the Open-RMF hotel, and the two robots dispatched to different floors">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-hotel-run.jpg">
 <meta name="twitter:title" content="The Hotel Incident">
-<meta name="twitter:description" content="An epistemic mission whose world changes underneath it: a leak in one of two suites on two floors, shut off in private so that the fleet's belief goes stale, executed over an Open-RMF fleet through two lifts.">
+<meta name="twitter:description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with the agents' knowledge measured after every action: two of three agents end holding beliefs the world contradicts, and the frame leaves S5 for KD45 during execution.">
 
 
 <script>
@@ -368,14 +368,19 @@ sup.cite a:hover{text-decoration:underline}
           <h6>Pages</h6>
           <a href="index.html">Overview</a>
           <a href="domains.html">Domains</a>
-          <a href="execution.html">Execution</a>
+          <a href="demos.html">Demonstrations</a>
           <div class="nav-sub">
-            <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
-            <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
-            <a href="warehouse_run.html" aria-current="page">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
-            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
-            <a href="hotel_run.html" aria-current="page">The hotel incident<span class="sub">A mission whose world changes, over an Open-RMF fleet</span></a>
+            <a href="demos.html#building-rooms">building-rooms<span class="sub">Six rooms and a measured floor</span></a>
+            <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+            <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            <a href="demos.html#robot-warehouse">robot-warehouse<span class="sub">The AWS small warehouse</span></a>
+            <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+            <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+            <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+            <a href="demos.html#hotel-incident">hotel-incident<span class="sub">Three floors and two lifts</span></a>
+            <a href="hotel_run.html" aria-current="page">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
           </div>
+          <a href="execution.html">Execution</a>
           <hr>
           <h6>Reports (PDF)</h6>
           <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
@@ -392,20 +397,20 @@ sup.cite a:hover{text-decoration:underline}
   </div>
 </header>
 
+
 <div class="hero">
   <div class="container">
     <p class="eyebrow">Open-RMF &#183; KD45 belief &#183; ROS 2</p>
-    <h2>A mission whose world changes <em>underneath</em> it</h2>
+    <h2>Measuring belief during a fleet mission</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      A leak is in one of two hotel suites, on two different floors, and nobody
-      knows which. Finding out means sending a robot up a lift to look. Shutting
-      the valve is quiet work in a closed suite, so the moment it is done, every
-      agent still downstairs believes something that was true when it formed the
-      belief and is false now. Repairing that belief without the guest
-      overhearing is the rest of the mission. Below is a recorded run over the
-      Open-RMF hotel demo, with two fleets, two lifts, and a policy that splits
-      the robots before it knows the answer.
+      An epistemic policy was executed over an Open-RMF fleet across three
+      floors of a hotel, and the state of the agents' knowledge was measured
+      after every action. The run ends with two of the three agents holding
+      beliefs the world contradicts. Each of those beliefs is attributable to a
+      single action, and the accessibility relation of the agent concerned
+      stops being reflexive at exactly that step, which is the formal signature
+      of the frame leaving \(\mathrm{S5}_n\) for \(\mathrm{KD45}_n\).
     </p>
     <p class="note" style="margin-top:1.4rem">
       Planned by <a href="https://github.com/HanielUlises/Aletheia">Aletheia</a> over
@@ -413,61 +418,97 @@ sup.cite a:hover{text-decoration:underline}
       <a href="https://github.com/ePlanSys/eplansys">eplansys</a> on PlanSys2,
       dispatched to Open-RMF by
       <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>.
+      All figures below are generated from the measured run.
     </p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ THE RUN -->
+<!-- ═══════════════════════════════════════════════ PROBLEM -->
 <section>
   <div class="container">
-    <p class="sec-label">The run</p>
-    <h3>Two robots at once, two lifts, one branch</h3>
+    <p class="sec-label">The problem</p>
+    <h3>A mission stated as a modal formula</h3>
 
     <p>
-      Gazebo on the left, RViz on the right. The captions are generated from the
-      run's own log, at the second each line was written: a recording of this
-      mission without them is a video of two robots taking lifts, because
-      everything that makes it worth watching happens in the model and is
-      invisible on the floor.
+      A leak is in one of two suites, <span class="mono-inline">l2_suite</span>
+      and <span class="mono-inline">l3_suite</span>, on separate floors. Its
+      location is settled in the world and unknown to the fleet, so the initial
+      model has two worlds and designates both. Three agents participate: an
+      <span class="mono-inline">inspector</span> and a
+      <span class="mono-inline">porter</span>, each bound to a robot, and a
+      <span class="mono-inline">guest</span>, which is an agent of the model
+      with no robot and no actions available to it.
+    </p>
+
+    <p>The goal is the conjunction</p>
+
+    <pre><code>(:goal (and (safe)
+            ([porter] (safe))
+            (&lt;Kw. guest&gt; (leak-at l2_suite))))</code></pre>
+
+    <p>
+      whose three conjuncts constrain the plan in three different ways. The
+      first is ontic and requires the leak to be shut off, which carries a
+      modal precondition: an agent may close a valve only in a suite it knows
+      to be flooded, so the plan must contain an act of sensing. The second
+      requires the porter to come to know an ontic fact. The third requires the
+      guest to remain uncertain about the location, and it is this conjunct
+      that removes the public address system from the admissible plans.
+    </p>
+
+    <p>
+      The action library is the <span class="mono-inline">intermediate</span>
+      set. Movement is <span class="mono-inline">public-ontic</span>; inspection
+      is <span class="mono-inline">semi-private-sensing</span>, so the fleet
+      observes that an inspection occurred and does not observe its outcome;
+      containment is <span class="mono-inline">private-ontic</span> and is
+      observed only by agents in the suite; the radio is
+      <span class="mono-inline">quasi-private-announcement</span> and the public
+      address system is <span class="mono-inline">public-announcement</span>.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ POLICY -->
+<section>
+  <div class="container">
+    <p class="sec-label">The policy</p>
+    <h3>Solution structure</h3>
+
+    <p>
+      Aletheia solved the instance by AO* search at depth 4, expanding
+      15&#8202;164 nodes and generating 16&#8202;796. The result was validated
+      over two leaves and six branches. The executor rendered it as a tree of
+      six nodes.
     </p>
 
     <figure class="demo-figure">
-      <video controls preload="metadata" playsinline width="100%"
-             poster="media/og-hotel-run.jpg">
-        <source src="media/hotel_run_l3.mp4" type="video/mp4">
-        Your browser will not play this video.
-        <a href="media/hotel_run_l3.mp4">Download it instead</a>.
-      </video>
+      <img src="media/hotel-policy.svg" alt="The policy as a tree: a joint move, then an inspection with two continuations" width="100%">
       <figcaption>
-        The leak is in the L3 suite, so the inspection comes back dry and the
-        policy takes its second branch. Recorded on a display of its own, with
-        nothing on it but these two windows; sped up six times, and the
-        captions held at reading speed regardless.
+        <b>Figure 1.</b> The policy. The root moves both agents in one action.
+        The inspection has two outcomes, and the continuation differs between
+        them.
       </figcaption>
     </figure>
 
     <p>
-      Nothing in the recording was staged. Both robots are sent to different
-      floors before anybody knows which suite is flooded, because that is what
-      the policy says to do, and it says so for a reason worth stating plainly:
-      whichever way the inspection comes out, one of the two is already standing
-      on the right floor.
+      Three properties of this policy follow from the goal alone. The root
+      commits both robots to different floors before the leak's location is
+      known, which places one of them on the correct floor under either outcome.
+      The private radio carries the finding, since a public announcement would
+      falsify the third conjunct. The dry branch closes the valve with the
+      porter, which is already on the floor the inspection implicates, so the
+      solution contains no second lift traversal.
     </p>
 
-    <p>
-      They move at the same time, and that is not free. A policy is a chain of
-      product updates and the executor runs it strictly in order &#8212; the tree
-      it renders is a <span class="mono-inline">Sequence</span>, one node after
-      another &#8212; so two consecutive move actions are two robots moving one
-      after the other. Concurrency cannot be added between the nodes without
-      making the order of the updates ambiguous. It has to be inside a node:
-      one event, applied once, that relocates both agents.
-    </p>
+    <h4>Concurrency and the order of updates</h4>
 
     <p>
-      Which is also the more honest reading of what is happening. Covering both
-      floors before anything is known is a single decision taken once, and
-      splitting it into two actions suggests a choice was made twice.
+      A policy is a sequence of product updates and the executor renders it as
+      a <span class="mono-inline">Sequence</span> node, so two consecutive move
+      actions produce two robots moving one after another. Simultaneous motion
+      requires a single event that relocates several agents, which the domain
+      provides as <span class="mono-inline">deploy</span>:
     </p>
 
     <pre><code>(:event e-deploy
@@ -481,214 +522,288 @@ sup.cite a:hover{text-decoration:underline}
           (not (at-ag ?j ?from-j)) (at-ag ?j ?to-j)))</code></pre>
 
     <p>
-      On the far side of the bridge that one action becomes two RMF tasks, one
-      pinned to each robot, and the action stays open until both report done. It
-      fails as soon as either does: half a joint move is not a state the model
-      has a world for.
-    </p>
-
-    <p class="note">
-      In the recorded run the two robots contend for floor space on the way out
-      of the lobby and RMF replans one of them around the other, and it puts
-      each of them in the lift the plan did not name. Neither the policy nor the
-      epistemic model contains anything that could have anticipated either, and
-      neither had to.
+      The bridge submits one RMF task per agent named in such an action and
+      holds the PlanSys2 action open until every task reports completion,
+      failing the action as soon as any one of them fails.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ THE POLICY -->
+<!-- ═══════════════════════════════════════════════ EXECUTION -->
 <section>
   <div class="container">
-    <p class="sec-label">The policy</p>
-    <h3>Six nodes, and a branch nobody wrote</h3>
-
-    <p>
-      The planner is given the domain, the instance and no advice. What it
-      returns is below. That it opens with the joint action rather than two
-      separate moves, that it prefers the radio to the public address system,
-      and that the second branch needs no second lift ride are all consequences
-      of the goal rather than of anything written into the plan.
-    </p>
+    <p class="sec-label">Execution</p>
+    <h3>The run on the fleet</h3>
 
     <figure class="demo-figure">
-      <img src="media/hotel-policy.svg" alt="The branching policy as a tree: both robots dispatched, then an inspection with two continuations" width="100%">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/og-hotel-run.jpg">
+        <source src="media/hotel_run_l3.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/hotel_run_l3.mp4">Download it instead</a>.
+      </video>
       <figcaption>
-        Solved at depth 4, 15&#8202;164 nodes expanded, and validated: two leaves,
-        six branches checked.
+        <b>Figure 2.</b> The recorded run, with the leak in the L3 suite, so the
+        inspection returns dry and the policy takes its second branch. Recorded
+        on a display of its own; sped up six times, with captions generated from
+        the run's log.
       </figcaption>
     </figure>
 
     <p>
-      The public address system is in the domain, it is a single action, and it
-      would inform the porter in one step from anywhere in the building. The
-      planner does not use it. Nothing marks it as dangerous; it is inadmissible
-      only because the guest is an agent of the same model and the goal says the
-      guest must not learn which suite was flooded.
+      Wall-clock time for each action, from the moment the bridge submitted it
+      to the moment the epistemic state applied the corresponding update:
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>step</th><th>action</th><th>execution</th><th>|W|</th><th>|D| inspector</th><th>|D| porter</th><th>|D| guest</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>initial state</td><td>&#8212;</td><td>2</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>1</td><td><span class="mono-inline">deploy</span></td><td>742.0 s</td><td>2</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>2</td><td><span class="mono-inline">inspect</span></td><td>14.3 s</td><td>2</td><td>1</td><td>2</td><td>2</td></tr>
+        <tr><td>3</td><td><span class="mono-inline">brief-leak</span></td><td>4.3 s</td><td>4</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><td>4</td><td><span class="mono-inline">contain</span></td><td>1.0 s</td><td>5</td><td>1</td><td>1</td><td>2</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      The joint move accounts for 97&#8202;% of the execution time. It comprises
+      two lift traversals across three levels, performed concurrently, and
+      Open-RMF resolved a traffic conflict between the two robots on the way out
+      of the lobby and assigned each of them a lift. The epistemic work that
+      follows occupies under twenty seconds in total.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ THE MODEL -->
+<!-- ═══════════════════════════════════════════════ MEASUREMENT -->
 <section>
   <div class="container">
-    <p class="sec-label">The model</p>
-    <h3>Sensing narrows it; acting in private widens it</h3>
+    <p class="sec-label">Measurement</p>
+    <h3>The model after every update</h3>
 
     <p>
-      The interesting quantity is the size of the model, and it does not move in
-      one direction. These are the numbers the epistemic state reported during
-      the recorded run.
+      The run was replayed against a standalone epistemic state, and after each
+      action three quantities were recorded for every agent: the number of
+      worlds in its perspective, the number of worlds it designates, and whether
+      that perspective contains the world that is the case. The accessibility
+      relation was recorded with them, which permits the frame property to be
+      checked directly.
     </p>
 
     <figure class="demo-figure">
-      <img src="media/hotel-model.svg" alt="Worlds in the model after each step: 2, 2, 3, 6" width="100%">
+      <img src="media/hotel-trajectory.svg" alt="A table of model size and each agent's epistemic state after every step" width="100%">
       <figcaption>
-        Worlds after each product update. The count rising is the whole point of
-        the domain.
+        <b>Figure 3.</b> The measured run. |D| = 1 is knowledge of the
+        proposition at issue; |D| &gt; 1 is uncertainty. Red marks a perspective
+        that excludes the actual world.
       </figcaption>
     </figure>
 
-    <pre><code>applied go_inspector_lobby_l2_suite:                  2 worlds, 2 designated
-applied inspect_inspector_l2_suite -&gt; e-inspect-wet:  2 worlds, 1 designated
-applied contain_inspector_l2_suite:                   3 worlds, 1 designated
-applied brief-safe_inspector_porter_l2_suite:         6 worlds, 1 designated</code></pre>
-
     <p>
-      The inspection leaves two worlds and designates one: the fleet still
-      represents both possibilities, and now knows which of them it is in.
-      Shutting the valve <em>adds</em> a world, because the porter is on another
-      floor and did not see it: there is now the world in which the valve is
-      shut and the world the porter still believes in, where the suite is
-      flooded. That second world is a false belief in the strict sense, and it is
-      why the reachable state space here is \(\mathrm{KD45}_n\) rather than
-      \(\mathrm{S5}_n\) &#8212; accessibility loses reflexivity the moment an
-      agent believes something that is not so.
+      Two features of this table carry the argument. The size of the shared
+      model increases from two worlds to five, and it does so at the two steps
+      where only part of the fleet observes what happened. A private
+      announcement introduces the distinction between a world in which the
+      message was sent and a world its non-recipients continue to inhabit; a
+      private ontic action introduces the distinction between a world in which
+      the valve is closed and a world in which the agents that did not see it
+      still believe it open.
     </p>
 
     <p>
-      The radio call adds worlds again rather than removing them. Telling one
-      agent and not another is a distinction, and a model that has to represent
-      what the guest still believes needs somewhere to put it.
+      The second feature is the red cells. At step 3 the guest's perspective
+      ceases to contain the actual world, and at step 4 the inspector's does the
+      same. Both agents continue to designate worlds and to satisfy every
+      formula those worlds support, and both are wrong.
+    </p>
+
+    <h4>The accessibility relations</h4>
+
+    <figure class="demo-figure">
+      <img src="media/hotel-kripke.svg" alt="Accessibility relations for each agent at four steps of the run" width="100%">
+      <figcaption>
+        <b>Figure 4.</b> Each agent's accessibility relation as a digraph over
+        the worlds of the model, at the initial state and after steps 2, 3 and 4.
+        Red rings mark designated worlds. Labels give the atoms that vary across
+        worlds.
+      </figcaption>
+    </figure>
+
+    <p>
+      In the initial model all three relations are the complete graph on two
+      worlds, and every agent designates both. After the inspection the
+      inspector's relation has lost the arc between them and designates one,
+      while the relations of the porter and the guest are unchanged: the fleet
+      observed that an inspection took place and did not observe what it found.
+    </p>
+
+    <p>
+      After step 3 the guest's relation has no self-loop at the actual world,
+      and after step 4 the inspector's has none either. Reflexivity is the
+      property that makes knowledge factive, so its loss is what allows an agent
+      to be mistaken. This is measured directly:
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>step</th><th>inspector</th><th>porter</th><th>guest</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>initial</td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
+        <tr><td>1 &#183; <span class="mono-inline">deploy</span></td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
+        <tr><td>2 &#183; <span class="mono-inline">inspect</span></td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
+        <tr><td>3 &#183; <span class="mono-inline">brief-leak</span></td><td>reflexive</td><td>reflexive</td><td><b>irreflexive</b></td></tr>
+        <tr><td>4 &#183; <span class="mono-inline">contain</span></td><td><b>irreflexive</b></td><td>reflexive</td><td><b>irreflexive</b></td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      The frame of the reachable state space is therefore \(\mathrm{S5}_n\)
+      through step 2 and \(\mathrm{KD45}_n\) thereafter. The transition occurs
+      during execution, and it is caused by actions the plan selected.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ THE SEAM -->
+<!-- ═══════════════════════════════════════════════ GOAL -->
 <section>
   <div class="container">
-    <p class="sec-label">The seam</p>
-    <h3>What each system is allowed to decide</h3>
+    <p class="sec-label">Verification</p>
+    <h3>The goal, evaluated in the final model</h3>
 
     <p>
-      The hotel demo that ships with Open-RMF is a traffic problem: three fleets,
-      two lifts and a corridor, and RMF works out who goes first. Nothing in it
-      is ever in doubt. The mission above adds the doubt and hands the traffic
-      back.
+      Each conjunct of the goal was evaluated in the model after every step. The
+      table gives the truth value at each stage.
     </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>formula</th><th>initial</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="mono-inline">safe</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td><b>T</b></td></tr>
+        <tr><td><span class="mono-inline">(K porter safe)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td><b>T</b></td></tr>
+        <tr><td><span class="mono-inline">(Kw guest leak-at_l2_suite)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+        <tr><td><span class="mono-inline">(Kw guest leak-at_l3_suite)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+        <tr><td><span class="mono-inline">(Kw porter leak-at_l3_suite)</span></td><td>F</td><td>F</td><td>F</td><td><b>T</b></td><td><b>T</b></td></tr>
+        <tr><td><span class="mono-inline">(K inspector safe)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      All three conjuncts hold in the final model. The last row is outside the
+      goal and describes the agent that organised the outcome: the inspector
+      does not know that the incident is over, because the porter closed the
+      valve on another floor and nobody told it. The mission is satisfied while
+      the agent that began it holds a false belief about its result.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ SEAM -->
+<section>
+  <div class="container">
+    <p class="sec-label">Architecture</p>
+    <h3>The division of decisions</h3>
 
     <figure class="demo-figure">
       <img src="media/hotel-seam.svg" alt="ePlanSys decides what must be known; Open-RMF decides lifts, doors and traffic; the bridge joins them" width="100%">
       <figcaption>
-        The bridge is a PlanSys2 performer that submits one RMF task per action
-        and finishes with what the robot observed.
+        <b>Figure 5.</b> The interface. The bridge is a PlanSys2 performer that
+        submits one RMF task per action and reports what the robot observed.
       </figcaption>
     </figure>
 
     <p>
-      A <span class="mono-inline">go</span> from the lobby to the L3 suite is one
-      action in the epistemic model and one line in the plan. On the other side
-      of the bridge it is a lift call, a door, a floor transition and a
-      negotiation with whichever cleaning robot wanted the same lift. The Kripke
-      model contains no lift, and the traffic schedule contains no knowledge.
-      Neither system can express the other's subject, which is the reason there
-      are two of them.
+      A <span class="mono-inline">go</span> from the lobby to the L3 suite is
+      one action in the epistemic model. Its execution comprises a lift call, a
+      door, a floor transition and a negotiation with whichever cleaning robot
+      requested the same lift. The Kripke model contains no lift and the traffic
+      schedule contains no knowledge, and each system decides only what it can
+      represent.
     </p>
 
-    <h4>Allocation has to be pinned</h4>
+    <h4>Allocation</h4>
 
     <p>
-      Both systems allocate. The planner assigns actions to named agents while it
-      searches, and the epistemic model records knowledge against those names;
-      RMF's dispatcher takes bids and picks a robot. If they disagree, the model
-      records that an agent knows something it never sensed, and nothing raises
-      an error. So the bridge binds each agent to one robot and submits a
+      Both systems allocate. The planner assigns actions to named agents during
+      search and the epistemic model records knowledge against those names;
+      Open-RMF's dispatcher receives bids and selects a robot. Divergence
+      between the two produces a model in which an agent is credited with
+      sensing something it never observed, and no error is raised anywhere. The
+      bridge therefore binds each agent to one robot and submits a
       <span class="mono-inline">robot_task_request</span>, which the named
-      robot's own task manager accepts without a bid. RMF's traffic management is
-      kept in full; only its allocation is given up.
+      robot's task manager accepts without a bid. RMF's traffic management is
+      retained in full and its allocation is given up. An agent bound to no
+      robot causes the action to be refused, which is the treatment the
+      <span class="mono-inline">guest</span> receives.
     </p>
 
-    <p>
-      An agent bound to no robot is a hard refusal rather than a fallback. The
-      guest is exactly such an agent: it is who the mission must not inform, and
-      it never moves.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ WHAT RMF WILL NOT CARRY -->
-<section>
-  <div class="container">
-    <p class="sec-label">The awkward part</p>
-    <h3>An RMF task will not carry an answer back</h3>
+    <h4>The return path</h4>
 
     <p>
-      A sensing action's whole point is to find something out, and the policy
-      branches on what it found. So the bridge has to get a token back from the
-      fleet. Open-RMF will not give it one: a task's completion is a status from
-      a fixed enumeration and a finish time. There is no result, return or output
-      property anywhere in <span class="mono-inline">task_state.json</span>, and
-      <span class="mono-inline">ActionExecution::finished()</span> &#8212; the
-      call a performer makes when it is done &#8212; takes no argument at all.
-    </p>
-
-    <p>
-      Two free-form fields do travel with a task, and the bridge reads both: an
-      event's <span class="mono-inline">detail</span> string, and the log entries
-      a performer writes. A value carrying the prefix
-      <span class="mono-inline">eplansys.outcome=</span> in either is read as the
-      token the policy branches on. On Humble that stream leaves the fleet
-      adapter over the websocket named by its
-      <span class="mono-inline">server_uri</span> parameter and over nothing else,
-      so the bridge is the server the adapter dials.
+      A sensing action's outcome determines which branch of the policy executes,
+      so the bridge requires a token from the fleet. Open-RMF reports task
+      completion as a status drawn from a fixed enumeration.
+      <span class="mono-inline">task_state.json</span> declares no result
+      property at any level, and
+      <span class="mono-inline">ActionExecution::finished()</span> takes no
+      argument. Two free-form fields travel with a task and the bridge reads
+      both: an event's <span class="mono-inline">detail</span> string, and the
+      log entries a performer writes. A value carrying the prefix
+      <span class="mono-inline">eplansys.outcome=</span> in either is taken as
+      the outcome. On Humble this stream leaves the fleet adapter over the
+      websocket named by its <span class="mono-inline">server_uri</span>
+      parameter alone, so the bridge serves that socket.
     </p>
 
     <p class="note">
-      In the recorded run the token is supplied by the task map rather than by a
-      water sensor, and the bridge says so in the log every time it falls back. A
-      fleet adapter that reported what it measured would override it, and the
-      branch would be taken on the measurement instead. Everything upstream of
-      that line is the same either way.
+      In the recorded run the token is supplied by the task map, and the bridge
+      records that substitution in the log at every occurrence. A fleet adapter
+      reporting a measurement would override it, and every step upstream of that
+      line is identical in the two cases.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ RUNNING IT -->
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
 <section>
   <div class="container">
-    <p class="sec-label">Running it</p>
-    <h3>One command, and the two branches</h3>
+    <p class="sec-label">Reproduction</p>
+    <h3>Running and measuring it</h3>
 
     <pre><code>ros2 launch hotel_rmf_demo hotel_rmf_launch.py
 ros2 launch hotel_rmf_demo hotel_rmf_launch.py leak:=l3_suite</code></pre>
 
     <p>
-      The argument chooses which suite is actually flooded, and the two values
-      take the policy down its two branches with the robots really driving each
-      one. The world, the fleets and the lifts are the stock
-      <span class="mono-inline">rmf_demos</span> hotel; nothing in it was
-      modified for this.
+      The argument selects which suite is flooded, and the two values drive the
+      policy down its two branches. The world, its three fleets and its two
+      lifts are the unmodified <span class="mono-inline">rmf_demos</span> hotel.
     </p>
 
-    <pre><code>bash scenarios/hotel/record_demo.sh              # films it, captions and all
-plank export -d hotel-incident.epddl -p instances/problem_2.epddl -l $LIB -o out
-epistemic_planner --task out/problem_2.json --plan plan.json --explain</code></pre>
+    <pre><code>bash scenarios/hotel/record_demo.sh
+
+python3 scenarios/hotel/tools/analyse_run.py \
+    --task epddl-workspace/hotel-incident/out/problem_2.json \
+    --log scenarios/hotel/out/hotel-l3_suite.log \
+    --agents inspector porter guest \
+    --model-formula safe --model-formula '(K porter safe)' \
+    --out scenarios/hotel/out/analysis-l3.json
+
+python3 scenarios/hotel/tools/figures.py \
+    --analysis scenarios/hotel/out/analysis-l3.json \
+    --agents inspector porter guest --prefix docs/img/hotel-</code></pre>
 
     <p>
-      The domain and its instances are in
-      <span class="mono-inline">epddl-workspace/hotel-incident/</span>. The
-      demo package installs them from there rather than keeping a copy, so what
-      the robots execute and what plank validates are one pair of files.
+      The recorder drives the demo on a private X display and composes the two
+      windows into the film. The analysis replays the action sequence taken from
+      the run's own log against a standalone epistemic state, so Figures 3 and 4
+      describe the execution that occurred. The domain and its instances are in
+      <span class="mono-inline">epddl-workspace/hotel-incident/</span>, and the
+      demo package installs them from there without copying.
     </p>
   </div>
 </section>

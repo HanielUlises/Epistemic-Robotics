@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 900" width="560" height="900" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="Accessibility relations per agent at each step">
+<style>
+  .lbl  { font-size:11.5px; fill:#5A5A5A }
+  .ttl  { font-size:13px; font-weight:bold; fill:#111111 }
+  .cap  { font-size:11.5px; fill:#5A5A5A; font-style:italic }
+  .wid  { font-family:'Courier New',Courier,monospace; font-size:11px; fill:#111111 }
+  .atom { font-family:'Courier New',Courier,monospace; font-size:9.5px; fill:#5A5A5A }
+  .node { fill:#FFFFFF; stroke:#5A5A5A; stroke-width:1.4 }
+  .des  { fill:#FFFFFF; stroke:#C8102E; stroke-width:2.6 }
+  .act  { fill:#FDECEF; stroke:#C8102E; stroke-width:2.6 }
+  .arc  { stroke:#1A52A0; stroke-width:1.3; fill:none; marker-end:url(#a) }
+  .axis { stroke:#D6D6D6; stroke-width:1 }
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="15" refY="5" markerWidth="5"
+  markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1A52A0"/>
+</marker></defs>
+<text class="ttl" x="12" y="22">after initial</text>
+<rect x="20" y="30" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="44">r1</text>
+<text class="lbl" x="28" y="60">reflexive</text>
+<path class="arc" d="M137,60 A9,9 0 1,1 151,60"/>
+<path class="arc" d="M144,73 L144,183"/>
+<path class="arc" d="M144,183 L144,73"/>
+<path class="arc" d="M137,170 A9,9 0 1,1 151,170"/>
+<circle class="des" cx="144" cy="73" r="15"/>
+<text class="wid" x="144" y="77" text-anchor="middle">w0</text>
+<text class="atom" x="144" y="102" text-anchor="middle">pallet@bay3</text>
+<circle class="des" cx="144" cy="183" r="15"/>
+<text class="wid" x="144" y="187" text-anchor="middle">w1</text>
+<text class="atom" x="144" y="212" text-anchor="middle">pallet@bay2</text>
+<rect x="280" y="30" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="288" y="44">r2</text>
+<text class="lbl" x="288" y="60">reflexive</text>
+<path class="arc" d="M397,60 A9,9 0 1,1 411,60"/>
+<path class="arc" d="M404,73 L404,183"/>
+<path class="arc" d="M404,183 L404,73"/>
+<path class="arc" d="M397,170 A9,9 0 1,1 411,170"/>
+<circle class="des" cx="404" cy="73" r="15"/>
+<text class="wid" x="404" y="77" text-anchor="middle">w0</text>
+<text class="atom" x="404" y="102" text-anchor="middle">pallet@bay3</text>
+<circle class="des" cx="404" cy="183" r="15"/>
+<text class="wid" x="404" y="187" text-anchor="middle">w1</text>
+<text class="atom" x="404" y="212" text-anchor="middle">pallet@bay2</text>
+<text class="ttl" x="12" y="232">after inspect_r1_bay2</text>
+<rect x="20" y="240" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="254">r1</text>
+<text class="lbl" x="28" y="270">reflexive</text>
+<path class="arc" d="M137,270 A9,9 0 1,1 151,270"/>
+<path class="arc" d="M137,380 A9,9 0 1,1 151,380"/>
+<circle class="node" cx="144" cy="283" r="15"/>
+<text class="wid" x="144" y="287" text-anchor="middle">w0</text>
+<text class="atom" x="144" y="312" text-anchor="middle">pallet@bay3</text>
+<circle class="des" cx="144" cy="393" r="15"/>
+<text class="wid" x="144" y="397" text-anchor="middle">w1</text>
+<text class="atom" x="144" y="422" text-anchor="middle">pallet@bay2</text>
+<rect x="280" y="240" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="288" y="254">r2</text>
+<text class="lbl" x="288" y="270">reflexive</text>
+<path class="arc" d="M397,270 A9,9 0 1,1 411,270"/>
+<path class="arc" d="M404,283 L404,393"/>
+<path class="arc" d="M404,393 L404,283"/>
+<path class="arc" d="M397,380 A9,9 0 1,1 411,380"/>
+<circle class="des" cx="404" cy="283" r="15"/>
+<text class="wid" x="404" y="287" text-anchor="middle">w0</text>
+<text class="atom" x="404" y="312" text-anchor="middle">pallet@bay3</text>
+<circle class="des" cx="404" cy="393" r="15"/>
+<text class="wid" x="404" y="397" text-anchor="middle">w1</text>
+<text class="atom" x="404" y="422" text-anchor="middle">pallet@bay2</text>
+<text class="ttl" x="12" y="442">after pickup_r1_bay2</text>
+<rect x="20" y="450" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="464">r1</text>
+<text class="lbl" x="28" y="480">reflexive</text>
+<path class="arc" d="M137,480 A9,9 0 1,1 151,480"/>
+<circle class="des" cx="144" cy="493" r="15"/>
+<text class="wid" x="144" y="497" text-anchor="middle">w0</text>
+<rect x="280" y="450" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="288" y="464">r2</text>
+<text class="lbl" x="288" y="480">reflexive</text>
+<path class="arc" d="M397,480 A9,9 0 1,1 411,480"/>
+<circle class="des" cx="404" cy="493" r="15"/>
+<text class="wid" x="404" y="497" text-anchor="middle">w0</text>
+<text class="ttl" x="12" y="652">after unload_r1_dock_north</text>
+<rect x="20" y="660" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="674">r1</text>
+<text class="lbl" x="28" y="690">reflexive</text>
+<path class="arc" d="M137,690 A9,9 0 1,1 151,690"/>
+<circle class="des" cx="144" cy="703" r="15"/>
+<text class="wid" x="144" y="707" text-anchor="middle">w0</text>
+<rect x="280" y="660" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="288" y="674">r2</text>
+<text class="lbl" x="288" y="690">reflexive</text>
+<path class="arc" d="M397,690 A9,9 0 1,1 411,690"/>
+<circle class="des" cx="404" cy="703" r="15"/>
+<text class="wid" x="404" y="707" text-anchor="middle">w0</text>
+<text class="cap" x="12" y="888">Nodes are worlds, arcs the agent's accessibility relation, red rings the worlds it designates. A missing self-loop is a world the agent excludes while it is the case.</text>
+</svg>

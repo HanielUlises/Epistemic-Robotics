@@ -4,23 +4,28 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Six-Room Run &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="A recorded run of the mu-calculus route planner over a six-room building: what a robot can reach, what it can know, and the difference between them.">
+<title>The Warehouse over Open-RMF &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The robot-warehouse epistemic mission executed over an Open-RMF fleet in the AWS RoboMaker small warehouse, with the navigation graph derived from the world's own floor plan and validated against it, and the agents' knowledge measured after every action.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The Six-Room Run">
-<meta property="og:description" content="A recorded run of the mu-calculus route planner over a six-room building: what a robot can reach, what it can know, and the difference between them.">
-<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/demo.html">
-<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-six-room-survey.jpg">
+<meta property="og:title" content="The Warehouse over Open-RMF">
+<meta property="og:description" content="The robot-warehouse epistemic mission executed over an Open-RMF fleet in the AWS RoboMaker small warehouse, with the navigation graph derived from the world's own floor plan and validated against it, and the agents' knowledge measured after every action.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/warehouse_rmf.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-rmf.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A six-room building in simulation, with a robot and the fan of its laser scanner">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Six-Room Run">
-<meta name="twitter:description" content="A recorded run of the mu-calculus route planner over a six-room building: what a robot can reach, what it can know, and the difference between them.">
-<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-six-room-survey.jpg">
+<meta property="og:image:alt" content="The navigation graph drawn over the AWS small warehouse floor">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-warehouse-rmf.jpg">
+<meta name="twitter:title" content="The Warehouse over Open-RMF">
+<meta name="twitter:description" content="The robot-warehouse epistemic mission executed over an Open-RMF fleet in the AWS RoboMaker small warehouse, with the navigation graph derived from the world's own floor plan and validated against it, and the agents' knowledge measured after every action.">
+
 
 <script>
 MathJax = {
@@ -318,12 +323,22 @@ footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 </style>
 
 <style>
-/* The six-room run */
+/* The warehouse run */
 .demo-figure{margin:2rem 0 2.4rem}
 .demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
   background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
 
 /* References. A numbered list with a hanging indent, and superscript markers
    that link both ways so a citation can be followed and come back. */
@@ -340,7 +355,6 @@ sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -357,12 +371,12 @@ sup.cite a:hover{text-decoration:underline}
           <a href="demos.html">Demonstrations</a>
           <div class="nav-sub">
             <a href="demos.html#building-rooms">building-rooms<span class="sub">Six rooms and a measured floor</span></a>
-            <a href="demo.html" aria-current="page">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+            <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
             <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             <a href="demos.html#robot-warehouse">robot-warehouse<span class="sub">The AWS small warehouse</span></a>
             <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
             <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
-            <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+            <a href="warehouse_rmf.html" aria-current="page">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
             <a href="demos.html#hotel-incident">hotel-incident<span class="sub">Three floors and two lifts</span></a>
             <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
           </div>
@@ -383,342 +397,288 @@ sup.cite a:hover{text-decoration:underline}
   </div>
 </header>
 
+
+
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">Simulation &#183; mu-calculus routing &#183; ROS 2</p>
-    <h2>What it can reach, and what it can <em>know</em></h2>
+    <p class="eyebrow">Open-RMF &#183; AWS small warehouse &#183; ROS 2</p>
+    <h2>An epistemic policy on a floor RMF was never given</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      A route planner asks whether a goal is reachable. This one asks a second
-      question first: whether the cells it would drive through are known to be
-      free, and whether the agent would be able to tell it had arrived. The two
-      questions come apart, and a six-room building is enough to show where.
-      Below is a single recorded run over one of the worlds in this repository,
-      with the planner's own output at each step.
+      The warehouse mission of <span class="mono-inline">robot-warehouse</span>
+      was executed over an Open-RMF fleet in the AWS RoboMaker small warehouse,
+      a world with no traffic-editor description and no RMF assets of its own.
+      The navigation graph and the building map were derived from the same
+      constants the rest of the repository reads its floor plan from, and both
+      were validated against the occupancy grid before use. The run completed in
+      nine actions with no traffic negotiation failures, and every agent's
+      accessibility relation remained reflexive throughout.
     </p>
     <p class="note" style="margin-top:1.4rem">
-      Implemented in <a href="https://github.com/HanielUlises/Epistemic-Robotics">Epistemic-Robotics</a>,
-      routing with <span class="mono-inline">mu_path_planner</span> over <span class="mono-inline">02_building_rooms.sdf</span>.
+      Domain and instance from
+      <span class="mono-inline">epddl-workspace/robot-warehouse</span>, unmodified.
+      Planned by <a href="https://github.com/HanielUlises/Aletheia">Aletheia</a>,
+      executed by <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
+      dispatched by <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>.
     </p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ THE RUN -->
+<!-- ═══════════════════════════════════════════════ PROBLEM -->
 <section>
   <div class="container">
-    <p class="sec-label">The run</p>
-    <h3>Nine queries, in order</h3>
+    <p class="sec-label">The problem</p>
+    <h3>Two aisles and a pallet</h3>
 
     <p>
-      Gazebo on the left, RViz on the right. The map RViz draws is the one the
-      planner is given: white where the occupancy grid reports free, teal where
-      nobody has observed anything yet. Green is the route the fixed point
-      returns, blue the polyline the base actually drives, red the cells where
-      sensing would pay.
+      A pallet stands in one of two aisles, <span class="mono-inline">bay2</span>
+      and <span class="mono-inline">bay3</span>. Its location is settled and
+      unknown to the fleet, so the initial model has two worlds and designates
+      both. Two agents participate: <span class="mono-inline">r1</span>, which
+      comes on shift at shipping, and <span class="mono-inline">r2</span>, which
+      waits at receiving and never moves.
+    </p>
+
+    <pre><code>(:goal (and (delivered)
+            ([Kw. r2] (pallet-at bay2))))</code></pre>
+
+    <p>
+      The first conjunct is ontic. The second requires the stationary agent to
+      come to know which aisle held the pallet. The pickup action carries a
+      modal precondition,
+      <span class="mono-inline">([?i] (pallet-at ?z))</span>, so a robot may
+      lift the pallet only where it knows the pallet to be, and any plan that
+      satisfies the goal contains an inspection.
+    </p>
+
+    <p>
+      Inspection is <span class="mono-inline">semi-private-sensing</span>: the
+      fleet observes that an aisle was inspected and does not observe the
+      result. Movement and pickup are <span class="mono-inline">public-ontic</span>.
+      The domain also supplies a public announcement, which the policy for this
+      instance leaves unused for reasons the measurement below makes clear.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ ENVIRONMENT -->
+<section>
+  <div class="container">
+    <p class="sec-label">The environment</p>
+    <h3>Deriving an RMF world from a floor plan</h3>
+
+    <p>
+      Open-RMF obtains its navigation graph from a traffic-editor
+      <span class="mono-inline">.building.yaml</span>, which also generates the
+      Gazebo world. The AWS small warehouse exists already and has no such
+      description, so both artefacts were generated in the world's own metres
+      from the constants in
+      <span class="mono-inline">warehouse_scenario/include/warehouse_scenario/warehouse.hpp</span>.
+      The zones RMF routes between are then the zones the &#956;-calculus planner
+      routes over.
+    </p>
+
+    <p>
+      The building map is required even though the warehouse has one level, no
+      doors and no lifts. The slotcar plugin queries the building map server for
+      the level a robot occupies, and it publishes no robot state without an
+      answer, so an absent map leaves RMF with no fleet at all.
     </p>
 
     <figure class="demo-figure">
-      <video controls preload="metadata" playsinline
-             poster="" width="100%">
-        <source src="media/epistemic_rooms_demo.mp4" type="video/mp4">
-        Your browser will not play this video.
-        <a href="media/epistemic_rooms_demo.mp4">Download it instead</a>.
-      </video>
+      <img src="media/warehouse-rmf-floor.svg" alt="The navigation graph drawn over the occupied floor of the AWS small warehouse" width="100%">
       <figcaption>
-        140&#8201;s, unedited apart from the trim. The robot is a TurtleBot3
-        burger; the laser fan visible in Gazebo is what the local planner is
-        avoiding obstacles with.
+        <b>Figure 1.</b> The navigation graph over the warehouse floor. Circles
+        ringed in red are zones the epistemic domain names; smaller circles are
+        corners the route requires and the domain does not mention. The dashed
+        line is a lane the validator refuses.
       </figcaption>
     </figure>
 
+    <h4>Validating the graph against the floor</h4>
+
     <p>
-      The steps are chosen to separate the two questions and not to show a
-      robot getting somewhere:
+      A first version of the graph ran a lane east along the south wall, joining
+      <span class="mono-inline">dock_south</span> to the service lane by the
+      shortest path on the plan. That lane crosses the rack block. The
+      consequence in simulation was quiet: RMF accepted the task, the robot
+      drove to within 0.75&#8202;m of the shelving, which is its configured
+      <span class="mono-inline">stop_radius</span>, and stopped. The task neither
+      completed nor failed, and the bridge waited until its timeout.
+    </p>
+
+    <p>
+      The graph generator now takes the occupancy grid as an argument and
+      refuses to emit a graph whose waypoints or lanes intersect occupied floor.
+      A scan for east&#8211;west corridors clear over the whole span from the
+      west corridor to the service lane returns two bands, at
+      \(y = -8.9\) and \(y \in [-5.6,\, 0.9]\); the crossing is placed at
+      \(y = -5.0\), inside the wider one.
+    </p>
+
+    <p>
+      A second constraint was added after a second failure. Each robot claims a
+      vicinity radius of 0.5&#8202;m in addition to its footprint, so two robots
+      require about a metre between their centres. With
+      <span class="mono-inline">r2</span> parked on
+      <span class="mono-inline">dock_north</span>, which is where
+      <span class="mono-inline">r1</span> delivers, RMF logged
+      <span class="mono-inline">Failed negotiation</span> 102 times over four
+      minutes and never failed the task. The generator now requires 1.4&#8202;m
+      between every parking spot and every zone.
+    </p>
+
+    <p class="note">
+      A zone in the epistemic domain is a region several agents occupy at once,
+      and a waypoint in RMF admits one robot. Both statements about
+      <span class="mono-inline">r2</span> are true simultaneously: the model
+      places it in zone <span class="mono-inline">dock_north</span> and the fleet
+      parks it 1.5&#8202;m away.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ EXECUTION -->
+<section>
+  <div class="container">
+    <p class="sec-label">Execution</p>
+    <h3>The run</h3>
+
+    <p>
+      Aletheia solved the instance by AO* at depth 11, expanding
+      1&#8202;448&#8202;279 nodes and generating 1&#8202;459&#8202;711. The
+      executor rendered a policy of seventeen nodes. Nine actions were dispatched
+      before the goal held, over 170.9&#8202;s of wall-clock time, with no
+      negotiation failures.
     </p>
 
     <table class="data">
       <thead>
-        <tr><th>Step</th><th>What it asks</th><th>What comes back</th></tr>
+        <tr><th>step</th><th>action</th><th>execution</th><th>|W|</th><th>|D| r1</th><th>|D| r2</th></tr>
       </thead>
       <tbody>
-        <tr><td>1&#8211;2</td><td>Ontic goals: room&#8202;2, then room&#8202;5</td><td>Routes, driven</td></tr>
-        <tr><td>3</td><td>The target, lying in rooms nobody observed</td><td><strong>No route.</strong> Unknown is not free</td></tr>
-        <tr><td>4&#8211;5</td><td>Room&#8202;3 sensed; the same query again</td><td>A route, because the cells became free</td></tr>
-        <tr><td>6&#8211;7</td><td>An epistemic goal over a disputed target</td><td>Sensing waypoints, not a route</td></tr>
-        <tr><td>8&#8211;9</td><td>The observation collapses the model</td><td>One world left: it knows, and goes</td></tr>
+        <tr><td>0</td><td>initial state</td><td>&#8212;</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>1</td><td><span class="mono-inline">go</span> dock_south &#8594; lane</td><td>40.2 s</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>2</td><td><span class="mono-inline">go</span> lane &#8594; bay2</td><td>16.8 s</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>3</td><td><span class="mono-inline">inspect</span> bay2</td><td>6.0 s</td><td>2</td><td>1</td><td>2</td></tr>
+        <tr><td>4</td><td><span class="mono-inline">pickup</span> bay2</td><td>6.0 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>5</td><td><span class="mono-inline">go</span> bay2 &#8594; lane</td><td>16.6 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>6</td><td><span class="mono-inline">go</span> lane &#8594; dock_south</td><td>39.5 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>7</td><td><span class="mono-inline">go</span> dock_south &#8594; corridor</td><td>20.7 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>8</td><td><span class="mono-inline">go</span> corridor &#8594; dock_north</td><td>19.1 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>9</td><td><span class="mono-inline">unload</span> dock_north</td><td>6.0 s</td><td>1</td><td>1</td><td>1</td></tr>
       </tbody>
     </table>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ WHAT THE PLANNER SAID -->
-<section>
-  <div class="container">
-    <p class="sec-label">What the planner said</p>
-    <h3>The same query, three answers</h3>
 
     <p>
-      Every query in the run is logged with the sets the fixed point was taken
-      over. Three lines carry the whole argument, and they differ only in what
-      was known when they were asked:
-    </p>
-
-    <pre class="code"><span class="c"># nobody has looked into the room the target lies in</span>
-zone='target' epistemic=0:  goal=<span class="k">0</span>    known=0    disputed=804  region=0      path=<span class="k">0</span>
-
-<span class="c"># the same query, after a sensing action resolves that room</span>
-zone='target' epistemic=0:  goal=<span class="k">356</span>  known=0    disputed=804  region=24907  path=<span class="k">113</span>
-
-<span class="c"># asking to *know* it arrived, once the model has collapsed to one world</span>
-zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed=<span class="k">0</span>    region=30167  path=<span class="k">107</span></pre>
-
-    <p>
-      The first is asked while the target's room has never been observed.
-      <span class="mono-inline">goal=0</span>: not one cell of the zone is known free, so the least
-      fixed point halts with an empty winning region and there is no route, in a
-      building whose corridors are entirely open. Nothing was blocking the
-      robot except that it had not looked.
-    </p>
-
-    <p>
-      The second is the same query after a sensing action resolves the room.
-      The zone did not move and the walls did not change; 356 cells became
-      known free, and a 113-cell route appears.
-    </p>
-
-    <p>
-      The third asks for knowledge, not arrival. Between the two worlds
-      the agent holds possible the target lies in different rooms, so while
-      <span class="mono-inline">disputed=804</span> the agent cannot come to know it has arrived,
-      however easily it can stand on the cell, and what comes back is
-      where to sense, not where to drive. Only once the observation collapses
-      the model to a single world does <span class="mono-inline">known</span> catch up with
-      <span class="mono-inline">goal</span>, and the route follow.
+      Motion accounts for 153&#8202;s of the 171&#8202;s. The inspection that
+      settles the mission's uncertainty occupies six seconds, and the aisle it
+      enters was reached in the preceding 57.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ DRIVING IT -->
-<!-- ═══════════════════════════════════════════════ THE FIXED POINT -->
+<!-- ═══════════════════════════════════════════════ MEASUREMENT -->
 <section>
   <div class="container">
-    <p class="sec-label">The fixed point</p>
-    <h3>What <span class="mono-inline">goal=0</span> means, written out</h3>
+    <p class="sec-label">Measurement</p>
+    <h3>Information gain over the run</h3>
 
     <p>
-      The three log lines above differ in the sets the fixed point was taken
-      over, and those sets are what the planner computes. Let \(C\) be the cells
-      of the grid and let \(R \subseteq C \times C\) relate a cell to the cells
-      a step can reach from it. Write \(\mathit{Free}\) for the cells observed
-      and settled free, \(\mathit{Goal}\) for the cells of the queried zone that
-      are in \(\mathit{Free}\), and take the least fixed point<sup class="cite">[<a href="#ref-kozen1983" id="cite-kozen1983">1</a>]</sup>
+      The run was replayed against a standalone epistemic state and each agent's
+      perspective was measured after every action.
     </p>
 
-    <div class="math-block">
-      \[
-        \mu X.\;
-        \bigl( \mathit{Goal} \;\cup\;
-               \{\, c \in \mathit{Free} \;:\; \exists c' \in X,\; (c,c') \in R \,\}
-        \bigr)
-      \]
-    </div>
+    <figure class="demo-figure">
+      <img src="media/warehouse-rmf-trajectory.svg" alt="Model size and each agent's epistemic state after every step of the warehouse run" width="100%">
+      <figcaption>
+        <b>Figure 2.</b> The measured run. No cell is marked in red: every
+        perspective contains the actual world at every step.
+      </figcaption>
+    </figure>
 
     <p>
-      &#8212; the smallest set containing the goal cells and closed under taking
-      a free predecessor. A route exists exactly when the robot's own cell lies
-      in it. The operator is monotone in \(X\) over the powerset lattice of
-      \(C\)<sup class="cite">[<a href="#ref-kozen1983" id="cite-kozen1983">1</a>,&#8202;<a href="#ref-barcenas2017" id="cite-barcenas2017">2</a>]</sup>, so the fixed point exists and the iteration terminates; the
-      planner's <span class="mono-inline">region</span> figure is its
-      cardinality.
-    </p>
-
-    <h4>Why an empty goal set empties the whole region</h4>
-
-    <p>
-      The first query answers \(\mathit{Goal} = \emptyset\), and the least fixed
-      point of an operator whose base case is empty is empty:
-    </p>
-
-    <div class="math-block">
-      \[
-        \mathit{Goal} = \emptyset
-        \;\Longrightarrow\;
-        \mu X.\,\bigl(\emptyset \cup \{c \in \mathit{Free} : \exists c' \in X,\;(c,c') \in R\}\bigr)
-        \;=\; \emptyset .
-      \]
-    </div>
-
-    <p>
-      Nothing is unreachable in the building; the set the iteration would have
-      grown from does not exist yet. This is the whole content of
-      <span class="mono-inline">goal=0 &#8230; path=0</span> in a building whose
-      corridors are open, and it is why the honest answer to the first query is
-      that no route is <em>known</em> to exist. Treating unobserved cells as
-      free would replace \(\mathit{Free}\) with \(C \setminus
-      \mathit{Occupied}\) and return a route across floor nobody has measured.
-    </p>
-
-    <h4>The second question, and why its answer is a place to look</h4>
-
-    <p>
-      The third query asks something the first two do not. Let \(W\) be the
-      worlds the agent holds possible and \(\mathit{Goal}_w\) the goal cells in
-      world \(w\). Arrival is a fact about one world; knowing one has arrived is
-      a fact about all of them, so the target set is the intersection
-    </p>
-
-    <div class="math-block">
-      \[
-        \mathit{Goal}^{K} \;=\; \bigcap_{w \in W} \mathit{Goal}_w ,
-        \qquad
-        \mathit{Goal}^{K} = \emptyset \text{ whenever the worlds disagree.}
-      \]
-    </div>
-
-    <p>
-      With <span class="mono-inline">disputed=804</span> the two worlds place
-      the target in different rooms, the intersection is empty, and by the
-      argument above the winning region is empty as well. No amount of driving
-      changes that, because driving does not change \(W\). What the planner
-      returns instead is a cell from which a sensing action would collapse
-      \(W\), which is why the answer to a query about knowledge is a place to
-      look and not a place to stand.
-    </p>
-
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">The same query, three answers</span>
-        <span class="note">the sets the fixed point was taken over</span>
-      </div>
-      <div class="fig-body">
-<svg class="graph" viewBox="0 0 1000 300" width="100%" xmlns="http://www.w3.org/2000/svg"
-     font-family="Arial,Helvetica,sans-serif" role="img"
-     aria-label="Three queries over the same zone. In the first the goal set is empty because nothing in the room has been observed, so the least fixed point is empty. In the second an observation makes 356 cells free and a route appears. In the third the target set is the intersection over the worlds the agent holds possible, which is empty while they disagree, and the planner returns somewhere to sense instead.">
-  <rect x="8" y="8" width="984" height="284" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-  <text x="30" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">ONE ZONE, THREE QUERIES &#183; what differs is what was known when each was asked</text>
-
-  <g font-size="10.5">
-    <!-- 1 -->
-    <rect x="30" y="52" width="300" height="196" rx="2" fill="#fff" stroke="#111"/>
-    <text x="180" y="76" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">1 &#183; nobody has looked</text>
-    <circle cx="180" cy="132" r="40" fill="#fff" stroke="#D6D6D6" stroke-dasharray="4 3"/>
-    <text x="180" y="130" font-size="10" text-anchor="middle" fill="#5A5A5A">the zone,</text>
-    <text x="180" y="144" font-size="10" text-anchor="middle" fill="#5A5A5A">unobserved</text>
-    <text x="180" y="196" text-anchor="middle" fill="#C8102E">Goal = &#8709;</text>
-    <text x="180" y="216" text-anchor="middle" fill="#5A5A5A">region = 0, path = 0</text>
-    <text x="180" y="236" font-size="10" text-anchor="middle" fill="#5A5A5A">no route is known to exist</text>
-
-    <!-- 2 -->
-    <rect x="350" y="52" width="300" height="196" rx="2" fill="#fff" stroke="#111"/>
-    <text x="500" y="76" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">2 &#183; after one observation</text>
-    <circle cx="500" cy="132" r="40" fill="#F4F4F4" stroke="#111"/>
-    <text x="500" y="130" font-size="10" text-anchor="middle" fill="#111">356 cells</text>
-    <text x="500" y="144" font-size="10" text-anchor="middle" fill="#111">known free</text>
-    <text x="500" y="196" text-anchor="middle" fill="#111" font-weight="600">Goal &#8800; &#8709;</text>
-    <text x="500" y="216" text-anchor="middle" fill="#5A5A5A">region = 24 907, path = 113</text>
-    <text x="500" y="236" font-size="10" text-anchor="middle" fill="#5A5A5A">the walls did not move</text>
-
-    <!-- 3 -->
-    <rect x="670" y="52" width="300" height="196" rx="2" fill="#fff" stroke="#C8102E" stroke-width="1.5"/>
-    <text x="820" y="76" font-size="11.5" text-anchor="middle" fill="#111" font-weight="600">3 &#183; asking to <tspan font-style="italic">know</tspan> it arrived</text>
-    <circle cx="784" cy="132" r="36" fill="#fff" stroke="#111"/>
-    <text x="768" y="136" font-size="10" text-anchor="middle" fill="#5A5A5A">world A</text>
-    <circle cx="856" cy="132" r="36" fill="#fff" stroke="#111"/>
-    <text x="872" y="136" font-size="10" text-anchor="middle" fill="#5A5A5A">world B</text>
-    <text x="820" y="196" text-anchor="middle" fill="#C8102E">Goal&#7488; = &#8745;&#8202;Goal&#8339; = &#8709;</text>
-    <text x="820" y="216" text-anchor="middle" fill="#5A5A5A">disputed = 804</text>
-    <text x="820" y="236" font-size="10" text-anchor="middle" fill="#5A5A5A">what comes back is where to sense</text>
-  </g>
-
-  <line x1="30" y1="266" x2="968" y2="266" stroke="#D6D6D6"/>
-  <text x="30" y="286" font-size="11" fill="#5A5A5A">The first two differ in what the robot has measured; the third differs in how many worlds it still holds possible. Only the third is answered by looking rather than by driving.</text>
-</svg>
-      </div>
-      <div class="fig-cap">
-        <b>An empty base case makes an empty fixed point.</b> The first query
-        fails because \(\mathit{Goal}\) is empty, the second succeeds because an
-        observation filled it, and the third fails for a different reason
-        entirely: its target set is an intersection over the worlds the agent
-        holds possible, and those worlds disagree.
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <p class="sec-label">Driving it</p>
-    <h3>From a cell path to a velocity</h3>
-
-    <p>
-      The fixed point returns a path over a 4-connected grid, which is a
-      staircase grazing every inside corner: not something a differential base
-      can drive. Three layers sit between it and the wheels. Line-of-sight
-      shortcutting removes the corners that can be seen past; a smoother pulls
-      what remains towards a curve, undoing any step that would put a point
-      somewhere the map does not call free; and a dynamic window samples the
-      velocities one acceleration step away, rolls each forward as an arc, and
-      scores the survivors on progress, clearance and speed. The laser has the
-      final say, so an obstacle the map never had is still avoided.
-    </p>
-
-    <p>
-      Measured against Gazebo's own poses for the robot and not against its
-      odometry: wheel odometry keeps integrating while a base is held
-      against a wall, and so cannot answer this question at all:
+      The model contracts. It has two worlds until step 4 and one thereafter,
+      and the transition occurs at the pickup. Uncertainty is resolved twice and
+      by two different mechanisms. At step 3 the inspection settles the aisle for
+      <span class="mono-inline">r1</span> alone, which is what semi-private
+      sensing provides: the other agent observes that an inspection occurred. At
+      step 4 the pickup settles it for both, because a public ontic action whose
+      precondition names the aisle discloses the aisle to every observer.
     </p>
 
     <table class="data">
+      <thead>
+        <tr><th>formula</th><th>initial</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5&#8211;8</th><th>9</th></tr>
+      </thead>
       <tbody>
-        <tr><td>Distance driven</td><td>24.71&#8201;m</td></tr>
-        <tr><td>Closest approach to any obstacle</td><td>0.225&#8201;m</td></tr>
-        <tr><td>Robot body radius</td><td>0.105&#8201;m</td></tr>
-        <tr><td>Contacts</td><td><strong>0</strong></td></tr>
+        <tr><td><span class="mono-inline">delivered</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td><td><b>T</b></td></tr>
+        <tr><td><span class="mono-inline">(Kw r1 pallet-at_bay2)</span></td><td>F</td><td>F</td><td>F</td><td><b>T</b></td><td><b>T</b></td><td><b>T</b></td><td><b>T</b></td></tr>
+        <tr><td><span class="mono-inline">(Kw r2 pallet-at_bay2)</span></td><td>F</td><td>F</td><td>F</td><td>F</td><td><b>T</b></td><td><b>T</b></td><td><b>T</b></td></tr>
       </tbody>
     </table>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ REPRODUCING -->
-<section>
-  <div class="container">
-    <p class="sec-label">Reproducing it</p>
-    <h3>Running the same nine steps</h3>
 
     <p>
-      The harness lives in <span class="mono-inline">demo/</span> and is deliberately outside the
-      ROS packages, so that nothing in them depends on it. It rasterises the
-      world SDF into the occupancy grid the planner subscribes to, publishes a
-      Kripke snapshot grounding the six rooms as zones, and walks the script.
+      The second goal conjunct is satisfied at step 4 by an agent that never
+      moved and never communicated. This accounts for the absence of the
+      announcement from the policy: the public pickup already discloses what an
+      announcement would say, and the planner spends no action on it. A third
+      agent, or an instance in which the inspection returns an empty aisle,
+      changes that, and the three-robot instances in
+      <span class="mono-inline">robot-warehouse</span> measure the difference.
     </p>
 
-    <pre class="code">colcon build &amp;&amp; source install/setup.bash
+    <figure class="demo-figure">
+      <img src="media/warehouse-rmf-kripke.svg" alt="Accessibility relations for both agents at four steps of the warehouse run" width="100%">
+      <figcaption>
+        <b>Figure 3.</b> Each agent's accessibility relation at the initial
+        state and after steps 3, 4 and 9. Every world retains its self-loop
+        throughout.
+      </figcaption>
+    </figure>
 
-./demo/run_demo.sh out.mp4      <span class="c"># gazebo and rviz side by side, recorded</span>
-REHEARSE=1 ./demo/run_demo.sh   <span class="c"># the same, without recording</span>
-./demo/smoke.sh                 <span class="c"># headless, for checking the logic alone</span></pre>
-
-    <p class="note">
-      Both controllers run on <span class="mono-inline">/clock</span>. The GUI does not simulate at
-      wall-clock speed, and a controller ticking on wall time issues several
-      commands per simulated step: the window opens faster than the base can
-      accelerate, and the robot overshoots into whatever it was rounding.
+    <p>
+      Every relation in this run is reflexive at every step, so the frame is
+      \(\mathrm{S5}_n\) from beginning to end and no agent holds a belief the
+      world contradicts. Every action here is public or semi-private, and the
+      information available to an agent grows monotonically. The
+      <a href="hotel_run.html">hotel incident</a> admits private ontic change and
+      private announcement, and its measurement shows both the model growing and
+      two agents ending outside the actual world.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
 <section>
   <div class="container">
-    <p class="sec-label">References</p>
-    <h3>Works cited</h3>
-    <ol class="ref-list">
-      <li id="ref-kozen1983">D.&nbsp;Kozen. <em>Results on the Propositional &micro;-Calculus</em>. Theoretical Computer Science, 27(3):333&#8211;354, 1983.</li>
-      <li id="ref-barcenas2017">E.&nbsp;B&aacute;rcenas, E.&nbsp;Ben&iacute;tez-Guerrero, A.&nbsp;Benitez, J.&nbsp;de la Calleja and M.&nbsp;A. Medina. <em>Branching Path Planning with Modal Logics</em>. Computaci&oacute;n y Sistemas, 21(3):407&#8211;418, 2017. <a href="https://doi.org/10.13053/cys-21-3-2444">doi:10.13053/cys-21-3-2444</a>.</li>
-    </ol>
+    <p class="sec-label">Reproduction</p>
+    <h3>Running and measuring it</h3>
+
+    <pre><code>ros2 launch warehouse_rmf_demo warehouse_rmf_launch.py
+ros2 launch warehouse_rmf_demo warehouse_rmf_launch.py pallet:=bay3</code></pre>
+
+    <p>
+      The argument selects the aisle the pallet occupies, and the two values
+      drive the policy down its two branches. The world is the AWS RoboMaker
+      small warehouse, launched unmodified, with RMF's robots spawned into it.
+    </p>
+
+    <pre><code>python3 tools/make_nav_graph.py \
+    --map ../warehouse_scenario/maps/aws_small_warehouse.yaml \
+    --out maps/nav_graphs/0.yaml
+python3 tools/make_building_map.py \
+    --nav-graph maps/nav_graphs/0.yaml \
+    --out maps/aws_small_warehouse.building.yaml</code></pre>
+
+    <p>
+      The graph generator exits with an error listing every waypoint and lane
+      that intersects occupied floor, and every parking spot closer to a zone
+      than two robots can stand. The building map is derived from the graph, so
+      the two cannot disagree.
+    </p>
   </div>
 </section>
-
 <footer>
   <div class="container-wide">
     <div class="ftr">
@@ -727,13 +687,13 @@ REHEARSE=1 ./demo/run_demo.sh   <span class="c"># the same, without recording</s
         &nbsp;&#183;&nbsp;
         <a href="domains.html">Domains</a>
         &nbsp;&#183;&nbsp;
-        <a href="eplansys_execution.pdf">Technical report (PDF)</a>
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">3 packages &#183; 82 tests &#183; ROS 2</span>
+      <span class="ftr-r">AWS small warehouse &#183; 17-node branching policy &#183; ROS 2</span>
     </div>
   </div>
 </footer>

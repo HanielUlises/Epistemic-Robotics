@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coordination Domains · The Epistemic Robotics Project</title>
-<meta name="description" content="Four DEL coordination domains for UGV fleets: the planning task, the observability models, and animated policy execution.">
+<meta name="description" content="Four DEL coordination domains for UGV fleets: the planning task, the observability models, and animated policy execution. With the full domain catalogue, the KD45 domains in which an agent can be mistaken, and the path from an EPDDL source to a fleet.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
@@ -319,14 +319,19 @@ footer a:hover{color:var(--red)}
           <h6>Pages</h6>
           <a href="index.html">Overview</a>
           <a href="domains.html" aria-current="page">Domains</a>
-          <a href="execution.html">Execution</a>
+          <a href="demos.html">Demonstrations</a>
           <div class="nav-sub">
-            <a href="demo.html">The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
-            <a href="six_room_survey.html">The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
-            <a href="warehouse_run.html">The warehouse run<span class="sub">The Amazon warehouse exercise, in the epistemic reading</span></a>
-            <a href="nested_run.html">Nested epistemic goals<span class="sub">Three goals, one warehouse: what modal depth costs</span></a>
-<a href="hotel_run.html">The hotel incident<span class="sub">A mission whose world changes, over an Open-RMF fleet</span></a>
+            <a href="demos.html#building-rooms">building-rooms<span class="sub">Six rooms and a measured floor</span></a>
+            <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+            <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            <a href="demos.html#robot-warehouse">robot-warehouse<span class="sub">The AWS small warehouse</span></a>
+            <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+            <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+            <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+            <a href="demos.html#hotel-incident">hotel-incident<span class="sub">Three floors and two lifts</span></a>
+            <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
           </div>
+          <a href="execution.html">Execution</a>
           <hr>
           <h6>Reports (PDF)</h6>
           <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
@@ -854,6 +859,216 @@ footer a:hover{color:var(--red)}
       range-limited with four candidate bays and three or more vehicles; every
       one is a search timeout and not an error. Grounding, by contrast,
       scales with \(N \times L\): from 0.02 s to 76 s across the same suite, an offline, cacheable cost, where search is the online one.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ CATALOGUE -->
+<section>
+  <div class="container">
+    <p class="sec-label">The catalogue</p>
+    <h3>Domains in this repository, and the frames they reach</h3>
+
+    <p>
+      The domains below are stated in EPDDL over the
+      <span class="mono-inline">intermediate</span> action-type library, which
+      supplies ontic change, sensing and announcement in public, semi-private,
+      quasi-private and private forms. The observability conditions an action
+      declares determine which frame the reachable state space has, so the frame
+      is a consequence of the vocabulary a domain uses.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>domain</th><th>action types used</th><th>frame</th><th>run</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="mono-inline">muddy-children</span></td>
+          <td>public sensing</td><td>S5</td><td>&#8212;</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">Active-Muddy-Child</span></td>
+          <td>public sensing</td><td>S5</td><td>&#8212;</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">building-rooms</span></td>
+          <td>public ontic, semi-private sensing</td><td>S5</td>
+          <td><a href="six_room_survey.html">six-room survey</a></td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">robot-warehouse</span></td>
+          <td>public ontic, semi-private sensing, public announcement</td><td>S5</td>
+          <td><a href="warehouse_run.html">warehouse</a>,
+              <a href="warehouse_rmf.html">over RMF</a></td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">ugv-coordination</span></td>
+          <td>four observability models over one facility</td><td>S5</td>
+          <td>this page</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">coin-in-the-box</span></td>
+          <td>private ontic, quasi-private sensing</td><td>KD45</td><td>&#8212;</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">box-task</span></td>
+          <td>public ontic, private ontic, private announcement</td><td>KD45</td><td>&#8212;</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">box-task-2.0</span></td>
+          <td>the above with public sensing</td><td>KD45</td><td>&#8212;</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">doxastic-depot</span></td>
+          <td>all eight of the library's types</td><td>KD45</td><td>&#8212;</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">hotel-incident</span></td>
+          <td>public ontic, semi-private sensing, private ontic,
+              quasi-private and public announcement</td><td>KD45</td>
+          <td><a href="hotel_run.html">hotel incident</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ KD45 -->
+<section>
+  <div class="container">
+    <p class="sec-label">Belief</p>
+    <h3>Where \(\mathrm{S5}_n\) stops being enough</h3>
+
+    <p>
+      An \(\mathrm{S5}_n\) model has an accessibility relation that is an
+      equivalence, and reflexivity is the clause that makes knowledge factive:
+      \(K_i\varphi \rightarrow \varphi\). An agent in such a model can be
+      ignorant to any degree and its beliefs remain true. Every domain in the
+      upper half of the table stays inside that fragment, because every action
+      they declare is observed by all agents or by none in a way that leaves each
+      agent's equivalence class containing the world that holds.
+    </p>
+
+    <p>
+      Two constructions leave it. A <span class="mono-inline">private-ontic</span>
+      action changes the world while some agents observe nothing, so an agent
+      that formed a true belief before the change carries it afterwards, when it
+      is false. A <span class="mono-inline">private-announcement</span> informs
+      part of the group, and the agents outside the audience continue in a world
+      the message has already excluded. In both cases the agent's relation loses
+      the self-loop at the actual world, the frame becomes
+      \(\mathrm{KD45}_n\), and \(K_i\) is read as belief.
+    </p>
+
+    <p>
+      This is a property of the run and it can be measured. The
+      <a href="hotel_run.html">hotel incident</a> reports the accessibility
+      relation of every agent after every action of an executed mission. Two
+      agents lose reflexivity, at two identifiable steps, under the two
+      constructions above:
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>step</th><th>action type</th><th>inspector</th><th>porter</th><th>guest</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>initial</td><td>&#8212;</td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
+        <tr><td>1</td><td>public ontic</td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
+        <tr><td>2</td><td>semi-private sensing</td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
+        <tr><td>3</td><td>quasi-private announcement</td><td>reflexive</td><td>reflexive</td><td><b>irreflexive</b></td></tr>
+        <tr><td>4</td><td>private ontic</td><td><b>irreflexive</b></td><td>reflexive</td><td><b>irreflexive</b></td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      The model also grows at those two steps, from two worlds to four and then
+      to five. A private action introduces the distinction between the world in
+      which it occurred and the world its non-observers continue to occupy, and
+      the model has to carry both.
+    </p>
+
+    <p>
+      <span class="mono-inline">doxastic-depot</span> is the domain written to
+      exercise this deliberately. Every relocation in it is private, so a crate
+      moved once leaves every agent outside the source bay believing it is where
+      it was; its five instances plant a false belief, plant a second-order false
+      belief, repair one into common knowledge, and turn private knowledge into
+      common knowledge by announcement.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ STACK -->
+<section>
+  <div class="container">
+    <p class="sec-label">The stack</p>
+    <h3>From a domain to a fleet</h3>
+
+    <p>
+      A domain in this repository is a source file, and reaching a robot from
+      there involves four components with distinct responsibilities.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/stack.svg" alt="EPDDL through plank and Aletheia to the executor, the epistemic state and Open-RMF" width="100%">
+      <figcaption>
+        <b>Figure.</b> The path from an EPDDL source to a moving robot, and the
+        return path that makes the execution epistemic.
+      </figcaption>
+    </figure>
+
+    <p>
+      <b>plank</b> parses the domain, its instance and the action-type library,
+      checks their types, and grounds the lifted actions into the tokens a
+      planner searches over. It also validates a plan independently, which is how
+      a policy is checked against something other than the planner that produced
+      it.
+    </p>
+
+    <p>
+      <b>Aletheia</b> searches over pointed Kripke models. Its unit of progress
+      is the product update, so a sensing action with several outcomes produces
+      several successors and the result is a policy with a branch at that action.
+      The <a href="nested_run.html">nested-goal study</a> measures what the shape
+      of the goal costs this search.
+    </p>
+
+    <p>
+      <b>eplansys</b> executes the policy on ROS 2. Its executor renders the
+      policy as a behaviour tree, one node per policy node, each guarded by the
+      knowledge its action requires and followed by the update its outcome
+      determines. Its epistemic state holds the model and applies that update.
+      The state answers two questions any component may ask:
+      <span class="mono-inline">check_formula</span> evaluates a modal formula,
+      and <span class="mono-inline">get_agent_perspective</span> returns the
+      model as one agent sees it. The measured figures in the run reports are
+      built from those two services.
+    </p>
+
+    <p>
+      <b>The performer</b> is whatever drives the hardware. For a fleet it is
+      <span class="mono-inline">eplansys_rmf_bridge</span>, which submits one
+      Open-RMF task per action, pins it to the robot the planner named, and
+      reports what the robot observed. Open-RMF decides lifts, doors, floor space
+      and traffic between fleets, and holds no representation of knowledge; the
+      Kripke model holds no representation of a lift. Each system decides what it
+      can represent.
+    </p>
+
+    <h4>The return path</h4>
+
+    <p>
+      A sensing action's outcome selects the branch, so the outcome has to travel
+      from the performer back to the state.
+      <span class="mono-inline">plansys2_msgs/ActionExecution</span> carries an
+      <span class="mono-inline">outcome</span> field for it, and the value is the
+      name of an event the action's model declares. A performer that reports an
+      event the policy does not list fails its branch, which is the treatment any
+      unanticipated observation receives. An ordinary action leaves the field
+      empty, and every classical performer does so.
     </p>
   </div>
 </section>
