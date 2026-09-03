@@ -1,0 +1,41 @@
+{
+  "action": "go_r_dock_bay2",
+  "branches": [
+    {
+      "event": 0,
+      "subtree": {
+        "action": "inspect_r_bay2",
+        "branches": [
+          {
+            "event": 0,
+            "subtree": {
+              "action": "pickup_r_bay2",
+              "branches": [
+                {
+                  "event": 0,
+                  "subtree": {
+                    "action": "go_r_bay2_dock",
+                    "branches": [
+                      {
+                        "event": 0,
+                        "subtree": {
+                          "action": "unload_r_dock",
+                          "branches": [
+                            {
+                              "event": 0,
+                              "subtree": null
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

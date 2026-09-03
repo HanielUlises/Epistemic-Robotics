@@ -1,0 +1,52 @@
+;; lone-inspector 1 -- the crate is in bay2, and the robot does not know it.
+;;
+;; Two bays, one crate, one robot. The robot cannot lift what it does not know
+;; the location of, so the solution inspects before it lifts and branches on
+;; what the inspection returns. Expected policy: a trunk to bay2, an
+;; inspection, and two continuations.
+
+(define (problem lone-1)
+    (:domain lone-inspector)
+
+    (:requirements
+        :finitary-S5-theories :modal-goals
+        :negative-preconditions :facts
+    )
+
+    (:agents r)
+
+    (:objects dock bay1 bay2 - zone)
+
+    (:facts-init
+        (adjacent dock bay1) (adjacent bay1 dock)
+        (adjacent dock bay2) (adjacent bay2 dock)
+        (bay bay1) (bay bay2)
+        (dock dock)
+    )
+
+    (:init
+        (:and
+            (at-ag r dock) (not (at-ag r bay1)) (not (at-ag r bay2))
+            (not (carrying r)) (not (delivered))
+            (crate-at bay2) (not (crate-at bay1))
+            ;; The layout and the robot's position are known; which bay holds
+            ;; the crate is not.
+            ([C. All]
+                (and
+                    (at-ag r dock) (not (at-ag r bay1)) (not (at-ag r bay2))
+                    (not (carrying r)) (not (delivered))))
+            ;; Exactly one bay holds the crate, and which one is the only
+            ;; thing the robot does not know.
+            ;; The crate is in one of the two bays and nowhere else.
+            ([C. All] (not (crate-at dock)))
+            ([C. All]
+                (or (and (crate-at bay1) (not (crate-at bay2)))
+                    (and (crate-at bay2) (not (crate-at bay1)))))
+            ([C. All] (<Kw. r> (crate-at bay2)))
+        )
+    )
+
+    (:goal
+        (delivered)
+    )
+)
