@@ -164,15 +164,17 @@ section:last-of-type{border-bottom:none}
   background:#FFFFFF}
 .dfolder>summary{list-style:none;cursor:pointer;user-select:none;
   font-family:var(--sg);font-size:.95rem;font-weight:600;color:var(--black);
-  padding:.75rem .9rem;display:flex;align-items:baseline;gap:.5rem;
+  padding:.75rem .9rem;display:block;
   transition:background .15s}
 .dfolder>summary::-webkit-details-marker{display:none}
 .dfolder>summary::before{content:"\25B8";color:var(--gray);font-size:.8em;
   transition:transform .16s ease;display:inline-block}
 .dfolder[open]>summary::before{transform:rotate(90deg)}
 .dfolder>summary:hover{background:#FAFAFA}
-.dfolder>summary .dtag{margin-left:auto;font-family:var(--mono);
+.dfolder>summary .dtag{float:right;font-family:var(--mono);
   font-size:.68rem;font-weight:400;color:var(--gray)}
+.dnames{display:block;margin:.3rem 0 0 1.3rem;font-family:var(--mono);
+  font-size:.68rem;font-weight:400;color:var(--gray);line-height:1.5}
 .dfolder-body{padding:.2rem 1rem 1rem;border-top:1px solid var(--border)}
 .axioms{margin:.8rem 0;border-left:2px solid var(--border);padding-left:.9rem}
 .axioms dl{margin:0;display:grid;grid-template-columns:auto 1fr;
@@ -968,7 +970,8 @@ pre:has(> code){margin:1.3rem 0}
 
     <details class="dfolder">
       <summary>I &#183; Single-agent epistemic logic
-        <span class="dtag">\(\mathrm{S5}\)</span></summary>
+        <span class="dtag">\(\mathrm{S5}\)</span>
+        <span class="dnames">no domain in this repository is single-agent</span></summary>
       <div class="dfolder-body">
         <p>
           One agent, one accessibility relation. The language is propositional
@@ -1017,7 +1020,9 @@ pre:has(> code){margin:1.3rem 0}
 
     <details class="dfolder">
       <summary>II &#183; Multi-agent epistemic logic
-        <span class="dtag">\(\mathrm{S5}_n\) &#183; 5 domains</span></summary>
+        <span class="dtag">\(\mathrm{S5}_n\)</span>
+        <span class="dnames">muddy-children &#183; Active-Muddy-Child &#183;
+          building-rooms &#183; robot-warehouse &#183; ugv-coordination</span></summary>
       <div class="dfolder-body">
         <p>
           The modality takes an index, and the model carries one relation per
@@ -1085,7 +1090,9 @@ pre:has(> code){margin:1.3rem 0}
 
     <details class="dfolder">
       <summary>III &#183; Doxastic logic
-        <span class="dtag">\(\mathrm{KD45}_n\) &#183; 5 domains</span></summary>
+        <span class="dtag">\(\mathrm{KD45}_n\)</span>
+        <span class="dnames">coin-in-the-box &#183; box-task &#183; box-task-2.0 &#183;
+          doxastic-depot &#183; hotel-incident</span></summary>
       <div class="dfolder-body">
         <p>
           Dropping T and replacing it with D gives belief. The modality is

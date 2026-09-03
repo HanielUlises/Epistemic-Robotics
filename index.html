@@ -152,15 +152,17 @@ section:last-of-type{border-bottom:none}
   background:#FFFFFF}
 .dfolder>summary{list-style:none;cursor:pointer;user-select:none;
   font-family:var(--sg);font-size:.92rem;font-weight:600;color:var(--black);
-  padding:.7rem .9rem;display:flex;align-items:baseline;gap:.5rem;
+  padding:.7rem .9rem;display:block;
   transition:background .15s}
 .dfolder>summary::-webkit-details-marker{display:none}
 .dfolder>summary::before{content:"\25B8";color:var(--gray);font-size:.8em;
   transition:transform .16s ease;display:inline-block}
 .dfolder[open]>summary::before{transform:rotate(90deg)}
 .dfolder>summary:hover{background:#FAFAFA}
-.dfolder>summary .dcount{margin-left:auto;font-family:var(--mono);
+.dfolder>summary .dcount{float:right;font-family:var(--mono);
   font-size:.68rem;font-weight:400;color:var(--gray)}
+.dnames{display:block;margin:.3rem 0 0 1.3rem;font-family:var(--mono);
+  font-size:.68rem;font-weight:400;color:var(--gray);line-height:1.5}
 .dfolder-body{padding:0 .9rem .8rem 2rem;border-top:1px solid var(--border)}
 .dfolder-body p.about{font-size:.86rem;color:#3C3C3C;margin:.7rem 0 .5rem}
 .dfolder-body a.run{display:block;font-family:var(--sg);font-size:.9rem;
@@ -1421,7 +1423,8 @@ pre:has(> code){margin:1.3rem 0}
     </p>
 
     <details class="dfolder">
-      <summary>building-rooms<span class="dcount">2 runs</span></summary>
+      <summary>building-rooms<span class="dcount">2 runs</span>
+        <span class="dnames">the six-room run &#183; the six-room survey</span></summary>
       <div class="dfolder-body">
         <p class="about">
           Six rooms and a measured floor. The routing is a &micro;-calculus fixed
@@ -1436,7 +1439,9 @@ pre:has(> code){margin:1.3rem 0}
     </details>
 
     <details class="dfolder">
-      <summary>robot-warehouse<span class="dcount">3 runs</span></summary>
+      <summary>robot-warehouse<span class="dcount">3 runs</span>
+        <span class="dnames">the warehouse run &#183; nested epistemic goals &#183;
+          over Open-RMF</span></summary>
       <div class="dfolder-body">
         <p class="about">
           A pallet in one of two aisles, and a robot that may lift it only where
@@ -1454,7 +1459,8 @@ pre:has(> code){margin:1.3rem 0}
     </details>
 
     <details class="dfolder">
-      <summary>hotel-incident<span class="dcount">1 run</span></summary>
+      <summary>hotel-incident<span class="dcount">1 run</span>
+        <span class="dnames">the hotel incident</span></summary>
       <div class="dfolder-body">
         <p class="about">
           A leak in one of two suites on separate floors, under a goal with a
