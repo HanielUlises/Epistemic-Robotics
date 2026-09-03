@@ -54,8 +54,8 @@ body{animation:pageIn .38s ease-out both}
   --ss:Arial,Helvetica,sans-serif;
   --mono:'Courier New',Courier,monospace;
 }
-html{font-size:16px;scroll-behavior:smooth}
-body{background:#fff;color:var(--black);
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
   font-family:var(--ss);
   font-weight:400;line-height:1.6}
 /* One content width, for prose and for figures alike.
@@ -777,10 +777,19 @@ sup.cite a:hover{text-decoration:underline}
 (function(){
   var menu = document.querySelector('.nav-menu');
   if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
   document.addEventListener('click', function(e){
+    if(phone.matches) return;
     if(menu.open && !menu.contains(e.target)) menu.open = false;
   });
   document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
     if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
   });
 })();
@@ -852,15 +861,14 @@ sup.cite a:hover{text-decoration:underline}
   var phone = window.matchMedia('(max-width:720px)');
 
 
-  /* Opening the drawer drops the top level of the contents, so the four
-     sections are readable without a tap each. Their own submenus stay shut:
-     one level is a menu, two is the whole site poured into a phone. */
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;
-    var top = menu.querySelectorAll('.nav-panel > .nav-folder');
-    Array.prototype.forEach.call(top, function(f){ f.open = true; });
-    var nested = menu.querySelectorAll('.nav-panel .nav-folder .nav-folder');
-    Array.prototype.forEach.call(nested, function(f){ f.open = false; });
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
   }
 
   function open(state){
