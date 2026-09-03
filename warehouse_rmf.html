@@ -588,6 +588,28 @@ sup.cite a:hover{text-decoration:underline}
     <p class="sec-label">Execution</p>
     <h3>The run</h3>
 
+    <p>
+      Aletheia solved the instance by AO* at depth 11, expanding
+      1&#8202;448&#8202;279 nodes and generating 1&#8202;459&#8202;711. The
+      executor rendered a policy of seventeen nodes. Nine actions were dispatched
+      before the goal held, over 172.5&#8202;s of wall-clock time, with no
+      negotiation failures.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-rmf-policy.svg" width="100%"
+           alt="The policy as a tree: a trunk to aisle 2, an inspection, and two continuations">
+      <figcaption>
+        <b>Figure 2.</b> The policy, drawn from the plan the planner emitted. A
+        conditional plan is an AND&#8211;OR tree: an action, and one continuation
+        per event that action can produce. The single branch point is the
+        inspection, whose two events divide a six-node continuation from an
+        eleven-node one. The branch the recorded run took is drawn in full; the
+        counterfactual is greyed. The red outline marks the sensing action and
+        the black outlines the two that change the world.
+      </figcaption>
+    </figure>
+
     <figure class="demo-figure">
       <video controls preload="metadata" playsinline width="100%"
              poster="media/thumbs/warehouse_rmf_run.jpg">
@@ -596,7 +618,7 @@ sup.cite a:hover{text-decoration:underline}
         <a href="media/warehouse_rmf_run.mp4">Download it instead</a>.
       </video>
       <figcaption>
-        <b>Figure 2.</b> The recorded run, with the pallet in aisle 2. Gazebo on
+        <b>Figure 3.</b> The recorded run, with the pallet in aisle 2. Gazebo on
         the left, the RMF schedule view on the right; r1 drives, r2 stays on its
         charger and comes to know which aisle held the pallet anyway. Recorded on
         a display of its own; sped up three times, with captions generated from
@@ -604,14 +626,6 @@ sup.cite a:hover{text-decoration:underline}
         one measured below, recorded with both interfaces drawing in software.
       </figcaption>
     </figure>
-
-    <p>
-      Aletheia solved the instance by AO* at depth 11, expanding
-      1&#8202;448&#8202;279 nodes and generating 1&#8202;459&#8202;711. The
-      executor rendered a policy of seventeen nodes. Nine actions were dispatched
-      before the goal held, over 172.5&#8202;s of wall-clock time, with no
-      negotiation failures.
-    </p>
 
     <table class="data">
       <thead>
@@ -653,7 +667,7 @@ sup.cite a:hover{text-decoration:underline}
     <figure class="demo-figure">
       <img src="media/warehouse-rmf-trajectory.svg" alt="Model size and each agent's epistemic state after every step of the warehouse run" width="100%">
       <figcaption>
-        <b>Figure 3.</b> The measured run. No cell is marked in red: every
+        <b>Figure 4.</b> The measured run. No cell is marked in red: every
         perspective contains the actual world at every step.
       </figcaption>
     </figure>
@@ -773,7 +787,7 @@ sup.cite a:hover{text-decoration:underline}
 })();
 </script>
     <p class="note" style="margin-top:.9rem">
-      <b>Figure 4.</b> Each agent's accessibility relation, stepped through the
+      <b>Figure 5.</b> Each agent's accessibility relation, stepped through the
       run. Every world keeps its self-loop at every step, which is the
       \(\mathrm{S5}_n\) condition holding throughout.
     </p>
