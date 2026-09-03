@@ -320,6 +320,50 @@ table.data td .mono-inline{font-size:.78em}
 .ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
 .ftr-l a:hover{border-bottom-color:var(--black)}
 footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
 </style>
 
 <style>
@@ -544,11 +588,28 @@ sup.cite a:hover{text-decoration:underline}
     <p class="sec-label">Execution</p>
     <h3>The run</h3>
 
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/warehouse_rmf_run.jpg">
+        <source src="media/warehouse_rmf_run.mp4" type="video/mp4">
+        Your browser will not play this video.
+        <a href="media/warehouse_rmf_run.mp4">Download it instead</a>.
+      </video>
+      <figcaption>
+        <b>Figure 2.</b> The recorded run, with the pallet in aisle 2. Gazebo on
+        the left, the RMF schedule view on the right; r1 drives, r2 stays on its
+        charger and comes to know which aisle held the pallet anyway. Recorded on
+        a display of its own; sped up three times, with captions generated from
+        the run's log. This is a separate execution of the same instance from the
+        one measured below, recorded with both interfaces drawing in software.
+      </figcaption>
+    </figure>
+
     <p>
       Aletheia solved the instance by AO* at depth 11, expanding
       1&#8202;448&#8202;279 nodes and generating 1&#8202;459&#8202;711. The
       executor rendered a policy of seventeen nodes. Nine actions were dispatched
-      before the goal held, over 170.9&#8202;s of wall-clock time, with no
+      before the goal held, over 172.5&#8202;s of wall-clock time, with no
       negotiation failures.
     </p>
 
@@ -558,22 +619,22 @@ sup.cite a:hover{text-decoration:underline}
       </thead>
       <tbody>
         <tr><td>0</td><td>initial state</td><td>&#8212;</td><td>2</td><td>2</td><td>2</td></tr>
-        <tr><td>1</td><td><span class="mono-inline">go</span> dock_south &#8594; lane</td><td>40.2 s</td><td>2</td><td>2</td><td>2</td></tr>
-        <tr><td>2</td><td><span class="mono-inline">go</span> lane &#8594; bay2</td><td>16.8 s</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>1</td><td><span class="mono-inline">go</span> dock_south &#8594; lane</td><td>40.7 s</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>2</td><td><span class="mono-inline">go</span> lane &#8594; bay2</td><td>15.3 s</td><td>2</td><td>2</td><td>2</td></tr>
         <tr><td>3</td><td><span class="mono-inline">inspect</span> bay2</td><td>6.0 s</td><td>2</td><td>1</td><td>2</td></tr>
         <tr><td>4</td><td><span class="mono-inline">pickup</span> bay2</td><td>6.0 s</td><td>1</td><td>1</td><td>1</td></tr>
-        <tr><td>5</td><td><span class="mono-inline">go</span> bay2 &#8594; lane</td><td>16.6 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>5</td><td><span class="mono-inline">go</span> bay2 &#8594; lane</td><td>16.0 s</td><td>1</td><td>1</td><td>1</td></tr>
         <tr><td>6</td><td><span class="mono-inline">go</span> lane &#8594; dock_south</td><td>39.5 s</td><td>1</td><td>1</td><td>1</td></tr>
-        <tr><td>7</td><td><span class="mono-inline">go</span> dock_south &#8594; corridor</td><td>20.7 s</td><td>1</td><td>1</td><td>1</td></tr>
-        <tr><td>8</td><td><span class="mono-inline">go</span> corridor &#8594; dock_north</td><td>19.1 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>7</td><td><span class="mono-inline">go</span> dock_south &#8594; corridor</td><td>20.5 s</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>8</td><td><span class="mono-inline">go</span> corridor &#8594; dock_north</td><td>19.5 s</td><td>1</td><td>1</td><td>1</td></tr>
         <tr><td>9</td><td><span class="mono-inline">unload</span> dock_north</td><td>6.0 s</td><td>1</td><td>1</td><td>1</td></tr>
       </tbody>
     </table>
 
     <p>
-      Motion accounts for 153&#8202;s of the 171&#8202;s. The inspection that
+      Motion accounts for 151.5&#8202;s of the 172.5&#8202;s. The inspection that
       settles the mission's uncertainty occupies six seconds, and the aisle it
-      enters was reached in the preceding 57.
+      enters was reached in the preceding 56.
     </p>
   </div>
 </section>
@@ -592,7 +653,7 @@ sup.cite a:hover{text-decoration:underline}
     <figure class="demo-figure">
       <img src="media/warehouse-rmf-trajectory.svg" alt="Model size and each agent's epistemic state after every step of the warehouse run" width="100%">
       <figcaption>
-        <b>Figure 2.</b> The measured run. No cell is marked in red: every
+        <b>Figure 3.</b> The measured run. No cell is marked in red: every
         perspective contains the actual world at every step.
       </figcaption>
     </figure>
@@ -628,14 +689,94 @@ sup.cite a:hover{text-decoration:underline}
       <span class="mono-inline">robot-warehouse</span> measure the difference.
     </p>
 
-    <figure class="demo-figure">
-      <img src="media/warehouse-rmf-kripke.svg" alt="Accessibility relations for both agents at four steps of the warehouse run" width="100%">
-      <figcaption>
-        <b>Figure 3.</b> Each agent's accessibility relation at the initial
-        state and after steps 3, 4 and 9. Every world retains its self-loop
-        throughout.
-      </figcaption>
-    </figure>
+    <figure class="demo-figure kfig" id="whk-fig">
+  <svg viewBox="0 0 500 238" width="100%" role="img"
+       aria-label="Each agent's accessibility relation, stepped through the run">
+    <defs>
+      <marker id="whk-head" viewBox="0 0 10 10" refX="9.5" refY="5"
+              markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#1A52A0"/></marker>
+    </defs>
+    <g transform="translate(0,0)"><rect class="kpanel" x="6" y="6" width="238" height="220" rx="3"/><text class="kagent" x="18" y="26">r1</text><text class="kframe" id="whk-frame-r1" x="18" y="42"></text><path class="kedge kloop cut" data-a="r1" marker-end="url(#whk-head)" data-from="w0" data-to="w0" d="M114.5,55.5 C97.5,44.2 152.5,44.2 135.5,55.5"/><path class="kedge cut" data-a="r1" marker-end="url(#whk-head)" data-from="w0" data-to="w1" d="M125.0,87.4 L125.0,160.6"/><path class="kedge cut" data-a="r1" marker-end="url(#whk-head)" data-from="w1" data-to="w0" d="M125.0,160.6 L125.0,87.4"/><path class="kedge kloop cut" data-a="r1" marker-end="url(#whk-head)" data-from="w1" data-to="w1" d="M135.5,192.5 C152.5,203.8 97.5,203.8 114.5,192.5"/><g class="kworld dead" data-a="r1" data-w="w0"><circle class="kdot" cx="125" cy="69" r="15"/><text class="kwid" x="125" y="73" text-anchor="middle">w0</text><text class="katom" id="whk-at-r1-w0-0" x="125" y="98" text-anchor="middle"></text><text class="katom" id="whk-at-r1-w0-1" x="125" y="109" text-anchor="middle"></text></g><g class="kworld dead" data-a="r1" data-w="w1"><circle class="kdot" cx="125" cy="179" r="15"/><text class="kwid" x="125" y="183" text-anchor="middle">w1</text><text class="katom" id="whk-at-r1-w1-0" x="125" y="208" text-anchor="middle"></text><text class="katom" id="whk-at-r1-w1-1" x="125" y="219" text-anchor="middle"></text></g></g><g transform="translate(250,0)"><rect class="kpanel" x="6" y="6" width="238" height="220" rx="3"/><text class="kagent" x="18" y="26">r2</text><text class="kframe" id="whk-frame-r2" x="18" y="42"></text><path class="kedge kloop cut" data-a="r2" marker-end="url(#whk-head)" data-from="w0" data-to="w0" d="M114.5,55.5 C97.5,44.2 152.5,44.2 135.5,55.5"/><path class="kedge cut" data-a="r2" marker-end="url(#whk-head)" data-from="w0" data-to="w1" d="M125.0,87.4 L125.0,160.6"/><path class="kedge cut" data-a="r2" marker-end="url(#whk-head)" data-from="w1" data-to="w0" d="M125.0,160.6 L125.0,87.4"/><path class="kedge kloop cut" data-a="r2" marker-end="url(#whk-head)" data-from="w1" data-to="w1" d="M135.5,192.5 C152.5,203.8 97.5,203.8 114.5,192.5"/><g class="kworld dead" data-a="r2" data-w="w0"><circle class="kdot" cx="125" cy="69" r="15"/><text class="kwid" x="125" y="73" text-anchor="middle">w0</text><text class="katom" id="whk-at-r2-w0-0" x="125" y="98" text-anchor="middle"></text><text class="katom" id="whk-at-r2-w0-1" x="125" y="109" text-anchor="middle"></text></g><g class="kworld dead" data-a="r2" data-w="w1"><circle class="kdot" cx="125" cy="179" r="15"/><text class="kwid" x="125" y="183" text-anchor="middle">w1</text><text class="katom" id="whk-at-r2-w1-0" x="125" y="208" text-anchor="middle"></text><text class="katom" id="whk-at-r2-w1-1" x="125" y="219" text-anchor="middle"></text></g></g>
+  </svg>
+  <div class="kbar">
+    <button type="button" class="kbtn" id="whk-prev" aria-label="previous step">&#8592;</button>
+    <button type="button" class="kbtn" id="whk-play" aria-label="play">&#9654; play</button>
+    <button type="button" class="kbtn" id="whk-next" aria-label="next step">&#8594;</button>
+    <span class="kstep" id="whk-label"></span>
+  </div>
+</figure>
+<script>
+(function(){
+  var frames = [{"label": "initial", "agents": {"r1": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w0", "w1"], "edges": [["w0", "w0"], ["w0", "w1"], ["w1", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 2}, "r2": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w0", "w1"], "edges": [["w0", "w0"], ["w0", "w1"], ["w1", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 2}}}, {"label": "go_r1_dock_south_lane", "agents": {"r1": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w0", "w1"], "edges": [["w0", "w0"], ["w0", "w1"], ["w1", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 2}, "r2": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w0", "w1"], "edges": [["w0", "w0"], ["w0", "w1"], ["w1", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 2}}}, {"label": "go_r1_lane_bay2", "agents": {"r1": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w0", "w1"], "edges": [["w0", "w0"], ["w0", "w1"], ["w1", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 2}, "r2": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w0", "w1"], "edges": [["w0", "w0"], ["w0", "w1"], ["w1", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 2}}}, {"label": "inspect_r1_bay2", "agents": {"r1": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w1"], "edges": [["w0", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 1}, "r2": {"labels": {"w0": ["pallet@bay3"], "w1": ["pallet@bay2"]}, "worlds": ["w0", "w1"], "designated": ["w0", "w1"], "edges": [["w0", "w0"], ["w0", "w1"], ["w1", "w0"], ["w1", "w1"]], "reflexive": true, "actual": true, "D": 2}}}, {"label": "pickup_r1_bay2", "agents": {"r1": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}, "r2": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}}}, {"label": "go_r1_bay2_lane", "agents": {"r1": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}, "r2": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}}}, {"label": "go_r1_lane_dock_south", "agents": {"r1": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}, "r2": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}}}, {"label": "go_r1_dock_south_corridor", "agents": {"r1": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}, "r2": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}}}, {"label": "go_r1_corridor_dock_north", "agents": {"r1": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}, "r2": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}}}, {"label": "unload_r1_dock_north", "agents": {"r1": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}, "r2": {"labels": {"w0": []}, "worlds": ["w0"], "designated": ["w0"], "edges": [["w0", "w0"]], "reflexive": true, "actual": true, "D": 1}}}];
+  var root = document.getElementById('whk-fig');
+  if (!root) return;
+  var i = 0, timer = null;
+
+  function draw() {
+    var f = frames[i];
+    root.querySelectorAll('.kworld').forEach(function(g) {
+      var st = f.agents[g.dataset.a];
+      var live = st.worlds.indexOf(g.dataset.w) >= 0;
+      g.classList.toggle('dead', !live);
+      g.classList.toggle('des', live && st.designated.indexOf(g.dataset.w) >= 0);
+    });
+    Object.keys(f.agents).forEach(function(a) {
+      var labels = f.agents[a].labels || {};
+      Object.keys(labels).forEach(function(w) {
+        for (var k = 0; k < 2; k++) {
+          var t = document.getElementById('whk-at-' + a + '-' + w + '-' + k);
+          if (t) t.textContent = labels[w][k] || '';
+        }
+      });
+    });
+    root.querySelectorAll('.kedge').forEach(function(p) {
+      var st = f.agents[p.dataset.a];
+      var on = st.edges.some(function(e) {
+        return e[0] === p.dataset.from && e[1] === p.dataset.to;
+      });
+      p.classList.toggle('cut', !on);
+    });
+    Object.keys(f.agents).forEach(function(a) {
+      var st = f.agents[a];
+      var el = document.getElementById('whk-frame-' + a);
+      if (el) el.textContent = '|D| = ' + st.D +
+        (st.actual ? '' : '  \u00b7  excludes the actual world');
+      if (el) el.setAttribute('class', st.actual ? 'kframe' : 'kframe wrong');
+    });
+    var lab = document.getElementById('whk-label');
+    if (lab) lab.textContent = (i === 0 ? 'initial state'
+      : 'step ' + i + ' \u00b7 ' + f.label);
+  }
+
+  function go(d) { i = (i + d + frames.length) % frames.length; draw(); }
+
+  document.getElementById('whk-prev').onclick = function(){ stop(); go(-1); };
+  document.getElementById('whk-next').onclick = function(){ stop(); go(1); };
+  var play = document.getElementById('whk-play');
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; play.innerHTML = '&#9654; play'; }
+  }
+  play.onclick = function() {
+    if (timer) return stop();
+    play.innerHTML = '&#10073;&#10073; pause';
+    timer = setInterval(function(){ go(1); }, 1900);
+  };
+
+  // Start when it is on screen, and stop when it leaves.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(es) {
+      es.forEach(function(e) { if (!e.isIntersecting) stop(); });
+    }, {threshold: 0.15}).observe(root);
+  }
+  draw();
+})();
+</script>
+    <p class="note" style="margin-top:.9rem">
+      <b>Figure 4.</b> Each agent's accessibility relation, stepped through the
+      run. Every world keeps its self-loop at every step, which is the
+      \(\mathrm{S5}_n\) condition holding throughout.
+    </p>
 
     <p>
       Every relation in this run is reflexive at every step, so the frame is
@@ -712,5 +853,57 @@ python3 tools/make_building_map.py \
   });
 })();
 </script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
 </body>
 </html>

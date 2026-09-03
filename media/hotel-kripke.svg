@@ -1,237 +1,326 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 900" width="820" height="900" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="Accessibility relations per agent at each step">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 856 1190" width="856" height="1190" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="Accessibility relations per agent at each step">
 <style>
   .lbl  { font-size:11.5px; fill:#5A5A5A }
   .ttl  { font-size:13px; font-weight:bold; fill:#111111 }
   .cap  { font-size:11.5px; fill:#5A5A5A; font-style:italic }
   .wid  { font-family:'Courier New',Courier,monospace; font-size:11px; fill:#111111 }
   .atom { font-family:'Courier New',Courier,monospace; font-size:9.5px; fill:#5A5A5A }
+  .atomh{ font-family:'Courier New',Courier,monospace; font-size:9.5px;
+           fill:none; stroke:#FAFAFA; stroke-width:3; stroke-linejoin:round }
   .node { fill:#FFFFFF; stroke:#5A5A5A; stroke-width:1.4 }
   .des  { fill:#FFFFFF; stroke:#C8102E; stroke-width:2.6 }
   .act  { fill:#FDECEF; stroke:#C8102E; stroke-width:2.6 }
   .arc  { stroke:#1A52A0; stroke-width:1.3; fill:none; marker-end:url(#a) }
+  .arc2 { stroke:#1A52A0; stroke-width:1.3; fill:none;
+           marker-end:url(#a); marker-start:url(#b) }
+  .loop { stroke:#1A52A0; stroke-width:1.3; fill:none; marker-end:url(#a) }
   .axis { stroke:#D6D6D6; stroke-width:1 }
 </style>
-<defs><marker id="a" viewBox="0 0 10 10" refX="15" refY="5" markerWidth="5"
-  markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1A52A0"/>
-</marker></defs>
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="6"
+    markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="#1A52A0"/></marker>
+  <marker id="b" viewBox="0 0 10 10" refX="0.5" refY="5" markerWidth="6"
+    markerHeight="6" orient="auto">
+    <path d="M10,0 L0,5 L10,10 z" fill="#1A52A0"/></marker>
+</defs>
 <text class="ttl" x="12" y="22">after initial</text>
-<rect x="20" y="30" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<rect x="20" y="30" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
 <text class="ttl" x="28" y="44">inspector</text>
 <text class="lbl" x="28" y="60">reflexive</text>
-<path class="arc" d="M137,60 A9,9 0 1,1 151,60"/>
-<path class="arc" d="M144,73 L144,183"/>
-<path class="arc" d="M144,183 L144,73"/>
-<path class="arc" d="M137,170 A9,9 0 1,1 151,170"/>
-<circle class="des" cx="144" cy="73" r="15"/>
-<text class="wid" x="144" y="77" text-anchor="middle">w0</text>
-<text class="atom" x="144" y="102" text-anchor="middle">leak@l3</text>
-<circle class="des" cx="144" cy="183" r="15"/>
-<text class="wid" x="144" y="187" text-anchor="middle">w1</text>
-<text class="atom" x="144" y="212" text-anchor="middle">leak@l2</text>
-<rect x="280" y="30" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="288" y="44">porter</text>
-<text class="lbl" x="288" y="60">reflexive</text>
-<path class="arc" d="M397,60 A9,9 0 1,1 411,60"/>
-<path class="arc" d="M404,73 L404,183"/>
-<path class="arc" d="M404,183 L404,73"/>
-<path class="arc" d="M397,170 A9,9 0 1,1 411,170"/>
-<circle class="des" cx="404" cy="73" r="15"/>
-<text class="wid" x="404" y="77" text-anchor="middle">w0</text>
-<text class="atom" x="404" y="102" text-anchor="middle">leak@l3</text>
-<circle class="des" cx="404" cy="183" r="15"/>
-<text class="wid" x="404" y="187" text-anchor="middle">w1</text>
-<text class="atom" x="404" y="212" text-anchor="middle">leak@l2</text>
-<rect x="540" y="30" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="548" y="44">guest</text>
-<text class="lbl" x="548" y="60">reflexive</text>
-<path class="arc" d="M657,60 A9,9 0 1,1 671,60"/>
-<path class="arc" d="M664,73 L664,183"/>
-<path class="arc" d="M664,183 L664,73"/>
-<path class="arc" d="M657,170 A9,9 0 1,1 671,170"/>
-<circle class="des" cx="664" cy="73" r="15"/>
-<text class="wid" x="664" y="77" text-anchor="middle">w0</text>
-<text class="atom" x="664" y="102" text-anchor="middle">leak@l3</text>
-<circle class="des" cx="664" cy="183" r="15"/>
-<text class="wid" x="664" y="187" text-anchor="middle">w1</text>
-<text class="atom" x="664" y="212" text-anchor="middle">leak@l2</text>
-<text class="ttl" x="12" y="232">after inspect_inspector_l2_suite</text>
-<rect x="20" y="240" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="28" y="254">inspector</text>
-<text class="lbl" x="28" y="270">reflexive</text>
-<path class="arc" d="M137,270 A9,9 0 1,1 151,270"/>
-<path class="arc" d="M137,380 A9,9 0 1,1 151,380"/>
-<circle class="des" cx="144" cy="283" r="15"/>
-<text class="wid" x="144" y="287" text-anchor="middle">w0</text>
-<text class="atom" x="144" y="312" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="144" cy="393" r="15"/>
-<text class="wid" x="144" y="397" text-anchor="middle">w1</text>
-<text class="atom" x="144" y="422" text-anchor="middle">leak@l2</text>
-<rect x="280" y="240" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="288" y="254">porter</text>
-<text class="lbl" x="288" y="270">reflexive</text>
-<path class="arc" d="M397,270 A9,9 0 1,1 411,270"/>
-<path class="arc" d="M404,283 L404,393"/>
-<path class="arc" d="M404,393 L404,283"/>
-<path class="arc" d="M397,380 A9,9 0 1,1 411,380"/>
-<circle class="des" cx="404" cy="283" r="15"/>
-<text class="wid" x="404" y="287" text-anchor="middle">w0</text>
-<text class="atom" x="404" y="312" text-anchor="middle">leak@l3</text>
-<circle class="des" cx="404" cy="393" r="15"/>
-<text class="wid" x="404" y="397" text-anchor="middle">w1</text>
-<text class="atom" x="404" y="422" text-anchor="middle">leak@l2</text>
-<rect x="540" y="240" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="548" y="254">guest</text>
-<text class="lbl" x="548" y="270">reflexive</text>
-<path class="arc" d="M657,270 A9,9 0 1,1 671,270"/>
-<path class="arc" d="M664,283 L664,393"/>
-<path class="arc" d="M664,393 L664,283"/>
-<path class="arc" d="M657,380 A9,9 0 1,1 671,380"/>
-<circle class="des" cx="664" cy="283" r="15"/>
-<text class="wid" x="664" y="287" text-anchor="middle">w0</text>
-<text class="atom" x="664" y="312" text-anchor="middle">leak@l3</text>
-<circle class="des" cx="664" cy="393" r="15"/>
-<text class="wid" x="664" y="397" text-anchor="middle">w1</text>
-<text class="atom" x="664" y="422" text-anchor="middle">leak@l2</text>
-<text class="ttl" x="12" y="442">after brief-leak_inspector_porter_l3_suite</text>
-<rect x="20" y="450" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="28" y="464">inspector</text>
-<text class="lbl" x="28" y="480">reflexive</text>
-<path class="arc" d="M137,480 A9,9 0 1,1 151,480"/>
-<path class="arc" d="M192,535 A9,9 0 1,1 206,535"/>
-<path class="arc" d="M137,590 A9,9 0 1,1 151,590"/>
-<path class="arc" d="M82,535 A9,9 0 1,1 96,535"/>
-<circle class="des" cx="144" cy="493" r="15"/>
-<text class="wid" x="144" y="497" text-anchor="middle">w0</text>
-<text class="atom" x="144" y="522" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="199" cy="548" r="15"/>
-<text class="wid" x="199" y="552" text-anchor="middle">w1</text>
-<text class="atom" x="199" y="577" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="144" cy="603" r="15"/>
-<text class="wid" x="144" y="607" text-anchor="middle">w2</text>
-<text class="atom" x="144" y="632" text-anchor="middle">leak@l2</text>
-<circle class="node" cx="89" cy="548" r="15"/>
-<text class="wid" x="89" y="552" text-anchor="middle">w3</text>
-<text class="atom" x="89" y="577" text-anchor="middle">leak@l2</text>
-<rect x="280" y="450" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="288" y="464">porter</text>
-<text class="lbl" x="288" y="480">reflexive</text>
-<path class="arc" d="M397,480 A9,9 0 1,1 411,480"/>
-<path class="arc" d="M452,535 A9,9 0 1,1 466,535"/>
-<path class="arc" d="M459,548 L349,548"/>
-<path class="arc" d="M397,590 A9,9 0 1,1 411,590"/>
-<path class="arc" d="M349,548 L459,548"/>
-<path class="arc" d="M342,535 A9,9 0 1,1 356,535"/>
-<circle class="des" cx="404" cy="493" r="15"/>
-<text class="wid" x="404" y="497" text-anchor="middle">w0</text>
-<text class="atom" x="404" y="522" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="459" cy="548" r="15"/>
-<text class="wid" x="459" y="552" text-anchor="middle">w1</text>
-<text class="atom" x="459" y="577" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="404" cy="603" r="15"/>
-<text class="wid" x="404" y="607" text-anchor="middle">w2</text>
-<text class="atom" x="404" y="632" text-anchor="middle">leak@l2</text>
-<circle class="node" cx="349" cy="548" r="15"/>
-<text class="wid" x="349" y="552" text-anchor="middle">w3</text>
-<text class="atom" x="349" y="577" text-anchor="middle">leak@l2</text>
-<rect x="540" y="450" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="548" y="464">guest</text>
-<text class="lbl" x="548" y="480">not reflexive, excludes the actual world</text>
-<path class="arc" d="M664,493 L719,548"/>
-<path class="arc" d="M664,493 L609,548"/>
-<path class="arc" d="M712,535 A9,9 0 1,1 726,535"/>
-<path class="arc" d="M719,548 L609,548"/>
-<path class="arc" d="M664,603 L719,548"/>
-<path class="arc" d="M664,603 L609,548"/>
-<path class="arc" d="M609,548 L719,548"/>
-<path class="arc" d="M602,535 A9,9 0 1,1 616,535"/>
-<circle class="node" cx="664" cy="493" r="15"/>
-<text class="wid" x="664" y="497" text-anchor="middle">w0</text>
-<text class="atom" x="664" y="522" text-anchor="middle">leak@l3</text>
-<circle class="des" cx="719" cy="548" r="15"/>
-<text class="wid" x="719" y="552" text-anchor="middle">w1</text>
-<text class="atom" x="719" y="577" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="664" cy="603" r="15"/>
-<text class="wid" x="664" y="607" text-anchor="middle">w2</text>
-<text class="atom" x="664" y="632" text-anchor="middle">leak@l2</text>
-<circle class="des" cx="609" cy="548" r="15"/>
-<text class="wid" x="609" y="552" text-anchor="middle">w3</text>
-<text class="atom" x="609" y="577" text-anchor="middle">leak@l2</text>
-<text class="ttl" x="12" y="652">after contain_porter_l3_suite</text>
-<rect x="20" y="660" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="28" y="674">inspector</text>
-<text class="lbl" x="28" y="690">not reflexive, excludes the actual world</text>
-<path class="arc" d="M144,703 L196,741"/>
-<path class="arc" d="M189,728 A9,9 0 1,1 203,728"/>
-<path class="arc" d="M169,790 A9,9 0 1,1 183,790"/>
-<path class="arc" d="M105,790 A9,9 0 1,1 119,790"/>
-<path class="arc" d="M85,728 A9,9 0 1,1 99,728"/>
-<circle class="node" cx="144" cy="703" r="15"/>
-<text class="wid" x="144" y="707" text-anchor="middle">w0</text>
-<text class="atom" x="144" y="732" text-anchor="middle">sealed@l3, safe</text>
-<circle class="des" cx="196" cy="741" r="15"/>
-<text class="wid" x="196" y="745" text-anchor="middle">w1</text>
-<text class="atom" x="196" y="770" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="176" cy="803" r="15"/>
-<text class="wid" x="176" y="807" text-anchor="middle">w2</text>
-<text class="atom" x="176" y="832" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="112" cy="803" r="15"/>
-<text class="wid" x="112" y="807" text-anchor="middle">w3</text>
-<text class="atom" x="112" y="832" text-anchor="middle">leak@l2</text>
-<circle class="node" cx="92" cy="741" r="15"/>
-<text class="wid" x="92" y="745" text-anchor="middle">w4</text>
-<text class="atom" x="92" y="770" text-anchor="middle">leak@l2</text>
-<rect x="280" y="660" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="288" y="674">porter</text>
-<text class="lbl" x="288" y="690">reflexive</text>
-<path class="arc" d="M397,690 A9,9 0 1,1 411,690"/>
-<path class="arc" d="M449,728 A9,9 0 1,1 463,728"/>
-<path class="arc" d="M429,790 A9,9 0 1,1 443,790"/>
-<path class="arc" d="M436,803 L352,741"/>
-<path class="arc" d="M365,790 A9,9 0 1,1 379,790"/>
-<path class="arc" d="M352,741 L436,803"/>
-<path class="arc" d="M345,728 A9,9 0 1,1 359,728"/>
-<circle class="des" cx="404" cy="703" r="15"/>
-<text class="wid" x="404" y="707" text-anchor="middle">w0</text>
-<text class="atom" x="404" y="732" text-anchor="middle">sealed@l3, safe</text>
-<circle class="node" cx="456" cy="741" r="15"/>
-<text class="wid" x="456" y="745" text-anchor="middle">w1</text>
-<text class="atom" x="456" y="770" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="436" cy="803" r="15"/>
-<text class="wid" x="436" y="807" text-anchor="middle">w2</text>
-<text class="atom" x="436" y="832" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="372" cy="803" r="15"/>
-<text class="wid" x="372" y="807" text-anchor="middle">w3</text>
-<text class="atom" x="372" y="832" text-anchor="middle">leak@l2</text>
-<circle class="node" cx="352" cy="741" r="15"/>
-<text class="wid" x="352" y="745" text-anchor="middle">w4</text>
-<text class="atom" x="352" y="770" text-anchor="middle">leak@l2</text>
-<rect x="540" y="660" width="248" height="184" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-<text class="ttl" x="548" y="674">guest</text>
-<text class="lbl" x="548" y="690">not reflexive, excludes the actual world</text>
-<path class="arc" d="M664,703 L696,803"/>
-<path class="arc" d="M664,703 L612,741"/>
-<path class="arc" d="M716,741 L696,803"/>
-<path class="arc" d="M716,741 L612,741"/>
-<path class="arc" d="M689,790 A9,9 0 1,1 703,790"/>
-<path class="arc" d="M696,803 L612,741"/>
-<path class="arc" d="M632,803 L696,803"/>
-<path class="arc" d="M632,803 L612,741"/>
-<path class="arc" d="M612,741 L696,803"/>
-<path class="arc" d="M605,728 A9,9 0 1,1 619,728"/>
-<circle class="node" cx="664" cy="703" r="15"/>
-<text class="wid" x="664" y="707" text-anchor="middle">w0</text>
-<text class="atom" x="664" y="732" text-anchor="middle">sealed@l3, safe</text>
-<circle class="node" cx="716" cy="741" r="15"/>
-<text class="wid" x="716" y="745" text-anchor="middle">w1</text>
-<text class="atom" x="716" y="770" text-anchor="middle">leak@l3</text>
-<circle class="des" cx="696" cy="803" r="15"/>
-<text class="wid" x="696" y="807" text-anchor="middle">w2</text>
-<text class="atom" x="696" y="832" text-anchor="middle">leak@l3</text>
-<circle class="node" cx="632" cy="803" r="15"/>
-<text class="wid" x="632" y="807" text-anchor="middle">w3</text>
-<text class="atom" x="632" y="832" text-anchor="middle">leak@l2</text>
-<circle class="des" cx="612" cy="741" r="15"/>
-<text class="wid" x="612" y="745" text-anchor="middle">w4</text>
-<text class="atom" x="612" y="770" text-anchor="middle">leak@l2</text>
-<text class="cap" x="12" y="888">Nodes are worlds, arcs the agent's accessibility relation, red rings the worlds it designates. A missing self-loop is a world the agent excludes while it is the case.</text>
+<path class="loop" d="M139.5,56.6 C122.5,45.2 177.5,45.2 160.5,56.6"/>
+<path class="arc2" d="M150.0,88.5 L150.0,183.5"/>
+<path class="loop" d="M160.5,215.4 C177.5,226.8 122.5,226.8 139.5,215.4"/>
+<circle class="des" cx="150" cy="70" r="15"/>
+<text class="wid" x="150" y="74" text-anchor="middle">w0</text>
+<text class="atomh" x="150" y="99" text-anchor="middle">leak@l3</text>
+<text class="atom" x="150" y="99" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="150" cy="202" r="15"/>
+<text class="wid" x="150" y="206" text-anchor="middle">w1</text>
+<text class="atomh" x="150" y="231" text-anchor="middle">leak@l2</text>
+<text class="atom" x="150" y="231" text-anchor="middle">leak@l2</text>
+<rect x="292" y="30" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="300" y="44">porter</text>
+<text class="lbl" x="300" y="60">reflexive</text>
+<path class="loop" d="M411.5,56.6 C394.5,45.2 449.5,45.2 432.5,56.6"/>
+<path class="arc2" d="M422.0,88.5 L422.0,183.5"/>
+<path class="loop" d="M432.5,215.4 C449.5,226.8 394.5,226.8 411.5,215.4"/>
+<circle class="des" cx="422" cy="70" r="15"/>
+<text class="wid" x="422" y="74" text-anchor="middle">w0</text>
+<text class="atomh" x="422" y="99" text-anchor="middle">leak@l3</text>
+<text class="atom" x="422" y="99" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="422" cy="202" r="15"/>
+<text class="wid" x="422" y="206" text-anchor="middle">w1</text>
+<text class="atomh" x="422" y="231" text-anchor="middle">leak@l2</text>
+<text class="atom" x="422" y="231" text-anchor="middle">leak@l2</text>
+<rect x="564" y="30" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="572" y="44">guest</text>
+<text class="lbl" x="572" y="60">reflexive</text>
+<path class="loop" d="M683.5,56.6 C666.5,45.2 721.5,45.2 704.5,56.6"/>
+<path class="arc2" d="M694.0,88.5 L694.0,183.5"/>
+<path class="loop" d="M704.5,215.4 C721.5,226.8 666.5,226.8 683.5,215.4"/>
+<circle class="des" cx="694" cy="70" r="15"/>
+<text class="wid" x="694" y="74" text-anchor="middle">w0</text>
+<text class="atomh" x="694" y="99" text-anchor="middle">leak@l3</text>
+<text class="atom" x="694" y="99" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="694" cy="202" r="15"/>
+<text class="wid" x="694" y="206" text-anchor="middle">w1</text>
+<text class="atomh" x="694" y="231" text-anchor="middle">leak@l2</text>
+<text class="atom" x="694" y="231" text-anchor="middle">leak@l2</text>
+<text class="ttl" x="12" y="248">after deploy_inspector_porter_lobby_l2_suite_lobby_l3_suite</text>
+<rect x="20" y="256" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="270">inspector</text>
+<text class="lbl" x="28" y="286">reflexive</text>
+<path class="loop" d="M139.5,282.6 C122.5,271.2 177.5,271.2 160.5,282.6"/>
+<path class="arc2" d="M150.0,314.5 L150.0,409.5"/>
+<path class="loop" d="M160.5,441.4 C177.5,452.8 122.5,452.8 139.5,441.4"/>
+<circle class="des" cx="150" cy="296" r="15"/>
+<text class="wid" x="150" y="300" text-anchor="middle">w0</text>
+<text class="atomh" x="150" y="325" text-anchor="middle">leak@l3</text>
+<text class="atom" x="150" y="325" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="150" cy="428" r="15"/>
+<text class="wid" x="150" y="432" text-anchor="middle">w1</text>
+<text class="atomh" x="150" y="457" text-anchor="middle">leak@l2</text>
+<text class="atom" x="150" y="457" text-anchor="middle">leak@l2</text>
+<rect x="292" y="256" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="300" y="270">porter</text>
+<text class="lbl" x="300" y="286">reflexive</text>
+<path class="loop" d="M411.5,282.6 C394.5,271.2 449.5,271.2 432.5,282.6"/>
+<path class="arc2" d="M422.0,314.5 L422.0,409.5"/>
+<path class="loop" d="M432.5,441.4 C449.5,452.8 394.5,452.8 411.5,441.4"/>
+<circle class="des" cx="422" cy="296" r="15"/>
+<text class="wid" x="422" y="300" text-anchor="middle">w0</text>
+<text class="atomh" x="422" y="325" text-anchor="middle">leak@l3</text>
+<text class="atom" x="422" y="325" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="422" cy="428" r="15"/>
+<text class="wid" x="422" y="432" text-anchor="middle">w1</text>
+<text class="atomh" x="422" y="457" text-anchor="middle">leak@l2</text>
+<text class="atom" x="422" y="457" text-anchor="middle">leak@l2</text>
+<rect x="564" y="256" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="572" y="270">guest</text>
+<text class="lbl" x="572" y="286">reflexive</text>
+<path class="loop" d="M683.5,282.6 C666.5,271.2 721.5,271.2 704.5,282.6"/>
+<path class="arc2" d="M694.0,314.5 L694.0,409.5"/>
+<path class="loop" d="M704.5,441.4 C721.5,452.8 666.5,452.8 683.5,441.4"/>
+<circle class="des" cx="694" cy="296" r="15"/>
+<text class="wid" x="694" y="300" text-anchor="middle">w0</text>
+<text class="atomh" x="694" y="325" text-anchor="middle">leak@l3</text>
+<text class="atom" x="694" y="325" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="694" cy="428" r="15"/>
+<text class="wid" x="694" y="432" text-anchor="middle">w1</text>
+<text class="atomh" x="694" y="457" text-anchor="middle">leak@l2</text>
+<text class="atom" x="694" y="457" text-anchor="middle">leak@l2</text>
+<text class="ttl" x="12" y="474">after inspect_inspector_l2_suite</text>
+<rect x="20" y="482" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="496">inspector</text>
+<text class="lbl" x="28" y="512">reflexive</text>
+<path class="loop" d="M139.5,508.6 C122.5,497.2 177.5,497.2 160.5,508.6"/>
+<path class="loop" d="M160.5,667.4 C177.5,678.8 122.5,678.8 139.5,667.4"/>
+<circle class="des" cx="150" cy="522" r="15"/>
+<text class="wid" x="150" y="526" text-anchor="middle">w0</text>
+<text class="atomh" x="150" y="551" text-anchor="middle">leak@l3</text>
+<text class="atom" x="150" y="551" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="150" cy="654" r="15"/>
+<text class="wid" x="150" y="658" text-anchor="middle">w1</text>
+<text class="atomh" x="150" y="683" text-anchor="middle">leak@l2</text>
+<text class="atom" x="150" y="683" text-anchor="middle">leak@l2</text>
+<rect x="292" y="482" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="300" y="496">porter</text>
+<text class="lbl" x="300" y="512">reflexive</text>
+<path class="loop" d="M411.5,508.6 C394.5,497.2 449.5,497.2 432.5,508.6"/>
+<path class="arc2" d="M422.0,540.5 L422.0,635.5"/>
+<path class="loop" d="M432.5,667.4 C449.5,678.8 394.5,678.8 411.5,667.4"/>
+<circle class="des" cx="422" cy="522" r="15"/>
+<text class="wid" x="422" y="526" text-anchor="middle">w0</text>
+<text class="atomh" x="422" y="551" text-anchor="middle">leak@l3</text>
+<text class="atom" x="422" y="551" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="422" cy="654" r="15"/>
+<text class="wid" x="422" y="658" text-anchor="middle">w1</text>
+<text class="atomh" x="422" y="683" text-anchor="middle">leak@l2</text>
+<text class="atom" x="422" y="683" text-anchor="middle">leak@l2</text>
+<rect x="564" y="482" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="572" y="496">guest</text>
+<text class="lbl" x="572" y="512">reflexive</text>
+<path class="loop" d="M683.5,508.6 C666.5,497.2 721.5,497.2 704.5,508.6"/>
+<path class="arc2" d="M694.0,540.5 L694.0,635.5"/>
+<path class="loop" d="M704.5,667.4 C721.5,678.8 666.5,678.8 683.5,667.4"/>
+<circle class="des" cx="694" cy="522" r="15"/>
+<text class="wid" x="694" y="526" text-anchor="middle">w0</text>
+<text class="atomh" x="694" y="551" text-anchor="middle">leak@l3</text>
+<text class="atom" x="694" y="551" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="694" cy="654" r="15"/>
+<text class="wid" x="694" y="658" text-anchor="middle">w1</text>
+<text class="atomh" x="694" y="683" text-anchor="middle">leak@l2</text>
+<text class="atom" x="694" y="683" text-anchor="middle">leak@l2</text>
+<text class="ttl" x="12" y="700">after brief-leak_inspector_porter_l3_suite</text>
+<rect x="20" y="708" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="722">inspector</text>
+<text class="lbl" x="28" y="738">reflexive</text>
+<path class="loop" d="M139.5,734.6 C122.5,723.2 177.5,723.2 160.5,734.6"/>
+<path class="loop" d="M229.4,803.5 C240.8,786.5 240.8,841.5 229.4,824.5"/>
+<path class="loop" d="M160.5,893.4 C177.5,904.8 122.5,904.8 139.5,893.4"/>
+<path class="loop" d="M70.6,824.5 C59.2,841.5 59.2,786.5 70.6,803.5"/>
+<circle class="des" cx="150" cy="748" r="15"/>
+<text class="wid" x="150" y="752" text-anchor="middle">w0</text>
+<text class="atomh" x="150" y="777" text-anchor="middle">leak@l3</text>
+<text class="atom" x="150" y="777" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="216" cy="814" r="15"/>
+<text class="wid" x="216" y="818" text-anchor="middle">w1</text>
+<text class="atomh" x="216" y="843" text-anchor="middle">leak@l3</text>
+<text class="atom" x="216" y="843" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="150" cy="880" r="15"/>
+<text class="wid" x="150" y="884" text-anchor="middle">w2</text>
+<text class="atomh" x="150" y="909" text-anchor="middle">leak@l2</text>
+<text class="atom" x="150" y="909" text-anchor="middle">leak@l2</text>
+<circle class="node" cx="84" cy="814" r="15"/>
+<text class="wid" x="84" y="818" text-anchor="middle">w3</text>
+<text class="atomh" x="84" y="843" text-anchor="middle">leak@l2</text>
+<text class="atom" x="84" y="843" text-anchor="middle">leak@l2</text>
+<rect x="292" y="708" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="300" y="722">porter</text>
+<text class="lbl" x="300" y="738">reflexive</text>
+<path class="loop" d="M411.5,734.6 C394.5,723.2 449.5,723.2 432.5,734.6"/>
+<path class="loop" d="M501.4,803.5 C512.8,786.5 512.8,841.5 501.4,824.5"/>
+<path class="arc2" d="M469.5,814.0 L374.5,814.0"/>
+<path class="loop" d="M432.5,893.4 C449.5,904.8 394.5,904.8 411.5,893.4"/>
+<path class="loop" d="M342.6,824.5 C331.2,841.5 331.2,786.5 342.6,803.5"/>
+<circle class="des" cx="422" cy="748" r="15"/>
+<text class="wid" x="422" y="752" text-anchor="middle">w0</text>
+<text class="atomh" x="422" y="777" text-anchor="middle">leak@l3</text>
+<text class="atom" x="422" y="777" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="488" cy="814" r="15"/>
+<text class="wid" x="488" y="818" text-anchor="middle">w1</text>
+<text class="atomh" x="488" y="843" text-anchor="middle">leak@l3</text>
+<text class="atom" x="488" y="843" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="422" cy="880" r="15"/>
+<text class="wid" x="422" y="884" text-anchor="middle">w2</text>
+<text class="atomh" x="422" y="909" text-anchor="middle">leak@l2</text>
+<text class="atom" x="422" y="909" text-anchor="middle">leak@l2</text>
+<circle class="node" cx="356" cy="814" r="15"/>
+<text class="wid" x="356" y="818" text-anchor="middle">w3</text>
+<text class="atomh" x="356" y="843" text-anchor="middle">leak@l2</text>
+<text class="atom" x="356" y="843" text-anchor="middle">leak@l2</text>
+<rect x="564" y="708" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="572" y="722">guest</text>
+<text class="lbl" x="572" y="738">not reflexive, excludes the actual world</text>
+<path class="arc" d="M707.1,761.1 L746.9,800.9"/>
+<path class="arc" d="M680.9,761.1 L641.1,800.9"/>
+<path class="loop" d="M773.4,803.5 C784.8,786.5 784.8,841.5 773.4,824.5"/>
+<path class="arc2" d="M741.5,814.0 L646.5,814.0"/>
+<path class="arc" d="M707.1,866.9 L746.9,827.1"/>
+<path class="arc" d="M680.9,866.9 L641.1,827.1"/>
+<path class="loop" d="M614.6,824.5 C603.2,841.5 603.2,786.5 614.6,803.5"/>
+<circle class="node" cx="694" cy="748" r="15"/>
+<text class="wid" x="694" y="752" text-anchor="middle">w0</text>
+<text class="atomh" x="694" y="777" text-anchor="middle">leak@l3</text>
+<text class="atom" x="694" y="777" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="760" cy="814" r="15"/>
+<text class="wid" x="760" y="818" text-anchor="middle">w1</text>
+<text class="atomh" x="760" y="843" text-anchor="middle">leak@l3</text>
+<text class="atom" x="760" y="843" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="694" cy="880" r="15"/>
+<text class="wid" x="694" y="884" text-anchor="middle">w2</text>
+<text class="atomh" x="694" y="909" text-anchor="middle">leak@l2</text>
+<text class="atom" x="694" y="909" text-anchor="middle">leak@l2</text>
+<circle class="des" cx="628" cy="814" r="15"/>
+<text class="wid" x="628" y="818" text-anchor="middle">w3</text>
+<text class="atomh" x="628" y="843" text-anchor="middle">leak@l2</text>
+<text class="atom" x="628" y="843" text-anchor="middle">leak@l2</text>
+<text class="ttl" x="12" y="926">after contain_porter_l3_suite</text>
+<rect x="20" y="934" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="28" y="948">inspector</text>
+<text class="lbl" x="28" y="964">not reflexive, excludes the actual world</text>
+<path class="arc" d="M165.0,984.9 L197.8,1008.7"/>
+<path class="loop" d="M222.3,1005.5 C227.8,985.8 244.8,1038.1 228.7,1025.4"/>
+<path class="loop" d="M205.1,1098.1 C225.6,1097.3 181.1,1129.6 188.2,1110.4"/>
+<path class="loop" d="M111.8,1110.4 C118.9,1129.6 74.4,1097.3 94.9,1098.1"/>
+<path class="loop" d="M71.3,1025.4 C55.2,1038.1 72.2,985.8 77.7,1005.5"/>
+<circle class="node" cx="150" cy="974" r="15"/>
+<text class="wid" x="150" y="978" text-anchor="middle">w0</text>
+<text class="atomh" x="150" y="1003" text-anchor="middle">sealed@l3</text>
+<text class="atom" x="150" y="1003" text-anchor="middle">sealed@l3</text>
+<text class="atomh" x="150" y="1014" text-anchor="middle">safe</text>
+<text class="atom" x="150" y="1014" text-anchor="middle">safe</text>
+<circle class="des" cx="213" cy="1020" r="15"/>
+<text class="wid" x="213" y="1024" text-anchor="middle">w1</text>
+<text class="atomh" x="213" y="1049" text-anchor="middle">leak@l3</text>
+<text class="atom" x="213" y="1049" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="189" cy="1093" r="15"/>
+<text class="wid" x="189" y="1097" text-anchor="middle">w2</text>
+<text class="atomh" x="189" y="1122" text-anchor="middle">leak@l3</text>
+<text class="atom" x="189" y="1122" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="111" cy="1093" r="15"/>
+<text class="wid" x="111" y="1097" text-anchor="middle">w3</text>
+<text class="atomh" x="111" y="1122" text-anchor="middle">leak@l2</text>
+<text class="atom" x="111" y="1122" text-anchor="middle">leak@l2</text>
+<circle class="node" cx="87" cy="1020" r="15"/>
+<text class="wid" x="87" y="1024" text-anchor="middle">w4</text>
+<text class="atomh" x="87" y="1049" text-anchor="middle">leak@l2</text>
+<text class="atom" x="87" y="1049" text-anchor="middle">leak@l2</text>
+<rect x="292" y="934" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="300" y="948">porter</text>
+<text class="lbl" x="300" y="964">reflexive</text>
+<path class="loop" d="M411.5,960.6 C394.5,949.2 449.5,949.2 432.5,960.6"/>
+<path class="loop" d="M494.3,1005.5 C499.8,985.8 516.8,1038.1 500.7,1025.4"/>
+<path class="loop" d="M477.1,1098.1 C497.6,1097.3 453.1,1129.6 460.2,1110.4"/>
+<path class="arc2" d="M445.8,1082.5 L374.2,1030.5"/>
+<path class="loop" d="M383.8,1110.4 C390.9,1129.6 346.4,1097.3 366.9,1098.1"/>
+<path class="loop" d="M343.3,1025.4 C327.2,1038.1 344.2,985.8 349.7,1005.5"/>
+<circle class="des" cx="422" cy="974" r="15"/>
+<text class="wid" x="422" y="978" text-anchor="middle">w0</text>
+<text class="atomh" x="422" y="1003" text-anchor="middle">sealed@l3</text>
+<text class="atom" x="422" y="1003" text-anchor="middle">sealed@l3</text>
+<text class="atomh" x="422" y="1014" text-anchor="middle">safe</text>
+<text class="atom" x="422" y="1014" text-anchor="middle">safe</text>
+<circle class="node" cx="485" cy="1020" r="15"/>
+<text class="wid" x="485" y="1024" text-anchor="middle">w1</text>
+<text class="atomh" x="485" y="1049" text-anchor="middle">leak@l3</text>
+<text class="atom" x="485" y="1049" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="461" cy="1093" r="15"/>
+<text class="wid" x="461" y="1097" text-anchor="middle">w2</text>
+<text class="atomh" x="461" y="1122" text-anchor="middle">leak@l3</text>
+<text class="atom" x="461" y="1122" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="383" cy="1093" r="15"/>
+<text class="wid" x="383" y="1097" text-anchor="middle">w3</text>
+<text class="atomh" x="383" y="1122" text-anchor="middle">leak@l2</text>
+<text class="atom" x="383" y="1122" text-anchor="middle">leak@l2</text>
+<circle class="node" cx="359" cy="1020" r="15"/>
+<text class="wid" x="359" y="1024" text-anchor="middle">w4</text>
+<text class="atomh" x="359" y="1049" text-anchor="middle">leak@l2</text>
+<text class="atom" x="359" y="1049" text-anchor="middle">leak@l2</text>
+<rect x="564" y="934" width="260" height="200" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
+<text class="ttl" x="572" y="948">guest</text>
+<text class="lbl" x="572" y="964">not reflexive, excludes the actual world</text>
+<path class="arc" d="M699.7,991.6 L727.1,1075.8"/>
+<path class="arc" d="M679.0,984.9 L646.2,1008.7"/>
+<path class="arc" d="M751.1,1037.2 L738.5,1075.8"/>
+<path class="arc" d="M738.3,1019.6 L649.7,1019.6"/>
+<path class="loop" d="M749.1,1098.1 C769.6,1097.3 725.1,1129.6 732.2,1110.4"/>
+<path class="arc2" d="M717.8,1082.5 L646.2,1030.5"/>
+<path class="arc" d="M673.7,1093.4 L714.3,1093.4"/>
+<path class="arc" d="M649.5,1075.8 L636.9,1037.2"/>
+<path class="loop" d="M615.3,1025.4 C599.2,1038.1 616.2,985.8 621.7,1005.5"/>
+<circle class="node" cx="694" cy="974" r="15"/>
+<text class="wid" x="694" y="978" text-anchor="middle">w0</text>
+<text class="atomh" x="694" y="1003" text-anchor="middle">sealed@l3</text>
+<text class="atom" x="694" y="1003" text-anchor="middle">sealed@l3</text>
+<text class="atomh" x="694" y="1014" text-anchor="middle">safe</text>
+<text class="atom" x="694" y="1014" text-anchor="middle">safe</text>
+<circle class="node" cx="757" cy="1020" r="15"/>
+<text class="wid" x="757" y="1024" text-anchor="middle">w1</text>
+<text class="atomh" x="757" y="1049" text-anchor="middle">leak@l3</text>
+<text class="atom" x="757" y="1049" text-anchor="middle">leak@l3</text>
+<circle class="des" cx="733" cy="1093" r="15"/>
+<text class="wid" x="733" y="1097" text-anchor="middle">w2</text>
+<text class="atomh" x="733" y="1122" text-anchor="middle">leak@l3</text>
+<text class="atom" x="733" y="1122" text-anchor="middle">leak@l3</text>
+<circle class="node" cx="655" cy="1093" r="15"/>
+<text class="wid" x="655" y="1097" text-anchor="middle">w3</text>
+<text class="atomh" x="655" y="1122" text-anchor="middle">leak@l2</text>
+<text class="atom" x="655" y="1122" text-anchor="middle">leak@l2</text>
+<circle class="des" cx="631" cy="1020" r="15"/>
+<text class="wid" x="631" y="1024" text-anchor="middle">w4</text>
+<text class="atomh" x="631" y="1049" text-anchor="middle">leak@l2</text>
+<text class="atom" x="631" y="1049" text-anchor="middle">leak@l2</text>
+<text class="cap" x="12" y="1178">Nodes are worlds, arcs the agent's accessibility relation, red rings the worlds it designates. A missing self-loop is a world the agent excludes while it is the case.</text>
 </svg>
