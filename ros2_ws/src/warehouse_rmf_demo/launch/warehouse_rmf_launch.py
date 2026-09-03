@@ -42,6 +42,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     OpaqueFunction,
     RegisterEventHandler,
+    TimerAction,
 )
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
@@ -67,6 +68,7 @@ def launch_setup(context, *args, **kwargs):
 
     domain = os.path.join(here, 'epddl', 'warehouse-domain.epddl')
     problem = os.path.join(here, 'epddl', 'warehouse-problem.epddl')
+    task = os.path.join(here, 'epddl', 'out', 'warehouse-problem.json')
     mapping = os.path.join(here, 'pddl', 'warehouse-mapping.json')
 
     # The classical half is warehouse_demo's, unchanged. What a robot
@@ -78,7 +80,8 @@ def launch_setup(context, *args, **kwargs):
     params = (params
               .replace('EPDDL_DOMAIN', domain)
               .replace('EPDDL_PROBLEM', problem)
-              .replace('MAPPING_FILE', mapping))
+              .replace('MAPPING_FILE', mapping)
+              .replace('TASK_FILE', task))
 
     filled = tempfile.NamedTemporaryFile(
         mode='w', suffix='_warehouse.yaml', delete=False)
@@ -141,7 +144,18 @@ def launch_setup(context, *args, **kwargs):
     finish = RegisterEventHandler(
         OnProcessExit(target_action=mission, on_exit=[EmitEvent(event=Shutdown())]))
 
-    return [fleet, plansys2, bridge, mission, finish]
+    # The planning system starts first and the world follows.
+    #
+    # Both GUIs render in software when this is recorded, and the CPU they take
+    # is enough that the lifecycle manager times out asking the epistemic state
+    # for its status, which fails the whole bringup. Holding the fleet back
+    # costs nothing: the bridge already keeps a task until the robot it names
+    # appears on fleet_states.
+    return [plansys2, bridge, mission,
+            TimerAction(period=float(LaunchConfiguration('fleet_delay')
+                                     .perform(context)),
+                        actions=[fleet]),
+            finish]
 
 
 def generate_launch_description():
@@ -152,6 +166,10 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'headless', default_value='false',
             description='Run gazebo without a window.'),
+        DeclareLaunchArgument(
+            'fleet_delay', default_value='25.0',
+            description='Seconds to let the planning system settle before the '
+                        'world and its fleet start.'),
         DeclareLaunchArgument(
             'rmf', default_value='true',
             description='Launch the warehouse fleet too. false when it is '

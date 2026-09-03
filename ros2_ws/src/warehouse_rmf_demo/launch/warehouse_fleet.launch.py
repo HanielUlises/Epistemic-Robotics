@@ -41,10 +41,11 @@ from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
+    IncludeLaunchDescription,
     OpaqueFunction,
     SetEnvironmentVariable,
 )
-from launch.conditions import IfCondition, UnlessCondition
+from launch.launch_description_sources import AnyLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
@@ -97,6 +98,26 @@ def launch_setup(context, *args, **kwargs):
         for name, x, y, yaw in SPAWN
     ]
 
+    # RViz and the schedule markers, so a recording shows the graph the fleet
+    # routes over beside the world it drives through.
+    visualization = IncludeLaunchDescription(
+        AnyLaunchDescriptionSource(os.path.join(
+            get_package_share_directory('rmf_visualization'),
+            'visualization.launch.xml')),
+        launch_arguments={
+            'use_sim_time': 'true',
+            'map_name': 'L1',
+            'headless': LaunchConfiguration('headless'),
+            # The stock rmf.rviz saves a top-down camera over the office demo,
+            # centred twenty metres from anything in this world, which renders
+            # as an empty grey panel. Only the focal point of a saved view is
+            # honoured on load; its angle and scale are not, so the framing
+            # here comes from the focal point alone.
+            'viz_config_file': os.path.join(
+                get_package_share_directory('warehouse_rmf_demo'),
+                'config', 'warehouse.rviz'),
+        }.items())
+
     building_map_server = Node(
         package='rmf_building_map_tools', executable='building_map_server',
         name='building_map_server', output='both',
@@ -125,7 +146,8 @@ def launch_setup(context, *args, **kwargs):
         parameters=[{'use_sim_time': True, 'server_uri': server_uri}])
 
     return ([gazebo] + spawns +
-            [building_map_server, schedule, blockade, manager, adapter])
+            [building_map_server, schedule, blockade, manager, adapter,
+             visualization])
 
 
 def generate_launch_description():

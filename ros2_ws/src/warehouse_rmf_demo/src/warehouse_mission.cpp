@@ -131,7 +131,19 @@ int main(int argc, char ** argv)
     node->get_logger(), "policy with %zu nodes, %s",
     plan->items.size(), branches ? "branching" : "linear");
 
-  if (!executor->start_plan_execution(plan.value())) {
+  // The executor is another lifecycle node on its own schedule, and asking it
+  // before its action server is up fails the mission after the planning is
+  // already done.
+  bool started = false;
+  for (int i = 0; i < 40 && rclcpp::ok(); ++i) {
+    if (executor->start_plan_execution(plan.value())) {
+      started = true;
+      break;
+    }
+    rclcpp::spin_some(node);
+    std::this_thread::sleep_for(500ms);
+  }
+  if (!started) {
     RCLCPP_ERROR(node->get_logger(), "the executor refused the policy");
     rclcpp::shutdown();
     return 1;

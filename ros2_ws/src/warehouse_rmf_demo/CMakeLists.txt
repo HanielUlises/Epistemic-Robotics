@@ -35,7 +35,7 @@ install(DIRECTORY launch config params maps pddl tools
 # would be a second thing to keep right.
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../../epddl-workspace/robot-warehouse/
   DESTINATION share/${PROJECT_NAME}/epddl
-  FILES_MATCHING PATTERN "*.epddl"
+  FILES_MATCHING PATTERN "*.epddl" PATTERN "*.json"
 )
 
 ament_package()
