@@ -1,0 +1,37 @@
+;; remote-door 1 -- shut the door, and come to know that it is shut.
+;;
+;; The door starts open and that is common knowledge. Commanding it shut is
+;; unobserved, so afterwards the robot believes the door open while it is in
+;; fact shut: a false belief, and a KD45 model. The goal asks for knowledge,
+;; which the robot can only get by walking to the door.
+
+(define (problem door-1)
+  (:domain remote-door)
+
+  (:requirements
+    :KD45-frames :finitary-S5-theories :modal-goals
+    :negative-preconditions :facts
+  )
+
+  (:agents r)
+
+  (:objects office plant - zone)
+
+  (:facts-init
+    (adjacent office plant) (adjacent plant office)
+    (door-at plant)
+  )
+
+  (:init
+    (:and
+      (at-ag r office) (not (at-ag r plant))
+      (not (shut))
+      ([C. All]
+        (and (at-ag r office) (not (at-ag r plant)) (not (shut))))
+    )
+  )
+
+  (:goal
+    (and (shut) ([r] (shut)))
+  )
+)

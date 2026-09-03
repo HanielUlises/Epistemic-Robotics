@@ -1,0 +1,85 @@
+;; remote-door -- one agent whose belief can be false.
+;;
+;; A robot commands a door it cannot see. The command is ontic and the robot
+;; is oblivious to it, so the world changes while the robot's picture of it
+;; does not. What the robot then holds is belief: consistent, introspective
+;; and wrong, which is KD45 rather than S5. Only going to the door and looking
+;; restores knowledge, so a goal stated as knowledge forces the trip.
+
+(define (domain remote-door)
+  (:requirements
+    :typing :facts :equality
+    :partial-observability :ontic-actions
+    :lists :list-comprehensions
+    :negative-preconditions :modal-preconditions :knowing-whether
+    :group-modalities :multi-pointed-models
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:types zone)
+
+  (:predicates
+    (at-ag ?i - agent ?z - zone)
+    (shut)
+    (:fact adjacent ?z1 ?z2 - zone)
+    (:fact door-at  ?z     - zone)
+  )
+
+  (:event nil)
+
+  ;--------------------MOVE------------------
+
+  (:event e-go
+    :parameters (?i - agent ?from ?to - zone)
+    :precondition
+      (and (at-ag ?i ?from) (adjacent ?from ?to) (not (at-ag ?i ?to)))
+    :effects
+      (:and (not (at-ag ?i ?from)) (at-ag ?i ?to))
+  )
+
+  (:action go
+    :parameters (?i - agent ?from ?to - zone)
+    :action-type (public-ontic (e-go ?i ?from ?to))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------COMMAND------------------
+  ;
+  ; The door shuts and the robot does not see it. The alternative event is
+  ; nil, so the robot goes on considering a world in which nothing happened,
+  ; and that world is the one it believes it is in.
+
+  (:event e-command
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (door-at ?z) (not (at-ag ?i ?z)) (not (shut)))
+    :effects (shut)
+  )
+
+  (:action command-shut
+    :parameters (?i - agent ?z - zone)
+    :action-type (private-ontic (e-command ?i ?z) (nil))
+    :observability-conditions (default Oblivious)
+  )
+
+  ;--------------------LOOK------------------
+  ;
+  ; Standing at the door settles it, and reflexivity is restored for whichever
+  ; reading obtains.
+
+  (:event e-look-shut
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (door-at ?z) (shut))
+  )
+
+  (:event e-look-open
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (door-at ?z) (not (shut)))
+  )
+
+  (:action look
+    :parameters (?i - agent ?z - zone)
+    :action-type (public-sensing (e-look-shut ?i ?z) (e-look-open ?i ?z))
+    :observability-conditions (default Fully)
+  )
+)

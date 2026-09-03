@@ -1,0 +1,540 @@
+{
+  "planning-task-info": {
+    "problem": "door-1",
+    "domain": "remote-door",
+    "libraries": [
+      "intermediate"
+    ],
+    "requirements": [
+      ":KD45-frames",
+      ":common-knowledge",
+      ":disjunctive-list-formulas",
+      ":disjunctive-preconditions",
+      ":equality",
+      ":events-conditions",
+      ":facts",
+      ":finitary-S5-theories",
+      ":group-modalities",
+      ":knowing-whether",
+      ":list-comprehensions",
+      ":lists",
+      ":modal-goals",
+      ":modal-preconditions",
+      ":multi-pointed-models",
+      ":negative-list-formulas",
+      ":negative-preconditions",
+      ":ontic-actions",
+      ":partial-observability",
+      ":static-common-knowledge",
+      ":typing"
+    ],
+    "agents-number": 1,
+    "atoms-number": 9,
+    "facts-number": 3,
+    "actions-number": 8,
+    "initial-worlds-number": 1,
+    "goal-modal-depth": 1,
+    "goal-size": 4
+  },
+  "language": {
+    "atoms": [
+      "adjacent_office_office",
+      "adjacent_office_plant",
+      "adjacent_plant_office",
+      "adjacent_plant_plant",
+      "shut",
+      "door-at_office",
+      "door-at_plant",
+      "at-ag_r_office",
+      "at-ag_r_plant"
+    ],
+    "agents": [
+      "r"
+    ]
+  },
+  "facts": [
+    "adjacent_office_plant",
+    "adjacent_plant_office",
+    "door-at_plant"
+  ],
+  "initial-state": {
+    "worlds": [
+      "w0"
+    ],
+    "relations": {
+      "r": {
+        "w0": [
+          "w0"
+        ]
+      }
+    },
+    "labels": {
+      "w0": [
+        "adjacent_office_plant",
+        "adjacent_plant_office",
+        "door-at_plant",
+        "at-ag_r_office"
+      ]
+    },
+    "designated": [
+      "w0"
+    ]
+  },
+  "actions": {
+    "go_r_office_office": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_office",
+              "adjacent_office_office",
+              {
+                "connective": "not",
+                "formula": "at-ag_r_office"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r_office": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r_office_plant": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_office",
+              "adjacent_office_plant",
+              {
+                "connective": "not",
+                "formula": "at-ag_r_plant"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r_plant": {
+            "formula": "true"
+          },
+          "at-ag_r_office": {
+            "formula": "false"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r_plant_office": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_plant",
+              "adjacent_plant_office",
+              {
+                "connective": "not",
+                "formula": "at-ag_r_office"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r_plant": {
+            "formula": "false"
+          },
+          "at-ag_r_office": {
+            "formula": "true"
+          }
+        }
+      },
+      "observability-conditions": {
+        "r": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "go_r_plant_plant": {
+      "action-type": "public-ontic",
+      "events": [
+        "e-go"
+      ],
+      "relations": {
+        "Fully": {
+          "e-go": [
+            "e-go"
+          ]
+        }
+      },
+      "designated": [
+        "e-go"
+      ],
+      "preconditions": {
+        "e-go": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_plant",
+              "adjacent_plant_plant",
+              {
+                "connective": "not",
+                "formula": "at-ag_r_plant"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-go": {
+          "at-ag_r_plant": {
+            "formula": {
+              "connective": "and",
+              "formulas": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        }
+      },
+      "observability-conditions": {
+        "r": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "command-shut_r_office": {
+      "action-type": "private-ontic",
+      "events": [
+        "e-command",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-command": [
+            "e-command"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-command": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-command"
+      ],
+      "preconditions": {
+        "e-command": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "door-at_office",
+              {
+                "connective": "not",
+                "formula": "at-ag_r_office"
+              },
+              {
+                "connective": "not",
+                "formula": "shut"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-command": {
+          "shut": {
+            "formula": "true"
+          }
+        },
+        "nil": null
+      },
+      "observability-conditions": {
+        "r": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "command-shut_r_plant": {
+      "action-type": "private-ontic",
+      "events": [
+        "e-command",
+        "nil"
+      ],
+      "relations": {
+        "Fully": {
+          "e-command": [
+            "e-command"
+          ],
+          "nil": [
+            "nil"
+          ]
+        },
+        "Oblivious": {
+          "e-command": [
+            "nil"
+          ],
+          "nil": [
+            "nil"
+          ]
+        }
+      },
+      "designated": [
+        "e-command"
+      ],
+      "preconditions": {
+        "e-command": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "door-at_plant",
+              {
+                "connective": "not",
+                "formula": "at-ag_r_plant"
+              },
+              {
+                "connective": "not",
+                "formula": "shut"
+              }
+            ]
+          }
+        },
+        "nil": {
+          "formula": "true"
+        }
+      },
+      "effects": {
+        "e-command": {
+          "shut": {
+            "formula": "true"
+          }
+        },
+        "nil": null
+      },
+      "observability-conditions": {
+        "r": {
+          "Oblivious": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "look_r_office": {
+      "action-type": "public-sensing",
+      "events": [
+        "e-look-shut",
+        "e-look-open"
+      ],
+      "relations": {
+        "Fully": {
+          "e-look-shut": [
+            "e-look-shut"
+          ],
+          "e-look-open": [
+            "e-look-open"
+          ]
+        }
+      },
+      "designated": [
+        "e-look-shut",
+        "e-look-open"
+      ],
+      "preconditions": {
+        "e-look-shut": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_office",
+              "door-at_office",
+              "shut"
+            ]
+          }
+        },
+        "e-look-open": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_office",
+              "door-at_office",
+              {
+                "connective": "not",
+                "formula": "shut"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-look-shut": null,
+        "e-look-open": null
+      },
+      "observability-conditions": {
+        "r": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    },
+    "look_r_plant": {
+      "action-type": "public-sensing",
+      "events": [
+        "e-look-shut",
+        "e-look-open"
+      ],
+      "relations": {
+        "Fully": {
+          "e-look-shut": [
+            "e-look-shut"
+          ],
+          "e-look-open": [
+            "e-look-open"
+          ]
+        }
+      },
+      "designated": [
+        "e-look-shut",
+        "e-look-open"
+      ],
+      "preconditions": {
+        "e-look-shut": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_plant",
+              "door-at_plant",
+              "shut"
+            ]
+          }
+        },
+        "e-look-open": {
+          "formula": {
+            "connective": "and",
+            "formulas": [
+              "at-ag_r_plant",
+              "door-at_plant",
+              {
+                "connective": "not",
+                "formula": "shut"
+              }
+            ]
+          }
+        }
+      },
+      "effects": {
+        "e-look-shut": null,
+        "e-look-open": null
+      },
+      "observability-conditions": {
+        "r": {
+          "Fully": {
+            "formula": "true"
+          }
+        }
+      }
+    }
+  },
+  "goal": {
+    "formula": {
+      "connective": "and",
+      "formulas": [
+        "shut",
+        {
+          "modality-name": "box",
+          "modality-index": [
+            "r"
+          ],
+          "formula": "shut"
+        }
+      ]
+    }
+  }
+}
