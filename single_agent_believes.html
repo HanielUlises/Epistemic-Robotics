@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coordination Domains · The Epistemic Robotics Project</title>
+<title>What One Agent Believes &#183; The Epistemic Robotics Project</title>
 <meta name="description" content="Four DEL coordination domains for UGV fleets: the planning task, the observability models, and animated policy execution. With the full domain catalogue, the KD45 domains in which an agent can be mistaken, and the path from an EPDDL source to a fleet.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
@@ -394,7 +394,16 @@ pre:has(> code){margin:1.3rem 0}
         <div class="nav-panel">
           <h6>Pages</h6>
           <a href="index.html">Overview</a>
-          <a href="domains.html" aria-current="page">Domains</a>
+          <details class="nav-folder" open>
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domains.html">All four cases<span class="sub">Two axes: agents, and knowledge or belief</span></a>
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html" aria-current="page">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
           <details class="nav-folder">
             <summary>Demonstrations</summary>
             <div class="nav-sub">
@@ -446,15 +455,14 @@ pre:has(> code){margin:1.3rem 0}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">Coordination domains · UGV fleets</p>
-    <h2>Planning for what a fleet <em>knows</em></h2>
+    <p class="eyebrow">Single agent &#183; belief</p>
+    <h2>Planning for what one agent <em>believes</em></h2>
     <div class="rule"></div>
     <p class="hero-p">
-      Four EPDDL domains in which a fleet of unmanned ground vehicles must reach a
-      prescribed configuration of knowledge, not a configuration of the world.
-      Each domain fixes one thing only: who observes what. This page states the
-      planning task, gives the observability model of each domain, and executes
-      the policies the planner actually returned.
+      A robot that commands a door it cannot see. One oblivious ontic action
+      is enough to detach a single agent&#8217;s picture of the world from the
+      world, which takes the frame out of \(\mathrm{S5}\) with nobody else
+      involved at all.
     </p>
   </div>
 </div>
@@ -474,12 +482,12 @@ pre:has(> code){margin:1.3rem 0}
         <span class="ql">\(\mathrm{S5}\) &#183; lone-inspector</span>
         <span class="qd">Sensing refines one partition. Nothing is hidden, because there is nobody to hide it from.</span>
       </a>
-      <a href="single_agent_believes.html">
+      <a href="single_agent_believes.html" aria-current="page">
         <span class="qk">Planning for what one agent <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}\) &#183; remote-door</span>
         <span class="qd">The world changes while the agent is not looking, and its picture of the world stops matching it.</span>
       </a>
-      <a href="domains.html" aria-current="page">
+      <a href="domains.html">
         <span class="qk">Planning for what a fleet <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}_n\) &#183; ugv-coordination</span>
         <span class="qd">Four observability models over one facility, and what each one costs to plan.</span>
@@ -493,906 +501,123 @@ pre:has(> code){margin:1.3rem 0}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ THE TASK -->
+<!-- ═══════════════════════════════════════════════ TASK -->
 <section>
   <div class="container">
     <p class="sec-label">The planning task</p>
-    <h3>Epistemic states, event models, and conditional policies</h3>
-
+    <h3>Dropping one axiom, and what it costs</h3>
     <p>
-      An epistemic state is a multi-pointed Kripke model
-      \(\mathcal{M} = (W, \{R_i\}_{i\in\mathcal{A}}, V, W^{*})\): the worlds a
-      fleet considers possible, one indistinguishability relation per vehicle,
-      a valuation, and the designated set \(W^{*}\) of candidates for the actual
-      world. Knowledge is \(\mathrm{S5}\), so each \(R_i\) is an equivalence.
+      \(\mathrm{S5}\) is \(\mathrm{KT45}\). Removing T and putting D in its
+      place gives \(\mathrm{KD45}\), the logic of belief. The modality is
+      written \(B\), and the axioms are:
     </p>
-
-    <p>
-      An action is an event model
-      \(\mathcal{E} = (E, \{Q_i\}, \mathrm{pre}, \mathrm{post}, E^{*})\), applied
-      by product update. The relation \(Q_i\) carries the entire modelling
-      commitment: a vehicle that relates every event to a distinguished null
-      event is <em class="term">oblivious</em>, it observes neither the outcome
-      of the action nor its occurrence.
-    </p>
-
-    <div class="math-block">
-      \[\mathcal{M}\otimes\mathcal{E}
-        \;=\;\bigl(\{(w,e) : \mathcal{M},w\models \mathrm{pre}(e)\},\;
-        (w,e)R'_i(v,f)\iff wR_iv \wedge eQ_if,\;
-        V',\;W^{*}\!\times\!E^{*}\bigr)\]
+    <div class="axioms">
+      <dl>
+        <dt>K</dt><dd>\(B(\varphi \to \psi) \to (B\varphi \to B\psi)\)
+          <span class="cond">holds on every frame</span></dd>
+        <dt>D</dt><dd>\(B\varphi \to \neg B\neg\varphi\)
+          <span class="cond">\(R\) serial: belief is consistent, and may be false</span></dd>
+        <dt>4</dt><dd>\(B\varphi \to BB\varphi\)
+          <span class="cond">\(R\) transitive</span></dd>
+        <dt>5</dt><dd>\(\neg B\varphi \to B\neg B\varphi\)
+          <span class="cond">\(R\) Euclidean</span></dd>
+      </dl>
     </div>
-
     <p>
-      A sensing action has \(|E^{*}| \ge 2\), one designated event per reading,
-      so a solution takes the form of a policy: an AND/OR tree whose
-      OR-nodes choose an action, whose AND-nodes branch over designated events,
-      and every leaf of which satisfies the goal. Goals here are modal:
+      Without reflexivity the world that is the case need not lie in the
+      agent's own accessible set, so \(B\varphi \wedge \neg\varphi\) becomes
+      satisfiable. The agent remains consistent and fully introspective about a
+      belief that is wrong, which is what makes the failure worth planning
+      against: nothing inside the agent's perspective reveals it.
     </p>
-
-    <div class="math-block">
-      \[\underbrace{C_{\mathcal{A}}\textstyle\bigwedge_{i}\mathrm{Kw}_i\,p}_{\text{fleet-wide}}
-        \qquad
-        \underbrace{K_{R_1}\mathrm{Kw}_{R_2}\,p}_{\text{second-order}}
-        \qquad
-        \underbrace{\mathrm{Kw}_{R_2}\,p \wedge \neg\,\mathrm{Kw}_{R_3}\,p}_{\text{selective}}\]
-    </div>
-
     <p>
-      The third is the one no non-epistemic encoding expresses: it requires one
-      vehicle to be informed <em>and another to remain ignorant</em>, so no scalar
-      measure of "how much the fleet knows" can serve as a goal test.
+      With a single agent there is nobody to hide anything from, so the usual
+      multi-agent route to false belief is closed. What remains is an action
+      the agent performs without observing its effect. That is enough.
     </p>
-
-    <!-- product update animation -->
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">Product update under private sensing</span>
-        <div class="ctrls">
-          <button class="btn primary" id="pu-play">▶ Play</button>
-          <button class="btn" id="pu-step">Step</button>
-          <button class="btn" id="pu-reset">Reset</button>
-        </div>
-      </div>
-      <div class="fig-body">
-        <svg id="pu-svg" viewBox="0 0 760 220" width="100%" style="max-width:760px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
-          <defs>
-            <marker id="pu-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <path d="M0,1 L7,4 L0,7" fill="none" stroke="#888" stroke-width="1.2"/>
-            </marker>
-          </defs>
-
-          <!-- M -->
-          <text x="96" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">epistemic state 𝓜</text>
-          <circle id="pu-w1" cx="56" cy="86" r="21" fill="#fff" stroke="#111" stroke-width="1.6"/>
-          <circle cx="56" cy="86" r="25" fill="none" stroke="#C8102E" stroke-width="1.1"/>
-          <text x="56" y="90" font-size="10" text-anchor="middle" fill="#111">p</text>
-          <circle id="pu-w2" cx="136" cy="86" r="21" fill="#fff" stroke="#111" stroke-width="1.6"/>
-          <circle cx="136" cy="86" r="25" fill="none" stroke="#C8102E" stroke-width="1.1"/>
-          <text x="136" y="90" font-size="10" text-anchor="middle" fill="#111">¬p</text>
-          <line x1="79" y1="86" x2="113" y2="86" stroke="#888" stroke-width="1.3"/>
-          <text x="96" y="76" font-size="9" fill="#5A5A5A" text-anchor="middle">R₁R₂</text>
-          <text x="96" y="134" font-size="9.5" fill="#5A5A5A" text-anchor="middle">|W*| = 2 · nobody knows</text>
-
-          <text x="196" y="92" font-size="18" fill="#111" text-anchor="middle">⊗</text>
-
-          <!-- E -->
-          <text x="286" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">event model 𝓔 (scan)</text>
-          <circle cx="246" cy="70" r="18" fill="#fff" stroke="#111" stroke-width="1.6"/>
-          <text x="246" y="74" font-size="9" text-anchor="middle">e⁺</text>
-          <circle cx="326" cy="70" r="18" fill="#fff" stroke="#111" stroke-width="1.6"/>
-          <text x="326" y="74" font-size="9" text-anchor="middle">e⁻</text>
-          <circle cx="286" cy="128" r="18" fill="#fff" stroke="#888" stroke-width="1.3" stroke-dasharray="3,2"/>
-          <text x="286" y="132" font-size="9" text-anchor="middle" fill="#555">nil</text>
-          <path d="M254.2,89.3 Q268,110 270.4,114" fill="none" stroke="#1A52A0" stroke-width="1.2" marker-end="url(#pu-arr)"/>
-          <path d="M317.8,89.3 Q304,110 301.6,114" fill="none" stroke="#1A52A0" stroke-width="1.2" marker-end="url(#pu-arr)"/>
-          <text x="286" y="160" font-size="9" fill="#1A52A0" text-anchor="middle">R₂ : Q₂(e) = nil  (oblivious)</text>
-          <text x="286" y="40" font-size="9.5" fill="#5A5A5A" text-anchor="middle">E* = {e⁺, e⁻}</text>
-
-          <text x="386" y="92" font-size="15" fill="#111" text-anchor="middle">=</text>
-
-          <!-- M' -->
-          <text x="596" y="24" font-size="11" fill="#5A5A5A" text-anchor="middle">𝓜′, branch e⁺</text>
-          <g id="pu-out" opacity="0">
-            <circle id="pu-o1" cx="470" cy="70" r="20" fill="#fff" stroke="#C8102E" stroke-width="2"/>
-            <text x="470" y="74" font-size="9" text-anchor="middle">p,e⁺</text>
-            <circle id="pu-o2" cx="596" cy="70" r="20" fill="#fff" stroke="#111" stroke-width="1.4" opacity=".45"/>
-            <text x="596" y="74" font-size="9" text-anchor="middle" fill="#555">p,nil</text>
-            <circle id="pu-o3" cx="722" cy="70" r="20" fill="#fff" stroke="#111" stroke-width="1.4" opacity=".45"/>
-            <text x="722" y="74" font-size="8.5" text-anchor="middle" fill="#555">¬p,nil</text>
-            <line id="pu-e1" x1="490" y1="70" x2="576" y2="70" stroke="#1A52A0" stroke-width="1.4"/>
-            <line id="pu-e2" x1="616" y1="70" x2="702" y2="70" stroke="#1A52A0" stroke-width="1.4"/>
-            <text x="533" y="60" font-size="9" fill="#1A52A0" text-anchor="middle">R₂</text>
-            <text x="659" y="60" font-size="9" fill="#1A52A0" text-anchor="middle">R₂</text>
-            <text x="596" y="128" font-size="9.5" fill="#111" text-anchor="middle">R₁ separates ⇒ Kw₁ p</text>
-            <text x="596" y="146" font-size="9.5" fill="#1A52A0" text-anchor="middle">R₂ still reaches ¬p ⇒ ¬Kw₂ p</text>
-            <text x="596" y="170" font-size="10" font-family="Arial,Helvetica,sans-serif" font-style="italic" fill="#5A5A5A" text-anchor="middle">the null copies are exactly what keeps R₂ ignorant</text>
-          </g>
-        </svg>
-      </div>
-      <div class="fig-cap">
-        <b>Figure 1.</b> One product update with a private sensing action. The
-        designated event \(e^{+}\) fixes the reading for \(R_1\), but the null
-        copies survive in \(\mathcal{M}'\) and remain \(R_2\)-accessible, so
-        \(R_2\) knows neither the outcome nor that a scan occurred. Every
-        difference between the four domains below is a difference in this one
-        relation.
-      </div>
-    </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ DOMAINS -->
+<!-- ═══════════════════════════════════════════════ DOMAIN -->
 <section>
   <div class="container">
-    <p class="sec-label">The four domains</p>
-    <h3>One facility, four observability models</h3>
-
+    <p class="sec-label">The domain</p>
+    <h3><span class="mono-inline">remote-door</span>: commanding what you cannot see</h3>
     <p>
-      All four domains share a corridor of \(L\) bays, a fleet of \(N\) UGVs, a
-      target confined to \(U\) candidate bays, movement as a public ontic action,
-      and sensing as strictly private: a vehicle reads only the bay it occupies,
-      and no teammate observes the reading. What differs is the communication
-      action.
+      A robot in the office, a door in the plant, and a command that shuts the
+      door remotely. The robot issues the command and cannot see the result.
+      The action is ontic and the only agent is oblivious to it:
     </p>
-
-    <div class="dom-grid">
-      <div class="dom-card">
-        <h4>ugv-public</h4>
-        <div class="sig">broadcast ?i ?l, public-announcement<br>(default Fully)</div>
-        <p>Facility-wide radio. One transmission establishes
-        \(C_{\mathcal{A}}\), so fleet knowledge is always symmetric. The planning
-        problem is the division of labour: who drives where, and when to speak.</p>
-      </div>
-      <div class="dom-card">
-        <h4>ugv-radio</h4>
-        <div class="sig">report ?i ?l, private-announcement<br>(?j Fully if in range, else Oblivious)</div>
-        <p>Range-limited radio: the sender's bay and its neighbours. Acquisition
-        happens at the far end, delivery must happen near the fleet, so policies
-        gain a return, a relay, or a rendezvous.</p>
-      </div>
-      <div class="dom-card">
-        <h4>ugv-directed</h4>
-        <div class="sig">tell ?i ?j ?l, private-announcement<br>(?i, ?j Fully; default Oblivious)</div>
-        <p>Point-to-point radio with a single detector in the fleet. Reaches
-        asymmetric information states: one teammate informed, another
-        deliberately left ignorant.</p>
-      </div>
-      <div class="dom-card">
-        <h4>ugv-facility</h4>
-        <div class="sig">unlock ?i ?from ?to, public-ontic<br>scan gated by (has-scanner ?i)</div>
-        <p>Heterogeneous fleet, locked bays, several items. One vehicle holds the
-        key, another the detector, so an ontic action becomes the precondition of
-        an epistemic one.</p>
-      </div>
-    </div>
-
-    <h4>Observability as a formula</h4>
+    <pre class="code"><code>(:action command-shut
+  :parameters (?i - agent ?z - zone)
+  :action-type (private-ontic (e-command ?i ?z) (nil))
+  :observability-conditions (default Oblivious))</code></pre>
     <p>
-      Range limitation is not a special case in the planner; it is an
-      observability condition evaluated per agent at update time. This is the
-      single block in which <span style="font-family:var(--mono);font-size:.85em">ugv-radio</span>
-      differs from <span style="font-family:var(--mono);font-size:.85em">ugv-public</span>:
+      The alternative event is <span class="mono-inline">nil</span>, so after
+      the update the agent still relates to a copy of the world in which
+      nothing happened, and that copy is the one it takes itself to be in. The
+      door is shut; the agent believes it open. The parser reports the frame
+      accordingly.
     </p>
-
-<pre class="code"><span class="k">(:action</span> report
-    <span class="k">:parameters</span> (?i - agent ?l - location)
-    <span class="k">:action-type</span> (private-announcement (e-report ?i ?l) (nil))
-    <span class="k">:observability-conditions</span>
-        (:and
-            (?i Fully)
-            (:forall (?j - agent | (/= ?i ?j))
-                (?j
-                    (<span class="k">if</span>
-                        (forall (?l1 - location)
-                            (imply (at ?i ?l1)
-                                (exists (?l2 - location |
-                                        (or (= ?l2 ?l1) (adjacent ?l1 ?l2) (adjacent ?l2 ?l1)))
-                                    (at ?j ?l2) )))
-                        Fully
-                    <span class="k">else</span>
-                        Oblivious ) ) )
-            (default Oblivious) )
-)</pre>
-
-    <!-- reception figure -->
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">Who receives a report sent from b2</span>
-        <div class="ctrls">
-          <span class="ctrl-label">domain</span>
-          <div class="seg" id="rx-seg">
-            <button class="btn" data-rx="public" aria-pressed="true">public</button>
-            <button class="btn" data-rx="radio" aria-pressed="false">radio</button>
-            <button class="btn" data-rx="directed" aria-pressed="false">directed</button>
-          </div>
-          <button class="btn primary" id="rx-send">▶ Transmit</button>
-        </div>
-      </div>
-      <div class="fig-body">
-        <svg id="rx-svg" viewBox="0 0 700 170" width="100%" style="max-width:700px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
-          <g id="rx-bays"></g>
-          <circle id="rx-wave" class="wave" cx="0" cy="76" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
-          <g id="rx-agents"></g>
-          <text id="rx-note" x="350" y="150" font-size="10.5" fill="#5A5A5A" text-anchor="middle"></text>
-        </svg>
-      </div>
-      <div class="fig-cap">
-        <b>Figure 2.</b> The same transmission under three observability models.
-        Filled markers received the content; hollow markers are oblivious, they
-        did not learn that a transmission occurred, so they can infer nothing
-        from the fleet's silence either.
-      </div>
-    </div>
+    <p>
+      Going to the plant and looking is the repair. It is a sensing action with
+      one designated event per reading, and standing at the door makes the
+      readings distinguishable:
+    </p>
+    <pre class="code"><code>(:action look
+  :parameters (?i - agent ?z - zone)
+  :action-type (public-sensing (e-look-shut ?i ?z) (e-look-open ?i ?z))
+  :observability-conditions (default Fully))</code></pre>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ MAP AND MODEL -->
-<section>
-  <div class="container-wide">
-    <p class="sec-label">Map and model</p>
-    <h3>One run, two representations</h3>
-    <p style="max-width:820px">
-      The fleet drives on a metric map; the planner reasons over a symbolic
-      quotient of it. Cells of the occupancy grid group into bays, and the bay a
-      vehicle occupies is the atom \(\textit{at}(i,b)\). What the planner adds
-      on top is the third column: the set of worlds still considered possible.
-      Below, a three-bay search runs on both representations at once. The target
-      is in \(b_3\), \(b_4\), or \(b_5\), and R1 is the only vehicle with a
-      detector.
-    </p>
-
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">Warehouse occupancy grid and epistemic state, stepped together</span>
-        <div class="ctrls">
-          <button class="btn primary" id="mm-play">▶ Play</button>
-          <button class="btn" id="mm-step">Step</button>
-          <button class="btn" id="mm-reset">Reset</button>
-        </div>
-      </div>
-      <div class="fig-body">
-        <div class="mm-grid">
-          <div>
-            <div class="mm-cap">metric layer, occupancy grid</div>
-            <svg id="mm-map" viewBox="0 0 512 282" width="100%" style="display:block"
-                 xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
-              <g id="mm-cells"></g>
-              <g id="mm-fov"></g>
-              <g id="mm-bays"></g>
-              <g id="mm-trail"></g>
-              <circle id="mm-wave" class="wave" cx="0" cy="0" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
-              <g id="mm-bots"></g>
-            </svg>
-            <div class="panel" style="margin-top:.7rem">
-              <h5>Knowledge state</h5>
-              <div id="mm-kw"></div>
-            </div>
-          </div>
-          <div>
-            <div class="mm-cap">epistemic layer, state space</div>
-            <svg id="mm-model" viewBox="0 0 300 286" width="100%" style="display:block"
-                 xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
-              <g id="mm-edges"></g>
-              <g id="mm-worlds"></g>
-              <text id="mm-mcap" x="150" y="266" font-size="10.5" fill="#5A5A5A" text-anchor="middle"></text>
-            </svg>
-          </div>
-        </div>
-
-        <div class="mm-read">
-          <div><span class="mm-k">metric</span><span id="mm-r1">pose(R1)</span></div>
-          <div><span class="mm-k">symbolic</span><span id="mm-r2">at(R1, b1)</span></div>
-          <div><span class="mm-k">epistemic</span><span id="mm-r3">|W*| = 3</span></div>
-        </div>
-        <div class="mm-act" id="mm-act">initial state</div>
-      </div>
-      <div class="fig-cap">
-        <b>Figure 3.</b> Driving changes the metric and symbolic columns and
-        leaves the state space untouched: motion is not informative by itself. A
-        scan leaves the map unchanged but cuts \(R_1\)'s edges, since \(R_1\)
-        can now tell those worlds apart, while R2 and R3, being oblivious, keep
-        all of theirs. After two negative readings R1 knows the target is in
-        \(b_5\) without ever having scanned it, and the broadcast is what
-        finally removes worlds outright: one world left, no edges to cut, which
-        is what common knowledge looks like here.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ POLICY THEATRE -->
-<section>
-  <div class="container-wide">
-    <p class="sec-label">Policy execution</p>
-    <h3>What the planner returned, executed step by step</h3>
-    <p style="max-width:800px">
-      Both policies below are transcribed verbatim from the solver's output on
-      instances that differ in one respect only, the communication model.
-      Three UGVs start at the depot \(b_1\); the target is in \(b_3\) or
-      \(b_4\) and nobody knows which; the goal is
-      \(C_{\mathcal{A}}\bigwedge_i \mathrm{Kw}_i\,p\) with
-      \(p \equiv \textit{target-at}(b_3)\). Choose the branch to follow the
-      sensing outcome the policy conditions on.
-    </p>
-
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">Policy execution, corridor, model, and knowledge state</span>
-        <div class="ctrls">
-          <span class="ctrl-label">domain</span>
-          <div class="seg" id="th-dom">
-            <button class="btn" data-dom="public" aria-pressed="true">public</button>
-            <button class="btn" data-dom="radio" aria-pressed="false">radio</button>
-          </div>
-          <span class="ctrl-label" style="margin-left:.5rem">branch</span>
-          <div class="seg" id="th-branch">
-            <button class="btn" data-br="pos" aria-pressed="true">target in b3</button>
-            <button class="btn" data-br="neg" aria-pressed="false">not in b3</button>
-          </div>
-          <button class="btn primary" id="th-play" style="margin-left:.5rem">▶ Play</button>
-          <button class="btn" id="th-step">Step</button>
-          <button class="btn" id="th-reset">Reset</button>
-        </div>
-      </div>
-      <div class="fig-body">
-        <div class="theatre">
-          <div>
-            <svg id="th-svg" viewBox="0 0 660 250" width="100%" style="display:block"
-                 xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
-              <g id="th-bays"></g>
-              <circle id="th-wave" class="wave" cx="0" cy="96" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
-              <circle id="th-scan" class="scanring" cx="0" cy="96" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>
-              <g id="th-agents"></g>
-              <g id="th-tree"></g>
-            </svg>
-            <div class="panel" style="margin-top:.7rem">
-              <h5>Policy trace</h5>
-              <div class="steplist" id="th-steps"></div>
-              <div class="step-formal" id="th-formal"></div>
-            </div>
-          </div>
-          <div>
-            <div class="panel" style="margin-bottom:.7rem">
-              <h5>Knowledge state</h5>
-              <div id="th-kw"></div>
-            </div>
-            <div class="panel" style="margin-bottom:.7rem">
-              <h5>Epistemic model</h5>
-              <svg id="th-model" viewBox="0 0 240 96" width="100%"
-                   xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
-                <circle id="m-w1" class="wnode" cx="66" cy="44" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
-                <text x="66" y="38" font-size="9" text-anchor="middle" fill="#111">target</text>
-                <text x="66" y="55" font-size="9" text-anchor="middle" fill="#111">b3</text>
-                <circle id="m-w2" class="wnode" cx="174" cy="44" r="24" fill="#fff" stroke="#111" stroke-width="1.5"/>
-                <text x="174" y="38" font-size="9" text-anchor="middle" fill="#111">target</text>
-                <text x="174" y="55" font-size="9" text-anchor="middle" fill="#111">b4</text>
-                <line id="m-edge" class="wedge" x1="90" y1="44" x2="150" y2="44" stroke="#888" stroke-width="1.4"/>
-                <text id="m-lbl" x="120" y="34" font-size="8.5" fill="#5A5A5A" text-anchor="middle">R₁R₂R₃</text>
-                <circle id="m-d1" cx="66" cy="44" r="28" fill="none" stroke="#C8102E" stroke-width="1.1"/>
-                <circle id="m-d2" cx="174" cy="44" r="28" fill="none" stroke="#C8102E" stroke-width="1.1"/>
-                <text id="m-cap" x="120" y="88" font-size="8.5" fill="#5A5A5A" text-anchor="middle">|W*| = 2</text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="fig-cap">
-        <b>Figure 4.</b> The star marks where the target actually is along the
-        selected branch, which is settled from the outset; it is grey while the
-        fleet is still ignorant of it and solid once a reading has resolved it.
-        Two behaviours repay attention. On the negative branch
-        the policy reports \(b_4\), a bay no vehicle ever scanned, because the
-        reading together with the common knowledge that the target lies in
-        exactly one of two bays entails it. And under the range-limited radio a
-        return move is inserted on <b>both</b> branches: a report transmitted
-        from \(b_3\) would reach nobody, so the knowledge would not be delivered.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ INTERLOCK -->
+<!-- ═══════════════════════════════════════════════ RESULT -->
 <section>
   <div class="container">
-    <p class="sec-label">Capability interlock</p>
-    <h3>When an ontic action is the precondition of an epistemic one</h3>
-    <p>
-      In <span style="font-family:var(--mono);font-size:.85em">ugv-facility</span>
-      the fleet is heterogeneous: \(R_2\) carries the key but no detector,
-      \(R_1\) the reverse, and a mid-corridor bay starts locked. Neither vehicle
-      can complete the mission alone, and the dependency runs across the
-      ontic/epistemic boundary, \(R_2\) must change the world before \(R_1\) can
-      learn anything at all.
-    </p>
-
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">facility, unlock, traverse, sense, report</span>
-        <div class="ctrls">
-          <button class="btn primary" id="fc-play">▶ Play</button>
-          <button class="btn" id="fc-step">Step</button>
-          <button class="btn" id="fc-reset">Reset</button>
-        </div>
-      </div>
-      <div class="fig-body">
-        <svg id="fc-svg" viewBox="0 0 660 200" width="100%" style="max-width:660px;display:block;margin:0 auto"
-             xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
-          <g id="fc-bays"></g>
-          <circle id="fc-wave" class="wave" cx="0" cy="86" r="6" fill="none" stroke="#C8102E" stroke-width="2"/>
-          <circle id="fc-scan" class="scanring" cx="0" cy="86" r="10" fill="none" stroke="#1A52A0" stroke-width="2"/>
-          <g id="fc-agents"></g>
-          <text id="fc-note" x="330" y="176" font-size="10.5" fill="#5A5A5A" text-anchor="middle"></text>
-        </svg>
-      </div>
-      <div class="fig-cap">
-        <b>Figure 5.</b> The policy for
-        <span style="font-family:var(--mono)">facility-a2-b4-i1-depot-ck</span>.
-        The lock is public, so its opening is common knowledge the moment it
-        happens; the reading is private, so it is worth nothing until broadcast.
-        The two halves of the mission are coupled only through the plan.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ RESULTS -->
-<section>
-  <div class="container">
-    <p class="sec-label">Measurements</p>
-    <h3>What actually drives the cost
-      <a class="ext-chip" href="https://github.com/a-burigana/plank" target="_blank" rel="noopener"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor" stroke-width="1.2"/></svg>plank</a>
-    </h3>
-    <p>
-      204 instances, grounded with <span style="font-family:var(--mono);font-size:.85em">plank</span>
-      and solved with ALETHEIA under a 60 s search budget. The suite varies fleet
-      size \(N\), corridor length \(L\), initial uncertainty \(U\), which is
-      exactly \(|W|\), deployment, goal shape, and the number of items.
-    </p>
-
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">Median expanded nodes, by parameter (logarithmic)</span>
-        <div class="ctrls"><button class="btn" id="ch-replay">↻ Replay</button></div>
-      </div>
-      <div class="fig-body">
-        <div id="charts" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.4rem"></div>
-      </div>
-      <div class="fig-cap">
-        <b>Figure 6.</b> Uncertainty is measured at \(N = 2\), fleet size over
-        \(L \le 5\), and corridor length at \(U = 2\), so that the strata do not
-        confound one another. Uncertainty moves the cost by three orders of
-        magnitude; fleet size by one. Each additional candidate bay is another
-        world in the initial model, and the model is what the search carries.
-      </div>
-    </div>
-
+    <p class="sec-label">Grounding and search</p>
+    <h3>What plank and Aletheia returned</h3>
     <table class="data">
-      <thead>
-        <tr><th>Family</th><th>Solved</th><th>Depth</th><th>Expanded</th><th>Search (s)</th></tr>
-      </thead>
+      <thead><tr><th>quantity</th><th>value</th></tr></thead>
       <tbody>
-        <tr><td>public / common knowledge</td><td>36/36</td><td>4</td><td>1 397</td><td>0.01</td></tr>
-        <tr><td>radio / common knowledge</td><td>32/36</td><td>5</td><td>4 829</td><td>0.04</td></tr>
-        <tr><td>public / second-order</td><td>36/36</td><td>4</td><td>1 397</td><td>0.01</td></tr>
-        <tr><td>radio / second-order</td><td>32/36</td><td>5</td><td>4 164</td><td>0.03</td></tr>
-        <tr><td>directed / second-order</td><td>30/30</td><td>5</td><td>536</td><td>0.01</td></tr>
-        <tr><td>directed / selective</td><td>20/20</td><td>5</td><td>1 254</td><td>0.01</td></tr>
-        <tr><td>facility / common knowledge</td><td>10/10</td><td>7</td><td>3 971</td><td>0.03</td></tr>
-        <tr class="sum"><td>All</td><td>196/204</td><td>5</td><td>2 263</td><td>0.02</td></tr>
+        <tr><td>frame reported by the parser</td><td>\(\mathrm{KD45}\) (belief)</td></tr>
+        <tr><td>agents</td><td>1</td></tr>
+        <tr><td>grounded atoms</td><td>9</td></tr>
+        <tr><td>worlds in the initial state</td><td>1</td></tr>
+        <tr><td>grounded actions</td><td>8</td></tr>
+        <tr><td>goal <span class="mono-inline">(shut)</span></td><td>solved at depth 1, 3 expanded</td></tr>
+        <tr><td>goal <span class="mono-inline">([r] (shut))</span></td><td>unsolved; space reported exhausted at depth 3</td></tr>
       </tbody>
     </table>
-
-    <p class="note">
-      Medians over solved instances. All eight unsolved instances are
-      range-limited with four candidate bays and three or more vehicles; every
-      one is a search timeout and not an error. Grounding, by contrast,
-      scales with \(N \times L\): from 0.02 s to 76 s across the same suite, an offline, cacheable cost, where search is the online one.
+    <p>
+      The first row is the result this page exists to show. The declaration
+      alone is enough for the parser to classify the task as
+      \(\mathrm{KD45}\): a single-agent domain with one oblivious ontic action
+      leaves the frame non-reflexive, and belief becomes the attitude the
+      planner reasons about.
+    </p>
+    <p>
+      Shutting the door takes one action. Coming to <em>know</em> it is shut
+      does not currently reach a solution: the search reports its space
+      exhausted at depth three, below the length of the plan that ought to work
+      (command, drive, look). The repair path is stated in the domain and the
+      goal is expressible, so the gap is in the search rather than the
+      modelling. It is recorded here as an open item.
     </p>
   </div>
 </section>
 
-
-<!-- ═══════════════════════════════════════════════ CATALOGUE -->
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
 <section>
   <div class="container">
-    <p class="sec-label">The catalogue</p>
-    <h3>Domains in this repository, and the frames they reach</h3>
-
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+    <pre class="code"><code>cd epddl-workspace/remote-door
+plank export -d remote-door.epddl -p instances/problem_1.epddl \
+      -l $PLANK/benchmarks/libraries/intermediate.epddl -o out
+epistemic_planner --task out/problem_1.json --plan out/problem_1-plan.json</code></pre>
     <p>
-      The domains below are stated in EPDDL over the
-      <span class="mono-inline">intermediate</span> action-type library, which
-      supplies ontic change, sensing and announcement in public, semi-private,
-      quasi-private and private forms. The observability conditions an action
-      declares determine which frame the reachable state space has, so the frame
-      is a consequence of the vocabulary a domain uses.
-    </p>
-
-    <p>
-      They are grouped by the logic their reachable models inhabit. Each tier
-      extends the one above it: the language gains an index, then the frame
-      gives up an axiom. The axiom schemas and the frame conditions they
-      correspond to are stated with each tier, since the correspondence is what
-      makes the frame a property that can be measured off a run.
-    </p>
-
-    <details class="dfolder">
-      <summary>I &#183; Single-agent epistemic logic
-        <span class="dtag">\(\mathrm{S5}\)</span>
-        <span class="dnames">no domain in this repository is single-agent</span></summary>
-      <div class="dfolder-body">
-        <p>
-          One agent, one accessibility relation. The language is propositional
-          logic closed under a single modality:
-        </p>
-        <p style="text-align:center">
-          \(\varphi ::= p \mid \neg\varphi \mid \varphi \wedge \varphi \mid K\varphi\)
-        </p>
-        <p>
-          A model is a triple \(M = (W, R, V)\) with \(R \subseteq W \times W\)
-          and \(V : W \to 2^{P}\), and the modality quantifies over the
-          accessible worlds:
-        </p>
-        <p style="text-align:center">
-          \(M, w \models K\varphi \iff \text{for all } v,\; wRv \implies M, v \models \varphi\)
-        </p>
-
-        <div class="axioms">
-          <dl>
-            <dt>K</dt><dd>\(K(\varphi \to \psi) \to (K\varphi \to K\psi)\)
-              <span class="cond">holds on every frame; it is what makes \(K\) a normal modality</span></dd>
-            <dt>T</dt><dd>\(K\varphi \to \varphi\)
-              <span class="cond">corresponds to \(R\) reflexive: what is known is true</span></dd>
-            <dt>4</dt><dd>\(K\varphi \to KK\varphi\)
-              <span class="cond">corresponds to \(R\) transitive: positive introspection</span></dd>
-            <dt>5</dt><dd>\(\neg K\varphi \to K\neg K\varphi\)
-              <span class="cond">corresponds to \(R\) Euclidean: negative introspection</span></dd>
-          </dl>
-        </div>
-
-        <p>
-          Taking all four gives \(\mathrm{S5}\), on which \(R\) is an
-          equivalence relation and the worlds partition into classes the agent
-          cannot tell apart. A single-agent domain has no observability to
-          declare, since every event is observed by the only agent there is;
-          sensing shrinks a class and ontic change moves within one.
-        </p>
-        <p>
-          The repository holds no domain at this tier. Every domain here names
-          at least two agents, because the questions the planner is used for are
-          questions about what one agent knows of another. The tier is stated
-          because the tiers below are defined by what they add to it.
-        </p>
-      </div>
-    </details>
-
-    <details class="dfolder">
-      <summary>II &#183; Multi-agent epistemic logic
-        <span class="dtag">\(\mathrm{S5}_n\)</span>
-        <span class="dnames">muddy-children &#183; Active-Muddy-Child &#183;
-          building-rooms &#183; robot-warehouse &#183; ugv-coordination</span></summary>
-      <div class="dfolder-body">
-        <p>
-          The modality takes an index, and the model carries one relation per
-          agent: \(M = (W, \{R_i\}_{i \in \mathcal{A}}, V)\), each \(R_i\) an
-          equivalence. Group notions become definable:
-        </p>
-        <div class="axioms">
-          <dl>
-            <dt>E_G</dt><dd>\(E_G\varphi \equiv \bigwedge_{i \in G} K_i \varphi\)
-              <span class="cond">everyone in \(G\) knows \(\varphi\)</span></dd>
-            <dt>C_G</dt><dd>\(C_G\varphi \equiv \nu X.\, \varphi \wedge E_G X\)
-              <span class="cond">common knowledge: the greatest fixed point, reached along \(\bigcup_{i \in G} R_i\)</span></dd>
-            <dt>D_G</dt><dd>\(D_G\varphi\) evaluated over \(\bigcap_{i \in G} R_i\)
-              <span class="cond">distributed knowledge: what the group would know pooled</span></dd>
-          </dl>
-        </div>
-        <p>
-          Dynamics are given by an event model
-          \(\mathcal{E} = (E, \{Q_i\}, \mathrm{pre}, \mathrm{post})\) and the
-          product update \(M \otimes \mathcal{E}\), whose worlds are the pairs
-          that survive their preconditions and whose relations compose
-          pointwise:
-        </p>
-        <p style="text-align:center">
-          \(W' = \{(w,e) : M, w \models \mathrm{pre}(e)\}, \qquad
-            (w,e)\,R'_i\,(v,f) \iff w R_i v \text{ and } e Q_i f\)
-        </p>
-        <p>
-          Each \(Q_i\) is an equivalence when every agent either observes an
-          event or is unable to distinguish it from the others it might be, so
-          \(\mathrm{S5}_n\) is closed under the update and a domain built from
-          public and semi-private types alone stays in this tier for every
-          reachable state.
-        </p>
-
-        <table class="data">
-          <thead>
-            <tr><th>domain</th><th>action types used</th><th>run</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><span class="mono-inline">muddy-children</span></td>
-                <td>public sensing</td><td>&#8212;</td></tr>
-            <tr><td><span class="mono-inline">Active-Muddy-Child</span></td>
-                <td>public sensing</td><td>&#8212;</td></tr>
-            <tr><td><span class="mono-inline">building-rooms</span></td>
-                <td>public ontic, semi-private sensing</td>
-                <td><a href="six_room_survey.html">six-room survey</a></td></tr>
-            <tr><td><span class="mono-inline">robot-warehouse</span></td>
-                <td>public ontic, semi-private sensing, public announcement</td>
-                <td><a href="warehouse_run.html">warehouse</a>,
-                    <a href="warehouse_rmf.html">over RMF</a></td></tr>
-            <tr><td><span class="mono-inline">ugv-coordination</span></td>
-                <td>four observability models over one facility</td>
-                <td>this page</td></tr>
-          </tbody>
-        </table>
-        <p>
-          The warehouse run is measured against this claim directly: every
-          relation is reflexive at every step, so the frame is
-          \(\mathrm{S5}_n\) from beginning to end.
-          <a href="warehouse_rmf.html">The measurement is Figure&nbsp;5 there</a>.
-        </p>
-      </div>
-    </details>
-
-    <details class="dfolder">
-      <summary>III &#183; Doxastic logic
-        <span class="dtag">\(\mathrm{KD45}_n\)</span>
-        <span class="dnames">coin-in-the-box &#183; box-task &#183; box-task-2.0 &#183;
-          doxastic-depot &#183; hotel-incident</span></summary>
-      <div class="dfolder-body">
-        <p>
-          Dropping T and replacing it with D gives belief. The modality is
-          written \(B_i\), and the axioms are those of \(\mathrm{S5}_n\) with
-          reflexivity weakened to seriality:
-        </p>
-        <div class="axioms">
-          <dl>
-            <dt>K</dt><dd>\(B(\varphi \to \psi) \to (B\varphi \to B\psi)\)
-              <span class="cond">as above</span></dd>
-            <dt>D</dt><dd>\(B\varphi \to \neg B\neg\varphi\)
-              <span class="cond">corresponds to \(R\) serial: belief is consistent, and may still be false</span></dd>
-            <dt>4</dt><dd>\(B\varphi \to BB\varphi\)
-              <span class="cond">\(R\) transitive</span></dd>
-            <dt>5</dt><dd>\(\neg B\varphi \to B\neg B\varphi\)
-              <span class="cond">\(R\) Euclidean</span></dd>
-          </dl>
-        </div>
-        <p>
-          The absence of T is the whole of the difference. Without reflexivity
-          the actual world need not lie in an agent's own accessible set, and
-          \(B_i\varphi \wedge \neg\varphi\) becomes satisfiable. A private ontic
-          action or an announcement made to some agents and not others produces
-          exactly this: the event model has a \(Q_i\) under which an
-          uninformed agent takes a world where nothing happened to be
-          accessible, while the pair carrying the change is the one that
-          obtains.
-        </p>
-        <p>
-          A serial, transitive, Euclidean relation still partitions its range
-          into a cluster, so an agent whose belief is false remains
-          introspective and consistent about it. That is what makes the failure
-          worth planning against: nothing in the agent's own perspective
-          reveals it.
-        </p>
-
-        <table class="data">
-          <thead>
-            <tr><th>domain</th><th>action types used</th><th>run</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><span class="mono-inline">coin-in-the-box</span></td>
-                <td>private ontic, quasi-private sensing</td><td>&#8212;</td></tr>
-            <tr><td><span class="mono-inline">box-task</span></td>
-                <td>public ontic, private ontic, private announcement</td><td>&#8212;</td></tr>
-            <tr><td><span class="mono-inline">box-task-2.0</span></td>
-                <td>the above with public sensing</td><td>&#8212;</td></tr>
-            <tr><td><span class="mono-inline">doxastic-depot</span></td>
-                <td>all eight of the library&#8217;s types</td><td>&#8212;</td></tr>
-            <tr><td><span class="mono-inline">hotel-incident</span></td>
-                <td>public ontic, semi-private sensing, private ontic,
-                    quasi-private and public announcement</td>
-                <td><a href="hotel_run.html">hotel incident</a></td></tr>
-          </tbody>
-        </table>
-        <p>
-          The hotel run crosses the tier boundary during execution. Its
-          relations are equivalences until step&nbsp;3, and two agents end the
-          run in \(\mathrm{KD45}_n\) holding beliefs the world contradicts.
-          <a href="hotel_run.html">The measurement is Figure&nbsp;4 there</a>.
-        </p>
-      </div>
-    </details>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ KD45 -->
-<section>
-  <div class="container">
-    <p class="sec-label">Belief</p>
-    <h3>Where \(\mathrm{S5}_n\) stops being enough</h3>
-
-    <p>
-      An \(\mathrm{S5}_n\) model has an accessibility relation that is an
-      equivalence, and reflexivity is the clause that makes knowledge factive:
-      \(K_i\varphi \rightarrow \varphi\). An agent in such a model can be
-      ignorant to any degree and its beliefs remain true. Every domain in the
-      upper half of the table stays inside that fragment, because every action
-      they declare is observed by all agents or by none in a way that leaves each
-      agent's equivalence class containing the world that holds.
-    </p>
-
-    <p>
-      Two constructions leave it. A <span class="mono-inline">private-ontic</span>
-      action changes the world while some agents observe nothing, so an agent
-      that formed a true belief before the change carries it afterwards, when it
-      is false. A <span class="mono-inline">private-announcement</span> informs
-      part of the group, and the agents outside the audience continue in a world
-      the message has already excluded. In both cases the agent's relation loses
-      the self-loop at the actual world, the frame becomes
-      \(\mathrm{KD45}_n\), and \(K_i\) is read as belief.
-    </p>
-
-    <p>
-      This is a property of the run and it can be measured. The
-      <a href="hotel_run.html">hotel incident</a> reports the accessibility
-      relation of every agent after every action of an executed mission. Two
-      agents lose reflexivity, at two identifiable steps, under the two
-      constructions above:
-    </p>
-
-    <table class="data">
-      <thead>
-        <tr><th>step</th><th>action type</th><th>inspector</th><th>porter</th><th>guest</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>initial</td><td>&#8212;</td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
-        <tr><td>1</td><td>public ontic</td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
-        <tr><td>2</td><td>semi-private sensing</td><td>reflexive</td><td>reflexive</td><td>reflexive</td></tr>
-        <tr><td>3</td><td>quasi-private announcement</td><td>reflexive</td><td>reflexive</td><td><b>irreflexive</b></td></tr>
-        <tr><td>4</td><td>private ontic</td><td><b>irreflexive</b></td><td>reflexive</td><td><b>irreflexive</b></td></tr>
-      </tbody>
-    </table>
-
-    <p>
-      The model also grows at those two steps, from two worlds to four and then
-      to five. A private action introduces the distinction between the world in
-      which it occurred and the world its non-observers continue to occupy, and
-      the model has to carry both.
-    </p>
-
-    <p>
-      <span class="mono-inline">doxastic-depot</span> is the domain written to
-      exercise this deliberately. Every relocation in it is private, so a crate
-      moved once leaves every agent outside the source bay believing it is where
-      it was; its five instances plant a false belief, plant a second-order false
-      belief, repair one into common knowledge, and turn private knowledge into
-      common knowledge by announcement.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ STACK -->
-<section>
-  <div class="container">
-    <p class="sec-label">The stack</p>
-    <h3>From a domain to a fleet</h3>
-
-    <p>
-      A domain in this repository is a source file, and reaching a robot from
-      there involves four components with distinct responsibilities.
-    </p>
-
-    <figure class="demo-figure">
-      <img src="media/stack.svg" alt="EPDDL through plank and Aletheia to the executor, the epistemic state and Open-RMF" width="100%">
-      <figcaption>
-        <b>Figure.</b> The path from an EPDDL source to a moving robot, and the
-        return path that makes the execution epistemic.
-      </figcaption>
-    </figure>
-
-    <p>
-      <b>plank</b> parses the domain, its instance and the action-type library,
-      checks their types, and grounds the lifted actions into the tokens a
-      planner searches over. It also validates a plan independently, which is how
-      a policy is checked against something other than the planner that produced
-      it.
-    </p>
-
-    <p>
-      <b>Aletheia</b> searches over pointed Kripke models. Its unit of progress
-      is the product update, so a sensing action with several outcomes produces
-      several successors and the result is a policy with a branch at that action.
-      The <a href="nested_run.html">nested-goal study</a> measures what the shape
-      of the goal costs this search.
-    </p>
-
-    <p>
-      <b>eplansys</b> executes the policy on ROS 2. Its executor renders the
-      policy as a behaviour tree, one node per policy node, each guarded by the
-      knowledge its action requires and followed by the update its outcome
-      determines. Its epistemic state holds the model and applies that update.
-      The state answers two questions any component may ask:
-      <span class="mono-inline">check_formula</span> evaluates a modal formula,
-      and <span class="mono-inline">get_agent_perspective</span> returns the
-      model as one agent sees it. The measured figures in the run reports are
-      built from those two services.
-    </p>
-
-    <p>
-      <b>The performer</b> is whatever drives the hardware. For a fleet it is
-      <span class="mono-inline">eplansys_rmf_bridge</span>, which submits one
-      Open-RMF task per action, pins it to the robot the planner named, and
-      reports what the robot observed. Open-RMF decides lifts, doors, floor space
-      and traffic between fleets, and holds no representation of knowledge; the
-      Kripke model holds no representation of a lift. Each system decides what it
-      can represent.
-    </p>
-
-    <h4>The return path</h4>
-
-    <p>
-      A sensing action's outcome selects the branch, so the outcome has to travel
-      from the performer back to the state.
-      <span class="mono-inline">plansys2_msgs/ActionExecution</span> carries an
-      <span class="mono-inline">outcome</span> field for it, and the value is the
-      name of an event the action's model declares. A performer that reports an
-      event the policy does not list fails its branch, which is the treatment any
-      unanticipated observation receives. An ordinary action leaves the field
-      empty, and every classical performer does so.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ DISCREPANCY -->
-<section>
-  <div class="container">
-    <p class="sec-label">Open issue</p>
-    <h3>A benchmark earning its keep</h3>
-
-    <div class="warn">
-      <h4>Four of the 204 returned policies are unsound</h4>
-      <p>
-        On the multi-item facility instances, the policy terminates on a
-        <em>private</em> scan while the goal demands fleet-wide knowledge:
-      </p>
-<pre class="code" style="margin:.6rem 0">... broadcast_R1_o2_b2 -> unlock_R2_b2_b3
-    -> move_R1_b2_b3 -> move_R1_b3_b4 -> scan_R1_o1_b4   <span class="c">[leaf]</span></pre>
-      <p style="margin-bottom:0">
-        Since <span style="font-family:var(--mono);font-size:.85em">scan</span>
-        declares <span style="font-family:var(--mono);font-size:.85em">(default Oblivious)</span>,
-        \(R_2\)'s accessibility class still contains worlds disagreeing on the
-        item's bay, precisely the null copies of Figure 1, so
-        \(\mathrm{Kw}_{R_2}\) fails and the goal cannot hold at that leaf.
-      </p>
-    </div>
-
-    <p>
-      Three checks locate the fault in the planner and not the encoding.
-      <span style="font-family:var(--mono);font-size:.85em">plank</span>'s
-      independent validator reports the goal unsatisfied on the same history;
-      the identical model with a goal naming only the last-sensed atom is solved
-      correctly, with the broadcast present; and all 190 corridor and
-      addressed-radio policies end in a communication action, as does every
-      single-item facility policy. Only goals conjoining knowledge requirements
-      over <em>two distinct atoms</em> exhibit it.
-    </p>
-
-    <p class="pull">
-      Goal shape, knowing-whether, nested, negated, conjoined over several
-      atoms, deserves standing as a benchmark dimension alongside instance size.
-      Scaling a suite exercises one code path harder; varying the shape of the
-      goal exercises different ones.
-    </p>
-
-    <p class="note">
-      A planner's own plan validator cannot adjudicate this class of
-      disagreement, since it shares the state pipeline under suspicion. The
-      cross-check that settled it came from a second, independent implementation
-      of the semantics.
+      The parser prints its frame verdict on the first line, which is where
+      \(\mathrm{KD45}\) in the table above comes from.
     </p>
   </div>
 </section>
