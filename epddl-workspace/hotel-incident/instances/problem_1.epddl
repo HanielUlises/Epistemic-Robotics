@@ -1,0 +1,71 @@
+(define (problem hotel-incident-baseline)
+
+  ;; Three agents, two suites on two floors, and a leak in one of them.
+  ;;
+  ;; The zones are the Open-RMF hotel demo's: the lobby on L1 where the fleet
+  ;; comes on shift, and the master suites of L2 and L3. The lobby is adjacent
+  ;; to both suites and the suites are not adjacent to each other, because the
+  ;; only way between floors is a lift and the lifts open into the lobby. That
+  ;; a robot rides Lift1 rather than walking is not represented here at all.
+  ;;
+  ;; The goal has three conjuncts and each rules out a different shortcut.
+  ;; Somebody has to go and look. The finding has to reach the porter. And it
+  ;; cannot reach the guest, which is what makes the public address system
+  ;; inadmissible even though nothing marks it as such.
+
+  (:domain hotel-incident)
+
+  (:requirements
+    :typing :facts :equality
+    :finitary-S5-theories :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions
+  )
+
+  (:agents inspector porter guest)
+
+  (:objects lobby l2_suite l3_suite - zone)
+
+  (:facts-init
+    ;; Lift1 to L2 and Lift2 to L3, both opening on the lobby. No edge between
+    ;; the suites: there is no way from one floor to the other except back
+    ;; through the lobby.
+    (adjacent lobby l2_suite) (adjacent l2_suite lobby)
+    (adjacent lobby l3_suite) (adjacent l3_suite lobby)
+
+    (suite l2_suite) (suite l3_suite)
+    (desk lobby)
+  )
+
+  (:init
+    (:and
+      (at-ag inspector lobby) (at-ag porter lobby) (at-ag guest lobby)
+      (:forall (?i - agent)
+        (and (not (at-ag ?i l2_suite)) (not (at-ag ?i l3_suite))))
+      ([C. All]
+        (and (at-ag inspector lobby) (at-ag porter lobby) (at-ag guest lobby)
+             (forall (?i - agent)
+               (and (not (at-ag ?i l2_suite)) (not (at-ag ?i l3_suite))))))
+
+      (not (safe))
+      (:forall (?z - zone) (not (contained ?z)))
+      ([C. All] (and (not (safe))
+                     (forall (?z - zone) (not (contained ?z)))))
+
+      ;; One leak, in one of the two suites, and nobody knows which.
+      ([C. All] (and (or (leak-at l2_suite) (leak-at l3_suite))
+                     (not (and (leak-at l2_suite) (leak-at l3_suite)))
+                     (not (leak-at lobby))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (leak-at l2_suite))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (leak-at l3_suite))))
+    )
+  )
+
+  (:goal
+    (and
+      ([Kw. inspector] (leak-at l2_suite))
+      ([Kw. porter]    (leak-at l2_suite))
+      (<Kw. guest>     (leak-at l2_suite))
+    )
+  )
+)

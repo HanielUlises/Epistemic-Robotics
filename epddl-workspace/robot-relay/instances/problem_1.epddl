@@ -1,0 +1,72 @@
+(define (problem relay-solo)
+
+  ;; One courier on the facility floor. The package is in one of two bays and
+  ;; r1 does not know which, so the initial model designates two worlds -- the
+  ;; same opening robot-warehouse gives its solo instance. What happens after
+  ;; the pickup is where this domain parts ways with that one: r1 carries the
+  ;; package across three private legs to the depot, and the goal asks that it
+  ;; still know, once delivered, which bay it came from -- a fact nothing in
+  ;; the carry itself would threaten, since r1 is never oblivious to its own
+  ;; actions. The KD45_n frame has nothing to diverge from with one agent; that
+  ;; is the point of running this instance first.
+
+  (:domain robot-relay)
+
+  (:requirements
+    :KD45-frames :finitary-S5-theories
+    :typing :facts :equality
+    :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions
+  )
+
+  (:agents r1)
+
+  (:objects home lane bayA bayB relay1 relay2 depot - zone)
+
+  (:facts-init
+    (adjacent home lane) (adjacent lane home)
+    (adjacent lane bayA) (adjacent bayA lane)
+    (adjacent lane bayB) (adjacent bayB lane)
+    (adjacent lane relay1) (adjacent relay1 lane)
+    (adjacent relay1 relay2) (adjacent relay2 relay1)
+    (adjacent relay2 depot) (adjacent depot relay2)
+
+    (bay bayA) (bay bayB)
+    (depot depot)
+
+    (courier r1)
+  )
+
+  (:init
+    (:and
+      (at-ag r1 home)
+      (not (at-ag r1 lane)) (not (at-ag r1 bayA)) (not (at-ag r1 bayB))
+      (not (at-ag r1 relay1)) (not (at-ag r1 relay2)) (not (at-ag r1 depot))
+      ([C. All]
+        (and (at-ag r1 home)
+             (not (at-ag r1 lane)) (not (at-ag r1 bayA)) (not (at-ag r1 bayB))
+             (not (at-ag r1 relay1)) (not (at-ag r1 relay2)) (not (at-ag r1 depot))))
+
+      (not (carrying r1)) (not (delivered))
+      ([C. All] (and (not (carrying r1)) (not (delivered))))
+
+      ;; The package is in exactly one of the two bays, and that much is
+      ;; common knowledge -- which bay is the open question.
+      ([C. All] (and (or (package-at bayA) (package-at bayB))
+                     (not (and (package-at bayA) (package-at bayB)))
+                     (not (package-at home)) (not (package-at lane))
+                     (not (package-at relay1)) (not (package-at relay2))
+                     (not (package-at depot))))
+      ([C. All] (<Kw. r1> (package-at bayA)))
+      ([C. All] (<Kw. r1> (package-at bayB)))
+    )
+  )
+
+  (:goal
+    (and
+      (delivered)
+      ([Kw. r1] (package-at bayA))
+    )
+  )
+)

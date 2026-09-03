@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" width="900" height="320"
+     font-family="Arial, Helvetica, sans-serif" role="img"
+     aria-label="The size of the model through the run: sensing narrows it, private actions widen it">
+  <style>
+    .axis  { stroke:#D6D6D6; stroke-width:1 }
+    .barA  { fill:#5A5A5A }
+    .barB  { fill:#C8102E }
+    .barC  { fill:#1A52A0 }
+    .num   { font-size:13px; font-weight:bold; fill:#111111; text-anchor:middle }
+    .step  { font-family:'Courier New',Courier,monospace; font-size:11.5px;
+             fill:#111111; text-anchor:middle }
+    .note  { font-size:11.5px; fill:#5A5A5A; text-anchor:middle }
+    .cap   { font-size:12px; fill:#5A5A5A; font-style:italic }
+    .key   { font-size:11.5px; fill:#5A5A5A }
+  </style>
+
+  <line class="axis" x1="60" y1="200" x2="850" y2="200"/>
+
+  <!-- 2 worlds -->
+  <rect class="barA" x="100" y="160" width="70" height="40"/>
+  <text class="num"  x="135" y="152">2</text>
+  <text class="step" x="135" y="220">go</text>
+  <text class="note" x="135" y="238">two suites, either</text>
+  <text class="note" x="135" y="254">could be flooded</text>
+
+  <!-- inspect: designated drops -->
+  <rect class="barA" x="290" y="160" width="70" height="40"/>
+  <rect class="barB" x="290" y="160" width="70" height="20"/>
+  <text class="num"  x="325" y="152">2</text>
+  <text class="step" x="325" y="220">inspect</text>
+  <text class="note" x="325" y="238">still two worlds, but</text>
+  <text class="note" x="325" y="254">one designated: it knows</text>
+
+  <!-- contain: widens -->
+  <rect class="barC" x="480" y="140" width="70" height="60"/>
+  <text class="num"  x="515" y="132">3</text>
+  <text class="step" x="515" y="220">contain</text>
+  <text class="note" x="515" y="238">a private change adds a</text>
+  <text class="note" x="515" y="254">world the porter still believes</text>
+
+  <!-- brief: widens further -->
+  <rect class="barC" x="670" y="80" width="70" height="120"/>
+  <text class="num"  x="705" y="72">6</text>
+  <text class="step" x="705" y="220">brief</text>
+  <text class="note" x="705" y="238">telling one agent and not</text>
+  <text class="note" x="705" y="254">another adds more still</text>
+
+  <text class="cap" x="450" y="286" text-anchor="middle">
+    Worlds in the model after each step of the recorded run. Sensing settles which world is the real one.
+  </text>
+  <text class="cap" x="450" y="304" text-anchor="middle">
+    Acting where only some can see, and speaking to one agent and not another, add worlds rather than remove them.
+  </text>
+
+  <rect class="barB" x="60" y="28" width="12" height="12"/>
+  <text class="key"  x="78" y="39">designated</text>
+  <rect class="barA" x="160" y="28" width="12" height="12"/>
+  <text class="key"  x="178" y="39">worlds after a public action</text>
+  <rect class="barC" x="360" y="28" width="12" height="12"/>
+  <text class="key"  x="378" y="39">worlds after one only part of the fleet observed</text>
+</svg>

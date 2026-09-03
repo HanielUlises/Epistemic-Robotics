@@ -1,0 +1,69 @@
+(define (problem relay-quartet)
+
+  ;; Same facility, three idle robots now, all waiting at home. The goal is
+  ;; the same one broadcast reaching one more listener; the search behind it
+  ;; is not the same size. Run beside relay-trio, this instance is where the
+  ;; scaling table stops looking linear.
+
+  (:domain robot-relay)
+
+  (:requirements
+    :KD45-frames :finitary-S5-theories :common-knowledge
+    :typing :facts :equality
+    :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions
+  )
+
+  (:agents r1 r2 r3 r4)
+
+  (:objects home lane bayA bayB relay1 relay2 depot - zone)
+
+  (:facts-init
+    (adjacent home lane) (adjacent lane home)
+    (adjacent lane bayA) (adjacent bayA lane)
+    (adjacent lane bayB) (adjacent bayB lane)
+    (adjacent lane relay1) (adjacent relay1 lane)
+    (adjacent relay1 relay2) (adjacent relay2 relay1)
+    (adjacent relay2 depot) (adjacent depot relay2)
+
+    (bay bayA) (bay bayB)
+    (depot depot)
+
+    (courier r1)
+  )
+
+  (:init
+    (:and
+      (:forall (?i - agent)
+        (:and (at-ag ?i home)
+              (not (at-ag ?i lane)) (not (at-ag ?i bayA)) (not (at-ag ?i bayB))
+              (not (at-ag ?i relay1)) (not (at-ag ?i relay2)) (not (at-ag ?i depot))))
+      ([C. All]
+        (forall (?i - agent)
+          (and (at-ag ?i home)
+               (not (at-ag ?i lane)) (not (at-ag ?i bayA)) (not (at-ag ?i bayB))
+               (not (at-ag ?i relay1)) (not (at-ag ?i relay2)) (not (at-ag ?i depot)))))
+
+      (:forall (?i - agent) (not (carrying ?i))) (not (delivered))
+      ([C. All] (and (forall (?i - agent) (not (carrying ?i))) (not (delivered))))
+
+      ([C. All] (and (or (package-at bayA) (package-at bayB))
+                     (not (and (package-at bayA) (package-at bayB)))
+                     (not (package-at home)) (not (package-at lane))
+                     (not (package-at relay1)) (not (package-at relay2))
+                     (not (package-at depot))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (package-at bayA))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (package-at bayB))))
+    )
+  )
+
+  (:goal
+    (and
+      (delivered)
+      ([Kw. r2] (package-at bayA))
+      ([Kw. r3] (package-at bayA))
+      ([Kw. r4] (package-at bayA))
+    )
+  )
+)
