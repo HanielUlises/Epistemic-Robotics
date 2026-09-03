@@ -1,0 +1,482 @@
+{
+  "go_r1_bay2_bay3": {
+    "action": "(goto_zone r1 bay2 bay3)",
+    "duration": 120.0
+  },
+  "go_r1_bay2_corridor": {
+    "action": "(goto_zone r1 bay2 corridor)",
+    "duration": 120.0
+  },
+  "go_r1_bay2_dock_north": {
+    "action": "(goto_zone r1 bay2 dock_north)",
+    "duration": 120.0
+  },
+  "go_r1_bay2_dock_south": {
+    "action": "(goto_zone r1 bay2 dock_south)",
+    "duration": 120.0
+  },
+  "go_r1_bay2_lane": {
+    "action": "(goto_zone r1 bay2 lane)",
+    "duration": 120.0
+  },
+  "go_r1_bay3_bay2": {
+    "action": "(goto_zone r1 bay3 bay2)",
+    "duration": 120.0
+  },
+  "go_r1_bay3_corridor": {
+    "action": "(goto_zone r1 bay3 corridor)",
+    "duration": 120.0
+  },
+  "go_r1_bay3_dock_north": {
+    "action": "(goto_zone r1 bay3 dock_north)",
+    "duration": 120.0
+  },
+  "go_r1_bay3_dock_south": {
+    "action": "(goto_zone r1 bay3 dock_south)",
+    "duration": 120.0
+  },
+  "go_r1_bay3_lane": {
+    "action": "(goto_zone r1 bay3 lane)",
+    "duration": 120.0
+  },
+  "go_r1_corridor_bay2": {
+    "action": "(goto_zone r1 corridor bay2)",
+    "duration": 120.0
+  },
+  "go_r1_corridor_bay3": {
+    "action": "(goto_zone r1 corridor bay3)",
+    "duration": 120.0
+  },
+  "go_r1_corridor_dock_north": {
+    "action": "(goto_zone r1 corridor dock_north)",
+    "duration": 120.0
+  },
+  "go_r1_corridor_dock_south": {
+    "action": "(goto_zone r1 corridor dock_south)",
+    "duration": 120.0
+  },
+  "go_r1_corridor_lane": {
+    "action": "(goto_zone r1 corridor lane)",
+    "duration": 120.0
+  },
+  "go_r1_dock_north_bay2": {
+    "action": "(goto_zone r1 dock_north bay2)",
+    "duration": 120.0
+  },
+  "go_r1_dock_north_bay3": {
+    "action": "(goto_zone r1 dock_north bay3)",
+    "duration": 120.0
+  },
+  "go_r1_dock_north_corridor": {
+    "action": "(goto_zone r1 dock_north corridor)",
+    "duration": 120.0
+  },
+  "go_r1_dock_north_dock_south": {
+    "action": "(goto_zone r1 dock_north dock_south)",
+    "duration": 120.0
+  },
+  "go_r1_dock_north_lane": {
+    "action": "(goto_zone r1 dock_north lane)",
+    "duration": 120.0
+  },
+  "go_r1_dock_south_bay2": {
+    "action": "(goto_zone r1 dock_south bay2)",
+    "duration": 120.0
+  },
+  "go_r1_dock_south_bay3": {
+    "action": "(goto_zone r1 dock_south bay3)",
+    "duration": 120.0
+  },
+  "go_r1_dock_south_corridor": {
+    "action": "(goto_zone r1 dock_south corridor)",
+    "duration": 120.0
+  },
+  "go_r1_dock_south_dock_north": {
+    "action": "(goto_zone r1 dock_south dock_north)",
+    "duration": 120.0
+  },
+  "go_r1_dock_south_lane": {
+    "action": "(goto_zone r1 dock_south lane)",
+    "duration": 120.0
+  },
+  "go_r1_lane_bay2": {
+    "action": "(goto_zone r1 lane bay2)",
+    "duration": 120.0
+  },
+  "go_r1_lane_bay3": {
+    "action": "(goto_zone r1 lane bay3)",
+    "duration": 120.0
+  },
+  "go_r1_lane_corridor": {
+    "action": "(goto_zone r1 lane corridor)",
+    "duration": 120.0
+  },
+  "go_r1_lane_dock_north": {
+    "action": "(goto_zone r1 lane dock_north)",
+    "duration": 120.0
+  },
+  "go_r1_lane_dock_south": {
+    "action": "(goto_zone r1 lane dock_south)",
+    "duration": 120.0
+  },
+  "go_r2_bay2_bay3": {
+    "action": "(goto_zone r2 bay2 bay3)",
+    "duration": 120.0
+  },
+  "go_r2_bay2_corridor": {
+    "action": "(goto_zone r2 bay2 corridor)",
+    "duration": 120.0
+  },
+  "go_r2_bay2_dock_north": {
+    "action": "(goto_zone r2 bay2 dock_north)",
+    "duration": 120.0
+  },
+  "go_r2_bay2_dock_south": {
+    "action": "(goto_zone r2 bay2 dock_south)",
+    "duration": 120.0
+  },
+  "go_r2_bay2_lane": {
+    "action": "(goto_zone r2 bay2 lane)",
+    "duration": 120.0
+  },
+  "go_r2_bay3_bay2": {
+    "action": "(goto_zone r2 bay3 bay2)",
+    "duration": 120.0
+  },
+  "go_r2_bay3_corridor": {
+    "action": "(goto_zone r2 bay3 corridor)",
+    "duration": 120.0
+  },
+  "go_r2_bay3_dock_north": {
+    "action": "(goto_zone r2 bay3 dock_north)",
+    "duration": 120.0
+  },
+  "go_r2_bay3_dock_south": {
+    "action": "(goto_zone r2 bay3 dock_south)",
+    "duration": 120.0
+  },
+  "go_r2_bay3_lane": {
+    "action": "(goto_zone r2 bay3 lane)",
+    "duration": 120.0
+  },
+  "go_r2_corridor_bay2": {
+    "action": "(goto_zone r2 corridor bay2)",
+    "duration": 120.0
+  },
+  "go_r2_corridor_bay3": {
+    "action": "(goto_zone r2 corridor bay3)",
+    "duration": 120.0
+  },
+  "go_r2_corridor_dock_north": {
+    "action": "(goto_zone r2 corridor dock_north)",
+    "duration": 120.0
+  },
+  "go_r2_corridor_dock_south": {
+    "action": "(goto_zone r2 corridor dock_south)",
+    "duration": 120.0
+  },
+  "go_r2_corridor_lane": {
+    "action": "(goto_zone r2 corridor lane)",
+    "duration": 120.0
+  },
+  "go_r2_dock_north_bay2": {
+    "action": "(goto_zone r2 dock_north bay2)",
+    "duration": 120.0
+  },
+  "go_r2_dock_north_bay3": {
+    "action": "(goto_zone r2 dock_north bay3)",
+    "duration": 120.0
+  },
+  "go_r2_dock_north_corridor": {
+    "action": "(goto_zone r2 dock_north corridor)",
+    "duration": 120.0
+  },
+  "go_r2_dock_north_dock_south": {
+    "action": "(goto_zone r2 dock_north dock_south)",
+    "duration": 120.0
+  },
+  "go_r2_dock_north_lane": {
+    "action": "(goto_zone r2 dock_north lane)",
+    "duration": 120.0
+  },
+  "go_r2_dock_south_bay2": {
+    "action": "(goto_zone r2 dock_south bay2)",
+    "duration": 120.0
+  },
+  "go_r2_dock_south_bay3": {
+    "action": "(goto_zone r2 dock_south bay3)",
+    "duration": 120.0
+  },
+  "go_r2_dock_south_corridor": {
+    "action": "(goto_zone r2 dock_south corridor)",
+    "duration": 120.0
+  },
+  "go_r2_dock_south_dock_north": {
+    "action": "(goto_zone r2 dock_south dock_north)",
+    "duration": 120.0
+  },
+  "go_r2_dock_south_lane": {
+    "action": "(goto_zone r2 dock_south lane)",
+    "duration": 120.0
+  },
+  "go_r2_lane_bay2": {
+    "action": "(goto_zone r2 lane bay2)",
+    "duration": 120.0
+  },
+  "go_r2_lane_bay3": {
+    "action": "(goto_zone r2 lane bay3)",
+    "duration": 120.0
+  },
+  "go_r2_lane_corridor": {
+    "action": "(goto_zone r2 lane corridor)",
+    "duration": 120.0
+  },
+  "go_r2_lane_dock_north": {
+    "action": "(goto_zone r2 lane dock_north)",
+    "duration": 120.0
+  },
+  "go_r2_lane_dock_south": {
+    "action": "(goto_zone r2 lane dock_south)",
+    "duration": 120.0
+  },
+  "inspect_r1_bay2": {
+    "action": "(look_into r1 bay2)",
+    "duration": 30.0
+  },
+  "inspect_r1_bay3": {
+    "action": "(look_into r1 bay3)",
+    "duration": 30.0
+  },
+  "inspect_r1_corridor": {
+    "action": "(look_into r1 corridor)",
+    "duration": 30.0
+  },
+  "inspect_r1_dock_north": {
+    "action": "(look_into r1 dock_north)",
+    "duration": 30.0
+  },
+  "inspect_r1_dock_south": {
+    "action": "(look_into r1 dock_south)",
+    "duration": 30.0
+  },
+  "inspect_r1_lane": {
+    "action": "(look_into r1 lane)",
+    "duration": 30.0
+  },
+  "inspect_r2_bay2": {
+    "action": "(look_into r2 bay2)",
+    "duration": 30.0
+  },
+  "inspect_r2_bay3": {
+    "action": "(look_into r2 bay3)",
+    "duration": 30.0
+  },
+  "inspect_r2_corridor": {
+    "action": "(look_into r2 corridor)",
+    "duration": 30.0
+  },
+  "inspect_r2_dock_north": {
+    "action": "(look_into r2 dock_north)",
+    "duration": 30.0
+  },
+  "inspect_r2_dock_south": {
+    "action": "(look_into r2 dock_south)",
+    "duration": 30.0
+  },
+  "inspect_r2_lane": {
+    "action": "(look_into r2 lane)",
+    "duration": 30.0
+  },
+  "pickup_r1_bay2": {
+    "action": "(pick_up r1 bay2)",
+    "duration": 6.0
+  },
+  "pickup_r1_bay3": {
+    "action": "(pick_up r1 bay3)",
+    "duration": 6.0
+  },
+  "pickup_r1_corridor": {
+    "action": "(pick_up r1 corridor)",
+    "duration": 6.0
+  },
+  "pickup_r1_dock_north": {
+    "action": "(pick_up r1 dock_north)",
+    "duration": 6.0
+  },
+  "pickup_r1_dock_south": {
+    "action": "(pick_up r1 dock_south)",
+    "duration": 6.0
+  },
+  "pickup_r1_lane": {
+    "action": "(pick_up r1 lane)",
+    "duration": 6.0
+  },
+  "pickup_r2_bay2": {
+    "action": "(pick_up r2 bay2)",
+    "duration": 6.0
+  },
+  "pickup_r2_bay3": {
+    "action": "(pick_up r2 bay3)",
+    "duration": 6.0
+  },
+  "pickup_r2_corridor": {
+    "action": "(pick_up r2 corridor)",
+    "duration": 6.0
+  },
+  "pickup_r2_dock_north": {
+    "action": "(pick_up r2 dock_north)",
+    "duration": 6.0
+  },
+  "pickup_r2_dock_south": {
+    "action": "(pick_up r2 dock_south)",
+    "duration": 6.0
+  },
+  "pickup_r2_lane": {
+    "action": "(pick_up r2 lane)",
+    "duration": 6.0
+  },
+  "report-pallet-at_r1_bay2": {
+    "action": "(announce r1 bay2)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r1_bay3": {
+    "action": "(announce r1 bay3)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r1_corridor": {
+    "action": "(announce r1 corridor)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r1_dock_north": {
+    "action": "(announce r1 dock_north)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r1_dock_south": {
+    "action": "(announce r1 dock_south)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r1_lane": {
+    "action": "(announce r1 lane)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r2_bay2": {
+    "action": "(announce r2 bay2)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r2_bay3": {
+    "action": "(announce r2 bay3)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r2_corridor": {
+    "action": "(announce r2 corridor)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r2_dock_north": {
+    "action": "(announce r2 dock_north)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r2_dock_south": {
+    "action": "(announce r2 dock_south)",
+    "duration": 4.0
+  },
+  "report-pallet-at_r2_lane": {
+    "action": "(announce r2 lane)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r1_bay2": {
+    "action": "(announce r1 bay2)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r1_bay3": {
+    "action": "(announce r1 bay3)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r1_corridor": {
+    "action": "(announce r1 corridor)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r1_dock_north": {
+    "action": "(announce r1 dock_north)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r1_dock_south": {
+    "action": "(announce r1 dock_south)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r1_lane": {
+    "action": "(announce r1 lane)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r2_bay2": {
+    "action": "(announce r2 bay2)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r2_bay3": {
+    "action": "(announce r2 bay3)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r2_corridor": {
+    "action": "(announce r2 corridor)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r2_dock_north": {
+    "action": "(announce r2 dock_north)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r2_dock_south": {
+    "action": "(announce r2 dock_south)",
+    "duration": 4.0
+  },
+  "report-pallet-not-at_r2_lane": {
+    "action": "(announce r2 lane)",
+    "duration": 4.0
+  },
+  "unload_r1_bay2": {
+    "action": "(drop_off r1 bay2)",
+    "duration": 6.0
+  },
+  "unload_r1_bay3": {
+    "action": "(drop_off r1 bay3)",
+    "duration": 6.0
+  },
+  "unload_r1_corridor": {
+    "action": "(drop_off r1 corridor)",
+    "duration": 6.0
+  },
+  "unload_r1_dock_north": {
+    "action": "(drop_off r1 dock_north)",
+    "duration": 6.0
+  },
+  "unload_r1_dock_south": {
+    "action": "(drop_off r1 dock_south)",
+    "duration": 6.0
+  },
+  "unload_r1_lane": {
+    "action": "(drop_off r1 lane)",
+    "duration": 6.0
+  },
+  "unload_r2_bay2": {
+    "action": "(drop_off r2 bay2)",
+    "duration": 6.0
+  },
+  "unload_r2_bay3": {
+    "action": "(drop_off r2 bay3)",
+    "duration": 6.0
+  },
+  "unload_r2_corridor": {
+    "action": "(drop_off r2 corridor)",
+    "duration": 6.0
+  },
+  "unload_r2_dock_north": {
+    "action": "(drop_off r2 dock_north)",
+    "duration": 6.0
+  },
+  "unload_r2_dock_south": {
+    "action": "(drop_off r2 dock_south)",
+    "duration": 6.0
+  },
+  "unload_r2_lane": {
+    "action": "(drop_off r2 lane)",
+    "duration": 6.0
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "//": "The zones are already the nav graph's waypoint names, so this table is an identity. It is written out anyway: the two vocabularies agreeing is a fact worth stating rather than an accident to rely on.",
+  "zones": {
+    "dock_south": "dock_south",
+    "corridor":   "corridor",
+    "dock_north": "dock_north",
+    "lane":       "lane",
+    "bay2":       "bay2",
+    "bay3":       "bay3"
+  },
+
+  "agents": {
+    "r1": {"fleet": "warehouseBot", "robot": "r1"},
+    "r2": {"fleet": "warehouseBot", "robot": "r2"}
+  },
+
+  "actions": {
+    "goto_zone": {"waypoint_arg": 2},
+
+    "look_into": {
+      "waypoint_arg": 1,
+      "sensing": true,
+      "outcome_arg": 1,
+      "outcomes": {
+        "bay2": "e-inspect-found",
+        "bay3": "e-inspect-empty"
+      },
+      "default_outcome": "e-inspect-empty"
+    },
+
+    "pick_up":  {"waypoint_arg": 1},
+    "drop_off": {"waypoint_arg": 1},
+
+    "announce": {"local": true, "duration": 4.0}
+  }
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<package format="3">
+  <name>warehouse_rmf_demo</name>
+  <version>0.1.0</version>
+  <description>
+    The warehouse mission of epddl-workspace/robot-warehouse, executed over an
+    Open-RMF fleet in the AWS RoboMaker small warehouse.
+  </description>
+  <maintainer email="hanielulises@gmail.com">Haniel Ulises</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_planner</depend>
+  <depend>plansys2_problem_expert</depend>
+  <depend>plansys2_domain_expert</depend>
+  <depend>plansys2_msgs</depend>
+
+  <exec_depend>eplansys_rmf_bridge</exec_depend>
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>warehouse_demo</exec_depend>
+  <exec_depend>aws_robomaker_small_warehouse_world</exec_depend>
+  <exec_depend>rmf_demos_assets</exec_depend>
+  <exec_depend>rmf_demos_fleet_adapter</exec_depend>
+  <exec_depend>rmf_traffic_ros2</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
