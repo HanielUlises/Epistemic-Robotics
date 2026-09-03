@@ -158,6 +158,29 @@ header h1 a:hover{color:var(--red)}
 
 section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
+/* Folders for the domain tiers. The catalogue is read by tier, so each opens
+   on request and the page stays a page rather than a table. */
+.dfolder{border:1px solid var(--border);border-radius:3px;margin:.6rem 0;
+  background:#FFFFFF}
+.dfolder>summary{list-style:none;cursor:pointer;user-select:none;
+  font-family:var(--sg);font-size:.95rem;font-weight:600;color:var(--black);
+  padding:.75rem .9rem;display:flex;align-items:baseline;gap:.5rem;
+  transition:background .15s}
+.dfolder>summary::-webkit-details-marker{display:none}
+.dfolder>summary::before{content:"\25B8";color:var(--gray);font-size:.8em;
+  transition:transform .16s ease;display:inline-block}
+.dfolder[open]>summary::before{transform:rotate(90deg)}
+.dfolder>summary:hover{background:#FAFAFA}
+.dfolder>summary .dtag{margin-left:auto;font-family:var(--mono);
+  font-size:.68rem;font-weight:400;color:var(--gray)}
+.dfolder-body{padding:.2rem 1rem 1rem;border-top:1px solid var(--border)}
+.axioms{margin:.8rem 0;border-left:2px solid var(--border);padding-left:.9rem}
+.axioms dl{margin:0;display:grid;grid-template-columns:auto 1fr;
+  gap:.28rem .9rem;align-items:baseline}
+.axioms dt{font-family:var(--mono);font-size:.72rem;color:var(--red);
+  font-weight:600}
+.axioms dd{margin:0;font-size:.9rem}
+.axioms dd .cond{display:block;font-size:.76rem;color:var(--gray)}
 .sec-label{font-family:var(--mono);font-size:.66rem;
   color:var(--red);margin-bottom:1.6rem}
 h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
@@ -935,59 +958,197 @@ pre:has(> code){margin:1.3rem 0}
       is a consequence of the vocabulary a domain uses.
     </p>
 
-    <table class="data">
-      <thead>
-        <tr><th>domain</th><th>action types used</th><th>frame</th><th>run</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="mono-inline">muddy-children</span></td>
-          <td>public sensing</td><td>S5</td><td>&#8212;</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">Active-Muddy-Child</span></td>
-          <td>public sensing</td><td>S5</td><td>&#8212;</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">building-rooms</span></td>
-          <td>public ontic, semi-private sensing</td><td>S5</td>
-          <td><a href="six_room_survey.html">six-room survey</a></td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">robot-warehouse</span></td>
-          <td>public ontic, semi-private sensing, public announcement</td><td>S5</td>
-          <td><a href="warehouse_run.html">warehouse</a>,
-              <a href="warehouse_rmf.html">over RMF</a></td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">ugv-coordination</span></td>
-          <td>four observability models over one facility</td><td>S5</td>
-          <td>this page</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">coin-in-the-box</span></td>
-          <td>private ontic, quasi-private sensing</td><td>KD45</td><td>&#8212;</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">box-task</span></td>
-          <td>public ontic, private ontic, private announcement</td><td>KD45</td><td>&#8212;</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">box-task-2.0</span></td>
-          <td>the above with public sensing</td><td>KD45</td><td>&#8212;</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">doxastic-depot</span></td>
-          <td>all eight of the library's types</td><td>KD45</td><td>&#8212;</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">hotel-incident</span></td>
-          <td>public ontic, semi-private sensing, private ontic,
-              quasi-private and public announcement</td><td>KD45</td>
-          <td><a href="hotel_run.html">hotel incident</a></td>
-        </tr>
-      </tbody>
-    </table>
+    <p>
+      They are grouped by the logic their reachable models inhabit. Each tier
+      extends the one above it: the language gains an index, then the frame
+      gives up an axiom. The axiom schemas and the frame conditions they
+      correspond to are stated with each tier, since the correspondence is what
+      makes the frame a property that can be measured off a run.
+    </p>
+
+    <details class="dfolder">
+      <summary>I &#183; Single-agent epistemic logic
+        <span class="dtag">\(\mathrm{S5}\)</span></summary>
+      <div class="dfolder-body">
+        <p>
+          One agent, one accessibility relation. The language is propositional
+          logic closed under a single modality:
+        </p>
+        <p style="text-align:center">
+          \(\varphi ::= p \mid \neg\varphi \mid \varphi \wedge \varphi \mid K\varphi\)
+        </p>
+        <p>
+          A model is a triple \(M = (W, R, V)\) with \(R \subseteq W \times W\)
+          and \(V : W \to 2^{P}\), and the modality quantifies over the
+          accessible worlds:
+        </p>
+        <p style="text-align:center">
+          \(M, w \models K\varphi \iff \text{for all } v,\; wRv \implies M, v \models \varphi\)
+        </p>
+
+        <div class="axioms">
+          <dl>
+            <dt>K</dt><dd>\(K(\varphi \to \psi) \to (K\varphi \to K\psi)\)
+              <span class="cond">holds on every frame; it is what makes \(K\) a normal modality</span></dd>
+            <dt>T</dt><dd>\(K\varphi \to \varphi\)
+              <span class="cond">corresponds to \(R\) reflexive: what is known is true</span></dd>
+            <dt>4</dt><dd>\(K\varphi \to KK\varphi\)
+              <span class="cond">corresponds to \(R\) transitive: positive introspection</span></dd>
+            <dt>5</dt><dd>\(\neg K\varphi \to K\neg K\varphi\)
+              <span class="cond">corresponds to \(R\) Euclidean: negative introspection</span></dd>
+          </dl>
+        </div>
+
+        <p>
+          Taking all four gives \(\mathrm{S5}\), on which \(R\) is an
+          equivalence relation and the worlds partition into classes the agent
+          cannot tell apart. A single-agent domain has no observability to
+          declare, since every event is observed by the only agent there is;
+          sensing shrinks a class and ontic change moves within one.
+        </p>
+        <p>
+          The repository holds no domain at this tier. Every domain here names
+          at least two agents, because the questions the planner is used for are
+          questions about what one agent knows of another. The tier is stated
+          because the tiers below are defined by what they add to it.
+        </p>
+      </div>
+    </details>
+
+    <details class="dfolder">
+      <summary>II &#183; Multi-agent epistemic logic
+        <span class="dtag">\(\mathrm{S5}_n\) &#183; 5 domains</span></summary>
+      <div class="dfolder-body">
+        <p>
+          The modality takes an index, and the model carries one relation per
+          agent: \(M = (W, \{R_i\}_{i \in \mathcal{A}}, V)\), each \(R_i\) an
+          equivalence. Group notions become definable:
+        </p>
+        <div class="axioms">
+          <dl>
+            <dt>E_G</dt><dd>\(E_G\varphi \equiv \bigwedge_{i \in G} K_i \varphi\)
+              <span class="cond">everyone in \(G\) knows \(\varphi\)</span></dd>
+            <dt>C_G</dt><dd>\(C_G\varphi \equiv \nu X.\, \varphi \wedge E_G X\)
+              <span class="cond">common knowledge: the greatest fixed point, reached along \(\bigcup_{i \in G} R_i\)</span></dd>
+            <dt>D_G</dt><dd>\(D_G\varphi\) evaluated over \(\bigcap_{i \in G} R_i\)
+              <span class="cond">distributed knowledge: what the group would know pooled</span></dd>
+          </dl>
+        </div>
+        <p>
+          Dynamics are given by an event model
+          \(\mathcal{E} = (E, \{Q_i\}, \mathrm{pre}, \mathrm{post})\) and the
+          product update \(M \otimes \mathcal{E}\), whose worlds are the pairs
+          that survive their preconditions and whose relations compose
+          pointwise:
+        </p>
+        <p style="text-align:center">
+          \(W' = \{(w,e) : M, w \models \mathrm{pre}(e)\}, \qquad
+            (w,e)\,R'_i\,(v,f) \iff w R_i v \text{ and } e Q_i f\)
+        </p>
+        <p>
+          Each \(Q_i\) is an equivalence when every agent either observes an
+          event or is unable to distinguish it from the others it might be, so
+          \(\mathrm{S5}_n\) is closed under the update and a domain built from
+          public and semi-private types alone stays in this tier for every
+          reachable state.
+        </p>
+
+        <table class="data">
+          <thead>
+            <tr><th>domain</th><th>action types used</th><th>run</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="mono-inline">muddy-children</span></td>
+                <td>public sensing</td><td>&#8212;</td></tr>
+            <tr><td><span class="mono-inline">Active-Muddy-Child</span></td>
+                <td>public sensing</td><td>&#8212;</td></tr>
+            <tr><td><span class="mono-inline">building-rooms</span></td>
+                <td>public ontic, semi-private sensing</td>
+                <td><a href="six_room_survey.html">six-room survey</a></td></tr>
+            <tr><td><span class="mono-inline">robot-warehouse</span></td>
+                <td>public ontic, semi-private sensing, public announcement</td>
+                <td><a href="warehouse_run.html">warehouse</a>,
+                    <a href="warehouse_rmf.html">over RMF</a></td></tr>
+            <tr><td><span class="mono-inline">ugv-coordination</span></td>
+                <td>four observability models over one facility</td>
+                <td>this page</td></tr>
+          </tbody>
+        </table>
+        <p>
+          The warehouse run is measured against this claim directly: every
+          relation is reflexive at every step, so the frame is
+          \(\mathrm{S5}_n\) from beginning to end.
+          <a href="warehouse_rmf.html">The measurement is Figure&nbsp;5 there</a>.
+        </p>
+      </div>
+    </details>
+
+    <details class="dfolder">
+      <summary>III &#183; Doxastic logic
+        <span class="dtag">\(\mathrm{KD45}_n\) &#183; 5 domains</span></summary>
+      <div class="dfolder-body">
+        <p>
+          Dropping T and replacing it with D gives belief. The modality is
+          written \(B_i\), and the axioms are those of \(\mathrm{S5}_n\) with
+          reflexivity weakened to seriality:
+        </p>
+        <div class="axioms">
+          <dl>
+            <dt>K</dt><dd>\(B(\varphi \to \psi) \to (B\varphi \to B\psi)\)
+              <span class="cond">as above</span></dd>
+            <dt>D</dt><dd>\(B\varphi \to \neg B\neg\varphi\)
+              <span class="cond">corresponds to \(R\) serial: belief is consistent, and may still be false</span></dd>
+            <dt>4</dt><dd>\(B\varphi \to BB\varphi\)
+              <span class="cond">\(R\) transitive</span></dd>
+            <dt>5</dt><dd>\(\neg B\varphi \to B\neg B\varphi\)
+              <span class="cond">\(R\) Euclidean</span></dd>
+          </dl>
+        </div>
+        <p>
+          The absence of T is the whole of the difference. Without reflexivity
+          the actual world need not lie in an agent's own accessible set, and
+          \(B_i\varphi \wedge \neg\varphi\) becomes satisfiable. A private ontic
+          action or an announcement made to some agents and not others produces
+          exactly this: the event model has a \(Q_i\) under which an
+          uninformed agent takes a world where nothing happened to be
+          accessible, while the pair carrying the change is the one that
+          obtains.
+        </p>
+        <p>
+          A serial, transitive, Euclidean relation still partitions its range
+          into a cluster, so an agent whose belief is false remains
+          introspective and consistent about it. That is what makes the failure
+          worth planning against: nothing in the agent's own perspective
+          reveals it.
+        </p>
+
+        <table class="data">
+          <thead>
+            <tr><th>domain</th><th>action types used</th><th>run</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="mono-inline">coin-in-the-box</span></td>
+                <td>private ontic, quasi-private sensing</td><td>&#8212;</td></tr>
+            <tr><td><span class="mono-inline">box-task</span></td>
+                <td>public ontic, private ontic, private announcement</td><td>&#8212;</td></tr>
+            <tr><td><span class="mono-inline">box-task-2.0</span></td>
+                <td>the above with public sensing</td><td>&#8212;</td></tr>
+            <tr><td><span class="mono-inline">doxastic-depot</span></td>
+                <td>all eight of the library&#8217;s types</td><td>&#8212;</td></tr>
+            <tr><td><span class="mono-inline">hotel-incident</span></td>
+                <td>public ontic, semi-private sensing, private ontic,
+                    quasi-private and public announcement</td>
+                <td><a href="hotel_run.html">hotel incident</a></td></tr>
+          </tbody>
+        </table>
+        <p>
+          The hotel run crosses the tier boundary during execution. Its
+          relations are equivalences until step&nbsp;3, and two agents end the
+          run in \(\mathrm{KD45}_n\) holding beliefs the world contradicts.
+          <a href="hotel_run.html">The measurement is Figure&nbsp;4 there</a>.
+        </p>
+      </div>
+    </details>
   </div>
 </section>
 

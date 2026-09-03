@@ -704,6 +704,24 @@ sup.cite a:hover{text-decoration:underline}
       formula those worlds support, and both are wrong.
     </p>
 
+    <figure class="demo-figure">
+      <img src="media/hotel-frames.svg" width="100%"
+           alt="Edge counts and frame properties of each agent's accessibility relation at every step">
+      <figcaption>
+        <b>Figure 4.</b> The same relations counted as graphs. The preceding
+        table counts vertices; this counts edges and checks the closure
+        properties they satisfy, which is what fixes the logic the run is in. A
+        relation that is reflexive, transitive and Euclidean gives
+        \(\mathrm{S5}\) and reads as knowledge. The guest's relation loses
+        reflexivity at the private announcement and the inspector's at the
+        private ontic action, and each remains serial, transitive and Euclidean
+        without it, which is \(\mathrm{KD45}\): what those agents hold from
+        that step on is belief, and it is false. The porter's relation stays
+        \(\mathrm{S5}\) throughout while its edge count rises from four to
+        seven, since the model it is defined over grows from two worlds to five.
+      </figcaption>
+    </figure>
+
     <h4>The accessibility relations</h4>
 
     <figure class="demo-figure kfig" id="hotelk-fig">
@@ -790,7 +808,7 @@ sup.cite a:hover{text-decoration:underline}
 })();
 </script>
     <p class="note" style="margin-top:.9rem">
-      <b>Figure 4.</b> Each agent's accessibility relation, stepped through the
+      <b>Figure 5.</b> Each agent's accessibility relation, stepped through the
       run. Nodes are worlds and arcs are the relation; a red ring marks a world
       the agent designates, and a world drawn faintly is one the model does not
       yet contain. An agent whose panel reports that it excludes the actual world
@@ -877,7 +895,7 @@ sup.cite a:hover{text-decoration:underline}
     <figure class="demo-figure">
       <img src="media/hotel-seam.svg" alt="ePlanSys decides what must be known; Open-RMF decides lifts, doors and traffic; the bridge joins them" width="100%">
       <figcaption>
-        <b>Figure 5.</b> The interface. The bridge is a PlanSys2 performer that
+        <b>Figure 6.</b> The interface. The bridge is a PlanSys2 performer that
         submits one RMF task per action and reports what the robot observed.
       </figcaption>
     </figure>
