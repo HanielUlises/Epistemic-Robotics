@@ -112,6 +112,23 @@ header h1{font-family:var(--sg);font-size:1.18rem;
 .nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
 .nav-sub a{padding-left:.62rem}
 .nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
 .nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
 @media(max-width:560px){
   .nav-menu{width:100%;margin:.6rem 0 0}
@@ -128,6 +145,30 @@ header h1{font-family:var(--sg);font-size:1.18rem;
 .hero-p{font-size:1.03rem;max-width:600px;color:#2C2C2C}
 section{padding:3.6rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
+/* Folders on the page itself, for the demonstration index. Same gesture as
+   the contents menu: shut until asked for, so the section stays short as the
+   number of recorded runs grows. */
+.dfolder{border:1px solid var(--border);border-radius:3px;margin:.5rem 0;
+  background:#FFFFFF}
+.dfolder>summary{list-style:none;cursor:pointer;user-select:none;
+  font-family:var(--sg);font-size:.92rem;font-weight:600;color:var(--black);
+  padding:.7rem .9rem;display:flex;align-items:baseline;gap:.5rem;
+  transition:background .15s}
+.dfolder>summary::-webkit-details-marker{display:none}
+.dfolder>summary::before{content:"\25B8";color:var(--gray);font-size:.8em;
+  transition:transform .16s ease;display:inline-block}
+.dfolder[open]>summary::before{transform:rotate(90deg)}
+.dfolder>summary:hover{background:#FAFAFA}
+.dfolder>summary .dcount{margin-left:auto;font-family:var(--mono);
+  font-size:.68rem;font-weight:400;color:var(--gray)}
+.dfolder-body{padding:0 .9rem .8rem 2rem;border-top:1px solid var(--border)}
+.dfolder-body p.about{font-size:.86rem;color:#3C3C3C;margin:.7rem 0 .5rem}
+.dfolder-body a.run{display:block;font-family:var(--sg);font-size:.9rem;
+  color:var(--black);text-decoration:none;padding:.34rem 0;
+  border-bottom:1px solid #F0F0F0}
+.dfolder-body a.run:last-child{border-bottom:0}
+.dfolder-body a.run:hover{color:var(--red)}
+.dfolder-body a.run .sub{display:block;font-size:.76rem;color:var(--gray)}
 .sec-label{font-family:var(--mono);font-size:.66rem;
   color:var(--red);margin-bottom:1.6rem}
 h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
@@ -340,29 +381,49 @@ pre:has(> code){margin:1.3rem 0}
           <h6>Pages</h6>
           <a href="index.html" aria-current="page">Overview</a>
           <a href="domains.html">Domains</a>
-          <a href="demos.html">Demonstrations</a>
-          <div class="nav-sub">
-            <a href="demos.html#building-rooms">building-rooms<span class="sub">Six rooms and a measured floor</span></a>
-            <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
-            <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
-            <a href="demos.html#robot-warehouse">robot-warehouse<span class="sub">The AWS small warehouse</span></a>
-            <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
-            <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
-            <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
-            <a href="demos.html#hotel-incident">hotel-incident<span class="sub">Three floors and two lifts</span></a>
-            <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
-          </div>
+          <details class="nav-folder">
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
           <a href="execution.html">Execution</a>
           <hr>
-          <h6>Reports (PDF)</h6>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
           <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
           <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
-          <div class="nav-sub">
-            <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
-            <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
-          </div>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
           <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
         </div>
       </details>
     </div>
@@ -416,10 +477,10 @@ pre:has(> code){margin:1.3rem 0}
     <p>
       None of these goals have a representation in STRIPS, PDDL, or any classical
       planning formalism. They require an epistemic planner: a system whose state
-      space is not a set of ground atoms, but a structured model of what every agent
-      knows, believes, and is uncertain about. The gap between classical planning and
-      epistemic planning is not a matter of expressivity at the margins; it is a
-      categorical difference in what kind of object constitutes a world state.
+      space is a structured model of what every agent knows, believes, and is
+      uncertain about, in place of a set of ground atoms. The gap between
+      classical planning and epistemic planning is a categorical difference in
+      what kind of object constitutes a world state.
     </p>
   </div>
 </section>
@@ -1344,6 +1405,72 @@ pre:has(> code){margin:1.3rem 0}
         </svg>
       </a>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEMONSTRATIONS -->
+<section>
+  <div class="container">
+    <p class="sec-label">Demonstrations</p>
+    <h3>The stack running</h3>
+    <p>
+      Every demonstration below is a recorded execution: an EPDDL domain
+      grounded by plank, solved by Aletheia, executed by ePlanSys over ROS&nbsp;2,
+      and measured against a standalone epistemic state afterwards. They are
+      grouped by the domain they run, and each group opens on request.
+    </p>
+
+    <details class="dfolder">
+      <summary>building-rooms<span class="dcount">2 runs</span></summary>
+      <div class="dfolder-body">
+        <p class="about">
+          Six rooms and a measured floor. The routing is a &micro;-calculus fixed
+          point over the occupancy grid, and the survey mission adds a goal
+          stated as knowledge.
+        </p>
+        <a class="run" href="demo.html">The six-room run
+          <span class="sub">Routing by a &micro;-calculus fixed point</span></a>
+        <a class="run" href="six_room_survey.html">The six-room survey
+          <span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+      </div>
+    </details>
+
+    <details class="dfolder">
+      <summary>robot-warehouse<span class="dcount">3 runs</span></summary>
+      <div class="dfolder-body">
+        <p class="about">
+          A pallet in one of two aisles, and a robot that may lift it only where
+          it knows the pallet is. The same domain scales from one robot to
+          three, deepens by one modal operator, and executes over an Open-RMF
+          fleet.
+        </p>
+        <a class="run" href="warehouse_run.html">The warehouse run
+          <span class="sub">One robot, then two, then three</span></a>
+        <a class="run" href="nested_run.html">Nested epistemic goals
+          <span class="sub">What modal depth costs</span></a>
+        <a class="run" href="warehouse_rmf.html">Over Open-RMF
+          <span class="sub">A floor RMF was never given</span></a>
+      </div>
+    </details>
+
+    <details class="dfolder">
+      <summary>hotel-incident<span class="dcount">1 run</span></summary>
+      <div class="dfolder-body">
+        <p class="about">
+          A leak in one of two suites on separate floors, under a goal with a
+          secrecy conjunct. The domain admits private announcement and private
+          ontic change, so the frame leaves S5 and two agents end the run
+          holding beliefs the world contradicts.
+        </p>
+        <a class="run" href="hotel_run.html">The hotel incident
+          <span class="sub">Belief measured during a fleet mission</span></a>
+      </div>
+    </details>
+
+    <p style="margin-top:1.1rem">
+      <a href="demos.html">All demonstrations, with thumbnails and figures
+        &#8594;</a>
+    </p>
   </div>
 </section>
 

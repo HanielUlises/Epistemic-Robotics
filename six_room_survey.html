@@ -123,6 +123,23 @@ header h1 a:hover{color:var(--red)}
 .nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
 .nav-sub a{padding-left:.62rem}
 .nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
 .nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
 @media(max-width:560px){
   .nav-menu{width:100%;margin:.6rem 0 0}
@@ -372,29 +389,49 @@ sup.cite a:hover{text-decoration:underline}
           <h6>Pages</h6>
           <a href="index.html">Overview</a>
           <a href="domains.html">Domains</a>
-          <a href="demos.html">Demonstrations</a>
-          <div class="nav-sub">
-            <a href="demos.html#building-rooms">building-rooms<span class="sub">Six rooms and a measured floor</span></a>
-            <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
-            <a href="six_room_survey.html" aria-current="page">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
-            <a href="demos.html#robot-warehouse">robot-warehouse<span class="sub">The AWS small warehouse</span></a>
-            <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
-            <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
-            <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
-            <a href="demos.html#hotel-incident">hotel-incident<span class="sub">Three floors and two lifts</span></a>
-            <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
-          </div>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder" open>
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html" aria-current="page">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
           <a href="execution.html">Execution</a>
           <hr>
-          <h6>Reports (PDF)</h6>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
           <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
           <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
-          <div class="nav-sub">
-            <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
-            <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
-          </div>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
           <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
         </div>
       </details>
     </div>
@@ -409,8 +446,9 @@ sup.cite a:hover{text-decoration:underline}
     <p class="hero-p">
       The companion page on this site routes a robot with a mu-calculus fixed
       point. This one asks a different question of the same building. The
-      mission is not to reach the east wing but to come to <em>know</em>
-      whether it is passable, the mission is written in EPDDL, and the answer
+      mission is to come to <em>know</em> whether the east wing is passable,
+      which the robot satisfies without entering it. The mission is written in
+      EPDDL, and the answer
       is supplied by a map the robot builds with its own laser and not by
       anything the planner imagines.
     </p>
