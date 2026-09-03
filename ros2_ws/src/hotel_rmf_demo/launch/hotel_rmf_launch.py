@@ -121,7 +121,11 @@ def launch_setup(context, *args, **kwargs):
         parameters=[{
             'task_map': map_file.name,
             'websocket_port': WEBSOCKET_PORT,
-            'task_timeout': 900.0,
+            # A backstop against a task that has stopped, not a budget for one
+            # that is slow. It is wall-clock while the fleet runs on sim time,
+            # and recording on a software renderer drops the real-time factor
+            # to about a third, so a generous number is the only safe one.
+            'task_timeout': 3600.0,
         }])
 
     mission = Node(

@@ -102,7 +102,8 @@ def zone(name):
 def applied_caption(action, outcome, worlds, designated):
     """What the product update did, in words rather than in event names."""
     worlds, designated = int(worlds), int(designated)
-    model = f'{worlds} worlds, {designated} designated'
+    model = (f'{worlds} world{"s" if worlds != 1 else ""}, '
+             f'{designated} designated')
 
     if action.startswith('inspect'):
         found = 'flooded' if outcome and outcome.endswith('wet') else 'dry'
@@ -229,6 +230,34 @@ def main():
 
         kept.append(lines[index])
         index += 1
+
+    # Most of the film is the two robots riding to their floors, and nothing
+    # is said in it because nothing happens to the model. A gap this long
+    # reads as the captions having stopped working, so it gets a line of its
+    # own saying what is being waited for.
+    GAP = 45.0
+    FILLERS = [
+        ('Riding the lifts',
+         'Open-RMF owns the lift, the door and the floor space, and none of '
+         'it is anything the planner reasoned about'),
+        ('Still riding',
+         'The model changes at neither end of the ride: going somewhere to '
+         'find out is not yet finding out'),
+    ]
+    spaced = []
+    for index, entry in enumerate(kept):
+        spaced.append(entry)
+        if index + 1 >= len(kept):
+            continue
+        here, following = entry[0], kept[index + 1][0]
+        # One line per GAP of silence, evenly spaced across it, so a long ride
+        # never reads as the captions having stopped.
+        count = int((following - here) // GAP)
+        step = (following - here) / (count + 1)
+        for n in range(count):
+            spaced.append((here + step * (n + 1), 'filler')
+                          + FILLERS[n % len(FILLERS)])
+    kept = spaced
 
     # What is left may still be closer together than it can be read. Each
     # caption is pushed to start no earlier than the previous one ends, which

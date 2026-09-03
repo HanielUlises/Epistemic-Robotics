@@ -17,7 +17,7 @@
 Writes the action map that joins the epistemic vocabulary to the PlanSys2 one.
 
     make_mapping.py --task out/problem_2.json --objects lobby l2_suite l3_suite \
-                    --out pddl/hotel-mapping.json
+                    --translate pddl/translation.json --out pddl/mapping.json
 
 plank grounds an action into a single token by joining the action name and its
 arguments with underscores, and object names contain underscores too:
@@ -64,19 +64,12 @@ def parse(name, vocabulary):
     return head, arguments
 
 
-# Epistemic action -> the PlanSys2 action it is executed as, and how long the
-# executor should allow for it. The durations are generous: RMF decides what a
-# lift ride really costs and the bridge waits for it.
-TRANSLATION = {
-    'deploy':       ('deploy', 180.0, 6),
-    'go':           ('goto_zone', 180.0, 3),
-    'inspect':      ('look_into', 30.0, 2),
-    'contain':      ('shut_valve', 20.0, 2),
-    'brief-leak':   ('radio', 4.0, 3),
-    'brief-safe':   ('radio', 4.0, 3),
-    'page-leak-at': ('page', 4.0, 2),
-    'page-safe':    ('page', 4.0, 1),
-}
+# Epistemic action -> the PlanSys2 action it is executed as, how long the
+# executor should allow for it, and how many arguments it takes. Read from a
+# file, because the two demos in this workspace speak different domains and
+# this tool has no business knowing either.
+#
+#   {"go": {"action": "goto_zone", "duration": 180.0, "arity": 3}, ...}
 
 
 def main():
@@ -84,10 +77,21 @@ def main():
     parser.add_argument('--task', required=True, help='plank export JSON')
     parser.add_argument('--objects', nargs='+', required=True,
                         help='the object names the task grounds over')
+    parser.add_argument('--translate', required=True,
+                        help='JSON saying which PlanSys2 action each epistemic '
+                             'action is executed as')
     parser.add_argument('--out', required=True)
     args = parser.parse_args()
 
     task = json.load(open(args.task))
+    declared = json.load(open(args.translate))
+    translation = {
+        name: (entry['action'], float(entry['duration']), int(entry['arity']))
+        for name, entry in declared.items()
+    }
+    translation_padding = {
+        name: list(entry.get('pad', [])) for name, entry in declared.items()
+    }
     vocabulary = vocabularies(task, args.objects)
     if not vocabulary:
         raise SystemExit('the task declares no agents or objects to parse against')
@@ -99,10 +103,10 @@ def main():
     trivial = 0
     for name in names:
         head, arguments = parse(name, vocabulary)
-        if head not in TRANSLATION:
+        if head not in translation:
             unparsed.append(name)
             continue
-        target, duration, arity = TRANSLATION[head]
+        target, duration, arity = translation[head]
         if arguments is None or len(arguments) != arity:
             unparsed.append(name)
             continue
@@ -123,12 +127,11 @@ def main():
             trivial += 1
             continue
 
-        if head == 'page-safe':
-            # page-safe names no suite and the PDDL action takes one. It is
-            # never chosen under a goal that protects the guest.
-            expression = f'(page {arguments[0]} l2_suite)'
-        else:
-            expression = f'({target} ' + ' '.join(arguments) + ')'
+        # An epistemic action may take fewer arguments than the PlanSys2 one
+        # it runs as. `page-safe` names no suite and `page` takes one, so the
+        # translation may pad with a fixed tail.
+        padding = translation_padding.get(head, [])
+        expression = f'({target} ' + ' '.join(arguments + padding) + ')'
 
         mapping[name] = {'action': expression, 'duration': duration}
 

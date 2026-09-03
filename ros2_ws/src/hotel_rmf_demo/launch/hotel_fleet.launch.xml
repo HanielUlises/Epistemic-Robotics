@@ -71,8 +71,32 @@
     </node>
   </group>
 
-  <include file="$(find-pkg-share rmf_demos_gz_classic)/simulation.launch.xml">
-    <arg name="map_name" value="hotel"/>
-    <arg name="gazebo_version" value="$(var gazebo_version)"/>
-  </include>
+  <!--
+    rmf_demos_gz_classic/simulation.launch.xml would do this, and it takes the
+    world from rmf_demos_maps. The world is copied into this package for one
+    change: its GUI camera is pointed straight down at the middle of the
+    building instead of at the south face. Nothing in this map models a
+    ceiling, so a camera above it sees into whichever floor the toggle_floors
+    plugin is showing, and the recorder drives those buttons to follow the
+    agent that is acting. Models, assets and plugins all still come from
+    rmf_demos.
+  -->
+  <let name="world_path" value="$(find-pkg-share hotel_rmf_demo)/worlds/hotel.world"/>
+  <let name="model_path" value="$(find-pkg-share rmf_demos_maps)/maps/hotel/models:$(find-pkg-share rmf_demos_assets)/models:/usr/share/gazebo-$(var gazebo_version)/models"/>
+  <let name="resource_path" value="$(find-pkg-share rmf_demos_assets):/usr/share/gazebo-$(var gazebo_version)"/>
+  <let name="plugin_path" value="$(find-pkg-prefix rmf_robot_sim_gz_classic_plugins)/lib/rmf_robot_sim_gz_classic_plugins:$(find-pkg-prefix rmf_building_sim_gz_classic_plugins)/lib/rmf_building_sim_gz_classic_plugins:/usr/share/gazebo-$(var gazebo_version)"/>
+
+  <executable cmd="gzserver --verbose -s libgazebo_ros_factory.so -s libgazebo_ros_init.so $(var world_path)" output="both">
+    <env name="GAZEBO_MODEL_PATH" value="$(var model_path)"/>
+    <env name="GAZEBO_RESOURCE_PATH" value="$(var resource_path)"/>
+    <env name="GAZEBO_PLUGIN_PATH" value="$(var plugin_path)"/>
+    <env name="GAZEBO_MODEL_DATABASE_URI" value=""/>
+  </executable>
+  <group unless="$(var headless)">
+    <executable cmd="gzclient --verbose $(var world_path)" output="both">
+      <env name="GAZEBO_MODEL_PATH" value="$(var model_path)"/>
+      <env name="GAZEBO_RESOURCE_PATH" value="$(var resource_path)"/>
+      <env name="GAZEBO_PLUGIN_PATH" value="$(var plugin_path)"/>
+    </executable>
+  </group>
 </launch>

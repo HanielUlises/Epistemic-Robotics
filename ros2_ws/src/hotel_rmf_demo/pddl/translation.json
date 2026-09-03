@@ -1,0 +1,11 @@
+{
+  "deploy":       {"action": "deploy",     "duration": 180.0, "arity": 6},
+  "go":           {"action": "goto_zone",  "duration": 180.0, "arity": 3},
+  "inspect":      {"action": "look_into",  "duration": 30.0,  "arity": 2},
+  "contain":      {"action": "shut_valve", "duration": 20.0,  "arity": 2},
+  "brief-leak":   {"action": "radio",      "duration": 4.0,   "arity": 3},
+  "brief-safe":   {"action": "radio",      "duration": 4.0,   "arity": 3},
+  "page-leak-at": {"action": "page",       "duration": 4.0,   "arity": 2},
+  "page-safe":    {"action": "page",       "duration": 4.0,   "arity": 1,
+                   "pad": ["l2_suite"]}
+}
