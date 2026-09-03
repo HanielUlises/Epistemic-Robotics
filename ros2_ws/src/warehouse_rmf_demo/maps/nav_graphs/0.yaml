@@ -20,11 +20,11 @@ levels:
     - - 4.3
       - -3.94
       - {name: bay3}
+    - - -3.5
+      - -5.0
+      - {name: south_turn}
     - - 2.2
-      - -9.3
-      - {name: south_east}
-    - - 2.2
-      - -6.2
+      - -5.0
       - {name: lane_south}
     - - 2.2
       - -2.14
@@ -40,22 +40,22 @@ levels:
       - {name: r2_charger, is_charger: true, is_parking_spot: true}
     lanes:
     - - 0
+      - 6
+      - {speed_limit: 0}
+    - - 6
+      - 0
+      - {speed_limit: 0}
+    - - 6
       - 1
       - {speed_limit: 0}
     - - 1
-      - 0
+      - 6
       - {speed_limit: 0}
     - - 1
       - 2
       - {speed_limit: 0}
     - - 2
       - 1
-      - {speed_limit: 0}
-    - - 0
-      - 6
-      - {speed_limit: 0}
-    - - 6
-      - 0
       - {speed_limit: 0}
     - - 6
       - 7

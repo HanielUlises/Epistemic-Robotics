@@ -22,16 +22,68 @@ also generates the Gazebo world. Here the world already exists and is not ours
 rasterises the occupancy grid from -- so the graph is written directly in that
 world's own metres instead.
 
-The coordinates are not invented. They are the constants in
+The zone coordinates are not invented. They are the constants in
 `warehouse_scenario/include/warehouse_scenario/warehouse.hpp`, which is where
 the rest of this repository reads the floor plan from, so the zones RMF routes
 between and the zones the mu-calculus planner routes over are the same places.
 
-    make_nav_graph.py --out maps/nav_graphs/0.yaml
+The lanes between them are another matter, and drawing them by eye does not
+work. A first version ran a lane straight east along the south wall, which
+looks reasonable on paper and passes through the shelving; the robot drove
+into it and stopped, the task never completed, and nothing in RMF said why.
+So every waypoint and every lane is now checked against the occupancy grid
+`warehouse_scenario` rasterised from the world's own collision meshes, and a
+lane that crosses anything is an error here rather than a robot halted in a
+corridor an hour later.
+
+    make_nav_graph.py --map ../warehouse_scenario/maps/aws_small_warehouse.yaml \
+                      --out maps/nav_graphs/0.yaml
 """
 
 import argparse
+import math
+import os
+
 import yaml
+
+
+class Floor:
+    """The occupancy grid, for asking whether a robot could be somewhere."""
+
+    def __init__(self, path):
+        meta = yaml.safe_load(open(path))
+        self.resolution = meta['resolution']
+        self.origin_x, self.origin_y = meta['origin'][0], meta['origin'][1]
+        image = os.path.join(os.path.dirname(path), meta['image'])
+        with open(image, 'rb') as handle:
+            if handle.readline().strip() != b'P5':
+                raise SystemExit(f'{image} is not a binary PGM')
+            line = handle.readline()
+            while line.startswith(b'#'):
+                line = handle.readline()
+            self.width, self.height = map(int, line.split())
+            handle.readline()
+            self.pixels = handle.read()
+
+    def free(self, x, y, margin):
+        """Free, with clearance: a robot has width and RMF wants room to turn."""
+        steps = int(margin / self.resolution)
+        for dc in range(-steps, steps + 1):
+            for dr in range(-steps, steps + 1):
+                col = int((x - self.origin_x) / self.resolution) + dc
+                row = self.height - 1 - int((y - self.origin_y) / self.resolution) + dr
+                if not (0 <= col < self.width and 0 <= row < self.height):
+                    return False
+                if self.pixels[row * self.width + col] < 200:
+                    return False
+        return True
+
+    def clear(self, a, b, margin):
+        steps = max(2, int(math.dist(a, b) / (self.resolution)))
+        return all(
+            self.free(a[0] + (b[0] - a[0]) * i / steps,
+                      a[1] + (b[1] - a[1]) * i / steps, margin)
+            for i in range(steps + 1))
 
 # warehouse.hpp, verbatim. The bays are the centres of kBayAisle2 and
 # kBayAisle3; the docks and the corridor are the robots' start poses.
@@ -49,11 +101,12 @@ WAYPOINTS = [
     ('lane', LANE),
     ('bay2', BAY2),
     ('bay3', BAY3),
-    # Corners, so that a lane never cuts through the rack block. dock_south is
-    # already the south end of the west corridor, so the run east along the
-    # south wall starts there.
-    ('south_east', (2.20, -9.30)),
-    ('lane_south', (2.20, -6.20)),
+    # Corners, so that no lane cuts through the rack block. The crossing from
+    # the west corridor to the service lane is made at y = -5.0, which is the
+    # middle of the only wide band of floor that is clear the whole way across;
+    # the obvious run along the south wall is not, whatever the map looks like.
+    ('south_turn', (-3.50, -5.00)),
+    ('lane_south', (2.20, -5.00)),
     ('bay2_mouth', (2.20, -2.14)),
     ('bay3_mouth', (2.20, -3.94)),
 ]
@@ -62,10 +115,10 @@ WAYPOINTS = [
 # so nothing crosses it: an aisle is a pocket with one mouth on the service
 # lane, and a robot that has looked into one comes back out to try the other.
 EDGES = [
-    ('dock_south', 'corridor'),
+    ('dock_south', 'south_turn'),
+    ('south_turn', 'corridor'),
     ('corridor', 'dock_north'),
-    ('dock_south', 'south_east'),
-    ('south_east', 'lane_south'),
+    ('south_turn', 'lane_south'),
     ('lane_south', 'lane'),
     ('lane', 'bay2_mouth'),
     ('bay2_mouth', 'bay2'),
@@ -83,9 +136,28 @@ CHARGERS = {
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', required=True)
+    parser.add_argument('--map', required=True,
+                        help="the occupancy grid to check the graph against")
+    parser.add_argument('--margin', type=float, default=0.30,
+                        help='clearance a lane must have on either side')
     args = parser.parse_args()
 
+    floor = Floor(args.map)
+
     named = list(WAYPOINTS) + list(CHARGERS.items())
+
+    # Check before writing. A graph that looks right and crosses a rack costs
+    # an hour of watching a robot not move.
+    problems = [f'waypoint {name} at {point} is not clear'
+                for name, point in named if not floor.free(*point, args.margin)]
+    lookup = dict(named)
+    for a, b in list(EDGES) + [('dock_south', 'r1_charger'),
+                               ('dock_north', 'r2_charger')]:
+        if not floor.clear(lookup[a], lookup[b], args.margin):
+            problems.append(f'lane {a} -> {b} crosses something')
+    if problems:
+        raise SystemExit('this graph does not fit the building:\n  ' +
+                         '\n  '.join(problems))
     index = {name: i for i, (name, _) in enumerate(named)}
 
     vertices = []

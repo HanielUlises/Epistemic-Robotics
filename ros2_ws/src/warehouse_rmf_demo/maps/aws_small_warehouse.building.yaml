@@ -36,13 +36,13 @@ levels:
       - 0.0
       - bay3
       - {}
-    - - 2.2
-      - -9.3
+    - - -3.5
+      - -5.0
       - 0.0
-      - south_east
+      - south_turn
       - {}
     - - 2.2
-      - -6.2
+      - -5.0
       - 0.0
       - lane_south
       - {}
@@ -70,6 +70,12 @@ levels:
         is_parking_spot: [4, true]
     lanes:
     - - 0
+      - 6
+      - bidirectional: [4, true]
+        graph_idx: [2, 0]
+        orientation: [1, '']
+        speed_limit: [3, 0]
+    - - 6
       - 1
       - bidirectional: [4, true]
         graph_idx: [2, 0]
@@ -77,12 +83,6 @@ levels:
         speed_limit: [3, 0]
     - - 1
       - 2
-      - bidirectional: [4, true]
-        graph_idx: [2, 0]
-        orientation: [1, '']
-        speed_limit: [3, 0]
-    - - 0
-      - 6
       - bidirectional: [4, true]
         graph_idx: [2, 0]
         orientation: [1, '']
