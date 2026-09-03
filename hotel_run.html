@@ -5,26 +5,26 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Hotel Incident &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with the agents' knowledge measured after every action: two of three agents end holding beliefs the world contradicts, and the frame leaves S5 for KD45 during execution.">
+<meta name="description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with belief measured at every step.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The Hotel Incident">
-<meta property="og:description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with the agents' knowledge measured after every action: two of three agents end holding beliefs the world contradicts, and the frame leaves S5 for KD45 during execution.">
+<meta property="og:title" content="The hotel incident">
+<meta property="og:description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with belief measured at every step.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/hotel_run.html">
 
 
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-hotel-run.jpg">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/hotel_run.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gazebo and RViz side by side: the Open-RMF hotel, and the two robots dispatched to different floors">
-<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og-hotel-run.jpg">
-<meta name="twitter:title" content="The Hotel Incident">
-<meta name="twitter:description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with the agents' knowledge measured after every action: two of three agents end holding beliefs the world contradicts, and the frame leaves S5 for KD45 during execution.">
+<meta property="og:image:alt" content="The Open-RMF hotel floorplan during the run.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/hotel_run.jpg">
+<meta name="twitter:title" content="The hotel incident">
+<meta name="twitter:description" content="An epistemic policy executed over an Open-RMF fleet across three hotel floors, with belief measured at every step.">
 
 
 <script>
@@ -146,9 +146,71 @@ header h1 a:hover{color:var(--red)}
   border-left:1px solid var(--border)}
 .nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
 .nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
-@media(max-width:560px){
-  .nav-menu{width:100%;margin:.6rem 0 0}
-  .nav-panel{left:0;right:auto;width:100%;min-width:0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
 }
 
 .hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
@@ -415,6 +477,8 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
+  <meta name="twitter:image:alt" content="The Open-RMF hotel floorplan during the run.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/hotel_run.html">
 </head>
 <body>
 
@@ -423,9 +487,14 @@ sup.cite a:hover{text-decoration:underline}
     <div class="hdr-inner">
       <span class="site-tag">epistemic-robotics</span>
       <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
       <details class="nav-menu">
         <summary>Contents</summary>
-        <div class="nav-panel">
+        <div class="nav-panel" id="site-contents">
           <h6>Pages</h6>
           <a href="index.html">Overview</a>
           <details class="nav-folder">
@@ -1083,5 +1152,46 @@ python3 scenarios/hotel/tools/figures.py \
 })();
 </script>
 
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
 </body>
 </html>
