@@ -16,6 +16,14 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RAW="$1"; VIDEO="$2"; LOG="$3"; REC_START="$4"
+
+# Each pane is scaled to this height before the two are stacked, so a pair of
+# 16:9 panes gives a 3840x1080 film, the shape the rest of the demos on the
+# site are in. The caption geometry below was authored against a 1920-wide
+# frame and U carries it up to whatever height this is set to.
+PANE_HEIGHT="${PANE_HEIGHT:-1080}"
+U=$(( PANE_HEIGHT / 540 ))
+(( U < 1 )) && U=1
 SPEED="${SPEED:-4}"
 
 # Where each pane's drawn content sits in the grab, as ffmpeg crop rects.
@@ -37,10 +45,23 @@ FONT_MONO="${FONT_MONO:-/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf
 GOAL="${GOAL:-(and (safe)  ([porter] (safe))  (<Kw. guest> (leak-at l2_suite)))}"
 GLOSS="${GLOSS:-the incident is over  -  the porter comes to know it  -  the guest never learns which suite}"
 
-python3 "${HERE}/captions.py" \
-  --log "${LOG}" --start "${REC_START}" --speed "${SPEED}" --out "${SEGMENTS}"
+# How long a caption stays up when nothing follows it soon. A caption holds
+# until the next one is due, up to this.
+HOLD="${HOLD:-6}"
 
-escape() { sed -e "s/'/\\\\\\\\'/g" -e 's/:/\\:/g' -e 's/%/\\%/g' <<< "$1"; }
+python3 "${HERE}/captions.py" \
+  --log "${LOG}" --start "${REC_START}" --speed "${SPEED}" --hold "${HOLD}" \
+  --out "${SEGMENTS}"
+
+# Squeezes the whitespace around and inside a caption field. The tool that
+# did this before read its input as shell words, which eats the quote out
+# of "the planner's r1".
+trim() { sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/[[:space:]]\{2,\}/ /g' <<< "$1"; }
+
+# drawtext takes its text inside single quotes, and no amount of backslashes
+# puts a literal one back in, so apostrophes are turned into the typographic
+# character, which needs no escaping and reads better anyway.
+escape() { sed -e "s/'/’/g" -e 's/:/\\:/g' -e 's/%/\\%/g' <<< "$1"; }
 
 # The last few actions happen seconds apart, and captions that overlap cannot
 # be read, so they are queued one after another. That queue can outlast the
@@ -70,9 +91,13 @@ PAD=$(awk -v raw="${RAW_SECONDS}" -v speed="${SPEED}" '
 
 if [[ -n "${PANE_LEFT}" && -n "${PANE_RIGHT}" ]]; then
   echo "composing ${PANE_LEFT} and ${PANE_RIGHT} side by side"
-  compose="[0:v]crop=${PANE_LEFT},scale=-2:540[l];"
-  compose+="[0:v]crop=${PANE_RIGHT},scale=-2:540[r];"
-  compose+="[l][r]hstack=inputs=2,scale=1920:-2,"
+  compose="[0:v]crop=${PANE_LEFT},scale=-2:${PANE_HEIGHT}[l];"
+  compose+="[0:v]crop=${PANE_RIGHT},scale=-2:${PANE_HEIGHT}[r];"
+  # The two caption bands get a band of their own above and below the panes
+  # instead of being laid over them. Drawn over, the top band hides whatever
+  # the schedule view has in its first two hundred rows.
+  compose+="[l][r]hstack=inputs=2,"
+  compose+="pad=iw:ih+$(( 222 * U )):0:$(( 104 * U )):black,"
 else
   compose=""
 fi
@@ -82,22 +107,22 @@ if awk -v p="${PAD}" 'BEGIN{exit !(p > 0)}'; then
   echo "holding the last frame for ${PAD}s so the closing captions fit"
   filter+=",tpad=stop_mode=clone:stop_duration=${PAD}"
 fi
-filter+=",drawbox=x=0:y=0:w=iw:h=104:color=black@0.66:t=fill"
+filter+=",drawbox=x=0:y=0:w=iw:h=$(( 104 * U )):color=black@0.66:t=fill"
 filter+=",drawtext=fontfile='${FONT_MONO}':text='$(escape ":goal ${GOAL}")'"
-filter+=":x=32:y=18:fontsize=27:fontcolor=0xF2F2F2"
+filter+=":x=$(( 32 * U )):y=$(( 18 * U )):fontsize=$(( 27 * U )):fontcolor=0xF2F2F2"
 filter+=",drawtext=fontfile='${FONT}':text='$(escape "${GLOSS}")'"
-filter+=":x=32:y=60:fontsize=24:fontcolor=0xB4B4B4"
+filter+=":x=$(( 32 * U )):y=$(( 60 * U )):fontsize=$(( 24 * U )):fontcolor=0xB4B4B4"
 
 while IFS='|' read -r window headline detail; do
   [[ "${window}" == \#* || -z "${window// }" ]] && continue
   read -r start end <<< "${window}"
   on="between(t,${start},${end})"
 
-  filter+=",drawbox=x=0:y=ih-118:w=iw:h=118:color=black@0.66:t=fill:enable='${on}'"
-  filter+=",drawtext=fontfile='${FONT_BOLD}':text='$(escape "$(xargs <<< "${headline}")")'"
-  filter+=":x=32:y=h-100:fontsize=34:fontcolor=white:enable='${on}'"
-  filter+=",drawtext=fontfile='${FONT}':text='$(escape "$(xargs <<< "${detail}")")'"
-  filter+=":x=32:y=h-54:fontsize=25:fontcolor=0xC8C8C8:enable='${on}'"
+  filter+=",drawbox=x=0:y=ih-$(( 118 * U )):w=iw:h=$(( 118 * U )):color=black@0.66:t=fill:enable='${on}'"
+  filter+=",drawtext=fontfile='${FONT_BOLD}':text='$(escape "$(trim "${headline}")")'"
+  filter+=":x=$(( 32 * U )):y=h-$(( 100 * U )):fontsize=$(( 34 * U )):fontcolor=white:enable='${on}'"
+  filter+=",drawtext=fontfile='${FONT}':text='$(escape "$(trim "${detail}")")'"
+  filter+=":x=$(( 32 * U )):y=h-$(( 54 * U )):fontsize=$(( 25 * U )):fontcolor=0xC8C8C8:enable='${on}'"
 done < "${SEGMENTS}"
 
 # Cutting two panes out of one grab reads the input twice, which makes the

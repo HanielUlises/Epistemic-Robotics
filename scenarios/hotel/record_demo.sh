@@ -55,6 +55,7 @@ cleanup() {
   [[ -n "${DEMO_PID}"  ]] && kill -TERM -"${DEMO_PID}" 2>/dev/null || true
   sleep 3
   [[ -n "${DEMO_PID}"  ]] && kill -KILL -"${DEMO_PID}" 2>/dev/null || true
+  [[ -n "${FLOORS_PID}" ]] && kill -TERM "${FLOORS_PID}" 2>/dev/null || true
   [[ -n "${XVFB_PID}"  ]] && kill -KILL "${XVFB_PID}" 2>/dev/null || true
 }
 trap cleanup EXIT
@@ -152,39 +153,62 @@ place_window() {           # name-pattern x y w h
   echo "  ${name} would not stay where it was put" >&2
   return 1
 }
-# RViz relays out when it is resized and Gazebo does not, so only RViz is
-# given a size. Gazebo is moved to the origin and left at whatever it drew,
-# which is then exactly what its window geometry reports and exactly what gets
-# cut out below.
-move_window "Gazebo" 0 0 || true
+# Both are asked for half the display. Gazebo does not always take the size --
+# under some window managers it snaps back to what it drew -- so a refusal is
+# not fatal and the pane is measured from the geometry it settled on either
+# way. Leaving it unasked is what produced a 434-pixel film.
+place_window "Gazebo" 0 0 1920 1080 || move_window "Gazebo" 0 0 || true
 place_window "RViz" 1920 0 1920 1080 || true
 sleep 3
 
+# The camera looks straight down at the building from the world this package
+# ships. What it sees is whichever floor is left showing, so this follows the
+# agent that is acting and shows that one. A camera that tracked a robot
+# instead ends up inside the floor slab whenever the robot is in a room.
+python3 "${HERE}/tools/follow_floors.py" --log "${LOG}" --display "${DISPLAY}" &
+FLOORS_PID=$!
+
 # What each of them actually drew, which is not the same as the window it was
 # given: see the note in tools/burn_captions.sh.
-pane_of() {                # name-pattern offset-x
+# Each window is cut down to the part worth filming. Gazebo keeps a tool
+# column down its left and a toolbar across its top, and RViz gives half its
+# width to the schedule panel, so a full-window pane is mostly chrome.
+pane_of() {                # name-pattern offset-x inset-x inset-y trim-w trim-h
   local id geometry w h
   id=$(largest_window "$1") || return 1
   geometry=$(xdotool getwindowgeometry --shell "${id}")
   w=$(sed -n 's/^WIDTH=//p' <<< "${geometry}")
   h=$(sed -n 's/^HEIGHT=//p' <<< "${geometry}")
-  # Even sides, and never past the bottom of the grab.
-  (( w = w / 2 * 2, h = h / 2 * 2 ))
   (( h > 1080 )) && h=1080
-  echo "${w}:${h}:$2:0"
+  (( w = w - $3 - ${5:-0}, h = h - $4 - ${6:-0} ))
+  # Even sides, which x264 requires of a crop.
+  (( w = w / 2 * 2, h = h / 2 * 2 ))
+  echo "${w}:${h}:$(( $2 + $3 )):$4"
 }
-PANE_LEFT=$(pane_of "Gazebo" 0 || echo "")
-PANE_RIGHT=$(pane_of "RViz" 1920 || echo "")
+# Gazebo: past the tool column and under the toolbar, stopping above the
+# status bar. RViz: the floorplan alone. The schedule panel takes the first
+# 686 columns of that window and is empty for the whole run.
+PANE_LEFT=$(pane_of "Gazebo" 0 264 78 0 42 || echo "")
+PANE_RIGHT=$(pane_of "RViz" 1920 686 26 20 40 || echo "")
 echo "  panes: left ${PANE_LEFT:-none}, right ${PANE_RIGHT:-none}"
+
+# A grab left over from an interrupted run keeps writing to this same file,
+# and two ffmpegs on one path produce a video that plays as garbage without
+# either of them reporting anything. Refuse to start rather than discover it
+# an hour later.
+if pgrep -f "ffmpeg.*${RAW##*/}" > /dev/null 2>&1; then
+  echo "another grab is already writing ${RAW}; stop it first" >&2
+  exit 1
+fi
 
 echo "recording to ${RAW}"
 # The instant the grab starts, so the log's wall-clock stamps can be turned
 # into positions in the film.
 REC_START=$(date +%s.%N)
 ffmpeg -hide_banner -loglevel error -y \
-  -f x11grab -framerate "${FPS}" -video_size "${GEOMETRY%%+*}" \
+  -f x11grab -draw_mouse 0 -framerate "${FPS}" -video_size "${GEOMETRY%%+*}" \
   -i "${DISPLAY}+${GEOMETRY#*+}" \
-  -vf "scale=1920:-2" -c:v libx264 -preset veryfast -crf 26 -pix_fmt yuv420p \
+  -c:v libx264 -preset veryfast -crf 26 -pix_fmt yuv420p \
   "${RAW}" &
 FFMPEG_PID=$!
 

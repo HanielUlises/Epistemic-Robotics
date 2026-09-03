@@ -26,7 +26,7 @@ ament_target_dependencies(hotel_mission
 
 install(TARGETS hotel_mission DESTINATION lib/${PROJECT_NAME})
 
-install(DIRECTORY launch config params pddl tools
+install(DIRECTORY launch config params worlds pddl tools
   DESTINATION share/${PROJECT_NAME}
 )
 
