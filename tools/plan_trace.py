@@ -484,6 +484,375 @@ def chip(model, formula, right, y):
     return out
 
 
+
+
+# ────────────────────────────────────────────── one product update, drawn ──
+
+def varying_atoms(models):
+    """The atoms that are not constant across a family of models.
+
+    A world's label carries every ground atom that holds there, most of them
+    static facts about the building. What distinguishes one world from another
+    is the handful that vary, and those are the only ones worth drawing.
+    """
+    labels = [m.labels[w] for m in models for w in m.worlds]
+    if not labels:
+        return []
+    union = set().union(*labels)
+    return sorted(a for a in union
+                  if any(a in l for l in labels) and not all(a in l for l in labels))
+
+
+def short(atom):
+    """A ground atom shortened to what distinguishes it."""
+    return atom.replace('_', ' ')
+
+
+def observability_classes(action, agent, model):
+    """The class this agent occupies, at each world of the model."""
+    return {w: observability(action, agent, model, w) for w in model.worlds}
+
+
+def frame_of(model, agent):
+    """The closure properties the agent's relation actually satisfies."""
+    edges = {(w, v) for w in model.worlds for v in model.image(agent, w)}
+    has = lambda w, v: (w, v) in edges
+    reflexive = all(has(w, w) for w in model.worlds)
+    serial = all(model.image(agent, w) for w in model.worlds)
+    symmetric = all(has(v, w) for (w, v) in edges)
+    transitive = all(has(w, y) for (w, x) in edges for (x2, y) in edges if x2 == x)
+    euclidean = all(has(x, y) for (w, x) in edges for (w2, y) in edges if w2 == w)
+    if reflexive and symmetric and transitive:
+        name = 'S5'
+    elif serial and transitive and euclidean:
+        name = 'KD45'
+    elif not serial:
+        name = 'not serial'
+    else:
+        name = 'K'
+    return {'reflexive': reflexive, 'serial': serial, 'frame': name,
+            'edges': len(edges)}
+
+
+def update_data(task, model, action_name, agents, event=None):
+    """Everything one product update needs, computed rather than drawn."""
+    action = task['actions'][action_name]
+    events = action['events']
+    designated = event and [event] or action['designated']
+    after, provenance = update(model, action, agents, designated)
+    atoms = varying_atoms([model, after])
+
+    def label(m, w):
+        return [short(a) for a in atoms if a in m.labels[w]] or ['—']
+
+    classes = {a: observability_classes(action, a, model) for a in agents}
+    here = {a: classes[a][sorted(model.designated)[0]] for a in agents}
+
+    return {
+        'action': action_name,
+        'type': action.get('action-type', ''),
+        'agents': list(agents),
+        'atoms': [short(a) for a in atoms],
+        'M': {
+            'worlds': model.worlds,
+            'designated': sorted(model.designated),
+            'label': {w: label(model, w) for w in model.worlds},
+            'rel': {a: {w: sorted(model.image(a, w)) for w in model.worlds}
+                    for a in agents},
+        },
+        'E': {
+            'events': events,
+            'designated': sorted(designated),
+            'pre': {e: tex(convert(action['preconditions'][e])) for e in events},
+            'klass': here,
+            'varies': {a: len(set(classes[a].values())) > 1 for a in agents},
+            'q': {a: action['relations'].get(here[a], {}) for a in agents},
+        },
+        'Mp': {
+            'worlds': after.worlds,
+            'designated': sorted(after.designated),
+            'from': {w: list(provenance[w]) for w in after.worlds},
+            'label': {w: label(after, w) for w in after.worlds},
+            'rel': {a: {w: sorted(after.image(a, w)) for w in after.worlds}
+                    for a in agents},
+        },
+        'before': {a: frame_of(model, a) for a in agents},
+        'after': {a: frame_of(after, a) for a in agents},
+    }
+
+
+UPDATE_STYLE = """<style>
+.pu-wrap{position:relative}
+.pu-note{font-size:.78rem;color:var(--gray);margin:.85rem 0 0;
+  border-top:1px solid var(--border);padding-top:.75rem;display:grid;gap:.3rem}
+.pu-note b{color:var(--black);font-weight:600}
+.pu-note .ag{display:inline-block;min-width:5.6rem;font-family:var(--mono);
+  font-size:.72rem;color:var(--black)}
+.pu-lost{color:var(--red);font-weight:600}
+</style>
+"""
+
+UPDATE_SCRIPT = r'''<script>
+(function(){
+'use strict';
+var D = __DATA__, ID = '__ID__';
+var svg = document.getElementById(ID);
+if (!svg) return;
+var RED = '#C8102E', INK = '#111', GRAY = '#5A5A5A', BORD = '#D6D6D6',
+    STEEL = '#1A52A0';
+var RM = window.matchMedia &&
+         window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+var agent = D.agents[0], stage = 0, timer = null;
+
+function el(tag, at){
+  var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in at) n.setAttribute(k, at[k]);
+  return n;
+}
+function text(x, y, s, at){
+  var t = el('text', at || {});
+  t.setAttribute('x', x); t.setAttribute('y', y);
+  t.textContent = s;
+  return t;
+}
+
+/* A node is a world; the ring marks it designated, and the loop above it is
+   the reflexive edge whose loss is what this figure exists to show. */
+/* The world's name goes inside the circle and everything else beneath it:
+   a valuation set never fits in a node, and shrinking it to make it fit is
+   how a diagram stops being readable. */
+function node(g, x, y, r, name, designated){
+  if (designated)
+    g.appendChild(el('circle', {cx:x, cy:y, r:r + 5, fill:'none',
+      stroke:RED, 'stroke-width':1.2}));
+  g.appendChild(el('circle', {cx:x, cy:y, r:r, fill:'#fff', stroke:INK,
+    'stroke-width':1.5}));
+  g.appendChild(text(x, y + 4, name,
+    {'font-size':11, 'text-anchor':'middle', fill:INK,
+     'font-family':"'Courier New',monospace"}));
+}
+
+function loop(g, x, y, r, colour){
+  var d = 'M' + (x - 7) + ' ' + (y - r + 1) +
+          ' C' + (x - 17) + ' ' + (y - r - 22) + ' ' +
+          (x + 17) + ' ' + (y - r - 22) + ' ' + (x + 7) + ' ' + (y - r + 1);
+  g.appendChild(el('path', {d:d, fill:'none', stroke:colour,
+    'stroke-width':1.4, 'marker-end':'url(#' + ID + '-a)'}));
+}
+
+function arc(g, a, b, colour, both){
+  var dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy);
+  if (!len) return;
+  var ux = dx / len, uy = dy / len;
+  var x1 = a.x + ux * (a.r + 3), y1 = a.y + uy * (a.r + 3);
+  var x2 = b.x - ux * (b.r + 6), y2 = b.y - uy * (b.r + 6);
+  var mx = (x1 + x2) / 2 - uy * 16, my = (y1 + y2) / 2 + ux * 16;
+  var p = el('path', {d:'M' + x1 + ' ' + y1 + ' Q' + mx + ' ' + my + ' ' +
+    x2 + ' ' + y2, fill:'none', stroke:colour, 'stroke-width':1.4,
+    'marker-end':'url(#' + ID + '-a)'});
+  if (both) p.setAttribute('marker-start', 'url(#' + ID + '-a)');
+  g.appendChild(p);
+}
+
+function relation(g, pos, rel, colour){
+  var seen = {};
+  Object.keys(rel).forEach(function(w){
+    rel[w].forEach(function(v){
+      if (w === v){ loop(g, pos[w].x, pos[w].y, pos[w].r, colour); return; }
+      if (seen[v + '|' + w]) return;
+      var both = (rel[v] || []).indexOf(w) >= 0;
+      seen[w + '|' + v] = 1;
+      arc(g, pos[w], pos[v], colour, both);
+    });
+  });
+}
+
+function row(gW, gR, worlds, designated, labels, rel, x0, x1, y, r, colour){
+  var pos = {}, n = worlds.length;
+  var step = n > 1 ? Math.min((x1 - x0) / (n - 1), 180) : 0;
+  var left = x0 + ((x1 - x0) - step * (n - 1)) / 2;
+  worlds.forEach(function(w, i){ pos[w] = {x:left + i * step, y:y, r:r}; });
+  worlds.forEach(function(w){
+    node(gW, pos[w].x, pos[w].y, r, w, designated.indexOf(w) >= 0);
+    labels[w].forEach(function(line, i){
+      gW.appendChild(text(pos[w].x, y + r + 15 + i * 11, line,
+        {'font-size':9, 'text-anchor':'middle', fill:GRAY}));
+    });
+    pos[w].below = y + r + 15 + labels[w].length * 11;
+  });
+  if (rel) relation(gR, pos, rel, colour);
+  return pos;
+}
+
+function draw(){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var defs = el('defs', {});
+  var m = el('marker', {id:ID + '-a', viewBox:'0 0 10 10', refX:9, refY:5,
+    markerWidth:5.5, markerHeight:5.5, orient:'auto'});
+  m.appendChild(el('path', {d:'M0 0 L10 5 L0 10 z', fill:STEEL}));
+  defs.appendChild(m);
+  svg.appendChild(defs);
+
+  var W = 1000;
+  svg.appendChild(text(150, 22, 'epistemic state \u{1D4DC}',
+    {'font-size':11, fill:GRAY, 'text-anchor':'middle'}));
+  svg.appendChild(text(620, 22, 'event model \u{1D4D4}  ·  ' + D.type,
+    {'font-size':11, fill:GRAY, 'text-anchor':'middle'}));
+  var gM = el('g', {}), gMr = el('g', {});
+  svg.appendChild(gMr); svg.appendChild(gM);
+  var mpos = row(gM, gMr, D.M.worlds, D.M.designated, D.M.label,
+                 D.M.rel[agent], 40, 300, 92, 21, STEEL);
+
+  /* The events, with the relation Q_i the selected agent is given. It is
+     the pairing of the event that occurred with one that did not that
+     survives into the product and keeps an agent uninformed. */
+  var gE = el('g', {}), gEr = el('g', {});
+  svg.appendChild(gEr); svg.appendChild(gE);
+  var epos = {}, ev = D.E.events;
+  var estep = ev.length > 1 ? Math.min(500 / (ev.length - 1), 170) : 0;
+  var eleft = 620 - estep * (ev.length - 1) / 2;
+  var mright = 0;
+  D.M.worlds.forEach(function(w){ mright = Math.max(mright, mpos[w].x + 21); });
+  svg.appendChild(text((mright + eleft - 19) / 2, 98, '⊗',
+    {'font-size':19, fill:INK, 'text-anchor':'middle'}));
+  ev.forEach(function(e, i){
+    epos[e] = {x:eleft + i * estep, y:92, r:19};
+    var des = D.E.designated.indexOf(e) >= 0;
+    if (des) gE.appendChild(el('circle', {cx:epos[e].x, cy:92, r:24,
+      fill:'none', stroke:RED, 'stroke-width':1.2}));
+    gE.appendChild(el('circle', {cx:epos[e].x, cy:92, r:19, fill:'#fff',
+      stroke:e === 'nil' ? GRAY : INK, 'stroke-width':e === 'nil' ? 1.2 : 1.5,
+      'stroke-dasharray':e === 'nil' ? '3,2' : ''}));
+    gE.appendChild(text(epos[e].x, 96,
+      e === 'nil' ? 'nil' : 'e' + (i + 1),
+      {'font-size':11, 'text-anchor':'middle',
+       fill:e === 'nil' ? GRAY : INK}));
+    gE.appendChild(text(epos[e].x, 130, e,
+      {'font-size':9, 'text-anchor':'middle', fill:GRAY,
+       'font-family':"'Courier New',monospace"}));
+  });
+  relation(gEr, epos, D.E.q[agent] || {}, STEEL);
+  svg.appendChild(text(620, 152,
+    agent + ' is ' + (D.E.klass[agent] || 'Fully').toLowerCase() +
+    ' here' + (D.E.varies[agent] ? ', and not everywhere' : ''),
+    {'font-size':9.5, fill:STEEL, 'text-anchor':'middle'}));
+
+  if (stage === 0) return;
+
+  svg.appendChild(text(500, 196, '\u{1D4DC} ⊗ \u{1D4D4}',
+    {'font-size':11, fill:GRAY, 'text-anchor':'middle'}));
+  var gP = el('g', {}), gPr = el('g', {});
+  svg.appendChild(gPr); svg.appendChild(gP);
+  var pos = row(gP, gPr, D.Mp.worlds, D.Mp.designated, D.Mp.label,
+                stage >= 2 ? D.Mp.rel[agent] : null,
+                40, 960, 262, 23, STEEL);
+  D.Mp.worlds.forEach(function(w){
+    gP.appendChild(text(pos[w].x, pos[w].below,
+      '(' + D.Mp.from[w][0] + ', ' + D.Mp.from[w][1] + ')',
+      {'font-size':8.5, 'text-anchor':'middle', fill:GRAY,
+       'font-family':"'Courier New',monospace"}));
+  });
+
+  if (stage >= 3){
+    var b = D.before[agent], a = D.after[agent];
+    var lost = b.reflexive && !a.reflexive;
+    svg.appendChild(text(500, 338,
+      'R_' + agent + ':  ' + b.edges + (b.edges === 1 ? ' edge, ' : ' edges, ') +
+      b.frame + '   →   ' +
+      a.edges + (a.edges === 1 ? ' edge, ' : ' edges, ') + a.frame +
+      (lost ? '   ·   the self-loop at the designated world is gone' : ''),
+      {'font-size':10.5, 'text-anchor':'middle',
+       fill:lost ? RED : INK}));
+  }
+}
+
+function step(){
+  stage = stage + 1;
+  if (stage > 3){ reset(); return false; }
+  draw();
+  return true;
+}
+function reset(){
+  if (timer) clearInterval(timer);
+  timer = null; stage = 0; draw();
+  document.getElementById(ID + '-play').textContent = '▶ Play';
+}
+document.getElementById(ID + '-step').onclick = function(){ step(); };
+document.getElementById(ID + '-reset').onclick = reset;
+document.getElementById(ID + '-play').onclick = function(){
+  if (timer){ reset(); return; }
+  this.textContent = '■ Stop';
+  step();
+  timer = setInterval(function(){ if (!step()) clearInterval(timer); },
+                      RM ? 1400 : 950);
+};
+var seg = document.getElementById(ID + '-seg');
+if (seg) seg.addEventListener('click', function(e){
+  var b = e.target.closest('button');
+  if (!b) return;
+  agent = b.getAttribute('data-agent');
+  this.querySelectorAll('button').forEach(function(x){
+    x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+  });
+  draw();
+});
+draw();
+})();
+</script>'''
+
+
+def update_figure(data, title, caption, ident):
+    """One product update, drawn from the models it actually produces."""
+    seg = ''
+    if len(data['agents']) > 1:
+        buttons = ''.join(
+            f'<button class="btn" data-agent="{escape(a)}" '
+            f'aria-pressed="{"true" if i == 0 else "false"}">{escape(a)}</button>'
+            for i, a in enumerate(data['agents']))
+        seg = ('<span class="ctrl-label">relation of</span>'
+               f'<div class="seg" id="{ident}-seg">{buttons}</div>')
+
+    notes = []
+    for a in data['agents']:
+        before, after = data['before'][a], data['after'][a]
+        lost = before['reflexive'] and not after['reflexive']
+        plural = lambda n: 'edge' if n == 1 else 'edges'
+        row = (f'\\({before["edges"]}\\) {plural(before["edges"])}, '
+               f'\\({before["frame"]}\\) &#8594; '
+               f'\\({after["edges"]}\\) {plural(after["edges"])}, '
+               f'\\({after["frame"]}\\)')
+        if lost:
+            row += ' &#183; <span class="pdlost">no longer reflexive</span>'
+        notes.append(f'<div><span class="ag">{escape(a)}</span> {row}</div>')
+
+    script = (UPDATE_SCRIPT
+              .replace('__DATA__', json.dumps(data))
+              .replace('__ID__', ident))
+
+    return (UPDATE_STYLE.replace('.pu-lost', '.pdlost')
+            + '<div class="fig">\n'
+            '  <div class="fig-head">\n'
+            f'    <span class="fig-title">{title}</span>\n'
+            '    <div class="ctrls">'
+            + seg
+            + f'<button class="btn primary" id="{ident}-play">&#9654; Play</button>'
+            f'<button class="btn" id="{ident}-step">Step</button>'
+            f'<button class="btn" id="{ident}-reset">Reset</button>'
+            '</div>\n'
+            '  </div>\n'
+            '  <div class="fig-body"><div class="pu-wrap">\n'
+            f'    <svg id="{ident}" viewBox="0 0 1000 350" width="100%" '
+            'style="max-width:1000px;display:block;margin:0 auto" '
+            'xmlns="http://www.w3.org/2000/svg" '
+            'font-family="Arial,Helvetica,sans-serif" role="img" '
+            f'aria-label="{escape(title)}"></svg>\n'
+            '    <div class="pu-note">' + ''.join(notes) + '</div>\n'
+            '  </div></div>\n'
+            f'  <div class="fig-cap">{caption}</div>\n'
+            '</div>\n'
+            + script)
+
+
 # ───────────────────────────────────────────────────────────────────── cli ──
 
 STATS = [
@@ -496,7 +865,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
 
-    for name in ('matrix', 'diagram', 'report'):
+    for name in ('matrix', 'diagram', 'update', 'report'):
         p = sub.add_parser(name)
         p.add_argument('--task', required=True, help='grounded task JSON')
         p.add_argument('--plan', required=True, help='the solution Aletheia wrote')
@@ -512,6 +881,12 @@ def main():
                        help='repeatable; an agent whose relation is counted')
         p.add_argument('--against', help='the analysis of a recorded run this '
                                          'reconstruction must reproduce')
+        if name == 'update':
+            p.add_argument('--step', type=int, default=0,
+                           help='how many actions of the plan to apply before '
+                                'the update that is drawn')
+            p.add_argument('--id', default='pu',
+                           help='element id prefix, unique within a page')
 
     args = parser.parse_args()
     task = json.load(open(args.task))
@@ -526,6 +901,36 @@ def main():
     for agent in args.relation:
         stats.append((f'|R_{{\\texttt{{{agent}}}}}|',
                       lambda m, a=agent: sum(len(m.image(a, w)) for w in m.worlds)))
+
+    if args.command == 'update':
+        track = follow(task, plan, agents, args.take)
+        entry = track[args.step]
+        node, index = plan, 0
+        while index < args.step:
+            action = task['actions'][node['action']]
+            options = [branch_events(action, b) for b in node['branches']]
+            chosen = args.take[0] if (args.take and len(options) > 1) \
+                else options[0]
+            node = node['branches'][options.index(chosen)]['subtree']
+            index += 1
+        action_name = node['action']
+        action = task['actions'][action_name]
+        options = [branch_events(action, b) for b in node['branches']]
+        event = None
+        if len(options) > 1 and args.take:
+            for choice in args.take:
+                if choice in options:
+                    event = choice
+        data = update_data(task, entry['model'], action_name, agents, event)
+        fragment = update_figure(
+            data,
+            args.title or f'The product update at {action_name}',
+            args.caption or DEFAULT_UPDATE_CAPTION, args.id)
+        open(args.out, 'w').write(fragment)
+        print(f"{len(data['M']['worlds'])} worlds and "
+              f"{len(data['E']['events'])} events -> "
+              f"{len(data['Mp']['worlds'])} worlds  ->  {args.out}")
+        return
 
     if args.command == 'diagram':
         fragment = plan_diagram(
@@ -582,6 +987,15 @@ def verify(task, agents, analysis):
                              'recorded verdict')
     print(f'{len(steps)} reconstructed models match the run that was measured')
 
+
+DEFAULT_UPDATE_CAPTION = (
+    'One application of \\(\\mathcal{M} \\otimes \\mathcal{E}\\), computed '
+    'from the event model the domain declares and drawn from the result. A '
+    'world of the product is a pair \\((w, e)\\) whose event is applicable at '
+    'its world, and \\((w,e)\\,R\'_i\\,(v,f)\\) holds exactly when '
+    '\\(w R_i v\\) and \\(f \\in Q_i(e)\\). The loop above a world is its '
+    'reflexive edge; where that loop is missing at a designated world, the '
+    'agent excludes the world that is the case.')
 
 DEFAULT_DIAGRAM_CAPTION = (
     'The solution as the AND-OR tree it is, drawn from the planner&#8217;s '

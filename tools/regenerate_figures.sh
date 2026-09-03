@@ -40,6 +40,13 @@ python3 tools/plan_trace.py diagram \
   --title 'The plan Aletheia returned, and the model at every node' \
   --out "$out/lone-diagram.html"
 
+python3 tools/plan_trace.py update \
+  --task epddl-workspace/lone-inspector/out/problem_1.json \
+  --plan epddl-workspace/lone-inspector/out/problem_1-plan.json \
+  --step 1 --id lone-pu \
+  --title 'One product update: the inspection that refines the partition' \
+  --out "$out/lone-update.html"
+
 python3 tools/plan_trace.py matrix \
   --task epddl-workspace/lone-inspector/out/problem_1.json \
   --plan epddl-workspace/lone-inspector/out/problem_1-plan.json \
@@ -49,6 +56,13 @@ python3 tools/plan_trace.py matrix \
   --out "$out/lone-matrix.html"
 
 # ── one agent believes: remote-door, and the repair the search does not find ──
+python3 tools/plan_trace.py update \
+  --task epddl-workspace/remote-door/out/problem_1.json \
+  --plan epddl-workspace/remote-door/repair-witness.json \
+  --step 0 --id door-pu \
+  --title 'One product update: the command the agent does not observe' \
+  --out "$out/door-update.html"
+
 python3 tools/plan_trace.py diagram \
   --task epddl-workspace/remote-door/out/problem_1.json \
   --plan epddl-workspace/remote-door/repair-witness.json \
@@ -64,6 +78,13 @@ python3 tools/plan_trace.py matrix \
   --out "$out/door-matrix.html"
 
 # ── a fleet believes: hotel-incident, checked against the run it was executed on ──
+python3 tools/plan_trace.py update \
+  --task epddl-workspace/hotel-incident/out/problem_2.json \
+  --plan epddl-workspace/hotel-incident/plan-problem-2.json \
+  --step 2 --take e-inspect-dry --id hotel-pu \
+  --title 'One product update: the report the guest does not receive' \
+  --out "$out/hotel-update.html"
+
 python3 tools/plan_trace.py diagram \
   --task epddl-workspace/hotel-incident/out/problem_2.json \
   --plan epddl-workspace/hotel-incident/plan-problem-2.json \
