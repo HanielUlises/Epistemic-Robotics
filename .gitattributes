@@ -1,2 +1,18 @@
 ros2_epddl_planing.tex linguist-documentation=true
 
+# What GitHub counts as this repository's language.
+#
+# The ROS 2 packages under ros2_ws/src are the project; the scripts around
+# them are scaffolding for producing and inspecting runs. Counted together,
+# the scaffolding outweighs the C++ and Linguist calls the repository Python.
+# These keep the language bar on the packages.
+#
+# The Python under ros2_ws/src is left counted: launch files and package
+# tooling are part of those packages.
+
+scenarios/**  linguist-vendored
+tools/**      linguist-vendored
+demo/**       linguist-vendored
+
+# Run outputs, not source.
+artifacts/**  linguist-generated
