@@ -2,27 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/</loc>
-    <lastmod>2026-07-24</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/demo.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/demos.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/domains.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/execution.html</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/fleet_believes.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/hotel_run.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/nested_run.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/single_agent_believes.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/single_agent_knows.html</loc>
+    <lastmod>2026-09-03</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/six_room_survey.html</loc>
-    <lastmod>2026-08-26</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://hanielulises.github.io/Epistemic-Robotics/demo.html</loc>
-    <lastmod>2026-08-26</lastmod>
-    <priority>0.60</priority>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/warehouse_rmf.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/warehouse_run.html</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <priority>0.80</priority>
   </url>
 </urlset>
