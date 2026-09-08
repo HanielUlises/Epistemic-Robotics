@@ -4,27 +4,27 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Demonstrations &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="Every recorded run in the project, grouped by the domain it executes.">
+<title>A larger warehouse floor &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Thirty-four aisles, one service lane, and a run recorded from the fleet itself.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The Demonstrations">
-<meta property="og:description" content="Every recorded run in the project, grouped by the domain it executes.">
-<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/demos.html">
+<meta property="og:title" content="A larger warehouse floor">
+<meta property="og:description" content="Thirty-four aisles, one service lane, and a run recorded from the fleet itself.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl.html">
 
 
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/warehouse_xl.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
-<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The Demonstrations">
-<meta name="twitter:description" content="Every recorded run in the project, grouped by the domain it executes.">
+<meta property="og:image:alt" content="The navigation graph of a thirty by fifty metre warehouse floor.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/warehouse_xl.jpg">
+<meta name="twitter:title" content="A larger warehouse floor">
+<meta name="twitter:description" content="Thirty-four aisles, one service lane, and a run recorded from the fleet itself.">
 
 
 <script>
@@ -400,6 +400,32 @@ table.data td .mono-inline{font-size:.78em}
 .ftr-l a:hover{border-bottom-color:var(--black)}
 footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
 /* ── code blocks, and the button that copies them ──────────── */
 pre > code{display:block;background:var(--code-bg);
   border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
@@ -451,8 +477,8 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
-  <meta name="twitter:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
-  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/demos.html">
+  <meta name="twitter:image:alt" content="Gazebo and the RMF schedule view during the warehouse run.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl.html">
 </head>
 <body>
 
@@ -483,7 +509,7 @@ sup.cite a:hover{text-decoration:underline}
           <details class="nav-folder" open>
             <summary>Demonstrations</summary>
             <div class="nav-sub">
-          <a href="demos.html" aria-current="page">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
           <details class="nav-folder">
             <summary>building-rooms</summary>
             <div class="nav-sub">
@@ -492,14 +518,14 @@ sup.cite a:hover{text-decoration:underline}
           <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             </div>
           </details>
-          <details class="nav-folder">
+          <details class="nav-folder" open>
             <summary>robot-warehouse</summary>
             <div class="nav-sub">
           <a href="demos.html#robot-warehouse">All warehouse demos</a>
           <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
           <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
-          <a href="warehouse_xl.html">&#183; A larger floor<span class="sub">Thirty-four aisles over one lane</span></a>
+          <a href="warehouse_xl.html" aria-current="page">&#183; A larger floor<span class="sub">Thirty-four aisles over one lane</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -529,249 +555,200 @@ sup.cite a:hover{text-decoration:underline}
     </div>
   </div>
 </header>
-
-
-
-
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">Recorded runs &#183; ROS 2 &#183; simulation</p>
-    <h2>The demonstrations</h2>
+    <p class="eyebrow">Open-RMF &#183; 30 &#215; 50 m &#183; ROS 2</p>
+    <h2>A larger warehouse floor</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      Every run on this site is a recorded execution of a stated problem, with
-      the planner's own output beside it. They are grouped below by the domain
-      they are built on, since several runs of one domain differ only in the
-      goal, the size of the fleet, or the layer that drives the robots.
+      The warehouse the bridge had been driving is fourteen metres by
+      twenty-one, with two aisles and twelve waypoints: enough to show the
+      pipeline works and not enough to show it scaling. This floor is thirty by
+      fifty with thirty-four aisles, a service lane running the length of the
+      building, and three robots under Open-RMF. Every aisle opens onto the lane
+      and onto nothing else, so an aisle cannot be seen into until a robot
+      stands at its mouth, which is the property the whole approach rests on.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      Floor, navigation graph and building map generated from one source in
+      <span class="mono-inline">warehouse_xl_rmf_demo</span>. Dispatched by
+      <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>,
+      driven by Open-RMF over Gazebo Classic.
     </p>
   </div>
 </div>
 
-<style>
-.dgroup{margin:0 0 3.2rem}
-.dgroup .about{color:var(--gray);font-size:.9rem;line-height:1.7;max-width:44rem;
-  margin:.2rem 0 1.5rem}
-.dgroup .about .mono-inline{font-size:.85em}
-.dcard{display:flex;gap:1.5rem;padding:1.3rem 0;border-top:1px solid var(--border);
-  align-items:flex-start;flex-wrap:wrap}
-.dcard .shot{flex:0 0 16rem}
-.dcard .shot img{width:100%;height:auto;display:block;border:1px solid var(--border)}
-.dcard .shot .none{display:flex;align-items:center;justify-content:center;
-  height:5.6rem;border:1px dashed var(--border);color:var(--gray);
-  font-family:var(--mono);font-size:.68rem;text-align:center;padding:.5rem}
-.dcard .body{flex:1 1 20rem;min-width:0}
-.dcard .body h5{margin:0 0 .3rem;font-size:1rem;font-weight:600}
-.dcard .body h5 a{text-decoration:none;border-bottom:1px solid var(--border)}
-.dcard .body h5 a:hover{border-bottom-color:var(--red)}
-.dcard .body p{margin:0;color:var(--gray);font-size:.88rem;line-height:1.65}
-.dcard .facts{margin-top:.6rem;font-family:var(--mono);font-size:.68rem;
-  color:var(--gray);letter-spacing:.02em}
-.dcard .facts span{margin-right:1.3rem;white-space:nowrap;display:inline-block}
-@media(max-width:620px){.dcard .shot{flex-basis:100%}}
-</style>
-
+<!-- ═══════════════════════════════════════════════ WHY BUILT -->
 <section>
   <div class="container">
+    <p class="sec-label">The floor</p>
+    <h3>There was nothing to download</h3>
+    <p>
+      No large warehouse map exists for Open-RMF. Measured against their own
+      meshes rather than their descriptions, the candidates on Gazebo Fuel each
+      fail in a different way, and the failures are not visible from the
+      catalogue page.
+    </p>
+    <table class="data">
+      <thead>
+        <tr><th>Candidate</th><th>Footprint</th><th>Collision geometry</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="mono-inline">OpenRobotics/Depot</span></td>
+          <td>29 &#215; 15 m</td>
+          <td>A ground plane, and nothing else</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">OpenRobotics/Warehouse</span></td>
+          <td>30 &#215; 50 m</td>
+          <td>Shell and pillars: 1.2&#8202;% occupied at robot height</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">industrial-warehouse</span></td>
+          <td>= AWS small</td>
+          <td>Complete, and no larger than what we had</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <span class="mono-inline">Depot</span> is the model usually reached for,
+      and it is the trap: its racks and walls are visuals, a laser passes
+      through them, and a floor plan rasterised from its collision meshes comes
+      back empty. The largest maps in <span class="mono-inline">rmf_demos</span>,
+      the airport terminal and the campus, are not warehouses.
+    </p>
+    <p>
+      So the hall is the Fuel model, whose collision mesh really is the
+      building, and the shelving inside it is AWS RoboMaker's, whose racks carry
+      collision meshes a laser can see. The arrangement &#8212; eighteen rack
+      rows either side of a central lane, clear of the ten pillars &#8212; is
+      ours.
+    </p>
 
-    <!-- ─────────────────────────────── building-rooms -->
-    <div class="dgroup" id="building-rooms">
-      <p class="sec-label">Domain</p>
-      <h3>building-rooms &#183; a six-room floor</h3>
-      <p class="about">
-        Six rooms and the doors between them, with an occupancy grid a robot
-        measures as it goes. Movement is
-        <span class="mono-inline">public-ontic</span> and looking is
-        <span class="mono-inline">semi-private-sensing</span>. The frame is
-        \(\mathrm{S5}_n\). Two runs use it: one asks what routing over a
-        partially measured floor costs, and one states a mission whose goal is a
-        modal formula.
-      </p>
-
-      <div class="dcard">
-        <div class="shot"><img src="media/thumbs/epistemic_rooms_demo.jpg"
-          alt="Gazebo and RViz during the six-room routing run" loading="lazy"></div>
-        <div class="body">
-          <h5><a href="demo.html">The six-room run</a></h5>
-          <p>
-            Nine queries put to a &#956;-calculus route planner, separating
-            reachability from the question of whether the agent could tell it had
-            arrived. Cells nobody has observed are excluded from the fixed point,
-            so the least fixed point halts at the mouth of an unmeasured corridor.
-          </p>
-          <div class="facts">
-            <span>&#956;-calculus fixed point</span><span>SLAM Toolbox</span>
-            <span>Nav2</span><span>140 s</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard">
-        <div class="shot"><img src="media/thumbs/eplansys_six_room_survey.jpg"
-          alt="The six-room survey executing on ePlanSys" loading="lazy"></div>
-        <div class="body">
-          <h5><a href="six_room_survey.html">The six-room survey</a></h5>
-          <p>
-            The same building with a goal stated in EPDDL. The plan is a policy,
-            and the branch is taken on what the robot observes.
-          </p>
-          <div class="facts">
-            <span>S5</span><span>semi-private sensing</span>
-            <span>branching policy</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─────────────────────────────── robot-warehouse -->
-    <div class="dgroup" id="robot-warehouse">
-      <p class="sec-label">Domain</p>
-      <h3>robot-warehouse &#183; the AWS small warehouse</h3>
-      <p class="about">
-        The RoboticsAcademy multi-robot Amazon warehouse exercise in its
-        epistemic reading. A pallet stands in one of two aisles, nobody is told
-        which, and <span class="mono-inline">pickup</span> carries the modal
-        precondition <span class="mono-inline">([?i] (pallet-at ?z))</span>, so a
-        robot may lift it only where it knows it to be. Inspection is
-        semi-private and every other action is public, which keeps the frame
-        \(\mathrm{S5}_n\). Three runs use it, differing in the goal, the fleet
-        size, and the layer driving the robots.
-      </p>
-
-      <div class="dcard">
-        <div class="shot"><img src="media/thumbs/warehouse_run.jpg"
-          alt="The warehouse run in Gazebo and RViz" loading="lazy"></div>
-        <div class="body">
-          <h5><a href="warehouse_run.html">The warehouse run</a></h5>
-          <p>
-            The mission executed for one robot, then two, then three, under Nav2.
-            The third robot is where an announcement starts earning its place:
-            watching a pickup settles the aisle, and watching an empty aisle
-            settles nothing.
-          </p>
-          <div class="facts">
-            <span>S5</span><span>17-node policy</span><span>Nav2 fleet</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard">
-        <div class="shot"><img src="media/thumbs/nested_run_G3.jpg"
-          alt="Three robots and the formula probe during a nested-goal run" loading="lazy"></div>
-        <div class="body">
-          <h5><a href="nested_run.html">Nested epistemic goals</a></h5>
-          <p>
-            Three instances identical except for the modal depth of the goal.
-            Second-order knowledge is sometimes free and sometimes costs an
-            announcement, and the difference appears in the search before it
-            appears in the plan.
-          </p>
-          <div class="facts">
-            <span>modal depth 1&#8211;2</span>
-            <span>3952 vs 8543 expansions</span><span>3 robots</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard">
-        <div class="shot"><img src="media/thumbs/warehouse_rmf_run.jpg"
-          alt="Gazebo and the RMF schedule view during the warehouse run" loading="lazy"></div>
-        <div class="body">
-          <h5><a href="warehouse_rmf.html">The warehouse over Open-RMF</a></h5>
-          <p>
-            The same domain executed by an RMF fleet in a world with no
-            traffic-editor description of its own. The navigation graph and
-            building map are derived from the floor plan and validated against
-            the occupancy grid before use. Every relation stays reflexive and the
-            model contracts from two worlds to one.
-          </p>
-          <div class="facts">
-            <span>S5</span><span>generated nav graph</span>
-            <span>9 actions, 172.5 s</span><span>depth 11</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="dcard">
-        <div class="shot"><img src="media/thumbs/warehouse_xl_run.jpg"
-          alt="The navigation graph of the larger warehouse with a recorded run drawn over it" loading="lazy"></div>
-        <div class="body">
-          <h5><a href="warehouse_xl.html">A larger floor</a></h5>
-          <p>
-            Thirty by fifty metres and thirty-four aisles, against the small
-            warehouse's fourteen by twenty-one and two. Every aisle opens onto
-            one service lane and onto nothing else, so it cannot be seen into
-            until a robot stands at its mouth. The floor, the navigation graph
-            and the building map are generated from one source, and a run is
-            recorded from the fleet rather than described. The floor and the
-            fleet, so far: the epistemic mission has not been executed on it
-            yet.
-          </p>
-          <div class="facts">
-            <span>30 &#215; 50 m</span><span>34 aisles</span>
-            <span>132 waypoints</span><span>3 robots</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─────────────────────────────── hotel-incident -->
-    <div class="dgroup" id="hotel-incident">
-      <p class="sec-label">Domain</p>
-      <h3>hotel-incident &#183; three floors and two lifts</h3>
-      <p class="about">
-        A leak in one of two suites on separate floors. The domain admits
-        <span class="mono-inline">private-ontic</span> change and
-        <span class="mono-inline">quasi-private-announcement</span>, so an agent
-        that observes neither continues to hold what it last had reason to hold.
-        The reachable frame is therefore \(\mathrm{KD45}_n\), and the transition
-        out of \(\mathrm{S5}_n\) happens during execution. One run uses it so
-        far.
-      </p>
-
-      <div class="dcard">
-        <div class="shot"><img src="media/thumbs/hotel_run_l3.jpg"
-          alt="Gazebo and RViz during the hotel incident run" loading="lazy"></div>
-        <div class="body">
-          <h5><a href="hotel_run.html">The hotel incident</a></h5>
-          <p>
-            Two robots dispatched to different floors by a single joint action,
-            and a containment only the suite observes. The agents' knowledge is
-            measured after every action: two of the three end holding beliefs the
-            world contradicts, and each of those is attributable to one action.
-          </p>
-          <div class="facts">
-            <span>KD45</span><span>private ontic change</span>
-            <span>two lifts, three fleets</span>
-            <span>depth 4, 15 164 expansions</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-floor.svg" width="100%"
+           alt="The navigation graph of the larger warehouse: eighteen rack rows either side of a central service lane, with docks and chargers in the outer bays">
+      <figcaption>
+        The floor. Grey is rack and pillar, blue the navigation graph, orange
+        the aisle mouths; green the docks and red the chargers, out in the bays
+        beyond the pillar rows. Thirty-four aisles, and each meets the graph
+        only at its mouth on the lane.
+      </figcaption>
+    </figure>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ GENERATED -->
 <section>
   <div class="container">
-    <p class="sec-label">Reading them</p>
-    <h3>What the measured figures in a run report mean</h3>
-
+    <p class="sec-label">How it is built</p>
+    <h3>One definition, three artefacts</h3>
     <p>
-      Each report of a run over a fleet carries the same two figures, generated
-      from a replay of that run against the epistemic state. The first is a table
-      of the run: the size |W| of the model the agents share, and for each agent
-      the number |D| of worlds it still designates. |D| = 1 is knowledge of the
-      proposition at issue and |D| &gt; 1 is uncertainty. A cell marked in red is
-      a perspective that has ceased to contain the world that is the case.
+      The world, the navigation graph and the building map are generated from
+      <span class="mono-inline">tools/layout.py</span>. None is edited by hand,
+      so none can drift from the others, and the hall's own geometry is read off
+      its collision mesh rather than copied from its description.
+    </p>
+    <pre><code>python3 tools/make_world.py        --out worlds/warehouse_xl.world
+python3 tools/make_nav_graph.py    --out maps/nav_graphs/0.yaml
+python3 tools/make_building_map.py --nav-graph maps/nav_graphs/0.yaml \
+                                   --out maps/warehouse_xl.building.yaml</code></pre>
+    <p>
+      Every waypoint and every lane is checked against the floor before it is
+      written. The check is not decoration: it refused three layouts that looked
+      right on paper &#8212; aisle ends that met the pillar row, a cross aisle
+      that ran through the last row of shelving once the row count changed, and
+      two robots nominating a single charger, a waypoint holding exactly one
+      robot.
+    </p>
+    <p>
+      The fourth it did not refuse, and that one is worth recording. A pallet
+      jack placed at the south dock purely for the look of the thing overlapped
+      the lane out of the east charger by twenty centimetres. The check passed,
+      because it knew about racks and pillars and not about props; RMF reported
+      the task underway; and the robot drove out of its charger, pressed into
+      the pallet jack and stopped, with nothing anywhere reporting a collision.
+      A thing that stands on the floor is an obstacle whatever it was put there
+      for. The props are part of the floor definition now, and the same check
+      that missed it rejects it.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE RUN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The run</p>
+    <h3>Measured, not asserted</h3>
+    <p>
+      That an aisle can only be entered from the lane is a claim about the
+      floor, so it is put to the fleet and answered in metres. The run is
+      recorded from <span class="mono-inline">/fleet_states</span> and drawn
+      over the graph the robot was routing on.
     </p>
 
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-run.svg" width="100%"
+           alt="A recorded run: r1's path out of its charger, west along the south cross aisle, north up the service lane and east into aisle 8">
+      <figcaption>
+        <span class="mono-inline">r1</span> from
+        <span class="mono-inline">charger_east_south</span> to aisle
+        <span class="mono-inline">east_08</span>: 35.9&#8202;m of path for
+        25&#8202;m of separation, in 96&#8202;s. Out of the charger, west along
+        the south cross aisle, twenty-two metres north up the service lane, then
+        east into the aisle. The detour is the point &#8212; the racks leave no
+        way in but the lane.
+      </figcaption>
+    </figure>
+
+    <pre><code>t=0s   (11.00, -23.64)  charger_east_south
+t=12s  ( 9.06, -22.05)  onto the south cross aisle
+t=24s  ( 3.29, -22.04)  west along it, ~0.58 m/s
+t=36s  ( 0.00, -22.04)  lane_00, the foot of the service lane
+t=48s  ( 0.01, -16.86)  north up the lane
+t=60s  ( 0.01, -11.35)
+t=72s  ( 0.00,  -5.59)
+t=84s  ( 2.70,   0.25)  turned east at the mouth of aisle 8
+t=96s  ( 4.19,   0.25)  east_08</code></pre>
+
     <p>
-      The second draws each agent's accessibility relation as a digraph over the
-      worlds of the model at selected steps. Reflexivity is the property that
-      makes knowledge factive, so a world that has lost its self-loop in an
-      agent's relation is a world that agent excludes while it holds. The two
-      figures together locate a false belief at the step and the agent that
-      acquired it.
+      A task is pinned to a named robot rather than dispatched for bidding,
+      which is the path the epistemic bridge uses: the robot that senses is the
+      agent the model credits with knowing.
+    </p>
+    <pre><code>ros2 launch warehouse_xl_rmf_demo warehouse_xl_fleet.launch.py
+ros2 run eplansys_rmf_probe submit_probe -F warehouseXL -R r1 -p east_08</code></pre>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ SCOPE -->
+<section>
+  <div class="container">
+    <p class="sec-label">What it establishes</p>
+    <h3>And what it does not</h3>
+    <p>
+      Three robots come up, three tasks pinned to three robots are accepted and
+      executed concurrently, and no process fails. The trace above is
+      <span class="mono-inline">r1</span>'s alone.
+    </p>
+    <p>
+      How the schedule mediates the service lane under sustained three-robot
+      traffic has not been measured. The lane is the one resource all
+      thirty-four aisles share, so it is where contention would appear, and it
+      is the next thing worth knowing about this floor.
+    </p>
+    <p class="note">
+      One environment note, since it stops every
+      <span class="mono-inline">rmf_demos</span> fleet and not only this one.
+      The fleet manager imports <span class="mono-inline">fastapi</span>, and
+      the <span class="mono-inline">fastapi</span> that Jammy packages is 0.63,
+      written against pydantic&nbsp;1. A pydantic&nbsp;2 installed in
+      <span class="mono-inline">~/.local</span> shadows the apt pydantic&nbsp;1.8
+      for every interpreter on the machine and the import fails, so no robot
+      moves. The launch sets
+      <span class="mono-inline">PYTHONNOUSERSITE=1</span>, which restores the
+      pair apt installed together and needs nothing installed or removed.
     </p>
   </div>
 </section>
@@ -789,7 +766,7 @@ sup.cite a:hover{text-decoration:underline}
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">Six recorded runs &#183; ROS 2 &#183; simulation</span>
+      <span class="ftr-r">30 &#215; 50 m &#183; 34 aisles &#183; 132 waypoints &#183; ROS 2</span>
     </div>
   </div>
 </footer>
