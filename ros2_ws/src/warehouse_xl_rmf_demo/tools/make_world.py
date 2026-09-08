@@ -127,20 +127,12 @@ def main():
         parts.append(include(model, f'shelf_{i:03d}', x, y, yaw))
 
     # Clutter at the dock ends, so the floor is not uniformly empty where the
-    # robots begin and so a recording has something to show. Placed by hand
-    # rather than scattered, because anything that lands in the service lane
-    # blocks the only route the whole floor depends on.
-    parts.append('\n    <!-- Dock clutter, clear of the lane and the pillars. -->\n')
-    clutter = [
-        ('aws_robomaker_warehouse_ClutteringA_01', 11.5, -12.0, 0.0),
-        ('aws_robomaker_warehouse_ClutteringC_01', -11.5, -12.0, 0.0),
-        ('aws_robomaker_warehouse_ClutteringC_01', 11.5, 12.0, 1.5708),
-        ('aws_robomaker_warehouse_ClutteringA_01', -11.5, 12.0, 1.5708),
-        ('aws_robomaker_warehouse_PalletJackB_01', 10.5, -22.0, 0.0),
-        ('aws_robomaker_warehouse_PalletJackB_01', -10.5, 22.0, 3.1416),
-        ('aws_robomaker_warehouse_Bucket_01', 12.5, 0.0, 0.0),
-        ('aws_robomaker_warehouse_TrashCanC_01', -12.5, 0.0, 0.0),
-    ]
+    # robots begin. The positions live in layout.py, with their footprints,
+    # because the navigation graph has to treat them as obstacles: a prop
+    # placed for the look of it once sat across a charger's own lane, and the
+    # robot drove into it while RMF reported the task underway.
+    parts.append('\n    <!-- Dock clutter, from layout.py so the graph sees it too. -->\n')
+    clutter = L.CLUTTER
     for i, (model, x, y, yaw) in enumerate(clutter):
         if not L.inside_hall(x, y) or not L.clear_of_pillars(x, y):
             raise SystemExit(f'clutter {i} at ({x}, {y}) is not on free floor')

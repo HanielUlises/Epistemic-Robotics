@@ -176,6 +176,20 @@ def generate_launch_description():
             'GAZEBO_RESOURCE_PATH',
             aws + ':' + os.environ.get('GAZEBO_RESOURCE_PATH', '')),
 
+        # rmf_demos' fleet_manager imports fastapi, and the fastapi that
+        # Jammy packages is 0.63, which is written against pydantic 1. A
+        # pydantic 2 in ~/.local shadows the apt pydantic 1.8 for every
+        # interpreter on the machine, and fastapi then fails to import with
+        #
+        #   PydanticUserError: Field 'type_' defined on a base class was
+        #   overridden by a non-annotated attribute
+        #
+        # which stops the fleet manager and so stops every robot. Ignoring the
+        # user site restores the pair apt installed together. This is set here
+        # rather than fixed in the environment because the environment is not
+        # ours to change and nothing RMF launches comes from ~/.local.
+        SetEnvironmentVariable('PYTHONNOUSERSITE', '1'),
+
         # libslotcar.so is what RMF actually drives, and it does not live
         # anywhere Gazebo looks by default.
         SetEnvironmentVariable(

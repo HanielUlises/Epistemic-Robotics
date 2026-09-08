@@ -57,6 +57,9 @@ def obstacles():
         for sign in (-1.0, 1.0):
             x0, x1 = sorted((sign * L.RACK_MIN_X, sign * L.RACK_MAX_X))
             boxes.append((x0, y - half, x1, y + half))
+    # The props too. They stand on the floor, so they are obstacles whatever
+    # they were put there to look like.
+    boxes.extend(L.clutter_boxes())
     return boxes
 
 

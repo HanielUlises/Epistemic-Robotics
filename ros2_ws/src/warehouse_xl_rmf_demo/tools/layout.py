@@ -84,6 +84,55 @@ DOCK_X = 11.0
 DOCK_Y = (-19.0, 19.0)
 
 
+# ─── The clutter ────────────────────────────────────────────────────────────
+#
+# Props at the dock ends, so the floor is not bare where the robots begin.
+#
+# These live here rather than in the world generator because the graph has to
+# know about them. They did not, once: a pallet jack was placed at (10.5,
+# -22.0) purely for the look of it, the lane from the east charger to the cross
+# aisle runs up x = 11, and the two overlap by twenty centimetres. The graph
+# check passed, because it only knew about racks and pillars, and the robot
+# drove out of its charger, pressed into the pallet jack and stopped -- with
+# RMF reporting the task underway and nothing reporting a collision. A thing
+# that stands on the floor is an obstacle whatever it was put there for.
+#
+# Footprints are the collision extents of the AWS models, in metres.
+CLUTTER_FOOTPRINT = {
+    'aws_robomaker_warehouse_ClutteringA_01': (2.16, 2.00),
+    'aws_robomaker_warehouse_ClutteringC_01': (1.77, 2.06),
+    'aws_robomaker_warehouse_PalletJackB_01': (1.16, 0.54),
+    'aws_robomaker_warehouse_Bucket_01': (0.60, 0.60),
+    'aws_robomaker_warehouse_TrashCanC_01': (0.60, 0.60),
+}
+
+# (model, x, y, yaw). Kept in the outer bays and off the cross aisles, which
+# run at y = LANE_MIN_Y and y = LANE_MAX_Y, and off the charger spurs at
+# x = +/-DOCK_X.
+CLUTTER = (
+    ('aws_robomaker_warehouse_ClutteringA_01', 13.2, -12.0, 0.0),
+    ('aws_robomaker_warehouse_ClutteringC_01', -13.2, -12.0, 0.0),
+    ('aws_robomaker_warehouse_ClutteringC_01', 13.2, 12.0, 1.5708),
+    ('aws_robomaker_warehouse_ClutteringA_01', -13.2, 12.0, 1.5708),
+    ('aws_robomaker_warehouse_PalletJackB_01', 13.6, -19.0, 0.0),
+    ('aws_robomaker_warehouse_PalletJackB_01', -13.6, 19.0, 3.1416),
+    ('aws_robomaker_warehouse_Bucket_01', 13.6, 3.0, 0.0),
+    ('aws_robomaker_warehouse_TrashCanC_01', -13.6, 3.0, 0.0),
+)
+
+
+def clutter_boxes():
+    """Each prop as (min_x, min_y, max_x, max_y), turned by its yaw."""
+    out = []
+    for model, x, y, yaw in CLUTTER:
+        w, d = CLUTTER_FOOTPRINT[model]
+        # Only right angles are used, so a quarter turn swaps the extents.
+        if abs(abs(yaw) - 1.5707963) < 1e-3:
+            w, d = d, w
+        out.append((x - w / 2.0, y - d / 2.0, x + w / 2.0, y + d / 2.0))
+    return out
+
+
 def rows():
     """The y centre of each rack row, south to north."""
     return [ROWS_MIN_Y + i * ROW_PITCH for i in range(ROW_COUNT)]

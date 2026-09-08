@@ -13,7 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Draws the floor: the racks, the pillars and the graph the fleet routes over."""
+"""Draws the floor: the racks, the pillars, the graph, and where the robots went.
+
+With `--run`, a CSV from `record_run.py` is drawn over the graph. That is the
+figure worth having: it shows the robots reaching aisles only by way of the
+service lane, which is the floor's whole claim, measured rather than asserted.
+"""
 
 import argparse
 import os
@@ -33,6 +38,7 @@ from make_nav_graph import obstacles         # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--nav-graph', default='maps/nav_graphs/0.yaml')
+    ap.add_argument('--run', help='CSV from record_run.py to draw over the graph')
     ap.add_argument('--out', required=True)
     args = ap.parse_args()
 
@@ -70,14 +76,39 @@ def main():
             c, s = '#4a5568', 5
         ax.scatter([x], [y], s=s, c=c, zorder=3, linewidths=0)
 
+    if args.run:
+        import collections
+        import csv as _csv
+        tracks = collections.defaultdict(list)
+        with open(args.run) as fh:
+            for row in _csv.DictReader(fh):
+                tracks[row['robot']].append((float(row['x']), float(row['y'])))
+        colours = {'r1': '#dc2626', 'r2': '#7c3aed', 'r3': '#0891b2'}
+        for name in sorted(tracks):
+            pts = tracks[name]
+            # Drop the samples where the robot did not move, so a robot that
+            # spent the run parked does not print a blob over its charger.
+            xs = [p[0] for p in pts]
+            ys = [p[1] for p in pts]
+            ax.plot(xs, ys, lw=2.2, color=colours.get(name, '#111'),
+                    alpha=0.9, zorder=5, solid_capstyle='round',
+                    label=f'{name} ({len(pts)} samples)')
+            ax.scatter([xs[-1]], [ys[-1]], s=60, marker='o', zorder=6,
+                       facecolor='white', edgecolor=colours.get(name, '#111'),
+                       linewidths=2)
+        ax.legend(loc='upper left', fontsize=7, framealpha=0.9)
+
     ax.set_aspect('equal')
     ax.set_xlim(L.HALL_MIN_X - 1, L.HALL_MAX_X + 1)
     ax.set_ylim(L.HALL_MIN_Y - 1, L.HALL_MAX_Y + 1)
     ax.set_xlabel('x (m)')
     ax.set_ylabel('y (m)')
-    ax.set_title(f'warehouse_xl — {L.HALL_MAX_X - L.HALL_MIN_X:.0f} x '
-                 f'{L.HALL_MAX_Y - L.HALL_MIN_Y:.0f} m, '
-                 f'{2 * len(L.aisles())} aisles, {len(V)} waypoints')
+    title = (f'warehouse_xl — {L.HALL_MAX_X - L.HALL_MIN_X:.0f} x '
+             f'{L.HALL_MAX_Y - L.HALL_MIN_Y:.0f} m, '
+             f'{2 * len(L.aisles())} aisles, {len(V)} waypoints')
+    if args.run:
+        title += '\nrecorded run: every aisle reached by way of the lane'
+    ax.set_title(title, fontsize=10)
     ax.grid(alpha=0.15, lw=0.4)
     fig.tight_layout()
     fig.savefig(args.out, dpi=150)

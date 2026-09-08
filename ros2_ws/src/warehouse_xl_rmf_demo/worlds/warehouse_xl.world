@@ -477,53 +477,53 @@
       <static>true</static>
     </include>
 
-    <!-- Dock clutter, clear of the lane and the pillars. -->
+    <!-- Dock clutter, from layout.py so the graph sees it too. -->
     <include>
       <uri>model://aws_robomaker_warehouse_ClutteringA_01</uri>
       <name>clutter_00</name>
-      <pose>11.500 -12.000 0 0 0 0.0000</pose>
+      <pose>13.200 -12.000 0 0 0 0.0000</pose>
       <static>true</static>
     </include>
     <include>
       <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
       <name>clutter_01</name>
-      <pose>-11.500 -12.000 0 0 0 0.0000</pose>
+      <pose>-13.200 -12.000 0 0 0 0.0000</pose>
       <static>true</static>
     </include>
     <include>
       <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
       <name>clutter_02</name>
-      <pose>11.500 12.000 0 0 0 1.5708</pose>
+      <pose>13.200 12.000 0 0 0 1.5708</pose>
       <static>true</static>
     </include>
     <include>
       <uri>model://aws_robomaker_warehouse_ClutteringA_01</uri>
       <name>clutter_03</name>
-      <pose>-11.500 12.000 0 0 0 1.5708</pose>
+      <pose>-13.200 12.000 0 0 0 1.5708</pose>
       <static>true</static>
     </include>
     <include>
       <uri>model://aws_robomaker_warehouse_PalletJackB_01</uri>
       <name>clutter_04</name>
-      <pose>10.500 -22.000 0 0 0 0.0000</pose>
+      <pose>13.600 -19.000 0 0 0 0.0000</pose>
       <static>true</static>
     </include>
     <include>
       <uri>model://aws_robomaker_warehouse_PalletJackB_01</uri>
       <name>clutter_05</name>
-      <pose>-10.500 22.000 0 0 0 3.1416</pose>
+      <pose>-13.600 19.000 0 0 0 3.1416</pose>
       <static>true</static>
     </include>
     <include>
       <uri>model://aws_robomaker_warehouse_Bucket_01</uri>
       <name>clutter_06</name>
-      <pose>12.500 0.000 0 0 0 0.0000</pose>
+      <pose>13.600 3.000 0 0 0 0.0000</pose>
       <static>true</static>
     </include>
     <include>
       <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
       <name>clutter_07</name>
-      <pose>-12.500 0.000 0 0 0 0.0000</pose>
+      <pose>-13.600 3.000 0 0 0 0.0000</pose>
       <static>true</static>
     </include>
 

@@ -65,21 +65,54 @@ ros2 launch warehouse_xl_rmf_demo warehouse_xl_fleet.launch.py headless:=true
 `server_uri:=ws://localhost:7879` points the fleet adapter at the epistemic
 bridge, the same as the small warehouse demo.
 
-### Known environment defect
+### The fastapi and pydantic clash
 
-`fleet_manager` will not import on a machine whose `fastapi` comes from apt and
-whose `pydantic` is 2.x:
+`fleet_manager` imports `fastapi`, and the `fastapi` that Jammy packages is
+0.63, written against pydantic 1. A pydantic 2 installed in `~/.local` shadows
+the apt pydantic 1.8 for every interpreter on the machine, and the import then
+fails:
 
 ```
 pydantic.errors.PydanticUserError: Field 'type_' defined on a base class was
 overridden by a non-annotated attribute
 ```
 
-This is not particular to this package -- it stops every `rmf_demos` fleet,
-including the small warehouse demo -- and the robots do not move until it is
-resolved, by pinning `pydantic<2` or by installing a newer `fastapi`. Gazebo,
-the traffic schedule, the building map server and the fleet adapter all come up
-regardless.
+Without the fleet manager no robot moves, and this stops every `rmf_demos`
+fleet rather than only this one. The launch file sets `PYTHONNOUSERSITE=1`,
+which restores the pair apt installed together and needs nothing installed or
+uninstalled. Nothing RMF launches comes from `~/.local`, so ignoring the user
+site costs nothing.
+
+## The recorded run
+
+```
+  t=0s   (11.00, -23.64)  charger_east_south
+  t=12s  ( 9.06, -22.05)  onto the south cross aisle
+  t=24s  ( 3.29, -22.04)  west along it, ~0.58 m/s
+  t=36s  ( 0.00, -22.04)  lane_00, the foot of the service lane
+  t=48s  ( 0.01, -16.86)  north up the lane
+  t=60s  ( 0.01, -11.35)
+  t=72s  ( 0.00,  -5.59)
+  t=84s  ( 2.70,   0.25)  turned east at the mouth of aisle 8
+  t=96s  ( 4.19,   0.25)  east_08
+```
+
+r1 covers 35.9 m of path for 25 m of separation, because the racks leave no way
+into an aisle but the lane. `docs/r1_run.csv` holds the samples and
+`docs/warehouse_xl_run.png` draws them over the graph.
+
+```
+python3 tools/record_run.py --seconds 120 --out run.csv
+python3 tools/plot_floor.py --run run.csv --out run.png
+```
+
+### What the run does not yet establish
+
+The trace is r1's alone. Three tasks pinned to three robots were accepted and
+executed concurrently without a process failure, but how the schedule mediates
+the service lane under sustained three-robot traffic -- the lane being the one
+resource all thirty-four aisles share -- has not been measured. That is the
+next thing worth knowing about this floor.
 
 ## Third-party models
 

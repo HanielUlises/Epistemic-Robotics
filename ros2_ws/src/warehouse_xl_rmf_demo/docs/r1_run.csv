@@ -1,0 +1,10 @@
+t,robot,x,y,yaw,task_id
+0,r1,11.000,-23.640,1.571,eplansys_probe_0e32b4245b11a6b2
+12,r1,9.056,-22.050,3.142,eplansys_probe_0e32b4245b11a6b2
+24,r1,3.295,-22.044,3.142,eplansys_probe_0e32b4245b11a6b2
+36,r1,0.000,-22.040,1.571,eplansys_probe_0e32b4245b11a6b2
+48,r1,0.009,-16.858,1.571,eplansys_probe_0e32b4245b11a6b2
+60,r1,0.006,-11.347,1.571,eplansys_probe_0e32b4245b11a6b2
+72,r1,0.003,-5.585,1.571,eplansys_probe_0e32b4245b11a6b2
+84,r1,2.703,0.245,0.000,eplansys_probe_0e32b4245b11a6b2
+96,r1,4.186,0.249,0.000,eplansys_probe_0e32b4245b11a6b2
