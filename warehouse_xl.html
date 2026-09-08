@@ -891,6 +891,117 @@ ok   observer was spoken to by nobody</code></pre>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ EPISTEMIC -->
+<section>
+  <div class="container">
+    <p class="sec-label">The epistemic layer</p>
+    <h3>What is being planned over, and in what logic</h3>
+    <p>
+      The domain is EPDDL and the logic is S5 with three agents. The parser
+      reports what it grounded before anything is planned:
+    </p>
+    <pre><code>[parser] Frame: S5 (knowledge)
+[parser] Loaded: 4 atoms, 3 agents, 2 worlds (2 designated), 30 actions
+         partial_obs=1  goal_kw_only=1</code></pre>
+    <p>
+      Two designated worlds is the uncertainty stated precisely: the initial
+      model designates both a world in which the site is contaminated and one
+      in which it is not, and no agent's accessibility relation separates them.
+      That is what it means for the fleet not to know, and it is a property of
+      the model rather than a flag on a proposition.
+    </p>
+    <p>
+      The solver is <span class="mono-inline">plansys2/EpistemicPlanSolver</span>,
+      searching with AO* because what it must return is not a sequence:
+    </p>
+    <pre><code>[epistemic] strategy=aostar heuristic=ks worlds=2 designated=2 actions=30
+[aostar] Solution found at depth 3  Expanded=40  Generated=57  Memo=4/7</code></pre>
+
+    <h3>The policy, and why it branches</h3>
+    <p>
+      A classical planner returns a sequence because it assumes the state is
+      known. Here it is not, and the plan must say what to do in each case the
+      sensing action can return. The solver returns four nodes.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-policy.svg" width="100%"
+           alt="The policy: goto-site then scan, branching on e-scan-dirty or e-scan-clean into one of two private announcements">
+      <figcaption>
+        The branch is on an <i>observation</i>, not on a state variable. Both
+        arms announce privately, and the reason is the third conjunct of the
+        goal: a public announcement discharges
+        <span class="mono-inline">Kw scout</span> and
+        <span class="mono-inline">Kw relay</span> in a single step and
+        simultaneously falsifies
+        <span class="mono-inline">&#172;Kw observer</span>. The planner is not
+        told to prefer the private channel; it is told the observer must not
+        come to know, and the channel follows.
+      </figcaption>
+    </figure>
+
+    <h3>The model under product update</h3>
+    <p>
+      Execution is not a matter of marking actions done. Each executed action is
+      an event model, and applying it is a product update of the Kripke
+      structure. The state node reports the shape after each:
+    </p>
+    <pre><code>applied goto-site_relay:             2 worlds, 2 designated
+applied scan_relay -> e-scan-dirty:  2 worlds, 1 designated
+applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-kripke.svg" width="100%"
+           alt="Three Kripke models: initially two worlds both designated with all agents unable to distinguish them; after the scan two worlds with one designated and relay distinguishing them; after the private announcement three worlds">
+      <figcaption>
+        The counts are the ones the run reported, not an illustration of them.
+      </figcaption>
+    </figure>
+
+    <p>
+      The movement in that table is the whole argument, and it goes in two
+      directions. <b>Sensing contracts the model.</b> Before the scan both
+      worlds are designated; afterwards one is, because the observation ruled
+      the other out. <b>Private speech expands it.</b> Two worlds become three,
+      because an utterance the observer cannot hear creates a distinction that
+      did not previously exist: a world in which the message was sent, and a
+      world the observer still considers possible in which it was not.
+    </p>
+    <p>
+      This is worth dwelling on because it is counter-intuitive and it is the
+      reason the approach needs a model rather than a set of facts. Learning
+      something removes possibilities. Telling somebody something privately
+      <i>adds</i> them, because the agents excluded from the audience must go on
+      considering possible a world in which nothing was said. Both are the same
+      operation &#8212; a product with an event model &#8212; and a
+      representation that only tracked what is true could express neither.
+    </p>
+    <p>
+      The goal is then decided against the resulting structure rather than
+      against a fact base:
+    </p>
+    <pre><code>[goal] (and (Kw scout contaminated)
+            (Kw relay contaminated)
+            (not (Kw observer contaminated)))  holds</code></pre>
+
+    <h3>Where the chain is not yet closed</h3>
+    <p class="note">
+      One qualification, and it is a real one. In this run the outcome the
+      policy branched on was not sensed:
+      <span class="mono-inline">scan: RMF carried no outcome, falling back to
+      the map's "e-scan-dirty"</span>. The value came from the task map rather
+      than from a simulated sensor. Everything downstream of it &#8212; the
+      product update, the branch, the private channel, the model checking
+      &#8212; is genuine, but its input was configured. The bridge emits that
+      warning on every occurrence rather than concealing it. Closing the link
+      means a fleet adapter that reports what it observed, or routing the scan
+      through <span class="mono-inline">plansys2_epistemic_perception</span>,
+      which already turns occupancy geometry into propositions and which this
+      pipeline currently bypasses.
+    </p>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════════ ANALYSIS -->
 <section>
   <div class="container">

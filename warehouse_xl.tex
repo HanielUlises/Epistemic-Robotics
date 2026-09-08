@@ -308,6 +308,176 @@ only by way of the service floor: an aisle cannot be seen into until a robot
 stands at its mouth, which is the physical counterpart of the sensing action
 the policy contains.
 
+\section{The epistemic layer}
+\label{sec:epistemic}
+
+\subsection{What is planned over}
+
+The domain is EPDDL and the logic is $S5$ with three agents. The parser reports
+what it grounded before search begins:
+
+\begin{lstlisting}
+[parser] Frame: S5 (knowledge)
+[parser] Loaded: 4 atoms, 3 agents, 2 worlds (2 designated), 30 actions
+         partial_obs=1  goal_kw_only=1
+\end{lstlisting}
+
+Two designated worlds states the uncertainty precisely. The initial model
+$\Mod_0$ designates both a world in which the site is contaminated and one in
+which it is not, and no agent's accessibility relation separates them:
+\[
+\Mod_0 \models \textstyle\bigwedge_{i \in \Ag} \neg\,\Kw{i}\,\mathit{contaminated}.
+\]
+That the fleet does not know is a property of the structure, not a flag on a
+proposition, and it is the reason a set of facts will not serve as a
+representation.
+
+The solver is \code{plansys2/EpistemicPlanSolver}, searching with AO$^*$ because
+what it must return is not a sequence:
+
+\begin{lstlisting}
+[epistemic] strategy=aostar heuristic=ks worlds=2 designated=2 actions=30
+[aostar] Solution found at depth 3  Expanded=40  Generated=57  Memo=4/7
+\end{lstlisting}
+
+\subsection{The policy, and why it branches}
+
+A classical planner returns a sequence because it presumes the state known.
+Here it is not, and the plan must prescribe an action for each outcome the
+sensing action admits. Figure~\ref{fig:policy} is what the solver returned.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=6mm,
+  act/.style={draw=ink, fill=mist, rounded corners=2pt, inner sep=5pt,
+              font=\ttfamily\scriptsize, align=left, minimum height=8mm},
+  ev/.style={->, >=Latex, draw=signal, thick},
+  seq/.style={->, >=Latex, draw=slate}]
+  \node[act] (a) {goto-site\_relay\\[-1pt]\normalfont\tiny public ontic};
+  \node[act, right=14mm of a] (b)
+      {scan\_relay\\[-1pt]\normalfont\tiny semi-private sensing};
+  \node[act, above right=6mm and 26mm of b] (c)
+      {relay-dirty\_relay\_scout\\[-1pt]\normalfont\tiny private announcement};
+  \node[act, below right=6mm and 26mm of b] (d)
+      {relay-clean\_relay\_scout\\[-1pt]\normalfont\tiny private announcement};
+  \draw[seq] (a) -- (b);
+  \draw[ev] (b.east) -- ++(8mm,0) |- (c.west)
+        node[midway, above, font=\ttfamily\tiny, text=signal, xshift=6mm]
+        {e-scan-dirty};
+  \draw[ev] (b.east) -- ++(8mm,0) |- (d.west)
+        node[midway, below, font=\ttfamily\tiny, text=signal, xshift=6mm]
+        {e-scan-clean};
+\end{tikzpicture}
+\caption{The four-node policy. The branch is on an observation rather than on a
+state variable, and both arms announce privately.}
+\label{fig:policy}
+\end{figure}
+
+That both arms are private is a consequence of the third conjunct and not a
+preference of the domain. A public announcement discharges
+$\Kw{\mathit{scout}}$ and $\Kw{\mathit{relay}}$ in one step and simultaneously
+falsifies $\neg\,\Kw{\mathit{observer}}$; the planner is never instructed to
+prefer the private channel, only that the observer must not come to know.
+
+\subsection{The model under product update}
+
+Execution is not a matter of marking actions complete. Each executed action is
+an event model $\Ev$, and applying it forms the product $\Mod \prd \Ev$. The
+state node reports the shape of the result at each step of the recorded run:
+
+\begin{lstlisting}
+applied goto-site_relay:             2 worlds, 2 designated
+applied scan_relay -> e-scan-dirty:  2 worlds, 1 designated
+applied relay-dirty_relay_scout:     3 worlds, 1 designated
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  w/.style={circle, draw=ink, fill=mist, minimum size=11mm,
+            font=\ttfamily\tiny, inner sep=0pt},
+  des/.style={w, double, double distance=1pt, draw=signal},
+  rel/.style={draw=steel, font=\ttfamily\tiny},
+  lab/.style={font=\scriptsize\itshape, text=slate}]
+
+  \node[des] (a1) {$\neg c$};
+  \node[des, below=13mm of a1] (a2) {$c$};
+  \draw[rel] (a1) -- node[right, font=\ttfamily\tiny, text=steel] {s r o} (a2);
+  \node[lab, above=3mm of a1] {2 worlds, 2 designated};
+
+  \node[w, right=34mm of a1] (b1) {$\neg c$};
+  \node[des, below=13mm of b1] (b2) {$c$};
+  \draw[rel] (b1) -- node[right, font=\ttfamily\tiny, text=steel] {s o} (b2);
+  \node[lab, above=3mm of b1] {2 worlds, 1 designated};
+
+  \node[w, right=34mm of b1] (c1) {$\neg c$};
+  \node[des, below=13mm of c1] (c2) {$c$};
+  \node[w, right=13mm of c2, yshift=7mm] (c3) {$c$};
+  \draw[rel] (c1) -- node[right, font=\ttfamily\tiny, text=steel] {o} (c2);
+  \draw[rel] (c2) -- node[below right, font=\ttfamily\tiny, text=steel] {o} (c3);
+  \node[lab, above=3mm of c1] {3 worlds, 1 designated};
+
+  \draw[->, >=Latex, draw=slate] ($(a1)!0.5!(a2) + (9mm,0)$)
+      -- node[above, font=\ttfamily\tiny] {scan}
+         node[below, font=\scriptsize\itshape, text=slate] {narrows}
+      ($(b1)!0.5!(b2) - (9mm,0)$);
+  \draw[->, >=Latex, draw=slate] ($(b1)!0.5!(b2) + (9mm,0)$)
+      -- node[above, font=\ttfamily\tiny] {relay}
+         node[below, font=\scriptsize\itshape, text=slate] {widens}
+      ($(c1)!0.5!(c2) - (9mm,0)$);
+\end{tikzpicture}
+\caption{The model at each step. A double ring marks a designated world; an edge
+is labelled with the agents that cannot distinguish its endpoints. The counts
+are those the run reported.}
+\label{fig:kripke}
+\end{figure}
+
+The movement is in two directions and constitutes the argument for the
+representation.
+
+\paragraph{Sensing contracts the model} Before the scan both worlds are
+designated; afterwards one is, the observation having excluded the other. The
+set of worlds is unchanged and the designation is not: what the agent learned
+is expressed by which worlds may still be actual.
+
+\paragraph{Private speech expands it} Two worlds become three. An utterance the
+observer cannot hear introduces a distinction that did not previously exist ---
+a world in which the message was sent, and a world the observer must go on
+considering possible in which it was not.
+
+That these are the same operation is the point. A representation tracking only
+what is true could express neither: the first alters no proposition's truth
+value, and the second increases the number of situations under consideration
+while the physical world stands still. The goal is decided against the
+resulting structure by model checking rather than by lookup:
+
+\begin{lstlisting}
+[goal] (and (Kw scout contaminated)
+            (Kw relay contaminated)
+            (not (Kw observer contaminated)))  holds
+\end{lstlisting}
+
+\subsection{Where the chain is not closed}
+
+One qualification, and it is material. In the recorded run the outcome on which
+the policy branched was not sensed:
+
+\begin{lstlisting}
+scan: RMF carried no outcome, falling back to the map's "e-scan-dirty".
+      A fleet adapter reporting what it sensed would override this.
+\end{lstlisting}
+
+The value originated in the task map rather than in a simulated sensor.
+Everything downstream of it --- the product update, the branch, the private
+channel, the model checking --- is genuine; its input was configured. The
+bridge emits that warning on every occurrence rather than concealing it, which
+is the correct behaviour for a stub that must not be mistaken for a
+measurement. Closing the link requires a fleet adapter that reports what it
+observed, or routing the sensing action through
+\code{plansys2\_epistemic\_perception}, which already translates occupancy
+geometry into propositions and which this pipeline presently bypasses.
+
 \section{Defects found by the integration}
 \label{sec:defects}
 

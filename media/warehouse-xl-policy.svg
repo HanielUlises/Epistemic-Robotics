@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" width="900" height="330" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="The four-node branching policy: go to the site, scan, and then one of two announcements according to what the scan returned">
+  <style>
+    .ttl { font-size:13px; font-weight:bold; fill:#111111 }
+    .lbl { font-size:11.5px; fill:#5A5A5A }
+    .cap { font-size:11.5px; fill:#5A5A5A; font-style:italic }
+    .wid { font-family:'Courier New',Courier,monospace; font-size:11px; fill:#111111 }
+    .ag  { font-family:'Courier New',Courier,monospace; font-size:10px; fill:#1A52A0 }
+    .val { font-family:'Courier New',Courier,monospace; font-size:11.5px; fill:#111111 }
+  </style>
+<text x="30" y="26" class="ttl">The policy the solver returned</text>
+<text x="30" y="44" class="lbl">4 nodes, branching, depth 3 &#183; AO* expanded 40, generated 57</text>
+<rect x="30" y="120" width="200" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="42" y="140" class="wid">goto-site_relay</text>
+<text x="42" y="156" class="lbl" font-size="10">public ontic</text>
+<rect x="280" y="120" width="200" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="292" y="140" class="wid">scan_relay</text>
+<text x="292" y="156" class="lbl" font-size="10">semi-private sensing</text>
+<rect x="560" y="70" width="310" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="572" y="90" class="wid">relay-dirty_relay_scout</text>
+<text x="572" y="106" class="lbl" font-size="10">private announcement</text>
+<rect x="560" y="190" width="310" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="572" y="210" class="wid">relay-clean_relay_scout</text>
+<text x="572" y="226" class="lbl" font-size="10">private announcement</text>
+<line x1="230" y1="143" x2="272" y2="143" stroke="#5A5A5A" stroke-width="1.2"/>
+<polygon points="280,143 271,138.5 271,147.5" fill="#5A5A5A"/>
+<path d="M480 143 L520 143 L520 93 L552 93" fill="none" stroke="#C8102E" stroke-width="1.3"/>
+<polygon points="560,93 551,88.5 551,97.5" fill="#C8102E"/>
+<path d="M480 143 L520 143 L520 213 L552 213" fill="none" stroke="#C8102E" stroke-width="1.3"/>
+<polygon points="560,213 551,208.5 551,217.5" fill="#C8102E"/>
+<text x="552" y="84" class="ag" fill="#C8102E" text-anchor="end">e-scan-dirty &#8594;</text>
+<text x="552" y="204" class="ag" fill="#C8102E" text-anchor="end">e-scan-clean &#8594;</text>
+<line x1="30" y1="280" x2="870" y2="280" stroke="#D6D6D6"/>
+<text x="30" y="298" class="lbl">The branch is taken on what the scan observed, not on a state variable. The recorded run took the upper arm.</text>
+<text x="30" y="315" class="lbl">Both arms announce privately: broadcasting satisfies the first two conjuncts of the goal and destroys the third.</text>
+</svg>
