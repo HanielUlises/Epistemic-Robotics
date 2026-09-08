@@ -680,7 +680,7 @@ python3 tools/make_building_map.py --nav-graph maps/nav_graphs/0.yaml \
 <section>
   <div class="container">
     <p class="sec-label">The run</p>
-    <h3>Measured, not asserted</h3>
+    <h3>Thirty seconds of it</h3>
     <p>
       The mission below is the survey domain of
       <span class="mono-inline">eplansys</span>, unchanged, executed by three
@@ -690,13 +690,21 @@ python3 tools/make_building_map.py --nav-graph maps/nav_graphs/0.yaml \
       a stopwatch.
     </p>
 
-    <p class="note">The recording is being replaced.</p>
-    <p>
-      That an aisle can only be entered from the lane is a claim about the
-      floor, so it is put to the fleet and answered in metres. The run is
-      recorded from <span class="mono-inline">/fleet_states</span> and drawn
-      over the graph the robot was routing on.
-    </p>
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/warehouse_xl_run.jpg">
+        <source src="media/warehouse_xl_run.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Real time, from the moment <span class="mono-inline">r1</span> is
+        already crossing to the site. It enters
+        <span class="mono-inline">aisle_07</span>; the scan returns
+        <span class="mono-inline">e-scan-dirty</span>; the policy takes its
+        dirty branch and speaks on the private channel. On the right the same
+        robot moves through the traffic schedule, and the figure walking the
+        aisle on the left is one of the world's nine actors.
+      </figcaption>
+    </figure>
 
     <figure class="demo-figure">
       <img src="media/warehouse-xl-run.svg" width="100%"
