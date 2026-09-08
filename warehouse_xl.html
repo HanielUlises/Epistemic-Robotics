@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A larger warehouse floor &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="Thirty-four aisles, one service lane, and a run recorded from the fleet itself.">
+<title>A Warehouse Floor at Scale &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Three TurtleBots under Open-RMF on 2 640 square metres of warehouse, and the eight defects that took to find.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="A larger warehouse floor">
-<meta property="og:description" content="Thirty-four aisles, one service lane, and a run recorded from the fleet itself.">
+<meta property="og:title" content="A Warehouse Floor at Scale">
+<meta property="og:description" content="Three TurtleBots under Open-RMF on 2 640 square metres of warehouse, and the eight defects that took to find.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl.html">
 
 
@@ -21,10 +21,10 @@
 <meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/warehouse_xl.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The navigation graph of a thirty by fifty metre warehouse floor.">
+<meta property="og:image:alt" content="A TurtleBot3 in a simulated warehouse beside the Open-RMF traffic schedule.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/warehouse_xl.jpg">
-<meta name="twitter:title" content="A larger warehouse floor">
-<meta name="twitter:description" content="Thirty-four aisles, one service lane, and a run recorded from the fleet itself.">
+<meta name="twitter:title" content="A Warehouse Floor at Scale">
+<meta name="twitter:description" content="Three TurtleBots under Open-RMF on 2 640 square metres of warehouse, and the eight defects that took to find.">
 
 
 <script>
@@ -525,7 +525,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
           <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
-          <a href="warehouse_xl.html" aria-current="page">&#183; A larger floor<span class="sub">Thirty-four aisles over one lane</span></a>
+          <a href="warehouse_xl.html" aria-current="page">&#183; A warehouse floor at scale<span class="sub">Three TurtleBots under Open-RMF, and eight defects</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -557,121 +557,239 @@ sup.cite a:hover{text-decoration:underline}
 </header>
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">Open-RMF &#183; 30 &#215; 50 m &#183; ROS 2</p>
-    <h2>A larger warehouse floor</h2>
+    <p class="eyebrow">Open-RMF &#183; 42 &#215; 63 m &#183; TurtleBot3 &#183; ROS 2</p>
+    <h2>A warehouse floor at scale</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      The warehouse the bridge had been driving is fourteen metres by
-      twenty-one, with two aisles and twelve waypoints: enough to show the
-      pipeline works and not enough to show it scaling. This floor is thirty by
-      fifty with thirty-four aisles, a service lane running the length of the
-      building, and three robots under Open-RMF. Every aisle opens onto the lane
-      and onto nothing else, so an aisle cannot be seen into until a robot
-      stands at its mouth, which is the property the whole approach rests on.
+      The floor the bridge had been driving is fourteen metres by twenty-one,
+      with two aisles and twelve waypoints: sufficient to demonstrate that the
+      pipeline closes, insufficient to demonstrate anything about its
+      behaviour at scale. This one is forty-two by sixty-three, holds a hundred
+      and fifty-three obstacles and nine walking figures, and is traversed by
+      three TurtleBot3 Waffles under Open-RMF. The epistemic layer is unchanged
+      throughout, which is the point of the exercise; the execution layer is
+      not, and the greater part of what follows is an account of where it gave
+      way.
     </p>
     <p class="note" style="margin-top:1.4rem">
-      Floor, navigation graph and building map generated from one source in
-      <span class="mono-inline">warehouse_xl_rmf_demo</span>. Dispatched by
+      Floor from
+      <a href="https://github.com/belal-ibrahim/dynamic_logistics_warehouse">dynamic_logistics_warehouse</a>;
+      navigation graph and building map derived from its geometry in
+      <span class="mono-inline">warehouse_xl_rmf_demo</span>. Policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, dispatched by
       <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>,
-      driven by Open-RMF over Gazebo Classic.
+      executed over Gazebo Classic. The full account is in
+      <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a> (PDF).
     </p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ WHY BUILT -->
+<!-- ═══════════════════════════════════════════════ THE FLOOR -->
 <section>
   <div class="container">
     <p class="sec-label">The floor</p>
-    <h3>There was nothing to download</h3>
+    <h3>A survey of what is available, and why none of it served</h3>
     <p>
-      No large warehouse map exists for Open-RMF. Measured against their own
-      meshes rather than their descriptions, the candidates on Gazebo Fuel each
-      fail in a different way, and the failures are not visible from the
-      catalogue page.
+      Open-RMF routes over a navigation graph and a building map, and its
+      demonstrations distribute both. The largest of those are the airport
+      terminal, at 279&#8202;&#215;&#8202;60&#8202;m with 92 named waypoints,
+      and a campus at 319&#8202;&#215;&#8202;246&#8202;m. Neither is a
+      warehouse. No large warehouse map is published for Open-RMF at all, and
+      the assets from which one might be assembled were therefore measured
+      individually, from their collision meshes rather than from their
+      catalogue entries.
+    </p>
+    <p>
+      The distinction matters more than it may appear. A Gazebo model carries
+      two independent descriptions of its geometry: a visual mesh, which is
+      what a rendering shows, and a collision mesh, which is what a laser
+      returns and what an occupancy grid is rasterised from. Nothing requires
+      the two to agree, and for the assets in question they do not.
     </p>
     <table class="data">
       <thead>
-        <tr><th>Candidate</th><th>Footprint</th><th>Collision geometry</th></tr>
+        <tr>
+          <th>Asset</th><th>Footprint</th><th>Collision geometry</th>
+          <th>Consequence</th>
+        </tr>
       </thead>
       <tbody>
         <tr>
           <td><span class="mono-inline">OpenRobotics/Depot</span></td>
           <td>29 &#215; 15 m</td>
-          <td>A ground plane, and nothing else</td>
+          <td>A ground plane</td>
+          <td>Racks and walls exist as visuals alone. A laser passes through
+              them; a floor plan rasterised from collision geometry returns an
+              empty hall.</td>
         </tr>
         <tr>
           <td><span class="mono-inline">OpenRobotics/Warehouse</span></td>
           <td>30 &#215; 50 m</td>
-          <td>Shell and pillars: 1.2&#8202;% occupied at robot height</td>
+          <td>Shell and pillars</td>
+          <td>Genuinely large and genuinely empty: 1.2&#8202;% occupied at
+              robot height, the whole of it structural columns.</td>
         </tr>
         <tr>
           <td><span class="mono-inline">industrial-warehouse</span></td>
           <td>= AWS small</td>
-          <td>Complete, and no larger than what we had</td>
+          <td>Complete</td>
+          <td>The AWS small warehouse recomposed from the same components; no
+              larger than the floor already in service.</td>
         </tr>
       </tbody>
     </table>
     <p>
-      <span class="mono-inline">Depot</span> is the model usually reached for,
-      and it is the trap: its racks and walls are visuals, a laser passes
-      through them, and a floor plan rasterised from its collision meshes comes
-      back empty. The largest maps in <span class="mono-inline">rmf_demos</span>,
-      the airport terminal and the campus, are not warehouses.
-    </p>
-    <p>
-      So the hall is the Fuel model, whose collision mesh really is the
-      building, and the shelving inside it is AWS RoboMaker's, whose racks carry
-      collision meshes a laser can see. The arrangement &#8212; eighteen rack
-      rows either side of a central lane, clear of the ten pillars &#8212; is
-      ours.
+      <span class="mono-inline">Depot</span> is the asset ordinarily selected
+      for this purpose &#8212; some fifty thousand downloads &#8212; and is the
+      least serviceable of the three. Its detail is entirely superficial, and
+      the defect is undetectable from any rendering.
     </p>
 
-    <figure class="demo-figure">
-      <img src="media/warehouse-xl-floor.svg" width="100%"
-           alt="The navigation graph of the larger warehouse: eighteen rack rows either side of a central service lane, with docks and chargers in the outer bays">
-      <figcaption>
-        The floor. Grey is rack and pillar, blue the navigation graph, orange
-        the aisle mouths; green the docks and red the chargers, out in the bays
-        beyond the pillar rows. Thirty-four aisles, and each meets the graph
-        only at its mouth on the lane.
-      </figcaption>
-    </figure>
+    <h3>The floor adopted</h3>
+    <p>
+      An earlier iteration of this work composed a floor from
+      <span class="mono-inline">OpenRobotics/Warehouse</span> as the building
+      shell and AWS RoboMaker's shelving as its contents, arranged
+      parametrically. That construction is superseded and is recorded here only
+      because its abandonment is informative: a floor whose every dimension is
+      chosen by its author is a floor on which no property of the execution
+      layer is genuinely tested, since any difficulty encountered can be
+      designed away rather than resolved.
+    </p>
+    <p>
+      The floor now in use is
+      <span class="mono-inline">dynamic_logistics_warehouse</span>: AWS
+      RoboMaker's small warehouse tiled and furnished by hand. Measured from
+      its own model poses it comprises
+    </p>
+    <table class="data">
+      <thead><tr><th>Property</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Extent</td><td>42.0 &#215; 62.8 m &#8212; 2 640 m&#178;</td></tr>
+        <tr><td>Floor slabs</td><td>9</td></tr>
+        <tr><td>Obstacles</td><td>153, drawn from 14 AWS assets</td></tr>
+        <tr><td>Longest rack</td><td>18.05 m (<span class="mono-inline">ShelfF</span>, six of them)</td></tr>
+        <tr><td>Scripted actors</td><td>9, on fixed circuits</td></tr>
+        <tr><td>Occupied at robot height</td><td>42&#8202;%</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Against the 296&#8202;m&#178; of the small warehouse this is an increase
+      of approximately nine times in area. It is also, and more consequentially,
+      irregular: nothing about the placement of 153 hand-set obstacles admits a
+      closed form, so the navigation graph cannot be written from a formula and
+      must instead be recovered from the world.
+    </p>
+    <p class="note">
+      The asset is distributed under GPL-2.0 while this repository is
+      Apache-2.0 &#8212; its own <span class="mono-inline">package.xml</span>
+      declares Apache 2.0, which the repository contents contradict &#8212; so
+      it is fetched at setup rather than vendored, and the more restrictive of
+      the two declarations is assumed.
+    </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ GENERATED -->
+<!-- ═══════════════════════════════════════════════ THE ROADMAP -->
 <section>
   <div class="container">
-    <p class="sec-label">How it is built</p>
-    <h3>One definition, three artefacts</h3>
+    <p class="sec-label">The roadmap</p>
+    <h3>Recovering a graph from a world that was not designed to yield one</h3>
     <p>
-      The world, the navigation graph and the building map are generated from
-      <span class="mono-inline">tools/layout.py</span>. None is edited by hand,
-      so none can drift from the others, and the hall's own geometry is read off
-      its collision mesh rather than copied from its description.
+      The derivation proceeds in four stages, each of which failed at least
+      once before it held.
     </p>
-    <pre><code>python3 tools/make_world.py        --out worlds/warehouse_xl.world
-python3 tools/make_nav_graph.py    --out maps/nav_graphs/0.yaml
-python3 tools/make_building_map.py --nav-graph maps/nav_graphs/0.yaml \
-                                   --out maps/warehouse_xl.building.yaml</code></pre>
+    <ol>
+      <li><b>Footprints.</b> Every model in the world is an instance of one of
+        fourteen AWS assets. Their collision extents are measured once, from
+        the meshes, and cached in
+        <span class="mono-inline">config/aws_footprints.json</span>.</li>
+      <li><b>Structure against obstacle.</b> Three of the fourteen are the
+        building rather than its contents.
+        <span class="mono-inline">GroundB</span> is a 14&#8202;&#215;&#8202;21&#8202;m
+        floor tile, and admitting it as an obstacle fills the warehouse solid;
+        <span class="mono-inline">RoofB</span> is overhead;
+        <span class="mono-inline">WallB</span> is a room-sized shell whose
+        bounding box is not its geometry.</li>
+      <li><b>Rasterisation.</b> The remainder are rasterised at 0.25&#8202;m and
+        dilated by the robot's radius and a margin, yielding 0.45&#8202;m of
+        clearance.</li>
+      <li><b>Lattice and thinning.</b> A lattice is imposed on the free floor,
+        lanes are admitted only where the segment joining their endpoints is
+        unobstructed, and the result is thinned.</li>
+    </ol>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-floor.svg" width="100%"
+           alt="The derived roadmap over the warehouse floor: grey obstacles, blue lanes, orange aisle waypoints, red chargers, and the dotted circuits of the nine actors">
+      <figcaption>
+        The recovered graph. Grey is obstacle, blue the lanes, orange the
+        waypoints identified as aisles, red the chargers; the dotted green
+        circuits are the paths of the nine actors, which are excluded from the
+        graph.
+      </figcaption>
+    </figure>
+
+    <h3>Why the lattice must be fine and the roadmap coarse</h3>
     <p>
-      Every waypoint and every lane is checked against the floor before it is
-      written. The check is not decoration: it refused three layouts that looked
-      right on paper &#8212; aisle ends that met the pillar row, a cross aisle
-      that ran through the last row of shelving once the row count changed, and
-      two robots nominating a single charger, a waypoint holding exactly one
-      robot.
+      These two requirements are in opposition, and the resolution satisfying
+      either violates the other. Six of the racks are eighteen metres in
+      length, so the floor is traversed by walls admitting few apertures. A
+      lattice coarse enough to route on fails to discover them.
+    </p>
+    <table class="data">
+      <thead>
+        <tr><th>Spacing</th><th>Free nodes</th><th>Largest component</th>
+            <th>Outcome</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2.00 m</td><td>295</td><td>147 (50&#8202;%)</td>
+            <td>Floor divides into three disjoint bands</td></tr>
+        <tr><td>1.50 m</td><td>541</td><td>447 (83&#8202;%)</td>
+            <td>Still disconnected</td></tr>
+        <tr><td>1.25 m</td><td>748</td><td>748 (100&#8202;%)</td>
+            <td>Connected; planner intractable</td></tr>
+        <tr><td>1.00 m</td><td>1205</td><td>1205 (100&#8202;%)</td>
+            <td>Connected; larger again</td></tr>
+        <tr><td><b>1.25 m, thinned</b></td><td><b>261</b></td>
+            <td><b>261 (100&#8202;%)</b></td>
+            <td><b>Connected and routable</b></td></tr>
+      </tbody>
+    </table>
+    <p>
+      The failure at two metres is compounded by a second mechanism worth
+      isolating. A largest-component filter is applied, and correctly so: an
+      isolated pocket of floor yields waypoints RMF will accept and never route
+      to, which fails at dispatch rather than at generation. Each step is
+      individually defensible; in composition they discard two thirds of the
+      warehouse and emit no diagnostic. The failure is silent, and silence is
+      the property that makes it expensive.
     </p>
     <p>
-      The fourth it did not refuse, and that one is worth recording. A pallet
-      jack placed at the south dock purely for the look of the thing overlapped
-      the lane out of the east charger by twenty centimetres. The check passed,
-      because it knew about racks and pillars and not about props; RMF reported
-      the task underway; and the robot drove out of its charger, pressed into
-      the pallet jack and stopped, with nothing anywhere reporting a collision.
-      A thing that stands on the floor is an obstacle whatever it was put there
-      for. The props are part of the floor definition now, and the same check
-      that missed it rejects it.
+      At the opposite extreme, 748 waypoints and 2200 lanes are connected and
+      unusable: RMF returned no path for a sixty-metre errand within seventy
+      seconds. The thinning reconciles the two. A node is removed whenever every
+      pair of its neighbours admits a direct unobstructed join, which preserves
+      every route and costs one waypoint; junctions and aisle waypoints are
+      retained. The generalisation matters: restricted to nodes of degree two,
+      the same procedure removes 55 of 748, since in open floor a lattice node
+      has degree four.
+    </p>
+
+    <h3>Aisles are identified rather than enumerated</h3>
+    <p>
+      A waypoint is classified as an aisle when the floor terminates within
+      1.5&#8202;m on both sides along one axis and remains open along the other.
+      This is precisely the configuration a robot must enter before it can
+      determine anything about its contents, and therefore precisely what a
+      sensing action requires a name for. Thirty-five such waypoints survive a
+      four-metre minimum separation &#8212; one per aisle rather than one per
+      cell, the unseparated criterion having admitted 174 and left the thinning
+      nothing to remove.
+    </p>
+    <p>
+      The resulting graph is 261 waypoints, 35 of them aisles, three chargers
+      and 1652 directed lanes, in a single connected component.
     </p>
   </div>
 </section>
@@ -679,15 +797,40 @@ python3 tools/make_building_map.py --nav-graph maps/nav_graphs/0.yaml \
 <!-- ═══════════════════════════════════════════════ THE RUN -->
 <section>
   <div class="container">
-    <p class="sec-label">The run</p>
+    <p class="sec-label">The mission</p>
+    <h3>The domain, and what the floor changes about it</h3>
+    <p>
+      The domain is the survey of <span class="mono-inline">eplansys</span>,
+      unaltered. Three agents; a site which may be contaminated; a goal of
+      three conjuncts:
+    </p>
+    <pre><code>(:goal (and ([Kw. scout]  (contaminated))
+            ([Kw. relay]  (contaminated))
+            (&lt;Kw. observer&gt; (contaminated))))</code></pre>
+    <p>
+      The third conjunct supplies the difficulty. It prohibits the open
+      channel, otherwise the cheapest means by which the team may inform
+      itself, and so obliges the planner to select a channel by its audience.
+      The returned policy has four nodes and branches on what the scan
+      discovers.
+    </p>
+    <p>
+      What the larger floor alters is not the policy but the geography over
+      which it is executed. The site is
+      <span class="mono-inline">aisle_07</span>, and reaching it is work: the
+      agent must cross open floor and then enter an aisle which cannot be
+      inspected from outside. On the small floor the sensing action was
+      satisfied almost immediately upon dispatch, the site being a waypoint the
+      robot had effectively already reached. Here the epistemic action and the
+      physical one have comparable cost, which is the condition under which the
+      distinction between them is worth drawing.
+    </p>
+
     <h3>Thirty seconds of it</h3>
     <p>
-      The mission below is the survey domain of
-      <span class="mono-inline">eplansys</span>, unchanged, executed by three
-      TurtleBot3 Waffles over Open-RMF. Gazebo is on the left and RViz on the
-      right; the captions name the step of the policy the fleet is on at that
-      moment, and their times come from the executor's own log rather than from
-      a stopwatch.
+      Gazebo on the left, the Open-RMF traffic schedule on the right. Caption
+      times are taken from the executor's log rather than assigned by hand, so
+      each names the step of the policy in force at that instant.
     </p>
 
     <figure class="demo-figure">
@@ -696,99 +839,207 @@ python3 tools/make_building_map.py --nav-graph maps/nav_graphs/0.yaml \
         <source src="media/warehouse_xl_run.mp4" type="video/mp4">
       </video>
       <figcaption>
-        Real time, from the moment <span class="mono-inline">r1</span> is
-        already crossing to the site. It enters
-        <span class="mono-inline">aisle_07</span>; the scan returns
-        <span class="mono-inline">e-scan-dirty</span>; the policy takes its
-        dirty branch and speaks on the private channel. On the right the same
-        robot moves through the traffic schedule, and the figure walking the
-        aisle on the left is one of the world's nine actors.
+        Real time, commencing with <span class="mono-inline">r1</span> already
+        in transit. It enters <span class="mono-inline">aisle_07</span>; the
+        scan returns <span class="mono-inline">e-scan-dirty</span>; the policy
+        takes its dirty branch and speaks on the private channel. The figure
+        crossing the aisle is one of the world's nine actors.
       </figcaption>
     </figure>
 
-    <figure class="demo-figure">
-      <img src="media/warehouse-xl-run.svg" width="100%"
-           alt="A recorded run: r1's path out of its charger, west along the south cross aisle, north up the service lane and east into aisle 8">
-      <figcaption>
-        <span class="mono-inline">r1</span> from
-        <span class="mono-inline">charger_east_south</span> to aisle
-        <span class="mono-inline">east_08</span>: 35.9&#8202;m of path for
-        25&#8202;m of separation, in 96&#8202;s. Out of the charger, west along
-        the south cross aisle, twenty-two metres north up the service lane, then
-        east into the aisle. The detour is the point &#8212; the racks leave no
-        way in but the lane.
-      </figcaption>
-    </figure>
+    <table class="data">
+      <thead><tr><th>t</th><th>Event</th><th>Layer</th></tr></thead>
+      <tbody>
+        <tr><td>&#8722;64.0 s</td>
+            <td><span class="mono-inline">goto-site_relay</span> dispatched</td>
+            <td>Bridge &#8594; RMF</td></tr>
+        <tr><td>+9.5 s</td>
+            <td><span class="mono-inline">scan_relay</span> dispatched to <span class="mono-inline">aisle_07</span></td>
+            <td>Bridge &#8594; RMF</td></tr>
+        <tr><td>+16.3 s</td>
+            <td><span class="mono-inline">observed e-scan-dirty</span></td>
+            <td>Epistemic state</td></tr>
+        <tr><td>+18.5 s</td>
+            <td><span class="mono-inline">relay says e-scan-dirty on /eplansys/channel/private/scout</span></td>
+            <td>Speech act</td></tr>
+        <tr><td>+21.4 s</td><td>Mission complete</td><td>Executor</td></tr>
+      </tbody>
+    </table>
 
-    <pre><code>t=0s   (11.00, -23.64)  charger_east_south
-t=12s  ( 9.06, -22.05)  onto the south cross aisle
-t=24s  ( 3.29, -22.04)  west along it, ~0.58 m/s
-t=36s  ( 0.00, -22.04)  lane_00, the foot of the service lane
-t=48s  ( 0.01, -16.86)  north up the lane
-t=60s  ( 0.01, -11.35)
-t=72s  ( 0.00,  -5.59)
-t=84s  ( 2.70,   0.25)  turned east at the mouth of aisle 8
-t=96s  ( 4.19,   0.25)  east_08</code></pre>
-
+    <h3>The verdict, and the two kinds of claim it rests on</h3>
+    <pre><code>ok   (Kw scout contaminated) holds
+ok   (Kw relay contaminated) holds
+ok   (Kw observer contaminated) does not hold
+ok   scout was spoken to, 1 time(s)
+ok   observer was spoken to by nobody</code></pre>
     <p>
-      A task is pinned to a named robot rather than dispatched for bidding,
-      which is the path the epistemic bridge uses: the robot that senses is the
-      agent the model credits with knowing.
+      The first three interrogate the epistemic state and establish where the
+      model finished. The last two read the agents' radio transcripts and
+      establish who was in fact addressed. They are claims of different kinds
+      and the second is the weaker, which is why it is worth having: a negative
+      epistemic conjunct is satisfied by everything that fails to occur, so a
+      procedure consulting only the model cannot distinguish deliberate secrecy
+      from an absence of communication. A run honouring the private channel and
+      a run achieving nothing return the same verdict.
     </p>
-    <pre><code>ros2 launch warehouse_xl_rmf_demo warehouse_xl_fleet.launch.py
-ros2 run eplansys_rmf_probe submit_probe -F warehouseXL -R r1 -p east_08</code></pre>
+    <p>
+      A transcript that fails to arrive is reported as unchecked rather than as
+      an agent that heard nothing. The distinction is not pedantry: a radio
+      which was never running would otherwise testify that the observer knows
+      nothing, which is the very proposition the exercise exists to establish.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ ANALYSIS -->
+<section>
+  <div class="container">
+    <p class="sec-label">Analysis</p>
+    <h3>Where the layer gave way, and of what kind</h3>
+    <p>
+      Eight defects were encountered in bringing the chain into operation at
+      this scale. They are given because, collectively, they are the
+      substantive result: six are properties of the composition rather than
+      errors within any component, and none would have been exposed by a unit
+      test.
+    </p>
+    <table class="data">
+      <thead>
+        <tr><th>Symptom</th><th>Cause</th><th>Class</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>No robot moves; the fleet manager is absent</td>
+            <td>The packaged <span class="mono-inline">fastapi</span> is 0.63,
+                written against pydantic&#8202;1; a pydantic&#8202;2 in
+                <span class="mono-inline">~/.local</span> shadows it for every
+                interpreter on the machine</td>
+            <td>Environment</td></tr>
+        <tr><td>A robot leaves its charger, halts after 1.3 m, RMF reports the
+                task underway</td>
+            <td>A pallet jack placed for appearance overlapped the charger's
+                own lane by 20 cm; the lane check knew of racks and pillars but
+                not of props</td>
+            <td>Composition</td></tr>
+        <tr><td>The warehouse is a third of its extent</td>
+            <td>A 12 cm seam between floor slabs reads as absent floor and
+                divides the map, of which the component filter retains one part</td>
+            <td>Geometric</td></tr>
+        <tr><td>No path returned for a 60 m errand in 70 s</td>
+            <td>693 waypoints and 2200 lanes; the lattice required for
+                connectivity is not the roadmap that should be routed upon</td>
+            <td>Scale</td></tr>
+        <tr><td>Robots report a pose, accept paths, do not move</td>
+            <td>Spawned at <i>z</i>&#8202;=&#8202;0 into slabs 12 cm thick with
+                no ground plane beneath; each settled at
+                <i>z</i>&#8202;=&#8202;&#8722;0.067 with its wheels within the
+                floor</td>
+            <td>Geometric</td></tr>
+        <tr><td>A purpose-built TurtleBot3 loads, initialises, publishes state,
+                does not move</td>
+            <td><span class="mono-inline">slotcar</span> requires more of a
+                model than it documents</td>
+            <td>Undocumented interface</td></tr>
+        <tr><td>The robot is 271 m across; or, separately, a 2 m cube</td>
+            <td>turtlebot3 meshes are STL in millimetres, and the
+                <span class="mono-inline">.dae</span> files beside them are
+                placeholders</td>
+            <td>Units</td></tr>
+        <tr><td><span class="mono-inline">goto_site</span> fails with
+                <i>RMF task timed out</i></td>
+            <td>The 180 s limit is the small floor's figure; forty metres at
+                half a metre per second is not 180 s</td>
+            <td>Scale</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Three of these warrant comment</h3>
+    <p>
+      <b>The pallet jack.</b> The lane check was written to refuse lanes
+      crossing obstacles, and it did refuse three layouts which appeared
+      correct. It admitted this one because its obstacle set comprised racks
+      and pillars: the prop had been placed in the world generator, for
+      appearance, and the checker never saw it. The symptom was disproportionate
+      to the cause &#8212; a robot held motionless against a pallet jack while
+      RMF reported its task underway and no component reported a collision. The
+      correction moves props into the definition the checker consults, and the
+      check which admitted the placement now refuses it.
+    </p>
+    <p>
+      <b>The seam.</b> Twelve centimetres between two floor tiles is invisible
+      in any rendering and fatal to a rasteriser, which cannot distinguish a
+      seam from a void. Its interest lies in the interaction: the
+      largest-component filter is correct in isolation, and the two together
+      discard two thirds of a warehouse without diagnostic.
+    </p>
+    <p>
+      <b>The model that would not move.</b> A Waffle constructed to
+      <span class="mono-inline">slotcar</span>'s documented requirements &#8212;
+      a <span class="mono-inline">base_footprint</span>, two wheel links, two
+      named revolute joints &#8212; loaded, initialised, published state at
+      6&#8202;Hz, accepted paths, and remained stationary. TinyRobot crossed the
+      same floor on the same graph without difficulty, which is what isolated
+      the model from the world and the roadmap. The resolution retains the
+      working skeleton and substitutes only what is seen, which is an admission
+      that the interface was not understood so much as circumvented.
+    </p>
+
+    <h3>A remark on method</h3>
+    <p>
+      The recurring form is this: each component behaves as specified, the
+      composition does not, and the failure presents as silence rather than as
+      an error. A robot pressed against a pallet jack reports its task underway.
+      A warehouse reduced to a third of itself reports a valid graph. A model
+      which cannot be driven reports its state at 6&#8202;Hz. In a system of
+      autonomous nodes, plugins loaded at run time and streams advancing at
+      different rates, integration is the only instrument which exhibits this
+      class of fault, and the absence of a diagnostic is its signature rather
+      than an indication of health.
+    </p>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════ SCOPE -->
 <section>
   <div class="container">
-    <p class="sec-label">What it establishes</p>
-    <h3>And what it does not</h3>
+    <p class="sec-label">Scope</p>
+    <h3>What forty metres does not establish</h3>
     <p>
-      The mission completes and every check passes:
+      <b>Not a planning result.</b> The policy has four nodes and would be
+      solved as readily over a floor plan sketched on paper. Nothing here bears
+      on the complexity of epistemic planning, and the floor could be enlarged
+      indefinitely without touching it.
     </p>
-    <pre><code>observed e-scan-dirty
-relay says e-scan-dirty on /eplansys/channel/private/scout
-mission complete
-
-ok   (Kw scout contaminated) holds
-ok   (Kw relay contaminated) holds
-ok   (Kw observer contaminated) does not hold
-ok   scout was spoken to, 1 time(s)
-ok   observer was spoken to by nobody</code></pre>
     <p>
-      Three formulas put to the epistemic state, and two radio transcripts read
-      off the fleet. The last two are the ones worth having: they are facts
-      about what was published and received rather than about the model, and
-      they are what tells a run that honoured the private channel apart from a
-      run that never spoke at all.
+      <b>Not a study of contention.</b> Three robots share the floor and three
+      pinned tasks were accepted and executed concurrently without failure, but
+      no measurement was taken of how the traffic schedule mediates shared
+      corridors under sustained multi-robot traffic. That is the evident next
+      experiment and it has not been performed.
+    </p>
+    <p>
+      <b>Not a dynamic-obstacle result.</b> The nine actors walk fixed circuits
+      and are absent from the navigation graph. The fleet does not avoid them
+      and was never asked to; they are scenery, and a robot encountering one
+      would drive into it.
+    </p>
+    <p>
+      <b>Not confidentiality.</b> The private channel is realised by addressing:
+      an utterance is published to a topic whose subscribers are the audience
+      the action declares. Any node may subscribe to any topic. What is
+      established is that the team employed a channel on which the excluded
+      agent was not addressed, not that it could not have listened. Enforcing
+      the latter requires DDS partitions or SROS&#8202;2 permissions, which are
+      constructed from these same audiences and belong to a deployment.
     </p>
     <p class="note">
-      A full account of the floor, the fleet and the eight defects the
-      integration turned up is in
-      <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a> (PDF).
-    </p>
-    <p>
-      How the schedule mediates the service lane under sustained three-robot
-      traffic has not been measured. The lane is the one resource all
-      thirty-four aisles share, so it is where contention would appear, and it
-      is the next thing worth knowing about this floor.
-    </p>
-    <p class="note">
-      One environment note, since it stops every
-      <span class="mono-inline">rmf_demos</span> fleet and not only this one.
-      The fleet manager imports <span class="mono-inline">fastapi</span>, and
-      the <span class="mono-inline">fastapi</span> that Jammy packages is 0.63,
-      written against pydantic&nbsp;1. A pydantic&nbsp;2 installed in
-      <span class="mono-inline">~/.local</span> shadows the apt pydantic&nbsp;1.8
-      for every interpreter on the machine and the import fails, so no robot
-      moves. The launch sets
-      <span class="mono-inline">PYTHONNOUSERSITE=1</span>, which restores the
-      pair apt installed together and needs nothing installed or removed.
+      The complete account &#8212; the survey of assets, the derivation of the
+      roadmap, the fleet, and all eight defects with their measurements &#8212;
+      is in <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a> (PDF,
+      7&#8202;pp).
     </p>
   </div>
 </section>
+
 <footer>
   <div class="container-wide">
     <div class="ftr">
@@ -803,7 +1054,7 @@ ok   observer was spoken to by nobody</code></pre>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">30 &#215; 50 m &#183; 34 aisles &#183; 132 waypoints &#183; ROS 2</span>
+      <span class="ftr-r">42 &#215; 63 m &#183; 153 obstacles &#183; 261 waypoints &#183; ROS 2</span>
     </div>
   </div>
 </footer>
