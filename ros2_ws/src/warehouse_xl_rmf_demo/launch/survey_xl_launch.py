@@ -198,11 +198,16 @@ def launch_setup(context, *args, **kwargs):
         staged.append(
             RegisterEventHandler(OnProcessExit(target_action=mission, on_exit=[check])))
 
-    staged.append(
-        RegisterEventHandler(
-            OnProcessExit(
-                target_action=check if checking else mission,
-                on_exit=[EmitEvent(event=Shutdown())])))
+    # Whether the mission ending takes the simulation down with it. It should,
+    # for an unattended run; it must not while a recording is being made, since
+    # the windows close the moment the checks print and the last thing filmed
+    # is a desktop.
+    if LaunchConfiguration('shutdown').perform(context).lower() in ('true', '1'):
+        staged.append(
+            RegisterEventHandler(
+                OnProcessExit(
+                    target_action=check if checking else mission,
+                    on_exit=[EmitEvent(event=Shutdown())])))
 
     return [fleet, plansys2, bridge, *radios, mission, *staged]
 
@@ -215,6 +220,10 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'headless', default_value='false',
             description='Run gazebo headless and leave rviz out.'),
+        DeclareLaunchArgument(
+            'shutdown', default_value='true',
+            description='Bring the simulation down when the mission ends. '
+                        'false to leave it up, which is what recording needs.'),
         DeclareLaunchArgument(
             'check', default_value='true',
             description='Ask the epistemic state, once the robots have '

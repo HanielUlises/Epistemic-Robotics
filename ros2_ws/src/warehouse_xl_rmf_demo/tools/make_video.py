@@ -81,6 +81,8 @@ def main():
     ap.add_argument('--speed', type=float, default=2.0)
     ap.add_argument('--trim', type=float, default=60.0,
                     help='seconds of capture to keep, from the start')
+    ap.add_argument('--precomposed', action='store_true',
+                    help='the capture is already a stacked 1920x1080 frame')
     ap.add_argument('--gazebo-x', type=int, default=1920)
     ap.add_argument('--rviz-x', type=int, default=0)
     ap.add_argument('--captions', required=True,
@@ -101,12 +103,18 @@ def main():
     # on this machine Gazebo is on the second monitor and RViz on the first, so
     # the right half of the grab is Gazebo. Swapping them here puts Gazebo on
     # the left of the finished frame, where the labels say it is.
-    chain = [
-        f'crop=1920:1080:{args.gazebo_x}:0,scale=960:1080[gz]',
-        f'crop=1920:1080:{args.rviz_x}:0,scale=960:1080[rv]',
-    ]
-    filters = (f'[0:v]{chain[0]};[0:v]{chain[1]};[gz][rv]hstack=inputs=2[stacked];'
-               f'[stacked]setpts=PTS/{args.speed}[fast];[fast]')
+    if args.precomposed:
+        # The capture already grabbed the two windows separately and stacked
+        # them, which is how the desktop is kept out of frame: grabbing the
+        # whole screen and cropping afterwards films whatever else is open.
+        filters = f'[0:v]setpts=PTS/{args.speed}[fast];[fast]'
+    else:
+        chain = [
+            f'crop=1920:1080:{args.gazebo_x}:0,scale=960:1080[gz]',
+            f'crop=1920:1080:{args.rviz_x}:0,scale=960:1080[rv]',
+        ]
+        filters = (f'[0:v]{chain[0]};[0:v]{chain[1]};[gz][rv]hstack=inputs=2[stacked];'
+                   f'[stacked]setpts=PTS/{args.speed}[fast];[fast]')
 
     overlays = [
         drawtext('GAZEBO — dynamic logistics warehouse, 42 x 63 m',

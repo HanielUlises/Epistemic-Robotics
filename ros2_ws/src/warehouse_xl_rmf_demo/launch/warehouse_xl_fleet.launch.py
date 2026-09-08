@@ -38,6 +38,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import (
+    TimerAction,
     DeclareLaunchArgument,
     ExecuteProcess,
     IncludeLaunchDescription,
@@ -64,6 +65,9 @@ from launch_ros.actions import Node
 # is enough for the tallest slab and small enough that the drop is not visible
 # in a recording.
 SPAWN_Z = '0.35'
+
+# Seconds to let gzserver load the world before asking it to spawn anything.
+SPAWN_DELAY = 45.0
 
 SPAWN = [
     ('r1', -3.35, -9.25, 0.0),
@@ -155,7 +159,15 @@ def launch_setup(context, *args, **kwargs):
         arguments=['-c', fleet_config, '-n', nav_graph, '-sim'],
         parameters=[{'use_sim_time': True, 'server_uri': server_uri}])
 
-    return ([gazebo] + spawns +
+    # The spawns are held back rather than issued with the world. This world
+    # is a megabyte of SDF, 169 placed models and nine actors, and gzserver
+    # takes tens of seconds to have a spawn service worth calling: issued
+    # immediately, all three spawns fail with "Spawn service failed" and the
+    # fleet comes up with no robots in it. The delay is the difference between
+    # a demonstration and an empty warehouse.
+    delayed_spawns = TimerAction(period=SPAWN_DELAY, actions=spawns)
+
+    return ([gazebo, delayed_spawns] +
             [building_map_server, schedule, blockade, manager, adapter,
              visualization])
 
