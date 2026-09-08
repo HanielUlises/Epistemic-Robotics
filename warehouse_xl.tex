@@ -1,0 +1,436 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, fit, backgrounds, calc, shapes.geometric}
+\usepackage[hidelinks]{hyperref}
+
+%  ---  Palette shared with the companion report  ---
+\definecolor{ink}{RGB}{26,30,36}
+\definecolor{slate}{RGB}{92,101,112}
+\definecolor{mist}{RGB}{233,235,238}
+\definecolor{rulegrey}{RGB}{188,194,201}
+\definecolor{steel}{RGB}{47,72,102}
+\definecolor{steellight}{RGB}{124,146,172}
+\definecolor{signal}{RGB}{160,32,45}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=steel,
+    citecolor=steel,
+    urlcolor=steel,
+    pdftitle={A Warehouse Floor at Scale: Three TurtleBots under Open-RMF Executing an Epistemic Policy},
+    pdfauthor={Haniel Ulises},
+}
+
+\color{ink}
+
+\setlength{\headheight}{22pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{slate}{\itshape A Warehouse Floor at Scale}}
+\fancyhead[R]{\small\textcolor{slate}{\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulegrey}\leaders\hrule height \headrulewidth\hfill}}
+
+\titleformat{\section}{\normalfont\large\bfseries\color{ink}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries\color{ink}}{\thesubsection}{0.7em}{}
+\titleformat{\paragraph}[runin]{\normalfont\bfseries\color{slate}}{}{0em}{}[.]
+
+\captionsetup{font=small, labelfont={bf,color=slate}, textfont=footnotesize}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\lstdefinestyle{sys}{
+    backgroundcolor=\color{mist},
+    basicstyle=\ttfamily\scriptsize\color{ink},
+    keywordstyle=\color{steel}\bfseries,
+    commentstyle=\color{slate}\itshape,
+    stringstyle=\color{slate},
+    morecomment=[l]{\#},
+    morekeywords={executor,ros__parameters,bt_builder_plugin,bt_node_plugins,
+        planner,plan_solver_plugins,EPISTEMIC,conditional_plan,action_mapping,
+        Sequence,ReactiveSequence,CheckKnowledge,ApplyEpistemicUpdate,
+        EpistemicSwitch,CheckEpistemicGoal,ExecuteAction,true,false,ok,refused},
+    frame=single,
+    rulecolor=\color{rulegrey},
+    framesep=5pt,
+    xleftmargin=6pt,
+    xrightmargin=0pt,
+    breaklines=true,
+    showstringspaces=false,
+    columns=fullflexible,
+    captionpos=b,
+}
+\lstset{style=sys}
+
+%  ---  Notation  ---
+\newcommand{\Ag}{\mathcal{A}}
+\newcommand{\Mod}{\mathcal{M}}
+\newcommand{\Ev}{\mathcal{E}}
+\newcommand{\prd}{\otimes}
+\newcommand{\Kop}[1]{K_{#1}}
+\newcommand{\Kw}[1]{\mathit{Kw}_{#1}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2.4cm}
+{\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[0.9cm]
+{\LARGE\bfseries A Warehouse Floor at Scale\par}
+\vspace{0.5cm}
+{\large\color{slate} Three TurtleBots under Open-RMF Executing an\\ Epistemic Policy over Forty Metres of Warehouse\par}
+\vspace{0.7cm}
+{\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[1.4cm]
+
+{\large Haniel Ulises\par}
+\vspace{0.3cm}
+{\color{slate} Epistemic Robotics}\\
+\vspace{0.15cm}
+{\color{slate}\today}
+
+\vfill
+{\color{slate}\small
+The companion report executes an epistemic mission on a floor of fourteen
+metres by twenty-one with two aisles. This one asks what changes when the floor
+is forty-two by sixty-three, holds a hundred and fifty-three obstacles and nine
+people walking through it, and is driven by three robots rather than two.
+Nothing in the epistemic layer changes, which is the point; a great deal in the
+execution layer does, and most of this report is an account of what.}
+\vspace{1.2cm}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Scope, and what this report is for}
+
+The claim under examination is narrow and worth stating before anything else.
+It is \emph{not} that epistemic planning scales: the policy solved here has
+four nodes and would be solved as quickly over a floor plan drawn on a napkin.
+It is that the execution layer between such a policy and a real fleet holds
+together at a scale where the floor is no longer trivially traversable, and
+that the properties the policy is chosen for --- in particular, that one agent
+must \emph{not} come to know something --- remain checkable when it does.
+
+Two things follow from that framing. First, the interesting content of this
+report is the failure analysis of Section~\ref{sec:defects}, not the mission
+trace of Section~\ref{sec:run}: the mission is three actions long and its
+trace could be summarised in a sentence. Second, the negative results matter as
+much as the positive ones, and Section~\ref{sec:notestablished} states plainly
+what forty metres of warehouse does not establish.
+
+\section{The floor}
+
+\subsection{Why an existing floor, and which}
+
+Open-RMF routes over a navigation graph and a building map, and its
+demonstrations ship both. The largest maps in \code{rmf\_demos} are the airport
+terminal, at $279 \times 60$\,m with 92 named waypoints, and a campus at
+$319 \times 246$\,m; neither is a warehouse. There is no large warehouse map
+published for Open-RMF at all.
+
+The candidate warehouse assets on Gazebo Fuel were therefore measured directly,
+from their own collision meshes rather than from their catalogue descriptions.
+Table~\ref{tab:fuel} records the result, and the discrepancy between what the
+descriptions promise and what the geometry provides is the substance of it.
+
+\begin{table}[H]
+\centering\small
+\caption{Warehouse assets on Gazebo Fuel, measured from their collision meshes.}
+\label{tab:fuel}
+\begin{tabularx}{\textwidth}{@{}lllX@{}}
+\toprule
+\textbf{Asset} & \textbf{Footprint} & \textbf{Collision} & \textbf{Consequence} \\
+\midrule
+\code{OpenRobotics/Depot} & $29 \times 15$\,m & a ground plane &
+Racks and walls are visuals only. A laser passes through them and an occupancy
+grid rasterised from collision geometry returns an empty floor. \\
+\addlinespace
+\code{OpenRobotics/Warehouse} & $30 \times 50$\,m & shell and pillars &
+Genuinely large and genuinely empty: 1.2\,\% occupied at robot height, all of
+it structural columns. \\
+\addlinespace
+\code{industrial-warehouse} & as AWS small & complete &
+The AWS small warehouse recomposed from the same parts; no larger than the
+floor already in use. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\code{Depot} is the asset usually reached for --- some fifty thousand
+downloads --- and is the trap of the three. Its detail is entirely visual.
+
+The floor finally used is \code{dynamic\_logistics\_warehouse}, which is AWS
+RoboMaker's small warehouse tiled and furnished by hand: nine floor slabs,
+153 obstacles drawn from fourteen AWS assets, five lamps, and nine scripted
+actors walking fixed circuits. Measured from its own model poses it spans
+$42.0 \times 62.8$\,m, against $14.05 \times 21.05$\,m for the floor of the
+companion report --- an increase of roughly nine times in area.
+
+\subsection{Deriving the roadmap}
+
+The companion report's floor is parametric and its navigation graph is written
+from a formula. This one is not: nothing about the placement of 153 hand-set
+obstacles is regular, so the graph is derived from the world instead.
+
+\begin{enumerate}[nosep]
+  \item Every model in the world is one of fourteen AWS assets. Their collision
+        extents are measured once, from the collision meshes, and cached.
+  \item Three of the fourteen are structure rather than obstacle. Getting this
+        wrong is not a detail: \code{GroundB} is a $14 \times 21$\,m floor tile,
+        and treating it as an obstacle fills the warehouse solid.
+  \item The remaining models are rasterised at 0.25\,m and inflated by the
+        robot's radius plus a margin, giving 0.45\,m of clearance.
+  \item A lattice is laid over the free floor, lanes are kept only where the
+        straight segment between their ends is clear, and the roadmap is then
+        thinned.
+\end{enumerate}
+
+The thinning is where the engineering is. A node is removed whenever every pair
+of its neighbours can be joined directly, which preserves every route and costs
+one waypoint; junctions and aisle waypoints are kept. Table~\ref{tab:lattice}
+shows why both halves of that --- fine lattice, then thinning --- are
+necessary.
+
+\begin{table}[H]
+\centering\small
+\caption{Lattice spacing against connectivity and tractability.}
+\label{tab:lattice}
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+\textbf{Spacing} & \textbf{Free nodes} & \textbf{Largest component} & \textbf{Outcome} \\
+\midrule
+2.00\,m  & 295  & 147 (50\,\%)  & floor splits into three bands \\
+1.50\,m  & 541  & 447 (83\,\%)  & still disconnected \\
+1.25\,m  & 748  & 748 (100\,\%) & connected; planner intractable \\
+1.00\,m  & 1205 & 1205 (100\,\%)& connected; larger still \\
+\midrule
+1.25\,m, thinned & \textbf{261} & \textbf{261 (100\,\%)} & connected and routable \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Six of the racks are eighteen metres long, so the floor is crossed by walls
+with few gaps. At two-metre spacing the lattice misses enough of those gaps to
+leave the warehouse in three disconnected north--south bands, and a
+largest-component filter then silently discards two thirds of the building. At
+1.25\,m every gap is found. The thinning recovers what the fine spacing costs:
+261 waypoints, 35 of them named as aisles, and 1652 directed lanes.
+
+\subsection{Aisles are found, not listed}
+
+A waypoint is called an aisle when the floor runs out close on both sides along
+one axis and is open along the other. That is exactly the place a robot must
+enter before it can tell anything about what is inside, and so exactly what a
+sensing action wants to name. Thirty-five such waypoints survive a four-metre
+minimum separation, one per aisle rather than one per cell.
+
+\section{The fleet}
+
+\subsection{A TurtleBot3 that Open-RMF can drive}
+
+The fleet is three TurtleBot3 Waffles. Assembling one that RMF can actually
+drive took two corrections, both of which are worth recording because neither
+is documented anywhere obvious.
+
+\paragraph{The skeleton} RMF moves a simulated robot with the \code{slotcar}
+plugin, which is a kinematic driver rather than a controller. A Waffle built
+from scratch to what slotcar documents it requires --- a \code{base\_footprint},
+a \code{left\_wheel} and \code{right\_wheel}, and the revolute joints
+\code{joint\_tire\_left} and \code{joint\_tire\_right} --- loaded without
+complaint, initialised slotcar, published its state at 6\,Hz, accepted paths
+from the fleet adapter, and did not move a centimetre. On the same floor and
+the same graph, \code{rmf\_demos}' TinyRobot drove sixty metres without
+trouble, which is what isolated the model as the fault rather than the world or
+the roadmap. The Waffle geometry is therefore mounted on TinyRobot's drive
+skeleton unchanged.
+
+\paragraph{The scale} \code{turtlebot3\_gazebo} ships its meshes as STL in
+millimetres. Loaded at scale 1 a Waffle base is 271 metres across. The
+\code{.dae} files beside them in \code{turtlebot3\_common} are placeholder
+cubes two metres on a side, which is a second and independent way of producing
+an enormous robot. Both were encountered.
+
+\subsection{Pinned allocation}
+
+Tasks are pinned to named robots through \code{robot\_task\_request} rather
+than dispatched for bidding. The reason is epistemic rather than practical: the
+planner assigns actions to named agents while it solves, the model records
+knowledge against those names, and if the dispatcher were free to substitute a
+robot the model would credit an agent with having sensed something it never
+saw. An agent bound to no robot is a hard error and the bridge refuses the
+action.
+
+\section{The mission}
+\label{sec:run}
+
+The domain is the survey of \code{eplansys}, unchanged. Three agents; a site
+that may be contaminated; a goal of three conjuncts:
+\[
+\gamma \;=\; \Kw{\mathit{scout}}\,\mathit{contaminated}
+\;\wedge\; \Kw{\mathit{relay}}\,\mathit{contaminated}
+\;\wedge\; \neg\,\Kw{\mathit{observer}}\,\mathit{contaminated}.
+\]
+
+The third conjunct is what gives the domain its difficulty. It forbids the open
+channel, which is otherwise the cheapest way for the team to inform itself, and
+so forces the planner to choose a channel by its audience. The planner returns
+a policy of four nodes, branching.
+
+What the larger floor changes is the geography the policy is executed over. The
+site is \code{aisle\_20}, thirty metres from the robot's charger and reachable
+only by way of the service floor: an aisle cannot be seen into until a robot
+stands at its mouth, which is the physical counterpart of the sensing action
+the policy contains.
+
+\section{Defects found by the integration}
+\label{sec:defects}
+
+Putting the chain in operation at this scale revealed eight defects that no
+part of it exhibited alone. They are given in full because, taken together,
+they are the substantive result of the exercise: six of the eight are
+consequences of composition rather than errors of programming, and none would
+have appeared in a unit test.
+
+\begin{table}[H]
+\centering\small
+\caption{Defects encountered, in the order they were met.}
+\label{tab:defects}
+\begin{tabularx}{\textwidth}{@{}p{3.5cm}Xl@{}}
+\toprule
+\textbf{Symptom} & \textbf{Cause} & \textbf{Nature} \\
+\midrule
+No robot moves; the fleet manager is absent. &
+The system \code{fastapi} is 0.63, written against pydantic~1; a pydantic~2 in
+\code{\textasciitilde/.local} shadows the packaged 1.8 for every interpreter on
+the machine and the import fails. &
+Environment \\
+\addlinespace
+A robot leaves its charger, stops after 1.3\,m, and RMF reports the task
+underway. &
+A pallet jack placed for appearance overlapped the charger's own lane by
+20\,cm. The graph check knew about racks and pillars and not about props. &
+Composition \\
+\addlinespace
+The warehouse is a third of its size. &
+The nine floor slabs do not abut; a 12\,cm seam reads as absent floor and
+splits the map into three components, of which a largest-component filter keeps
+one. &
+Geometric \\
+\addlinespace
+No path is returned for a 60\,m errand in 70\,s. &
+693 waypoints and 2200 lanes. The fine lattice needed for connectivity is not
+the roadmap that should be routed on. &
+Scale \\
+\addlinespace
+Robots report a pose, accept paths and do not move. &
+Spawned at $z=0$ into floor slabs 12\,cm thick with no ground plane beneath;
+each came to rest at $z=-0.067$ with its wheels inside the floor. &
+Geometric \\
+\addlinespace
+A purpose-built TurtleBot3 loads, initialises slotcar, publishes state and does
+not move. &
+slotcar requires more of a model than it documents. &
+Undocumented interface \\
+\addlinespace
+The robot is 271\,m across; or, separately, a 2\,m cube. &
+\code{turtlebot3\_gazebo} meshes are STL in millimetres, and the \code{.dae}
+files beside them are placeholders. &
+Units \\
+\addlinespace
+\code{goto\_site} fails with \emph{RMF task timed out}. &
+The 180\,s limit is the small floor's figure. Forty metres at half a metre per
+second is not 180\,s. &
+Scale \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Three of these deserve comment.
+
+\paragraph{The pallet jack} The graph check was written to refuse lanes that
+cross obstacles, and it did refuse three layouts that looked correct on paper.
+It passed this one because its obstacle set was racks and pillars: the prop had
+been placed in the world generator, for appearance, and the checker never saw
+it. The symptom was severe out of all proportion to the cause --- a robot
+pressed motionless into a pallet jack while RMF reported its task underway and
+nothing anywhere reported a collision. The correction moves the props into the
+same definition the checker reads, and the check that missed it now rejects the
+original placement.
+
+\paragraph{The seam} A twelve-centimetre gap between two floor tiles is
+invisible in any rendering and fatal to a rasteriser, which cannot distinguish
+a seam from a hole. What makes it worth recording is the interaction with the
+largest-component filter: the filter is correct in isolation --- an isolated
+pocket of floor is a waypoint RMF will accept and never route to --- and
+together they discard two thirds of a warehouse without a diagnostic.
+
+\paragraph{The lattice} Connectivity and tractability pull in opposite
+directions, and the resolution that satisfies one fails the other. Building
+finely and thinning afterwards is not the same as building coarsely, and
+Table~\ref{tab:lattice} is the measurement that says so.
+
+\section{What forty metres does not establish}
+\label{sec:notestablished}
+
+\paragraph{Not a planning result} The policy has four nodes. Nothing here bears
+on the complexity of epistemic planning, and the floor could be enlarged
+indefinitely without touching it.
+
+\paragraph{Not a study of contention} Three robots share one floor and three
+tasks were accepted and executed concurrently without a process failure, but no
+measurement was made of how the traffic schedule mediates the shared corridors
+under sustained multi-robot traffic. That is the obvious next experiment and it
+has not been run.
+
+\paragraph{Not a dynamic-obstacle result} The world's nine actors walk fixed
+circuits and are not in the navigation graph. The fleet does not avoid them and
+was never asked to; they are scenery, and a robot that met one would drive into
+it.
+
+\paragraph{Not confidentiality} The private channel is realised by addressing:
+an utterance is published to a topic whose subscribers are the audience the
+action declares. Any node may subscribe to any topic. What is established is
+that the team used a channel the excluded agent was not addressed on, not that
+it could not have listened.
+
+\section{Conclusion}
+
+The execution layer holds at this scale, and the eight defects of
+Section~\ref{sec:defects} are the price of finding that out. Six of them are
+properties of the composition rather than of any component, which is the
+recurring lesson of this line of work: a system of autonomous nodes, plugins
+loaded at run time and streams advancing at different rates exhibits a family of
+faults that integration alone can reveal.
+
+The epistemic content is unchanged from the small floor, and deliberately so.
+What the larger floor buys is that the geography is no longer trivial --- the
+site is thirty metres away and down an aisle --- so that the claim the domain
+exists to support, that an agent can be kept from coming to know something, is
+made against a floor where getting anywhere at all is work.
+
+\end{document}

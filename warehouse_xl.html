@@ -682,6 +682,31 @@ python3 tools/make_building_map.py --nav-graph maps/nav_graphs/0.yaml \
     <p class="sec-label">The run</p>
     <h3>Measured, not asserted</h3>
     <p>
+      The mission below is the survey domain of
+      <span class="mono-inline">eplansys</span>, unchanged, executed by three
+      TurtleBot3 Waffles over Open-RMF. Gazebo is on the left and RViz on the
+      right; the captions name the step of the policy the fleet is on at that
+      moment, and their times come from the executor's own log rather than from
+      a stopwatch.
+    </p>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/warehouse_xl_run.jpg">
+        <source src="media/warehouse_xl_run.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        The run at twice speed.
+        <span class="mono-inline">goto-site_relay</span> pins an RMF task to
+        <span class="mono-inline">r1</span>; the robot crosses the floor and
+        enters <span class="mono-inline">aisle_07</span>, which cannot be seen
+        into from outside it; the scan returns
+        <span class="mono-inline">e-scan-dirty</span> over the fleet adapter's
+        websocket and the policy takes its dirty branch. The figures walking
+        the aisles are the world's own nine actors.
+      </figcaption>
+    </figure>
+    <p>
       That an aisle can only be entered from the lane is a claim about the
       floor, so it is put to the fleet and answered in metres. The run is
       recorded from <span class="mono-inline">/fleet_states</span> and drawn
@@ -728,9 +753,28 @@ ros2 run eplansys_rmf_probe submit_probe -F warehouseXL -R r1 -p east_08</code><
     <p class="sec-label">What it establishes</p>
     <h3>And what it does not</h3>
     <p>
-      Three robots come up, three tasks pinned to three robots are accepted and
-      executed concurrently, and no process fails. The trace above is
-      <span class="mono-inline">r1</span>'s alone.
+      The mission completes and every check passes:
+    </p>
+    <pre><code>observed e-scan-dirty
+relay says e-scan-dirty on /eplansys/channel/private/scout
+mission complete
+
+ok   (Kw scout contaminated) holds
+ok   (Kw relay contaminated) holds
+ok   (Kw observer contaminated) does not hold
+ok   scout was spoken to, 1 time(s)
+ok   observer was spoken to by nobody</code></pre>
+    <p>
+      Three formulas put to the epistemic state, and two radio transcripts read
+      off the fleet. The last two are the ones worth having: they are facts
+      about what was published and received rather than about the model, and
+      they are what tells a run that honoured the private channel apart from a
+      run that never spoke at all.
+    </p>
+    <p class="note">
+      A full account of the floor, the fleet and the eight defects the
+      integration turned up is in
+      <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a> (PDF).
     </p>
     <p>
       How the schedule mediates the service lane under sustained three-robot
