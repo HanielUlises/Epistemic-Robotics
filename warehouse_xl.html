@@ -566,10 +566,7 @@ sup.cite a:hover{text-decoration:underline}
       pipeline closes, insufficient to demonstrate anything about its
       behaviour at scale. This one is forty-two by sixty-three, holds a hundred
       and fifty-three obstacles and nine walking figures, and is traversed by
-      three TurtleBot3 Waffles under Open-RMF. The epistemic layer is unchanged
-      throughout, which is the point of the exercise; the execution layer is
-      not, and the greater part of what follows is an account of where it gave
-      way.
+      three TurtleBot3 Waffles under Open-RMF. The epistemic layer is unchanged throughout. The execution layer is not, and the greater part of what follows is an account of where it gave way.
     </p>
     <p class="note" style="margin-top:1.4rem">
       Floor from
@@ -596,8 +593,8 @@ sup.cite a:hover{text-decoration:underline}
       and a campus at 319&#8202;&#215;&#8202;246&#8202;m. Neither is a
       warehouse. No large warehouse map is published for Open-RMF at all, and
       the assets from which one might be assembled were therefore measured
-      individually, from their collision meshes rather than from their
-      catalogue entries.
+      individually. What is measured is the collision mesh, not the catalogue
+      entry.
     </p>
     <p>
       The distinction matters more than it may appear. A Gazebo model carries
@@ -626,8 +623,7 @@ sup.cite a:hover{text-decoration:underline}
           <td><span class="mono-inline">OpenRobotics/Warehouse</span></td>
           <td>30 &#215; 50 m</td>
           <td>Shell and pillars</td>
-          <td>Genuinely large and genuinely empty: 1.2&#8202;% occupied at
-              robot height, the whole of it structural columns.</td>
+          <td>Genuinely large and genuinely empty: 1.2&#8202;% occupied at robot height, all of it structural columns.</td>
         </tr>
         <tr>
           <td><span class="mono-inline">industrial-warehouse</span></td>
@@ -639,9 +635,7 @@ sup.cite a:hover{text-decoration:underline}
       </tbody>
     </table>
     <p>
-      <span class="mono-inline">Depot</span> is the asset ordinarily selected
-      for this purpose &#8212; some fifty thousand downloads &#8212; and is the
-      least serviceable of the three. Its detail is entirely superficial, and
+      <span class="mono-inline">Depot</span> is the asset ordinarily selected for this purpose, at some fifty thousand downloads, and is the least serviceable of the three. Its detail is entirely superficial, and
       the defect is undetectable from any rendering.
     </p>
 
@@ -653,8 +647,7 @@ sup.cite a:hover{text-decoration:underline}
       parametrically. That construction is superseded and is recorded here only
       because its abandonment is informative: a floor whose every dimension is
       chosen by its author is a floor on which no property of the execution
-      layer is genuinely tested, since any difficulty encountered can be
-      designed away rather than resolved.
+      layer is genuinely tested, any difficulty it presents can be designed away.
     </p>
     <p>
       The floor now in use is
@@ -681,11 +674,8 @@ sup.cite a:hover{text-decoration:underline}
       must instead be recovered from the world.
     </p>
     <p class="note">
-      The asset is distributed under GPL-2.0 while this repository is
-      Apache-2.0 &#8212; its own <span class="mono-inline">package.xml</span>
-      declares Apache 2.0, which the repository contents contradict &#8212; so
-      it is fetched at setup rather than vendored, and the more restrictive of
-      the two declarations is assumed.
+      The asset is distributed under GPL-2.0 while this repository is Apache-2.0. Its own <span class="mono-inline">package.xml</span> declares Apache 2.0, which the repository contents contradict. It is therefore fetched at setup and not vendored. The more restrictive of the two
+      declarations is assumed.
     </p>
   </div>
 </section>
@@ -704,8 +694,7 @@ sup.cite a:hover{text-decoration:underline}
         fourteen AWS assets. Their collision extents are measured once, from
         the meshes, and cached in
         <span class="mono-inline">config/aws_footprints.json</span>.</li>
-      <li><b>Structure against obstacle.</b> Three of the fourteen are the
-        building rather than its contents.
+      <li><b>Structure against obstacle.</b> Three of the fourteen are the building, not its contents.
         <span class="mono-inline">GroundB</span> is a 14&#8202;&#215;&#8202;21&#8202;m
         floor tile, and admitting it as an obstacle fills the warehouse solid;
         <span class="mono-inline">RoofB</span> is overhead;
@@ -760,7 +749,7 @@ sup.cite a:hover{text-decoration:underline}
       The failure at two metres is compounded by a second mechanism worth
       isolating. A largest-component filter is applied, and correctly so: an
       isolated pocket of floor yields waypoints RMF will accept and never route
-      to, which fails at dispatch rather than at generation. Each step is
+      to, which fails at dispatch, not at generation. Each step is
       individually defensible; in composition they discard two thirds of the
       warehouse and emit no diagnostic. The failure is silent, and silence is
       the property that makes it expensive.
@@ -776,16 +765,13 @@ sup.cite a:hover{text-decoration:underline}
       has degree four.
     </p>
 
-    <h3>Aisles are identified rather than enumerated</h3>
+    <h3>Aisles are identified by measurement</h3>
     <p>
       A waypoint is classified as an aisle when the floor terminates within
       1.5&#8202;m on both sides along one axis and remains open along the other.
       This is precisely the configuration a robot must enter before it can
       determine anything about its contents, and therefore precisely what a
-      sensing action requires a name for. Thirty-five such waypoints survive a
-      four-metre minimum separation &#8212; one per aisle rather than one per
-      cell, the unseparated criterion having admitted 174 and left the thinning
-      nothing to remove.
+      sensing action requires a name for. Thirty-five such waypoints survive a four-metre minimum separation: one per aisle, not one per cell. The unseparated criterion admitted 174 and left the thinning nothing to remove.
     </p>
     <p>
       The resulting graph is 261 waypoints, 35 of them aisles, three chargers
@@ -821,16 +807,12 @@ sup.cite a:hover{text-decoration:underline}
       agent must cross open floor and then enter an aisle which cannot be
       inspected from outside. On the small floor the sensing action was
       satisfied almost immediately upon dispatch, the site being a waypoint the
-      robot had effectively already reached. Here the epistemic action and the
-      physical one have comparable cost, which is the condition under which the
-      distinction between them is worth drawing.
+      robot had effectively already reached. Here the epistemic action and the physical one have comparable cost, and the distinction between them becomes measurable.
     </p>
 
     <h3>Thirty seconds of it</h3>
     <p>
-      Gazebo on the left, the Open-RMF traffic schedule on the right. Caption
-      times are taken from the executor's log rather than assigned by hand, so
-      each names the step of the policy in force at that instant.
+      Gazebo on the left, the Open-RMF traffic schedule on the right. Caption times are read from the executor's log. Each names the step of the policy in force at that instant.
     </p>
 
     <figure class="demo-figure">
@@ -875,18 +857,15 @@ ok   observer was spoken to by nobody</code></pre>
     <p>
       The first three interrogate the epistemic state and establish where the
       model finished. The last two read the agents' radio transcripts and
-      establish who was in fact addressed. They are claims of different kinds
-      and the second is the weaker, which is why it is worth having: a negative
-      epistemic conjunct is satisfied by everything that fails to occur, so a
+      establish who was in fact addressed. They are claims of different kinds, and the second is the weaker of the two. A negative epistemic conjunct is satisfied by everything that fails to occur, so a
       procedure consulting only the model cannot distinguish deliberate secrecy
       from an absence of communication. A run honouring the private channel and
       a run achieving nothing return the same verdict.
     </p>
     <p>
-      A transcript that fails to arrive is reported as unchecked rather than as
-      an agent that heard nothing. The distinction is not pedantry: a radio
-      which was never running would otherwise testify that the observer knows
-      nothing, which is the very proposition the exercise exists to establish.
+      A transcript that fails to arrive is reported as unchecked, not as an agent
+      that heard nothing. The distinction is load-bearing: a radio
+      which was never running would otherwise testify that the observer knows nothing, the very proposition the exercise exists to establish.
     </p>
   </div>
 </section>
@@ -907,8 +886,8 @@ ok   observer was spoken to by nobody</code></pre>
       Two designated worlds is the uncertainty stated precisely: the initial
       model designates both a world in which the site is contaminated and one
       in which it is not, and no agent's accessibility relation separates them.
-      That is what it means for the fleet not to know, and it is a property of
-      the model rather than a flag on a proposition.
+      That the fleet does not know is a property of the model, not a flag on a
+      proposition.
     </p>
     <p>
       The solver is <span class="mono-inline">plansys2/EpistemicPlanSolver</span>,
@@ -959,8 +938,7 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
     </figure>
 
     <p>
-      The movement in that table is the whole argument, and it goes in two
-      directions. <b>Sensing contracts the model.</b> Before the scan both
+      The movement in that table goes in two directions. <b>Sensing contracts the model.</b> Before the scan both
       worlds are designated; afterwards one is, because the observation ruled
       the other out. <b>Private speech expands it.</b> Two worlds become three,
       because an utterance the observer cannot hear creates a distinction that
@@ -968,17 +946,15 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
       world the observer still considers possible in which it was not.
     </p>
     <p>
-      This is worth dwelling on because it is counter-intuitive and it is the
-      reason the approach needs a model rather than a set of facts. Learning
-      something removes possibilities. Telling somebody something privately
-      <i>adds</i> them, because the agents excluded from the audience must go on
+      The two directions are why the approach requires a model and not a set of
+      facts. Learning something removes possibilities. Telling somebody something
+      privately adds them: the agents excluded from the audience must go on
       considering possible a world in which nothing was said. Both are the same
-      operation &#8212; a product with an event model &#8212; and a
-      representation that only tracked what is true could express neither.
+      operation, a product with an event model. A representation that tracked
+      only what is true could express neither.
     </p>
     <p>
-      The goal is then decided against the resulting structure rather than
-      against a fact base:
+      The goal is decided against the resulting structure by model checking:
     </p>
     <pre><code>[goal] (and (Kw scout contaminated)
             (Kw relay contaminated)
@@ -989,11 +965,10 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
       One qualification, and it is a real one. In this run the outcome the
       policy branched on was not sensed:
       <span class="mono-inline">scan: RMF carried no outcome, falling back to
-      the map's "e-scan-dirty"</span>. The value came from the task map rather
-      than from a simulated sensor. Everything downstream of it &#8212; the
+      the map's "e-scan-dirty"</span>. The value came from the task map, not from a
+      simulated sensor. Everything downstream of it &#8212; the
       product update, the branch, the private channel, the model checking
-      &#8212; is genuine, but its input was configured. The bridge emits that
-      warning on every occurrence rather than concealing it. Closing the link
+      &#8212; is genuine, but its input was configured. The bridge emits that warning on every occurrence. Closing the link
       means a fleet adapter that reports what it observed, or routing the scan
       through <span class="mono-inline">plansys2_epistemic_perception</span>,
       which already turns occupancy geometry into propositions and which this
@@ -1010,9 +985,8 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
     <p>
       Eight defects were encountered in bringing the chain into operation at
       this scale. They are given because, collectively, they are the
-      substantive result: six are properties of the composition rather than
-      errors within any component, and none would have been exposed by a unit
-      test.
+      substantive result: six are properties of the composition, not errors
+      within any component, and none would have been exposed by a unit test.
     </p>
     <table class="data">
       <thead>
@@ -1069,9 +1043,7 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
       crossing obstacles, and it did refuse three layouts which appeared
       correct. It admitted this one because its obstacle set comprised racks
       and pillars: the prop had been placed in the world generator, for
-      appearance, and the checker never saw it. The symptom was disproportionate
-      to the cause &#8212; a robot held motionless against a pallet jack while
-      RMF reported its task underway and no component reported a collision. The
+      appearance, and the checker never saw it. The symptom was disproportionate to the cause: a robot held motionless against a pallet jack while RMF reported its task underway and no component reported a collision. The
       correction moves props into the definition the checker consults, and the
       check which admitted the placement now refuses it.
     </p>
@@ -1097,14 +1069,12 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
     <h3>A remark on method</h3>
     <p>
       The recurring form is this: each component behaves as specified, the
-      composition does not, and the failure presents as silence rather than as
-      an error. A robot pressed against a pallet jack reports its task underway.
+      composition does not, and the failure presents as silence, not as an error. A robot pressed against a pallet jack reports its task underway.
       A warehouse reduced to a third of itself reports a valid graph. A model
       which cannot be driven reports its state at 6&#8202;Hz. In a system of
       autonomous nodes, plugins loaded at run time and streams advancing at
       different rates, integration is the only instrument which exhibits this
-      class of fault, and the absence of a diagnostic is its signature rather
-      than an indication of health.
+      class of fault, The absence of a diagnostic is its signature, not an indication of health.
     </p>
   </div>
 </section>
@@ -1122,11 +1092,9 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
       <b>The execution layer closes where traversal is not free.</b> A policy
       planned over an epistemic domain drove a fleet across 2&#8202;640
       m&#178; of furnished warehouse, and the sensing action cost a thirty-metre
-      transit and the entry of an aisle rather than being discharged on
-      dispatch. On the small floor the scan was satisfied almost the moment it
+      transit and the entry of an aisle. It was not discharged on dispatch. On the small floor the scan was satisfied almost the moment it
       was issued, the site being a waypoint the robot had effectively already
-      reached; the epistemic and physical costs are here of the same order,
-      which is the condition under which their separation is worth asserting.
+      reached; here the two costs are of the same order.
     </p>
     <p>
       <b>A negative epistemic conjunct was checked twice, independently.</b>
@@ -1154,9 +1122,7 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
       <b>The complexity of epistemic planning.</b> The policy has four nodes and
       would be solved as readily over a floor plan sketched on paper. Floor size
       and policy size are independent here, and enlarging one says nothing about
-      the other. A result of that kind wants a domain whose modal depth or agent
-      count is varied deliberately, which is the subject of the companion work
-      on nested goals.
+      the other. A result of that kind requires a domain whose modal depth or agent count is varied deliberately. That is the subject of the companion work on nested goals.
     </p>
     <p>
       <b>Behaviour under contention.</b> Three robots share the floor, and three
@@ -1181,14 +1147,11 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
       is that the team used a channel on which the excluded agent was not
       addressed &#8212; not that it could not have listened. The stronger claim
       requires DDS partitions or SROS&#8202;2 permissions, and those would be
-      built from these same declared audiences, so the gap is one of
-      enforcement rather than of design.
+      built from these same declared audiences, so what separates them is
+      enforcement, not design.
     </p>
     <p class="note">
-      The complete account &#8212; the survey of assets, the derivation of the
-      roadmap, the fleet, and all eight defects with their measurements &#8212;
-      is in <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a> (PDF,
-      7&#8202;pp).
+      The full account is in <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a> (PDF, 10&#8202;pp): the survey of assets, the derivation of the roadmap, the fleet, the epistemic layer, and all eight defects with their measurements.
     </p>
   </div>
 </section>

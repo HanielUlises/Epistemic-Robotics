@@ -117,9 +117,8 @@
 The companion report executes an epistemic mission on a floor of fourteen
 metres by twenty-one with two aisles. This one asks what changes when the floor
 is forty-two by sixty-three, holds a hundred and fifty-three obstacles and nine
-people walking through it, and is driven by three robots rather than two.
-Nothing in the epistemic layer changes, which is the point; a great deal in the
-execution layer does, and most of this report is an account of what.}
+people walking through it, and is driven by three robots.
+Nothing in the epistemic layer changes. A great deal in the execution layer does, and most of this report is an account of what.}
 \vspace{1.2cm}
 \end{titlepage}
 
@@ -128,7 +127,7 @@ execution layer does, and most of this report is an account of what.}
 
 \section{Scope, and what this report is for}
 
-The claim under examination is narrow and worth stating before anything else.
+The claim under examination is narrow, and is stated here before anything else.
 It is \emph{not} that epistemic planning scales: the policy solved here has
 four nodes and would be solved as quickly over a floor plan drawn on a napkin.
 It is that the execution layer between such a policy and a real fleet holds
@@ -139,9 +138,7 @@ must \emph{not} come to know something --- remain checkable when it does.
 Two things follow from that framing. First, the interesting content of this
 report is the failure analysis of Section~\ref{sec:defects}, not the mission
 trace of Section~\ref{sec:run}: the mission is three actions long and its
-trace could be summarised in a sentence. Second, a result of this kind
-is worth only as much as its bounds are explicit, and
-Section~\ref{sec:notestablished} sets out both halves: the four propositions
+trace could be summarised in a sentence. Second, a result of this kind is only as good as its stated bounds, and Section~\ref{sec:notestablished} sets out both halves: the four propositions
 the run establishes, and the four it does not.
 
 \section{The floor}
@@ -155,7 +152,7 @@ $319 \times 246$\,m; neither is a warehouse. There is no large warehouse map
 published for Open-RMF at all.
 
 The candidate warehouse assets on Gazebo Fuel were therefore measured directly,
-from their own collision meshes rather than from their catalogue descriptions.
+from their collision meshes, not their catalogue descriptions.
 Table~\ref{tab:fuel} records the result, and the discrepancy between what the
 descriptions promise and what the geometry provides is the substance of it.
 
@@ -196,12 +193,12 @@ companion report --- an increase of roughly nine times in area.
 
 The companion report's floor is parametric and its navigation graph is written
 from a formula. This one is not: nothing about the placement of 153 hand-set
-obstacles is regular, so the graph is derived from the world instead.
+obstacles is regular, so the graph is derived from the world.
 
 \begin{enumerate}[nosep]
   \item Every model in the world is one of fourteen AWS assets. Their collision
         extents are measured once, from the collision meshes, and cached.
-  \item Three of the fourteen are structure rather than obstacle. Getting this
+  \item Three of the fourteen are structure, not obstacle. Getting this
         wrong is not a detail: \code{GroundB} is a $14 \times 21$\,m floor tile,
         and treating it as an obstacle fills the warehouse solid.
   \item The remaining models are rasterised at 0.25\,m and inflated by the
@@ -248,26 +245,24 @@ A waypoint is called an aisle when the floor runs out close on both sides along
 one axis and is open along the other. That is exactly the place a robot must
 enter before it can tell anything about what is inside, and so exactly what a
 sensing action wants to name. Thirty-five such waypoints survive a four-metre
-minimum separation, one per aisle rather than one per cell.
+minimum separation, one per aisle, not one per cell.
 
 \section{The fleet}
 
 \subsection{A TurtleBot3 that Open-RMF can drive}
 
 The fleet is three TurtleBot3 Waffles. Assembling one that RMF can actually
-drive took two corrections, both of which are worth recording because neither
-is documented anywhere obvious.
+drive took two corrections. Neither is documented anywhere obvious, so both are recorded here.
 
 \paragraph{The skeleton} RMF moves a simulated robot with the \code{slotcar}
-plugin, which is a kinematic driver rather than a controller. A Waffle built
+plugin, which is a kinematic driver and not a controller. A Waffle built
 from scratch to what slotcar documents it requires --- a \code{base\_footprint},
 a \code{left\_wheel} and \code{right\_wheel}, and the revolute joints
 \code{joint\_tire\_left} and \code{joint\_tire\_right} --- loaded without
 complaint, initialised slotcar, published its state at 6\,Hz, accepted paths
 from the fleet adapter, and did not move a centimetre. On the same floor and
 the same graph, \code{rmf\_demos}' TinyRobot drove sixty metres without
-trouble, which is what isolated the model as the fault rather than the world or
-the roadmap. The Waffle geometry is therefore mounted on TinyRobot's drive
+trouble, which isolated the fault to the model, not the world or the roadmap. The Waffle geometry is therefore mounted on TinyRobot's drive
 skeleton unchanged.
 
 \paragraph{The scale} \code{turtlebot3\_gazebo} ships its meshes as STL in
@@ -279,7 +274,7 @@ an enormous robot. Both were encountered.
 \subsection{Pinned allocation}
 
 Tasks are pinned to named robots through \code{robot\_task\_request} rather
-than dispatched for bidding. The reason is epistemic rather than practical: the
+than dispatched for bidding. The reason is epistemic and not practical: the
 planner assigns actions to named agents while it solves, the model records
 knowledge against those names, and if the dispatcher were free to substitute a
 robot the model would credit an agent with having sensed something it never
@@ -304,9 +299,7 @@ a policy of four nodes, branching.
 
 What the larger floor changes is the geography the policy is executed over. The
 site is \code{aisle\_20}, thirty metres from the robot's charger and reachable
-only by way of the service floor: an aisle cannot be seen into until a robot
-stands at its mouth, which is the physical counterpart of the sensing action
-the policy contains.
+only by way of the service floor: an aisle cannot be seen into until a robot stands at its mouth. That is the physical counterpart of the sensing action the policy contains.
 
 \section{The epistemic layer}
 \label{sec:epistemic}
@@ -369,8 +362,7 @@ sensing action admits. Figure~\ref{fig:policy} is what the solver returned.
         node[midway, below, font=\ttfamily\tiny, text=signal, xshift=6mm]
         {e-scan-clean};
 \end{tikzpicture}
-\caption{The four-node policy. The branch is on an observation rather than on a
-state variable, and both arms announce privately.}
+\caption{The four-node policy. The branch is on an observation, not on a state variable. Both arms announce privately.}
 \label{fig:policy}
 \end{figure}
 
@@ -382,8 +374,7 @@ prefer the private channel, only that the observer must not come to know.
 
 \subsection{The model under product update}
 
-Execution is not a matter of marking actions complete. Each executed action is
-an event model $\Ev$, and applying it forms the product $\Mod \prd \Ev$. The
+Execution is not a matter of marking actions complete. Each executed action is an event model $\Ev$, and applying it forms the product $\Mod \prd \Ev$. The
 state node reports the shape of the result at each step of the recorded run:
 
 \begin{lstlisting}
@@ -449,8 +440,7 @@ considering possible in which it was not.
 That these are the same operation is the point. A representation tracking only
 what is true could express neither: the first alters no proposition's truth
 value, and the second increases the number of situations under consideration
-while the physical world stands still. The goal is decided against the
-resulting structure by model checking rather than by lookup:
+while the physical world stands still. The goal is decided against the resulting structure by model checking:
 
 \begin{lstlisting}
 [goal] (and (Kw scout contaminated)
@@ -468,12 +458,9 @@ scan: RMF carried no outcome, falling back to the map's "e-scan-dirty".
       A fleet adapter reporting what it sensed would override this.
 \end{lstlisting}
 
-The value originated in the task map rather than in a simulated sensor.
+The value originated in the task map, not in a simulated sensor.
 Everything downstream of it --- the product update, the branch, the private
-channel, the model checking --- is genuine; its input was configured. The
-bridge emits that warning on every occurrence rather than concealing it, which
-is the correct behaviour for a stub that must not be mistaken for a
-measurement. Closing the link requires a fleet adapter that reports what it
+channel, the model checking --- is genuine; its input was configured. The bridge emits that warning on every occurrence, which is correct for a stub that must not be mistaken for a measurement. Closing the link requires a fleet adapter that reports what it
 observed, or routing the sensing action through
 \code{plansys2\_epistemic\_perception}, which already translates occupancy
 geometry into propositions and which this pipeline presently bypasses.
@@ -482,9 +469,7 @@ geometry into propositions and which this pipeline presently bypasses.
 \label{sec:defects}
 
 Putting the chain in operation at this scale revealed eight defects that no
-part of it exhibited alone. They are given in full because, taken together,
-they are the substantive result of the exercise: six of the eight are
-consequences of composition rather than errors of programming, and none would
+part of it exhibited alone. They are given in full. Taken together they are the substantive result of the exercise: six of the eight are consequences of composition, not errors of programming, and none would
 have appeared in a unit test.
 
 \begin{table}[H]
@@ -549,21 +534,17 @@ It passed this one because its obstacle set was racks and pillars: the prop had
 been placed in the world generator, for appearance, and the checker never saw
 it. The symptom was severe out of all proportion to the cause --- a robot
 pressed motionless into a pallet jack while RMF reported its task underway and
-nothing anywhere reported a collision. The correction moves the props into the
-same definition the checker reads, and the check that missed it now rejects the
+nothing anywhere reported a collision. The correction moves the props into the definition the checker reads, and the check that missed it now rejects the
 original placement.
 
 \paragraph{The seam} A twelve-centimetre gap between two floor tiles is
 invisible in any rendering and fatal to a rasteriser, which cannot distinguish
-a seam from a hole. What makes it worth recording is the interaction with the
-largest-component filter: the filter is correct in isolation --- an isolated
+a seam from a hole. The interaction with the largest-component filter is what makes it severe: the filter is correct in isolation --- an isolated
 pocket of floor is a waypoint RMF will accept and never route to --- and
 together they discard two thirds of a warehouse without a diagnostic.
 
 \paragraph{The lattice} Connectivity and tractability pull in opposite
-directions, and the resolution that satisfies one fails the other. Building
-finely and thinning afterwards is not the same as building coarsely, and
-Table~\ref{tab:lattice} is the measurement that says so.
+directions, and the resolution that satisfies one fails the other. Building finely and thinning afterwards is not the same as building coarsely. Table~\ref{tab:lattice} is the measurement.
 
 \section{Scope of the result}
 \label{sec:notestablished}
@@ -575,12 +556,9 @@ held.
 
 \paragraph{The execution layer closes where traversal is not free} A policy
 planned over an epistemic domain drove a fleet across 2\,640\,m$^2$ of furnished
-warehouse, and the sensing action cost a thirty-metre transit and the entry of
-an aisle rather than being discharged on dispatch. On the small floor the scan
+warehouse, and the sensing action cost a thirty-metre transit and the entry of an aisle. It was not discharged on dispatch. On the small floor the scan
 was satisfied almost at the moment it was issued, the site being a waypoint the
-robot had effectively already reached. Here the epistemic and the physical costs
-are of the same order, which is the condition under which separating them is
-worth asserting at all.
+robot had effectively already reached. Here the two costs are of the same order.
 
 \paragraph{A negative epistemic conjunct was checked twice, independently} Once
 against the model, by putting $\neg\,\Kw{\mathit{observer}}\,\mathit{contaminated}$
@@ -624,21 +602,15 @@ declares. Any node may subscribe to any topic. The claim available is that the
 team used a channel on which the excluded agent was not addressed, not that it
 could not have listened. The stronger claim requires DDS partitions or SROS~2
 permissions, and those would be constructed from these same declared audiences,
-so what separates the two is enforcement rather than design.
+so what separates the two is enforcement, not design.
 
 \section{Conclusion}
 
-The execution layer holds at this scale, and the eight defects of
-Section~\ref{sec:defects} are the price of finding that out. Six of them are
-properties of the composition rather than of any component, which is the
-recurring lesson of this line of work: a system of autonomous nodes, plugins
+The execution layer holds at this scale, and the eight defects of Section~\ref{sec:defects} are the price of establishing it. Six are properties of the composition, not of any component. That is the recurring lesson of this line of work: a system of autonomous nodes, plugins
 loaded at run time and streams advancing at different rates exhibits a family of
 faults that integration alone can reveal.
 
 The epistemic content is unchanged from the small floor, and deliberately so.
-What the larger floor buys is that the geography is no longer trivial --- the
-site is thirty metres away and down an aisle --- so that the claim the domain
-exists to support, that an agent can be kept from coming to know something, is
-made against a floor where getting anywhere at all is work.
+What the larger floor supplies is a non-trivial geography. The site is thirty metres away and down an aisle, so the claim the domain exists to support, that an agent can be kept from coming to know something, is made against a floor on which movement costs something.
 
 \end{document}
