@@ -20,12 +20,16 @@ rmf_fleet:
     port: 22021
     user: "some_user"
     password: "some_password"
+  # A TurtleBot3 Waffle, not the rmf_demos TinyRobot: 0.26 m/s and 1.82 rad/s
+  # are its published maxima, and the footprint is its 0.281 by 0.306 m
+  # chassis taken as a disc with a little margin. Traffic reserves the
+  # vicinity, so it stays wider than the body.
   limits:
-    linear: [0.5, 0.75]
-    angular: [0.6, 2.0]
+    linear: [0.24, 0.5]
+    angular: [0.6, 1.8]
   profile:
-    footprint: 0.3
-    vicinity: 0.5
+    footprint: 0.25
+    vicinity: 0.45
   reversible: True
   battery_system:
     voltage: 12.0
@@ -57,10 +61,10 @@ robots:
       robot_state_update_frequency: 10.0
       start:
         map_name: "L1"
-        waypoint: "charger_east_south"
+        waypoint: "charger_1"
         orientation: 0.0
       charger:
-        waypoint: "charger_east_south"
+        waypoint: "charger_1"
   r2:
     robot_config:
       max_delay: 15.0
@@ -68,10 +72,10 @@ robots:
       robot_state_update_frequency: 10.0
       start:
         map_name: "L1"
-        waypoint: "charger_west_south"
+        waypoint: "charger_2"
         orientation: 0.0
       charger:
-        waypoint: "charger_west_south"
+        waypoint: "charger_2"
   r3:
     robot_config:
       max_delay: 15.0
@@ -79,7 +83,7 @@ robots:
       robot_state_update_frequency: 10.0
       start:
         map_name: "L1"
-        waypoint: "charger_east_north"
+        waypoint: "charger_3"
         orientation: 0.0
       charger:
-        waypoint: "charger_east_north"
+        waypoint: "charger_3"

@@ -401,3 +401,8 @@ scenarios/*/out/*.log
 
 # Dropped by rmf_traffic_schedule into whatever directory it is run from
 .rmf_schedule_node.yaml
+
+# Cloned third-party simulation assets. dynamic_logistics_warehouse is GPL-2.0
+# and this repository is Apache-2.0, so its world is fetched rather than
+# vendored. tools/fetch_third_party.sh puts it here.
+ros2_ws/third_party/

@@ -1,0 +1,72 @@
+{
+ "aws_robomaker_warehouse_Bucket_01": [
+  0.941,
+  1.222,
+  1.404
+ ],
+ "aws_robomaker_warehouse_ClutteringA_01": [
+  2.161,
+  2.002,
+  1.086
+ ],
+ "aws_robomaker_warehouse_ClutteringC_01": [
+  1.773,
+  2.06,
+  1.76
+ ],
+ "aws_robomaker_warehouse_ClutteringD_01": [
+  1.017,
+  1.492,
+  1.522
+ ],
+ "aws_robomaker_warehouse_DeskC_01": [
+  0.882,
+  1.555,
+  1.44
+ ],
+ "aws_robomaker_warehouse_GroundB_01": [
+  13.98,
+  20.907,
+  0.124
+ ],
+ "aws_robomaker_warehouse_Lamp_01": [
+  1.024,
+  1.514,
+  1.008
+ ],
+ "aws_robomaker_warehouse_PalletJackB_01": [
+  1.161,
+  0.54,
+  0.966
+ ],
+ "aws_robomaker_warehouse_RoofB_01": [
+  13.98,
+  1.104,
+  20.907
+ ],
+ "aws_robomaker_warehouse_ShelfD_01": [
+  0.88,
+  2.613,
+  3.918
+ ],
+ "aws_robomaker_warehouse_ShelfE_01": [
+  0.88,
+  2.613,
+  3.918
+ ],
+ "aws_robomaker_warehouse_ShelfF_01": [
+  2.102,
+  18.047,
+  6.529
+ ],
+ "aws_robomaker_warehouse_TrashCanC_01": [
+  1.479,
+  0.909,
+  1.275
+ ],
+ "aws_robomaker_warehouse_WallB_01": [
+  13.98,
+  20.907,
+  9.02
+ ]
+}

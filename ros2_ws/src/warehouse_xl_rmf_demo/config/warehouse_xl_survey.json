@@ -1,0 +1,35 @@
+{
+  "agents": {
+    "relay": {
+      "fleet": "warehouseXL",
+      "robot": "r1"
+    },
+    "scout": {
+      "fleet": "warehouseXL",
+      "robot": "r2"
+    }
+  },
+  "actions": {
+    "goto_site": {
+      "category": "go_to_place",
+      "waypoint": "w043"
+    },
+    "scan": {
+      "category": "go_to_place",
+      "waypoint": "aisle_07",
+      "sensing": true,
+      "default_outcome": "e-scan-dirty"
+    },
+    "relay": {
+      "local": true,
+      "duration": 2.0,
+      "channel": "private",
+      "listener_arg": 1
+    },
+    "broadcast": {
+      "local": true,
+      "duration": 2.0,
+      "channel": "public"
+    }
+  }
+}

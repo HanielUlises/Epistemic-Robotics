@@ -14,6 +14,10 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>aws_robomaker_small_warehouse_world</exec_depend>
+  <exec_depend>eplansys_rmf_bridge</exec_depend>
+  <exec_depend>eplansys_rmf_demo</exec_depend>
+  <exec_depend>eplansys_demo</exec_depend>
+  <exec_depend>plansys2_bringup</exec_depend>
   <exec_depend>rmf_demos_assets</exec_depend>
   <exec_depend>rmf_demos_fleet_adapter</exec_depend>
   <exec_depend>rmf_building_map_tools</exec_depend>

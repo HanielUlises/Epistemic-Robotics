@@ -117,3 +117,68 @@ next thing worth knowing about this floor.
 ## Third-party models
 
 See `models/ATTRIBUTION.md`. The hall is CC BY 4.0 and the shelving is MIT.
+
+## The floor is no longer generated
+
+`warehouse_xl.world` and `tools/layout.py` built a hall from the Fuel model and
+placed shelving in it parametrically. The floor now used instead is
+`dynamic_logistics_warehouse` — the AWS small warehouse tiled and furnished by
+hand, 42 x 63 m, 153 obstacles and nine walking actors — which is both larger
+and better furnished than anything that could be justified generating.
+
+It is GPL-2.0 while this repository is Apache-2.0, so it is fetched rather than
+vendored:
+
+```
+git clone https://github.com/belal-ibrahim/dynamic_logistics_warehouse \
+    ros2_ws/third_party/dynamic_logistics_warehouse
+```
+
+Note that the upstream `package.xml` declares Apache 2.0 while the repository
+ships GPL-2.0 in `LICENSE`; the more restrictive of the two is assumed.
+
+Nothing about the placement of 153 hand-set obstacles is parametric, so the
+navigation graph is derived from the world rather than declared:
+
+```
+python3 tools/read_world.py                      # what is floor, what is obstacle
+python3 tools/make_dlw_graph.py --world <path>   # rasterise, lattice, thin
+python3 tools/plot_dlw.py --world <path> ...     # look at the result
+```
+
+`config/aws_footprints.json` holds the collision extents of the fourteen AWS
+assets, measured from the meshes themselves. Three of the fourteen are
+structure rather than obstacle, and `GroundB` in particular is a 14 x 21 m
+floor tile: treated as an obstacle it fills the warehouse solid.
+
+## The epistemic mission
+
+```
+ros2 launch warehouse_xl_rmf_demo survey_xl_launch.py
+```
+
+The survey domain of `eplansys`, unchanged, over this floor. The site is
+`aisle_07`, which a robot must enter before it can tell anything about it.
+
+```
+observed e-scan-dirty
+relay says e-scan-dirty on /eplansys/channel/private/scout
+mission complete
+
+ok   (Kw scout contaminated) holds
+ok   (Kw relay contaminated) holds
+ok   (Kw observer contaminated) does not hold
+ok   scout was spoken to, 1 time(s)
+ok   observer was spoken to by nobody
+```
+
+`tools/make_video.py` composes a screen capture into the recorded run, taking
+its caption times from the executor's log.
+
+## The robots
+
+Three TurtleBot3 Waffles: ROBOTIS's geometry on rmf_demos' TinyRobot drive
+skeleton. Both halves are deliberate and `models/TurtleBot3Waffle/model.sdf`
+explains why — briefly, a Waffle built to what `slotcar` documents loads,
+initialises, publishes state and does not move, and turtlebot3's meshes are
+millimetre STLs beside placeholder cubes.

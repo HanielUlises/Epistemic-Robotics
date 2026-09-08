@@ -53,17 +53,29 @@ from launch_ros.actions import Node
 # in config/warehouse_xl_fleet.yaml on purpose: RMF is told the robot is at a
 # waypoint and Gazebo puts it at a pose, and if the two disagree the first
 # command is issued from somewhere the robot is not.
+# The floor of this world is nine raised slabs, each a collision mesh about
+# 12 cm thick, and there is no ground plane beneath them. A robot spawned at
+# z = 0 arrives inside the slab and wedges: it reports a pose, accepts a path
+# and does not move, which from the fleet adapter's side is indistinguishable
+# from a robot that is never commanded. Measured on the first attempt, r1 came
+# to rest at z = -0.067 with its wheels inside the floor.
+#
+# Spawning clear of the slab and letting it drop is the fix. A third of a metre
+# is enough for the tallest slab and small enough that the drop is not visible
+# in a recording.
+SPAWN_Z = '0.35'
+
 SPAWN = [
-    ('r1', 11.00, -23.64, 1.5708),
-    ('r2', -11.00, -23.64, 1.5708),
-    ('r3', 11.00, 24.14, -1.5708),
+    ('r1', -3.35, -9.25, 0.0),
+    ('r2', 22.90, -9.25, 0.0),
+    ('r3', 11.65, -5.50, 0.0),
 ]
 
 
 def launch_setup(context, *args, **kwargs):
     here = get_package_share_directory('warehouse_xl_rmf_demo')
 
-    world = os.path.join(here, 'worlds', 'warehouse_xl.world')
+    world = LaunchConfiguration('world').perform(context)
     nav_graph = os.path.join(here, 'maps', 'nav_graphs', '0.yaml')
     building_map = os.path.join(here, 'maps', 'warehouse_xl.building.yaml')
     fleet_config = os.path.join(here, 'config', 'warehouse_xl_fleet.yaml')
@@ -77,8 +89,11 @@ def launch_setup(context, *args, **kwargs):
             plugins + [world],
         output='screen')
 
-    # The robots are rmf_demos' own TinyRobot, whose slotcar plugin is what
-    # RMF drives. Nothing else in the world is touched.
+    # The robots are TurtleBot3 Waffles carrying RMF's slotcar plugin, which is
+    # what RMF actually drives. A stock TurtleBot3 will not do: it ships a
+    # differential-drive plugin and its own controllers, which is a different
+    # way of being driven and fights this one. models/TurtleBot3Waffle is
+    # ROBOTIS's geometry on the skeleton slotcar expects.
     spawns = [
         Node(
             package='gazebo_ros', executable='spawn_entity.py',
@@ -86,9 +101,9 @@ def launch_setup(context, *args, **kwargs):
             arguments=[
                 '-entity', name,
                 '-file', os.path.join(
-                    get_package_share_directory('rmf_demos_assets'),
-                    'models', 'TinyRobot', 'model.sdf'),
-                '-x', str(x), '-y', str(y), '-z', '0.0', '-Y', str(yaw),
+                    get_package_share_directory('warehouse_xl_rmf_demo'),
+                    'models', 'TurtleBot3Waffle', 'model.sdf'),
+                '-x', str(x), '-y', str(y), '-z', SPAWN_Z, '-Y', str(yaw),
             ])
         for name, x, y, yaw in SPAWN
     ]
@@ -156,6 +171,16 @@ def generate_launch_description():
             'server_uri', default_value='',
             description='Websocket the fleet adapter publishes task states to. '
                         'On Humble it is the only place they go.'),
+        # The floor is `dynamic_logistics_warehouse`, which is GPL-2.0 and so
+        # is fetched rather than vendored into this Apache-2.0 repository:
+        # tools/fetch_third_party.sh clones it beside the workspace.
+        DeclareLaunchArgument(
+            'world',
+            default_value=os.path.join(
+                os.path.expanduser('~'), 'Projects', 'Epistemic-Robotics',
+                'ros2_ws', 'third_party', 'dynamic_logistics_warehouse',
+                'worlds', 'warehouse.world'),
+            description='Gazebo world to drive the fleet in.'),
         DeclareLaunchArgument(
             'headless', default_value='false',
             description='Run gazebo without a window.'),
@@ -165,7 +190,11 @@ def generate_launch_description():
         SetEnvironmentVariable(
             'GAZEBO_MODEL_PATH',
             os.path.join(here, 'models') + ':' +
-            os.path.join(aws, 'models') + ':' + rmf_models + ':' +
+            os.path.join(aws, 'models') + ':' +
+            os.path.join(
+                os.path.expanduser('~'), 'Projects', 'Epistemic-Robotics',
+                'ros2_ws', 'third_party', 'dynamic_logistics_warehouse',
+                'models') + ':' + rmf_models + ':' +
             os.environ.get('GAZEBO_MODEL_PATH', '')),
 
         # The AWS world refers to its collision meshes as `file://models/...`,
@@ -174,7 +203,10 @@ def generate_launch_description():
         # geometry, and a robot drives straight through the shelving.
         SetEnvironmentVariable(
             'GAZEBO_RESOURCE_PATH',
-            aws + ':' + os.environ.get('GAZEBO_RESOURCE_PATH', '')),
+            aws + ':' + os.path.join(
+                os.path.expanduser('~'), 'Projects', 'Epistemic-Robotics',
+                'ros2_ws', 'third_party', 'dynamic_logistics_warehouse') +
+            ':' + os.environ.get('GAZEBO_RESOURCE_PATH', '')),
 
         # rmf_demos' fleet_manager imports fastapi, and the fastapi that
         # Jammy packages is 0.63, which is written against pydantic 1. A
