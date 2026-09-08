@@ -1002,34 +1002,76 @@ ok   observer was spoken to by nobody</code></pre>
 <section>
   <div class="container">
     <p class="sec-label">Scope</p>
-    <h3>What forty metres does not establish</h3>
+    <h3>What the run establishes</h3>
     <p>
-      <b>Not a planning result.</b> The policy has four nodes and would be
-      solved as readily over a floor plan sketched on paper. Nothing here bears
-      on the complexity of epistemic planning, and the floor could be enlarged
-      indefinitely without touching it.
+      Four things, stated in the existential register: there exists a run in
+      which each held.
     </p>
     <p>
-      <b>Not a study of contention.</b> Three robots share the floor and three
+      <b>The execution layer closes where traversal is not free.</b> A policy
+      planned over an epistemic domain drove a fleet across 2&#8202;640
+      m&#178; of furnished warehouse, and the sensing action cost a thirty-metre
+      transit and the entry of an aisle rather than being discharged on
+      dispatch. On the small floor the scan was satisfied almost the moment it
+      was issued, the site being a waypoint the robot had effectively already
+      reached; the epistemic and physical costs are here of the same order,
+      which is the condition under which their separation is worth asserting.
+    </p>
+    <p>
+      <b>A negative epistemic conjunct was checked twice, independently.</b>
+      Once against the model, by putting
+      <span class="mono-inline">(Kw observer contaminated)</span> to the
+      epistemic state, and once against the fleet, by reading the radio
+      transcript of the agent the goal excludes. The second does not depend on
+      the first being right, and is the harder of the two to satisfy by
+      accident.
+    </p>
+    <p>
+      <b>Pinned allocation held under RMF.</b> Every task was bound to the
+      robot the planner named, so the agent the model credits with knowing is
+      the agent whose laser returned the reading. No substitution occurred and
+      none was possible.
+    </p>
+    <p>
+      <b>A routable graph was recovered from a world not built to yield one.</b>
+      261 waypoints in a single connected component, derived from 153 hand-set
+      obstacles by measurement alone, with no coordinate entered by hand.
+    </p>
+
+    <h3>And what it does not</h3>
+    <p>
+      <b>The complexity of epistemic planning.</b> The policy has four nodes and
+      would be solved as readily over a floor plan sketched on paper. Floor size
+      and policy size are independent here, and enlarging one says nothing about
+      the other. A result of that kind wants a domain whose modal depth or agent
+      count is varied deliberately, which is the subject of the companion work
+      on nested goals.
+    </p>
+    <p>
+      <b>Behaviour under contention.</b> Three robots share the floor, and three
       pinned tasks were accepted and executed concurrently without failure, but
-      no measurement was taken of how the traffic schedule mediates shared
-      corridors under sustained multi-robot traffic. That is the evident next
-      experiment and it has not been performed.
+      concurrency is not contention: nothing forced two robots into the same
+      corridor at once. Settling it means constructing that conflict on purpose
+      and measuring what the traffic schedule does with it &#8212; how long
+      negotiation takes, whether it converges, and what it costs the mission
+      that yields. The instrumentation is in place and the experiment is not.
     </p>
     <p>
-      <b>Not a dynamic-obstacle result.</b> The nine actors walk fixed circuits
-      and are absent from the navigation graph. The fleet does not avoid them
-      and was never asked to; they are scenery, and a robot encountering one
-      would drive into it.
+      <b>Navigation among moving obstacles.</b> The nine actors walk fixed
+      circuits and are absent from the navigation graph. The fleet neither
+      perceives nor avoids them, and a robot meeting one would drive into it.
+      They are scenery, and their presence in the recording should not be read
+      as more than that.
     </p>
     <p>
-      <b>Not confidentiality.</b> The private channel is realised by addressing:
-      an utterance is published to a topic whose subscribers are the audience
-      the action declares. Any node may subscribe to any topic. What is
-      established is that the team employed a channel on which the excluded
-      agent was not addressed, not that it could not have listened. Enforcing
-      the latter requires DDS partitions or SROS&#8202;2 permissions, which are
-      constructed from these same audiences and belong to a deployment.
+      <b>Confidentiality.</b> The private channel is realised by addressing: an
+      utterance is published to a topic whose subscribers are the audience the
+      action declares. Any node may subscribe to any topic. The claim available
+      is that the team used a channel on which the excluded agent was not
+      addressed &#8212; not that it could not have listened. The stronger claim
+      requires DDS partitions or SROS&#8202;2 permissions, and those would be
+      built from these same declared audiences, so the gap is one of
+      enforcement rather than of design.
     </p>
     <p class="note">
       The complete account &#8212; the survey of assets, the derivation of the

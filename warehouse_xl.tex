@@ -139,9 +139,10 @@ must \emph{not} come to know something --- remain checkable when it does.
 Two things follow from that framing. First, the interesting content of this
 report is the failure analysis of Section~\ref{sec:defects}, not the mission
 trace of Section~\ref{sec:run}: the mission is three actions long and its
-trace could be summarised in a sentence. Second, the negative results matter as
-much as the positive ones, and Section~\ref{sec:notestablished} states plainly
-what forty metres of warehouse does not establish.
+trace could be summarised in a sentence. Second, a result of this kind
+is worth only as much as its bounds are explicit, and
+Section~\ref{sec:notestablished} sets out both halves: the four propositions
+the run establishes, and the four it does not.
 
 \section{The floor}
 
@@ -394,29 +395,66 @@ directions, and the resolution that satisfies one fails the other. Building
 finely and thinning afterwards is not the same as building coarsely, and
 Table~\ref{tab:lattice} is the measurement that says so.
 
-\section{What forty metres does not establish}
+\section{Scope of the result}
 \label{sec:notestablished}
 
-\paragraph{Not a planning result} The policy has four nodes. Nothing here bears
-on the complexity of epistemic planning, and the floor could be enlarged
-indefinitely without touching it.
+\subsection{What the run establishes}
 
-\paragraph{Not a study of contention} Three robots share one floor and three
-tasks were accepted and executed concurrently without a process failure, but no
-measurement was made of how the traffic schedule mediates the shared corridors
-under sustained multi-robot traffic. That is the obvious next experiment and it
-has not been run.
+Four propositions, in the existential register: there exists a run in which each
+held.
 
-\paragraph{Not a dynamic-obstacle result} The world's nine actors walk fixed
-circuits and are not in the navigation graph. The fleet does not avoid them and
-was never asked to; they are scenery, and a robot that met one would drive into
-it.
+\paragraph{The execution layer closes where traversal is not free} A policy
+planned over an epistemic domain drove a fleet across 2\,640\,m$^2$ of furnished
+warehouse, and the sensing action cost a thirty-metre transit and the entry of
+an aisle rather than being discharged on dispatch. On the small floor the scan
+was satisfied almost at the moment it was issued, the site being a waypoint the
+robot had effectively already reached. Here the epistemic and the physical costs
+are of the same order, which is the condition under which separating them is
+worth asserting at all.
 
-\paragraph{Not confidentiality} The private channel is realised by addressing:
-an utterance is published to a topic whose subscribers are the audience the
-action declares. Any node may subscribe to any topic. What is established is
-that the team used a channel the excluded agent was not addressed on, not that
-it could not have listened.
+\paragraph{A negative epistemic conjunct was checked twice, independently} Once
+against the model, by putting $\neg\,\Kw{\mathit{observer}}\,\mathit{contaminated}$
+to the epistemic state, and once against the fleet, by reading the radio
+transcript of the very agent the goal excludes. The second does not depend on
+the first being correct, and is the harder of the two to satisfy by accident.
+
+\paragraph{Pinned allocation held under RMF} Every task was bound to the robot
+the planner named, so the agent the model credits with knowing is the agent
+whose laser returned the reading. No substitution occurred, and by construction
+none was available.
+
+\paragraph{A routable graph was recovered from a world not built to yield one}
+261 waypoints in a single connected component, derived from 153 hand-set
+obstacles by measurement alone, with no coordinate entered by hand.
+
+\subsection{What it does not establish}
+
+\paragraph{The complexity of epistemic planning} The policy has four nodes and
+would be solved as readily over a floor plan sketched on paper. Floor size and
+policy size are independent here, and enlarging the one says nothing about the
+other. A result of that kind requires a domain whose modal depth or agent count
+is varied deliberately.
+
+\paragraph{Behaviour under contention} Three robots share the floor and three
+pinned tasks were accepted and executed concurrently without failure, but
+concurrency is not contention: nothing obliged two robots to occupy the same
+corridor at once. Settling the question means constructing that conflict on
+purpose and measuring what the schedule does with it --- how long negotiation
+takes, whether it converges, and what it costs the mission that yields. The
+instrumentation exists; the experiment has not been run.
+
+\paragraph{Navigation among moving obstacles} The world's nine actors walk fixed
+circuits and are absent from the navigation graph. The fleet neither perceives
+nor avoids them, and a robot meeting one would drive into it. They are scenery,
+and their presence in a recording should not be read as more than that.
+
+\paragraph{Confidentiality} The private channel is realised by addressing: an
+utterance is published to a topic whose subscribers are the audience the action
+declares. Any node may subscribe to any topic. The claim available is that the
+team used a channel on which the excluded agent was not addressed, not that it
+could not have listened. The stronger claim requires DDS partitions or SROS~2
+permissions, and those would be constructed from these same declared audiences,
+so what separates the two is enforcement rather than design.
 
 \section{Conclusion}
 
