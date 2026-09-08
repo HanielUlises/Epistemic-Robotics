@@ -499,7 +499,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
           <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
-          <a href="warehouse_xl.html">&#183; A warehouse floor at scale<span class="sub">Three TurtleBots under Open-RMF, and eight defects</span></a>
+          <a href="warehouse_xl.html">&#183; A warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -520,7 +520,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
           <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
           <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
-          <a href="warehouse_xl.pdf">A Warehouse Floor at Scale<span class="sub">Three TurtleBots under Open-RMF, and eight defects found by integration</span></a>
+          <a href="warehouse_xl.pdf">A Warehouse Floor at Scale<span class="sub">Graph recovery and integration defects on a derived warehouse floor</span></a>
           <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
@@ -634,8 +634,11 @@ sup.cite a:hover{text-decoration:underline}
         precondition <span class="mono-inline">([?i] (pallet-at ?z))</span>, so a
         robot may lift it only where it knows it to be. Inspection is
         semi-private and every other action is public, which keeps the frame
-        \(\mathrm{S5}_n\). Three runs use it, differing in the goal, the fleet
-        size, and the layer driving the robots.
+        \(\mathrm{S5}_n\). Three runs use it, differing in the goal, the fleet size, and the layer
+        driving the robots. A fourth entry below shares the setting and not the
+        domain: <a href="warehouse_xl.html">A warehouse floor at scale</a>
+        executes the survey domain of the six-room demos on a warehouse floor,
+        and is an integration result rather than a fourth mission here.
       </p>
 
       <div class="dcard">
@@ -698,20 +701,15 @@ sup.cite a:hover{text-decoration:underline}
         <div class="body">
           <h5><a href="warehouse_xl.html">A warehouse floor at scale</a></h5>
           <p>
-            Forty-two by sixty-three metres, 153 obstacles and nine walking
-            figures, against the small warehouse's fourteen by twenty-one. The
-            navigation graph is recovered from the world rather than declared,
-            and the site is down an aisle that cannot be inspected from
-            outside it. The floor, the navigation graph
-            and the building map are derived from the world itself. The survey
-            domain runs on it unchanged: three TurtleBot3 Waffles under
-            Open-RMF, a site down an aisle that cannot be seen into from
-            outside, and a private channel the excluded agent is not addressed
-            on. Recorded, with Gazebo and the traffic schedule side by side.
+            The <b>survey</b> domain, not this one, on a derived 42 &#215; 63 m
+            floor. Graph recovery and a scan that costs metres, not a larger
+            policy: the plan is the same four nodes it is on the small floor.
+            An integration result, and the eight defects that finding it
+            turned up.
           </p>
           <div class="facts">
-            <span>42 &#215; 63 m</span><span>153 obstacles</span>
-            <span>261 waypoints</span><span>3 TurtleBots</span>
+            <span>same 4-node policy</span><span>261 waypoints</span>
+            <span>graph derived from world</span><span>8 defects</span>
           </div>
         </div>
       </div>

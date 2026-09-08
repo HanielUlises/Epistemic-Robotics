@@ -127,21 +127,33 @@ Nothing in the epistemic layer changes. A great deal in the execution layer does
 
 \section{Scope, and what this report is for}
 
-The claim under examination is narrow, and is stated here before anything else.
-It is \emph{not} that epistemic planning scales: the policy solved here has
-four nodes and would be solved as quickly over a floor plan drawn on a napkin.
-It is that the execution layer between such a policy and a real fleet holds
-together at a scale where the floor is no longer trivially traversable, and
-that the properties the policy is chosen for --- in particular, that one agent
-must \emph{not} come to know something --- remain checkable when it does.
+This is an integration result and not an epistemic one, and the distinction is
+stated here before anything else. The domain is unchanged: four policy nodes,
+AO$^*$ to depth 3, forty expansions, two designated worlds, the same on the
+fourteen-by-twenty-one metre floor as here. Floor size and policy size are
+independent, and enlarging the warehouse from 296 to 2\,640\,m$^2$ says nothing
+about the difficulty of the planning problem.
 
-Two things follow from that framing. First, the interesting content of this
-report is the failure analysis of Section~\ref{sec:defects}, not the mission
-trace of Section~\ref{sec:run}: the mission is three actions long and its
-trace could be summarised in a sentence. Second, a result of this kind is only as good as its stated bounds, and Section~\ref{sec:notestablished} sets out both halves: the four propositions
+What is under examination is the execution layer between such a policy and a
+fleet, at a scale where the floor is no longer trivially traversable, and
+whether the properties the policy is chosen for --- in particular, that one
+agent must \emph{not} come to know something --- remain checkable when it is
+not.
+
+Two bounds are stated at the outset because they qualify everything after.
+The nine walking figures in the world are scenery: absent from the navigation
+graph, unperceived and unavoided. The private channel is topic addressing: the
+observer was not addressed on it, which is not the same as being unable to
+listen.
+
+Two things follow. First, the substantive content is the lattice measurement
+of Section~\ref{sec:floor} and the failure analysis of
+Section~\ref{sec:defects}, not the mission trace of Section~\ref{sec:run}: the
+mission is three actions long and its trace fits in a sentence. Second, a result of this kind is only as good as its stated bounds, and Section~\ref{sec:notestablished} sets out both halves: the four propositions
 the run establishes, and the four it does not.
 
 \section{The floor}
+\label{sec:floor}
 
 \subsection{Why an existing floor, and which}
 
@@ -298,8 +310,37 @@ so forces the planner to choose a channel by its audience. The planner returns
 a policy of four nodes, branching.
 
 What the larger floor changes is the geography the policy is executed over. The
-site is \code{aisle\_20}, thirty metres from the robot's charger and reachable
-only by way of the service floor: an aisle cannot be seen into until a robot stands at its mouth. That is the physical counterpart of the sensing action the policy contains.
+site is \code{aisle\_07}, some thirty metres from the robot's charger and
+reachable only across open floor: an aisle cannot be seen into until a robot
+stands at its mouth. That is the physical counterpart of the sensing action the
+policy contains, and it is the whole of what this floor supplies.
+
+Timed from the opening of the recording, the run reads:
+
+\begin{center}\small
+\begin{tabular}{@{}rl@{}}
+\toprule
+$-64.0$\,s & \code{goto-site\_relay} dispatched; pre-positioning \\
+$+9.5$\,s  & \code{scan\_relay} dispatched to \code{aisle\_07} \\
+$+16.3$\,s & \code{observed e-scan-dirty} \\
+$+18.5$\,s & private announcement to \code{scout} \\
+$+21.4$\,s & mission complete \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{The observation was injected, not sensed} The log for this run reads
+\code{scan: RMF carried no outcome, falling back to the map's "e-scan-dirty"}.
+The value came from \code{default\_outcome} in the task map. No sensor produced
+it and none is claimed. What follows that input ran as described: the product
+update was applied, the policy branched, the private channel carried the value,
+the goal was decided by model checking and the transcripts were read off the
+fleet. The injection is the one link in the chain that did not execute.
+
+The claim is therefore narrow. The scan cost a thirty-metre transit and the
+entry of an aisle, where on the small floor it was discharged almost on
+dispatch. It is not a claim that a fleet worked 2\,640\,m$^2$: one robot
+executed three actions across part of the floor while two others held station.
 
 \section{The epistemic layer}
 \label{sec:epistemic}

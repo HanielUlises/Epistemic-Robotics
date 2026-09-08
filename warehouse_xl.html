@@ -525,7 +525,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
           <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
-          <a href="warehouse_xl.html" aria-current="page">&#183; A warehouse floor at scale<span class="sub">Three TurtleBots under Open-RMF, and eight defects</span></a>
+          <a href="warehouse_xl.html" aria-current="page">&#183; A warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -561,22 +561,36 @@ sup.cite a:hover{text-decoration:underline}
     <h2>A warehouse floor at scale</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      The floor the bridge had been driving is fourteen metres by twenty-one,
-      with two aisles and twelve waypoints: sufficient to demonstrate that the
-      pipeline closes, insufficient to demonstrate anything about its
-      behaviour at scale. This one is forty-two by sixty-three, holds a hundred
-      and fifty-three obstacles and nine walking figures, and is traversed by
-      three TurtleBot3 Waffles under Open-RMF. The epistemic layer is unchanged throughout. The execution layer is not, and the greater part of what follows is an account of where it gave way.
+      This is an integration result, not an epistemic one. The domain is the
+      survey of <span class="mono-inline">eplansys</span>, unchanged: four
+      policy nodes, AO* to depth 3, forty expansions, two designated worlds.
+      It was unchanged on the fourteen-by-twenty-one metre floor and it is
+      unchanged here. What changed is the floor, the navigation graph derived
+      from it, and the execution over Open-RMF.
+    </p>
+    <p class="hero-p">
+      Floor size and policy size are independent. Enlarging the warehouse from
+      296 to 2 640 square metres says nothing about the difficulty of the
+      planning problem, and nothing here should be read as claiming it does. The
+      companion work on nested goals varies modal depth; this varies the ground
+      the fleet has to cross, and reports what broke.
     </p>
     <p class="note" style="margin-top:1.4rem">
+      Two disclaimers stated at the top because they bound everything below.
+      <b>The nine walking figures are scenery:</b> absent from the navigation
+      graph, unperceived, unavoided. <b>The private channel is topic
+      addressing:</b> the observer was not addressed on it, which is not the
+      same as being unable to listen.
+    </p>
+    <p class="note" style="margin-top:1rem">
       Floor from
       <a href="https://github.com/belal-ibrahim/dynamic_logistics_warehouse">dynamic_logistics_warehouse</a>;
-      navigation graph and building map derived from its geometry in
+      graph and building map derived from its geometry in
       <span class="mono-inline">warehouse_xl_rmf_demo</span>. Policy from
       <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, dispatched by
-      <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>,
-      executed over Gazebo Classic. The full account is in
-      <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a> (PDF).
+      <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>. Full
+      account in <a href="warehouse_xl.pdf">A Warehouse Floor at Scale</a>
+      (PDF, 10&#8202;pp).
     </p>
   </div>
 </div>
@@ -779,213 +793,18 @@ sup.cite a:hover{text-decoration:underline}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ THE RUN -->
-<section>
-  <div class="container">
-    <p class="sec-label">The mission</p>
-    <h3>The domain, and what the floor changes about it</h3>
-    <p>
-      The domain is the survey of <span class="mono-inline">eplansys</span>,
-      unaltered. Three agents; a site which may be contaminated; a goal of
-      three conjuncts:
-    </p>
-    <pre><code>(:goal (and ([Kw. scout]  (contaminated))
-            ([Kw. relay]  (contaminated))
-            (&lt;Kw. observer&gt; (contaminated))))</code></pre>
-    <p>
-      The third conjunct supplies the difficulty. It prohibits the open
-      channel, otherwise the cheapest means by which the team may inform
-      itself, and so obliges the planner to select a channel by its audience.
-      The returned policy has four nodes and branches on what the scan
-      discovers.
-    </p>
-    <p>
-      What the larger floor alters is not the policy but the geography over
-      which it is executed. The site is
-      <span class="mono-inline">aisle_07</span>, and reaching it is work: the
-      agent must cross open floor and then enter an aisle which cannot be
-      inspected from outside. On the small floor the sensing action was
-      satisfied almost immediately upon dispatch, the site being a waypoint the
-      robot had effectively already reached. Here the epistemic action and the physical one have comparable cost, and the distinction between them becomes measurable.
-    </p>
-
-    <h3>Thirty seconds of it</h3>
-    <p>
-      Gazebo on the left, the Open-RMF traffic schedule on the right. Caption times are read from the executor's log. Each names the step of the policy in force at that instant.
-    </p>
-
-    <figure class="demo-figure">
-      <video controls preload="metadata" playsinline width="100%"
-             poster="media/thumbs/warehouse_xl_run.jpg">
-        <source src="media/warehouse_xl_run.mp4" type="video/mp4">
-      </video>
-      <figcaption>
-        Real time, commencing with <span class="mono-inline">r1</span> already
-        in transit. It enters <span class="mono-inline">aisle_07</span>; the
-        scan returns <span class="mono-inline">e-scan-dirty</span>; the policy
-        takes its dirty branch and speaks on the private channel. The figure
-        crossing the aisle is one of the world's nine actors.
-      </figcaption>
-    </figure>
-
-    <table class="data">
-      <thead><tr><th>t</th><th>Event</th><th>Layer</th></tr></thead>
-      <tbody>
-        <tr><td>&#8722;64.0 s</td>
-            <td><span class="mono-inline">goto-site_relay</span> dispatched</td>
-            <td>Bridge &#8594; RMF</td></tr>
-        <tr><td>+9.5 s</td>
-            <td><span class="mono-inline">scan_relay</span> dispatched to <span class="mono-inline">aisle_07</span></td>
-            <td>Bridge &#8594; RMF</td></tr>
-        <tr><td>+16.3 s</td>
-            <td><span class="mono-inline">observed e-scan-dirty</span></td>
-            <td>Epistemic state</td></tr>
-        <tr><td>+18.5 s</td>
-            <td><span class="mono-inline">relay says e-scan-dirty on /eplansys/channel/private/scout</span></td>
-            <td>Speech act</td></tr>
-        <tr><td>+21.4 s</td><td>Mission complete</td><td>Executor</td></tr>
-      </tbody>
-    </table>
-
-    <h3>The verdict, and the two kinds of claim it rests on</h3>
-    <pre><code>ok   (Kw scout contaminated) holds
-ok   (Kw relay contaminated) holds
-ok   (Kw observer contaminated) does not hold
-ok   scout was spoken to, 1 time(s)
-ok   observer was spoken to by nobody</code></pre>
-    <p>
-      The first three interrogate the epistemic state and establish where the
-      model finished. The last two read the agents' radio transcripts and
-      establish who was in fact addressed. They are claims of different kinds, and the second is the weaker of the two. A negative epistemic conjunct is satisfied by everything that fails to occur, so a
-      procedure consulting only the model cannot distinguish deliberate secrecy
-      from an absence of communication. A run honouring the private channel and
-      a run achieving nothing return the same verdict.
-    </p>
-    <p>
-      A transcript that fails to arrive is reported as unchecked, not as an agent
-      that heard nothing. The distinction is load-bearing: a radio
-      which was never running would otherwise testify that the observer knows nothing, the very proposition the exercise exists to establish.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ EPISTEMIC -->
-<section>
-  <div class="container">
-    <p class="sec-label">The epistemic layer</p>
-    <h3>What is being planned over, and in what logic</h3>
-    <p>
-      The domain is EPDDL and the logic is S5 with three agents. The parser
-      reports what it grounded before anything is planned:
-    </p>
-    <pre><code>[parser] Frame: S5 (knowledge)
-[parser] Loaded: 4 atoms, 3 agents, 2 worlds (2 designated), 30 actions
-         partial_obs=1  goal_kw_only=1</code></pre>
-    <p>
-      Two designated worlds is the uncertainty stated precisely: the initial
-      model designates both a world in which the site is contaminated and one
-      in which it is not, and no agent's accessibility relation separates them.
-      That the fleet does not know is a property of the model, not a flag on a
-      proposition.
-    </p>
-    <p>
-      The solver is <span class="mono-inline">plansys2/EpistemicPlanSolver</span>,
-      searching with AO* because what it must return is not a sequence:
-    </p>
-    <pre><code>[epistemic] strategy=aostar heuristic=ks worlds=2 designated=2 actions=30
-[aostar] Solution found at depth 3  Expanded=40  Generated=57  Memo=4/7</code></pre>
-
-    <h3>The policy, and why it branches</h3>
-    <p>
-      A classical planner returns a sequence because it assumes the state is
-      known. Here it is not, and the plan must say what to do in each case the
-      sensing action can return. The solver returns four nodes.
-    </p>
-
-    <figure class="demo-figure">
-      <img src="media/warehouse-xl-policy.svg" width="100%"
-           alt="The policy: goto-site then scan, branching on e-scan-dirty or e-scan-clean into one of two private announcements">
-      <figcaption>
-        The branch is on an <i>observation</i>, not on a state variable. Both
-        arms announce privately, and the reason is the third conjunct of the
-        goal: a public announcement discharges
-        <span class="mono-inline">Kw scout</span> and
-        <span class="mono-inline">Kw relay</span> in a single step and
-        simultaneously falsifies
-        <span class="mono-inline">&#172;Kw observer</span>. The planner is not
-        told to prefer the private channel; it is told the observer must not
-        come to know, and the channel follows.
-      </figcaption>
-    </figure>
-
-    <h3>The model under product update</h3>
-    <p>
-      Execution is not a matter of marking actions done. Each executed action is
-      an event model, and applying it is a product update of the Kripke
-      structure. The state node reports the shape after each:
-    </p>
-    <pre><code>applied goto-site_relay:             2 worlds, 2 designated
-applied scan_relay -> e-scan-dirty:  2 worlds, 1 designated
-applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
-
-    <figure class="demo-figure">
-      <img src="media/warehouse-xl-kripke.svg" width="100%"
-           alt="Three Kripke models: initially two worlds both designated with all agents unable to distinguish them; after the scan two worlds with one designated and relay distinguishing them; after the private announcement three worlds">
-      <figcaption>
-        The counts are the ones the run reported, not an illustration of them.
-      </figcaption>
-    </figure>
-
-    <p>
-      The movement in that table goes in two directions. <b>Sensing contracts the model.</b> Before the scan both
-      worlds are designated; afterwards one is, because the observation ruled
-      the other out. <b>Private speech expands it.</b> Two worlds become three,
-      because an utterance the observer cannot hear creates a distinction that
-      did not previously exist: a world in which the message was sent, and a
-      world the observer still considers possible in which it was not.
-    </p>
-    <p>
-      The two directions are why the approach requires a model and not a set of
-      facts. Learning something removes possibilities. Telling somebody something
-      privately adds them: the agents excluded from the audience must go on
-      considering possible a world in which nothing was said. Both are the same
-      operation, a product with an event model. A representation that tracked
-      only what is true could express neither.
-    </p>
-    <p>
-      The goal is decided against the resulting structure by model checking:
-    </p>
-    <pre><code>[goal] (and (Kw scout contaminated)
-            (Kw relay contaminated)
-            (not (Kw observer contaminated)))  holds</code></pre>
-
-    <h3>Where the chain is not yet closed</h3>
-    <p class="note">
-      One qualification, and it is a real one. In this run the outcome the
-      policy branched on was not sensed:
-      <span class="mono-inline">scan: RMF carried no outcome, falling back to
-      the map's "e-scan-dirty"</span>. The value came from the task map, not from a
-      simulated sensor. Everything downstream of it &#8212; the
-      product update, the branch, the private channel, the model checking
-      &#8212; is genuine, but its input was configured. The bridge emits that warning on every occurrence. Closing the link
-      means a fleet adapter that reports what it observed, or routing the scan
-      through <span class="mono-inline">plansys2_epistemic_perception</span>,
-      which already turns occupancy geometry into propositions and which this
-      pipeline currently bypasses.
-    </p>
-  </div>
-</section>
-
 <!-- ═══════════════════════════════════════════════ ANALYSIS -->
 <section>
   <div class="container">
-    <p class="sec-label">Analysis</p>
+    <p class="sec-label">Result</p>
     <h3>Where the layer gave way, and of what kind</h3>
     <p>
       Eight defects were encountered in bringing the chain into operation at
-      this scale. They are given because, collectively, they are the
-      substantive result: six are properties of the composition, not errors
-      within any component, and none would have been exposed by a unit test.
+      this scale. With the lattice measurement above they are what this page
+      has to report: six are properties of the composition, not errors within
+      any component, and none would have been exposed by a unit test. The
+      epistemic content, set out further down, is the same content the small
+      floor exercised.
     </p>
     <table class="data">
       <thead>
@@ -1078,6 +897,200 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ THE RUN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The run</p>
+    <h3>What the scan cost</h3>
+    <p>
+      Gazebo on the left, the Open-RMF traffic schedule on the right. Caption
+      times are read from the executor's log. Each names the step of the policy
+      in force at that instant.
+    </p>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/warehouse_xl_run.jpg">
+        <source src="media/warehouse_xl_run.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Real time, commencing with <span class="mono-inline">r1</span> already
+        in transit. It enters <span class="mono-inline">aisle_07</span>, the
+        scan resolves, and the policy takes its dirty branch. The figure
+        crossing the aisle is one of the world's nine actors, which the fleet
+        neither sees nor avoids.
+      </figcaption>
+    </figure>
+
+    <table class="data">
+      <thead><tr><th>t</th><th>Event</th><th>Layer</th></tr></thead>
+      <tbody>
+        <tr><td>&#8722;64.0 s</td>
+            <td><span class="mono-inline">goto-site_relay</span> dispatched; the
+                robot is pre-positioning before the recording opens</td>
+            <td>Bridge &#8594; RMF</td></tr>
+        <tr><td>+9.5 s</td>
+            <td><span class="mono-inline">scan_relay</span> dispatched to
+                <span class="mono-inline">aisle_07</span></td>
+            <td>Bridge &#8594; RMF</td></tr>
+        <tr><td>+16.3 s</td>
+            <td><span class="mono-inline">observed e-scan-dirty</span></td>
+            <td>Epistemic state</td></tr>
+        <tr><td>+18.5 s</td>
+            <td><span class="mono-inline">relay says e-scan-dirty on /eplansys/channel/private/scout</span></td>
+            <td>Speech act</td></tr>
+        <tr><td>+21.4 s</td><td>Mission complete</td><td>Executor</td></tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      <b>The observation was injected, not sensed.</b> The log for this run
+      reads <span class="mono-inline">scan: RMF carried no outcome, falling back
+      to the map's "e-scan-dirty"</span>. The value came from
+      <span class="mono-inline">default_outcome</span> in the task map. No
+      sensor produced it and none is claimed.
+    </p>
+    <p>
+      What follows that input is real. The product update was applied to the
+      Kripke structure, the policy branched on the value, the private channel
+      carried it to <span class="mono-inline">scout</span>, the goal was decided
+      by model checking, and the radio transcripts were read off the fleet.
+      Everything downstream of the injection ran; the injection is the one link
+      that did not.
+    </p>
+
+    <h3>The claim, stated narrowly</h3>
+    <p>
+      The scan cost a thirty-metre transit and the entry of an aisle. On the
+      small floor the same action was satisfied almost at the moment it was
+      dispatched, the site being a waypoint the robot had effectively already
+      reached. That is the difference this floor buys, and it is the only
+      difference it buys.
+    </p>
+    <p>
+      The claim is not that a fleet worked 2 640 square metres. One robot
+      executed a three-action policy across part of it while two others held
+      station. The floor's size matters because it is what makes the sensing
+      action cost something; it is not itself the result.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ EPISTEMIC -->
+<section>
+  <div class="container">
+    <p class="sec-label">The epistemic layer</p>
+    <h3>What did not change: the domain and the logic</h3>
+    <p>
+      Nothing in this section is new to the larger floor. It is recorded so
+      the epistemic content the run exercised is legible, and so the reader can
+      see that it is the same content the small floor exercised. The domain is
+      EPDDL and the logic is S5 with three agents:
+    </p>
+    <pre><code>[parser] Frame: S5 (knowledge)
+[parser] Loaded: 4 atoms, 3 agents, 2 worlds (2 designated), 30 actions
+         partial_obs=1  goal_kw_only=1</code></pre>
+    <p>
+      Two designated worlds is the uncertainty stated precisely: the initial
+      model designates both a world in which the site is contaminated and one
+      in which it is not, and no agent's accessibility relation separates them.
+      That the fleet does not know is a property of the model, not a flag on a
+      proposition.
+    </p>
+    <p>
+      The solver is <span class="mono-inline">plansys2/EpistemicPlanSolver</span>,
+      searching with AO* because what it must return is not a sequence:
+    </p>
+    <pre><code>[epistemic] strategy=aostar heuristic=ks worlds=2 designated=2 actions=30
+[aostar] Solution found at depth 3  Expanded=40  Generated=57  Memo=4/7</code></pre>
+
+    <h3>The policy, and why it branches</h3>
+    <p>
+      A classical planner returns a sequence because it assumes the state is
+      known. Here it is not, and the plan must say what to do in each case the
+      sensing action can return. The solver returns four nodes.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-policy.svg" width="100%"
+           alt="The policy: goto-site then scan, branching on e-scan-dirty or e-scan-clean into one of two private announcements">
+      <figcaption>
+        The branch is on an <i>observation</i>, not on a state variable. Both
+        arms announce privately, and the reason is the third conjunct of the
+        goal: a public announcement discharges
+        <span class="mono-inline">Kw scout</span> and
+        <span class="mono-inline">Kw relay</span> in a single step and
+        simultaneously falsifies
+        <span class="mono-inline">&#172;Kw observer</span>. The planner is not
+        told to prefer the private channel; it is told the observer must not
+        come to know, and the channel follows.
+      </figcaption>
+    </figure>
+
+    <h3>The model under product update</h3>
+    <p>
+      Execution is not a matter of marking actions done. Each executed action is
+      an event model, and applying it is a product update of the Kripke
+      structure. The state node reports the shape after each:
+    </p>
+    <pre><code>applied goto-site_relay:             2 worlds, 2 designated
+applied scan_relay -> e-scan-dirty:  2 worlds, 1 designated
+applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-kripke.svg" width="100%"
+           alt="Three Kripke models: initially two worlds both designated with all agents unable to distinguish them; after the scan two worlds with one designated and relay distinguishing them; after the private announcement three worlds">
+      <figcaption>
+        The counts are the ones the run reported, not an illustration of them.
+      </figcaption>
+    </figure>
+
+    <p>
+      The movement in that table goes in two directions. <b>Sensing contracts the model.</b> Before the scan both
+      worlds are designated; afterwards one is, because the observation ruled
+      the other out. <b>Private speech expands it.</b> Two worlds become three,
+      because an utterance the observer cannot hear creates a distinction that
+      did not previously exist: a world in which the message was sent, and a
+      world the observer still considers possible in which it was not.
+    </p>
+    <p>
+      The two directions are why the approach requires a model and not a set of
+      facts. Learning something removes possibilities. Telling somebody something
+      privately adds them: the agents excluded from the audience must go on
+      considering possible a world in which nothing was said. Both are the same
+      operation, a product with an event model. A representation that tracked
+      only what is true could express neither.
+    </p>
+    <p>
+      The goal is decided against the resulting structure by model checking:
+    </p>
+    <pre><code>[goal] (and (Kw scout contaminated)
+            (Kw relay contaminated)
+            (not (Kw observer contaminated)))  holds</code></pre>
+
+    <h3>The verdict, and the two kinds of claim it rests on</h3>
+    <pre><code>ok   (Kw scout contaminated) holds
+ok   (Kw relay contaminated) holds
+ok   (Kw observer contaminated) does not hold
+ok   scout was spoken to, 1 time(s)
+ok   observer was spoken to by nobody</code></pre>
+    <p>
+      The first three interrogate the epistemic state and establish where the
+      model finished. The last two read the agents' radio transcripts and
+      establish who was in fact addressed. They are claims of different kinds, and the second is the weaker of the two. A negative epistemic conjunct is satisfied by everything that fails to occur, so a
+      procedure consulting only the model cannot distinguish deliberate secrecy
+      from an absence of communication. A run honouring the private channel and
+      a run achieving nothing return the same verdict.
+    </p>
+    <p>
+      A transcript that fails to arrive is reported as unchecked, not as an agent
+      that heard nothing. The distinction is load-bearing: a radio
+      which was never running would otherwise testify that the observer knows nothing, the very proposition the exercise exists to establish.
+    </p>
+  </div>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════════ SCOPE -->
 <section>
   <div class="container">
@@ -1089,11 +1102,11 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
     </p>
     <p>
       <b>The execution layer closes where traversal is not free.</b> A policy
-      planned over an epistemic domain drove a fleet across 2&#8202;640
-      m&#178; of furnished warehouse, and the sensing action cost a thirty-metre
-      transit and the entry of an aisle. It was not discharged on dispatch. On the small floor the scan was satisfied almost the moment it
-      was issued, the site being a waypoint the robot had effectively already
-      reached; here the two costs are of the same order.
+      planned over an epistemic domain was executed by a fleet on a floor whose
+      geometry it did not choose, and the sensing action cost a thirty-metre
+      transit and the entry of an aisle. One robot executed the three actions;
+      the other two held station. The area of the building is not itself a
+      result.
     </p>
     <p>
       <b>A negative epistemic conjunct was checked twice, independently.</b>
@@ -1107,8 +1120,9 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
     <p>
       <b>Pinned allocation held under RMF.</b> Every task was bound to the
       robot the planner named, so the agent the model credits with knowing is
-      the agent whose laser returned the reading. No substitution occurred and
-      none was possible.
+      the agent the bridge actually sent to the site. No substitution occurred
+      and, by construction, none was available. What that agent reported is a
+      separate question, answered above.
     </p>
     <p>
       <b>A routable graph was recovered from a world not built to yield one.</b>
