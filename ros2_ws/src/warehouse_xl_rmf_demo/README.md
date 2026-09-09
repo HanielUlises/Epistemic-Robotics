@@ -161,7 +161,9 @@ The survey domain of `eplansys`, unchanged, over this floor. The site is
 `aisle_07`, which a robot must enter before it can tell anything about it.
 
 ```
-observed e-scan-dirty
+at the site (0.35 m from it), nearest return 0.32 m (< 0.70) -> e-scan-dirty
+scan: perception reported e-scan-dirty
+applied scan_relay -> e-scan-dirty: 2 worlds, 1 designated
 relay says e-scan-dirty on /eplansys/channel/private/scout
 mission complete
 
@@ -172,8 +174,29 @@ ok   scout was spoken to, 1 time(s)
 ok   observer was spoken to by nobody
 ```
 
-`tools/make_video.py` composes a screen capture into the recorded run, taking
-its caption times from the executor's log.
+### The outcome is sensed
+
+`scan_relay` is a physical action. `scripts/scan_perception.py` subscribes to
+`/scan` and `/fleet_states` and withholds any verdict until the fleet has put
+the robot within 0.40 m of the site on three consecutive reports. Only then
+does it read the nearest finite return, compare it against a 0.70 m threshold
+and publish `e-scan-dirty` or `e-scan-clean`, which the bridge prefers over the
+task map's `default_outcome`. Only `r1` carries a laser: Gazebo names a
+plugin's node after the plugin, so three robots from one model file give three
+nodes called `/lds_driver` and the server segfaults.
+
+The floor is built twice to show the action discriminates. The variants differ
+by one pallet inside `aisle_07`, 0.80 m from the waypoint, and by nothing else:
+
+| variant | nearest return | outcome | branch |
+| --- | --- | --- | --- |
+| `site:=clean` | 0.89 m, aisle clutter | `e-scan-clean` | `relay-clean_relay_scout` |
+| `site:=dirty` | 0.32 m, the pallet | `e-scan-dirty` | `relay-dirty_relay_scout` |
+
+The arrival radius is the delicate part. At its first value of 1.20 m the
+reading was taken a metre short of the waypoint, where the pallet reads about
+1.0 m and falls the wrong side of the threshold: the node then reported
+`e-scan-clean` in both worlds and every check still passed.
 
 ## The robots
 

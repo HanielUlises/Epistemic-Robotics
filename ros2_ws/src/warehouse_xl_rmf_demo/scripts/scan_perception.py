@@ -40,7 +40,8 @@ import math
 
 import rclpy
 from rclpy.node import Node
-from rclpy.qos import QoSDurabilityPolicy, QoSProfile, QoSReliabilityPolicy, qos_profile_sensor_data
+from rclpy.qos import (QoSDurabilityPolicy, QoSProfile, QoSReliabilityPolicy,
+                       qos_profile_sensor_data)
 
 from rmf_fleet_msgs.msg import FleetState
 from sensor_msgs.msg import LaserScan
@@ -57,11 +58,22 @@ class ScanPerception(Node):
         self.declare_parameter('site_x', -3.35)
         self.declare_parameter('site_y', 2.00)
         # How near the robot must be for a reading to be a reading of the site.
-        # A scan taken halfway down the warehouse says nothing about this aisle.
-        self.declare_parameter('site_radius', 1.20)
-        # Clean: the nearest structure from the site is clutter at 0.89 m.
-        # Dirty: the pallet's near face is at 0.53 m. The threshold sits between,
-        # and the margin either side is about 0.17 m.
+        #
+        # Tight, and it has to be. At 1.20 m the detector fired while the robot
+        # was still a metre short, and from there the object beside the site
+        # reads about 1.0 m instead of 0.34 m -- so it reported "clean" in both
+        # worlds and the demonstration proved nothing. Measured from the site
+        # itself the object is at 0.34 m and the aisle clutter at 0.91 m, which
+        # is the separation the threshold below relies on.
+        self.declare_parameter('site_radius', 0.40)
+        # Consecutive checks inside the radius before a reading is taken, so
+        # the observation is of a robot that has arrived and not one passing
+        # through.
+        self.declare_parameter('settle', 3)
+        # Measured from the site in both worlds. Clean: the nearest structure
+        # is aisle clutter 1.80 m to the east, whose near face reads 0.88 m.
+        # Dirty: the pallet reads 0.32 m. The threshold sits between the two
+        # with about 0.18 m of margin either side.
         self.declare_parameter('threshold', 0.70)
         self.declare_parameter('present_outcome', 'e-scan-dirty')
         self.declare_parameter('absent_outcome', 'e-scan-clean')
@@ -82,8 +94,12 @@ class ScanPerception(Node):
             durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
         self.pub = self.create_publisher(String, g('observation_topic'), latched)
 
+        self.settle = int(g('settle'))
         self.nearest = math.inf
-        self.at_site = False
+        self.inside = 0
+        # Distance to the site at the last fleet report, carried only so the
+        # log line can say where the robot was standing when it looked.
+        self.distance = math.inf
         self.reported = None
 
         self.create_subscription(
@@ -104,7 +120,8 @@ class ScanPerception(Node):
         for r in msg.robots:
             if r.name == self.robot:
                 d = math.dist((r.location.x, r.location.y), self.site)
-                self.at_site = d <= self.radius
+                self.inside = self.inside + 1 if d <= self.radius else 0
+                self.distance = d
                 return
 
     def decide(self):
@@ -113,8 +130,8 @@ class ScanPerception(Node):
         Reported once per arrival: the observation is of a place at a time, and
         republishing it every half second would say the robot kept looking.
         """
-        if not self.at_site or not math.isfinite(self.nearest):
-            if not self.at_site:
+        if self.inside < self.settle or not math.isfinite(self.nearest):
+            if self.inside == 0:
                 self.reported = None
             return
         if self.reported is not None:
@@ -124,7 +141,8 @@ class ScanPerception(Node):
         self.reported = outcome
         self.pub.publish(String(data=outcome))
         self.get_logger().info(
-            f'at the site, nearest return {self.nearest:.2f} m '
+            f'at the site ({self.distance:.2f} m from it), '
+            f'nearest return {self.nearest:.2f} m '
             f'({"<" if self.nearest < self.threshold else ">="} '
             f'{self.threshold:.2f}) -> {outcome}')
 

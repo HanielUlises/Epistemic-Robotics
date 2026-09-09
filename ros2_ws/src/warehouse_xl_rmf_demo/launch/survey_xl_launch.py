@@ -171,7 +171,8 @@ def launch_setup(context, *args, **kwargs):
             'observation_topic': '/eplansys/observation',
             'site_x': -3.35,
             'site_y': 2.00,
-            'site_radius': 1.20,
+            'site_radius': 0.40,
+            'settle': 3,
             'threshold': 0.70,
         }])
 
