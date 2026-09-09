@@ -1,0 +1,115 @@
+(define (domain survey-sites)
+
+  ;; The survey team, with the site no longer fixed.
+  ;;
+  ;; In survey-team the proposition is (contaminated) and there is one place to
+  ;; stand. Here contamination has a location: exactly one of several sites is
+  ;; contaminated, and which one is what nobody knows. A robot standing at a
+  ;; site learns whether that site is the one; it learns nothing about the
+  ;; others by looking at this one.
+  ;;
+  ;; That single change is what couples the floor to the epistemics. The team
+  ;; must now decide which sites to inspect and in what order, and the sites
+  ;; are metres apart on a roadmap derived from the world.
+
+  (:requirements
+    :typing :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:types site)
+
+  (:predicates
+    (contaminated ?s - site)
+    (on-site ?i - agent ?s - site)
+  )
+
+  (:event nil)
+
+  ;--------------------DRIVE TO A SITE------------------
+
+  (:event e-goto
+    :parameters (?i - agent ?s - site)
+    :precondition (not (on-site ?i ?s))
+    :effects (on-site ?i ?s)
+  )
+
+  (:action goto
+    :parameters (?i - agent ?s - site)
+    :action-type (public-ontic (e-goto ?i ?s))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------SCAN A SITE------------------
+  ;
+  ; Semi-private sensing, as before: the scanning robot learns whether this
+  ; site is the contaminated one, and the others learn only that it looked.
+
+  (:event e-scan-dirty
+    :parameters (?i - agent ?s - site)
+    :precondition
+      (and
+        (on-site ?i ?s)
+        (contaminated ?s)
+        (<Kw. ?i> (contaminated ?s)) )
+  )
+
+  (:event e-scan-clean
+    :parameters (?i - agent ?s - site)
+    :precondition
+      (and
+        (on-site ?i ?s)
+        (not (contaminated ?s))
+        (<Kw. ?i> (contaminated ?s)) )
+  )
+
+  (:action scan
+    :parameters (?i - agent ?s - site)
+    :action-type (semi-private-sensing
+      (e-scan-dirty ?i ?s)
+      (e-scan-clean ?i ?s) )
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (default Partially) )
+  )
+
+  ;--------------------REPORT ON THE TEAM CHANNEL------------------
+
+  (:event e-team-dirty
+    :parameters (?i - agent ?s - site)
+    :precondition ([?i] (contaminated ?s))
+  )
+
+  (:action relay-dirty
+    :parameters (?i ?j - agent ?s - site)
+    :action-type (private-announcement
+      (e-team-dirty ?i ?s)
+      (nil) )
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (?j Fully)
+        (default Oblivious) )
+  )
+
+  (:event e-team-clean
+    :parameters (?i - agent ?s - site)
+    :precondition ([?i] (not (contaminated ?s)))
+  )
+
+  (:action relay-clean
+    :parameters (?i ?j - agent ?s - site)
+    :action-type (private-announcement
+      (e-team-clean ?i ?s)
+      (nil) )
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (?j Fully)
+        (default Oblivious) )
+  )
+)

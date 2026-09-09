@@ -1,0 +1,65 @@
+{
+  "_comment": [
+    "The multi-site survey, as RMF tasks.",
+    "",
+    "What separates this from warehouse_xl_survey.json is that every action",
+    "now takes a site, so no action has a fixed destination any more. The",
+    "bridge resolves a destination from the argument named by waypoint_arg,",
+    "translates it through the zones table, and pins the task to the robot the",
+    "planner's agent is bound to. Two robots therefore go to two different",
+    "places under one action name, which is what the multi-site policy asks",
+    "for and what the single-site map could not express.",
+    "",
+    "The zones table is an identity here because the domain's site names were",
+    "chosen to be the waypoints' pinned names. It is written out rather than",
+    "omitted because the two are different things that happen to agree: one is",
+    "an object in an EPDDL problem, the other a vertex in a navigation graph,",
+    "and the day a site moves this is the line that moves it.",
+    "",
+    "outcomes is the simulator's ground truth and is consulted only when the",
+    "perception node has said nothing. The launch file writes it from the same",
+    "argument that places the pallet, so the fallback cannot disagree with the",
+    "world the robots are actually driving through."
+  ],
+
+  "zones": {
+    "a17": "a17",
+    "a31": "a31",
+    "a06": "a06"
+  },
+
+  "agents": {
+    "relay": {
+      "fleet": "warehouseXL",
+      "robot": "r1"
+    },
+    "scout": {
+      "fleet": "warehouseXL",
+      "robot": "r2"
+    }
+  },
+
+  "actions": {
+    "goto": {
+      "category": "go_to_place",
+      "waypoint_arg": 1
+    },
+    "scan": {
+      "category": "go_to_place",
+      "waypoint_arg": 1,
+      "sensing": true,
+      "outcome_arg": 1,
+      "outcomes": {
+        "a17": "e-scan-clean",
+        "a31": "e-scan-clean",
+        "a06": "e-scan-clean"
+      }
+    },
+    "relay": {
+      "local": true,
+      "duration": 2.0,
+      "channel": "private",
+      "listener_arg": 1
+    }
+  }
+}
