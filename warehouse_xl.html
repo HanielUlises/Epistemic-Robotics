@@ -573,7 +573,10 @@ sup.cite a:hover{text-decoration:underline}
       296 to 2 640 square metres says nothing about the difficulty of the
       planning problem, and nothing here should be read as claiming it does. The
       companion work on nested goals varies modal depth; this varies the ground
-      the fleet has to cross, and reports what broke.
+      the fleet has to cross, and reports what broke. One thing did change in
+      kind: the outcome the policy branches on is now read off the robot's
+      laser, so the step from ignorance to knowledge is carried by perception
+      and not by configuration.
     </p>
     <p class="note" style="margin-top:1.4rem">
       Two disclaimers stated at the top because they bound everything below.
@@ -590,7 +593,7 @@ sup.cite a:hover{text-decoration:underline}
       <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, dispatched by
       <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>. Full
       account in <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale</a>
-      (PDF, 10&#8202;pp).
+      (PDF, 11&#8202;pp).
     </p>
   </div>
 </div>
@@ -904,8 +907,9 @@ sup.cite a:hover{text-decoration:underline}
     <h3>What the scan cost</h3>
     <p>
       Gazebo on the left, the Open-RMF traffic schedule on the right. Caption
-      times are read from the executor's log. Each names the step of the policy
-      in force at that instant.
+      times are read from the mission's own log and offset against the frame the
+      capture opened on, so a caption saying the robot sensed something appears
+      at the frame in which it did.
     </p>
 
     <figure class="demo-figure">
@@ -914,49 +918,155 @@ sup.cite a:hover{text-decoration:underline}
         <source src="media/warehouse_xl_run.mp4" type="video/mp4">
       </video>
       <figcaption>
-        Real time, commencing with <span class="mono-inline">r1</span> already
-        in transit. It enters <span class="mono-inline">aisle_07</span>, the
-        scan resolves, and the policy takes its dirty branch. The figure
-        crossing the aisle is one of the world's nine actors, which the fleet
-        neither sees nor avoids.
+        Real time, no speed-up, recorded on a virtual display carrying nothing
+        but these two windows. Left: <span class="mono-inline">aisle_07</span>
+        seen across its width, the scout entering from the far end and the
+        pallet it is sent to look at standing beside the lane. Right: the whole
+        2 640&#8202;m&#178; roadmap, with the fleet on it. The scan resolves at
+        0.32&#8202;m and the policy takes its dirty branch.
       </figcaption>
     </figure>
 
     <table class="data">
       <thead><tr><th>t</th><th>Event</th><th>Layer</th></tr></thead>
       <tbody>
-        <tr><td>&#8722;64.0 s</td>
-            <td><span class="mono-inline">goto-site_relay</span> dispatched; the
-                robot is pre-positioning before the recording opens</td>
+        <tr><td>&#8722;16.9 s</td>
+            <td><span class="mono-inline">goto-site_relay</span> dispatched. The
+                scout is crossing the floor before the recording opens</td>
             <td>Bridge &#8594; RMF</td></tr>
-        <tr><td>+9.5 s</td>
+        <tr><td>+14.9 s</td>
             <td><span class="mono-inline">scan_relay</span> dispatched to
+                <span class="mono-inline">scan_site</span> in
                 <span class="mono-inline">aisle_07</span></td>
             <td>Bridge &#8594; RMF</td></tr>
-        <tr><td>+16.3 s</td>
-            <td><span class="mono-inline">observed e-scan-dirty</span></td>
-            <td>Epistemic state</td></tr>
-        <tr><td>+18.5 s</td>
-            <td><span class="mono-inline">relay says e-scan-dirty on /eplansys/channel/private/scout</span></td>
+        <tr><td>+22.8 s</td>
+            <td>Third consecutive fleet report inside the site, 0.35&#8202;m
+                from it. Nearest finite return 0.32&#8202;m</td>
+            <td>Laser &#8594; perception</td></tr>
+        <tr><td>+24.2 s</td>
+            <td><span class="mono-inline">e-scan-dirty</span> published, then
+                applied: 2 worlds, 1 designated</td>
+            <td>Perception &#8594; epistemic state</td></tr>
+        <tr><td>+26.5 s</td>
+            <td><span class="mono-inline">relay says e-scan-dirty on /eplansys/channel/private/scout</span>;
+                3 worlds, 1 designated</td>
             <td>Speech act</td></tr>
-        <tr><td>+21.4 s</td><td>Mission complete</td><td>Executor</td></tr>
+        <tr><td>+29.3 s</td><td>Mission complete</td><td>Executor</td></tr>
+        <tr><td>+30.0 s</td>
+            <td>Three formulas and two transcripts checked against the state
+                the fleet left behind</td>
+            <td>Post-execution check</td></tr>
       </tbody>
     </table>
 
     <p class="note">
-      <b>The observation was injected, not sensed.</b> The log for this run
-      reads <span class="mono-inline">scan: RMF carried no outcome, falling back
-      to the map's "e-scan-dirty"</span>. The value came from
-      <span class="mono-inline">default_outcome</span> in the task map. No
-      sensor produced it and none is claimed.
+      <b>The observation is sensed, not asserted.</b> The scout carries a planar
+      laser on its mast at 0.33&#8202;m, 180 beams over the full turn, returns
+      admitted between 0.12 and 3.5&#8202;m. A perception node subscribes to
+      <span class="mono-inline">/scan</span> and to
+      <span class="mono-inline">/fleet_states</span> and withholds any verdict
+      until the fleet has placed the robot within 0.40&#8202;m of the site on
+      three consecutive reports. Only then does it read the nearest finite
+      return, compare it against a 0.70&#8202;m threshold, and publish
+      <span class="mono-inline">e-scan-dirty</span> or
+      <span class="mono-inline">e-scan-clean</span>. The bridge takes that value
+      and the product update follows it. The epistemic state was updated from an
+      observation generated by the robot's onboard perception during execution.
     </p>
     <p>
-      What follows that input is real. The product update was applied to the
-      Kripke structure, the policy branched on the value, the private channel
-      carried it to <span class="mono-inline">scout</span>, the goal was decided
-      by model checking, and the radio transcripts were read off the fleet.
-      Everything downstream of the injection ran; the injection is the one link
-      that did not.
+      The log for the recorded run reads
+      <span class="mono-inline">at the site (0.35 m from it), nearest return
+      0.32 m (&lt; 0.70) -&gt; e-scan-dirty</span>, then
+      <span class="mono-inline">scan: perception reported e-scan-dirty</span>,
+      then <span class="mono-inline">applied scan_relay -&gt; e-scan-dirty:
+      2 worlds, 1 designated</span>. The three lines are emitted by three
+      processes and the order is the order of the chain: the laser, the
+      perception node, the model.
+    </p>
+    <p>
+      The task map still carries a
+      <span class="mono-inline">default_outcome</span> and the bridge still
+      falls back to it when an action completes with nothing observed. That path
+      is the fallback. The precedence the bridge applies is an outcome carried
+      by RMF first, the perception node second, the task map last, and this run
+      resolved at the second.
+    </p>
+
+    <h3>The same policy in two worlds</h3>
+    <p>
+      A sensing action reporting the same value whatever it is pointed at is not
+      sensing. The floor is therefore built twice. The two worlds are identical
+      but for a single pallet at (&minus;4.15,&nbsp;2.00), standing inside
+      <span class="mono-inline">aisle_07</span> and 0.80&#8202;m from the
+      waypoint the scan is dispatched to. The binary, the roadmap, the fleet
+      configuration, the domain, the goal and the 0.70&#8202;m threshold are
+      held fixed across the pair. One object moves, and nothing else.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr><th>World</th>
+            <th>Nearest return</th>
+            <th>Outcome published</th>
+            <th>Branch taken</th>
+            <th>Checks</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>clean, pallet absent</td>
+            <td>0.88&#8202;m</td>
+            <td><span class="mono-inline">e-scan-clean</span></td>
+            <td><span class="mono-inline">relay-clean_relay_scout</span></td>
+            <td>5 of 5</td></tr>
+        <tr><td>dirty, pallet present</td>
+            <td>0.32&#8202;m</td>
+            <td><span class="mono-inline">e-scan-dirty</span></td>
+            <td><span class="mono-inline">relay-dirty_relay_scout</span></td>
+            <td>5 of 5</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      The two runs take different branches because the laser returns different
+      numbers. In the clean world the nearest structure to the site is warehouse
+      clutter 1.80&#8202;m to the east, whose near face reads 0.88&#8202;m. In
+      the dirty world the pallet reads about a third of a metre. The threshold
+      sits between the two readings and is the only quantity in the perception
+      node that had to be chosen against the floor.
+    </p>
+    <p>
+      The figures in the table are the recorded runs. Repeats move them by a
+      centimetre or two, because the fleet stops the robot at a slightly
+      different point inside the site each time: across runs the clean world
+      returns 0.88 to 0.89&#8202;m and the dirty world 0.32 to 0.34&#8202;m,
+      against a threshold at 0.70. The margin is about 0.18&#8202;m either side
+      and the branch has never been in doubt on either floor.
+    </p>
+    <p>
+      Both worlds satisfy the goal, and they satisfy it by different routes. A
+      conditional policy that reaches its goal down either branch is what
+      planning under partial observability is for, and it is not demonstrated by
+      a run that only ever takes one branch.
+    </p>
+
+    <h3>An arrival gate too loose reads the wrong object</h3>
+    <p>
+      The first version of the perception node accepted the robot as being at
+      the site within 1.20&#8202;m. Under that tolerance the reading was taken
+      roughly a metre short of the waypoint, from where the pallet subtends a
+      distance of about 1.0&#8202;m and falls the wrong side of the threshold.
+      The node reported <span class="mono-inline">e-scan-clean</span> in both
+      worlds, the policy took its clean branch in both, and every check passed
+      in both. A green run proved nothing.
+    </p>
+    <p>
+      An isolated probe settled it: with the robot placed at the waypoint by
+      hand, the laser returned a minimum of 0.344&#8202;m at a bearing of
+      +93.5&#8203;&deg;, and 0.91&#8202;m at &minus;90&#8203;&deg;. The sensor
+      was correct throughout and the arrival test was not. Tightening the disc
+      to 0.40&#8202;m and requiring three consecutive fleet reports inside it
+      separated the worlds. The defect is worth stating because of its shape: it
+      degrades a sensing action into a constant while leaving the goal, the
+      checks and the logs looking exactly as they should.
     </p>
 
     <h3>The claim, stated narrowly</h3>
@@ -1088,7 +1198,6 @@ ok   observer was spoken to by nobody</code></pre>
       which was never running would otherwise testify that the observer knows nothing, the very proposition the exercise exists to establish.
     </p>
   </div>
-  </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════ SCOPE -->
@@ -1097,8 +1206,18 @@ ok   observer was spoken to by nobody</code></pre>
     <p class="sec-label">Scope</p>
     <h3>What the run establishes</h3>
     <p>
-      Four things, stated in the existential register: there exists a run in
+      Five things, stated in the existential register: there exists a run in
       which each held.
+    </p>
+    <p>
+      <b>The transition from ignorance to knowledge was driven by perception.</b>
+      The scan is a physical action: the robot is sent to a waypoint, the fleet
+      confirms it is inside the site, its laser is read, and the outcome the
+      product update consumes is the one the perception node derived from that
+      reading. The same binary in two worlds differing by one pallet publishes
+      two different outcomes and takes two different branches. The epistemic
+      state was updated from an observation generated by the robot's onboard
+      perception during execution.
     </p>
     <p>
       <b>The execution layer closes where traversal is not free.</b> A policy
@@ -1154,6 +1273,15 @@ ok   observer was spoken to by nobody</code></pre>
       as more than that.
     </p>
     <p>
+      <b>Object recognition.</b> The perception node thresholds the nearest
+      finite return of a planar scan against a distance chosen for this site. It
+      establishes that something is close to the robot at a waypoint where, in
+      the clean world, nothing is. It does not identify what that something is,
+      and would report the same for any object of comparable size in the same
+      place. The proposition it decides is occupancy at a known location, and
+      the domain is written to ask no more than that.
+    </p>
+    <p>
       <b>Confidentiality.</b> The private channel is realised by addressing: an
       utterance is published to a topic whose subscribers are the audience the
       action declares. Any node may subscribe to any topic. The claim available
@@ -1164,7 +1292,7 @@ ok   observer was spoken to by nobody</code></pre>
       enforcement, not design.
     </p>
     <p class="note">
-      The full account is in <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale</a> (PDF, 10&#8202;pp): the survey of assets, the derivation of the roadmap, the fleet, the epistemic layer, and all eight defects with their measurements.
+      The full account is in <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale</a> (PDF, 11&#8202;pp): the survey of assets, the derivation of the roadmap, the fleet, the epistemic layer, and all eight defects with their measurements.
     </p>
   </div>
 </section>
