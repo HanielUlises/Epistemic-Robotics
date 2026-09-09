@@ -39,17 +39,19 @@ and `heuristic=ks`, three agents throughout.
 | shipping demo, propositional | 4 | 2 | 30 | 3 | 40 | 4 |
 | *k* = 2 sites | 8 | 2 | 48 | 3 | 147 | 4 |
 | *k* = 3 sites | 12 | 3 | 72 | 6 | 838 168 | 8 |
-| *k* = 4 sites | 16 | 4 | 96 | not solved | — | — |
+| *k* = 4 sites | 16 | 4 | 96 | not solved in 901 s | — | — |
 
 *k* = 3 is solved inside the planner's default 15 s budget, so the search runs
 at better than 55 000 expansions per second. That is a lower bound: the run was
 not timed, only observed to finish.
 
-*k* = 4 is not solved. It reports `[aostar] Timeout at depth 7`, which is the
-budget running out and not the search space being refuted, and under a raised
-budget it was still at depth 7 after seven minutes. So *k* = 4 is out of reach
-of this heuristic as it stands, and a v2 that wants it needs a better heuristic
-rather than a longer wait.
+*k* = 4 is not solved. Under the default budget it reports `[aostar] Timeout at
+depth 7`; under a 900 s budget it reports `[aostar] Timeout at depth 8` after
+901 s and returns no plan. Both are the budget running out, not the search
+space being refuted, so no claim is made here that *k* = 4 is unsolvable. What
+is measured is the price of the extra site: sixty times the budget bought one
+further depth iteration. A v2 that wants four sites needs a better heuristic,
+not a longer wait.
 
 The interesting column is `expanded`. Going from one site to two costs a factor
 of four. Going from two to three costs a factor of 5 700, and the plan gets
@@ -131,7 +133,8 @@ ros2 run plansys2_epistemic_planner draft_epistemic_mapping \
 # survey-sites.pddl and request a plan through plansys2_terminal
 ```
 
-Raise `plan_solver_timeout` on the *planner node* to search longer. The same
-parameter on the terminal's client governs only how long it waits for the
-service to answer, which is not the same thing and will look like the solver
-giving up early.
+Raise `plan_solver_timeout` on the *planner node* to search longer, in the
+`planner: ros__parameters:` block of the params file. The same parameter on the
+terminal's client governs only how long that client waits for the service to
+answer; setting it there leaves the solver on its 15 s default and looks
+exactly like the solver giving up early.
