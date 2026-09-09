@@ -198,6 +198,22 @@ reading was taken a metre short of the waypoint, where the pallet reads about
 1.0 m and falls the wrong side of the threshold: the node then reported
 `e-scan-clean` in both worlds and every check still passed.
 
+### Recording
+
+```
+bash tools/record_demo.sh dirty /tmp/raw.mkv /tmp/run.log
+python3 tools/make_captions.py --log /tmp/run.log --t0 $(cat /tmp/raw.t0) \
+        --out /tmp/caps.tsv
+python3 tools/make_video.py --raw /tmp/raw.mkv --captions /tmp/caps.tsv \
+        --start 52 --trim 40 --out /tmp/run.mp4
+```
+
+`record_demo.sh` runs the mission on an Xvfb display carrying Gazebo and RViz
+and nothing else, so a full-screen grab cannot pick up the real desktop.
+`make_captions.py` reads the caption track off the mission's own log, so a
+caption saying the robot sensed something appears at the frame in which it
+did.
+
 ## The robots
 
 Three TurtleBot3 Waffles: ROBOTIS's geometry on rmf_demos' TinyRobot drive

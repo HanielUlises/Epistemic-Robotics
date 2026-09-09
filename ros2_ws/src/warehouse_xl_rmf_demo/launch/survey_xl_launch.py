@@ -192,6 +192,7 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments={
             'headless': LaunchConfiguration('headless'),
             'world': LaunchConfiguration('world'),
+            'rviz_config': LaunchConfiguration('rviz_config'),
             'server_uri': f'ws://localhost:{WEBSOCKET_PORT}',
         }.items())
 
@@ -239,6 +240,12 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'headless', default_value='false',
             description='Run gazebo headless and leave rviz out.'),
+        DeclareLaunchArgument(
+            'rviz_config',
+            default_value=os.path.join(
+                get_package_share_directory('warehouse_xl_rmf_demo'),
+                'config', 'warehouse_xl.rviz'),
+            description='RViz configuration, passed through to the fleet.'),
         DeclareLaunchArgument(
             'world',
             default_value=os.path.join('/tmp', 'warehouse_xl_dirty.world'),

@@ -16,9 +16,11 @@
 """
 Composes the screen capture into the demonstration video.
 
-The capture is a 3840x1080 grab of two monitors, Gazebo on the left and RViz on
-the right. Each half is scaled to half of a 1080p frame, so the pair sits side
-by side at 16:9 with nothing cropped away.
+The capture is a 3840x1080 grab of a virtual display carrying Gazebo on the
+left and RViz on the right. Each pane is cropped to its own 3D canvas, so the
+menus, docks and status bars are dropped and the two views are what remains.
+Both crops are taken at 16:9 and scaled to 1280x720, which puts them side by
+side without squeezing a landscape viewport into a portrait half-frame.
 
 Captions are written from the mission's own log rather than by hand: the times
 are taken from the log lines the bridge and the executor emit, offset against
@@ -49,8 +51,13 @@ def esc(text):
     # parameters on screen, and the second split the graph on a comma in the
     # word "warehouse, 42 x 63 m". A caption without a possessive or a comma is
     # a smaller loss than either.
-    out = text.replace("'", '').replace('"', '').replace(',', ' ')
-    for ch in (':', '[', ']', ';', '\\'):
+    # A semicolon goes the same way. ffmpeg splits a filter-complex script
+    # into filters on semicolons before it unescapes anything, so a caption
+    # containing one is read as the start of a filter and the graph fails to
+    # build with "No such filter" naming the rest of the sentence.
+    out = (text.replace("'", '').replace('"', '')
+               .replace(',', ' ').replace(';', ' —'))
+    for ch in (':', '[', ']', '\\'):
         out = out.replace(ch, '\\' + ch)
     return out
 
@@ -79,12 +86,23 @@ def main():
     ap.add_argument('--raw', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--speed', type=float, default=2.0)
+    ap.add_argument('--start', type=float, default=0.0,
+                    help='seconds of capture to drop from the front')
     ap.add_argument('--trim', type=float, default=60.0,
-                    help='seconds of capture to keep, from the start')
+                    help='seconds of capture to keep, from --start')
     ap.add_argument('--precomposed', action='store_true',
                     help='the capture is already a stacked 1920x1080 frame')
-    ap.add_argument('--gazebo-x', type=int, default=1920)
-    ap.add_argument('--rviz-x', type=int, default=0)
+    ap.add_argument('--gazebo-crop', default='1640:922:265:70',
+                    help='W:H:X:Y of the Gazebo 3D canvas in the capture')
+    ap.add_argument('--rviz-crop', default='810:1016:2494:30',
+                    help='W:H:X:Y of the RViz 3D canvas in the capture')
+    ap.add_argument('--pane', default='1280:720',
+                    help='W:H the Gazebo pane is scaled to')
+    # The roadmap is 38.8 m across and 60.0 m deep, so the RViz canvas holding
+    # all of it is taller than it is wide. Giving it the same width as the
+    # Gazebo pane would be half a pane of empty floor.
+    ap.add_argument('--rviz-pane', default='576:720',
+                    help='W:H the RViz pane is scaled to')
     ap.add_argument('--captions', required=True,
                     help='file of "seconds<TAB>text" lines, in capture time')
     args = ap.parse_args()
@@ -98,39 +116,44 @@ def main():
             t, text = line.split('\t', 1)
             caps.append((float(t), text))
     caps.sort()
+    # Captions are timed against the capture. Dropping seconds off the front
+    # moves every event that much earlier in the finished video. The last
+    # caption before the cut is kept and pinned to zero: the video opens in the
+    # middle of a policy node, and the frame should say which one.
+    before = [c for c in caps if c[0] < args.start]
+    caps = [(t - args.start, text) for t, text in caps if t >= args.start]
+    if before:
+        caps.insert(0, (0.0, before[-1][1]))
 
-    # Which half is which is a property of the desktop, not of the capture:
-    # on this machine Gazebo is on the second monitor and RViz on the first, so
-    # the right half of the grab is Gazebo. Swapping them here puts Gazebo on
-    # the left of the finished frame, where the labels say it is.
+    # The capture is of a virtual display which never carries anything but
+    # these two windows, so a full-screen grab cannot pick up the desktop and
+    # the panes are cut out of it afterwards.
     if args.precomposed:
-        # The capture already grabbed the two windows separately and stacked
-        # them, which is how the desktop is kept out of frame: grabbing the
-        # whole screen and cropping afterwards films whatever else is open.
         filters = f'[0:v]setpts=PTS/{args.speed}[fast];[fast]'
     else:
         chain = [
-            f'crop=1920:1080:{args.gazebo_x}:0,scale=960:1080[gz]',
-            f'crop=1920:1080:{args.rviz_x}:0,scale=960:1080[rv]',
+            f'crop={args.gazebo_crop},scale={args.pane}[gz]',
+            f'crop={args.rviz_crop},scale={args.rviz_pane}[rv]',
         ]
         filters = (f'[0:v]{chain[0]};[0:v]{chain[1]};[gz][rv]hstack=inputs=2[stacked];'
                    f'[stacked]setpts=PTS/{args.speed}[fast];[fast]')
 
+    pane_w = int(args.pane.split(':')[0])
     overlays = [
-        drawtext('GAZEBO — dynamic logistics warehouse, 42 x 63 m',
-                 MONO, 22, 24, 24, alpha='0.70'),
-        drawtext('RVIZ — Open-RMF traffic schedule',
-                 MONO, 22, 984, 24, alpha='0.70'),
+        drawtext('GAZEBO — aisle_07 of the dynamic logistics warehouse',
+                 MONO, 20, 20, 18, alpha='0.70'),
+        drawtext('RVIZ — roadmap and traffic schedule',
+                 MONO, 20, pane_w + 20, 18, alpha='0.70'),
     ]
     for i, (t, text) in enumerate(caps):
         start = round(t / args.speed, 2)
         end = round((caps[i + 1][0] if i + 1 < len(caps) else args.trim)
                     / args.speed, 2)
-        overlays.append(drawtext(text, FONT, 28, '(w-text_w)/2', 'h-92',
+        overlays.append(drawtext(text, FONT, 26, '(w-text_w)/2', 'h-84',
                                  start, end))
     overlays.append(drawtext(
         'three TurtleBot3 Waffles under Open-RMF  ·  epistemic policy by ePlanSys',
-        FONT, 19, '(w-text_w)/2', 'h-40', alpha='0.55'))
+        FONT, 18, '(w-text_w)/2', 'h-38', alpha='0.55'))
 
     graph = filters + ','.join(overlays) + '[v]'
 
@@ -139,7 +162,7 @@ def main():
         script = fh.name
 
     cmd = ['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error',
-           '-t', str(args.trim), '-i', args.raw,
+           '-ss', str(args.start), '-t', str(args.trim), '-i', args.raw,
            '-filter_complex_script', script, '-map', '[v]',
            '-c:v', 'libx264', '-preset', 'slow', '-crf', '23',
            '-pix_fmt', 'yuv420p', '-movflags', '+faststart', args.out]

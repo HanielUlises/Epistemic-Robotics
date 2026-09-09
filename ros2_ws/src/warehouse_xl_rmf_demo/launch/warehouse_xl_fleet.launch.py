@@ -135,9 +135,7 @@ def launch_setup(context, *args, **kwargs):
             # as an empty grey panel. Only the focal point of a saved view is
             # honoured on load; its angle and scale are not, so the framing
             # here comes from the focal point alone.
-            'viz_config_file': os.path.join(
-                get_package_share_directory('warehouse_xl_rmf_demo'),
-                'config', 'warehouse_xl.rviz'),
+            'viz_config_file': LaunchConfiguration('rviz_config'),
         }.items())
 
     building_map_server = Node(
@@ -194,6 +192,14 @@ def generate_launch_description():
         # The floor is `dynamic_logistics_warehouse`, which is GPL-2.0 and so
         # is fetched rather than vendored into this Apache-2.0 repository:
         # tools/fetch_third_party.sh clones it beside the workspace.
+        DeclareLaunchArgument(
+            'rviz_config',
+            default_value=os.path.join(
+                get_package_share_directory('warehouse_xl_rmf_demo'),
+                'config', 'warehouse_xl.rviz'),
+            description='RViz configuration. The recording harness passes a '
+                        'copy with the window placed on the right half of the '
+                        'virtual display.'),
         DeclareLaunchArgument(
             'world',
             default_value=os.path.join(
