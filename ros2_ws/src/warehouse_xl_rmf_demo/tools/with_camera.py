@@ -37,6 +37,11 @@ def main():
     ap.add_argument('--world', required=True)
     ap.add_argument('--pose', required=True,
                     help='x y z roll pitch yaw for the user camera')
+    ap.add_argument('--pallet', metavar='X,Y,YAW',
+                    help='place a pallet jack. This is the thing the scan is '
+                         'looking for: present in the dirty variant of the '
+                         'world, absent in the clean one, and nowhere in the '
+                         'navigation graph, which is identical for both.')
     ap.add_argument('--out', required=True)
     args = ap.parse_args()
 
@@ -56,8 +61,36 @@ def main():
         # belongs and where Gazebo will look for it.
         text = re.sub(r'(<world[^>]*>\n)', r'\1' + gui, text, count=1)
 
+    if args.pallet:
+        px, py, pyaw = (float(v) for v in args.pallet.split(','))
+        # Explicit geometry rather than an <include> of an AWS model. The
+        # asset pack shipped with this world carries absolute mesh paths from
+        # its author's machine, so an included model can load with no collision
+        # at all: it renders and the laser passes through it. A box cannot fail
+        # that way, and what the sensing action needs is something present, not
+        # something ornamental.
+        pallet = f"""    <model name='scan_target'>
+      <static>true</static>
+      <pose>{px} {py} 0.45 0 0 {pyaw}</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.9 0.5 0.9</size></box></geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.9 0.5 0.9</size></box></geometry>
+          <material>
+            <ambient>0.55 0.35 0.12 1</ambient>
+            <diffuse>0.72 0.47 0.16 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+"""
+        text = re.sub(r'(</world>)', pallet + r'\1', text, count=1)
+
     open(args.out, 'w').write(text)
-    print(f'{args.out}: camera at {args.pose}')
+    print(f'{args.out}: camera at {args.pose}'
+          + (f', pallet at {args.pallet}' if args.pallet else ', no pallet'))
 
 
 if __name__ == '__main__':

@@ -7,6 +7,10 @@ find_package(ament_cmake REQUIRED)
 # generators are installed too, because the floor is meant to be regenerated
 # rather than edited: every number in the world and the graph comes from
 # tools/layout.py.
+install(PROGRAMS scripts/scan_perception.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 install(DIRECTORY launch config maps worlds models tools docs
   DESTINATION share/${PROJECT_NAME}
 )

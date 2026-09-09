@@ -64,6 +64,9 @@ from launch_ros.actions import Node
 # Spawning clear of the slab and letting it drop is the fix. A third of a metre
 # is enough for the tallest slab and small enough that the drop is not visible
 # in a recording.
+# The agent the domain has scan. It is the one fitted with a laser.
+SENSING_ROBOT = 'r1'
+
 SPAWN_Z = '0.35'
 
 # Seconds to let gzserver load the world before asking it to spawn anything.
@@ -106,7 +109,12 @@ def launch_setup(context, *args, **kwargs):
                 '-entity', name,
                 '-file', os.path.join(
                     get_package_share_directory('warehouse_xl_rmf_demo'),
-                    'models', 'TurtleBot3Waffle', 'model.sdf'),
+                    'models', 'TurtleBot3Waffle',
+                    # Only the sensing agent carries a laser. Gazebo names a
+                    # plugin's node after the plugin, so three robots from one
+                    # model file give three nodes called /lds_driver, and the
+                    # server reports the collision and then segfaults.
+                    'model_lidar.sdf' if name == SENSING_ROBOT else 'model.sdf'),
                 '-x', str(x), '-y', str(y), '-z', SPAWN_Z, '-Y', str(yaw),
             ])
         for name, x, y, yaw in SPAWN

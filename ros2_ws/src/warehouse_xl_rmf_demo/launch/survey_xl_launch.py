@@ -158,6 +158,23 @@ def launch_setup(context, *args, **kwargs):
         for agent in AGENTS
     ]
 
+    # The sensing action's eyes. Without it the scan reports whatever the task
+    # map says, and the policy branches on a constant.
+    perception = Node(
+        package='warehouse_xl_rmf_demo',
+        executable='scan_perception.py',
+        name='scan_perception',
+        output='screen',
+        parameters=[{
+            'robot': 'r1',
+            'scan_topic': '/scan',
+            'observation_topic': '/eplansys/observation',
+            'site_x': -3.35,
+            'site_y': 2.00,
+            'site_radius': 1.20,
+            'threshold': 0.70,
+        }])
+
     mission = Node(
         package='eplansys_demo',
         executable='survey_mission',
@@ -173,6 +190,7 @@ def launch_setup(context, *args, **kwargs):
         condition=IfCondition(LaunchConfiguration('rmf')),
         launch_arguments={
             'headless': LaunchConfiguration('headless'),
+            'world': LaunchConfiguration('world'),
             'server_uri': f'ws://localhost:{WEBSOCKET_PORT}',
         }.items())
 
@@ -209,7 +227,7 @@ def launch_setup(context, *args, **kwargs):
                     target_action=check if checking else mission,
                     on_exit=[EmitEvent(event=Shutdown())])))
 
-    return [fleet, plansys2, bridge, *radios, mission, *staged]
+    return [fleet, plansys2, bridge, perception, *radios, mission, *staged]
 
 
 def generate_launch_description():
@@ -220,6 +238,12 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'headless', default_value='false',
             description='Run gazebo headless and leave rviz out.'),
+        DeclareLaunchArgument(
+            'world',
+            default_value=os.path.join('/tmp', 'warehouse_xl_dirty.world'),
+            description='Which variant of the floor to run: the pallet is in '
+                        'the dirty one and absent from the clean one, and '
+                        'nothing else differs.'),
         DeclareLaunchArgument(
             'shutdown', default_value='true',
             description='Bring the simulation down when the mission ends. '

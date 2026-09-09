@@ -5111,7 +5111,7 @@ levels:
       - {name: w049}
     - - -3.353
       - 1.996
-      - {name: aisle_07}
+      - {name: scan_site}
     - - 1.647
       - 1.996
       - {name: w051}

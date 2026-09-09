@@ -144,6 +144,18 @@ class Grid:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--world', required=True)
+    ap.add_argument('--site', action='append', default=[], metavar='X,Y,NAME',
+                    help='pin and name the waypoint nearest a coordinate. The '
+                         'scan site needs a stable name: aisle numbering is '
+                         'greedy and renumbers whenever the floor changes, so a '
+                         'task map keyed on aisle_07 breaks silently.')
+    ap.add_argument('--keepout', action='append', default=[],
+                    metavar='X,Y,R',
+                    help='reserve a disc of free floor. Used for the spot the '
+                         'sensed pallet may occupy: the roadmap must be the '
+                         'same whether or not the pallet is there, so the spot '
+                         'is reserved in both variants and the graph carries no '
+                         'information about which world it is in.')
     ap.add_argument('--footprints', default=None)
     ap.add_argument('--out', required=True)
     args = ap.parse_args()
@@ -151,6 +163,9 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     fp = args.footprints or os.path.join(here, '..', 'config', 'aws_footprints.json')
     floor, obstacles = read_world.read(args.world, fp)
+    for spec in args.keepout:
+        x, y, r = (float(v) for v in spec.split(','))
+        obstacles.append((x - r, y - r, x + r, y + r))
     grid = Grid(floor, obstacles)
 
     # The lattice, on free floor and off the slab edge.
@@ -204,6 +219,21 @@ def main():
     lanes = [[remap[a], remap[b], p] for a, b, p in lanes
              if a in remap and b in remap]
 
+    # Waypoints the caller has named. They are pinned before thinning: a node
+    # in the middle of a straight run is exactly what the thinning removes, and
+    # the scan site is such a node.
+    pinned = []
+    site_names = {}
+    for spec in args.site:
+        sx, sy, name = spec.rsplit(',', 2)[0], spec.split(',')[1], spec.split(',')[2]
+        sx, sy = float(spec.split(',')[0]), float(sy)
+        i = min(range(len(nodes)),
+                key=lambda k: (nodes[k][0] - sx) ** 2 + (nodes[k][1] - sy) ** 2)
+        pinned.append(i)
+        site_names[i] = name
+        print(f'  pinned {name} at ({nodes[i][0]:.2f}, {nodes[i][1]:.2f}) '
+              f'for requested ({sx:.2f}, {sy:.2f})')
+
     # Thin the roadmap.
     #
     # The fine lattice is laid for connectivity and is far too dense to route
@@ -228,7 +258,7 @@ def main():
         # and the thinning has nothing left to remove. One per aisle is what
         # the domain needs -- a name for the place -- so they are taken
         # greedily with a minimum separation.
-        candidates = []
+        candidates = list(pinned)
         for i, (x, y, _) in enumerate(nodes):
             along_x, along_y = grid.enclosure(x, y)
             if along_x != along_y:
@@ -279,10 +309,10 @@ def main():
             for j in adj[i]:
                 if j in remap:
                     out_lanes.append([remap[i], remap[j], {}])
-        return out_nodes, out_lanes
+        return out_nodes, out_lanes, remap
 
     before = len(nodes)
-    nodes, lanes = thin(nodes, lanes)
+    nodes, lanes, remap_after_thin = thin(nodes, lanes)
     print(f'  thinned {before} -> {len(nodes)} waypoints')
 
     # Name the aisles: boxed in on one axis, open on the other.
@@ -294,6 +324,12 @@ def main():
                 aisles.append(i)
     for n, i in enumerate(aisles):
         nodes[i][2]['name'] = f'aisle_{n:02d}'
+
+    # The pinned sites keep the name the caller gave them, overriding any
+    # aisle number they may have picked up.
+    for old, name in site_names.items():
+        if old in remap_after_thin:
+            nodes[remap_after_thin[old]][2]['name'] = name
 
     # Chargers, on the three most open nodes far apart from one another, so the
     # fleet does not begin the run already negotiating with itself.

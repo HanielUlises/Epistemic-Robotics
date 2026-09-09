@@ -16,9 +16,9 @@
     },
     "scan": {
       "category": "go_to_place",
-      "waypoint": "aisle_07",
+      "waypoint": "scan_site",
       "sensing": true,
-      "default_outcome": "e-scan-dirty"
+      "default_outcome": "e-scan-clean"
     },
     "relay": {
       "local": true,
