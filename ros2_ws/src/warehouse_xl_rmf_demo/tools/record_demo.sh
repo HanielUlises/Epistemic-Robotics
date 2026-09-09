@@ -95,7 +95,9 @@ PY
 # frame, and the pallet it is sent to look at stands beside it throughout.
 WORLD=/tmp/warehouse_xl_${VARIANT}_cam.world
 PALLET=()
-[ "$VARIANT" = dirty ] && PALLET=(--pallet -4.15,2.0,0)
+# --pallet=... joined, because the value starts with a minus: see the
+# note in make_site_worlds.sh.
+[ "$VARIANT" = dirty ] && PALLET=(--pallet=-4.15,2.0,0)
 python3 "$SHARE/tools/with_camera.py" \
     --world "$SHARE/worlds/warehouse_xl.world" \
     --pose "-3.45 6.6 2.6 0 0.454 -1.6239" \

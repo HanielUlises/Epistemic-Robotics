@@ -39,6 +39,7 @@ it is in. The branch has to be decided by what the robot measures.
 import math
 
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import (QoSDurabilityPolicy, QoSProfile, QoSReliabilityPolicy,
                        qos_profile_sensor_data)
@@ -152,10 +153,14 @@ def main():
     node = ScanPerception()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
+        # The launch takes the whole stack down when the mission ends, and
+        # rclpy raises rather than returning. Left uncaught it exits 1 and the
+        # launch reports the perception node as having died, which reads as the
+        # sensor failing in a run that in fact finished.
         pass
     node.destroy_node()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

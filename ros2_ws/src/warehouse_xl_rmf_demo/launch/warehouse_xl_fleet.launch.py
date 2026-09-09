@@ -33,6 +33,9 @@ all.
 """
 
 import os
+import subprocess
+import sys
+import tempfile
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -64,19 +67,55 @@ from launch_ros.actions import Node
 # Spawning clear of the slab and letting it drop is the fix. A third of a metre
 # is enough for the tallest slab and small enough that the drop is not visible
 # in a recording.
-# The agent the domain has scan. It is the one fitted with a laser.
-SENSING_ROBOT = 'r1'
-
 SPAWN_Z = '0.35'
+
+# Which robots carry a laser, when the caller does not say. The single-site
+# survey needs one; the multi-site survey scans two sites with two robots and
+# passes `sensing_robots:=r1,r2`.
+#
+# Fitting one to every robot regardless would be simpler and does not work.
+# Gazebo Classic names a plugin's node after the plugin, so robots spawned from
+# one model file give several nodes called `/lds_driver`, and the server
+# reports the collision and then segfaults. `tools/with_lidar.py` writes a copy
+# of the model per robot with the ray plugin in that robot's namespace, which
+# is what makes two lasers possible at all -- and why a laser's topic is
+# `/r1/scan` rather than `/scan`.
+DEFAULT_SENSING = 'r1'
 
 # Seconds to let gzserver load the world before asking it to spawn anything.
 SPAWN_DELAY = 45.0
 
-SPAWN = [
-    ('r1', -3.35, -9.25, 0.0),
-    ('r2', 22.90, -9.25, 0.0),
-    ('r3', 11.65, -5.50, 0.0),
-]
+# Which robot starts on which charger. Where those chargers are is not written
+# here and must not be: the graph is derived from the world, so a charger moves
+# whenever the floor is re-measured, and a spawn pose copied from an older
+# graph puts a robot somewhere RMF does not think it is. The first command is
+# then issued from a place the robot is not, which presents as a robot that
+# accepts a path and drives into a rack.
+#
+# Correcting the floor for the world's own `<state>` block moved every charger,
+# one of them by eleven metres, which is how this came to be read from the
+# graph rather than typed.
+SPAWN_ON = [('r1', 'charger_1'), ('r2', 'charger_2'), ('r3', 'charger_3')]
+
+
+def spawn_poses(nav_graph):
+    """(name, x, y, yaw) per robot, read from the graph's charger waypoints."""
+    import yaml
+    with open(nav_graph) as handle:
+        levels = yaml.safe_load(handle)['levels']
+    vertices = next(iter(levels.values()))['vertices']
+    where = {v[2].get('name'): (v[0], v[1]) for v in vertices}
+
+    out = []
+    for robot, charger in SPAWN_ON:
+        if charger not in where:
+            raise RuntimeError(
+                f'{robot} starts on {charger}, which is not a waypoint of '
+                f'{nav_graph}. The fleet config names it too, and RMF would '
+                f'refuse the fleet rather than place the robot.')
+        x, y = where[charger]
+        out.append((robot, x, y, 0.0))
+    return out
 
 
 def launch_setup(context, *args, **kwargs):
@@ -101,23 +140,53 @@ def launch_setup(context, *args, **kwargs):
     # differential-drive plugin and its own controllers, which is a different
     # way of being driven and fights this one. models/TurtleBot3Waffle is
     # ROBOTIS's geometry on the skeleton slotcar expects.
+    sensing = [r for r in
+               LaunchConfiguration('sensing_robots').perform(context).split(',')
+               if r]
+    spawn = spawn_poses(nav_graph)
+    known = {name for name, _, _, _ in spawn}
+    for robot in sensing:
+        if robot not in known:
+            raise RuntimeError(
+                f'sensing_robots names {robot}, which this fleet does not '
+                f'spawn ({sorted(known)}). A laser fitted to a robot that does '
+                f'not exist is a scan topic nobody publishes, and the mission '
+                f'waits for a reading that never comes.')
+
+    models = os.path.join(
+        get_package_share_directory('warehouse_xl_rmf_demo'), 'models',
+        'TurtleBot3Waffle')
+    tools = os.path.join(
+        get_package_share_directory('warehouse_xl_rmf_demo'), 'tools')
+
+    def model_for(name):
+        """The model file this robot spawns from.
+
+        A robot that senses gets its own copy of the laser-carrying model with
+        the ray plugin namespaced to it, written here rather than checked in:
+        the three copies would differ by one string and drift the moment the
+        geometry changed.
+        """
+        if name not in sensing:
+            return os.path.join(models, 'model.sdf')
+        out = os.path.join(tempfile.gettempdir(), f'warehouse_xl_{name}.sdf')
+        subprocess.run(
+            [sys.executable, os.path.join(tools, 'with_lidar.py'),
+             '--model', os.path.join(models, 'model_lidar.sdf'),
+             '--robot', name, '--out', out],
+            check=True)
+        return out
+
     spawns = [
         Node(
             package='gazebo_ros', executable='spawn_entity.py',
             name=f'spawn_{name}', output='screen',
             arguments=[
                 '-entity', name,
-                '-file', os.path.join(
-                    get_package_share_directory('warehouse_xl_rmf_demo'),
-                    'models', 'TurtleBot3Waffle',
-                    # Only the sensing agent carries a laser. Gazebo names a
-                    # plugin's node after the plugin, so three robots from one
-                    # model file give three nodes called /lds_driver, and the
-                    # server reports the collision and then segfaults.
-                    'model_lidar.sdf' if name == SENSING_ROBOT else 'model.sdf'),
+                '-file', model_for(name),
                 '-x', str(x), '-y', str(y), '-z', SPAWN_Z, '-Y', str(yaw),
             ])
-        for name, x, y, yaw in SPAWN
+        for name, x, y, yaw in spawn
     ]
 
     # RViz and the schedule markers, so a recording shows the graph the fleet
@@ -210,6 +279,11 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'headless', default_value='false',
             description='Run gazebo without a window.'),
+        DeclareLaunchArgument(
+            'sensing_robots', default_value=DEFAULT_SENSING,
+            description='Comma-separated robots to fit a laser to. Each gets '
+                        'its own copy of the model with the ray plugin in its '
+                        'own namespace, and scans on /<robot>/scan.'),
 
         # The warehouse's own models, and RMF's robots, on one path.
         # The hall from Fuel, the AWS shelving, and RMF's robots, on one path.
