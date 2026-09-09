@@ -1,0 +1,48 @@
+(define (problem site-survey-3)
+
+  (:domain survey-sites)
+
+  (:requirements
+    :typing :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents scout relay observer)
+
+  (:objects a07 a15 a23 - site)
+
+  (:init
+    (:and
+      (:forall (?i - agent)
+        (:forall (?s - site)
+          ([C. All] (not (on-site ?i ?s)))))
+      ;; Exactly one site is contaminated, and that this is so is common
+      ;; knowledge. Which one is what nobody knows, so the model designates one
+      ;; world per site.
+      ([C. All]
+        (or
+          (and (contaminated a07) (not (contaminated a15)) (not (contaminated a23)))
+          (and (not (contaminated a07)) (contaminated a15) (not (contaminated a23)))
+          (and (not (contaminated a07)) (not (contaminated a15)) (contaminated a23))))
+      (:forall (?i - agent)
+        (:forall (?s - site)
+          ([C. All] (<Kw. ?i> (contaminated ?s)))))
+    )
+  )
+
+  ;; The team must come to know which site it is; the observer must not.
+  (:goal
+    (and
+      ([Kw. scout] (contaminated a07))
+      ([Kw. scout] (contaminated a15))
+      ([Kw. scout] (contaminated a23))
+      ([Kw. relay] (contaminated a07))
+      ([Kw. relay] (contaminated a15))
+      ([Kw. relay] (contaminated a23))
+      (<Kw. observer> (contaminated a07))
+      (<Kw. observer> (contaminated a15))
+      (<Kw. observer> (contaminated a23))
+    )
+  )
+)
