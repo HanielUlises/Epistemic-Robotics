@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowing which, and knowing about a place nobody went &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Three survey sites, two robots that look, and a team that ends up knowing the state of the one nobody went to.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="Knowing which, and knowing about a place nobody went">
+<meta property="og:description" content="Three survey sites, two robots that look, and a team that ends up knowing the state of the one nobody went to.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl_sites.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/warehouse_xl_sites.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The eight-node multi-site policy, branching twice on what two lasers returned.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/warehouse_xl_sites.jpg">
+<meta name="twitter:title" content="Knowing which, and knowing about a place nobody went">
+<meta name="twitter:description" content="Three survey sites, two robots that look, and a team that ends up knowing the state of the one nobody went to.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="Gazebo and the RMF schedule view during the warehouse run.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl_sites.html">
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html" aria-current="page">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Open-RMF &#183; three sites &#183; two robots that look &#183; ROS 2</p>
+    <h2>Knowing which, and knowing about a place nobody went</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      The demonstration this follows says plainly what it does not claim:
+      that a bigger floor makes an epistemic problem harder. It could not
+      claim otherwise. <span class="mono-inline">(contaminated)</span> was a
+      proposition with no argument, there was one site, and the planner
+      therefore could not care where anything was. Floor and epistemics sat
+      side by side and never met.
+    </p>
+    <p class="hero-p">
+      They meet if contamination has a location. This page runs the same
+      pipeline over a domain in which exactly one of <i>three</i> sites is
+      contaminated and nobody knows which. That is one line of EPDDL &#8212;
+      <span class="mono-inline">(contaminated ?s - site)</span> &#8212; and it
+      changes the search by four orders of magnitude, the policy from four
+      nodes to eight, and the execution from one robot that looks to two.
+    </p>
+    <p class="hero-p">
+      It also produces a result the single-site domain cannot produce at any
+      floor size. Down one leaf of the policy the team finishes knowing the
+      state of a site <b>no robot approached and no laser was ever pointed
+      at</b> &#8212; twenty-six metres from the nearer of the two the fleet did
+      visit, forty-one from the other &#8212; because exactly one site is
+      contaminated, two have been ruled out, and the third settles itself. The derived knowledge then travels over the private channel like
+      any other finding, and the conjunct saying one agent must <i>not</i> come
+      to know still holds over it.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      The disclaimers of the previous page still bound this one. <b>The nine
+      walking figures are scenery:</b> absent from the navigation graph,
+      unperceived, unavoided. <b>The private channel is topic addressing:</b>
+      the observer was not addressed on it, which is not the same as being
+      unable to listen. To them this page adds a third: <b>the two robots act
+      one after the other,</b> because the executor runs a policy strictly in
+      order. Two agents doing physical work is not two agents working at once.
+      And it withdraws one thing that page reported: its floor was measured
+      from poses the simulator does not use, and the corrected figures are
+      below.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      The same floor &#8212; corrected &#8212; and the same fleet and bridge as
+      <a href="warehouse_xl.html">Epistemic planning on a warehouse floor at scale</a>.
+      Domain and policy from <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
+      dispatched by <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>,
+      floor from <a href="https://github.com/belal-ibrahim/dynamic_logistics_warehouse">dynamic_logistics_warehouse</a>.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE DOMAIN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The domain</p>
+    <h3>What one argument costs</h3>
+
+    <p>
+      The single-site domain asks whether a site is contaminated. This one asks
+      <i>which</i> of three is, and says in the initial state that exactly one
+      of them is &#8212; which is common knowledge, while which one is known to
+      nobody. The model therefore designates one world per site.
+    </p>
+
+    <pre class="code">(:types site)
+(:predicates
+  (contaminated ?s - site)
+  (on-site ?i - agent ?s - site))</pre>
+
+    <p>
+      Everything else is held fixed: three agents, S5, the same semi-private
+      sensing action, the same two private announcements, the same shape of
+      goal. The measurements below are of that one change.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th></th><th>one site</th><th>three sites</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>atoms</td><td>4</td><td>12</td></tr>
+          <tr><td>worlds, designated</td><td>2, 2</td><td>3, 3</td></tr>
+          <tr><td>ground actions</td><td>30</td><td>72</td></tr>
+          <tr><td>AO* depth</td><td>3</td><td>6</td></tr>
+          <tr><td>expansions</td><td>40</td><td>838&#8202;168</td></tr>
+          <tr><td>policy nodes, leaves</td><td>4, 2</td><td>8, 3</td></tr>
+          <tr><td>robots that move</td><td>1</td><td>2</td></tr>
+          <tr><td>sites scanned</td><td>1</td><td>at most 2 of 3</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      The expansion count is the column worth reading. One site to two costs a
+      factor of four; two to three costs a factor of 5&#8202;700 and adds three
+      actions to the plan. Four sites is not solved: under the default
+      fifteen-second budget the search reports
+      <span class="mono-inline">Timeout at depth 7</span>, and under a
+      nine-hundred-second budget it reports
+      <span class="mono-inline">Timeout at depth 8</span> after 901&#8202;s and
+      returns nothing. Both are the budget running out rather than the space
+      being refuted, so no claim is made here that four sites is unsolvable.
+      What is measured is the price of one more site: sixty times the budget
+      bought one further depth iteration. A version of this that wants four
+      sites needs a better heuristic, not a longer wait.
+    </p>
+
+    <p class="note">
+      Three sites is solved in about six seconds on this machine &#8212;
+      838&#8202;168 expansions, so better than 130&#8202;000 a second. That
+      number is not a boast about the search. It is the reason the bringup
+      broke, which is further down.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE POLICY -->
+<section>
+  <div class="container">
+    <p class="sec-label">The policy</p>
+    <h3>Two robots, two scans, and a conclusion about neither</h3>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-sites-policy.svg" width="100%"
+           alt="The eight-node policy: the relay goes to a06 and the scout to a17, the scout scans a17 and branches, and down the clean arm the relay scans a06 and branches again into two private announcements">
+      <figcaption>
+        Drawn from the policy the planner returned, not from a description of
+        it: <span class="mono-inline">survey_sites_mission</span> writes what
+        it was handed and <span class="mono-inline">tools/plot_sites.py</span>
+        reads that file.
+      </figcaption>
+    </figure>
+
+    <p>
+      Two things in it are worth stating plainly, and neither is ours: both are
+      the planner's.
+    </p>
+
+    <p class="note">
+      Which robot is sent where is the planner's and not ours. The domain is
+      symmetric in its three sites; the assignment above is what the search
+      returned, and it happens to give the relay a 36.5&#8202;m errand, the
+      scout a 26.8&#8202;m one, and to leave
+      <span class="mono-inline">a31</span> alone.
+    </p>
+
+    <h4>Nobody ever goes to a31</h4>
+
+    <p>
+      Exactly one site is contaminated, so ruling out two settles the third.
+      Down the leaf where both scans come back clean, the team finishes knowing
+      the state of <span class="mono-inline">a31</span> &#8212; a waypoint
+      26.5&#8202;m from <span class="mono-inline">a17</span> and 41.4&#8202;m
+      from <span class="mono-inline">a06</span>, which no task ever names as a
+      destination. In the world variant where the pallet is standing there, it
+      stands there unobserved for the whole run.
+    </p>
+
+    <p>
+      This is what the single-site domain cannot do at any floor size. With one
+      site there is nothing to eliminate, so every proposition the team ends up
+      knowing is one some robot measured. Here one of them is not.
+    </p>
+
+    <h4>Every announcement is a <span class="mono-inline">relay-clean</span></h4>
+
+    <p>
+      Including the two that convey which site is dirty.
+      <span class="mono-inline">(relay scout relay a06)</span>, on the arm where
+      the scout's scan came back <i>dirty</i>, says only that the scout knows
+      a06 is clean. That is enough, and the reason is second-order: after the
+      scan the relay considers three worlds possible, and the scout could only
+      know a06 to be clean in the one where its own scan found a17. The other
+      two are eliminated not by the content of the message but by what the
+      speaker's knowing it rules out.
+    </p>
+
+    <p>
+      A representation that tracked only what is true could not express that
+      step, and a planner that reasoned only about facts could not have found
+      it. It is the plainest thing on this page that requires a Kripke model.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE SITES -->
+<section>
+  <div class="container">
+    <p class="sec-label">The sites</p>
+    <h3>Chosen by measurement, and most of the floor refused</h3>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-sites-floor.svg" width="100%"
+           alt="The warehouse floor with the three survey sites ringed: a17 in the middle west, a31 in the north, a06 in the south-east corner, each with its pallet position marked">
+      <figcaption>
+        The three sites on the roadmap derived from the corrected floor: 289
+        waypoints, 1&#8202;870 directed lanes, 155 obstacles. Grey is obstacle,
+        blue the lanes, orange the aisle waypoints, red the chargers, green
+        dotted the circuits of the nine actors. The ringed waypoints are the sites and the
+        dark squares the pallet positions &#8212; one per world variant, and
+        only one present in any run.
+      </figcaption>
+    </figure>
+
+    <p>
+      A site has to satisfy three things at once, and none is a matter of
+      taste. A laser standing on it must read <i>open</i> in a world with
+      nothing there, or the sensing action reports contamination in every world
+      including the empty ones. The pallet that makes one world differ from
+      another must stand on floor, clear of the racks, and clear of every lane
+      the fleet may drive. And the two readings must fall unambiguously either
+      side of the threshold, or the branch is decided by where the fleet
+      happened to stop rather than by what is in the aisle.
+    </p>
+
+    <p>
+      <span class="mono-inline">tools/check_sites.py</span> decides all three
+      from the world's own collision extents &#8212; the same footprint table
+      the navigation graph is rasterised from, so the two cannot disagree.
+      Thirteen of the thirty-nine aisle waypoints qualify. <span class="mono-inline">a17</span> is a dead end &#8212; one lane in, and it is the way out.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th>site</th><th>at</th><th>empty world reads</th>
+              <th>pallet</th><th>reads</th><th>off the nearest lane</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="mono-inline">a17</span></td><td>(1.49, 15.75)</td><td>1.48&#8202;m</td>
+              <td>west</td><td>0.35&#8202;m</td><td>0.35&#8202;m</td></tr>
+          <tr><td><span class="mono-inline">a31</span></td><td>(15.24, 37.00)</td><td>1.24&#8202;m</td>
+              <td>west</td><td>0.35&#8202;m</td><td>0.35&#8202;m</td></tr>
+          <tr><td><span class="mono-inline">a06</span></td><td>(30.24, &minus;1.75)</td><td>1.71&#8202;m</td>
+              <td>east</td><td>0.35&#8202;m</td><td>0.35&#8202;m</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      Where a side is admitted at all it is admitted by the minimum:
+      0.35&#8202;m beside the nearest lane, which is a robot's radius and ten
+      centimetres. The sides that are refused are refused because they overlap
+      a rack or put a prop across a lane the fleet drives. That check is the one the previous iteration
+      shipped without and then needed, when a pallet jack placed for appearance
+      overlapped a charger's lane by twenty centimetres and a robot stood
+      pressed against it while RMF reported its task underway and nothing
+      anywhere reported a collision.
+    </p>
+
+    <p class="note">
+      The analytic model can be checked against the simulator, and the check is
+      worth reporting in both directions. For the single-site demonstration's
+      site, on the floor as it was read before the correction below, it
+      predicted 0.89&#8202;m in an empty world and a pallet face at
+      0.35&#8202;m; that demonstration measured 0.88&#8211;0.89&#8202;m and
+      0.32&#8211;0.34&#8202;m, and a multi-site run on the same floor measured
+      0.89&#8202;m. The pallet face is reliable, because the pallet is a box
+      whose height the model and the laser agree on.
+    </p>
+
+    <p class="note">
+      The empty-world reading is not, and the runs below show it: the model
+      predicts 1.71&#8202;m at <span class="mono-inline">a06</span> and the
+      laser returned 2.25&#8202;m, and it predicts 1.48&#8202;m at
+      <span class="mono-inline">a17</span> where the laser returned 0.97 and
+      1.08&#8202;m. Both differences have the same source. The model
+      is two-dimensional and the laser is a plane at 0.26&#8202;m, so anything
+      shorter than that is an obstacle to the model and invisible to the
+      scan; and the nine actors are excluded from the model deliberately and
+      are entirely visible to the scan. What the model is good for is refusing
+      a site, not predicting a reading &#8212; the sites it admits have more
+      than a metre of clearance, and that margin is what absorbs half a metre
+      of disagreement.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Three worlds, three leaves, one policy</h3>
+
+    <p>
+      The floor is built four times. The variants differ by where one pallet
+      stands and by nothing else: same hall, same 155 obstacles, same nine
+      actors, same navigation graph, same binary, same domain, same goal, same
+      0.70&#8202;m threshold. One object moves.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th>pallet at</th><th>scan a17</th><th>scan a06</th>
+              <th>leaf taken</th><th>actions</th><th>checks</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="mono-inline">a17</span></td><td>dirty, 0.33&#8202;m</td><td>not reached</td>
+              <td><span class="mono-inline">relay-clean_scout_relay_a06</span></td><td>4</td><td>11 of 11</td></tr>
+          <tr><td><span class="mono-inline">a06</span></td><td>clean, 1.08&#8202;m</td><td>dirty, 0.41&#8202;m</td>
+              <td><span class="mono-inline">relay-clean_relay_scout_a31</span></td><td>6</td><td>11 of 11</td></tr>
+          <tr><td><span class="mono-inline">a31</span></td><td>clean, 0.97&#8202;m</td><td>clean, 2.25&#8202;m</td>
+              <td><span class="mono-inline">relay-clean_relay_scout_a06</span></td><td>6</td><td>11 of 11</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      Three worlds, three different leaves of one policy, and the leaf is
+      decided by numbers read off two lasers. The third row is the one the
+      domain exists for: both scans return clean, nothing is ever measured at
+      a31, and the team concludes a31 anyway.
+    </p>
+
+    <p>
+      The fourth build is a control and is not in the table. The domain says
+      exactly one site is contaminated, so a world with no pallet contradicts
+      the problem the planner was given; running it shows what the fleet does
+      when the world and the model disagree, which is worth knowing and is not
+      a demonstration of anything working.
+    </p>
+
+    <h4>What the run reports</h4>
+
+    <pre class="code">r1 at a06 (0.27 m from it), nearest return 2.25 m -&gt; e-scan-clean
+r2 at a17 (0.31 m from it), nearest return 0.97 m -&gt; e-scan-clean
+scout says e-scan-clean on /eplansys/channel/private/relay
+relay says e-scan-clean on /eplansys/channel/private/scout
+mission complete</pre>
+
+    <p>
+      The observation is sensed and not asserted. Both scanning robots carry a
+      planar laser on the mast at 0.33&#8202;m, 180 beams over the full turn,
+      returns admitted between 0.12 and 3.5&#8202;m.
+      <span class="mono-inline">scripts/site_perception.py</span> subscribes to
+      <span class="mono-inline">/fleet_states</span> and to each robot's own
+      scan topic, and withholds any verdict until the fleet has placed that
+      robot within 0.40&#8202;m of a site on three consecutive reports. Only
+      then does it read the nearest finite return, compare it against
+      0.70&#8202;m, and publish.
+    </p>
+
+    <h4>The model under product update</h4>
+
+    <pre class="code">applied goto_relay_a06: 3 worlds, 3 designated
+applied goto_scout_a17: 3 worlds, 3 designated
+applied scan_scout_a17 -&gt; e-scan-clean: 3 worlds, 2 designated
+applied relay-clean_scout_relay_a17: 5 worlds, 2 designated
+applied scan_relay_a06 -&gt; e-scan-clean: 5 worlds, 1 designated
+applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
+
+    <figure class="demo-figure">
+      <img src="media/warehouse-xl-sites-kripke.svg" width="100%"
+           alt="The model at each product update: three worlds all designated, then three with two designated after the first scan, then five, then five with one designated, then eight">
+      <figcaption>
+        The counts are the ones the run reported, not an illustration of them:
+        <span class="mono-inline">tools/plot_sites.py</span> reads them out of
+        the log above.
+      </figcaption>
+    </figure>
+
+    <p>
+      Sensing contracts the model and private speech expands it, for the same
+      reason as on the single-site floor: learning something removes
+      possibilities, and telling somebody something privately adds one, because
+      the agents outside the audience must go on considering possible a world
+      in which nothing was said. What is new here is the middle of the table.
+      A scan that comes back clean does not settle anything on its own: it
+      takes the designated set from three to two and leaves the team unable to
+      say which of the remaining pair it is in. Only the second scan settles
+      it, and the team has to spend a second announcement after that before
+      the goal holds.
+    </p>
+
+    <h4>The verdict</h4>
+
+    <pre class="code">ok   (Kw scout contaminated_a06) holds
+ok   (Kw scout contaminated_a17) holds
+ok   (Kw scout contaminated_a31) holds
+ok   (Kw relay contaminated_a06) holds
+ok   (Kw relay contaminated_a17) holds
+ok   (Kw relay contaminated_a31) holds
+ok   (Kw observer contaminated_a06) does not hold
+ok   (Kw observer contaminated_a17) does not hold
+ok   (Kw observer contaminated_a31) does not hold
+ok   relay was spoken to, 1 time(s)
+ok   observer was spoken to by nobody
+the mission came out as specified: 9 formulas against the state the fleet left behind, and 2 transcript(s) of who was spoken to.</pre>
+
+    <p>
+      The first nine interrogate the epistemic state and establish where the
+      model finished. The last two read the agents' radio transcripts and
+      establish who was in fact addressed. They are claims of different kinds,
+      and the second is the weaker: a negative epistemic conjunct is satisfied
+      by everything that fails to occur, so a procedure consulting only the
+      model cannot tell deliberate secrecy from an absence of communication.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ WHAT BROKE -->
+<section>
+  <div class="container">
+    <p class="sec-label">What broke</p>
+    <h3>Eight defects, and the floor was one of them</h3>
+
+    <p>
+      None is an error inside any component. Each is a property of the
+      composition, and each was invisible while the domain had one site and one
+      robot that looked.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th>Symptom</th><th>Cause</th><th>Class</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>The navigation graph is a floor plan of a warehouse the
+                simulator does not load</td>
+            <td>The world carries a saved
+                <span class="mono-inline">&lt;state&gt;</span> block, and
+                Gazebo applies it over the poses the models declare. Fourteen
+                disagree, one by 149&#8202;m</td>
+            <td>Geometric</td>
+          </tr>
+          <tr>
+            <td>A 14&#8202;&#215;&#8202;21&#8202;m floor slab is placed at the
+                origin</td>
+            <td>Two <span class="mono-inline">&lt;state&gt;</span> poses have
+                their numbers run together, so a whitespace split yields a
+                token that is not a number and the obvious fallback is zero</td>
+            <td>Parsing</td>
+          </tr>
+          <tr>
+            <td>The graph routes through a bucket and a desk</td>
+            <td>Both are nested inside a <span class="mono-inline">&lt;model
+                name="Untitled"&gt;</span> group. A scan of the world's direct
+                children sees only the group, whose name is in no footprint
+                table</td>
+            <td>Geometric</td>
+          </tr>
+          <tr>
+            <td>The planner returns a good policy to a system that has already
+                shut down; the mission fails at
+                <span class="mono-inline">send_goal failed</span></td>
+            <td>The readiness test was &#8220;does the domain expert
+                answer&#8221;, and a <i>configured</i> node answers. A
+                seven-second search then starves the bringup's own activation
+                calls, which share the process</td>
+            <td>Race</td>
+          </tr>
+          <tr>
+            <td>A scan reports a genuine measurement, taken by the right sensor
+                at the right place, for the wrong site</td>
+            <td>One performer per action name and one latched observation
+                topic. The second scan is handed the first one's answer the
+                moment it subscribes</td>
+            <td>Composition</td>
+          </tr>
+          <tr>
+            <td>The executor prints
+                <span class="mono-inline">Error checking over all reqs</span>
+                fifty times a second, for ever</td>
+            <td>Four files name the sites and nothing checked they agreed. Three
+                were renamed and the fourth was not, so the mission declared
+                objects the policy does not mention</td>
+            <td>Duplication</td>
+          </tr>
+          <tr>
+            <td>One branch of three sits for ever on
+                <span class="mono-inline">Error checking at start reqs: (and
+                (scanned scout a06))</span></td>
+            <td>The classical half required the speaker of an announcement to
+                have scanned the site it names. This domain's whole point is
+                that it need not have</td>
+            <td>Modelling</td>
+          </tr>
+          <tr>
+            <td>The post-run check reports three formulas
+                <span class="mono-inline">UNCHECKED</span> and the mission
+                failed, on a run that came out exactly as the goal asked</td>
+            <td>The check node's defaults are the single-site formulas, and
+                this domain has no atom
+                <span class="mono-inline">contaminated</span>: plank grounds
+                <span class="mono-inline">(contaminated ?s)</span> into one atom
+                per site</td>
+            <td>Configuration</td>
+          </tr>
+        </tbody>
+    </table>
+
+    <h4>The floor was measured from poses the simulator does not use</h4>
+
+    <p>
+      This is the one that matters, because it is upstream of everything. A
+      Gazebo world may carry a saved
+      <span class="mono-inline">&lt;state&gt;</span> block recording where every
+      model actually is, and Gazebo applies it at load in preference to the
+      poses declared on the models themselves. This world has one, recording
+      178 poses. Fourteen of them disagree with the declaration: by 0.19&#8202;m
+      for one floor slab, by 3.8 and 4.1&#8202;m for two more, by 49.8&#8202;m
+      for a fourth, and by 149&#8202;m for a cluttering prop that the
+      declaration puts inside the building and the state puts well outside it.
+    </p>
+
+    <p>
+      The rasteriser read the declarations. So the map had obstacles where the
+      floor is clear, clear floor where an obstacle stands, and slabs in the
+      wrong place &#8212; and every symptom of that is a robot behaving
+      correctly in a world the planner has the wrong map of, which is the
+      hardest kind of fault to attribute.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th></th><th>declared poses</th><th>the poses Gazebo loads</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>obstacles</td><td>153</td><td>155</td></tr>
+          <tr><td>waypoints</td><td>261</td><td>289</td></tr>
+          <tr><td>directed lanes</td><td>1&#8202;652</td><td>1&#8202;870</td></tr>
+          <tr><td>aisle waypoints</td><td>35</td><td>39</td></tr>
+          <tr><td>chargers</td><td colspan="2">all three moved, one by 11&#8202;m</td></tr>
+        </tbody>
+    </table>
+
+    <p class="pull">
+      The figures the previous page reports are the left-hand column. They are
+      superseded by the right.
+    </p>
+
+    <p>
+      The charger move is why the fleet launch now reads spawn poses from the
+      graph rather than holding them as constants: a pose copied from an older
+      graph puts a robot somewhere RMF does not think it is, and the first
+      command is then issued from a place the robot is not. And the single-site
+      demonstration's own site does not survive the correction &#8212; on the
+      corrected floor no side of it admits the pallet &#8212; so that
+      demonstration now runs at <span class="mono-inline">a17</span> too.
+    </p>
+
+    <h4>The race the small domain never let anyone lose</h4>
+
+    <p>
+      The whole planning system is one process, and a plan request is served on
+      the same executor the bringup's lifecycle calls arrive on. Solving the
+      single-site problem is forty expansions and returns before anybody
+      notices. Solving this one holds the process for seven seconds, during
+      which the lifecycle manager's activate calls go unanswered and the
+      bringup gives up with
+      <span class="mono-inline">Failed to start plansys2!</span>. The planner
+      then hands back a perfectly good eight-node policy, and the mission dies
+      forty log lines and several seconds later on an unrelated-looking error.
+      The fix is to wait for every managed node to be <i>active</i> rather than
+      merely to answer.
+    </p>
+
+    <p class="pull">
+      The search time is a property of the domain. The bringup is a property of
+      the framework. They interact because they share a process, and nothing in
+      either says so.
+    </p>
+
+    <h4>An observation belongs to a place, not to a moment</h4>
+
+    <p>
+      The first fix for the shared observation topic was to timestamp readings
+      and ignore any that predated the action. It is wrong, and running it
+      shows why: a robot commonly arrives at its site during the
+      <span class="mono-inline">goto</span> that precedes the scan, so the
+      correct reading is already seconds old when the scan begins. A rule that
+      accepted only fresh readings would discard the right answer and fall
+      through to the task map's stand-in &#8212; which, because the launch
+      writes that stand-in from the same argument that places the pallet, would
+      have been <i>correct</i>, and the defect would have shipped invisible.
+    </p>
+
+    <p>
+      Readings are therefore published as
+      <span class="mono-inline">&lt;site&gt; &lt;outcome&gt;</span> and the
+      bridge looks up the site its action names. Two scans of two places cannot
+      answer for each other however they are ordered in time.
+    </p>
+
+    <h4>A precondition that denied the domain</h4>
+
+    <p>
+      The classical half of this mission is deliberately blind &#8212; it
+      cannot tell a broadcast from an encrypted relay &#8212; but it still
+      gates the actions the executor drives, and one of its gates was an
+      assumption this domain exists to refute. <span class="mono-inline">relay</span>
+      required <span class="mono-inline">(scanned ?from ?s)</span>: the speaker
+      must have scanned the site it reports on. With one of three sites
+      contaminated, ruling two out settles the third, so the announcement that
+      carries the finding names a site the speaker has never been to.
+    </p>
+
+    <p>
+      What makes it worth recording is that only one branch shows it. Where the
+      first scan comes back clean the relay is about the site just scanned, and
+      the condition holds; where it comes back dirty the relay is about a
+      different site, and the executor sits on the failed condition for ever.
+      <b>Two of the three worlds ran green with the wrong condition in
+      place.</b>
+    </p>
+
+    <h4>One thing that went right, and is worth as much</h4>
+
+    <p>
+      Given the wrong formulas, the post-run check reported them
+      <span class="mono-inline">UNCHECKED</span> and failed the run rather than
+      reporting that nothing holds. That distinction is the one the previous
+      page argued for &#8212; a transcript that fails to arrive is not an agent
+      that heard nothing &#8212; and here it is the difference between
+      &#8220;your formulas are wrong&#8221; and &#8220;your mission
+      failed&#8221;. A check that answered <i>false</i> to a question it could
+      not parse would have made a correct run look like a broken one, and a
+      broken one look correct.
+    </p>
+
+    <h4>One thing observed and not explained</h4>
+
+    <p>
+      On the floor as it was read before the correction, the scout stopped 2.5
+      metres short of its site, in open floor with 1.05&#8202;m of clearance,
+      and never moved again. It did so twice, at the same coordinates to three
+      decimals. Its own laser saw something 0.23&#8202;m behind it, fixed in the
+      world &#8212; moving the robot 0.86&#8202;m moved the reading by
+      0.85&#8202;m at the same bearing &#8212; and nothing in the world file,
+      at any nesting depth, in the declared poses or the recorded ones, and no
+      actor on any of its trajectory legs, is within 1.9&#8202;m of that point.
+      The fleet manager reported the robot 10.5 seconds from its destination
+      for four minutes.
+    </p>
+
+    <p>
+      It has not recurred on the corrected floor and it is not understood. It
+      is recorded because a stall that presents as a task permanently underway,
+      with no component reporting an error, is the same signature as the pallet
+      jack, and because an unexplained observation is worth more written down
+      than left out.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ SCOPE -->
+<section>
+  <div class="container">
+    <p class="sec-label">Scope</p>
+    <h3>What these runs establish</h3>
+
+    <p>
+      Stated in the existential register: there exists a run in which each held.
+    </p>
+
+    <p>
+      <b>A team came to know something about a place none of its members
+      visited.</b> Both scans returned clean, the third site was settled by
+      elimination, and the finding travelled over the private channel like any
+      other. The negative conjunct held over it, checked against the model and
+      against the transcripts.
+    </p>
+
+    <p>
+      <b>Two robots each contributed a measurement, at sites metres apart on a
+      roadmap derived from the world.</b> The relay's site and the scout's are
+      26.8 and 36.5&#8202;m from their chargers, and 33.7&#8202;m apart. Which sites to inspect, and in what
+      order, is a decision the planner takes, and the sites are transits apart.
+      That is the coupling between floor and epistemics the previous page
+      correctly said it did not have.
+    </p>
+
+    <p>
+      <b>One policy took three different leaves in three worlds differing by
+      one object.</b> A conditional policy that reaches its goal down every
+      branch is what planning under partial observability is for, and it is not
+      demonstrated by a run that only ever takes one branch.
+    </p>
+
+    <h3 style="margin-top:2.2rem">And what they do not</h3>
+
+    <p>
+      <b>Concurrency.</b> The executor runs a policy strictly in order, so the
+      relay's transit finishes before the scout's begins. Two agents doing
+      physical work is not two agents working at once, and nothing here forces
+      two robots into one corridor at the same moment. The instrumentation is
+      in place and the experiment is not.
+    </p>
+
+    <p>
+      <b>Scaling.</b> Three sites is one point, and four is not solved inside
+      an hour of budget. What is measured is the cost of the third site, not a
+      curve.
+    </p>
+
+    <p>
+      <b>Object recognition.</b> The perception node thresholds the nearest
+      finite return of a planar scan against a distance chosen for these sites.
+      It establishes that something is close to the robot at a waypoint where,
+      in the clean world, nothing is. It does not identify what.
+    </p>
+
+    <p>
+      <b>Navigation among moving obstacles.</b> The nine actors walk fixed
+      circuits and are absent from the navigation graph. The fleet neither
+      perceives nor avoids them.
+    </p>
+
+    <p>
+      <b>Confidentiality.</b> The private channel is realised by addressing:
+      any node may subscribe to any topic. The claim available is that the team
+      used a channel on which the excluded agent was not addressed, not that it
+      could not have listened.
+    </p>
+
+    <p>
+      <b>That the floor is now right.</b> What is established is that it was
+      wrong, and in what direction. The correction reads the poses Gazebo
+      applies rather than the ones the models declare, and the numbers above
+      are what follows from that; whether anything else in this world is
+      described in a way its own loader disagrees with has not been
+      established, and one stall on the old floor is still unexplained.
+    </p>
+  </div>
+</section>
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">3 sites &#183; 155 obstacles &#183; 289 waypoints &#183; ROS 2</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>

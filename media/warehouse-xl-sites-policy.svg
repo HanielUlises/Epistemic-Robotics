@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 888 692" width="888" height="692" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="The multi-site policy: two robots are sent to two of the three sites, each scan branches on what its laser returned, and every leaf is a private announcement">
+  <style>
+    .ttl { font-size:13px; font-weight:bold; fill:#111111 }
+    .lbl { font-size:11.5px; fill:#5A5A5A }
+    .wid { font-family:'Courier New',Courier,monospace; font-size:11.5px; fill:#111111 }
+    .ag  { font-family:'Courier New',Courier,monospace; font-size:10px; fill:#C8102E }
+    .sm  { font-size:10px; fill:#5A5A5A }
+  </style>
+<text x="30" y="30" class="ttl">The policy the solver returned</text>
+<text x="30" y="48" class="lbl">8 nodes, 3 leaves, depth 6 &#183; AO* expanded 838&#8202;168</text>
+<rect x="229.5" y="78" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="240.5" y="97" class="wid">(goto relay a06)</text>
+<text x="240.5" y="112" class="sm">goto_relay_a06</text>
+<path d="M345.5 124 L345.5 147.0 L345.5 147.0 L345.5 162" fill="none" stroke="#5A5A5A" stroke-width="1.3"/>
+<polygon points="345.5,170 341.0,161 350.0,161" fill="#5A5A5A"/>
+<rect x="229.5" y="170" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="240.5" y="189" class="wid">(goto scout a17)</text>
+<text x="240.5" y="204" class="sm">goto_scout_a17</text>
+<path d="M345.5 216 L345.5 239.0 L345.5 239.0 L345.5 254" fill="none" stroke="#5A5A5A" stroke-width="1.3"/>
+<polygon points="345.5,262 341.0,253 350.0,253" fill="#5A5A5A"/>
+<rect x="229.5" y="262" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#C8102E" stroke-width="1.3"/>
+<text x="240.5" y="281" class="wid">(scan scout a17)</text>
+<text x="240.5" y="296" class="sm">sensing &#183; the branch is here</text>
+<path d="M345.5 308 L345.5 331.0 L146.0 331.0 L146.0 346" fill="none" stroke="#C8102E" stroke-width="1.3"/>
+<polygon points="146.0,354 141.5,345 150.5,345" fill="#C8102E"/>
+<text x="154.0" y="341" class="ag">e-scan-dirty</text>
+<rect x="30" y="354" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="41" y="373" class="wid">(relay scout relay a06)</text>
+<text x="41" y="388" class="sm">relay-clean_scout_relay_a06</text>
+<text x="146.0" y="420" class="sm" text-anchor="middle" fill="#5A5A5A">&#8595; goal reached</text>
+<path d="M345.5 308 L345.5 331.0 L545.0 331.0 L545.0 346" fill="none" stroke="#C8102E" stroke-width="1.3"/>
+<polygon points="545.0,354 540.5,345 549.5,345" fill="#C8102E"/>
+<text x="553.0" y="341" class="ag">e-scan-clean</text>
+<rect x="429.0" y="354" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="440.0" y="373" class="wid">(relay scout relay a17)</text>
+<text x="440.0" y="388" class="sm">relay-clean_scout_relay_a17</text>
+<path d="M545.0 400 L545.0 423.0 L545.0 423.0 L545.0 438" fill="none" stroke="#5A5A5A" stroke-width="1.3"/>
+<polygon points="545.0,446 540.5,437 549.5,437" fill="#5A5A5A"/>
+<rect x="429.0" y="446" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#C8102E" stroke-width="1.3"/>
+<text x="440.0" y="465" class="wid">(scan relay a06)</text>
+<text x="440.0" y="480" class="sm">sensing &#183; the branch is here</text>
+<path d="M545.0 492 L545.0 515.0 L412.0 515.0 L412.0 530" fill="none" stroke="#C8102E" stroke-width="1.3"/>
+<polygon points="412.0,538 407.5,529 416.5,529" fill="#C8102E"/>
+<text x="420.0" y="525" class="ag">e-scan-dirty</text>
+<rect x="296" y="538" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="307" y="557" class="wid">(relay relay scout a31)</text>
+<text x="307" y="572" class="sm">relay-clean_relay_scout_a31</text>
+<text x="412.0" y="604" class="sm" text-anchor="middle" fill="#5A5A5A">&#8595; goal reached</text>
+<path d="M545.0 492 L545.0 515.0 L678.0 515.0 L678.0 530" fill="none" stroke="#C8102E" stroke-width="1.3"/>
+<polygon points="678.0,538 673.5,529 682.5,529" fill="#C8102E"/>
+<text x="686.0" y="525" class="ag">e-scan-clean</text>
+<rect x="562" y="538" width="232" height="46" rx="4" fill="#FAFAFA" stroke="#111111" stroke-width="1.3"/>
+<text x="573" y="557" class="wid">(relay relay scout a06)</text>
+<text x="573" y="572" class="sm">relay-clean_relay_scout_a06</text>
+<text x="678.0" y="604" class="sm" text-anchor="middle" fill="#5A5A5A">&#8595; goal reached</text>
+<line x1="30" y1="646" x2="858" y2="646" stroke="#D6D6D6"/>
+<text x="30" y="664" class="lbl">Red outline: a sensing action, and the only place the plan is not a sequence. The branch is taken on what the laser returned, not on a state variable.</text>
+<text x="30" y="681" class="lbl">Every leaf announces privately: a broadcast satisfies the first two conjuncts of the goal and destroys the third.</text>
+</svg>

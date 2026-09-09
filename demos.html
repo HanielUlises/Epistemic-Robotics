@@ -510,6 +510,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
           <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
           <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -645,11 +646,13 @@ sup.cite a:hover{text-decoration:underline}
         robot may lift it only where it knows it to be. Inspection is
         semi-private and every other action is public, which keeps the frame
         \(\mathrm{S5}_n\). Three runs use it, differing in the goal, the fleet size, and the layer
-        driving the robots. A fourth entry below shares the setting and not the
-        domain: <a href="warehouse_xl.html">Epistemic planning on a warehouse floor at scale</a>
-        executes the survey domain of the six-room demos on a warehouse floor,
-        and evaluates that execution at scale rather than posing a fourth
-        mission here.
+        driving the robots. Two further entries below share the setting and not
+        the domain: <a href="warehouse_xl.html">Epistemic planning on a warehouse floor at scale</a>
+        executes the survey domain of the six-room demos on a warehouse floor
+        and evaluates that execution at scale, and
+        <a href="warehouse_xl_sites.html">Knowing which, and knowing about a place nobody went</a>
+        gives that domain's contamination a location, which is what makes the
+        floor and the epistemics meet.
       </p>
 
       <div class="dcard">
@@ -723,6 +726,28 @@ sup.cite a:hover{text-decoration:underline}
           <div class="facts">
             <span>same 4-node policy</span><span>261 waypoints</span>
             <span>outcome sensed from /scan</span><span>8 defects</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/og/warehouse_xl_sites.jpg"
+          alt="The eight-node multi-site policy, branching twice on what two lasers returned" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="warehouse_xl_sites.html">Knowing which, and knowing about a place nobody went</a></h5>
+          <p>
+            The same floor, corrected, and a domain in which contamination has
+            a <i>location</i>: exactly one of three sites, and nobody knows
+            which. One line of EPDDL takes the search from 40 expansions to
+            838&#8202;168 and the policy from four nodes to eight, and sends two
+            robots to two aisles. Down one leaf the team ends up knowing the
+            state of a site no robot approached and no laser was pointed at.
+            Three worlds, three leaves, and the floor the previous page
+            measured turns out to have been the wrong one.
+          </p>
+          <div class="facts">
+            <span>8-node policy, depth 6</span><span>838&#8202;168 expansions</span>
+            <span>2 robots that look</span><span>3 worlds, 3 leaves</span>
           </div>
         </div>
       </div>
