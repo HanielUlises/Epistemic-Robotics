@@ -127,12 +127,20 @@ Nothing in the epistemic layer changes. A great deal in the execution layer does
 
 \section{Scope, and what this report is for}
 
-This is an integration result and not an epistemic one, and the distinction is
-stated here before anything else. The domain is unchanged: four policy nodes,
-AO$^*$ to depth 3, forty expansions, two designated worlds, the same on the
-fourteen-by-twenty-one metre floor as here. Floor size and policy size are
-independent, and enlarging the warehouse from 296 to 2\,640\,m$^2$ says nothing
-about the difficulty of the planning problem.
+This report evaluates the execution of an epistemic policy at warehouse scale.
+It does not claim that increasing floor area increases epistemic planning
+complexity, and that bound is stated here before anything else. The policy is
+unchanged: four nodes, AO$^*$ to depth 3, forty expansions, two designated
+worlds, the same here as on the fourteen-by-twenty-one metre floor. Floor size
+and policy size are independent, and enlarging the warehouse from 296 to
+2\,640\,m$^2$ says nothing about the difficulty of the planning problem.
+
+What enlarging it does change is what execution has to survive. The sensing
+action stops being free, the site stops being somewhere the robot already
+stands, and the epistemic content of the run moves into the execution: the
+outcome the policy branches on is read off the robot's laser during the run
+(\S\ref{sec:twoworlds}), and the negative conjunct is checked both against the
+model and against the fleet's own radio transcripts.
 
 What is under examination is the execution layer between such a policy and a
 fleet, at a scale where the floor is no longer trivially traversable, and

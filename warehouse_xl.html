@@ -561,22 +561,32 @@ sup.cite a:hover{text-decoration:underline}
     <h2>Epistemic planning on a warehouse floor at scale</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      This is an integration result, not an epistemic one. The domain is the
-      survey of <span class="mono-inline">eplansys</span>, unchanged: four
-      policy nodes, AO* to depth 3, forty expansions, two designated worlds.
-      It was unchanged on the fourteen-by-twenty-one metre floor and it is
-      unchanged here. What changed is the floor, the navigation graph derived
-      from it, and the execution over Open-RMF.
+      This demo evaluates the execution of an epistemic policy at warehouse
+      scale. It does not claim that increasing floor area increases epistemic
+      planning complexity. The policy is the survey of
+      <span class="mono-inline">eplansys</span>, unchanged: four nodes, AO* to
+      depth 3, forty expansions, two designated worlds, the same here as on the
+      fourteen-by-twenty-one metre floor. What changed is the floor, the
+      navigation graph derived from it, and the execution over Open-RMF.
     </p>
     <p class="hero-p">
-      Floor size and policy size are independent. Enlarging the warehouse from
-      296 to 2 640 square metres says nothing about the difficulty of the
-      planning problem, and nothing here should be read as claiming it does. The
-      companion work on nested goals varies modal depth; this varies the ground
-      the fleet has to cross, and reports what broke. One thing did change in
-      kind: the outcome the policy branches on is now read off the robot's
-      laser, so the step from ignorance to knowledge is carried by perception
-      and not by configuration.
+      Floor size and policy size are independent, so enlarging the warehouse
+      from 296 to 2 640 square metres says nothing about the difficulty of the
+      planning problem. What it does change is what execution has to survive:
+      the sensing action stops being free, the site stops being somewhere the
+      robot already is, and the properties the policy was chosen for have to
+      hold across thirty metres of contested floor. The companion work on
+      nested goals varies modal depth; this varies the ground the fleet has to
+      cross, and reports what broke.
+    </p>
+    <p class="hero-p">
+      The epistemic content is in the execution and not in the search. The
+      outcome the policy branches on is read off the robot's laser during the
+      run, and the same binary over two worlds differing by one pallet publishes
+      two different outcomes and takes two different branches. The step from
+      ignorance to knowledge is carried by perception, and the negative
+      conjunct, that one agent must <i>not</i> come to know, is checked against
+      the model and against the fleet's own radio transcripts.
     </p>
     <p class="note" style="margin-top:1.4rem">
       Two disclaimers stated at the top because they bound everything below.
@@ -1074,14 +1084,16 @@ sup.cite a:hover{text-decoration:underline}
       The scan cost a thirty-metre transit and the entry of an aisle. On the
       small floor the same action was satisfied almost at the moment it was
       dispatched, the site being a waypoint the robot had effectively already
-      reached. That is the difference this floor buys, and it is the only
-      difference it buys.
+      reached. That is the difference this floor buys, and it is what makes the
+      sensing action a real action with a real cost.
     </p>
     <p>
       The claim is not that a fleet worked 2 640 square metres. One robot
       executed a three-action policy across part of it while two others held
-      station. The floor's size matters because it is what makes the sensing
-      action cost something; it is not itself the result.
+      station. Nor is the claim that the planning problem grew: it did not. The
+      claim is that an epistemic policy, including its negative conjunct, was
+      executed and verified at this scale, with the branch decided by a
+      measurement taken on the floor.
     </p>
   </div>
 </section>
