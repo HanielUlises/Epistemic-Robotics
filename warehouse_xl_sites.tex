@@ -1,0 +1,1036 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, fit, backgrounds, calc, shapes.geometric}
+\usepackage[hidelinks]{hyperref}
+
+%  ---  Palette shared with the companion reports  ---
+\definecolor{ink}{RGB}{26,30,36}
+\definecolor{slate}{RGB}{92,101,112}
+\definecolor{mist}{RGB}{233,235,238}
+\definecolor{rulegrey}{RGB}{188,194,201}
+\definecolor{steel}{RGB}{47,72,102}
+\definecolor{steellight}{RGB}{124,146,172}
+\definecolor{signal}{RGB}{160,32,45}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=steel,
+    citecolor=steel,
+    urlcolor=steel,
+    pdftitle={Contamination with a Location: A Three-Site Epistemic Survey Executed by Two Robots under Open-RMF},
+    pdfauthor={Haniel Ulises},
+}
+
+\color{ink}
+
+\setlength{\headheight}{22pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{slate}{\itshape Contamination with a Location}}
+\fancyhead[R]{\small\textcolor{slate}{\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulegrey}\leaders\hrule height \headrulewidth\hfill}}
+
+\titleformat{\section}{\normalfont\large\bfseries\color{ink}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries\color{ink}}{\thesubsection}{0.7em}{}
+\titleformat{\paragraph}[runin]{\normalfont\bfseries\color{slate}}{}{0em}{}[.]
+
+\captionsetup{font=small, labelfont={bf,color=slate}, textfont=footnotesize}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+\lstdefinestyle{sys}{
+    backgroundcolor=\color{mist},
+    basicstyle=\ttfamily\scriptsize\color{ink},
+    keywordstyle=\color{steel}\bfseries,
+    commentstyle=\color{slate}\itshape,
+    stringstyle=\color{slate},
+    morecomment=[l]{\#},
+    % Deliberately short. Most of the listings here are log excerpts, and
+    % colouring their ordinary nouns marks a transcript as though it were
+    % source. Only the declarations of the domain are highlighted.
+    morekeywords={:types,:predicates,:objects,:agents,:goal,:init,site,agent},
+    frame=single,
+    rulecolor=\color{rulegrey},
+    framesep=5pt,
+    xleftmargin=6pt,
+    xrightmargin=0pt,
+    breaklines=true,
+    showstringspaces=false,
+    columns=fullflexible,
+    captionpos=b,
+}
+\lstset{style=sys}
+
+%  ---  Notation  ---
+\newcommand{\Ag}{\mathcal{A}}
+\newcommand{\Mod}{\mathcal{M}}
+\newcommand{\Ev}{\mathcal{E}}
+\newcommand{\prd}{\otimes}
+\newcommand{\Kop}[1]{K_{#1}}
+\newcommand{\Kw}[1]{\mathit{Kw}_{#1}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\site}[1]{\code{#1}}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2.4cm}
+{\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[0.9cm]
+{\LARGE\bfseries Contamination with a Location\par}
+\vspace{0.5cm}
+{\large\color{slate} A Three-Site Epistemic Survey Executed by Two Robots\\ under Open-RMF, and a Correction to the Floor\par}
+\vspace{0.7cm}
+{\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[1.4cm]
+
+{\large Haniel Ulises\par}
+\vspace{0.3cm}
+{\color{slate} Epistemic Robotics}\\
+\vspace{0.15cm}
+{\color{slate}\today}
+
+\vfill
+{\color{slate}\small
+The companion report executes an epistemic policy over forty metres of
+warehouse and states, at its outset, that floor area and epistemic difficulty
+are independent quantities. That statement is exact, and it is structural: the
+proposition under uncertainty carries no argument, one site exists, and the
+planner is therefore indifferent to geometry. This report removes the
+independence by giving contamination a location. Exactly one of three sites is
+contaminated; which one is unknown to every agent. The change is one line of
+\textsc{epddl}. It multiplies the search by four orders of magnitude, doubles
+the policy, and sends two robots to two aisles. Its principal consequence is
+epistemic: on one branch the team terminates in possession of the state of a
+site that no robot approached and no sensor observed.
+
+\vspace{0.6em}
+A second result is negative and concerns the floor of the companion report. The
+world file carries a saved state block which the simulator applies in
+preference to the poses the models declare. The two disagree for fourteen
+models. The navigation graph of the companion report was therefore derived from
+a building the simulator does not load, and its published figures are
+superseded by those given here.}
+\vspace{1.2cm}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%  ======================================================================
+\section{Scope}
+\label{sec:scope}
+
+This report concerns a single modification to a previously reported epistemic
+survey domain, and the consequences of that modification for search, for
+execution, and for the derivation of the floor the execution takes place on.
+
+The modification is the introduction of a type. Where the companion domain
+declares the propositional atom $\mathit{contaminated}$, this domain declares
+the predicate $\mathit{contaminated}(s)$ over a type $\mathit{site}$, together
+with the common-knowledge constraint that exactly one site of three satisfies
+it. Every other component is held fixed: three agents, an $\mathrm{S5}_3$
+frame, one semi-private sensing action, two private announcement actions, and a
+goal of the same form.
+
+Three claims are advanced, and each is bounded in
+Section~\ref{sec:established}.
+
+\begin{enumerate}[leftmargin=1.4em, itemsep=2pt]
+  \item A team of agents terminated in possession of knowledge concerning a
+        location that no member visited and no sensor measured, obtained by
+        elimination, with the negative conjunct of the goal intact over that
+        location.
+  \item Two robots each contributed one measurement, at sites separated by
+        \(33.7\)\,m on a roadmap derived from the world, with transit costs of
+        \(36.5\) and \(26.8\)\,m from their respective chargers.
+  \item One policy traversed three distinct leaves in three worlds differing by
+        the position of a single object, and satisfied its goal on each.
+\end{enumerate}
+
+Four bounds are stated at the outset, since they qualify everything that
+follows. The nine scripted pedestrians in the world are scenery: they are
+absent from the navigation graph and are neither perceived nor avoided. The
+private channel is realised by topic addressing, which establishes that the
+excluded agent was not addressed and does not establish that it could not have
+listened. The executor traverses a policy in strict order, so the two robots
+act sequentially and no claim of concurrency is made. Finally, the corrected
+floor of Section~\ref{sec:floor} is established to be a correction; it is not
+established that no further discrepancy of the same kind remains in the world
+file.
+
+%  ======================================================================
+\section{The domain, and the cost of one argument}
+\label{sec:domain}
+
+\subsection{Formulation}
+
+The domain is stated in \textsc{epddl} over a type $\mathit{site}$:
+
+\begin{lstlisting}
+(:types site)
+(:predicates
+  (contaminated ?s - site)
+  (on-site ?i - agent ?s - site))
+\end{lstlisting}
+
+\noindent
+The initial state asserts, as common knowledge among the three agents, that
+exactly one of the three sites is contaminated, and that no agent knows which:
+
+\[
+  \Kop{C}\!\!\bigvee_{s \in S}\Big(
+      \mathit{contaminated}(s) \wedge
+      \bigwedge_{t \neq s} \neg\,\mathit{contaminated}(t)\Big),
+  \qquad
+  \Kop{C}\!\!\bigwedge_{i \in \Ag}\bigwedge_{s \in S}
+      \neg\,\Kw{i}\,\mathit{contaminated}(s).
+\]
+
+The model therefore carries one world per site, all three designated. The goal
+requires the scout and the relay each to come to know, for every site, whether
+that site is contaminated, and requires the observer not to:
+
+\[
+  \bigwedge_{s \in S}\Kw{\mathit{scout}}\,\mathit{contaminated}(s)
+  \;\wedge\;
+  \bigwedge_{s \in S}\Kw{\mathit{relay}}\,\mathit{contaminated}(s)
+  \;\wedge\;
+  \bigwedge_{s \in S}\neg\,\Kw{\mathit{observer}}\,\mathit{contaminated}(s).
+\]
+
+Under the exactly-one constraint the first two conjunctions are satisfied by
+settling any two sites, since the third is then determined. That implication is
+the substance of the domain and is exploited by the policy of
+Section~\ref{sec:policy}.
+
+The goal is written as nine explicit conjuncts. The grounder rejects
+\code{:forall} within a goal formula, and the quantified form is therefore
+expanded at generation time.
+
+\subsection{The cost of the argument}
+
+Table~\ref{tab:scaling} records the grounded task and the search for the
+propositional domain and for $k$ sites, $k \in \{2,3,4\}$. All rows were
+grounded with \code{plank} and solved by \code{plansys2/Epistemic\-Plan\-Solver}
+under \code{strategy=aostar} with the \code{ks} heuristic, three agents
+throughout, on one machine.
+
+\begin{table}[H]
+\centering\small
+\caption{Grounded task and search, as a function of the number of sites.}
+\label{tab:scaling}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+\textbf{Domain} & \textbf{Atoms} & \textbf{Worlds} & \textbf{Actions}
+  & \textbf{Depth} & \textbf{Expanded} & \textbf{Nodes} \\
+\midrule
+propositional      &  4 & 2 & 30 & 3 & 40      & 4 \\
+$k = 2$ sites      &  8 & 2 & 48 & 3 & 147     & 4 \\
+$k = 3$ sites      & 12 & 3 & 72 & 6 & 838\,168 & 8 \\
+$k = 4$ sites      & 16 & 4 & 96 & \multicolumn{3}{c}{not solved within 901\,s} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three observations follow from the table.
+
+\paragraph{The growth is not in the task} The grounded task grows linearly in
+$k$: atoms, worlds and ground actions are $4k$, $k$ and $24k$ respectively. The
+search does not. Expansion counts stand in the ratio $1 : 3.7 : 5\,702$ across
+the first three rows, and the plan acquires four further actions between the
+second row and the third.
+
+\paragraph{Four sites is bounded, not refuted} Under the solver's default
+fifteen-second budget the search reports \code{Timeout at depth 7}; under a
+budget of nine hundred seconds it reports \code{Timeout at depth 8} after
+$901$\,s and returns no plan. Both outcomes are exhaustion of the budget. No
+claim is made here that $k = 4$ admits no solution. What is measured is the
+price of the fourth site: a sixtyfold increase in budget purchased one
+additional depth iteration.
+
+\paragraph{The three-site search is fast and is nonetheless a hazard} The
+planner logs the beginning of the search and the solution $6.4$\,s apart, so
+$838\,168$ expansions correspond to approximately $1.3 \times 10^{5}$
+expansions per second. That figure is not offered as a property of the search.
+It is the proximate cause of the first defect of Section~\ref{sec:defects}: the
+planner and the lifecycle manager of the planning system are served by one
+executor in one process, and six seconds of uninterrupted search is sufficient
+to starve the latter.
+
+%  ======================================================================
+\section{The policy}
+\label{sec:policy}
+
+The solver returns the eight-node conditional plan of
+Figure~\ref{fig:policy}, at depth $6$ with three leaves.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  x=1mm, y=1mm,
+  act/.style={draw=ink, fill=mist, rounded corners=2pt, inner sep=3.5pt,
+              font=\ttfamily\scriptsize, align=center, minimum width=40mm,
+              minimum height=6.5mm},
+  sen/.style={act, draw=signal},
+  ev/.style={->, >=Latex, draw=signal, thick},
+  seq/.style={->, >=Latex, draw=slate},
+  lab/.style={font=\ttfamily\tiny, text=signal, inner sep=1pt},
+  leaf/.style={font=\scriptsize\itshape, text=slate}]
+
+  \node[act] (g1) at (  0,   0) {goto relay a06};
+  \node[act] (g2) at (  0, -13) {goto scout a17};
+  \node[sen] (s1) at (  0, -26) {scan scout a17};
+  \node[act] (r1) at (-55, -45) {relay scout relay a06};
+  \node[act] (r2) at ( 55, -45) {relay scout relay a17};
+  \node[sen] (s2) at ( 55, -58) {scan relay a06};
+  \node[act] (r3) at (  0, -77) {relay relay scout a31};
+  \node[act] (r4) at ( 55, -77) {relay relay scout a06};
+
+  \draw[seq] (g1) -- (g2);
+  \draw[seq] (g2) -- (s1);
+  \draw[seq] (r2) -- (s2);
+
+  \draw[ev] (s1.south) -- (0,-36) -| (r1.north);
+  \draw[ev] (s1.south) -- (0,-36) -| (r2.north);
+  \node[lab, anchor=east] at (-3, -33.4) {e-scan-dirty};
+  \node[lab, anchor=west] at ( 3, -33.4) {e-scan-clean};
+
+  \draw[ev] (s2.south) -- (55,-68) -| (r3.north);
+  \draw[ev] (s2.south) -- (55,-68) -| (r4.north);
+  \node[lab, anchor=east] at (52, -65.4) {e-scan-dirty};
+  \node[lab, anchor=west] at (58, -65.4) {e-scan-clean};
+
+  \node[leaf, below=1.5mm of r1] {goal};
+  \node[leaf, below=1.5mm of r3] {goal};
+  \node[leaf, below=1.5mm of r4] {goal};
+\end{tikzpicture}
+\caption{The conditional plan returned for three sites: eight nodes, depth 6,
+three leaves. Nodes outlined in red are sensing actions and are the only points
+at which the plan is not a sequence. Branch labels are the observations the
+branch is taken on.}
+\label{fig:policy}
+\end{figure}
+
+The assignment of robots to sites is the solver's. The domain is symmetric in
+its three sites; the plan of Figure~\ref{fig:policy} is the plan returned, and
+it happens to assign the relay a transit of $36.5$\,m and the scout one of
+$26.8$\,m, and to leave \site{a31} unvisited.
+
+Two properties of the plan warrant statement.
+
+\subsection{Termination without observation}
+\label{sec:elimination}
+
+No action of the plan names \site{a31} as a destination, and no sensing action
+of the plan is executed at \site{a31}. On the leaf reached when both scans
+return \code{e-scan-clean}, the exactly-one constraint determines
+$\mathit{contaminated}(\site{a31})$, and the goal is satisfied for that site by
+inference alone. The waypoint \site{a31} lies $26.5$\,m from \site{a17} and
+$41.4$\,m from \site{a06}. In the corresponding world variant the sensed object
+stands at \site{a31} for the duration of the run and is never observed.
+
+The propositional domain cannot exhibit a result of this form at any floor
+area. With one site there is nothing to eliminate, and every proposition the
+team holds at termination is one that some robot measured.
+
+\subsection{Second-order content of the announcements}
+\label{sec:secondorder}
+
+Every leaf of the plan is a \code{relay-clean} announcement, including the two
+that convey which site is contaminated. Consider the leaf reached when the
+scout's scan of \site{a17} returns \code{e-scan-dirty}. The plan there executes
+\code{(relay scout relay a06)}, whose precondition is
+$\Kop{\mathit{scout}}\,\neg\,\mathit{contaminated}(\site{a06})$.
+
+The announcement is semantically informative for a reason that is not its
+content. After the semi-private scan, the relay considers three worlds
+possible. In the world in which \site{a06} is contaminated, and in the world in
+which \site{a31} is, the scout's scan of \site{a17} returned clean and the
+scout does not know the status of \site{a06}; the precondition of the
+announcement fails at both. The precondition holds at exactly one world, namely
+the one in which \site{a17} is contaminated. The relay eliminates two worlds
+from the fact that the scout is in a position to make the utterance, and not
+from the proposition uttered.
+
+\begin{proposition}
+The information the listener acquires is the restriction of its accessibility
+relation to those worlds at which the speaker's knowledge precondition is
+satisfied. Where that precondition is itself modal, the restriction is not
+computable from the propositional content of the announcement.
+\end{proposition}
+
+A representation recording only which propositions hold admits no
+formulation of this step, and a planner reasoning only over such a
+representation cannot construct it.
+
+%  ======================================================================
+\section{Correction of the floor}
+\label{sec:floor}
+
+\subsection{The state block}
+
+A Gazebo world file may carry a \code{<state>} element recording the pose of
+every model at the moment the world was saved. The simulator applies that
+record at load, in preference to the pose declared on the model itself. The
+world used here, \code{dynamic\_logistics\_warehouse}, carries such an element,
+recording $178$ poses against $171$ declared models.
+
+Fourteen of the recorded poses differ from the declaration by more than one
+centimetre. Figure~\ref{fig:drift} gives the magnitudes.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.86\textwidth]{figures/state_drift.pdf}
+\caption{Displacement between the declared pose of a model and the pose
+recorded in the world's saved state, for the fourteen models at which the two
+disagree. Logarithmic axis; the discrepancies span three orders of magnitude.
+Five of the fourteen are floor slabs, so the correction alters the extent of
+the floor and not only the placement of obstacles upon it.}
+\label{fig:drift}
+\end{figure}
+
+The consequence is that a floor plan rasterised from the declarations describes
+a building the simulator does not load. Obstacles appear where the floor is
+clear; floor appears where an obstacle stands; and the placement of five of the
+nine floor slabs is wrong, one of them by $49.76$\,m. The failure mode this
+produces in execution is a robot behaving correctly in a world of which the
+planner holds an incorrect map, which admits no local diagnosis.
+
+\subsection{Two subsidiary defects in the same reader}
+
+Two further defects were identified in the same component and are reported here
+because each is silent.
+
+\paragraph{Malformed pose fields} Two of the recorded poses are written with
+adjacent numeric fields unseparated, in the form
+\code{13.8354 41.7933-0.191335}. Tokenisation on whitespace yields a field that
+does not parse as a number. The conventional recovery, a \code{try}\,/\,%
+\code{except} returning the origin, places a $14 \times 21$\,m floor slab at
+$(0,0)$ and emits no diagnostic. Numeric fields are now extracted by regular
+expression, which cannot fail in that manner.
+
+\paragraph{Nested models} The world contains a model element named
+\code{Untitled} which is a grouping construct and not an asset: it holds a
+bucket and a desk, each placed relative to the group. Enumeration of the
+world's direct children returns the group, whose name appears in no footprint
+table, and both contained obstacles are discarded. The floor beneath them was
+therefore rasterised as free, and lanes were admitted across it. Model
+enumeration is now recursive, with poses composed along the nesting.
+
+\subsection{Consequences}
+
+Table~\ref{tab:floor} records the derived floor before and after the
+correction.
+
+\begin{table}[H]
+\centering\small
+\caption{The derived floor, read from the declared poses and from the poses the
+simulator loads. The left column comprises the figures published in the
+companion report; they are superseded by the right.}
+\label{tab:floor}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+ & \textbf{Declared poses} & \textbf{Poses loaded} \\
+\midrule
+Obstacles                & 153    & 155    \\
+Waypoints                & 261    & 289    \\
+Directed lanes           & 1\,652 & 1\,870 \\
+Aisle waypoints          & 35     & 39     \\
+Connected components     & 1      & 1      \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All three chargers are displaced by the correction, one of them by eleven
+metres. Spawn poses for the fleet were previously held as constants in the
+launch description and agreed with the graph by inspection. A constant copied
+from a superseded graph places a robot at coordinates the fleet manager does
+not associate with it, and the first navigation command is then issued from a
+position the robot does not occupy. Spawn poses are now read from the charger
+waypoints of the graph, which removes the possibility of disagreement.
+
+The site of the companion report does not survive the correction: on the
+corrected floor no side of that waypoint admits the sensed object under the
+criteria of Section~\ref{sec:sites}. The single-site mission is now configured
+at \site{a17}.
+
+%  ======================================================================
+\section{Selection of sites}
+\label{sec:sites}
+
+\subsection{Criteria}
+
+A survey site must satisfy three conditions simultaneously, each of which is
+measurable from the collision extents of the world.
+
+\begin{enumerate}[leftmargin=1.4em, itemsep=2pt]
+  \item \textbf{The empty waypoint must read open.} The sensing action reports
+        contamination when the nearest finite laser return falls below a
+        threshold. A waypoint with structure within that threshold reports
+        contamination in every world, including those containing no sensed
+        object, and the sensing action degenerates to a constant.
+  \item \textbf{The sensed object must have an admissible position.} It must
+        stand on floor, clear of the racks, and clear of every lane the fleet
+        may traverse. The third condition is the one the companion report
+        shipped without: an object placed for visual effect overlapped a
+        charger lane by $0.20$\,m, and a robot was held stationary against it
+        while the fleet reported its task underway, with no component reporting
+        a collision.
+  \item \textbf{The two readings must be separated by the threshold with
+        margin.} A site at which the occupied and empty readings straddle the
+        threshold by centimetres is a site whose branch is determined by the
+        stopping position of the fleet.
+\end{enumerate}
+
+These are evaluated from \code{config/aws\_footprints.json}, the same footprint
+table from which the navigation graph is rasterised, so the two cannot
+disagree. Thirteen of the thirty-nine aisle waypoints satisfy all three.
+
+\subsection{The three sites}
+
+\begin{table}[H]
+\centering\small
+\caption{The three sites, and the admissible position of the sensed object at
+each. Clearances are computed from the collision extents; the sensed object is
+a $0.9 \times 0.5 \times 0.9$\,m box placed $0.80$\,m from the waypoint with
+its major axis directed at it.}
+\label{tab:sites}
+\begin{tabular}{@{}llrlrrr@{}}
+\toprule
+\textbf{Site} & \textbf{Position} & \textbf{Empty} & \textbf{Side}
+  & \textbf{Occupied} & \textbf{Rack} & \textbf{Lane} \\
+\midrule
+\site{a17} & $(1.49,\ 15.75)$   & 1.48 & west & 0.35 & 0.44 & 0.35 \\
+\site{a31} & $(15.24,\ 37.00)$  & 1.24 & west & 0.35 & 0.87 & 0.35 \\
+\site{a06} & $(30.24,\ -1.75)$  & 1.71 & east & 0.35 & 0.46 & 0.35 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\site{a17} is a terminal waypoint: one lane enters it and that lane is the only
+exit. Where a side is admitted at all it is admitted at the minimum lane
+clearance of $0.35$\,m, which is the robot radius of $0.25$\,m together with a
+margin of $0.10$\,m.
+
+% Floated. Held in place it is too tall to follow the text on its page and
+% leaves half of one blank.
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.66\textwidth]{figures/floor_sites.pdf}
+\caption{The corrected floor and the roadmap derived from it: $289$ waypoints,
+$1\,870$ directed lanes, $155$ obstacles. Obstacles are shaded; lanes are drawn
+in outline; chargers are marked in red on the south wall; the three sites are
+ringed and the position of the sensed object at each is marked by a filled
+square. The dotted paths are the circuits of the nine scripted pedestrians,
+which are excluded from the graph.}
+\label{fig:floor}
+\end{figure}
+
+\subsection{Agreement between the model and the sensor}
+
+The analytic criteria admit direct comparison against the simulator, and the
+agreement is not uniform. Two regimes are distinguished.
+
+The predicted reading for the occupied case is reliable. The criteria give
+$0.35$\,m for the nearest face of the sensed object, against measurements of
+$0.32$--$0.34$\,m in the companion report and $0.33$--$0.41$\,m in the runs of
+Section~\ref{sec:runs}. The object is a box whose vertical extent the model and
+the sensor agree upon.
+
+The predicted reading for the empty case is not reliable. The criteria give
+$1.71$\,m at \site{a06} where the sensor returned $2.25$\,m, and $1.48$\,m at
+\site{a17} where the sensor returned $0.97$ and $1.08$\,m. Two causes account
+for the discrepancy in both directions. The criteria are two-dimensional and
+the sensor is a plane at $0.26$\,m above the floor, so structure shorter than
+that plane is an obstacle to the former and invisible to the latter. And the
+nine pedestrians are excluded from the criteria by construction and are
+entirely visible to the sensor.
+
+The criteria are therefore serviceable for refusing a site and are not
+serviceable for predicting a reading. Every admitted site carries in excess of
+one metre of clearance, and that margin absorbs the half metre of disagreement
+observed.
+
+%  ======================================================================
+\section{Execution}
+\label{sec:execution}
+
+\subsection{Two sensors}
+
+The companion report fits a laser to one robot and records the reason: Gazebo
+Classic derives the name of a plugin's node from the plugin, so several robots
+instantiated from one model description yield several nodes of one name, and
+the server terminates. With a single sensing agent the restriction is without
+cost.
+
+The three-site plan executes sensing actions at two sites with two robots, and
+the restriction is therefore binding. The ray plugin accepts a ROS namespace,
+and a namespace is the scope within which a node name is unique. A copy of the
+laser-bearing model description is generated per sensing robot at launch, with
+the plugin placed in that robot's namespace; scan topics are consequently
+\code{/r1/scan} and \code{/r2/scan}. Generation at launch is preferred to
+checked-in copies, which would differ by one string and would diverge upon any
+modification of the geometry.
+
+\subsection{Attribution of observations}
+\label{sec:attribution}
+
+The bridge instantiates one action performer per action name, and observations
+arrive on one topic. A domain with several sites therefore routes every sensing
+action through one performer and one observation field. The topic is latched,
+so a performer subscribing after an earlier reading receives that reading
+immediately.
+
+The consequence for a plan that dispatches two robots to two sites is severe
+and is not detectable from any single component. The second robot is already
+positioned at its site when the first reports, so the value available at the
+second sensing action is a genuine measurement, taken by the correct sensor at
+the correct place, and attributed to the wrong action. The branch is taken, the
+product update is applied, the goal is checked, and the value consumed is
+whichever site reported most recently.
+
+Temporal disambiguation is inadequate, and the inadequacy is instructive. A
+robot commonly arrives at its site during the \code{goto} action preceding the
+scan, so the correct reading is already several seconds old when the sensing
+action begins. A rule admitting only readings newer than the action discards
+the correct value and falls through to the ground truth recorded in the task
+map. Since the launch derives that ground truth from the same argument that
+positions the sensed object, the fallback is correct, and the defect is
+therefore invisible in the run.
+
+Observations are consequently published in the form
+\code{<place> <outcome>}, and the bridge resolves the entry for the place its
+own action names, taken from the argument the task map declares as selecting
+the outcome. Two sensing actions at two places cannot answer for one another
+under any ordering in time.
+
+\subsection{Perception}
+
+Both sensing robots carry a planar laser on the mast at $0.33$\,m, with $180$
+beams over the full revolution and returns admitted between $0.12$ and
+$3.5$\,m. The perception node subscribes to the fleet state and to each robot's
+own scan topic, and withholds a verdict until the fleet has reported that robot
+within $0.40$\,m of a site on three consecutive reports. It then reads the
+nearest finite return, compares it against $0.70$\,m, and publishes.
+
+The node is not informed of the plan. An observation is generated by a robot
+arriving at a location in possession of a sensor, and a perception component
+requiring notification of the action in progress would report the plan back to
+the system that issued it.
+
+%  ======================================================================
+\section{The three runs}
+\label{sec:runs}
+
+The floor is instantiated four times. The variants differ in the position of
+one object and in nothing else: the same hall, the same $155$ obstacles, the
+same nine pedestrians, the same navigation graph, the same binary, the same
+domain, the same goal, the same threshold of $0.70$\,m.
+
+\begin{table}[H]
+\centering\small
+\caption{Three worlds, three leaves. Readings are the nearest finite return
+reported by the perception node at the point of the corresponding sensing
+action. Checks comprise nine formulas evaluated against the epistemic state
+after the fleet came to rest, and two transcripts of address.}
+\label{tab:runs}
+\begin{tabular}{@{}llllrl@{}}
+\toprule
+\textbf{Object at} & \textbf{scan \site{a17}} & \textbf{scan \site{a06}}
+  & \textbf{Leaf} & \textbf{Actions} & \textbf{Checks} \\
+\midrule
+\site{a17} & dirty, 0.33\,m & not reached &
+  \code{relay-clean\_scout\_relay\_a06} & 4 & 11 of 11 \\
+\site{a06} & clean, 1.08\,m & dirty, 0.41\,m &
+  \code{relay-clean\_relay\_scout\_a31} & 6 & 11 of 11 \\
+\site{a31} & clean, 0.97\,m & clean, 2.25\,m &
+  \code{relay-clean\_relay\_scout\_a06} & 6 & 11 of 11 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The fourth variant contains no sensed object. It is a control and is excluded
+from the table: the domain asserts that exactly one site is contaminated, so a
+world containing no such object contradicts the problem the planner was given.
+
+The third row is the case for which the domain exists. Both sensing actions
+return \code{e-scan-clean}; no measurement is taken at \site{a31} at any point
+in the run; and the team terminates in possession of
+$\Kw{\mathit{scout}}\,\mathit{contaminated}(\site{a31})$ and
+$\Kw{\mathit{relay}}\,\mathit{contaminated}(\site{a31})$.
+
+\subsection{The model under product update}
+
+Execution is not the marking of actions as complete. Each executed action is an
+event model $\Ev$, and its application forms the product $\Mod \prd \Ev$. The
+state component reports the shape of the result at each step. For the third row
+of Table~\ref{tab:runs}:
+
+\begin{lstlisting}
+applied goto_relay_a06:                    3 worlds, 3 designated
+applied goto_scout_a17:                    3 worlds, 3 designated
+applied scan_scout_a17 -> e-scan-clean:    3 worlds, 2 designated
+applied relay-clean_scout_relay_a17:       5 worlds, 2 designated
+applied scan_relay_a06 -> e-scan-clean:    5 worlds, 1 designated
+applied relay-clean_relay_scout_a06:       8 worlds, 1 designated
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  x=6.6mm, y=6.6mm,
+  wnode/.style={circle, draw=ink, fill=mist, minimum size=3.0mm, inner sep=0pt},
+  dring/.style={circle, draw=signal, line width=0.5pt, minimum size=4.6mm,
+                inner sep=0pt},
+  slabel/.style={font=\ttfamily\tiny, text=ink, anchor=west},
+  ssub/.style={font=\tiny, text=slate, anchor=west},
+  sarrow/.style={->, >=Latex, draw=slate}]
+
+  % A panel of n worlds, the first d of them designated, at (#1,#2), in rows
+  % of four. The counts are those the state component reported.
+  \newcommand{\worlds}[4]{%
+    \foreach \k in {1,...,#3}{%
+      \pgfmathsetmacro{\cx}{#1 + 0.30 + 0.74*mod(\k-1,4)}%
+      \pgfmathsetmacro{\cy}{#2 - 0.74*floor((\k-1)/4)}%
+      \node[wnode] at (\cx, \cy) {};%
+      \pgfmathparse{\k <= #4 ? 1 : 0}%
+      \ifnum\pgfmathresult=1 \node[dring] at (\cx, \cy) {};\fi
+    }%
+  }
+
+  % --- upper band -------------------------------------------------------
+  \node[slabel] at (0, 1.5)     {initially};
+  \node[ssub]   at (0, 1.0)     {3 worlds, 3 designated};
+  \worlds{0}{0}{3}{3}
+
+  \node[slabel] at (4.6, 1.5)   {goto\_relay\_a06};
+  \node[ssub]   at (4.6, 1.0)   {3 worlds, 3 designated};
+  \worlds{4.6}{0}{3}{3}
+  \draw[sarrow] (3.55, 0) -- (4.35, 0);
+
+  \node[slabel] at (9.2, 1.5)   {goto\_scout\_a17};
+  \node[ssub]   at (9.2, 1.0)   {3 worlds, 3 designated};
+  \worlds{9.2}{0}{3}{3}
+  \draw[sarrow] (8.15, 0) -- (8.95, 0);
+
+  \node[slabel] at (13.8, 1.5)  {scan\_scout\_a17 $\to$ clean};
+  \node[ssub]   at (13.8, 1.0)  {3 worlds, 2 designated};
+  \worlds{13.8}{0}{3}{2}
+  \draw[sarrow] (12.75, 0) -- (13.55, 0);
+
+  % --- lower band -------------------------------------------------------
+  \node[slabel] at (0, -2.4)    {relay-clean\_scout\_relay\_a17};
+  \node[ssub]   at (0, -2.9)    {5 worlds, 2 designated};
+  \worlds{0}{-3.9}{5}{2}
+
+  \node[slabel] at (6.4, -2.4)  {scan\_relay\_a06 $\to$ clean};
+  \node[ssub]   at (6.4, -2.9)  {5 worlds, 1 designated};
+  \worlds{6.4}{-3.9}{5}{1}
+  \draw[sarrow] (5.35, -3.9) -- (6.15, -3.9);
+
+  \node[slabel] at (12.8, -2.4) {relay-clean\_relay\_scout\_a06};
+  \node[ssub]   at (12.8, -2.9) {8 worlds, 1 designated};
+  \worlds{12.8}{-3.9}{8}{1}
+  \draw[sarrow] (11.75, -3.9) -- (12.55, -3.9);
+\end{tikzpicture}
+\caption{The epistemic model at each product update of the third run. Each disc
+is a world; a red ring marks a designated world. Counts are those the state
+component reported. Sensing contracts the designated set; private announcement
+enlarges the model.}
+\label{fig:kripke}
+\end{figure}
+
+Two directions of movement are visible in the sequence, and both are necessary.
+Sensing contracts: the first scan reduces the designated set from three worlds
+to two, and the second from two to one. Private announcement enlarges: the
+model acquires two worlds at the first announcement and three at the second,
+because agents outside the audience of an utterance must continue to consider
+possible a world in which no utterance occurred.
+
+The distinction between the two runs of six actions and the run of four is a
+consequence of the first observation. A scan returning \code{e-scan-dirty}
+settles the question outright, since the contaminated site is then identified;
+a scan returning \code{e-scan-clean} eliminates one world of three and leaves
+the team unable to distinguish the remaining pair, which requires a second
+sensing action and a second announcement.
+
+\subsection{The verdict}
+
+Eleven checks are evaluated after the fleet comes to rest. Nine interrogate the
+epistemic state; two read the transcripts of the agents' radio channels.
+
+\begin{lstlisting}
+ok   (Kw scout contaminated_a06) holds
+ok   (Kw scout contaminated_a17) holds
+ok   (Kw scout contaminated_a31) holds
+ok   (Kw relay contaminated_a06) holds
+ok   (Kw relay contaminated_a17) holds
+ok   (Kw relay contaminated_a31) holds
+ok   (Kw observer contaminated_a06) does not hold
+ok   (Kw observer contaminated_a17) does not hold
+ok   (Kw observer contaminated_a31) does not hold
+ok   relay was spoken to, 1 time(s)
+ok   observer was spoken to by nobody
+\end{lstlisting}
+
+The two classes of check are of different evidential strength, and the second
+is the weaker. A negative epistemic conjunct is satisfied by everything that
+fails to occur, so a procedure consulting only the model cannot distinguish
+deliberate exclusion from an absence of communication. The transcript check
+addresses that gap and does not close it: it establishes that the excluded
+agent was not addressed.
+
+The transcript check is asserted over the relay alone. The relay is addressed
+on every branch, the scout's announcement being the first speech act under
+either outcome of the first scan; the scout is addressed on two branches of
+three. A check naming both agents would constitute an assertion about which
+branch was expected, and a run taking the short branch would be reported as a
+failure for having been short.
+
+%  ======================================================================
+\section{Defects}
+\label{sec:defects}
+
+Eight defects were identified in bringing the three-site mission into
+operation. None is an error within a component. Each is a property of the
+composition, and each was unobservable while the domain carried one site and
+one sensing robot. Table~\ref{tab:defects} records them.
+
+\begin{table}[H]
+\centering\small
+\caption{Defects identified, with their proximate cause and classification.}
+\label{tab:defects}
+\begin{tabularx}{\textwidth}{@{}p{0.30\textwidth}Xl@{}}
+\toprule
+\textbf{Symptom} & \textbf{Cause} & \textbf{Class} \\
+\midrule
+The navigation graph describes a building the simulator does not load &
+The world carries a saved state block which Gazebo applies over the declared
+poses; fourteen disagree, one by $149$\,m &
+Geometric \\
+\addlinespace
+A $14 \times 21$\,m floor slab is placed at the origin &
+Two recorded poses have adjacent numeric fields unseparated, so whitespace
+tokenisation yields a non-numeric field and the conventional recovery returns
+the origin &
+Parsing \\
+\addlinespace
+Lanes are admitted across a bucket and a desk &
+Both are nested within a grouping model whose name appears in no footprint
+table; enumeration of direct children discards them &
+Geometric \\
+\addlinespace
+A valid policy is returned to a system that has terminated; the mission fails
+at \code{send\_goal failed} &
+The readiness test admitted a configured node, and six seconds of search
+starved the lifecycle manager sharing the process &
+Race \\
+\addlinespace
+A sensing action reports a valid measurement, taken by the correct sensor at
+the correct place, for the wrong site &
+One performer per action name and one latched observation topic; the second
+sensing action receives the first one's value on subscription &
+Composition \\
+\addlinespace
+One branch of three does not proceed past
+\code{Error checking at start reqs} &
+The classical precondition required the speaker of an announcement to have
+scanned the site it names &
+Modelling \\
+\addlinespace
+The executor reports a precondition over a non-existent object, fifty times per
+second, indefinitely &
+Four files name the sites and no check compared them; three were renamed and
+the fourth was not &
+Duplication \\
+\addlinespace
+The post-run check reports three formulas \code{UNCHECKED} and the mission
+failed, on a run satisfying its goal &
+The check component's defaults are the propositional formulas, and this domain
+grounds one atom per site &
+Configuration \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Three warrant discussion.
+
+\subsection{A race the small domain concealed}
+
+The planning system is a single process, and a plan request is served on the
+same executor upon which the lifecycle manager's activation calls arrive.
+Solving the propositional problem requires forty expansions and returns before
+the coincidence is observable. Solving the three-site problem occupies the
+process for six seconds, during which the activation calls go unanswered and
+the bringup reports \code{Failed to start plansys2!}. The planner subsequently
+returns a valid eight-node policy to a system that has already terminated, and
+the mission fails at \code{start\_plan\_execution} with \code{send\_goal
+failed}, some forty log lines and several seconds removed from the cause.
+
+The readiness test previously admitted any node that answered. A configured
+node answers, several seconds before the bringup activates anything. The
+mission now waits for every managed node to report the active state.
+
+The general form is worth recording. Search time is a property of the domain.
+The bringup is a property of the framework. The two interact because they share
+a process, and no interface between them expresses the dependency.
+
+\subsection{A precondition contradicting the domain}
+
+The classical half of the mission is deliberately impoverished: it cannot
+distinguish a broadcast from an encrypted relay, and it is not intended to.
+It nonetheless gates the actions the executor drives, and one of its gates
+encoded an assumption this domain exists to refute. The \code{relay} action
+required \code{(scanned ?from ?s)}: the speaker of an announcement must have
+scanned the site it names. Under the exactly-one constraint the announcement
+carrying the finding names a site the speaker has not visited, which is the
+result of Section~\ref{sec:elimination}.
+
+The defect is observable on one branch of three. Where the first scan returns
+clean, the announcement names the site just scanned and the precondition holds;
+where it returns dirty, the announcement names a different site and the
+executor does not proceed. Two of the three worlds executed to completion with
+the incorrect precondition in place. The condition is now
+\code{(has\_scanned ?from)}, which requires that the speaker has performed some
+sensing action.
+
+\subsection{A correct refusal}
+
+The post-run check is configured by default with the propositional formulas,
+and this domain has no atom $\mathit{contaminated}$: the grounder produces one
+atom per site. Presented with formulas naming an atom outside the task, the
+check reported them \code{UNCHECKED} and failed the run.
+
+That behaviour is correct and is recorded because the alternative is
+consequential. A check returning \emph{false} for a formula it cannot evaluate
+would report a satisfied run as unsatisfied, and, on the negative conjunct,
+would report an unsatisfied run as satisfied. The distinction between
+\emph{does not hold} and \emph{could not be evaluated} is load-bearing wherever
+a goal contains a negative epistemic conjunct.
+
+\subsection{One observation without explanation}
+
+On the floor as read before the correction of Section~\ref{sec:floor}, the
+scout halted $2.5$\,m short of its site, in open floor with $1.05$\,m of
+clearance, and did not proceed. The behaviour reproduced across two runs at
+coordinates agreeing to three decimal places. The robot's own laser reported an
+object at $0.23$\,m to its rear, fixed with respect to the world: displacing
+the robot by $0.86$\,m displaced the reading by $0.85$\,m at the same bearing.
+No model in the world file, at any nesting depth, under either the declared or
+the recorded poses, and no pedestrian on any leg of its circuit, lies within
+$1.9$\,m of that point. The fleet manager reported the robot $10.5$\,s from its
+destination for four minutes.
+
+The behaviour has not recurred on the corrected floor and is not explained. It
+is recorded because a halt presenting as a task permanently underway, with no
+component reporting an error, is the signature of the class of defect this
+section is concerned with.
+
+%  ======================================================================
+\section{What the runs establish, and what they do not}
+\label{sec:established}
+
+\subsection{Established}
+
+Each proposition is stated existentially: there exists a run in which it held.
+
+\paragraph{Knowledge without observation} A team terminated in possession of
+the state of a site that no member visited and no sensor measured. Both sensing
+actions returned clean, the third site was determined by the exactly-one
+constraint, and the derived finding was transmitted on the private channel.
+The negative conjunct held over that site, verified against the model and
+against the transcript.
+
+\paragraph{Two sensing agents on a derived roadmap} Two robots each contributed
+one measurement, at sites $33.7$\,m apart, at transit costs of $36.5$ and
+$26.8$\,m from their chargers. The selection of sites to inspect, and their
+order, is determined by the planner, and the sites are separated by transits on
+a graph derived from the world. This constitutes the coupling between floor and
+epistemics that the companion report states it does not possess.
+
+\paragraph{Three leaves of one policy} One conditional plan traversed three
+distinct leaves in three worlds differing by the position of one object, and
+satisfied its goal on each. A conditional plan reaching its goal on every
+branch is the object of planning under partial observability, and is not
+demonstrated by a run traversing one branch.
+
+\paragraph{A floor derived from the poses in use} The correction of
+Section~\ref{sec:floor} is established, in the sense that the figures of
+Table~\ref{tab:floor} are derived from the poses the simulator applies.
+
+\subsection{Not established}
+
+\paragraph{Concurrency} The executor traverses a plan in strict order, so the
+relay's transit completes before the scout's begins. Two agents performing
+physical work is not two agents working simultaneously, and no element of this
+configuration forces two robots into one corridor at one time. The
+instrumentation exists; the experiment does not.
+
+\paragraph{Scaling} Three sites is one measurement. Four sites is unsolved
+within an hour of budget. What is measured is the cost of the third site, and
+not a curve.
+
+\paragraph{Object recognition} The perception component compares the nearest
+finite return of a planar scan against a distance selected for these sites. It
+establishes that an object is proximate to the robot at a waypoint at which, in
+the empty variant, no object is. It does not identify the object.
+
+\paragraph{Navigation among moving obstacles} The nine pedestrians traverse
+fixed circuits and are absent from the navigation graph. The fleet neither
+perceives nor avoids them.
+
+\paragraph{Confidentiality} The private channel is realised by addressing, and
+any node may subscribe to any topic. The available claim is that the team used
+a channel on which the excluded agent was not addressed. The stronger claim
+requires DDS partitions or SROS\,2 permissions, which would be constructed from
+these same declared audiences; what separates the two is enforcement.
+
+\paragraph{Completeness of the floor correction} It is established that the
+declared poses are not the poses applied. It is not established that no further
+discrepancy of the same kind remains, and one halt on the superseded floor is
+unexplained.
+
+%  ======================================================================
+\section*{Reproduction}
+\addcontentsline{toc}{section}{Reproduction}
+
+\begin{lstlisting}
+bash tools/make_site_worlds.sh /tmp
+ros2 launch warehouse_xl_rmf_demo survey_sites_launch.py \
+     contaminated:=a31 world:=/tmp/warehouse_xl_a31.world
+
+python3 tools/check_sites.py                      # every admissible site
+python3 tools/plot_state_drift.py --out drift.pdf # the pose disagreement
+\end{lstlisting}
+
+\noindent
+\code{contaminated:=} selects the variant, and admits \site{a17}, \site{a31},
+\site{a06} and \code{none}. \code{plan\_only:=true rmf:=false} returns the plan
+without a simulator. Sites are read from the \textsc{epddl} problem by the
+mission component and are checked against the launch description at startup,
+so the four files naming them cannot diverge without refusal.
+
+\end{document}
