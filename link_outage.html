@@ -5,13 +5,13 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A link that actually falls &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="A communication outage injected into a running two-robot fleet, and what RF-05's belief propagation and the map reconciliation of section 5.9 do when the link is genuinely gone.">
+<meta name="description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart, and the difference between them becomes something to measure.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
 <meta property="og:title" content="A link that actually falls">
-<meta property="og:description" content="Restricted connectivity, stopped being a declaration and made to happen: a gate that drops 1 765 messages, a belief that propagates, and two real SLAM maps reconciled at reconnection.">
+<meta property="og:description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/link_outage.html">
 
 
@@ -24,7 +24,7 @@
 <meta property="og:image:alt" content="Link card: A link that actually falls, over the belief error and the bound during a sixty-second outage.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/link_outage.jpg">
 <meta name="twitter:title" content="A link that actually falls">
-<meta name="twitter:description" content="A communication outage injected into a running two-robot fleet, and what belief propagation and map reconciliation do when the link is genuinely gone.">
+<meta name="twitter:description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart.">
 
 
 <script>
@@ -537,7 +537,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="warehouse_rmf.html" aria-current="page">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
           <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
-          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">A communication outage injected into a running fleet</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -575,19 +575,28 @@ sup.cite a:hover{text-decoration:underline}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">AWS small warehouse &#183; two robots &#183; SLAM per robot &#183; ROS 2</p>
+    <p class="eyebrow">Epistemic SLAM &#183; two robots, two maps &#183; AWS small warehouse &#183; ROS 2</p>
     <h2>A link that actually falls</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      Every other fleet demonstration here models restricted connectivity as a
-      declaration: an agent is oblivious to an announcement because the domain
-      says so, before the run starts, and no link ever falls. This one cuts the
-      radio between two robots while they work. The cut has no appearance in
-      the simulator, because nothing about a warehouse changes when a radio
-      stops working, so the thing to watch is on the left: the arrow is where
-      <span class="mono-inline">r2</span> believes
-      <span class="mono-inline">r1</span> is, and the disc around it is how
-      sure it is.
+      SLAM answers where the robot is and what the building looks like. It does
+      not answer who knows that, and on a floor with two robots on it the
+      second question stops being a philosophical extra: a bay
+      <span class="mono-inline">r2</span> has not entered is not something
+      <span class="mono-inline">r2</span> knows merely because
+      <span class="mono-inline">r1</span> drove past it. Every demonstration
+      here keeps the grid and the knowledge model as two views of one fact.
+      This one cuts the radio between the two robots and takes that
+      coincidence away, which is the only condition under which the difference
+      between them can be measured rather than asserted.
+    </p>
+    <p class="hero-p" style="margin-top:1rem">
+      The cut has no appearance in the simulator: nothing about a warehouse
+      changes when a radio stops working. So the thing to watch is on the left.
+      The arrow is where <span class="mono-inline">r2</span> believes
+      <span class="mono-inline">r1</span> is, the disc around it is how far
+      that belief has drifted from being knowledge, and both turn red at the
+      point where it should stop being believed at all.
     </p>
     <p class="note" style="margin-top:1.4rem">
       Fleet, world and per-robot SLAM from
@@ -654,6 +663,120 @@ sup.cite a:hover{text-decoration:underline}
               <td>7&#8239;720 and 4&#8239;873 cells learned, 0 in conflict</td></tr>
         </tbody>
     </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ CONCEPT -->
+<section>
+  <div class="container">
+    <p class="sec-label">Epistemic SLAM</p>
+    <h3>Two views of one fact, and the moment they come apart</h3>
+
+    <p>
+      The demonstrations on this site rest on a coincidence that is easy to
+      miss because it holds so consistently. A robot drives, its laser sweeps,
+      <span class="mono-inline">slam_toolbox</span> writes what it saw into a
+      grid, and the epistemic layer writes the same event into a Kripke model.
+      A bay the robot has not entered is unobserved in the grid and undecided
+      in the model at once. Those are two views of one fact, and keeping them
+      that way is what makes a run honest: no prepared map is published
+      anywhere, so the robot cannot know a thing it did not look at.
+    </p>
+
+    <p>
+      The coincidence holds because one robot's observation drives both views.
+      What this run does is take it away.
+    </p>
+
+    <h4>Three things SLAM does not store</h4>
+
+    <p>
+      An occupancy grid records a probability per cell. It does not record
+      <b>whose</b> probability it is. A robot handed a merged map holds cells it
+      never saw, and nothing in the format distinguishes them from cells it
+      measured itself. That distinction is the whole of what the collaborative
+      layer adds: coverage is a mask of what this robot observed, not of what
+      is free in the map it happens to hold.
+    </p>
+
+    <p>
+      Nor does the grid record <b>abstention</b>. A cell at &minus;1 was never
+      observed, and a cell whose probability sits between the thresholds was
+      observed and not resolved. Both are unknown to the epistemic layer, and
+      collapsing the second into free or occupied would hand the model a
+      certainty the sensor never produced. An occupancy grid stores a
+      probability and a modal formula needs a decision, so a threshold has to
+      be chosen somewhere; it is chosen once, in the classification, and
+      nowhere else.
+    </p>
+
+    <p>
+      And it does not record <b>disagreement</b>. Two robots that observed the
+      same cell and reached opposite conclusions have produced a fact about the
+      fleet, not a defect in either map. Reconciliation here records the
+      contradiction and does not stop; a disputed cell that somebody can go and
+      look at again is worth more than a hole punched in the map, and worth
+      much more than an average of the two readings, which would describe a
+      floor neither robot saw.
+    </p>
+
+    <h4>Where knowledge ends and belief begins, in metres</h4>
+
+    <p>
+      While the link is up, what one robot holds about its partner is a
+      received measurement: the partner said where it was, and the statement
+      inherits whatever the partner's own localisation was worth. The instant
+      the link falls that stops being an observation of anything. What
+      continues is inference from a motion model, and the covariance is the
+      distance it has travelled from the fact.
+    </p>
+
+    <p>
+      That gives the boundary a number, which is unusual. In the epistemic
+      models on this site an agent either knows which of two worlds it is in or
+      it does not, and the survey domains are built so that the question is
+      settled by looking. Here the same distinction is continuous: the disc on
+      the left of the film is how far the belief has drifted from being
+      knowledge, and it widens for as long as nothing arrives. At fifty seconds
+      it passes the threshold, and past that point the proposition about where
+      the partner is has no business being treated as something the robot
+      knows. The engine says so; what it cannot do is act on it, because
+      marking that proposition uncertain means editing a model, and there is
+      one model for the whole fleet rather than one per robot.
+    </p>
+
+    <p class="note">
+      That last clause is the honest edge of this run. The two grids diverge
+      because two robots observed different things while incommunicado, and
+      reconciling them is the operation this layer performs. The two
+      <em>models</em> never diverge, because there is only one, and an
+      accessibility relation in it is a column of a shared structure and not a
+      perspective held on a robot. Partitioning the model is a different piece
+      of work.
+    </p>
+
+    <h4>Why merging maps is not a registration problem</h4>
+
+    <p>
+      The obvious reading of what happens at reconnection is that two grids
+      must be aligned and combined. That reading is available and it is the
+      wrong one. The alignment is arithmetic: both maps came from the same
+      simulator at the same resolution, and putting them on a common extent is
+      a translation by whole cells, with no interpolation and no rotation. Maps
+      at different resolutions are refused rather than approximated, because a
+      wrong registration produces a merged map that is confidently wrong, which
+      is worse than one that is obviously missing.
+    </p>
+
+    <p>
+      What is not arithmetic is the question underneath: after the merge, what
+      does each robot know? The answer is not the union of the grids. It is a
+      per-robot fact, and this run reports it as one: the believing robot
+      learned 7&#8239;720 cells it had never observed, the patrolling one
+      4&#8239;873, and neither now confuses them with cells it measured. That
+      accounting is what the layer exists for, and it is the part an occupancy
+      grid has no field for.
+    </p>
   </div>
 </section>
 
@@ -728,9 +851,14 @@ ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
     </p>
 
     <p>
-      The full account, including why gating the announcement channel would
-      have measured nothing and what the reconciliation refused the first time
-      it was handed two real maps, is chapter 6 of the thesis.
+      Two findings from building it are worth recording here, because both cost
+      a run to discover. Gating the announcement channel measures nothing: the
+      channel is an audit path, read only by the transcript recorder, and the
+      epistemic model advances through a service the executor calls when an
+      action completes. And the reconciliation refused the first real pair of
+      maps it was ever handed, for differing in size, which is correct and had
+      never been exercised, because a test that builds both grids builds them
+      the same shape and two maps that two robots built never are.
     </p>
   </div>
 </section>
