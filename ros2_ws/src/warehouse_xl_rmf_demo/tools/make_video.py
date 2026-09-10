@@ -54,9 +54,10 @@ def esc(text):
     # A semicolon goes the same way. ffmpeg splits a filter-complex script
     # into filters on semicolons before it unescapes anything, so a caption
     # containing one is read as the start of a filter and the graph fails to
-    # build with "No such filter" naming the rest of the sentence.
+    # build with "No such filter" naming the rest of the sentence. It is
+    # replaced by a middle dot, which is the separator the pages use.
     out = (text.replace("'", '').replace('"', '')
-               .replace(',', ' ').replace(';', ' —'))
+               .replace(',', ' ').replace(';', ' ·'))
     for ch in (':', '[', ']', '\\'):
         out = out.replace(ch, '\\' + ch)
     return out
@@ -113,9 +114,9 @@ def main():
                     choices=['gazebo,rviz', 'rviz,gazebo'],
                     help='left pane first')
     ap.add_argument('--gazebo-label',
-                    default='GAZEBO — aisle_07 of the dynamic logistics warehouse')
+                    default='GAZEBO: aisle_07 of the dynamic logistics warehouse')
     ap.add_argument('--rviz-label',
-                    default='RVIZ — roadmap and traffic schedule')
+                    default='RVIZ: roadmap and traffic schedule')
     ap.add_argument('--fps', type=int, default=30,
                     help='output frame rate; shared with the cards so the '
                          'segments concatenate')

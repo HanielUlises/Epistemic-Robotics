@@ -34,34 +34,34 @@ run did not do.
 import argparse
 import re
 
-# (regex, template, once) — `once` keeps only the first match, for events that
+# (regex, template, once). `once` keeps only the first match, for events that
 # repeat. Everything with a site or a robot in it recurs legitimately and is
 # matched every time.
 EVENTS = [
     (r'\[survey_sites_mission\]: policy with (\d+) nodes, (\d+) leaves',
-     'the planner returns {0} nodes and {1} leaves  —  838 168 expansions, depth 6',
+     'the planner returns {0} nodes and {1} leaves  ·  838 168 expansions, depth 6',
      True),
     (r'goto: (\w+) -> \S+/(r\d) heading for (\w+)',
-     '{0} ({1}) is sent to {2}  —  a site is reached only through its own lane',
+     '{0} ({1}) is sent to {2}  ·  a site is reached only through its own lane',
      False),
     (r'\[site_perception\]: (r\d) at (\w+) \(([\d.]+) m from it\), '
      r'nearest return ([\d.]+) m',
-     '{0} at {1}, {2} m from it  —  the laser reads {3} m',
+     '{0} at {1}, {2} m from it  ·  the laser reads {3} m',
      False),
     (r'applied (scan_\w+) -> (e-scan-\w+): (\d+) worlds, (\d+) designated',
-     '{0} sensed {1}  —  {2} worlds, {3} designated',
+     '{0} sensed {1}  ·  {2} worlds, {3} designated',
      False),
     (r'(\w+) says (e-scan-\w+) on /eplansys/channel/private/(\w+)',
-     '{0} tells {2} privately  —  the observer is not on this channel',
+     '{0} tells {2} privately  ·  the observer is not on this channel',
      False),
     (r'applied (relay-\w+): (\d+) worlds, (\d+) designated',
-     'private announcement  —  the model grows to {1} worlds, {2} designated',
+     'private announcement  ·  the model grows to {1} worlds, {2} designated',
      False),
     (r'\[survey_sites_mission\]: mission complete',
      'mission complete',
      True),
     (r'came out as specified: (\d+) formulas',
-     'goal holds  —  {0} formulas checked and two transcripts read',
+     'goal holds  ·  {0} formulas checked and two transcripts read',
      True),
 ]
 

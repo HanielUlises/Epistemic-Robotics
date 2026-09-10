@@ -114,8 +114,8 @@ common=(--raw "$RAW" --captions "$CAPS" --fps "$FPS"
         # the RViz pane is 576 px wide; a longer line runs under the Gazebo
         # label and the two read as one sentence. Commas are stripped by the
         # filter-graph escaping, which turns a clause into a gap.
-        --gazebo-label 'GAZEBO — chase camera on the scout'
-        --rviz-label 'RVIZ — the roadmap')
+        --gazebo-label 'GAZEBO: chase camera on the scout'
+        --rviz-label 'RVIZ: the roadmap')
 
 # Segment boundaries are given in capture seconds and are properties of this
 # recording. They are passed rather than detected: an arrival is legible in the

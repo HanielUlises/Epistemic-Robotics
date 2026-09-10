@@ -19,20 +19,24 @@ Renders the opening and closing cards of the multi-site video.
 Two things are wanted of a card that the caption track cannot give. The first
 is the premise: a viewer who does not already know the domain sees two robots
 crossing a warehouse and has no reason to care which aisles they stop at, and
-the premise is one sentence -- exactly one of three named sites is
-contaminated, and nobody knows which. The second is the result, which is the
-one fact the film cannot show: the contaminated site is the one no robot
-visited, so the frame in which the mission succeeds looks exactly like the
-frame before it.
+the premise is one sentence, that exactly one of three named sites is
+contaminated and nobody knows which. The second is the result, which is the one
+fact the film cannot show: the contaminated site is the one no robot visited,
+so the frame in which the mission succeeds looks exactly like the frame before
+it.
 
-The cards are drawn rather than composed in a filter graph. drawtext places
-one line at a time against the frame and has no notion of a column, so a card
-built from it is a stack of guessed offsets that shift whenever a word is
-added. And the escaping rules make a colon, a comma or an apostrophe a hazard,
-which is a poor constraint on a card whose whole job is to be read.
+The cards are drawn and not composed in a filter graph. drawtext places one
+line at a time against the frame and has no notion of a column, so a card built
+from it is a stack of guessed offsets that shift whenever a word is added. Its
+escaping rules also make a colon, a comma or an apostrophe a hazard, which is a
+poor constraint on a card whose whole job is to be read.
 
-Latin Modern is used because the report is set in it. The video and the paper
-are the same result and should not look like two projects.
+The card carries the page's styling and not its own. Same ground, same rules,
+same red, same three typefaces, same tight tracking on the headings: Liberation
+Sans and Liberation Mono are metric-compatible with the Arial and Courier the
+pages ask for, so a still of a card and a screenshot of the page are set in the
+same faces at the same widths. A video that looks like a different project from
+the page carrying it reads as borrowed.
 
     make_sites_cards.py --outdir /tmp/cards --site a31
 """
@@ -42,24 +46,30 @@ import os
 
 from PIL import Image, ImageDraw, ImageFont
 
-LM = '/usr/share/texmf/fonts/opentype/public/lm'
+LIB = '/usr/share/fonts/truetype/liberation'
 DEJAVU = '/usr/share/fonts/truetype/dejavu'
 
-# The report's palette, and for the same reason as the typeface.
-INK = (26, 30, 36)
-PAPER = (238, 240, 243)
-SLATE = (146, 156, 168)
-RULE = (72, 80, 90)
-SIGNAL = (196, 74, 84)
-STEEL = (138, 168, 204)
+# The page's :root palette, verbatim.
+BLACK = (17, 17, 17)          # --black
+RED = (200, 16, 46)           # --red
+GRAY = (90, 90, 90)           # --gray
+BORDER = (214, 214, 214)      # --border
+PANEL = (250, 250, 250)       # --panel
+CODE_BG = (244, 244, 244)     # --code-bg
 
 W, H = 1856, 720
+MARGIN = 150
+
+FACES = {
+    'sans': 'LiberationSans-Regular',
+    'sans-bold': 'LiberationSans-Bold',
+    'mono': 'LiberationMono-Regular',
+}
 
 
-def face(name, size):
-    """A font, falling back to DejaVu where Latin Modern is not installed."""
-    for path in (f'{LM}/{name}.otf',
-                 f'{DEJAVU}/DejaVuSerif.ttf',
+def face(kind, size):
+    """A font, falling back to DejaVu where Liberation is not installed."""
+    for path in (f'{LIB}/{FACES[kind]}.ttf',
                  f'{DEJAVU}/DejaVuSans.ttf'):
         if os.path.exists(path):
             return ImageFont.truetype(path, size)
@@ -67,101 +77,136 @@ def face(name, size):
 
 
 def logic(size):
-    """A monospace face that has the connectives.
+    """A monospace face carrying the connectives.
 
-    Latin Modern Mono is missing U+2227, and PIL draws a missing glyph as
-    nothing at all rather than as a box, so a conjunction set in it becomes a
-    gap between two conjuncts and the formula reads as a list. DejaVu Sans
-    Mono carries the whole block.
+    Liberation Mono has no U+2227, and PIL draws a missing glyph as nothing at
+    all and not as a box, so a conjunction set in it becomes a gap between two
+    conjuncts and the formula reads as a list. DejaVu Sans Mono carries the
+    block, and is close enough to Courier at these sizes for one line.
     """
     return ImageFont.truetype(f'{DEJAVU}/DejaVuSansMono.ttf', size)
 
 
-def centred(draw, y, text, font, fill):
-    """Draw one line centred on the card, and return the baseline below it."""
+def width_of(draw, text, font, track=0.0):
+    """The width the tracked text will occupy."""
+    if not track:
+        box = draw.textbbox((0, 0), text, font=font)
+        return box[2] - box[0]
+    return sum(draw.textlength(ch, font=font) + track for ch in text) - track
+
+
+def put(draw, x, y, text, font, fill, track=0.0):
+    """Draw text at x, optionally letter-spaced, and return its width.
+
+    PIL has no tracking, and the pages set their headings at -0.035em, which
+    at these sizes is two pixels a glyph. Left alone the card's headings are
+    visibly looser than the page's, so the glyphs are placed one at a time.
+    """
+    if not track:
+        draw.text((x, y), text, font=font, fill=fill)
+        return width_of(draw, text, font)
+    for ch in text:
+        draw.text((x, y), ch, font=font, fill=fill)
+        x += draw.textlength(ch, font=font) + track
+    return x
+
+
+def centred(draw, y, text, font, fill, track=0.0):
+    """Draw one line centred on the card, and return the y below it."""
+    w = width_of(draw, text, font, track)
+    put(draw, (W - w) / 2, y, text, font, fill, track)
     box = draw.textbbox((0, 0), text, font=font)
-    draw.text(((W - (box[2] - box[0])) / 2 - box[0], y), text,
-              font=font, fill=fill)
     return y + (box[3] - box[1])
 
 
-def rule(draw, y, width=520, colour=RULE):
-    draw.line([((W - width) / 2, y), ((W + width) / 2, y)], fill=colour,
-              width=2)
+def rule(draw, y, width=W - 2 * MARGIN, colour=BORDER):
+    draw.line([((W - width) / 2, y), ((W + width) / 2, y)], fill=colour, width=1)
+
+
+def kicker(draw, y, text):
+    """The page's section label: small, monospace, red."""
+    return centred(draw, y, text, face('mono', 22), RED, track=1.6)
+
+
+def ground():
+    img = Image.new('RGB', (W, H), PANEL)
+    d = ImageDraw.Draw(img)
+    # The page puts a hairline under its header and above its footer. The card
+    # is a page without the prose, so it keeps both.
+    d.line([(0, 0), (W, 0)], fill=BORDER, width=3)
+    d.line([(0, H - 3), (W, H - 3)], fill=BORDER, width=3)
+    return img, d
 
 
 def opening(path, policy):
-    img = Image.new('RGB', (W, H), INK)
-    d = ImageDraw.Draw(img)
+    img, d = ground()
 
-    rule(d, 150, 900)
-    y = centred(d, 186, 'CONTAMINATION WITH A LOCATION',
-                face('lmroman10-bold', 62), PAPER)
-    y = centred(d, y + 46, 'A three-site epistemic survey executed by two robots',
-                face('lmroman10-italic', 32), SLATE)
-    y = centred(d, y + 26, 'under Open-RMF',
-                face('lmroman10-italic', 32), SLATE)
-    rule(d, y + 62, 900)
+    y = kicker(d, 108, 'MULTI-SITE EPISTEMIC SURVEY')
+    y = centred(d, y + 44, 'Contamination with a Location',
+                face('sans-bold', 66), BLACK, track=-2.3)
+    y = centred(d, y + 40,
+                'A three-site epistemic survey executed by two robots '
+                'under Open-RMF',
+                face('sans', 27), GRAY, track=-0.4)
 
-    y = centred(d, y + 104,
-                'Exactly one of  a17   a31   a06  is contaminated.',
-                face('lmroman10-regular', 36), PAPER)
-    y = centred(d, y + 30, 'Which one is unknown to every agent.',
-                face('lmroman10-regular', 36), SIGNAL)
-    # The planner runs during bringup, before the screen capture opens, so
-    # this fact has no frame of its own to be captioned on.
+    rule(d, y + 56, 760)
+
+    y = centred(d, y + 96, 'Exactly one of  a17   a31   a06  is contaminated.',
+                face('sans', 33), BLACK, track=-0.6)
+    y = centred(d, y + 34, 'Which one is unknown to every agent.',
+                face('sans', 33), RED, track=-0.6)
+    # The planner runs during bringup, before the screen capture opens, so this
+    # fact has no frame of its own to be captioned on.
     if policy:
-        centred(d, y + 44, policy, face('lmmono10-regular', 24), SLATE)
+        centred(d, y + 46, policy, face('mono', 22), GRAY)
 
-    centred(d, H - 92,
-            'ePlanSys  ·  PlanSys2  ·  Open-RMF  ·  Gazebo Classic',
-            face('lmmono10-regular', 24), STEEL)
-    centred(d, H - 56,
+    centred(d, H - 92, 'ePlanSys  ·  PlanSys2  ·  Open-RMF  ·  Gazebo Classic',
+            face('mono', 21), BLACK, track=0.6)
+    centred(d, H - 58,
             'recorded on a virtual display  ·  captions timed from the mission log',
-            face('lmmono10-regular', 20), RULE)
+            face('mono', 18), GRAY)
     img.save(path)
     return path
 
 
 def closing(path, site, other):
-    img = Image.new('RGB', (W, H), INK)
-    d = ImageDraw.Draw(img)
+    img, d = ground()
 
-    rule(d, 96, 900)
-    y = centred(d, 124, f'{site} is contaminated.',
-                face('lmroman10-bold', 58), PAPER)
-    y = centred(d, y + 40, 'No robot went there.',
-                face('lmroman10-bold', 58), SIGNAL)
-    rule(d, y + 62, 900)
+    y = kicker(d, 74, 'RESULT')
+    y = centred(d, y + 40, f'{site} is contaminated.',
+                face('sans-bold', 60), BLACK, track=-2.1)
+    y = centred(d, y + 34, 'No robot went there.',
+                face('sans-bold', 60), RED, track=-2.1)
 
-    # The derivation, in the order the run performed it. Each line is one
-    # action of the policy and its consequence, so a viewer can check the
-    # claim above against the captions they have just watched.
+    rule(d, y + 54, 760)
+
+    # The derivation, in the order the run performed it. Each row is one action
+    # of the policy and its consequence, so a viewer can check the claim above
+    # against the captions they have just watched.
     steps = [
-        (f'the scout scans {other[0]}', 'clean'),
-        ('it tells the relay, on a private channel', 'the relay learns it too'),
-        (f'the relay scans {other[1]}', 'clean'),
-        ('exactly one site is contaminated', f'it is {site}'),
+        (f'the scout scans {other[0]}', 'clean', False),
+        ('it tells the relay, on a private channel', 'the relay learns it too', False),
+        (f'the relay scans {other[1]}', 'clean', False),
+        ('exactly one site is contaminated', f'it is {site}', True),
     ]
-    mono = face('lmmono10-regular', 27)
-    left = face('lmroman10-regular', 29)
-    y += 118
-    for act, out in steps:
-        box = d.textbbox((0, 0), act, font=left)
-        d.text((W / 2 - 40 - (box[2] - box[0]), y), act, font=left, fill=SLATE)
-        d.text((W / 2 - 18, y + 1), '→', font=logic(30), fill=STEEL)
-        d.text((W / 2 + 40, y), out, font=mono,
-               fill=SIGNAL if out.startswith('it is') else PAPER)
-        y += 44
+    left = face('sans', 27)
+    right = face('mono', 25)
+    arrow = face('mono', 25)
+    y += 96
+    for act, out, final in steps:
+        w = width_of(d, act, left)
+        put(d, W / 2 - 56 - w, y, act, left, GRAY)
+        put(d, W / 2 - 30, y + 1, '→', arrow, GRAY)
+        put(d, W / 2 + 40, y + 1, out, right, RED if final else BLACK)
+        y += 42
 
-    rule(d, y + 26, 640)
-    y = centred(d, y + 56,
-                'Kw(scout)  ∧  Kw(relay)  ∧  ¬Kw(observer)',
-                logic(30), STEEL)
-    centred(d, H - 72,
+    rule(d, y + 26, 560)
+    y = centred(d, y + 54, 'Kw(scout)  ∧  Kw(relay)  ∧  ¬Kw(observer)',
+                logic(26), BLACK, track=0.4)
+    centred(d, H - 62,
             '9 formulas checked against the state the fleet left behind, '
             'and 2 transcripts of address',
-            face('lmmono10-regular', 20), RULE)
+            face('mono', 18), GRAY)
     img.save(path)
     return path
 
