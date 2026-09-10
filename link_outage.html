@@ -652,15 +652,15 @@ sup.cite a:hover{text-decoration:underline}
         </thead>
         <tbody>
           <tr><td>the gate stops relaying</td><td>t = 0</td>
-              <td>1&#8239;765 odometry messages dropped, 61 map messages</td></tr>
+              <td>1&#8239;764 odometry messages dropped, 64 map messages</td></tr>
           <tr><td>the belief starts propagating</td><td>t = 0</td>
-              <td>from (&#8722;2.10, &#8722;9.69) at 0.101&#8202;m/s</td></tr>
+              <td>from (&#8722;3.30, &#8722;8.57) at 0.150&#8202;m/s</td></tr>
           <tr><td>the covariance passes the threshold</td><td>t = 50&#8202;s</td>
               <td>trace 1.000&#8202;m&#178; against &#963;<sub>max</sub>&#178; = 1.0</td></tr>
           <tr><td>the link returns</td><td>t = 60&#8202;s</td>
-              <td>worst error 1.774&#8202;m over 634 samples</td></tr>
+              <td>worst error 7.632&#8202;m over 636 samples, no breach</td></tr>
           <tr><td>the two maps are reconciled</td><td>t = 60&#8202;s</td>
-              <td>7&#8239;720 and 4&#8239;873 cells learned, 0 in conflict</td></tr>
+              <td>5&#8239;246 and 4&#8239;870 cells learned, 0 in conflict</td></tr>
         </tbody>
     </table>
   </div>
@@ -772,8 +772,8 @@ sup.cite a:hover{text-decoration:underline}
       What is not arithmetic is the question underneath: after the merge, what
       does each robot know? The answer is not the union of the grids. It is a
       per-robot fact, and this run reports it as one: the believing robot
-      learned 7&#8239;720 cells it had never observed, the patrolling one
-      4&#8239;873, and neither now confuses them with cells it measured. That
+      learned 5&#8239;246 cells it had never observed, the patrolling one
+      4&#8239;870, and neither now confuses them with cells it measured. That
       accounting is what the layer exists for, and it is the part an occupancy
       grid has no field for.
     </p>
@@ -847,7 +847,7 @@ ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
       behind the numbers above are published beside this page:
       <a href="data/link_outage_short.json">short</a>,
       <a href="data/link_outage_baseline.json">baseline</a>,
-      <a href="data/link_outage_long.json">long</a>.
+      <a href="data/link_outage_long.json">long</a>, and the run in the film as <a href="data/link_outage_demo.json">demo</a>.
     </p>
 
     <p>
@@ -876,7 +876,7 @@ ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">AWS small warehouse &#183; 60&#8202;s outage &#183; 1&#8239;765 messages dropped</span>
+      <span class="ftr-r">AWS small warehouse &#183; 6060&#8202;s outage &#183; 1&#8239;765 messages dropped#8202;s outage &#183; 1&#8239;764 messages dropped</span>
     </div>
   </div>
 </footer>

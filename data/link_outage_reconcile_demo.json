@@ -1,0 +1,17 @@
+{
+  "at_link_down": {
+    "a_decided": 4915,
+    "b_decided": 5246
+  },
+  "at_link_up": {
+    "a_decided": 4870,
+    "b_decided": 5246,
+    "cells_total": 65505
+  },
+  "coverage_a": 0.0743,
+  "coverage_b": 0.0801,
+  "a_learned": 5246,
+  "b_learned": 4870,
+  "conflicts": 0,
+  "reply": "a learned 5246 cells, b learned 4870, 0 in conflict"
+}
