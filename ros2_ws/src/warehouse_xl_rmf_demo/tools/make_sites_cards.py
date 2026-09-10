@@ -16,15 +16,14 @@
 """
 Renders the opening and closing cards of the multi-site video.
 
-The opening card names the film and shows a frame of it, and does no more than
-that. The closing card carries the one fact the footage cannot: the
-contaminated site is the one no robot visited, so the frame in which the
-mission succeeds looks exactly like the frame before it.
-
-The still on the opening card is cut from the run being shown and not from a
-library. A title card standing over a frame of some other run would be the one
-claim in this repository a viewer has no way to check, and the same rule
-governs the closing card, whose every line is read out of the mission log.
+Two things are wanted of a card that the caption track cannot give. The first
+is the premise: a viewer who does not already know the domain sees two robots
+crossing a warehouse and has no reason to care which aisles they stop at, and
+the premise is one sentence, that exactly one of three named sites is
+contaminated and nobody knows which. The second is the result, which is the one
+fact the film cannot show: the contaminated site is the one no robot visited,
+so the frame in which the mission succeeds looks exactly like the frame before
+it.
 
 The cards are drawn and not composed in a filter graph. drawtext places one
 line at a time against the frame and has no notion of a column, so a card built
@@ -139,92 +138,33 @@ def ground():
     return img, d
 
 
-def feathered(still, box, fade_x, fade_y, strength=0.94):
-    """An alpha mask that fades a still into the ground it is pasted on.
-
-    A still dropped into a rectangle reads as a screenshot pasted onto a page.
-    Ramping its alpha to nothing along the edge that meets the text lets it
-    read as one surface: the frame is there, and the title is over ground the
-    frame has faded out of. The right edge is left alone, since it runs off the
-    card and has nothing to fade into.
-
-    `strength` holds the whole still just short of opaque, so the ground tints
-    it very slightly and the two do not look like separate layers.
-    """
-    w, h = box
-    mask = Image.new('L', (w, h), int(255 * strength))
-    px = mask.load()
-    for x in range(min(fade_x, w)):
-        # Smoothstep. A linear ramp leaves a visible edge where it reaches
-        # full opacity, because the eye finds the discontinuity in the slope.
-        t = x / fade_x
-        a = t * t * (3 - 2 * t)
-        for y in range(h):
-            px[x, y] = int(px[x, y] * a)
-    for y in range(min(fade_y, h)):
-        t = y / fade_y
-        a = t * t * (3 - 2 * t)
-        for x in range(w):
-            px[x, y] = int(px[x, y] * a)
-            px[x, h - 1 - y] = int(px[x, h - 1 - y] * a)
-    return mask
-
-
-def wrapped(draw, text, font, limit, track=0.0):
-    """Break text into lines no wider than limit."""
-    lines, line = [], ''
-    for word in text.split():
-        trial = f'{line} {word}'.strip()
-        if line and width_of(draw, trial, font, track) > limit:
-            lines.append(line)
-            line = word
-        else:
-            line = trial
-    if line:
-        lines.append(line)
-    return lines
-
-
-def opening(path, shot):
-    """The title, and a frame of the run. Nothing else.
-
-    An opening card competes with the footage behind it for the few seconds it
-    is up. Everything that can be said later is said later: the premise is what
-    the first captions establish, and the result has a card of its own.
-    """
+def opening(path, policy):
     img, d = ground()
 
-    # The still runs off the right edge of the card and fades into the ground
-    # on its left, so the title sits on the page and not on a screenshot.
-    shot_x = 700
-    shot_w, shot_h = W - shot_x, H
-    if shot and os.path.exists(shot):
-        still = Image.open(shot).convert('RGB')
-        # Cover, and not fit: the still is 2.58:1 and the space it goes into is
-        # narrower, so fitting it would letterbox the ground it is fading into.
-        scale = max(shot_w / still.width, shot_h / still.height)
-        still = still.resize((round(still.width * scale),
-                              round(still.height * scale)), Image.LANCZOS)
-        # Cropped from the right, which is the Gazebo pane. The roadmap is the
-        # half a still this small cannot resolve.
-        still = still.crop((still.width - shot_w, (still.height - shot_h) // 2,
-                            still.width, (still.height - shot_h) // 2 + shot_h))
-        img.paste(still, (shot_x, 0),
-                  feathered(still, (shot_w, shot_h), fade_x=520, fade_y=90))
+    y = kicker(d, 108, 'MULTI-SITE EPISTEMIC SURVEY')
+    y = centred(d, y + 44, 'Contamination with a Location',
+                face('sans-bold', 66), BLACK, track=-2.3)
+    y = centred(d, y + 40,
+                'A three-site epistemic survey executed by two robots '
+                'under Open-RMF',
+                face('sans', 27), GRAY, track=-0.4)
 
-    left = 128
-    title = face('sans-bold', 62)
-    lines = wrapped(d, 'Contamination with a Location', title,
-                    shot_x - left - 40, track=-2.2)
-    y = (H - (58 + len(lines) * 74)) // 2
+    rule(d, y + 56, 760)
 
-    put(d, left, y, 'MULTI-SITE EPISTEMIC SURVEY', face('mono', 21), RED,
-        track=1.6)
-    y += 58
-    for line in lines:
-        put(d, left, y, line, title, BLACK, track=-2.2)
-        y += 74
+    y = centred(d, y + 96, 'Exactly one of  a17   a31   a06  is contaminated.',
+                face('sans', 33), BLACK, track=-0.6)
+    y = centred(d, y + 34, 'Which one is unknown to every agent.',
+                face('sans', 33), RED, track=-0.6)
+    # The planner runs during bringup, before the screen capture opens, so this
+    # fact has no frame of its own to be captioned on.
+    if policy:
+        centred(d, y + 46, policy, face('mono', 22), GRAY)
 
+    centred(d, H - 92, 'ePlanSys  ·  PlanSys2  ·  Open-RMF  ·  Gazebo Classic',
+            face('mono', 21), BLACK, track=0.6)
+    centred(d, H - 58,
+            'recorded on a virtual display  ·  captions timed from the mission log',
+            face('mono', 18), GRAY)
     img.save(path)
     return path
 
@@ -278,13 +218,13 @@ def main():
                     help='the site the run found contaminated')
     ap.add_argument('--scanned', default='a17,a06',
                     help='the two sites that were scanned, in order')
-    ap.add_argument('--shot', default='',
-                    help='a frame of the run, for the opening card')
+    ap.add_argument('--policy', default='',
+                    help='one line describing the policy the planner returned')
     args = ap.parse_args()
 
     os.makedirs(args.outdir, exist_ok=True)
     other = args.scanned.split(',')
-    print(opening(os.path.join(args.outdir, 'card_open.png'), args.shot))
+    print(opening(os.path.join(args.outdir, 'card_open.png'), args.policy))
     print(closing(os.path.join(args.outdir, 'card_close.png'), args.site, other))
 
 
