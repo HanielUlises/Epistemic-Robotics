@@ -65,6 +65,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument, IncludeLaunchDescription, TimerAction)
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -104,7 +105,10 @@ def setup(context, *args, **kwargs):
             os.path.join(demo, 'launch', 'warehouse_demo_launch.py')),
         launch_arguments={
             'robots': '2',
-            'gui': LaunchConfiguration('gui'),
+            # The fleet's own rviz watches one robot's namespace and cannot
+            # show a belief one robot holds about another. This scenario
+            # brings its own, and takes Gazebo from the fleet.
+            'gui': LaunchConfiguration('gazebo_gui'),
         }.items())
 
     monitor = Node(
@@ -200,6 +204,14 @@ def setup(context, *args, **kwargs):
             'use_sim_time': True,
         }])
 
+    viewer = Node(
+        package='rviz2', executable='rviz2', name='rviz2', output='screen',
+        condition=IfCondition(LaunchConfiguration('rviz')),
+        arguments=['-d', os.path.join(
+            get_package_share_directory('epistemic_comm'),
+            'config', 'link_outage.rviz')],
+        parameters=[{'use_sim_time': True}])
+
     experiment = Node(
         package='epistemic_comm', executable='link_experiment',
         name='link_experiment', output='screen',
@@ -218,7 +230,7 @@ def setup(context, *args, **kwargs):
     staged = TimerAction(
         period=25.0,
         actions=[monitor, *gates, belief, align, patrol, fusion, reconcile,
-                 experiment])
+                 viewer, experiment])
 
     return [fleet, staged]
 
@@ -235,7 +247,12 @@ def generate_launch_description():
         DeclareLaunchArgument(
             't_recon', default_value='100.0',
             description='Seconds from the monitor\'s first tick to the repair.'),
-        DeclareLaunchArgument('gui', default_value='true'),
+        DeclareLaunchArgument(
+            'gazebo_gui', default_value='true',
+            description='Gazebo client, from the fleet launch.'),
+        DeclareLaunchArgument(
+            'rviz', default_value='true',
+            description='This scenario\'s own rviz, showing the belief.'),
         DeclareLaunchArgument(
             'out_dir', default_value='/tmp/epistemic_comm',
             description='Where the two measurement records are written.'),

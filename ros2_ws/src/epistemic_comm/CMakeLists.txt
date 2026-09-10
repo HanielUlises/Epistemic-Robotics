@@ -11,9 +11,11 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 find_package(epistemic_msgs REQUIRED)
 
-set(dependencies rclcpp std_msgs std_srvs geometry_msgs nav_msgs epistemic_msgs)
+set(dependencies rclcpp std_msgs std_srvs geometry_msgs nav_msgs
+    visualization_msgs epistemic_msgs)
 
 # The propagation is a library and not a node's private detail, because the
 # acceptance criterion of RF-05 is a claim about this arithmetic and a claim
@@ -51,7 +53,7 @@ install(PROGRAMS scripts/reconcile.py scripts/grid_align.py
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY include/ DESTINATION include)
-install(DIRECTORY launch params DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY launch params config tools DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

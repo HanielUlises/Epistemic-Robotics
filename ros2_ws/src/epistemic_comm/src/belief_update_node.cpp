@@ -28,6 +28,7 @@
 
 #include <array>
 #include <chrono>
+#include <cstdio>
 #include <memory>
 #include <string>
 
@@ -36,6 +37,7 @@
 #include "epistemic_msgs/msg/partner_belief.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include "visualization_msgs/msg/marker_array.hpp"
 
 namespace
 {
@@ -97,6 +99,19 @@ public:
 
     belief_ = create_publisher<epistemic_msgs::msg::PartnerBelief>(
       "/" + holder_ + "/belief/partner", rclcpp::QoS(rclcpp::KeepLast(20)));
+
+    // The belief, drawn. A number in a log says the estimate drifted; a ghost
+    // that separates from the robot and snaps back when the link returns is
+    // the same fact in the form the demonstration needs.
+    // Latched. A viewer that connects after the belief started publishing
+    // should find the last state rather than an empty screen, and the display
+    // that reads this asks for transient local: a volatile publisher against
+    // it is an incompatible pair, which the middleware reports once, as a
+    // line in a log, and then draws nothing for the rest of the run.
+    rclcpp::QoS marker_qos{rclcpp::KeepLast(4)};
+    marker_qos.transient_local().reliable();
+    markers_ = create_publisher<visualization_msgs::msg::MarkerArray>(
+      "/" + holder_ + "/belief/markers", marker_qos);
 
     const auto period = std::chrono::duration<double>(
       1.0 / std::max(1.0, get_parameter("rate").as_double()));
@@ -196,6 +211,7 @@ private:
     message.covariance_trace =
       epistemic_comm::positional_trace(covariance_);
     belief_->publish(message);
+    draw(message);
 
     // RF-05's invariant: past sigma_max^2 the position of the partner is no
     // longer something this robot believes, and saying so once is the whole of
@@ -213,6 +229,68 @@ private:
         message.covariance_trace, params_.sigma_max_squared, elapsed_,
         subject_.c_str());
     }
+  }
+
+  /// Draw the belief: where the holder thinks its partner is, and how sure it
+  /// is of that. The disc is the positional covariance at one standard
+  /// deviation, so it grows as the estimate ages, and it turns red once the
+  /// trace passes the threshold past which RF-05 says the estimate should no
+  /// longer be believed.
+  void draw(const epistemic_msgs::msg::PartnerBelief & belief)
+  {
+    visualization_msgs::msg::MarkerArray array;
+    const auto stamp = belief.header.stamp;
+    const auto frame = belief.header.frame_id;
+    const bool stale = belief.covariance_trace > params_.sigma_max_squared;
+
+    visualization_msgs::msg::Marker ghost;
+    ghost.header.stamp = stamp;
+    ghost.header.frame_id = frame;
+    ghost.ns = "belief";
+    ghost.id = 0;
+    ghost.type = visualization_msgs::msg::Marker::ARROW;
+    ghost.action = visualization_msgs::msg::Marker::ADD;
+    ghost.pose = belief.pose.pose;
+    ghost.scale.x = 0.45;
+    ghost.scale.y = 0.09;
+    ghost.scale.z = 0.09;
+    ghost.color.r = stale ? 0.78f : 0.10f;
+    ghost.color.g = stale ? 0.06f : 0.10f;
+    ghost.color.b = stale ? 0.18f : 0.10f;
+    ghost.color.a = belief.propagated ? 0.95f : 0.35f;
+    array.markers.push_back(ghost);
+
+    visualization_msgs::msg::Marker disc = ghost;
+    disc.id = 1;
+    disc.type = visualization_msgs::msg::Marker::CYLINDER;
+    // One standard deviation of the positional covariance, as a diameter.
+    const double sigma = std::sqrt(std::max(0.0, belief.covariance_trace / 2.0));
+    disc.scale.x = std::max(0.12, 2.0 * sigma);
+    disc.scale.y = disc.scale.x;
+    disc.scale.z = 0.01;
+    disc.pose.position.z = 0.01;
+    disc.color.a = belief.propagated ? 0.22f : 0.06f;
+    array.markers.push_back(disc);
+
+    visualization_msgs::msg::Marker label = ghost;
+    label.id = 2;
+    label.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;
+    label.pose.position.z = 0.6;
+    label.scale.z = 0.28;
+    label.color.a = 0.95f;
+    if (!belief.propagated) {
+      label.text = holder_ + " sees " + subject_;
+    } else {
+      char line[96];
+      std::snprintf(
+        line, sizeof(line), "%s believes %s  %.0f s  %.2f m2",
+        holder_.c_str(), subject_.c_str(),
+        belief.elapsed_since_link_down, belief.covariance_trace);
+      label.text = line;
+    }
+    array.markers.push_back(label);
+
+    markers_->publish(array);
   }
 
   std::string holder_;
@@ -236,6 +314,7 @@ private:
   rclcpp::Subscription<epistemic_msgs::msg::LinkEvent>::SharedPtr down_;
   rclcpp::Subscription<epistemic_msgs::msg::LinkEvent>::SharedPtr up_;
   rclcpp::Publisher<epistemic_msgs::msg::PartnerBelief>::SharedPtr belief_;
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr markers_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
 
