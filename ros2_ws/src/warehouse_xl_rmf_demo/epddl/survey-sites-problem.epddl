@@ -1,0 +1,75 @@
+(define (problem site-survey-3)
+
+  (:domain survey-sites)
+
+  ;; Three sites on the warehouse floor, one of them contaminated.
+  ;;
+  ;; The names are the waypoints they stand for, and the waypoints are pinned
+  ;; in `maps/nav_graphs/0.yaml` rather than found by aisle number: the aisle
+  ;; numbering is greedy and renumbers whenever the floor changes, so a task
+  ;; map keyed on `aisle_15` breaks silently the next time the graph is built.
+  ;; They carry no underscore because grounded action names are joined with
+  ;; one, and the mapping tool splits on it to recover arguments.
+  ;;
+  ;;   a17   ( 1.49, 15.75)   a dead end: one lane in, and it is the way out
+  ;;   a31   (15.24, 37.00)   deep in the north of the hall
+  ;;   a06   (30.24, -1.75)   the far south-east corner, 33.7 m from a17 and
+  ;;                          41.4 m from a31, and the site nobody visits
+  ;;
+  ;; `tools/check_sites.py` is what chose them, and the reasons are measured:
+  ;; each has open floor at the waypoint, each admits the sensed pallet on
+  ;; floor that no lane crosses, and each is an aisle -- boxed in on one axis,
+  ;; open on the other -- which is the configuration a robot has to enter
+  ;; before it can tell anything about what is inside.
+
+  (:requirements
+    :typing :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents scout relay observer)
+
+  (:objects a17 a31 a06 - site)
+
+  (:init
+    (:and
+      (:forall (?i - agent)
+        (:forall (?s - site)
+          ([C. All] (not (on-site ?i ?s)))))
+      ;; Exactly one site is contaminated, and that this is so is common
+      ;; knowledge. Which one is what nobody knows, so the model designates one
+      ;; world per site: three worlds, all three designated.
+      ([C. All]
+        (or
+          (and (contaminated a17) (not (contaminated a31)) (not (contaminated a06)))
+          (and (not (contaminated a17)) (contaminated a31) (not (contaminated a06)))
+          (and (not (contaminated a17)) (not (contaminated a31)) (contaminated a06))))
+      (:forall (?i - agent)
+        (:forall (?s - site)
+          ([C. All] (<Kw. ?i> (contaminated ?s)))))
+    )
+  )
+
+  ;; The team must come to know which site it is; the observer must not.
+  ;;
+  ;; Nine conjuncts rather than three quantified ones because plank rejects
+  ;; `:forall` inside `(:goal ...)`. Knowing *which* site is contaminated is
+  ;; written as knowing-whether about each of them, which under the
+  ;; exactly-one constraint above is the same thing: settle two and the third
+  ;; settles itself. That is the whole point of the domain, and the policy the
+  ;; planner returns uses it.
+  (:goal
+    (and
+      ([Kw. scout] (contaminated a17))
+      ([Kw. scout] (contaminated a31))
+      ([Kw. scout] (contaminated a06))
+      ([Kw. relay] (contaminated a17))
+      ([Kw. relay] (contaminated a31))
+      ([Kw. relay] (contaminated a06))
+      (<Kw. observer> (contaminated a17))
+      (<Kw. observer> (contaminated a31))
+      (<Kw. observer> (contaminated a06))
+    )
+  )
+)

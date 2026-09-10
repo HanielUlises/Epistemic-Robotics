@@ -12,11 +12,11 @@
   "actions": {
     "goto_site": {
       "category": "go_to_place",
-      "waypoint": "w043"
+      "waypoint": "dock17"
     },
     "scan": {
       "category": "go_to_place",
-      "waypoint": "scan_site",
+      "waypoint": "a17",
       "sensing": true,
       "default_outcome": "e-scan-clean"
     },

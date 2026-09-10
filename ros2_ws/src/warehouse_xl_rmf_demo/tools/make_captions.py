@@ -35,7 +35,7 @@ import re
 EVENTS = [
     (r'robot is up; request sent',
      'goto-site_relay  —  the scout is dispatched across the floor'),
-    (r'heading for scan_site',
+    (r'heading for a07',
      'scan_relay  —  an aisle cannot be seen into from outside it'),
     (r'at the site \(([\d.]+) m from it\), nearest return ([\d.]+) m',
      'inside the site, {0} m from it  —  the laser reads {1} m'),

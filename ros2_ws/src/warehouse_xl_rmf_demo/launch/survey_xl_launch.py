@@ -167,10 +167,14 @@ def launch_setup(context, *args, **kwargs):
         output='screen',
         parameters=[{
             'robot': 'r1',
-            'scan_topic': '/scan',
+            # /r1/scan and not /scan: the fleet launch now writes a copy of the
+            # laser-carrying model per sensing robot with the ray plugin in
+            # that robot's namespace, because the multi-site survey needs two
+            # lasers and two plugins of one name are two nodes of one name.
+            'scan_topic': '/r1/scan',
             'observation_topic': '/eplansys/observation',
-            'site_x': -3.35,
-            'site_y': 2.00,
+            'site_x': 1.49,
+            'site_y': 15.75,
             'site_radius': 0.40,
             'settle': 3,
             'threshold': 0.70,

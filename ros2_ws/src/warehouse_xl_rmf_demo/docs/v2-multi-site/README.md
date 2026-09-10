@@ -1,9 +1,12 @@
 # v2: contamination with a location
 
-An investigation, not a demo. Nothing here is wired to Open-RMF and nothing
-here runs in the recorded mission. It is kept because the measurements answer
-the question the shipping demo has to disclaim, and answering it is what a
-second iteration would be for.
+**This is now built.** The demo is `survey_sites_launch.py`, the domain is
+`epddl/survey-sites.epddl`, and the package README describes what it does. This
+file is kept as the design note it was: the measurements below are the ones
+that decided the shape of it, and the four things it said a v2 would have to
+build are the four things that were built.
+
+What follows is the note as written, with the outcome of each item marked.
 
 ## The question
 
@@ -41,9 +44,11 @@ and `heuristic=ks`, three agents throughout.
 | *k* = 3 sites | 12 | 3 | 72 | 6 | 838 168 | 8 |
 | *k* = 4 sites | 16 | 4 | 96 | not solved in 901 s | — | — |
 
-*k* = 3 is solved inside the planner's default 15 s budget, so the search runs
-at better than 55 000 expansions per second. That is a lower bound: the run was
-not timed, only observed to finish.
+*k* = 3 is solved inside the planner's default 15 s budget. It has since been
+timed: the planner logs the start of the search and the solution 6.4 s apart,
+so 838 168 expansions is about 131 000 a second. That figure is not a boast
+about the search — it is the reason the bringup broke, since the planner and
+the bringup's own lifecycle calls are served on one executor in one process.
 
 *k* = 4 is not solved. Under the default budget it reports `[aostar] Timeout at
 depth 7`; under a 900 s budget it reports `[aostar] Timeout at depth 8` after
@@ -95,22 +100,57 @@ correctly says it does not have.
    name to one waypoint. It would need a waypoint per site, and
    `scripts/scan_perception.py` would need to know which site it is standing
    at instead of holding one hard-coded `site_x`/`site_y`.
+
+   *Built.* `config/warehouse_xl_sites.json` uses `waypoint_arg` and a `zones`
+   table, so the bridge resolves the destination from the action's own
+   argument. `scripts/site_perception.py` watches every (robot, site) pair.
+   What this did not anticipate is that the bridge would need changing too:
+   one performer per action name and one latched observation topic means the
+   second scan is handed the first one's answer. Readings carry their site now.
+
 2. **Three sites on the roadmap.** `tools/make_dlw_graph.py` already takes
    `--site X,Y,NAME` and can pin more than one.
+
+   *Built, and it needed a chooser.* `tools/check_sites.py` decides what can be
+   a site at all: open to a laser in an empty world, and with somewhere legal
+   for the pallet to stand. Thirteen of thirty-nine aisle waypoints qualify.
+
 3. **Three pallet positions.** `tools/with_camera.py --pallet` places one; a
    v2 needs the world built with the pallet at whichever site the run is
    testing, and the clean variant with none.
+
+   *Built:* `tools/make_site_worlds.sh` writes all four.
+
 4. **A mapping decision.** `draft_epistemic_mapping` resolves `goto` and `scan`
    automatically but leaves all 54 relay entries for a human, because
    `relay-dirty` and `relay-clean` both correspond to the single classical
    `relay` and that correspondence is a modelling choice.
 
-## Two traps found on the way
+   *Built, once.* `tools/make_sites_mapping.py` states the decision as a rule
+   and applies it to all 54. The decision is one line; writing it out
+   fifty-four times by hand is the same decision plus fifty-three chances to
+   mistype an agent name.
+
+5. **Not anticipated: the floor was wrong.** The world carries a saved
+   `<state>` block that Gazebo applies over the declared model poses, and
+   fourteen of them disagree. Correcting it moved every charger and changed the
+   graph from 261 waypoints to 289. See the package README.
+
+## Three traps found on the way
 
 **Site names may not contain underscores.** Grounded action names are joined
 with `_`, and `draft_epistemic_mapping` splits on it to recover arguments, so
 `aisle_07` becomes the two arguments `aisle` and `07` and the mapping is
-silently wrong. The sites here are `a07`, `a15`, `a23`.
+silently wrong. The sites here are `a07`, `a15`, `a23`; in the built demo, and
+on the corrected floor, they are `a17`, `a31` and `a06`.
+
+**And a third trap, found in the building.** Four files name the sites: the
+EPDDL problem, the bridge's task map, the launch that places their pallets, and
+the mission node that declares them as objects. Nothing checked they agreed.
+Renaming three of the four left the executor checking an over-all condition
+over a site that was not an object of the problem, which it reports fifty times
+a second without ever saying that. The mission reads its sites from the EPDDL
+now, and the launch refuses to start if its own list disagrees.
 
 **`:forall` is not a goal formula.** plank rejects it in `(:goal ...)`, so the
 goal is written out one conjunct per site. `gen.py` does that expansion.

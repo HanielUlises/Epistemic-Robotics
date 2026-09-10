@@ -1,0 +1,45 @@
+# The multi-site survey, as parameters.
+#
+# The solver is given EPDDL sources rather than a grounded task: it runs plank
+# on first use and again whenever the sources change. This is the ordinary way
+# to state an epistemic problem, and the counterpart of classical PlanSys2's
+# model_file.
+#
+# The launch file substitutes the three upper-case names before handing this
+# over, so the paths are the installed share directory's and not a checkout's.
+
+planner:
+  ros__parameters:
+    plan_solver_plugins: ["EPISTEMIC"]
+    EPISTEMIC:
+      plugin: "plansys2/EpistemicPlanSolver"
+      epddl_domain: "EPDDL_DOMAIN"
+      epddl_problem: "EPDDL_PROBLEM"
+      action_mapping: "MAPPING_FILE"
+      strategy: "aostar"
+      conditional_plan: "policy"
+    # Three sites is 838 168 expansions and about six seconds of search on this
+    # machine, against forty expansions for the single-site problem. That is
+    # comfortably inside the 15 s default, but the default is a poor fit for a
+    # domain whose cost is this sensitive to one object: a fourth site is not
+    # solved in 900 s. Raising it here means a run that is going to fail fails
+    # for a reason worth reading rather than for want of patience.
+    #
+    # This parameter belongs on the planner node. The same name on the
+    # terminal's client governs only how long that client waits for the service
+    # to answer, and setting it there leaves the solver on its default and
+    # looks exactly like the solver giving up early.
+    plan_solver_timeout: 300.0
+
+executor:
+  ros__parameters:
+    bt_builder_plugin: "EpistemicBTBuilder"
+    bt_node_plugins: ["libplansys2_epistemic_bt_nodes.so"]
+
+epistemic_state:
+  ros__parameters:
+    # The same sources the planner is given. Both ground them independently;
+    # neither grounds for the other, and pointing them at one pair is what
+    # keeps the policy and the model it is checked against in one vocabulary.
+    epddl_domain: "EPDDL_DOMAIN"
+    epddl_problem: "EPDDL_PROBLEM"
