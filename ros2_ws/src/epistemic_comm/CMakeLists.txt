@@ -11,10 +11,11 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(epistemic_msgs REQUIRED)
 
-set(dependencies rclcpp std_msgs std_srvs geometry_msgs nav_msgs
+set(dependencies rclcpp std_msgs std_srvs geometry_msgs nav_msgs sensor_msgs
     visualization_msgs epistemic_msgs)
 
 # The propagation is a library and not a node's private detail, because the

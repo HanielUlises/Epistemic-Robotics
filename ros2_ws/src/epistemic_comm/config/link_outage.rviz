@@ -131,14 +131,16 @@ Visualization Manager:
       # empty space beside it. TopDownOrtho has no such trap -- X and Y are
       # the centre of the view, Scale is pixels per metre, and north is up.
       #
-      # Scale 36 over a ~950 px viewport shows about 26 m of floor. The
-      # building is 21 m tall and the caption block sits just above it, so the
-      # centre is nudged north of the building's own centre to leave the
-      # caption room rather than clipping its first line off the top.
+      # Centred on the corner the patrol works, and not on the building. The
+      # belief is an arrow about a metre long: over 26 m of floor it is a dozen
+      # pixels and the separation that is the whole subject of the run cannot
+      # be seen. Scale 62 over a ~950 px viewport shows some 15 m, which holds
+      # the robot, the arrow, the uncertainty disc at its widest and enough of
+      # the map being built around them to place all three.
       Class: rviz_default_plugins/TopDownOrtho
-      X: 0
-      Y: 2.0
-      Scale: 36
+      X: -2.5
+      Y: -7.5
+      Scale: 62
       Angle: 0
       Name: Current View
       Target Frame: map
@@ -148,5 +150,5 @@ Window Geometry:
     collapsed: false
   Height: 1000
   Width: 1900
-  Hide Left Dock: false
+  Hide Left Dock: true
   Hide Right Dock: true

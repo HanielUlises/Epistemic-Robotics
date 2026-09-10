@@ -54,14 +54,21 @@ FPS=30
 CAPS="${OUT%.*}_captions.tsv"
 python3 "$HERE/make_outage_captions.py" --log "$LOG" --t0 "$T0" --out "$CAPS"
 
-# The RViz crop is on the corner of the floor where the outage happens, and not
-# on the whole roadmap: the belief arrow is a metre long on a forty-metre floor
-# and is a dozen pixels at full extent. The Gazebo crop is the simulator's own
-# canvas at the pane's aspect.
-RV_CROP=${RV_CROP:-800:450:660:630}
-GZ_CROP=${GZ_CROP:-729:911:2630:78}
-RV_PANE=1280:720
-GZ_PANE=576:720
+# Both canvases whole. An earlier cut framed the corner of the floor where the
+# belief separates, on the grounds that an arrow a metre long is a dozen pixels
+# on a forty-metre floor; it did make the arrow bigger and it threw away the
+# map being built around it, which is the other half of what there is to watch.
+# The panes are the two canvases as they stand.
+# Each canvas whole, less its own chrome: RViz without the Displays panel and
+# the status bar, Gazebo without the toolbar and the world tree.
+# Centred on the belief marker, whose pixels were measured off a frame of this
+# capture rather than guessed: the canvas is mostly empty background at this
+# zoom, and framing the canvas rather than its contents spends most of the pane
+# on nothing.
+RV_CROP=${RV_CROP:-900:506:650:367}
+GZ_CROP=${GZ_CROP:-1620:911:2188:78}
+RV_PANE=1120:630
+GZ_PANE=1120:630
 
 common=(--raw "$RAW" --captions "$CAPS" --fps "$FPS"
         --order rviz,gazebo
