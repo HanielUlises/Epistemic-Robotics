@@ -575,407 +575,131 @@ sup.cite a:hover{text-decoration:underline}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">RF-05 &#183; AWS small warehouse &#183; ROS 2 &#183; Gazebo</p>
+    <p class="eyebrow">AWS small warehouse &#183; two robots &#183; SLAM per robot &#183; ROS 2</p>
     <h2>A link that actually falls</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      Every fleet demonstration on this site models restricted connectivity the
-      same way: an agent is oblivious to an announcement because the domain
-      declares it oblivious. The declaration is static, it is made before the
-      run, and no link ever falls. This page reports the first run in which one
-      does. A monitor owns the state of the radio between two robots and cuts
-      it for a configured window; a gate stops relaying and counts what it
-      dropped; the belief one robot holds about where the other is keeps being
-      propagated with a covariance that grows; and at reconnection the map
-      reconciliation of the collaborative SLAM layer is handed, for the first
-      time, two maps that two robots actually built.
+      Every other fleet demonstration here models restricted connectivity as a
+      declaration: an agent is oblivious to an announcement because the domain
+      says so, before the run starts, and no link ever falls. This one cuts the
+      radio between two robots while they work. The cut has no appearance in
+      the simulator, because nothing about a warehouse changes when a radio
+      stops working, so the thing to watch is on the left: the arrow is where
+      <span class="mono-inline">r2</span> believes
+      <span class="mono-inline">r1</span> is, and the disc around it is how
+      sure it is.
     </p>
     <p class="note" style="margin-top:1.4rem">
       Fleet, world and per-robot SLAM from
       <span class="mono-inline">warehouse_demo</span>, included unmodified.
       Reconciliation from <span class="mono-inline">epistemic_slam</span>.
       The outage, the belief engine and the measurement are
-      <span class="mono-inline">epistemic_comm</span>, new here.
+      <span class="mono-inline">epistemic_comm</span>.
     </p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ WHAT EXISTED -->
+<!-- ═══════════════════════════════════════════════ THE RUN -->
 <section>
   <div class="container">
-    <p class="sec-label">The starting point</p>
-    <h3>A requirement with no code behind it</h3>
+    <p class="sec-label">The run</p>
+    <h3>Sixty seconds without a radio</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/link_outage.jpg">
+        <source src="media/link_outage.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Left: what <span class="mono-inline">r2</span> believes about
+        <span class="mono-inline">r1</span>, over the map
+        <span class="mono-inline">r1</span> is building. Right: the simulator,
+        where nothing marks the outage at all. The cut is played at real time,
+        the minute of drift is sampled at 4&#215;, and the return is slowed to
+        0.9&#215; because the reconnection, the verdict and the reconciliation
+        land within three seconds of each other. Captions are matched against
+        the run's own log and timed by the ROS timestamp of the line that
+        carries them; where several events share an instant they are shown in
+        sequence, so a caption can trail its event by a second and none
+        precedes one.
+      </figcaption>
+    </figure>
 
     <p>
-      The requirement this page closes against is RF-05: on losing the link at
-      <span class="mono-inline">t<sub>disc</sub></span>, a robot propagates its
-      belief about its partner's pose forward under the motion model of the
-      last shared plan, with the covariance growing without bound, and the
-      estimation error is to stay within
-      <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>.
-      It names two topics and an engine. Before this work, none of the three
-      existed as code.
+      The belief is not a guess about the future. While the link is up it is
+      the last pose that arrived. When the link falls, nothing arrives, and
+      what is drawn from then on is the last velocity integrated forward: the
+      partner is assumed to carry on doing what it was last seen doing. The
+      disc is the positional covariance, which grows for as long as the outage
+      lasts and never shrinks. At fifty seconds it crosses the threshold the
+      requirement sets, the arrow turns red, and the engine says in as many
+      words that where <span class="mono-inline">r1</span> is should no longer
+      be believed.
     </p>
 
     <table class="data">
         <thead>
-          <tr><th>term</th><th>eplansys</th><th>eplansys-rmf</th><th>this repository</th></tr>
+          <tr><th>what happened</th><th>when</th><th>measured</th></tr>
         </thead>
         <tbody>
-          <tr><td><span class="mono-inline">comm_monitor</span></td><td>0</td><td>0</td><td>0</td></tr>
-          <tr><td><span class="mono-inline">BeliefUpdateEngine</span></td><td>0</td><td>0</td><td>0</td></tr>
-          <tr><td><span class="mono-inline">link_down</span></td><td>0</td><td>0</td><td>1, a string in a test</td></tr>
-          <tr><td><span class="mono-inline">link_up</span></td><td>0</td><td>0</td><td>7, an atom in a Kripke model</td></tr>
+          <tr><td>the gate stops relaying</td><td>t = 0</td>
+              <td>1&#8239;765 odometry messages dropped, 61 map messages</td></tr>
+          <tr><td>the belief starts propagating</td><td>t = 0</td>
+              <td>from (&#8722;2.10, &#8722;9.69) at 0.101&#8202;m/s</td></tr>
+          <tr><td>the covariance passes the threshold</td><td>t = 50&#8202;s</td>
+              <td>trace 1.000&#8202;m&#178; against &#963;<sub>max</sub>&#178; = 1.0</td></tr>
+          <tr><td>the link returns</td><td>t = 60&#8202;s</td>
+              <td>worst error 1.774&#8202;m over 634 samples</td></tr>
+          <tr><td>the two maps are reconciled</td><td>t = 60&#8202;s</td>
+              <td>7&#8239;720 and 4&#8239;873 cells learned, 0 in conflict</td></tr>
         </tbody>
     </table>
-
-    <p>
-      The last row is the whole difficulty in one line.
-      <span class="mono-inline">link_up</span> is in this repository, in
-      <span class="mono-inline">scenarios/warehouse/snapshots/*.json</span>, as
-      <span class="mono-inline">labels: {"w0": ["link_up"]}</span>: a
-      proposition that a world makes true, fixed when the problem was written.
-      What existed of connectivity was exactly the static declaration that the
-      limitation identifies, and nothing else.
-    </p>
-
-    <h4>The announcement channel does not carry belief</h4>
-
-    <p>
-      The obvious fault injector subscribes to the channel two robots speak on
-      and stops forwarding. It would have measured nothing, and finding out why
-      changed the design.
-    </p>
-
-    <p>
-      <span class="mono-inline">Announcer::say()</span> publishes an utterance
-      on <span class="mono-inline">/eplansys/channel/private/&lt;listener&gt;</span>.
-      The only subscriber is <span class="mono-inline">radio</span>, which
-      keeps a transcript so that who was addressed is a matter of record.
-      <span class="mono-inline">eplansys</span> contains no reference to that
-      channel at all. The epistemic model advances through a service,
-      <span class="mono-inline">epistemic_state/apply_action</span>, which the
-      executor calls when an action completes; in the speech-act performer the
-      two lines are <span class="mono-inline">speak(); conclude(true, ...)</span>,
-      in that order. Cutting the channel empties the transcript and leaves the
-      product update, the designated set and the goal check exactly as they
-      were.
-    </p>
-
-    <p class="note">
-      The channel is an audit path, not a transport. That is a reasonable thing
-      for it to be, and it is worth knowing before building an experiment on
-      the assumption that it is the other thing.
-    </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ WHAT WAS BUILT -->
-<section>
-  <div class="container">
-    <p class="sec-label">The apparatus</p>
-    <h3>Five nodes, and where each one cuts</h3>
-
-    <table class="data">
-        <thead>
-          <tr><th>node</th><th>what it does</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><span class="mono-inline">comm_monitor</span></td>
-              <td>Owns the link state and is the only thing that does. Publishes
-              <span class="mono-inline">/comm_monitor/link_down</span> and
-              <span class="mono-inline">/link_up</span>, latched, at the configured
-              instants, and answers a service for the state now.</td></tr>
-          <tr><td><span class="mono-inline">link_gate</span></td>
-              <td>The injector. A type-erased relay over rclcpp's generic
-              publisher and subscription, so one node gates an odometry and an
-              occupancy grid without a case for either. Holds no timer: it
-              subscribes to the monitor like everything else.</td></tr>
-          <tr><td><span class="mono-inline">belief_update</span></td>
-              <td>RF-05's engine. Holds the last pose while the link is up;
-              integrates the last twist forward while it is down, growing the
-              covariance. Reads the <em>gated</em> odometry, so the outage is
-              real for it.</td></tr>
-          <tr><td><span class="mono-inline">grid_align</span></td>
-              <td>Places two SLAM maps on the union of their extents at their
-              common resolution. Whole-cell translation, no interpolation.</td></tr>
-          <tr><td><span class="mono-inline">link_experiment</span></td>
-              <td>Measures. Reads the <em>ungated</em> odometry, because the
-              error to measure is against where the partner actually went and
-              not against the silence the believer was reasoning from.</td></tr>
-        </tbody>
-    </table>
-
-    <p>
-      The gate is installed alongside rather than in the middle: it reads the
-      topic the fleet already publishes and writes a second name that only the
-      believing side subscribes to. Nothing that exists is remapped, rebuilt or
-      told that a gate is present, and <span class="mono-inline">warehouse_demo</span>
-      is included by the scenario launch unmodified.
-    </p>
-
-    <h4>The outage is real, and the count is the evidence</h4>
-
-    <p>
-      A gate that reports nothing dropped was gating a topic nobody publishes
-      on, and that is a launch error which otherwise looks exactly like a
-      successful run. Over the sixty-second window the odometry gate dropped
-      <b>1&#8239;765</b> messages having passed 1&#8239;179 before, and the map
-      gate dropped <b>61</b> having passed 41. The belief engine also refuses
-      to accept a partner pose while it believes the link is down, and says so,
-      for the same reason: an arrival at that moment would mean the gate is on
-      a different topic from the one being read.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ RF-05 -->
+<!-- ═══════════════════════════════════════════════ RESULT -->
 <section>
   <div class="container">
     <p class="sec-label">The measurement</p>
-    <h3>RF-05's criterion over three outage lengths</h3>
+    <h3>The bound is met, and that is weaker than it sounds</h3>
 
     <p>
-      Three runs, differing only in how long the link stays down. The partner
-      drives a fixed square throughout and knows nothing about the outage. The
-      bound is
-      <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>
-      with <span class="mono-inline">v<sub>max</sub> = 0.22&#8202;m/s</span>,
-      taken from the <span class="mono-inline">max_speed_xy</span> the fleet's
-      own controller enforces, and
-      <span class="mono-inline">&#963;<sub>prop</sub> = 0.05&#8202;m</span>.
-    </p>
-
-    <table class="data">
-        <thead>
-          <tr><th>outage</th><th>samples</th><th>worst error</th><th>at</th>
-              <th>tightest margin</th><th>breaches</th><th>final trace</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>29.9&#8202;s</td><td>300</td><td>0.595&#8202;m</td><td>29.9&#8202;s</td>
-              <td>0.072&#8202;m</td><td>0</td><td>0.598&#8202;m&#178;</td></tr>
-          <tr><td>59.9&#8202;s</td><td>601</td><td>1.515&#8202;m</td><td>39.7&#8202;s</td>
-              <td>0.046&#8202;m</td><td>0</td><td>1.198&#8202;m&#178;</td></tr>
-          <tr><td>119.9&#8202;s</td><td>1&#8239;202</td><td>1.393&#8202;m</td><td>68.7&#8202;s</td>
-              <td>0.046&#8202;m</td><td>0</td><td>2.398&#8202;m&#178;</td></tr>
-        </tbody>
-    </table>
-
-    <p>
-      The criterion is met in all three, and the covariance invariant behaves
-      as specified: the trace grows without decreasing and crosses
-      <span class="mono-inline">&#963;<sub>max</sub>&#178; = 1.0&#8202;m&#178;</span>
-      at fifty seconds, at which point the engine says that where the partner
-      is should no longer be believed.
-    </p>
-
-    <h4>The bound is loosest exactly where the estimate is worst</h4>
-
-    <p>
-      The tightest margin in every run is at
-      <span class="mono-inline">t = 0</span>, not at the end. At the instant of
-      the cut the bound is
-      <span class="mono-inline">&#963;<sub>prop</sub></span> alone, 0.05&#8202;m,
-      and the error is a few millimetres of odometry noise. From there the bound
-      grows at 0.22&#8202;m/s while the propagated estimate tracks the partner
-      and the error grows far more slowly: at sixty seconds the bound stands at
-      13.2&#8202;m against an error of 1.4&#8202;m.
+      The requirement admits an error of
+      <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>,
+      with <span class="mono-inline">v<sub>max</sub> = 0.22&#8202;m/s</span>
+      taken from the speed the fleet's own controller enforces. Three runs, of
+      thirty, sixty and a hundred and twenty seconds, meet it with no breaches.
     </p>
 
     <figure class="demo-figure">
       <img src="media/link_outage_bound.svg" width="100%"
            alt="The belief error stays near one and a half metres while the admissible bound climbs linearly to thirteen metres over sixty seconds">
       <figcaption>
-        The sixty-second outage. Grey is the bound RF-05 admits, which climbs at
-        0.22&#8202;m/s because that is what the platform could do; red is the
-        error actually made. They touch only at the instant of the cut. The
-        shaded area is the margin, and it is the shape of the criticism: the
-        criterion is hardest to satisfy when the estimate is freshest and
-        easiest when it is oldest.
+        Grey is the bound, which climbs at 0.22&#8202;m/s because that is what
+        the platform could do; red is the error actually made. They touch only
+        at the instant of the cut. The criterion is hardest to satisfy when the
+        estimate is freshest and easiest when it is oldest, which is the wrong
+        way round.
       </figcaption>
     </figure>
 
-    <table class="data">
-        <thead>
-          <tr><th>t</th><th>error</th><th>bound</th><th>margin</th><th>trace</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>0&#8202;s</td><td>0.004&#8202;m</td><td>0.050&#8202;m</td><td>0.046&#8202;m</td><td>0.000&#8202;m&#178;</td></tr>
-          <tr><td>10&#8202;s</td><td>0.126&#8202;m</td><td>2.250&#8202;m</td><td>2.124&#8202;m</td><td>0.200&#8202;m&#178;</td></tr>
-          <tr><td>30&#8202;s</td><td>1.042&#8202;m</td><td>6.650&#8202;m</td><td>5.608&#8202;m</td><td>0.600&#8202;m&#178;</td></tr>
-          <tr><td>59&#8202;s</td><td>1.367&#8202;m</td><td>13.030&#8202;m</td><td>11.663&#8202;m</td><td>1.180&#8202;m&#178;</td></tr>
-        </tbody>
-    </table>
-
     <p>
-      So a pass is weak evidence. The bound admits any displacement a robot at
-      full speed could produce, and a propagation that simply holds the last
-      velocity cannot exceed it while the partner keeps its course. The unit
-      tests state the other half: a partner that reverses at full speed the
-      instant the link falls separates from the belief at
-      <span class="mono-inline">2v&#183;&#916;t</span> and breaches the bound
-      for every <span class="mono-inline">&#916;t</span> past
-      <span class="mono-inline">&#963;<sub>prop</sub>/v<sub>max</sub></span>.
-      What these three runs establish is that the engine tracks a partner that
-      holds its course, which is what they were able to establish; they do not
-      establish that the bound cannot be breached.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ RECONCILIATION -->
-<section>
-  <div class="container">
-    <p class="sec-label">The reconciliation</p>
-    <h3>The first real pair of maps was refused</h3>
-
-    <p>
-      The collaborative SLAM layer classifies cells, computes per-robot
-      coverage, detects contradictions and reconciles. It passes 43 tests, and
-      every one of them builds both grids in memory. A test that builds both
-      grids builds them the same shape.
-    </p>
-
-    <p>
-      Two maps that two robots actually built are never the same shape. Each
-      grows as its own robot discovers floor, and the first pair this
-      reconciliation was ever handed came back
-      <span class="mono-inline">grids differ in size: 118x128 and 134x86</span>.
-      The refusal is correct and is documented: a wrong registration produces a
-      merged map that is confidently wrong, so two maps whose discretisation
-      does not coincide are declined rather than approximated. What was missing
-      was the step before it.
-    </p>
-
-    <p>
-      <span class="mono-inline">grid_align</span> places both maps on the union
-      of their extents at their common resolution. It is a translation by whole
-      cells: no interpolation, no rotation, no scaling, and a cell keeps the
-      value it had. Maps at different resolutions are still refused, because
-      putting those on one grid would be the approximation the layer declines
-      to make. In the reported runs the alignment is
-      <span class="mono-inline">117&#215;128</span> and
-      <span class="mono-inline">133&#215;86</span> onto
-      <span class="mono-inline">134&#215;397</span> at 0.050&#8202;m per cell,
-      growing as both maps grow.
-    </p>
-
-    <h4>What the fusion found</h4>
-
-    <table class="data">
-        <thead>
-          <tr><th>outage</th><th>cells</th><th>holder learned</th>
-              <th>partner learned</th><th>in conflict</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>29.9&#8202;s</td><td>54&#8239;786</td><td>4&#8239;330</td><td>5&#8239;074</td><td>0</td></tr>
-          <tr><td>59.9&#8202;s</td><td>69&#8239;832</td><td>6&#8239;502</td><td>4&#8239;873</td><td>0</td></tr>
-          <tr><td>119.9&#8202;s</td><td>70&#8239;004</td><td>6&#8239;541</td><td>4&#8239;899</td><td>0</td></tr>
-        </tbody>
-    </table>
-
-    <p>
-      Each robot learns from the other almost exactly the count the other had
-      decided, and nothing is in conflict. That is not the reconciliation being
-      clever; it is what a disjoint pair of observations looks like. The
-      believing robot sits at its dock and maps what it can see from there, the
-      partner patrols elsewhere, and the two sets of observed cells barely
-      touch. A conflict needs two robots to have looked at the same cell and
-      disagreed about whether it is passable, and this pair never did.
+      A propagation that holds the last velocity cannot fail this bound while
+      the partner keeps its course, and the arithmetic gives the other half: a
+      partner that reverses at full speed the instant the link falls separates
+      at <span class="mono-inline">2v&#183;&#916;t</span> and breaches the
+      bound after <span class="mono-inline">&#963;<sub>prop</sub>/v<sub>max</sub></span>,
+      which here is 0.23&#8202;s. What these runs show is that the engine
+      tracks a partner that holds its course. They do not show that the bound
+      cannot be broken.
     </p>
 
     <p class="note">
-      The zeros are therefore a property of this trajectory, not a result about
-      the fusion. Producing a genuine contradiction needs the two robots routed
-      through the same aisle from opposite ends, and that is the next run
-      rather than this one.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ WHAT BROKE -->
-<section>
-  <div class="container">
-    <p class="sec-label">Defects</p>
-    <h3>Three found by integration, none in the new code</h3>
-
-    <table class="data">
-        <thead>
-          <tr><th>what</th><th>how it presented</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Stale ABI in the fleet demo</td>
-              <td>Every action node died at startup with
-              <span class="mono-inline">undefined symbol:
-              plansys2::ActionExecutorClient::finish(bool, float, string const&amp;)</span>.
-              The installed binaries were built when
-              <span class="mono-inline">finish</span> took three arguments; it
-              now takes four, the fourth being the outcome the epistemic
-              extension needs. A rebuild fixes it, and nothing warns that the
-              installed tree is older than the library it links.</td></tr>
-          <tr><td>The fleet cannot drive with two robots</td>
-              <td><span class="mono-inline">r1</span>'s global costmap never
-              receives its map, so it keeps the default 5&#215;5&#8202;m extent
-              at the origin, reports the robot out of bounds and nav2 can never
-              plan. The topic exists with one publisher and five subscribers and
-              the costmap's <span class="mono-inline">map_topic</span> is set to
-              it. Not diagnosed further here; the scenario drives the partner
-              directly instead.</td></tr>
-          <tr><td>The measurement recounted what it should have read</td>
-              <td>The first version of the reconciliation record differenced
-              cell counts it had subscribed to itself, and reported a merged map
-              with fewer decided cells than one of its inputs. The aligner keeps
-              publishing as both maps grow, so by the time a reply arrives the
-              recorder may hold a newer pair than the fusion was given.
-              Differencing two pairs that are not the same pair is not a
-              measurement. The counts now come from the fusion's own reply.</td></tr>
-        </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ SCOPE -->
-<section>
-  <div class="container">
-    <p class="sec-label">Scope</p>
-    <h3>What this establishes</h3>
-
-    <p>
-      That a communication outage can be injected into a running fleet without
-      modifying the fleet, and that the cut is real and counted. That RF-05's
-      engine exists, propagates, grows its covariance without decreasing, and
-      reaches the threshold past which it declares its own estimate unfit to be
-      believed. That its acceptance criterion is met over outages of thirty,
-      sixty and a hundred and twenty seconds against a partner in motion. And
-      that the reconciliation of the collaborative SLAM layer runs on maps two
-      robots built from two lasers in a simulator, which needed one step the
-      layer did not have.
-    </p>
-
-    <h3 style="margin-top:2.2rem">What it does not</h3>
-
-    <p>
-      It does not establish that the epistemic model diverges under partition,
-      because there is nothing for it to diverge in. The bringup runs one
-      planner and one epistemic state for the whole fleet, so an agent's
-      accessibility relation is a column of a shared structure rather than a
-      perspective held on a robot. RF-05 speaks of one robot's belief about
-      another; what is measured here is a metric estimate of a pose, published
-      alongside that structure and not inside it. Partitioning the model is a
-      different piece of work and a larger one.
-    </p>
-
-    <p>
-      It does not establish that the goal formula still holds at reconnection
-      by the validator's account, for the same reason: there is one model, it
-      never diverged, and a check against it would be a check that nothing was
-      partitioned.
-    </p>
-
-    <p>
-      And it does not establish anything about the bound being a good bound.
-      Three runs met it; the arithmetic says a partner that reverses at full
-      speed breaches it within a quarter of a second of the cut.
+      The zero conflicts are the same kind of fact. The believing robot sits at
+      its dock and the partner patrols elsewhere, so the two sets of observed
+      cells barely touch; a contradiction needs two robots to have looked at
+      the same cell and disagreed, and this pair never did. Routing them
+      through one aisle from opposite ends is the next run.
     </p>
   </div>
 </section>
@@ -987,26 +711,26 @@ sup.cite a:hover{text-decoration:underline}
     <h3>Running it</h3>
 
     <pre class="code">colcon build --packages-select epistemic_msgs epistemic_comm epistemic_slam
-colcon test --packages-select epistemic_comm      # 49 tests
+colcon test --packages-select epistemic_comm      # 62 tests
 
-ros2 launch epistemic_comm link_outage_launch.py \
-     gui:=false t_disc:=40 t_recon:=100 scenario:=baseline</pre>
+ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
 
     <p>
       <span class="mono-inline">t_disc</span> and
       <span class="mono-inline">t_recon</span> are seconds from the monitor's
-      first clock tick, and the schedule is open loop on purpose. An outage
+      first clock tick, and the schedule is open loop on purpose: an outage
       triggered by distance would make its own duration a function of the
-      trajectory it perturbs, and the measurement could not then separate the
-      two. Two JSON records are written per run, one for the belief error
-      against the bound and one for the reconciliation. The six this page
-      reports are published beside it:
+      trajectory it perturbs. Two JSON records are written per run, and the six
+      behind the numbers above are published beside this page:
       <a href="data/link_outage_short.json">short</a>,
-      <a href="data/link_outage_baseline.json">baseline</a> and
-      <a href="data/link_outage_long.json">long</a> carry every sample of the
-      error and the bound, and the three
-      <span class="mono-inline">reconcile</span> records carry what each robot
-      learned. Every figure in the tables above is read out of them.
+      <a href="data/link_outage_baseline.json">baseline</a>,
+      <a href="data/link_outage_long.json">long</a>.
+    </p>
+
+    <p>
+      The full account, including why gating the announcement channel would
+      have measured nothing and what the reconciliation refused the first time
+      it was handed two real maps, is chapter 6 of the thesis.
     </p>
   </div>
 </section>
