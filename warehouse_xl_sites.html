@@ -582,8 +582,8 @@ sup.cite a:hover{text-decoration:underline}
     <p class="hero-p">
       They meet if contamination has a location. This page runs the same
       pipeline over a domain in which exactly one of <i>three</i> sites is
-      contaminated and nobody knows which. That is one line of EPDDL &#8212;
-      <span class="mono-inline">(contaminated ?s - site)</span> &#8212; and it
+      contaminated and nobody knows which. That is one line of EPDDL,
+      <span class="mono-inline">(contaminated ?s - site)</span>, and it
       changes the search by four orders of magnitude, the policy from four
       nodes to eight, and the execution from one robot that looks to two.
     </p>
@@ -591,8 +591,8 @@ sup.cite a:hover{text-decoration:underline}
       It also produces a result the single-site domain cannot produce at any
       floor size. Down one leaf of the policy the team finishes knowing the
       state of a site <b>no robot approached and no laser was ever pointed
-      at</b> &#8212; twenty-six metres from the nearer of the two the fleet did
-      visit, forty-one from the other &#8212; because exactly one site is
+      at</b> (twenty-six metres from the nearer of the two the fleet did visit,
+      forty-one from the other), because exactly one site is
       contaminated, two have been ruled out, and the third settles itself. The derived knowledge then travels over the private channel like
       any other finding, and the conjunct saying one agent must <i>not</i> come
       to know still holds over it.
@@ -610,7 +610,7 @@ sup.cite a:hover{text-decoration:underline}
       below.
     </p>
     <p class="note" style="margin-top:1rem">
-      The same floor &#8212; corrected &#8212; and the same fleet and bridge as
+      The same floor, corrected, and the same fleet and bridge as
       <a href="warehouse_xl.html">Epistemic planning on a warehouse floor at scale</a>.
       Domain and policy from <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
       dispatched by <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>,
@@ -627,12 +627,12 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The domain</p>
-    <h3>What one argument costs</h3>
+    <h3>The cost of one argument</h3>
 
     <p>
       The single-site domain asks whether a site is contaminated. This one asks
       <i>which</i> of three is, and says in the initial state that exactly one
-      of them is &#8212; which is common knowledge, while which one is known to
+      of them is, which is common knowledge, while which one is known to
       nobody. The model therefore designates one world per site.
     </p>
 
@@ -679,7 +679,7 @@ sup.cite a:hover{text-decoration:underline}
     </p>
 
     <p class="note">
-      Three sites is solved in about six seconds on this machine &#8212;
+      Three sites is solved in about six seconds on this machine:
       838&#8202;168 expansions, so better than 130&#8202;000 a second. That
       number is not a boast about the search. It is the reason the bringup
       broke, which is further down.
@@ -691,7 +691,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The policy</p>
-    <h3>Two robots, two scans, and a conclusion about neither</h3>
+    <h3>Policy structure: two sensing actions, two announcements, three leaves</h3>
 
     <figure class="demo-figure">
       <img src="media/warehouse-xl-sites-policy.svg" width="100%"
@@ -717,12 +717,12 @@ sup.cite a:hover{text-decoration:underline}
       <span class="mono-inline">a31</span> alone.
     </p>
 
-    <h4>Nobody ever goes to a31</h4>
+    <h4>Termination without observation</h4>
 
     <p>
       Exactly one site is contaminated, so ruling out two settles the third.
       Down the leaf where both scans come back clean, the team finishes knowing
-      the state of <span class="mono-inline">a31</span> &#8212; a waypoint
+      the state of <span class="mono-inline">a31</span>, a waypoint
       26.5&#8202;m from <span class="mono-inline">a17</span> and 41.4&#8202;m
       from <span class="mono-inline">a06</span>, which no task ever names as a
       destination. In the world variant where the pallet is standing there, it
@@ -735,7 +735,7 @@ sup.cite a:hover{text-decoration:underline}
       knowing is one some robot measured. Here one of them is not.
     </p>
 
-    <h4>Every announcement is a <span class="mono-inline">relay-clean</span></h4>
+    <h4>Second-order content of the announcements</h4>
 
     <p>
       Including the two that convey which site is dirty.
@@ -760,7 +760,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The sites</p>
-    <h3>Chosen by measurement, and most of the floor refused</h3>
+    <h3>Selection of sites by measurement</h3>
 
     <figure class="demo-figure">
       <img src="media/warehouse-xl-sites-floor.svg" width="100%"
@@ -770,7 +770,7 @@ sup.cite a:hover{text-decoration:underline}
         waypoints, 1&#8202;870 directed lanes, 155 obstacles. Grey is obstacle,
         blue the lanes, orange the aisle waypoints, red the chargers, green
         dotted the circuits of the nine actors. The ringed waypoints are the sites and the
-        dark squares the pallet positions &#8212; one per world variant, and
+        dark squares the pallet positions: one per world variant, and
         only one present in any run.
       </figcaption>
     </figure>
@@ -788,9 +788,9 @@ sup.cite a:hover{text-decoration:underline}
 
     <p>
       <span class="mono-inline">tools/check_sites.py</span> decides all three
-      from the world's own collision extents &#8212; the same footprint table
+      from the world's own collision extents, the same footprint table
       the navigation graph is rasterised from, so the two cannot disagree.
-      Thirteen of the thirty-nine aisle waypoints qualify. <span class="mono-inline">a17</span> is a dead end &#8212; one lane in, and it is the way out.
+      Thirteen of the thirty-nine aisle waypoints qualify. <span class="mono-inline">a17</span> is a dead end: one lane in, and it is the way out.
     </p>
 
     <table class="data">
@@ -840,7 +840,7 @@ sup.cite a:hover{text-decoration:underline}
       shorter than that is an obstacle to the model and invisible to the
       scan; and the nine actors are excluded from the model deliberately and
       are entirely visible to the scan. What the model is good for is refusing
-      a site, not predicting a reading &#8212; the sites it admits have more
+      a site and not predicting a reading: the sites it admits have more
       than a metre of clearance, and that margin is what absorbs half a metre
       of disagreement.
     </p>
@@ -851,7 +851,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The runs</p>
-    <h3>Three worlds, three leaves, one policy</h3>
+    <h3>Execution: three world variants, three leaves</h3>
 
     <p>
       The floor is built four times. The variants differ by where one pallet
@@ -891,8 +891,8 @@ sup.cite a:hover{text-decoration:underline}
         The third row, executed. Left: the whole 2&#8239;328&#8202;m&#178;
         roadmap with the fleet on it. Right: a camera trailing the scout at
         3.2&#8202;m, driven over Gazebo transport by
-        <span class="mono-inline">src/chase_camera.cpp</span> &mdash; the
-        documented way, <span class="mono-inline">gz camera -f</span>, waits
+        <span class="mono-inline">src/chase_camera.cpp</span>. The documented
+        way, <span class="mono-inline">gz camera -f</span>, waits
         for a subscriber that does not exist and blocks for ever. The transit
         is sampled at 8&#215; and the epistemic sequence played at 1.5&#215;,
         because eight minutes of driving and eighteen seconds of reasoning do
@@ -913,7 +913,7 @@ sup.cite a:hover{text-decoration:underline}
       a demonstration of anything working.
     </p>
 
-    <h4>What the run reports</h4>
+    <h4>Perception, and what the run reports</h4>
 
     <pre class="code">r1 at a06 (0.27 m from it), nearest return 2.25 m -&gt; e-scan-clean
 r2 at a17 (0.31 m from it), nearest return 0.97 m -&gt; e-scan-clean
@@ -965,7 +965,7 @@ applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
       the goal holds.
     </p>
 
-    <h4>The frame does not stay S5</h4>
+    <h4>Frame properties after product update</h4>
 
     <p>
       The problem declares <span class="mono-inline">:finitary-S5-theories</span>
@@ -997,7 +997,7 @@ applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
     </p>
 
     <p>
-      At the final model the observer's relation is constant &mdash; every
+      At the final model the observer's relation is constant: every
       world maps to the same image {w<sub>1</sub>, w<sub>5</sub>,
       w<sub>7</sub>}, and the actual world w<sub>2</sub> is not in it. Three
       things follow, and all three were computed from the relations:
@@ -1011,7 +1011,7 @@ applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
         contains one world for each of the three sites.</li>
       <li>Its <em>second-order</em> belief is false. At w<sub>2</sub> both the
         scout and the relay know which site it is. At no world of the
-        observer's image do both know &mdash; at w<sub>1</sub> the relay knows
+        observer's image do both know: at w<sub>1</sub> the relay knows
         and the scout does not, at w<sub>7</sub> the other way round, at
         w<sub>5</sub> neither. The observer believes the mission has not
         succeeded, and it has.</li>
@@ -1029,7 +1029,7 @@ applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
       are different operational conditions.
     </p>
 
-    <h4>The verdict</h4>
+    <h4>Evaluation of the goal formula</h4>
 
     <pre class="code">ok   (Kw scout contaminated_a06) holds
 ok   (Kw scout contaminated_a17) holds
@@ -1059,7 +1059,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
 <section>
   <div class="container">
     <p class="sec-label">What broke</p>
-    <h3>Eight defects, and the floor was one of them</h3>
+    <h3>Eight defects, and the interface each was found at</h3>
 
     <p>
       None is an error inside any component. Each is a property of the
@@ -1164,7 +1164,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
     <p>
       The rasteriser read the declarations. So the map had obstacles where the
       floor is clear, clear floor where an obstacle stands, and slabs in the
-      wrong place &#8212; and every symptom of that is a robot behaving
+      wrong place, and every symptom of that is a robot behaving
       correctly in a world the planner has the wrong map of, which is the
       hardest kind of fault to attribute.
     </p>
@@ -1192,12 +1192,12 @@ the mission came out as specified: 9 formulas against the state the fleet left b
       graph rather than holding them as constants: a pose copied from an older
       graph puts a robot somewhere RMF does not think it is, and the first
       command is then issued from a place the robot is not. And the single-site
-      demonstration's own site does not survive the correction &#8212; on the
-      corrected floor no side of it admits the pallet &#8212; so that
+      demonstration's own site does not survive the correction (on the corrected
+      floor no side of it admits the pallet), so that
       demonstration now runs at <span class="mono-inline">a17</span> too.
     </p>
 
-    <h4>The race the small domain never let anyone lose</h4>
+    <h4>A race condition the smaller domain concealed</h4>
 
     <p>
       The whole planning system is one process, and a plan request is served on
@@ -1219,7 +1219,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
       either says so.
     </p>
 
-    <h4>An observation belongs to a place, not to a moment</h4>
+    <h4>Attribution of observations to places</h4>
 
     <p>
       The first fix for the shared observation topic was to timestamp readings
@@ -1228,7 +1228,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
       <span class="mono-inline">goto</span> that precedes the scan, so the
       correct reading is already seconds old when the scan begins. A rule that
       accepted only fresh readings would discard the right answer and fall
-      through to the task map's stand-in &#8212; which, because the launch
+      through to the task map's stand-in, which, because the launch
       writes that stand-in from the same argument that places the pallet, would
       have been <i>correct</i>, and the defect would have shipped invisible.
     </p>
@@ -1240,11 +1240,11 @@ the mission came out as specified: 9 formulas against the state the fleet left b
       answer for each other however they are ordered in time.
     </p>
 
-    <h4>A precondition that denied the domain</h4>
+    <h4>A classical precondition contradicting the domain</h4>
 
     <p>
-      The classical half of this mission is deliberately blind &#8212; it
-      cannot tell a broadcast from an encrypted relay &#8212; but it still
+      The classical half of this mission is deliberately blind (it cannot tell a
+      broadcast from an encrypted relay), but it still
       gates the actions the executor drives, and one of its gates was an
       assumption this domain exists to refute. <span class="mono-inline">relay</span>
       required <span class="mono-inline">(scanned ?from ?s)</span>: the speaker
@@ -1262,29 +1262,29 @@ the mission came out as specified: 9 formulas against the state the fleet left b
       place.</b>
     </p>
 
-    <h4>One thing that went right, and is worth as much</h4>
+    <h4>A correct refusal by the post-run check</h4>
 
     <p>
       Given the wrong formulas, the post-run check reported them
       <span class="mono-inline">UNCHECKED</span> and failed the run rather than
       reporting that nothing holds. That distinction is the one the previous
-      page argued for &#8212; a transcript that fails to arrive is not an agent
-      that heard nothing &#8212; and here it is the difference between
+      page argued for (a transcript that fails to arrive is not an agent that
+      heard nothing), and here it is the difference between
       &#8220;your formulas are wrong&#8221; and &#8220;your mission
       failed&#8221;. A check that answered <i>false</i> to a question it could
       not parse would have made a correct run look like a broken one, and a
       broken one look correct.
     </p>
 
-    <h4>One thing observed and not explained</h4>
+    <h4>One observation without explanation</h4>
 
     <p>
       On the floor as it was read before the correction, the scout stopped 2.5
       metres short of its site, in open floor with 1.05&#8202;m of clearance,
       and never moved again. It did so twice, at the same coordinates to three
       decimals. Its own laser saw something 0.23&#8202;m behind it, fixed in the
-      world &#8212; moving the robot 0.86&#8202;m moved the reading by
-      0.85&#8202;m at the same bearing &#8212; and nothing in the world file,
+      world (moving the robot 0.86&#8202;m moved the reading by 0.85&#8202;m at
+      the same bearing), and nothing in the world file,
       at any nesting depth, in the declared poses or the recorded ones, and no
       actor on any of its trajectory legs, is within 1.9&#8202;m of that point.
       The fleet manager reported the robot 10.5 seconds from its destination
@@ -1305,7 +1305,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
 <section>
   <div class="container">
     <p class="sec-label">Scope</p>
-    <h3>What these runs establish</h3>
+    <h3>What the runs establish</h3>
 
     <p>
       Stated in the existential register: there exists a run in which each held.
@@ -1335,7 +1335,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
       demonstrated by a run that only ever takes one branch.
     </p>
 
-    <h3 style="margin-top:2.2rem">And what they do not</h3>
+    <h3 style="margin-top:2.2rem">What the runs do not establish</h3>
 
     <p>
       <b>Concurrency.</b> The executor runs a policy strictly in order, so the

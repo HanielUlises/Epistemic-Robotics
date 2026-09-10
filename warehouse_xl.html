@@ -625,7 +625,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The floor</p>
-    <h3>A survey of what is available, and why none of it served</h3>
+    <h3>Available floor plans, and why none served</h3>
     <p>
       Open-RMF routes over a navigation graph and a building map, and its
       demonstrations distribute both. The largest of those are the airport
@@ -698,7 +698,7 @@ sup.cite a:hover{text-decoration:underline}
     <table class="data">
       <thead><tr><th>Property</th><th>Value</th></tr></thead>
       <tbody>
-        <tr><td>Extent</td><td>42.0 &#215; 62.8 m &#8212; 2 640 m&#178;</td></tr>
+        <tr><td>Extent</td><td>42.0 &#215; 62.8 m, 2 640 m&#178;</td></tr>
         <tr><td>Floor slabs</td><td>9</td></tr>
         <tr><td>Obstacles</td><td>153, drawn from 14 AWS assets</td></tr>
         <tr><td>Longest rack</td><td>18.05 m (<span class="mono-inline">ShelfF</span>, six of them)</td></tr>
@@ -724,7 +724,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The roadmap</p>
-    <h3>Recovering a graph from a world that was not designed to yield one</h3>
+    <h3>Recovering a navigation graph from the world file</h3>
     <p>
       The derivation proceeds in four stages, each of which failed at least
       once before it held.
@@ -821,7 +821,7 @@ sup.cite a:hover{text-decoration:underline}
       <b>Superseded.</b> These figures are derived from the poses the world's
       models declare, and Gazebo does not use those: the world carries a saved
       <span class="mono-inline">&lt;state&gt;</span> block, applied at load,
-      and fourteen of its poses disagree with the declaration &#8212; by
+      and fourteen of its poses disagree with the declaration: by
       0.19&#8202;m for one floor slab, by 49.8&#8202;m for another, and by
       149&#8202;m for a prop the declaration puts inside the building. Read
       from the poses actually loaded, the floor gives 155 obstacles, 289
@@ -837,7 +837,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">Result</p>
-    <h3>Where the layer gave way, and of what kind</h3>
+    <h3>Where the layer failed, and in what way</h3>
     <p>
       Eight defects were encountered in bringing the chain into operation at
       this scale. With the lattice measurement above they are what this page
@@ -895,7 +895,7 @@ sup.cite a:hover{text-decoration:underline}
       </tbody>
     </table>
 
-    <h3>Three of these warrant comment</h3>
+    <h3>Three defects warranting comment</h3>
     <p>
       <b>The pallet jack.</b> The lane check was written to refuse lanes
       crossing obstacles, and it did refuse three layouts which appeared
@@ -914,9 +914,9 @@ sup.cite a:hover{text-decoration:underline}
     </p>
     <p>
       <b>The model that would not move.</b> A Waffle constructed to
-      <span class="mono-inline">slotcar</span>'s documented requirements &#8212;
-      a <span class="mono-inline">base_footprint</span>, two wheel links, two
-      named revolute joints &#8212; loaded, initialised, published state at
+      <span class="mono-inline">slotcar</span>'s documented requirements (a
+      <span class="mono-inline">base_footprint</span>, two wheel links, two
+      named revolute joints) loaded, initialised, published state at
       6&#8202;Hz, accepted paths, and remained stationary. TinyRobot crossed the
       same floor on the same graph without difficulty, which is what isolated
       the model from the world and the roadmap. The resolution retains the
@@ -941,7 +941,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The run</p>
-    <h3>What the scan cost</h3>
+    <h3>The cost of the scan</h3>
     <p>
       Gazebo on the left, the Open-RMF traffic schedule on the right. Caption
       times are read from the mission's own log and offset against the frame the
@@ -1217,7 +1217,7 @@ applied relay-dirty_relay_scout:     3 worlds, 1 designated</code></pre>
             (Kw relay contaminated)
             (not (Kw observer contaminated)))  holds</code></pre>
 
-    <h3>The verdict, and the two kinds of claim it rests on</h3>
+    <h3>Evaluation of the goal, and the two kinds of claim it rests on</h3>
     <pre><code>ok   (Kw scout contaminated) holds
 ok   (Kw relay contaminated) holds
 ok   (Kw observer contaminated) does not hold
@@ -1291,7 +1291,7 @@ ok   observer was spoken to by nobody</code></pre>
       above.)
     </p>
 
-    <h3>And what it does not</h3>
+    <h3>What the run does not establish</h3>
     <p>
       <b>The complexity of epistemic planning.</b> The policy has four nodes and
       would be solved as readily over a floor plan sketched on paper. Floor size
@@ -1303,7 +1303,7 @@ ok   observer was spoken to by nobody</code></pre>
       pinned tasks were accepted and executed concurrently without failure, but
       concurrency is not contention: nothing forced two robots into the same
       corridor at once. Settling it means constructing that conflict on purpose
-      and measuring what the traffic schedule does with it &#8212; how long
+      and measuring what the traffic schedule does with it: how long
       negotiation takes, whether it converges, and what it costs the mission
       that yields. The instrumentation is in place and the experiment is not.
     </p>
@@ -1328,7 +1328,7 @@ ok   observer was spoken to by nobody</code></pre>
       utterance is published to a topic whose subscribers are the audience the
       action declares. Any node may subscribe to any topic. The claim available
       is that the team used a channel on which the excluded agent was not
-      addressed &#8212; not that it could not have listened. The stronger claim
+      addressed, and not that it could not have listened. The stronger claim
       requires DDS partitions or SROS&#8202;2 permissions, and those would be
       built from these same declared audiences, so what separates them is
       enforcement, not design.
