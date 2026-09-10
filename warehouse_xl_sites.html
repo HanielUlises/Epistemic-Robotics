@@ -882,6 +882,29 @@ sup.cite a:hover{text-decoration:underline}
       a31, and the team concludes a31 anyway.
     </p>
 
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/warehouse_xl_sites.jpg">
+        <source src="media/warehouse_xl_sites.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        The third row, executed. Left: the whole 2&#8239;328&#8202;m&#178;
+        roadmap with the fleet on it. Right: a camera trailing the scout at
+        3.2&#8202;m, driven over Gazebo transport by
+        <span class="mono-inline">src/chase_camera.cpp</span> &mdash; the
+        documented way, <span class="mono-inline">gz camera -f</span>, waits
+        for a subscriber that does not exist and blocks for ever. The transit
+        is sampled at 8&#215; and the epistemic sequence played at 1.5&#215;,
+        because eight minutes of driving and eighteen seconds of reasoning do
+        not share a speed. Captions are matched against the mission's own log
+        and timed by the ROS timestamp of the line that carries them, so a
+        caption saying the robot sensed something is on the frame where it did.
+        The closing card says what the footage cannot: the site the team ends
+        up knowing about is the one nobody drove to, so the frame in which the
+        mission succeeds looks exactly like the frame before it.
+      </figcaption>
+    </figure>
+
     <p>
       The fourth build is a control and is not in the table. The domain says
       exactly one site is contaminated, so a world with no pallet contradicts
@@ -940,6 +963,70 @@ applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
       say which of the remaining pair it is in. Only the second scan settles
       it, and the team has to spend a second announcement after that before
       the goal holds.
+    </p>
+
+    <h4>The frame does not stay S5</h4>
+
+    <p>
+      The problem declares <span class="mono-inline">:finitary-S5-theories</span>
+      and the parser reports <span class="mono-inline">Frame: S5</span>. Both
+      statements are about the initial model. What the relations satisfy after
+      six product updates is a different question, and the answer was measured
+      off the recorded models rather than assumed.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th>model</th><th>|W|</th><th>scout</th><th>relay</th><th>observer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0&#8211;3</td><td>3</td><td>S5</td><td>S5</td><td>S5</td></tr>
+          <tr><td>4</td><td>5</td><td>S5</td><td>S5</td><td>KD45</td></tr>
+          <tr><td>5</td><td>5</td><td>S5</td><td>S5</td><td>KD45</td></tr>
+          <tr><td>6</td><td>8</td><td>S5</td><td>S5</td><td>KD45</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      From the first private announcement the observer's relation is serial,
+      transitive and euclidean, and it is not reflexive; and the worlds where
+      reflexivity fails are exactly the designated ones. That is not a bug. It
+      is what modelling an agent as oblivious to an event that occurs means:
+      the excluded agent does not merely fail to learn the content, it comes to
+      believe no announcement took place.
+    </p>
+
+    <p>
+      At the final model the observer's relation is constant &mdash; every
+      world maps to the same image {w<sub>1</sub>, w<sub>5</sub>,
+      w<sub>7</sub>}, and the actual world w<sub>2</sub> is not in it. Three
+      things follow, and all three were computed from the relations:
+    </p>
+
+    <ul>
+      <li>Every propositional belief the observer holds is true. The atoms
+        holding at all three worlds of its image hold at w<sub>2</sub> as well,
+        and w<sub>2</sub> and w<sub>5</sub> agree on every atom in the model.</li>
+      <li>It is ignorant of the contamination, as the goal requires: its image
+        contains one world for each of the three sites.</li>
+      <li>Its <em>second-order</em> belief is false. At w<sub>2</sub> both the
+        scout and the relay know which site it is. At no world of the
+        observer's image do both know &mdash; at w<sub>1</sub> the relay knows
+        and the scout does not, at w<sub>7</sub> the other way round, at
+        w<sub>5</sub> neither. The observer believes the mission has not
+        succeeded, and it has.</li>
+    </ul>
+
+    <p>
+      This is the price of the private channel, and it is not what the goal
+      formula measures. The goal asks that the observer not know which site is
+      contaminated, which is a first-order condition on one agent. What the
+      execution delivers is stronger and different in kind: an agent right
+      about every fact, ignorant of the one thing it was required to be
+      ignorant of, and wrong about what its colleagues know. A specification
+      written only in first-order epistemic conjuncts cannot tell an agent kept
+      in the dark from an agent given a false picture of the others, and those
+      are different operational conditions.
     </p>
 
     <h4>The verdict</h4>

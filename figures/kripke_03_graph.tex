@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+  x=1mm, y=1mm,
+  wld/.style={circle, draw=ink, fill=mist, minimum size=9mm,
+              inner sep=0pt, font=\ttfamily\scriptsize},
+  des/.style={circle, draw=signal, line width=0.6pt,
+              minimum size=11.4mm, inner sep=0pt},
+  rel/.style={draw=steel, line width=0.5pt},
+  dir/.style={draw=steel, line width=0.5pt, -{Latex[length=1.6mm]}},
+  irr/.style={circle, draw=signal, line width=0.5pt, dashed,
+              minimum size=13.4mm, inner sep=0pt},
+  ag/.style={font=\ttfamily\tiny, text=steel, inner sep=1.2pt,
+             fill=white},
+  val/.style={font=\tiny, text=slate}]
+  \draw[rel] (0.00,22.00) -- (19.05,-11.00) node[ag, pos=0.5] {o\,r\,s};
+  \draw[rel] (0.00,22.00) -- (-19.05,-11.00) node[ag, pos=0.5] {o\,r};
+  \draw[rel] (19.05,-11.00) -- (-19.05,-11.00) node[ag, pos=0.5] {o\,r};
+  \node[des] at (0.00,22.00) {};
+  \node[wld] at (0.00,22.00) {$w_{0}$};
+  \node[val] at (0.00,31.24) {a06};
+  \node[des] at (19.05,-11.00) {};
+  \node[wld] at (19.05,-11.00) {$w_{1}$};
+  \node[val] at (27.05,-15.62) {a31};
+  \node[wld] at (-19.05,-11.00) {$w_{2}$};
+  \node[val] at (-27.05,-15.62) {a17};
+\end{tikzpicture}

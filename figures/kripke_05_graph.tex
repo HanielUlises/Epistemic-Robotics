@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+  x=1mm, y=1mm,
+  wld/.style={circle, draw=ink, fill=mist, minimum size=9mm,
+              inner sep=0pt, font=\ttfamily\scriptsize},
+  des/.style={circle, draw=signal, line width=0.6pt,
+              minimum size=11.4mm, inner sep=0pt},
+  rel/.style={draw=steel, line width=0.5pt},
+  dir/.style={draw=steel, line width=0.5pt, -{Latex[length=1.6mm]}},
+  irr/.style={circle, draw=signal, line width=0.5pt, dashed,
+              minimum size=13.4mm, inner sep=0pt},
+  ag/.style={font=\ttfamily\tiny, text=steel, inner sep=1.2pt,
+             fill=white},
+  val/.style={font=\tiny, text=slate}]
+  \draw[dir] (0.00,22.00) -- (20.92,6.80) node[ag, pos=0.5] {o};
+  \draw[rel] (0.00,22.00) -- (12.93,-17.80) node[ag, pos=0.5] {s};
+  \draw[dir] (0.00,22.00) -- (-12.93,-17.80) node[ag, pos=0.5] {o};
+  \draw[dir] (0.00,22.00) -- (-20.92,6.80) node[ag, pos=0.5] {o};
+  \draw[dir] (20.92,6.80) -- (12.93,-17.80) node[ag, pos=0.5] {o};
+  \draw[rel] (20.92,6.80) -- (-12.93,-17.80) node[ag, pos=0.5] {o\,s};
+  \draw[rel] (20.92,6.80) -- (-20.92,6.80) node[ag, pos=0.5] {o};
+  \draw[dir] (12.93,-17.80) -- (-12.93,-17.80) node[ag, pos=0.5] {o};
+  \draw[dir] (12.93,-17.80) -- (-20.92,6.80) node[ag, pos=0.5] {o};
+  \draw[rel] (-12.93,-17.80) -- (-20.92,6.80) node[ag, pos=0.5] {o\,r};
+  \node[irr] at (0.00,22.00) {};
+  \node[wld] at (0.00,22.00) {$w_{0}$};
+  \node[val] at (0.00,31.24) {a06};
+  \node[wld] at (20.92,6.80) {$w_{1}$};
+  \node[val] at (29.71,9.65) {a06};
+  \node[irr] at (12.93,-17.80) {};
+  \node[des] at (12.93,-17.80) {};
+  \node[wld] at (12.93,-17.80) {$w_{2}$};
+  \node[val] at (18.36,-25.27) {a31};
+  \node[wld] at (-12.93,-17.80) {$w_{3}$};
+  \node[val] at (-18.36,-25.27) {a31};
+  \node[wld] at (-20.92,6.80) {$w_{4}$};
+  \node[val] at (-29.71,9.65) {a17};
+\end{tikzpicture}
