@@ -16,7 +16,8 @@
 # Composes a recorded multi-site mission into the finished video.
 #
 # Four parts: an opening card, the transit, the epistemic sequence, and a
-# closing card.
+# closing card. The opening card names the film and shows a frame of it; the
+# closing card states the outcome.
 #
 # The two middle parts are at different speeds because the run has two
 # timescales. The robots spend some eight minutes crossing the floor and the
@@ -28,11 +29,11 @@
 # the sequence is played out. The caption track is offset within each segment,
 # so a caption still appears at the frame its event occurred on.
 #
-# The two cards carry what the footage cannot. The opening one states the
-# premise, without which two robots stopping at two aisles is not a result.
-# The closing one states the outcome, which is the one thing the film has no
-# way of showing: the contaminated site is the one no robot visited, so the
-# frame in which the mission succeeds looks exactly like the frame before it.
+# The closing card carries what the footage cannot: the contaminated site is
+# the one no robot visited, so the frame in which the mission succeeds looks
+# exactly like the frame before it. It is written from the run's own log, as is
+# the still on the opening card, so neither can assert anything the recording
+# does not contain.
 #
 #     make_sites_video.sh /tmp/raw.mkv /tmp/run.log /tmp/sites.mp4
 #
@@ -65,27 +66,6 @@ SCANNED=$(grep -oE 'applied scan_[a-z]+_[a-z0-9]+' "$LOG" \
           | sed 's/.*_//' | awk '!seen[$0]++' | paste -sd, -)
 SCANNED=${SCANNED:-a17,a06}
 
-# The planner runs during bringup, before the capture opens, so its result
-# cannot be captioned on a frame and goes on the opening card instead.
-POLICY=$(grep -oE 'policy with [0-9]+ nodes, [0-9]+ leaves' "$LOG" | head -1)
-POLICY=${POLICY:+the planner returns a $POLICY}
-
-python3 "$HERE/make_sites_cards.py" --outdir "$WORK" --site "$SITE" \
-        --scanned "$SCANNED" --policy "$POLICY"
-
-# A card is a still. It is given a fade at each end so it does not cut hard
-# into moving footage, and the same frame rate and pixel format as the
-# segments, because the concat demuxer joins streams by copying them and will
-# not reconcile two that disagree.
-card() {
-  local png="$1" out="$2" secs="$3"
-  ffmpeg -y -hide_banner -loglevel error -loop 1 -t "$secs" -i "$png" \
-         -vf "fps=$FPS,format=yuv420p,fade=t=in:st=0:d=0.5,fade=t=out:st=$(echo "$secs - 0.6" | bc):d=0.6" \
-         -c:v libx264 -preset slow -crf 20 -r "$FPS" "$out"
-}
-card "$WORK/card_open.png"  "$WORK/open.mp4"  5
-card "$WORK/card_close.png" "$WORK/close.mp4" 7
-
 # RViz is on the left of the capture and Gazebo on the right, the reverse of
 # the single-site recording. Both crops were measured from a frame of this
 # capture. The RViz one cannot be the single-site crop shifted, because this
@@ -105,11 +85,16 @@ card "$WORK/card_close.png" "$WORK/close.mp4" 7
 # The roadmap is 38.8 m across and 60.0 m deep, so the region holding all of it
 # is taller than it is wide; giving it the same width as the Gazebo pane would
 # be half a pane of empty floor.
+GZ_CROP=${GZ_CROP:-1620:911:2188:78}
+RV_CROP=${RV_CROP:-800:1030:560:30}
+GZ_PANE=1280:720
+RV_PANE=576:720
+
 common=(--raw "$RAW" --captions "$CAPS" --fps "$FPS"
         --order rviz,gazebo
-        --gazebo-crop "${GZ_CROP:-1620:911:2188:78}"
-        --rviz-crop 800:1030:560:30
-        --pane 1280:720 --rviz-pane 576:720
+        --gazebo-crop "$GZ_CROP"
+        --rviz-crop "$RV_CROP"
+        --pane "$GZ_PANE" --rviz-pane "$RV_PANE"
         # Short, and without commas. Each label is drawn over its own pane and
         # the RViz pane is 576 px wide; a longer line runs under the Gazebo
         # label and the two read as one sentence. Commas are stripped by the
@@ -132,6 +117,33 @@ python3 "$HERE/make_video.py" "${common[@]}" \
 python3 "$HERE/make_video.py" "${common[@]}" \
     --out "$WORK/seg2.mp4" --start "$SEG2_START" --trim "$SEG2_TRIM" \
     --speed "$SEG2_SPEED"
+
+# The still on the opening card is cut from this recording, with the geometry
+# the film is composed at, so the card previews the frame that follows it and
+# cannot show some other run. It is taken without captions or pane labels: the
+# card carries a title already, and two sets of lettering over one frame is one
+# too many.
+SHOT_AT=${SHOT_AT:-400}
+ffmpeg -y -hide_banner -loglevel error -ss "$SHOT_AT" -i "$RAW" -frames:v 1 \
+    -filter_complex \
+    "[0:v]crop=$RV_CROP,scale=$RV_PANE[rv];[0:v]crop=$GZ_CROP,scale=$GZ_PANE[gz];[rv][gz]hstack=inputs=2" \
+    "$WORK/shot.png"
+
+python3 "$HERE/make_sites_cards.py" --outdir "$WORK" --site "$SITE" \
+        --scanned "$SCANNED" --shot "$WORK/shot.png"
+
+# A card is a still. It is given a fade at each end so it does not cut hard
+# into moving footage, and the same frame rate and pixel format as the
+# segments, because the concat demuxer joins streams by copying them and will
+# not reconcile two that disagree.
+card() {
+  local png="$1" out="$2" secs="$3"
+  ffmpeg -y -hide_banner -loglevel error -loop 1 -t "$secs" -i "$png" \
+         -vf "fps=$FPS,format=yuv420p,fade=t=in:st=0:d=0.5,fade=t=out:st=$(echo "$secs - 0.6" | bc):d=0.6" \
+         -c:v libx264 -preset slow -crf 20 -r "$FPS" "$out"
+}
+card "$WORK/card_open.png"  "$WORK/open.mp4"  4
+card "$WORK/card_close.png" "$WORK/close.mp4" 7
 
 for f in open seg1 seg2 close; do printf "file '%s'\n" "$WORK/$f.mp4"; done > "$WORK/list"
 # Re-encoded rather than stream-copied. The parts are encoded with the same
