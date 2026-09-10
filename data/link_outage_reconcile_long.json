@@ -1,17 +1,17 @@
 {
   "at_link_down": {
-    "a_decided": 4864,
-    "b_decided": 6541
+    "a_decided": 5036,
+    "b_decided": 4879
   },
   "at_link_up": {
-    "a_decided": 4899,
-    "b_decided": 6541,
-    "cells_total": 70004
+    "a_decided": 4903,
+    "b_decided": 4879,
+    "cells_total": 65505
   },
-  "coverage_a": 0.07,
-  "coverage_b": 0.0934,
-  "a_learned": 6541,
-  "b_learned": 4899,
+  "coverage_a": 0.0748,
+  "coverage_b": 0.0745,
+  "a_learned": 4879,
+  "b_learned": 4903,
   "conflicts": 0,
-  "reply": "a learned 6541 cells, b learned 4899, 0 in conflict"
+  "reply": "a learned 4879 cells, b learned 4903, 0 in conflict"
 }

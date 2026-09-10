@@ -562,6 +562,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -791,7 +792,10 @@ sup.cite a:hover{text-decoration:underline}
       <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>,
       with <span class="mono-inline">v<sub>max</sub> = 0.22&#8202;m/s</span>
       taken from the speed the fleet's own controller enforces. Three runs, of
-      thirty, sixty and a hundred and twenty seconds, meet it with no breaches.
+      thirty, sixty and a hundred and twenty seconds, meet it with no breaches:
+      worst errors of 3.63, 6.97 and 19.20&#8202;m, each at the last sample and
+      each larger than the one before, which is what an estimate that ages
+      should do.
     </p>
 
     <figure class="demo-figure">
@@ -848,6 +852,14 @@ ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
       <a href="data/link_outage_short.json">short</a>,
       <a href="data/link_outage_baseline.json">baseline</a>,
       <a href="data/link_outage_long.json">long</a>, and the run in the film as <a href="data/link_outage_demo.json">demo</a>.
+    </p>
+
+    <p>
+      The full account is the report,
+      <a href="link_outage.pdf">A Link That Actually Falls</a>: the three
+      outage lengths, the proposition that fixes what the bound is and is not
+      worth, the map alignment the reconciliation needed, and what it would
+      take to make two robots hold two models instead of one.
     </p>
 
     <p>
