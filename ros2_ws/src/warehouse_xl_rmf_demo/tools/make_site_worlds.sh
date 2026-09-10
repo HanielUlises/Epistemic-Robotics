@@ -40,18 +40,42 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUT="${1:-/tmp}"
-WORLD="${WORLD:-$HERE/../../../third_party/dynamic_logistics_warehouse/worlds/warehouse.world}"
 
-if [ ! -f "$WORLD" ]; then
-  echo "no world at $WORLD" >&2
+# The floor is GPL-2.0 and is fetched, not vendored, so it sits in the source
+# workspace and not in the installed share directory. This script is run from
+# both, and the path relative to its own location is therefore correct in one
+# case only. Candidates are tried in order and WORLD overrides all of them.
+REL=third_party/dynamic_logistics_warehouse/worlds/warehouse.world
+WORLD="${WORLD:-}"
+for candidate in "$WORLD" \
+                 "$HERE/../../../$REL" \
+                 "$HOME/Projects/Epistemic-Robotics/ros2_ws/$REL"; do
+  [ -n "$candidate" ] && [ -f "$candidate" ] && WORLD="$candidate" && break
+done
+
+if [ -z "$WORLD" ] || [ ! -f "$WORLD" ]; then
+  echo "no world found; tried the path relative to $HERE and the source workspace" >&2
   echo "the floor is GPL-2.0 and fetched rather than vendored; see the README" >&2
   exit 1
 fi
 
-# Looking across a17 from the north, which is the view the single-site
-# recording used: the robot approaches from the south, so it drives towards the
-# camera and grows in frame.
-POSE="1.40 20.4 2.6 0 0.454 -1.6239"
+# A metre and a half north of a17, at half the height of the robot's mast,
+# looking south down the aisle. The scout enters from dock17, which is the only
+# lane into a17 and lies to the south, so it drives towards the camera and
+# grows in frame.
+#
+# The distance is set by the size the robot has to occupy and not by what makes
+# a pleasing composition. A TurtleBot3 Waffle is 0.28 m across. Measured off
+# the capture, it spans some forty-eight pixels of a 1640-pixel canvas at
+# 3.15 m and some twenty at 4.65 m, and at either distance the crop that makes
+# it legible contains nothing but floor. At 1.5 m it spans about a hundred, and
+# the aisle either side of it survives the crop.
+#
+# The height is 0.50 m rather than 2.60 m for a separate reason: from above, a
+# Waffle is a disc. The earlier recording showed a dark circle on a floor and
+# nothing that reads as a vehicle. Near the height of its own mast the chassis,
+# the mast and the laser return are all distinguishable.
+POSE="1.49 17.25 0.50 0 0.229 -1.5708"
 
 place() {
   local name="$1" pallet="$2"

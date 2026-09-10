@@ -105,6 +105,20 @@ def main():
                     help='W:H the RViz pane is scaled to')
     ap.add_argument('--captions', required=True,
                     help='file of "seconds<TAB>text" lines, in capture time')
+    # Which pane is on the left of the finished frame. The single-site
+    # recording puts Gazebo there; the multi-site one puts RViz there, because
+    # that mission is about which of three named places a robot was sent to and
+    # the roadmap is where that is legible.
+    ap.add_argument('--order', default='gazebo,rviz',
+                    choices=['gazebo,rviz', 'rviz,gazebo'],
+                    help='left pane first')
+    ap.add_argument('--gazebo-label',
+                    default='GAZEBO — aisle_07 of the dynamic logistics warehouse')
+    ap.add_argument('--rviz-label',
+                    default='RVIZ — roadmap and traffic schedule')
+    ap.add_argument('--fps', type=int, default=30,
+                    help='output frame rate; shared with the cards so the '
+                         'segments concatenate')
     args = ap.parse_args()
 
     caps = []
@@ -135,16 +149,26 @@ def main():
             f'crop={args.gazebo_crop},scale={args.pane}[gz]',
             f'crop={args.rviz_crop},scale={args.rviz_pane}[rv]',
         ]
-        filters = (f'[0:v]{chain[0]};[0:v]{chain[1]};[gz][rv]hstack=inputs=2[stacked];'
+        first, second = args.order.split(',')
+        tag = {'gazebo': '[gz]', 'rviz': '[rv]'}
+        filters = (f'[0:v]{chain[0]};[0:v]{chain[1]};'
+                   f'{tag[first]}{tag[second]}hstack=inputs=2[stacked];'
                    f'[stacked]setpts=PTS/{args.speed}[fast];[fast]')
 
-    pane_w = int(args.pane.split(':')[0])
-    overlays = [
-        drawtext('GAZEBO — aisle_07 of the dynamic logistics warehouse',
-                 MONO, 20, 20, 18, alpha='0.70'),
-        drawtext('RVIZ — roadmap and traffic schedule',
-                 MONO, 20, pane_w + 20, 18, alpha='0.70'),
-    ]
+    # Each label sits over its own pane, so the offsets follow the order rather
+    # than assuming it. A label naming the wrong window is worse than none.
+    width = {'gazebo': int(args.pane.split(':')[0]),
+             'rviz': int(args.rviz_pane.split(':')[0])}
+    label = {'gazebo': args.gazebo_label, 'rviz': args.rviz_label}
+    if args.precomposed:
+        order = ['gazebo', 'rviz']
+    else:
+        order = args.order.split(',')
+    overlays, offset = [], 0
+    for pane in order:
+        overlays.append(drawtext(label[pane], MONO, 20, offset + 20, 18,
+                                 alpha='0.70'))
+        offset += width[pane]
     for i, (t, text) in enumerate(caps):
         start = round(t / args.speed, 2)
         end = round((caps[i + 1][0] if i + 1 < len(caps) else args.trim)
@@ -161,9 +185,15 @@ def main():
         fh.write(graph)
         script = fh.name
 
+    # A constant output rate, and not the capture's. Segments are concatenated
+    # with the cards, and the concat demuxer joins streams by copying them: a
+    # variable-rate segment produced by setpts and a card produced from a still
+    # do not share a timebase, and the join then plays the second stream on the
+    # first one's clock.
     cmd = ['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error',
            '-ss', str(args.start), '-t', str(args.trim), '-i', args.raw,
            '-filter_complex_script', script, '-map', '[v]',
+           '-r', str(args.fps),
            '-c:v', 'libx264', '-preset', 'slow', '-crf', '23',
            '-pix_fmt', 'yuv420p', '-movflags', '+faststart', args.out]
     subprocess.run(cmd, check=True)

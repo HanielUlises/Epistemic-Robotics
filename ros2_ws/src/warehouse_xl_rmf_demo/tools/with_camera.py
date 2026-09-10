@@ -16,10 +16,24 @@
 """
 Writes a copy of a world with the GUI camera placed where we want it.
 
-Gazebo Classic takes its initial view from `<gui><camera>` in the world, and
-offers no way to set a pose afterwards: `gz camera` can follow a model, which
-puts the camera on top of it and frames crates rather than robots, and nothing
-else. So the pose is written into a copy of the world before it is launched.
+Gazebo Classic takes its initial view from `<gui><camera>` in the world and
+offers no way to set a pose afterwards, so the pose is written into a copy of
+the world before it is launched.
+
+There is no `<track_visual>` here, and the reason is worth recording because
+it is the obvious thing to reach for. A `<track_visual>` naming a model can
+only name one that exists when the world loads, and the robots are spawned
+some forty seconds later by a timer. Written without a name it supplies the
+defaults for a follow request issued afterwards, but the only tool that issues
+one is `gz camera -c user_camera -f <model>`, which advertises on
+`~/user_camera/cmd` and waits for a subscriber before publishing. Nothing
+subscribes to that topic: it belongs to camera sensors, and the GUI camera is
+not one. The command therefore blocks for ever and takes the script that
+called it with it.
+
+Following is done instead by `chase_camera`, which computes the pose it wants
+and publishes it on `~/user_camera/joy_pose`, a topic the GUI camera does
+subscribe to. See `src/chase_camera.cpp`.
 
 The copy is a temporary. The world it is made from is third-party and under a
 different licence to this repository, and is neither modified in place nor

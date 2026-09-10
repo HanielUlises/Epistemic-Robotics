@@ -229,6 +229,21 @@ def launch_setup(context, *args, **kwargs):
             'threshold': 0.70,
         }])
 
+    # The model after each product update, when asked for. The state topic
+    # carries the whole structure -- worlds, valuations, designated set, one
+    # accessibility relation per agent -- so a recording of it is what a figure
+    # of the model has to be drawn from if the figure is to be evidence.
+    models = Node(
+        package='warehouse_xl_rmf_demo',
+        executable='record_models.py',
+        name='record_models',
+        output='screen',
+        condition=IfCondition(LaunchConfiguration('record_models')),
+        parameters=[{
+            'state_topic': '/epistemic_state/state',
+            'out_dir': LaunchConfiguration('models_dir'),
+        }])
+
     mission = Node(
         package='warehouse_xl_rmf_demo',
         executable='survey_sites_mission',
@@ -297,7 +312,8 @@ def launch_setup(context, *args, **kwargs):
                     target_action=check if checking else mission,
                     on_exit=[EmitEvent(event=Shutdown())])))
 
-    return [fleet, plansys2, bridge, perception, *radios, mission, *staged]
+    return [fleet, plansys2, bridge, perception, models, *radios,
+            mission, *staged]
 
 
 def generate_launch_description():
@@ -310,6 +326,13 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'headless', default_value='false',
             description='Run gazebo headless and leave rviz out.'),
+        DeclareLaunchArgument(
+            'record_models', default_value='false',
+            description='Record the epistemic model after each product update, '
+                        'for tools/plot_kripke.py to draw.'),
+        DeclareLaunchArgument(
+            'models_dir', default_value='/tmp/epistemic_models',
+            description='Where record_models: writes them.'),
         DeclareLaunchArgument(
             'policy_out', default_value='',
             description='Write the policy the planner returned to this file, '
