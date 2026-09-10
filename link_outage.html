@@ -4,23 +4,28 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Six-Room Survey &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="An EPDDL mission whose goal is knowledge, answered by a map the robot builds with its own laser.">
+<title>A link that actually falls &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="A communication outage injected into a running two-robot fleet, and what RF-05's belief propagation and the map reconciliation of section 5.9 do when the link is genuinely gone.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The six-room survey">
-<meta property="og:description" content="An EPDDL mission whose goal is knowledge, answered by a map the robot builds with its own laser.">
-<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/six_room_survey.html">
-<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/six_room_survey.jpg">
+<meta property="og:title" content="A link that actually falls">
+<meta property="og:description" content="Restricted connectivity, stopped being a declaration and made to happen: a gate that drops 1 765 messages, a belief that propagates, and two real SLAM maps reconciled at reconnection.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/link_outage.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/link_outage.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A robot and the fan of its laser scan in the six-room building.">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The six-room survey">
-<meta name="twitter:description" content="An EPDDL mission whose goal is knowledge, answered by a map the robot builds with its own laser.">
-<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/six_room_survey.jpg">
+<meta property="og:image:alt" content="Link card: A link that actually falls, over the belief error and the bound during a sixty-second outage.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/link_outage.jpg">
+<meta name="twitter:title" content="A link that actually falls">
+<meta name="twitter:description" content="A communication outage injected into a running two-robot fleet, and what belief propagation and map reconciliation do when the link is genuinely gone.">
+
 
 <script>
 MathJax = {
@@ -395,6 +400,32 @@ table.data td .mono-inline{font-size:.78em}
 .ftr-l a:hover{border-bottom-color:var(--black)}
 footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
 /* ── code blocks, and the button that copies them ──────────── */
 pre > code{display:block;background:var(--code-bg);
   border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
@@ -415,12 +446,22 @@ pre:has(> code){margin:1.3rem 0}
 </style>
 
 <style>
-/* The six-room run */
+/* The warehouse run */
 .demo-figure{margin:2rem 0 2.4rem}
 .demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
   background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
 
 /* References. A numbered list with a hanging indent, and superscript markers
    that link both ways so a citation can be followed and come back. */
@@ -436,10 +477,9 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
-  <meta name="twitter:image:alt" content="A robot and the fan of its laser scan in the six-room building.">
-  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/six_room_survey.html">
+  <meta name="twitter:image:alt" content="Gazebo and the RMF schedule view during the warehouse run.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/warehouse_rmf.html">
 </head>
-
 <body>
 
 <header>
@@ -480,21 +520,21 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Demonstrations</summary>
             <div class="nav-sub">
           <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
-          <details class="nav-folder" open>
+          <details class="nav-folder">
             <summary>building-rooms</summary>
             <div class="nav-sub">
           <a href="demos.html#building-rooms">All six-room demos</a>
           <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
-          <a href="six_room_survey.html" aria-current="page">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             </div>
           </details>
-          <details class="nav-folder">
+          <details class="nav-folder" open>
             <summary>robot-warehouse</summary>
             <div class="nav-sub">
           <a href="demos.html#robot-warehouse">All warehouse demos</a>
           <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
-          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_rmf.html" aria-current="page">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
           <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
           <a href="link_outage.html">&#183; A link that actually falls<span class="sub">A communication outage injected into a running fleet</span></a>
@@ -531,483 +571,445 @@ sup.cite a:hover{text-decoration:underline}
   </div>
 </header>
 
+
+
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; ePlanSys &#183; DEL policies on ROS 2</p>
-    <h2>A goal that is <em>knowledge</em></h2>
+    <p class="eyebrow">RF-05 &#183; AWS small warehouse &#183; ROS 2 &#183; Gazebo</p>
+    <h2>A link that actually falls</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      The companion page on this site routes a robot with a mu-calculus fixed
-      point. This one asks a different question of the same building. The
-      mission is to come to <em>know</em> whether the east wing is passable,
-      which the robot satisfies without entering it. The mission is written in
-      EPDDL, and the answer
-      is supplied by a map the robot builds with its own laser and not by
-      anything the planner imagines.
+      Every fleet demonstration on this site models restricted connectivity the
+      same way: an agent is oblivious to an announcement because the domain
+      declares it oblivious. The declaration is static, it is made before the
+      run, and no link ever falls. This page reports the first run in which one
+      does. A monitor owns the state of the radio between two robots and cuts
+      it for a configured window; a gate stops relaying and counts what it
+      dropped; the belief one robot holds about where the other is keeps being
+      propagated with a covariance that grows; and at reconnection the map
+      reconciliation of the collaborative SLAM layer is handed, for the first
+      time, two maps that two robots actually built.
     </p>
     <p class="note" style="margin-top:1.4rem">
-      Domain and instance in
-      <span class="mono-inline">epddl-workspace/building-rooms</span>; executed on
-      <a href="https://github.com/ePlanSys/eplansys">ePlanSys</a>, grounded with
-      <a href="https://github.com/HanielUlises/plank">plank</a>, solved by
-      <a href="https://github.com/HanielUlises/Aletheia">Aletheia</a>.
-      <a class="ext-chip" href="six_room_survey.pdf">Technical report (PDF)</a>
+      Fleet, world and per-robot SLAM from
+      <span class="mono-inline">warehouse_demo</span>, included unmodified.
+      Reconciliation from <span class="mono-inline">epistemic_slam</span>.
+      The outage, the belief engine and the measurement are
+      <span class="mono-inline">epistemic_comm</span>, new here.
     </p>
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════════ THE RUN -->
+<!-- ═══════════════════════════════════════════════ WHAT EXISTED -->
 <section>
   <div class="container">
-    <p class="sec-label">The run</p>
-    <h3>Observing an agent come to know a proposition</h3>
+    <p class="sec-label">The starting point</p>
+    <h3>A requirement with no code behind it</h3>
 
     <p>
-      Gazebo on the left, RViz on the right. The map RViz draws is the one the
-      robot is building as it drives, and the captions name the mission's goal,
-      the epistemic action running at that moment, and how far through the
-      policy the executor has got.
+      The requirement this page closes against is RF-05: on losing the link at
+      <span class="mono-inline">t<sub>disc</sub></span>, a robot propagates its
+      belief about its partner's pose forward under the motion model of the
+      last shared plan, with the covariance growing without bound, and the
+      estimation error is to stay within
+      <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>.
+      It names two topics and an engine. Before this work, none of the three
+      existed as code.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th>term</th><th>eplansys</th><th>eplansys-rmf</th><th>this repository</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="mono-inline">comm_monitor</span></td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td><span class="mono-inline">BeliefUpdateEngine</span></td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td><span class="mono-inline">link_down</span></td><td>0</td><td>0</td><td>1, a string in a test</td></tr>
+          <tr><td><span class="mono-inline">link_up</span></td><td>0</td><td>0</td><td>7, an atom in a Kripke model</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      The last row is the whole difficulty in one line.
+      <span class="mono-inline">link_up</span> is in this repository, in
+      <span class="mono-inline">scenarios/warehouse/snapshots/*.json</span>, as
+      <span class="mono-inline">labels: {"w0": ["link_up"]}</span>: a
+      proposition that a world makes true, fixed when the problem was written.
+      What existed of connectivity was exactly the static declaration that the
+      limitation identifies, and nothing else.
+    </p>
+
+    <h4>The announcement channel does not carry belief</h4>
+
+    <p>
+      The obvious fault injector subscribes to the channel two robots speak on
+      and stops forwarding. It would have measured nothing, and finding out why
+      changed the design.
+    </p>
+
+    <p>
+      <span class="mono-inline">Announcer::say()</span> publishes an utterance
+      on <span class="mono-inline">/eplansys/channel/private/&lt;listener&gt;</span>.
+      The only subscriber is <span class="mono-inline">radio</span>, which
+      keeps a transcript so that who was addressed is a matter of record.
+      <span class="mono-inline">eplansys</span> contains no reference to that
+      channel at all. The epistemic model advances through a service,
+      <span class="mono-inline">epistemic_state/apply_action</span>, which the
+      executor calls when an action completes; in the speech-act performer the
+      two lines are <span class="mono-inline">speak(); conclude(true, ...)</span>,
+      in that order. Cutting the channel empties the transcript and leaves the
+      product update, the designated set and the goal check exactly as they
+      were.
+    </p>
+
+    <p class="note">
+      The channel is an audit path, not a transport. That is a reasonable thing
+      for it to be, and it is worth knowing before building an experiment on
+      the assumption that it is the other thing.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ WHAT WAS BUILT -->
+<section>
+  <div class="container">
+    <p class="sec-label">The apparatus</p>
+    <h3>Five nodes, and where each one cuts</h3>
+
+    <table class="data">
+        <thead>
+          <tr><th>node</th><th>what it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="mono-inline">comm_monitor</span></td>
+              <td>Owns the link state and is the only thing that does. Publishes
+              <span class="mono-inline">/comm_monitor/link_down</span> and
+              <span class="mono-inline">/link_up</span>, latched, at the configured
+              instants, and answers a service for the state now.</td></tr>
+          <tr><td><span class="mono-inline">link_gate</span></td>
+              <td>The injector. A type-erased relay over rclcpp's generic
+              publisher and subscription, so one node gates an odometry and an
+              occupancy grid without a case for either. Holds no timer: it
+              subscribes to the monitor like everything else.</td></tr>
+          <tr><td><span class="mono-inline">belief_update</span></td>
+              <td>RF-05's engine. Holds the last pose while the link is up;
+              integrates the last twist forward while it is down, growing the
+              covariance. Reads the <em>gated</em> odometry, so the outage is
+              real for it.</td></tr>
+          <tr><td><span class="mono-inline">grid_align</span></td>
+              <td>Places two SLAM maps on the union of their extents at their
+              common resolution. Whole-cell translation, no interpolation.</td></tr>
+          <tr><td><span class="mono-inline">link_experiment</span></td>
+              <td>Measures. Reads the <em>ungated</em> odometry, because the
+              error to measure is against where the partner actually went and
+              not against the silence the believer was reasoning from.</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      The gate is installed alongside rather than in the middle: it reads the
+      topic the fleet already publishes and writes a second name that only the
+      believing side subscribes to. Nothing that exists is remapped, rebuilt or
+      told that a gate is present, and <span class="mono-inline">warehouse_demo</span>
+      is included by the scenario launch unmodified.
+    </p>
+
+    <h4>The outage is real, and the count is the evidence</h4>
+
+    <p>
+      A gate that reports nothing dropped was gating a topic nobody publishes
+      on, and that is a launch error which otherwise looks exactly like a
+      successful run. Over the sixty-second window the odometry gate dropped
+      <b>1&#8239;765</b> messages having passed 1&#8239;179 before, and the map
+      gate dropped <b>61</b> having passed 41. The belief engine also refuses
+      to accept a partner pose while it believes the link is down, and says so,
+      for the same reason: an arrival at that moment would mean the gate is on
+      a different topic from the one being read.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ RF-05 -->
+<section>
+  <div class="container">
+    <p class="sec-label">The measurement</p>
+    <h3>RF-05's criterion over three outage lengths</h3>
+
+    <p>
+      Three runs, differing only in how long the link stays down. The partner
+      drives a fixed square throughout and knows nothing about the outage. The
+      bound is
+      <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>
+      with <span class="mono-inline">v<sub>max</sub> = 0.22&#8202;m/s</span>,
+      taken from the <span class="mono-inline">max_speed_xy</span> the fleet's
+      own controller enforces, and
+      <span class="mono-inline">&#963;<sub>prop</sub> = 0.05&#8202;m</span>.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th>outage</th><th>samples</th><th>worst error</th><th>at</th>
+              <th>tightest margin</th><th>breaches</th><th>final trace</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>29.9&#8202;s</td><td>300</td><td>0.595&#8202;m</td><td>29.9&#8202;s</td>
+              <td>0.072&#8202;m</td><td>0</td><td>0.598&#8202;m&#178;</td></tr>
+          <tr><td>59.9&#8202;s</td><td>601</td><td>1.515&#8202;m</td><td>39.7&#8202;s</td>
+              <td>0.046&#8202;m</td><td>0</td><td>1.198&#8202;m&#178;</td></tr>
+          <tr><td>119.9&#8202;s</td><td>1&#8239;202</td><td>1.393&#8202;m</td><td>68.7&#8202;s</td>
+              <td>0.046&#8202;m</td><td>0</td><td>2.398&#8202;m&#178;</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      The criterion is met in all three, and the covariance invariant behaves
+      as specified: the trace grows without decreasing and crosses
+      <span class="mono-inline">&#963;<sub>max</sub>&#178; = 1.0&#8202;m&#178;</span>
+      at fifty seconds, at which point the engine says that where the partner
+      is should no longer be believed.
+    </p>
+
+    <h4>The bound is loosest exactly where the estimate is worst</h4>
+
+    <p>
+      The tightest margin in every run is at
+      <span class="mono-inline">t = 0</span>, not at the end. At the instant of
+      the cut the bound is
+      <span class="mono-inline">&#963;<sub>prop</sub></span> alone, 0.05&#8202;m,
+      and the error is a few millimetres of odometry noise. From there the bound
+      grows at 0.22&#8202;m/s while the propagated estimate tracks the partner
+      and the error grows far more slowly: at sixty seconds the bound stands at
+      13.2&#8202;m against an error of 1.4&#8202;m.
     </p>
 
     <figure class="demo-figure">
-      <video controls preload="metadata" playsinline width="100%">
-        <source src="media/eplansys_six_room_survey.mp4" type="video/mp4">
-        Your browser will not play this video.
-        <a href="media/eplansys_six_room_survey.mp4">Download it instead</a>.
-      </video>
+      <img src="media/link_outage_bound.svg" width="100%"
+           alt="The belief error stays near one and a half metres while the admissible bound climbs linearly to thirteen metres over sixty seconds">
       <figcaption>
-        202&#8201;s, unedited. The blue fan is the laser the map is built from;
-        the orange block in room&#8202;3 is the obstruction the robot has to
-        find out about.
+        The sixty-second outage. Grey is the bound RF-05 admits, which climbs at
+        0.22&#8202;m/s because that is what the platform could do; red is the
+        error actually made. They touch only at the instant of the cut. The
+        shaded area is the margin, and it is the shape of the criticism: the
+        criterion is hardest to satisfy when the estimate is freshest and
+        easiest when it is oldest.
       </figcaption>
     </figure>
 
-    <p>
-      What to watch for: the robot drives into room&#8202;3, turns to face it,
-      and holds still. The caption changes from
-      <span class="mono-inline">ONTIC goto-door3_r1</span> to
-      <span class="mono-inline">SENSING inspect3_r1</span>, and a moment later
-      the map fills in and the region resolves. That observation is what the
-      policy branches on, and only then does the robot set off for
-      room&#8202;6.
-    </p>
-
-    <pre class="code">[planner]    [epistemic] policy with 6 nodes, branching
-[perception] 'room3' is <span class="k">blocked</span>: inspect3_r1 observed e-inspect3-blocked
-[epistemic]  applied inspect3_r1 -&gt; e-inspect3-blocked
-[bt]         (look_into r1 door3) observed e-inspect3-blocked
-[epistemic]  applied goto-door6_r1
-[perception] 'room6' is <span class="k">clear</span>: inspect6_r1 observed e-inspect6-clear
-[bt]         (look_into r1 door6) observed e-inspect6-clear
-[bt] [goal]  (and (Kw r1 blocked-r3) (Kw r1 blocked-r6))
-<span class="k">Successfully finished</span></pre>
-
-    <p>
-      The two rooms answer differently, which is the point: the branch is
-      exercised and not merely implied. Nothing in the stack decided those answers
-      both came from the occupancy grid the robot built with its own
-      laser.
-    </p>
-
     <table class="data">
-      <tbody>
-        <tr><td>Distance driven</td><td>27.88&#8201;m</td></tr>
-        <tr><td>Closest approach to any obstacle</td><td>0.307&#8201;m</td></tr>
-        <tr><td>Robot body radius</td><td>0.105&#8201;m</td></tr>
-        <tr><td>Contacts</td><td><strong>0</strong></td></tr>
-      </tbody>
-    </table>
-
-    <p class="note">
-      Measured against Gazebo's own poses for the robot, not its odometry:
-      wheel odometry keeps integrating while a base is held against a wall, so
-      it cannot answer whether anything was hit.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ THE DOMAIN -->
-<section>
-  <div class="container">
-    <p class="sec-label">The domain</p>
-    <h3>Four propositions, and two means of resolving them</h3>
-
-    <p>
-      Rooms 3 and 6 lie east of the cross corridor; the robot starts in room 1
-      at the west end. Whether either east room is obstructed is not stated in
-      the initial condition, so the model designates <strong>four worlds</strong>
-      and not one. A building nobody has surveyed is genuinely undetermined,
-      and that is what makes the solution branch.
-    </p>
-
-    <pre class="code"><span class="c">;; the sensing action: two events, one per answer, neither known in advance</span>
-(:action inspect3
-  :parameters (?i - agent)
-  :action-type (<span class="k">semi-private-sensing</span>
-    (e-inspect3-blocked ?i)
-    (e-inspect3-clear ?i) )
-  :observability-conditions
-    (:and
-      (?i <span class="k">Fully</span>)
-      (default <span class="k">Partially</span>) ) )
-
-<span class="c">;; knowing *whether*, not knowing *that*</span>
-(:goal (and ([<span class="k">Kw.</span> r1] (blocked-r3)) ([<span class="k">Kw.</span> r1] (blocked-r6))))</pre>
-
-    <p>
-      Semi-private sensing says the agent that looks learns the answer, and
-      anyone else present sees it look without learning what it saw. With one
-      robot the distinction is invisible, and modelling it as fully
-      public would still be a lie, one that stops being harmless the moment a
-      second robot joins.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ THE POLICY -->
-<section>
-  <div class="container">
-    <p class="sec-label">The policy</p>
-    <h3>Four leaves, six branches, depth four</h3>
-
-    <p>
-      Aletheia picks its heuristic and strategy from the task's own features,
-      and not from a flag, and reports which rule decided each:
-    </p>
-
-    <pre class="code">[main] Heuristic: knowledge-spread (auto, rule <span class="k">'kw-only-goal'</span>)
-[main] Strategy:  AO* (auto, rule <span class="k">'sensing-small-designated'</span>)
-[aostar] Solution found at depth 4  Expanded=32 Generated=35 Memo=6/6
-[validator] OK: 4 leaves, 6 branches checked
-
-goto-door3_r1
-  ev0: inspect3_r1
-    ev0: goto-door6_r1 -&gt; inspect6_r1     <span class="c"># room 3 seen blocked</span>
-    ev1: goto-door6_r1 -&gt; inspect6_r1     <span class="c"># room 3 seen clear</span></pre>
-
-    <p>
-      Both branches continue to the second room, and they are distinct nodes,
-      not a shared subtree. Which one runs is decided by an observation
-      that has not been made when the plan is built: the definition of a
-      policy as against a sequence.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ THE SEMANTICS -->
-<section>
-  <div class="container">
-    <p class="sec-label">The semantics</p>
-    <h3>Four worlds, two independent questions, four leaves</h3>
-
-    <p>
-      That the model designates four worlds and that the policy has four leaves
-      are the same fact, and it is worth writing it out. Abbreviate the two
-      undetermined propositions as \(B_3\) for
-      <span class="mono-inline">blocked-r3</span> and \(B_6\) for
-      <span class="mono-inline">blocked-r6</span>. An epistemic state is a
-      Kripke model \(\mathcal{M} = \langle W, \sim_{r_1}, V\rangle\) with a set
-      \(W_d \subseteq W\) of designated worlds and<sup class="cite">[<a href="#ref-fagin1995" id="cite-fagin1995">1</a>,&#8202;<a href="#ref-ditmarsch2007" id="cite-ditmarsch2007">2</a>]</sup>
-    </p>
-
-    <div class="math-block">
-      \[
-        \mathcal{M},w \models K_i\varphi
-          \iff \mathcal{M},v \models \varphi \text{ for all } v \sim_i w,
-        \qquad
-        \mathit{Kw}_i\varphi \;:=\; K_i\varphi \vee K_i\neg\varphi .
-      \]
-    </div>
-
-    <p>
-      Nothing in the initial condition constrains either proposition and
-      neither constrains the other, so the initial state is their product:
-      \(W_0 = \{0,1\}^2\), four worlds, with \(\sim_{r_1} = W_0 \times W_0\) and
-      every one of them designated. The goal is a conjunction of two
-      knowing-whether formulas over the same agent,
-    </p>
-
-    <div class="math-block">
-      \[
-        \gamma \;=\; \mathit{Kw}_{r_1} B_3 \;\wedge\; \mathit{Kw}_{r_1} B_6 ,
-      \]
-    </div>
-
-    <p>
-      and it is satisfied by four distinct states, one per assignment. Neither
-      conjunct is entailed by anything in the initial model, and no ontic action
-      in the domain affects either proposition: a wall does not move because a
-      robot drove past it. The only events that change \(\sim_{r_1}\) are the
-      two inspections.
-    </p>
-
-    <h4>Why each inspection halves the designated set</h4>
-
-    <p>
-      <span class="mono-inline">inspect3</span> is an event model with one event
-      per answer and no postconditions, whose preconditions partition the
-      worlds:
-    </p>
-
-    <div class="math-block">
-      \[
-        \mathsf{pre}(e_3^{\mathrm{blk}}) = B_3 \wedge \neg\mathit{Kw}_{r_1}B_3,
-        \qquad
-        \mathsf{pre}(e_3^{\mathrm{clr}}) = \neg B_3 \wedge \neg\mathit{Kw}_{r_1}B_3 .
-      \]
-    </div>
-
-    <p>
-      In the product \(\mathcal{M}\otimes\mathcal{E}\) a world survives paired<sup class="cite">[<a href="#ref-bms1998" id="cite-bms1998">3</a>]</sup>
-      only with the one event whose precondition it satisfies, and the acting
-      agent's event relation is the identity, so no surviving pair is related to
-      a pair carrying the other event. Four designated worlds therefore become
-      two states of two worlds each, agreeing on \(B_3\) and still divided on
-      \(B_6\). The second inspection does the same to \(B_6\), and each of the
-      two states becomes two states of one world. Four leaves, and the depth is
-      four because each inspection is preceded by the drive that makes it
-      applicable.
-    </p>
-
-    <p>
-      The two conjuncts are independent, which is why the policy cannot share a
-      subtree: the state in which room&#8202;3 was found blocked and the state
-      in which it was found clear disagree about \(B_3\), and every formula
-      evaluated below them is evaluated in a different model. They carry the
-      same two action names and are distinct nodes.
-    </p>
-
-    <div class="fig">
-      <div class="fig-head">
-        <span class="fig-title">Two inspections, four leaves</span>
-        <span class="note">the designated set, halved and halved again</span>
-      </div>
-      <div class="fig-body">
-<svg class="graph" viewBox="0 0 1000 330" width="100%" xmlns="http://www.w3.org/2000/svg"
-     font-family="Arial,Helvetica,sans-serif" role="img"
-     aria-label="The initial state designates four worlds over two independent propositions. The first inspection splits it into two states of two worlds, agreeing on the third room and still divided on the sixth. The second inspection splits each of those into single-world states, giving the policy its four leaves.">
-  <defs>
-    <marker id="sr-arrow" viewBox="0 0 10 10" refX="9" refY="5"
-            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M0 0 L10 5 L0 10 z" fill="#5A5A5A"/>
-    </marker>
-  </defs>
-  <rect x="8" y="8" width="984" height="314" rx="3" fill="#FAFAFA" stroke="#D6D6D6"/>
-
-  <text x="30" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">FOUR DESIGNATED WORLDS</text>
-  <text x="386" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">AFTER inspect3_r1</text>
-  <text x="726" y="34" font-size="11" fill="#C8102E" font-family="'Courier New',monospace">AFTER inspect6_r1 &#183; four leaves</text>
-
-  <!-- initial -->
-  <rect x="30" y="50" width="212" height="212" rx="2" fill="#fff" stroke="#111" stroke-width="1.5"/>
-  <text x="136" y="72" font-size="10.5" text-anchor="middle" fill="#5A5A5A">nobody has looked anywhere</text>
-  <circle cx="90"  cy="118" r="24" fill="#fff" stroke="#111"/>
-  <text x="90"  y="122" font-size="10" text-anchor="middle" fill="#111">¬B₃¬B₆</text>
-  <circle cx="182" cy="118" r="24" fill="#fff" stroke="#111"/>
-  <text x="182" y="122" font-size="10" text-anchor="middle" fill="#111">¬B₃&#8202;B₆</text>
-  <circle cx="90"  cy="196" r="24" fill="#fff" stroke="#111"/>
-  <text x="90"  y="200" font-size="10" text-anchor="middle" fill="#111">B₃¬B₆</text>
-  <circle cx="182" cy="196" r="24" fill="#fff" stroke="#111"/>
-  <text x="182" y="200" font-size="10" text-anchor="middle" fill="#111">B₃&#8202;B₆</text>
-  <line x1="114" y1="118" x2="158" y2="118" stroke="#5A5A5A" stroke-width="1.2"/>
-  <line x1="114" y1="196" x2="158" y2="196" stroke="#5A5A5A" stroke-width="1.2"/>
-  <line x1="90"  y1="142" x2="90"  y2="172" stroke="#5A5A5A" stroke-width="1.2"/>
-  <line x1="182" y1="142" x2="182" y2="172" stroke="#5A5A5A" stroke-width="1.2"/>
-  <line x1="110" y1="140" x2="162" y2="176" stroke="#5A5A5A" stroke-width="1.2"/>
-  <line x1="110" y1="176" x2="162" y2="140" stroke="#5A5A5A" stroke-width="1.2"/>
-
-  <path d="M248 156 L296 120" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
-  <path d="M248 156 L296 200" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
-
-  <!-- after the first -->
-  <rect x="304" y="70" width="180" height="86" rx="2" fill="#fff" stroke="#111"/>
-  <text x="394" y="88" font-size="10" text-anchor="middle" fill="#5A5A5A">room 3 seen clear</text>
-  <circle cx="356" cy="122" r="22" fill="#fff" stroke="#111"/>
-  <text x="356" y="126" font-size="9.5" text-anchor="middle" fill="#111">¬B₃¬B₆</text>
-  <circle cx="434" cy="122" r="22" fill="#fff" stroke="#111"/>
-  <text x="434" y="126" font-size="9.5" text-anchor="middle" fill="#111">¬B₃&#8202;B₆</text>
-  <line x1="378" y1="122" x2="412" y2="122" stroke="#5A5A5A" stroke-width="1.2"/>
-
-  <rect x="304" y="168" width="180" height="86" rx="2" fill="#fff" stroke="#111"/>
-  <text x="394" y="186" font-size="10" text-anchor="middle" fill="#5A5A5A">room 3 seen blocked</text>
-  <circle cx="356" cy="220" r="22" fill="#fff" stroke="#111"/>
-  <text x="356" y="224" font-size="9.5" text-anchor="middle" fill="#111">B₃¬B₆</text>
-  <circle cx="434" cy="220" r="22" fill="#fff" stroke="#111"/>
-  <text x="434" y="224" font-size="9.5" text-anchor="middle" fill="#111">B₃&#8202;B₆</text>
-  <line x1="378" y1="220" x2="412" y2="220" stroke="#5A5A5A" stroke-width="1.2"/>
-
-  <path d="M490 100 L556 84"  stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
-  <path d="M490 136 L556 140" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
-  <path d="M490 198 L556 200" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
-  <path d="M490 234 L556 254" stroke="#5A5A5A" stroke-width="1.3" marker-end="url(#sr-arrow)"/>
-
-  <!-- leaves -->
-  <g font-size="10">
-    <rect x="564" y="62" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
-    <circle cx="596" cy="84" r="17" fill="#fff" stroke="#111"/>
-    <text x="596" y="88" font-size="9" text-anchor="middle" fill="#111">¬B₃¬B₆</text>
-    <text x="626" y="88" fill="#5A5A5A">γ holds</text>
-
-    <rect x="564" y="118" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
-    <circle cx="596" cy="140" r="17" fill="#fff" stroke="#111"/>
-    <text x="596" y="144" font-size="9" text-anchor="middle" fill="#111">¬B₃B₆</text>
-    <text x="626" y="144" fill="#5A5A5A">γ holds</text>
-
-    <rect x="564" y="178" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
-    <circle cx="596" cy="200" r="17" fill="#fff" stroke="#111"/>
-    <text x="596" y="204" font-size="9" text-anchor="middle" fill="#111">B₃¬B₆</text>
-    <text x="626" y="204" fill="#5A5A5A">γ holds</text>
-
-    <rect x="564" y="234" width="150" height="44" rx="2" fill="#fff" stroke="#111"/>
-    <circle cx="596" cy="256" r="17" fill="#fff" stroke="#111"/>
-    <text x="596" y="260" font-size="9" text-anchor="middle" fill="#111">B₃B₆</text>
-    <text x="626" y="260" fill="#5A5A5A">γ holds</text>
-  </g>
-
-  <text x="736" y="88"  font-size="10.5" fill="#5A5A5A">Every leaf designates one world, so</text>
-  <text x="736" y="106" font-size="10.5" fill="#5A5A5A">each r₁-class is a singleton and both</text>
-  <text x="736" y="124" font-size="10.5" fill="#5A5A5A">conjuncts of γ hold there.</text>
-  <text x="736" y="160" font-size="10.5" fill="#C8102E">The run took the second and third of these:</text>
-  <text x="736" y="178" font-size="10.5" fill="#C8102E">room 3 blocked, room 6 clear.</text>
-  <text x="736" y="214" font-size="10.5" fill="#5A5A5A">The two subtrees below the first split are</text>
-  <text x="736" y="232" font-size="10.5" fill="#5A5A5A">separate nodes with the same two action</text>
-  <text x="736" y="250" font-size="10.5" fill="#5A5A5A">names, because they are evaluated in</text>
-  <text x="736" y="268" font-size="10.5" fill="#5A5A5A">models that disagree about B₃.</text>
-
-  <line x1="30" y1="288" x2="968" y2="288" stroke="#D6D6D6"/>
-  <text x="30" y="308" font-size="11" fill="#5A5A5A">Four designated worlds, two independent questions, two sensing actions that each halve the set: the policy has as many leaves as the initial model has worlds.</text>
-</svg>
-      </div>
-      <div class="fig-cap">
-        <b>The leaves of the policy are the worlds of the initial model.</b>
-        Nothing in the domain can change \(B_3\) or \(B_6\), so no ontic action
-        reduces the uncertainty and only the two inspections do. Each halves
-        the designated set exactly once, which is why depth four and four
-        leaves are not independent numbers.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ THE MAP -->
-<section>
-  <div class="container">
-    <p class="sec-label">Where the knowledge comes from</p>
-    <h3>The map, read as an observation</h3>
-
-    <p>
-      Nothing in the stack invents the answer. The perception node classifies a
-      named region of the occupancy grid and reports what it found as the
-      outcome of the sensing action the policy branched on:
-    </p>
-
-    <pre class="code">epistemic_perception:
-  ros__parameters:
-    regions: ["room3", "room6"]
-    room3:
-      boxes: [4.25, 0.25, 11.8, 7.8]
-      atom: <span class="k">"blocked-r3"</span>
-      atom_true_when_clear: <span class="k">false</span>
-      sensing_action: <span class="k">"inspect3_r1"</span>
-      outcome_when_clear: <span class="k">"e-inspect3-clear"</span>
-      outcome_when_blocked: <span class="k">"e-inspect3-blocked"</span></pre>
-
-    <p>
-      A region is <em class="term">clear</em> only when every cell in it has
-      been observed and settled, <em class="term">blocked</em> when any one cell
-      is occupied, and undecided otherwise. Occupied beats unobserved, since no
-      further looking removes an obstacle; unobserved beats free, since a region
-      is clear only when all of it is.
-    </p>
-
-    <p>
-      The grid is built by <span class="mono-inline">slam_toolbox</span> from
-      the robot's own laser while it drives, and this is what makes the
-      demonstration honest: a room the robot has not
-      entered is unobserved in the grid and undetermined in the Kripke model at
-      the same time. Those are two views of one fact. No prepared map is
-      published anywhere in the system.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ FINDINGS -->
-<section>
-  <div class="container">
-    <p class="sec-label">What building it found</p>
-    <h3>Five defects, and a modelling question</h3>
-
-    <p>
-      Getting this to run end to end turned up five faults in the stack, each of
-      which stopped the mission outright. All are fixed.
-    </p>
-
-    <table class="data">
-      <thead>
-        <tr><th>Where</th><th>What was wrong</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="mono-inline">plansys2_executor</span></td>
-          <td>Rendering any policy killed the node with SIGSEGV: a range-<span class="mono-inline">for</span> over
-              <span class="mono-inline">get_parameter(...).as_string_array()</span> iterated a destroyed vector and handed
-              <span class="mono-inline">dlopen</span> freed memory. Only bites when BT node plugins are configured, that is, only in the epistemic setup.</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">plansys2_bringup</span></td>
-          <td><span class="mono-inline">regions: []</span> in the shipped params: an empty list has no element type, so perception threw at construction every time it was launched.</td>
-        </tr>
-        <tr>
-          <td>five packages</td>
-          <td>Rolling-only <span class="mono-inline">EventsExecutor</span> and <span class="mono-inline">ServicesQoS</span> made the fork unbuildable on the Humble its own CI targets.</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">plansys2_epistemic_perception</span></td>
-          <td>An observation arriving 78&#8201;ms before the executor's own update was refused as a model/world divergence and, by design, never retried, losing a reading the model was about to accept.</td>
-        </tr>
-        <tr>
-          <td><span class="mono-inline">plansys2_epistemic_executor</span></td>
-          <td>With the observation applied first, the behaviour tree applied the same sensing action again and was refused, because its <span class="mono-inline">Kw</span> precondition no longer held: it had succeeded.</td>
-        </tr>
-      </tbody>
+        <thead>
+          <tr><th>t</th><th>error</th><th>bound</th><th>margin</th><th>trace</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0&#8202;s</td><td>0.004&#8202;m</td><td>0.050&#8202;m</td><td>0.046&#8202;m</td><td>0.000&#8202;m&#178;</td></tr>
+          <tr><td>10&#8202;s</td><td>0.126&#8202;m</td><td>2.250&#8202;m</td><td>2.124&#8202;m</td><td>0.200&#8202;m&#178;</td></tr>
+          <tr><td>30&#8202;s</td><td>1.042&#8202;m</td><td>6.650&#8202;m</td><td>5.608&#8202;m</td><td>0.600&#8202;m&#178;</td></tr>
+          <tr><td>59&#8202;s</td><td>1.367&#8202;m</td><td>13.030&#8202;m</td><td>11.663&#8202;m</td><td>1.180&#8202;m&#178;</td></tr>
+        </tbody>
     </table>
 
     <p>
-      The demonstration also settled a modelling question the domain does not
-      answer: what a robot should physically <em>do</em> when the policy says
-      <span class="mono-inline">inspect3</span>. A timed pause cannot tell success from failure. A
-      rotating sweep only ever kept a stalled mapper alive. What the action does
-      now is drive in, turn to face the room, hold still, and end exactly when
-      <span class="mono-inline">(Kw r1 blocked-r3)</span> holds, or fail and say so. A sensing action
-      exists to acquire knowledge, so knowledge is what ends it.
+      So a pass is weak evidence. The bound admits any displacement a robot at
+      full speed could produce, and a propagation that simply holds the last
+      velocity cannot exceed it while the partner keeps its course. The unit
+      tests state the other half: a partner that reverses at full speed the
+      instant the link falls separates from the belief at
+      <span class="mono-inline">2v&#183;&#916;t</span> and breaches the bound
+      for every <span class="mono-inline">&#916;t</span> past
+      <span class="mono-inline">&#963;<sub>prop</sub>/v<sub>max</sub></span>.
+      What these three runs establish is that the engine tracks a partner that
+      holds its course, which is what they were able to establish; they do not
+      establish that the bound cannot be breached.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ RECONCILIATION -->
+<section>
+  <div class="container">
+    <p class="sec-label">The reconciliation</p>
+    <h3>The first real pair of maps was refused</h3>
+
+    <p>
+      The collaborative SLAM layer classifies cells, computes per-robot
+      coverage, detects contradictions and reconciles. It passes 43 tests, and
+      every one of them builds both grids in memory. A test that builds both
+      grids builds them the same shape.
+    </p>
+
+    <p>
+      Two maps that two robots actually built are never the same shape. Each
+      grows as its own robot discovers floor, and the first pair this
+      reconciliation was ever handed came back
+      <span class="mono-inline">grids differ in size: 118x128 and 134x86</span>.
+      The refusal is correct and is documented: a wrong registration produces a
+      merged map that is confidently wrong, so two maps whose discretisation
+      does not coincide are declined rather than approximated. What was missing
+      was the step before it.
+    </p>
+
+    <p>
+      <span class="mono-inline">grid_align</span> places both maps on the union
+      of their extents at their common resolution. It is a translation by whole
+      cells: no interpolation, no rotation, no scaling, and a cell keeps the
+      value it had. Maps at different resolutions are still refused, because
+      putting those on one grid would be the approximation the layer declines
+      to make. In the reported runs the alignment is
+      <span class="mono-inline">117&#215;128</span> and
+      <span class="mono-inline">133&#215;86</span> onto
+      <span class="mono-inline">134&#215;397</span> at 0.050&#8202;m per cell,
+      growing as both maps grow.
+    </p>
+
+    <h4>What the fusion found</h4>
+
+    <table class="data">
+        <thead>
+          <tr><th>outage</th><th>cells</th><th>holder learned</th>
+              <th>partner learned</th><th>in conflict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>29.9&#8202;s</td><td>54&#8239;786</td><td>4&#8239;330</td><td>5&#8239;074</td><td>0</td></tr>
+          <tr><td>59.9&#8202;s</td><td>69&#8239;832</td><td>6&#8239;502</td><td>4&#8239;873</td><td>0</td></tr>
+          <tr><td>119.9&#8202;s</td><td>70&#8239;004</td><td>6&#8239;541</td><td>4&#8239;899</td><td>0</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      Each robot learns from the other almost exactly the count the other had
+      decided, and nothing is in conflict. That is not the reconciliation being
+      clever; it is what a disjoint pair of observations looks like. The
+      believing robot sits at its dock and maps what it can see from there, the
+      partner patrols elsewhere, and the two sets of observed cells barely
+      touch. A conflict needs two robots to have looked at the same cell and
+      disagreed about whether it is passable, and this pair never did.
     </p>
 
     <p class="note">
-      One consequence is about sensors and not models. A region is
-      <em class="term">blocked</em> the instant one cell in it is occupied, but
-      <em class="term">clear</em> only when every cell has been observed and
-      settled, which cannot be decided for a patch lying in open floor,
-      because a 3.5&#8201;m laser returns nothing across a 7.5&#8201;m room and
-      free space is traced only along beams that come back. The region a robot
-      can settle is the one its beams cross on the way to a wall.
+      The zeros are therefore a property of this trajectory, not a result about
+      the fusion. Producing a genuine contradiction needs the two robots routed
+      through the same aisle from opposite ends, and that is the next run
+      rather than this one.
     </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<!-- ═══════════════════════════════════════════════ WHAT BROKE -->
 <section>
   <div class="container">
-    <p class="sec-label">References</p>
-    <h3>Works cited</h3>
-    <ol class="ref-list">
-      <li id="ref-fagin1995">R.&nbsp;Fagin, J.&nbsp;Y. Halpern, Y.&nbsp;Moses and M.&nbsp;Y. Vardi. <em>Reasoning About Knowledge</em>. MIT Press, 1995.</li>
-      <li id="ref-ditmarsch2007">H.&nbsp;van Ditmarsch, W.&nbsp;van der Hoek and B.&nbsp;Kooi. <em>Dynamic Epistemic Logic</em>. Synthese Library vol.&nbsp;337, Springer, 2007.</li>
-      <li id="ref-bms1998">A.&nbsp;Baltag, L.&nbsp;S. Moss and S.&nbsp;Solecki. <em>The Logic of Public Announcements, Common Knowledge, and Private Suspicions</em>. Proceedings of TARK, 1998.</li>
-    </ol>
+    <p class="sec-label">Defects</p>
+    <h3>Three found by integration, none in the new code</h3>
+
+    <table class="data">
+        <thead>
+          <tr><th>what</th><th>how it presented</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stale ABI in the fleet demo</td>
+              <td>Every action node died at startup with
+              <span class="mono-inline">undefined symbol:
+              plansys2::ActionExecutorClient::finish(bool, float, string const&amp;)</span>.
+              The installed binaries were built when
+              <span class="mono-inline">finish</span> took three arguments; it
+              now takes four, the fourth being the outcome the epistemic
+              extension needs. A rebuild fixes it, and nothing warns that the
+              installed tree is older than the library it links.</td></tr>
+          <tr><td>The fleet cannot drive with two robots</td>
+              <td><span class="mono-inline">r1</span>'s global costmap never
+              receives its map, so it keeps the default 5&#215;5&#8202;m extent
+              at the origin, reports the robot out of bounds and nav2 can never
+              plan. The topic exists with one publisher and five subscribers and
+              the costmap's <span class="mono-inline">map_topic</span> is set to
+              it. Not diagnosed further here; the scenario drives the partner
+              directly instead.</td></tr>
+          <tr><td>The measurement recounted what it should have read</td>
+              <td>The first version of the reconciliation record differenced
+              cell counts it had subscribed to itself, and reported a merged map
+              with fewer decided cells than one of its inputs. The aligner keeps
+              publishing as both maps grow, so by the time a reply arrives the
+              recorder may hold a newer pair than the fusion was given.
+              Differencing two pairs that are not the same pair is not a
+              measurement. The counts now come from the fusion's own reply.</td></tr>
+        </tbody>
+    </table>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ SCOPE -->
+<section>
+  <div class="container">
+    <p class="sec-label">Scope</p>
+    <h3>What this establishes</h3>
+
+    <p>
+      That a communication outage can be injected into a running fleet without
+      modifying the fleet, and that the cut is real and counted. That RF-05's
+      engine exists, propagates, grows its covariance without decreasing, and
+      reaches the threshold past which it declares its own estimate unfit to be
+      believed. That its acceptance criterion is met over outages of thirty,
+      sixty and a hundred and twenty seconds against a partner in motion. And
+      that the reconciliation of the collaborative SLAM layer runs on maps two
+      robots built from two lasers in a simulator, which needed one step the
+      layer did not have.
+    </p>
+
+    <h3 style="margin-top:2.2rem">What it does not</h3>
+
+    <p>
+      It does not establish that the epistemic model diverges under partition,
+      because there is nothing for it to diverge in. The bringup runs one
+      planner and one epistemic state for the whole fleet, so an agent's
+      accessibility relation is a column of a shared structure rather than a
+      perspective held on a robot. RF-05 speaks of one robot's belief about
+      another; what is measured here is a metric estimate of a pose, published
+      alongside that structure and not inside it. Partitioning the model is a
+      different piece of work and a larger one.
+    </p>
+
+    <p>
+      It does not establish that the goal formula still holds at reconnection
+      by the validator's account, for the same reason: there is one model, it
+      never diverged, and a check against it would be a check that nothing was
+      partitioned.
+    </p>
+
+    <p>
+      And it does not establish anything about the bound being a good bound.
+      Three runs met it; the arithmetic says a partner that reverses at full
+      speed breaches it within a quarter of a second of the cut.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+
+    <pre class="code">colcon build --packages-select epistemic_msgs epistemic_comm epistemic_slam
+colcon test --packages-select epistemic_comm      # 49 tests
+
+ros2 launch epistemic_comm link_outage_launch.py \
+     gui:=false t_disc:=40 t_recon:=100 scenario:=baseline</pre>
+
+    <p>
+      <span class="mono-inline">t_disc</span> and
+      <span class="mono-inline">t_recon</span> are seconds from the monitor's
+      first clock tick, and the schedule is open loop on purpose. An outage
+      triggered by distance would make its own duration a function of the
+      trajectory it perturbs, and the measurement could not then separate the
+      two. Two JSON records are written per run, one for the belief error
+      against the bound and one for the reconciliation. The six this page
+      reports are published beside it:
+      <a href="data/link_outage_short.json">short</a>,
+      <a href="data/link_outage_baseline.json">baseline</a> and
+      <a href="data/link_outage_long.json">long</a> carry every sample of the
+      error and the bound, and the three
+      <span class="mono-inline">reconcile</span> records carry what each robot
+      learned. Every figure in the tables above is read out of them.
+    </p>
+  </div>
+</section>
 <footer>
   <div class="container-wide">
     <div class="ftr">
@@ -1016,13 +1018,13 @@ goto-door3_r1
         &nbsp;&#183;&nbsp;
         <a href="domains.html">Domains</a>
         &nbsp;&#183;&nbsp;
-        <a href="eplansys_execution.pdf">Technical report (PDF)</a>
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">3 packages &#183; 82 tests &#183; ROS 2</span>
+      <span class="ftr-r">AWS small warehouse &#183; 60&#8202;s outage &#183; 1&#8239;765 messages dropped</span>
     </div>
   </div>
 </footer>

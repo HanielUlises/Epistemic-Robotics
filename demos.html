@@ -511,6 +511,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
           <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">A communication outage injected into a running fleet</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -750,6 +751,28 @@ sup.cite a:hover{text-decoration:underline}
           <div class="facts">
             <span>8-node policy, depth 6</span><span>838&#8202;168 expansions</span>
             <span>2 robots that look</span><span>3 worlds, 3 leaves</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/link_outage.jpg"
+          alt="The belief error against the RF-05 bound over a sixty-second outage" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="link_outage.html">A link that actually falls</a></h5>
+          <p>
+            Every other demonstration models restricted connectivity as a
+            declaration made before the run. This one cuts the radio between
+            two robots while they work: a gate drops 1&#8239;765 messages, the
+            belief one robot holds about where the other is keeps propagating
+            with a covariance that grows past the threshold where it declares
+            itself unfit, and at reconnection the collaborative SLAM layer is
+            handed two maps that two robots actually built. The first real pair
+            it ever saw was refused for differing in size.
+          </p>
+          <div class="facts">
+            <span>3 outages: 30, 60, 120&#8202;s</span><span>0 breaches of RF-05</span>
+            <span>1&#8239;765 messages dropped</span><span>0 cells in conflict</span>
           </div>
         </div>
       </div>
