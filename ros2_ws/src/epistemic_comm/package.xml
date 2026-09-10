@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>epistemic_comm</name>
+  <version>0.1.0</version>
+  <description>
+    Communication faults, made to happen rather than declared.
+
+    The fleet demonstrations model restricted connectivity as a per-action
+    observability declaration: an agent is oblivious to an announcement because
+    the domain says so. This package makes a link fall and come back during a
+    run, and gives the two things that a fallen link needs and the system did
+    not have: a monitor that owns the link state and says when it changes, and
+    an engine that keeps propagating a robot's belief about where its partner
+    is while nothing is arriving from it.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>epistemic_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
