@@ -247,6 +247,13 @@ from the world and deciding which to inspect is now a decision.
 | robots that move | 1 | 2 |
 | sites scanned | 1 | at most 2 of 3 |
 
+These figures are from the planner as it stood when the demo was built. Against
+ePlanSys 0.2.0, which links Aletheia rather than a copy of it, three sites cost
+414 021 expansions by the same AO\* search, and the selection policy does not
+choose that search here any more: it replans over the all-outcomes
+determinization and solves three sites in eight expansions. Four sites is still
+not solved -- see `docs/v2-multi-site/README.md`.
+
 The expansion count is the column worth reading. One site to two costs a factor
 of four; two to three costs a factor of 5 700. Four sites is not solved: under
 the default fifteen-second budget the search reports `Timeout at depth 7`, and

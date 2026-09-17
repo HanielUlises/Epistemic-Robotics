@@ -58,6 +58,34 @@ is measured is the price of the extra site: sixty times the budget bought one
 further depth iteration. A v2 that wants four sites needs a better heuristic,
 not a longer wait.
 
+### Re-measured on 17 September 2026
+
+The rows above were measured with the planning core as it stood in early
+September, copied into `plansys2_epistemic_planner`. ePlanSys 0.2.0 links
+Aletheia itself, which by then had changed the state representation, added the
+`kadd` heuristic and the replan and portfolio strategies, and made the policy
+choose among them. The same tasks, on the same generator, through the
+`epistemic_planner` binary at one thread:
+
+| variant | strategy | expanded | depth | wall |
+| --- | --- | ---: | ---: | ---: |
+| *k* = 2 | AO\* + `ks` | 89 | 3 | ms |
+| *k* = 3 | AO\* + `ks` | 414 021 | 6 | 4.2 s |
+| *k* = 3 | portfolio (policy's own choice) | 8 | — | ms |
+| *k* = 4 | AO\* + `ks` | — | timeout at 8 | 60 s, no plan |
+| *k* = 4 | portfolio | 624 572 | timeout at 8 | 300 s, no plan |
+
+Two things change and one does not. AO\* on three sites now expands half of
+what it did, and the policy no longer chooses AO\* for this shape at all: it
+picks replanning over the all-outcomes determinization, which solves three
+sites in eight expansions. And four sites is still not solved -- five minutes
+of the portfolio, with both members running, ends at the same depth 8 the
+nine-hundred-second run reached before. The ceiling this note argued for is
+where it was.
+
+The wall-clock figures were taken on a machine running other work, so read
+`expanded` and leave the seconds as orders of magnitude.
+
 The interesting column is `expanded`. Going from one site to two costs a factor
 of four. Going from two to three costs a factor of 5 700, and the plan gets
 three actions longer. Whatever a v2 does, it does at *k* = 3.
