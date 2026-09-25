@@ -1,0 +1,116 @@
+(define (domain pass-through)
+
+  ;; Three pass-through bays cross a racking block, and exactly one of them is
+  ;; open. Two scouts can read a bay; a carrier has to take a load through one,
+  ;; and may only enter a bay it knows to be open.
+  ;;
+  ;; Every action here is grounded in a map. A survey is read off the scout's
+  ;; own SLAM map, and nothing else; an exchange is one robot's knowledge map
+  ;; fused into another's; the carrier's route is a least fixed point over a
+  ;; safe set that contains a bay exactly when the carrier knows it is open.
+  ;; The domain says what each of those does to what the agents know.
+
+  (:requirements
+    :typing :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:types tunnel)
+
+  (:predicates
+    (open ?t - tunnel)
+    ;; Which bays a scout is stationed at. Static, and common knowledge.
+    (covers ?i - agent ?t - tunnel)
+    ;; Who carries the load. Static, and common knowledge.
+    (hauls ?i - agent)
+    (delivered)
+  )
+
+  (:event nil)
+
+  ;--------------------SURVEY A BAY------------------
+  ;
+  ; Semi-private sensing. The scout learns whether the bay is open; the other
+  ; agents learn that it looked and not what it saw, which is what a radio
+  ; that carries a status and not a map would give them. The <Kw.> conjunct
+  ; keeps the planner from sending a scout to read a bay it has already read.
+
+  (:event e-open
+    :parameters (?i - agent ?t - tunnel)
+    :precondition (and (covers ?i ?t) (open ?t) (<Kw. ?i> (open ?t)))
+  )
+
+  (:event e-shut
+    :parameters (?i - agent ?t - tunnel)
+    :precondition (and (covers ?i ?t) (not (open ?t)) (<Kw. ?i> (open ?t)))
+  )
+
+  (:action survey
+    :parameters (?i - agent ?t - tunnel)
+    :action-type (semi-private-sensing (e-open ?i ?t) (e-shut ?i ?t))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;--------------------EXCHANGE MAPS------------------
+  ;
+  ; A semi-private announcement that the speaker knows the bay's state: the
+  ; listener hears it, the third agent observes that the two spoke about the
+  ; bay and not what was said.
+  ;
+  ; It was first written as a private announcement, with the third agent
+  ; oblivious, and that version is wrong in a way the planner finds. An agent
+  ; oblivious to one exchange goes on believing the speaker knows nothing;
+  ; told afterwards that the speaker does know, it has no world left that
+  ; agrees with what it has just heard. Its relation at the designated worlds
+  ; becomes empty, a box over an empty relation holds of anything, and the
+  ; carrier then "knows" every bay is open. The planner returned a policy that
+  ; crossed a bay the carrier had no grounds to believe open, and the
+  ; validator accepted it, because by the model's semantics the precondition
+  ; held. Letting the third agent observe that an exchange took place keeps
+  ; every relation serial and the model S5.
+  ;
+  ; Two actions and not one: an announcement designates one event, and the
+  ; library's semi-private announcement pairs it with its negation.
+
+  (:event e-says-open
+    :parameters (?i - agent ?t - tunnel)
+    :precondition ([?i] (open ?t))
+  )
+
+  (:event e-says-shut
+    :parameters (?i - agent ?t - tunnel)
+    :precondition ([?i] (not (open ?t)))
+  )
+
+  (:action share-open
+    :parameters (?i ?j - agent ?t - tunnel)
+    :action-type (semi-private-announcement (e-says-open ?i ?t) (e-says-shut ?i ?t))
+    :observability-conditions (:and (?i Fully) (?j Fully) (default Partially))
+  )
+
+  (:action share-shut
+    :parameters (?i ?j - agent ?t - tunnel)
+    :action-type (semi-private-announcement (e-says-shut ?i ?t) (e-says-open ?i ?t))
+    :observability-conditions (:and (?i Fully) (?j Fully) (default Partially))
+  )
+
+  ;--------------------CROSS------------------
+  ;
+  ; The knowledge precondition. Public: every agent sees the carrier go
+  ; through, and so learns that it knew the bay was open.
+
+  (:event e-cross
+    :parameters (?i - agent ?t - tunnel)
+    :precondition (and (hauls ?i) ([?i] (open ?t)))
+    :effects (delivered)
+  )
+
+  (:action cross
+    :parameters (?i - agent ?t - tunnel)
+    :action-type (public-ontic (e-cross ?i ?t))
+    :observability-conditions (default Fully)
+  )
+)

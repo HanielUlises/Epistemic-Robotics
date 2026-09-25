@@ -1,0 +1,54 @@
+(define (problem pass-through-3)
+
+  (:domain pass-through)
+
+  ;; The floor of tools/layout.py: a racking block across a 30 x 50 m hall with
+  ;; three pass-through bays, t1 in the west, t2 in the middle and t3 in the
+  ;; east. The names carry no underscore because grounded action names are
+  ;; joined with one, and the executor splits on it to recover arguments.
+  ;;
+  ;; west and east are scouts, each stationed at the bay on its side. The
+  ;; carrier is stationed at none: it is hauling. t2 belongs to no one, because
+  ;; it opens onto the carrier's own lane, and so the only way anyone can come
+  ;; to know t2 is open is by ruling out the other two.
+
+  (:requirements
+    :typing :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents west east carrier)
+
+  (:objects t1 t2 t3 - tunnel)
+
+  (:init
+    (:and
+      ([C. All] (not (delivered)))
+      ([C. All] (covers west t1))
+      ([C. All] (not (covers west t2)))
+      ([C. All] (not (covers west t3)))
+      ([C. All] (not (covers east t1)))
+      ([C. All] (not (covers east t2)))
+      ([C. All] (covers east t3))
+      (:forall (?t - tunnel) ([C. All] (not (covers carrier ?t))))
+      ([C. All] (hauls carrier))
+      ([C. All] (not (hauls west)))
+      ([C. All] (not (hauls east)))
+      ;; Exactly one bay is open, and that is common knowledge. Which one is
+      ;; not: three worlds, all designated.
+      ([C. All]
+        (or
+          (and (open t1) (not (open t2)) (not (open t3)))
+          (and (not (open t1)) (open t2) (not (open t3)))
+          (and (not (open t1)) (not (open t2)) (open t3))))
+      (:forall (?i - agent)
+        (:forall (?t - tunnel)
+          ([C. All] (<Kw. ?i> (open ?t)))))
+    )
+  )
+
+  ;; Ontic, and deliberately so. The epistemic content is in the precondition
+  ;; of cross: the goal is reached only by a carrier that knew.
+  (:goal (delivered))
+)

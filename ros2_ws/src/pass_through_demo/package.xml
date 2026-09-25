@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>pass_through_demo</name>
+  <version>0.1.0</version>
+  <description>
+    Multi-agent epistemic planning over maps the robots build: two scouts and a
+    carrier, three pass-through bays in a racking block, exactly one open. The
+    scouts' SLAM maps are what they know, a map exchange is an announcement,
+    and the carrier's route is a least fixed point over a safe set that
+    includes the bays it knows to be open.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>lifecycle_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>nlohmann-json-dev</depend>
+  <depend>epistemic_msgs</depend>
+  <depend>epistemic_slam</depend>
+  <depend>mu_path_planner</depend>
+  <depend>plansys2_msgs</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_planner</depend>
+  <depend>plansys2_problem_expert</depend>
+  <depend>plansys2_domain_expert</depend>
+
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>plansys2_epistemic_executor</exec_depend>
+  <exec_depend>plansys2_epistemic_bt_builder</exec_depend>
+  <exec_depend>plansys2_epistemic_planner</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>turtlebot3_description</exec_depend>
+  <exec_depend>aws_robomaker_small_warehouse_world</exec_depend>
+  <exec_depend>warehouse_xl_rmf_demo</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

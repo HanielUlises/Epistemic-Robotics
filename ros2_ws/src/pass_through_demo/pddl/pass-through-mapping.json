@@ -1,0 +1,290 @@
+{
+  "cross_carrier_t1": {
+    "action": "(cross carrier t1)",
+    "duration": 30.0
+  },
+  "cross_carrier_t2": {
+    "action": "(cross carrier t2)",
+    "duration": 30.0
+  },
+  "cross_carrier_t3": {
+    "action": "(cross carrier t3)",
+    "duration": 30.0
+  },
+  "cross_east_t1": {
+    "action": "(cross east t1)",
+    "duration": 30.0
+  },
+  "cross_east_t2": {
+    "action": "(cross east t2)",
+    "duration": 30.0
+  },
+  "cross_east_t3": {
+    "action": "(cross east t3)",
+    "duration": 30.0
+  },
+  "cross_west_t1": {
+    "action": "(cross west t1)",
+    "duration": 30.0
+  },
+  "cross_west_t2": {
+    "action": "(cross west t2)",
+    "duration": 30.0
+  },
+  "cross_west_t3": {
+    "action": "(cross west t3)",
+    "duration": 30.0
+  },
+  "share-open_carrier_carrier_t1": {
+    "action": "(tell_open carrier carrier t1)",
+    "duration": 2.0
+  },
+  "share-open_carrier_carrier_t2": {
+    "action": "(tell_open carrier carrier t2)",
+    "duration": 2.0
+  },
+  "share-open_carrier_carrier_t3": {
+    "action": "(tell_open carrier carrier t3)",
+    "duration": 2.0
+  },
+  "share-open_carrier_east_t1": {
+    "action": "(tell_open carrier east t1)",
+    "duration": 2.0
+  },
+  "share-open_carrier_east_t2": {
+    "action": "(tell_open carrier east t2)",
+    "duration": 2.0
+  },
+  "share-open_carrier_east_t3": {
+    "action": "(tell_open carrier east t3)",
+    "duration": 2.0
+  },
+  "share-open_carrier_west_t1": {
+    "action": "(tell_open carrier west t1)",
+    "duration": 2.0
+  },
+  "share-open_carrier_west_t2": {
+    "action": "(tell_open carrier west t2)",
+    "duration": 2.0
+  },
+  "share-open_carrier_west_t3": {
+    "action": "(tell_open carrier west t3)",
+    "duration": 2.0
+  },
+  "share-open_east_carrier_t1": {
+    "action": "(tell_open east carrier t1)",
+    "duration": 2.0
+  },
+  "share-open_east_carrier_t2": {
+    "action": "(tell_open east carrier t2)",
+    "duration": 2.0
+  },
+  "share-open_east_carrier_t3": {
+    "action": "(tell_open east carrier t3)",
+    "duration": 2.0
+  },
+  "share-open_east_east_t1": {
+    "action": "(tell_open east east t1)",
+    "duration": 2.0
+  },
+  "share-open_east_east_t2": {
+    "action": "(tell_open east east t2)",
+    "duration": 2.0
+  },
+  "share-open_east_east_t3": {
+    "action": "(tell_open east east t3)",
+    "duration": 2.0
+  },
+  "share-open_east_west_t1": {
+    "action": "(tell_open east west t1)",
+    "duration": 2.0
+  },
+  "share-open_east_west_t2": {
+    "action": "(tell_open east west t2)",
+    "duration": 2.0
+  },
+  "share-open_east_west_t3": {
+    "action": "(tell_open east west t3)",
+    "duration": 2.0
+  },
+  "share-open_west_carrier_t1": {
+    "action": "(tell_open west carrier t1)",
+    "duration": 2.0
+  },
+  "share-open_west_carrier_t2": {
+    "action": "(tell_open west carrier t2)",
+    "duration": 2.0
+  },
+  "share-open_west_carrier_t3": {
+    "action": "(tell_open west carrier t3)",
+    "duration": 2.0
+  },
+  "share-open_west_east_t1": {
+    "action": "(tell_open west east t1)",
+    "duration": 2.0
+  },
+  "share-open_west_east_t2": {
+    "action": "(tell_open west east t2)",
+    "duration": 2.0
+  },
+  "share-open_west_east_t3": {
+    "action": "(tell_open west east t3)",
+    "duration": 2.0
+  },
+  "share-open_west_west_t1": {
+    "action": "(tell_open west west t1)",
+    "duration": 2.0
+  },
+  "share-open_west_west_t2": {
+    "action": "(tell_open west west t2)",
+    "duration": 2.0
+  },
+  "share-open_west_west_t3": {
+    "action": "(tell_open west west t3)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_carrier_t1": {
+    "action": "(tell_shut carrier carrier t1)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_carrier_t2": {
+    "action": "(tell_shut carrier carrier t2)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_carrier_t3": {
+    "action": "(tell_shut carrier carrier t3)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_east_t1": {
+    "action": "(tell_shut carrier east t1)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_east_t2": {
+    "action": "(tell_shut carrier east t2)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_east_t3": {
+    "action": "(tell_shut carrier east t3)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_west_t1": {
+    "action": "(tell_shut carrier west t1)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_west_t2": {
+    "action": "(tell_shut carrier west t2)",
+    "duration": 2.0
+  },
+  "share-shut_carrier_west_t3": {
+    "action": "(tell_shut carrier west t3)",
+    "duration": 2.0
+  },
+  "share-shut_east_carrier_t1": {
+    "action": "(tell_shut east carrier t1)",
+    "duration": 2.0
+  },
+  "share-shut_east_carrier_t2": {
+    "action": "(tell_shut east carrier t2)",
+    "duration": 2.0
+  },
+  "share-shut_east_carrier_t3": {
+    "action": "(tell_shut east carrier t3)",
+    "duration": 2.0
+  },
+  "share-shut_east_east_t1": {
+    "action": "(tell_shut east east t1)",
+    "duration": 2.0
+  },
+  "share-shut_east_east_t2": {
+    "action": "(tell_shut east east t2)",
+    "duration": 2.0
+  },
+  "share-shut_east_east_t3": {
+    "action": "(tell_shut east east t3)",
+    "duration": 2.0
+  },
+  "share-shut_east_west_t1": {
+    "action": "(tell_shut east west t1)",
+    "duration": 2.0
+  },
+  "share-shut_east_west_t2": {
+    "action": "(tell_shut east west t2)",
+    "duration": 2.0
+  },
+  "share-shut_east_west_t3": {
+    "action": "(tell_shut east west t3)",
+    "duration": 2.0
+  },
+  "share-shut_west_carrier_t1": {
+    "action": "(tell_shut west carrier t1)",
+    "duration": 2.0
+  },
+  "share-shut_west_carrier_t2": {
+    "action": "(tell_shut west carrier t2)",
+    "duration": 2.0
+  },
+  "share-shut_west_carrier_t3": {
+    "action": "(tell_shut west carrier t3)",
+    "duration": 2.0
+  },
+  "share-shut_west_east_t1": {
+    "action": "(tell_shut west east t1)",
+    "duration": 2.0
+  },
+  "share-shut_west_east_t2": {
+    "action": "(tell_shut west east t2)",
+    "duration": 2.0
+  },
+  "share-shut_west_east_t3": {
+    "action": "(tell_shut west east t3)",
+    "duration": 2.0
+  },
+  "share-shut_west_west_t1": {
+    "action": "(tell_shut west west t1)",
+    "duration": 2.0
+  },
+  "share-shut_west_west_t2": {
+    "action": "(tell_shut west west t2)",
+    "duration": 2.0
+  },
+  "share-shut_west_west_t3": {
+    "action": "(tell_shut west west t3)",
+    "duration": 2.0
+  },
+  "survey_carrier_t1": {
+    "action": "(survey carrier t1)",
+    "duration": 5.0
+  },
+  "survey_carrier_t2": {
+    "action": "(survey carrier t2)",
+    "duration": 5.0
+  },
+  "survey_carrier_t3": {
+    "action": "(survey carrier t3)",
+    "duration": 5.0
+  },
+  "survey_east_t1": {
+    "action": "(survey east t1)",
+    "duration": 5.0
+  },
+  "survey_east_t2": {
+    "action": "(survey east t2)",
+    "duration": 5.0
+  },
+  "survey_east_t3": {
+    "action": "(survey east t3)",
+    "duration": 5.0
+  },
+  "survey_west_t1": {
+    "action": "(survey west t1)",
+    "duration": 5.0
+  },
+  "survey_west_t2": {
+    "action": "(survey west t2)",
+    "duration": 5.0
+  },
+  "survey_west_t3": {
+    "action": "(survey west t3)",
+    "duration": 5.0
+  }
+}
