@@ -445,6 +445,26 @@ pre:has(> code){margin:1.3rem 0}
 </style>
   <meta name="twitter:image:alt" content="A title card for the single-agent belief domain.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/single_agent_believes.html">
+<style>
+/* The four tier pages are set as a paper: numbered sections in grey, no
+   tinted highlight, and the red kept for the rule under the title alone. */
+body{counter-reset:sec}
+section .sec-label{color:var(--gray);text-transform:uppercase;letter-spacing:.08em;font-size:.6rem}
+section .sec-label::before{counter-increment:sec;content:counter(sec) ".\00a0\00a0";color:var(--black)}
+section:has(.quad) .sec-label::before{content:none;counter-increment:none}
+.hero h2 em{font-style:normal;font-weight:inherit;color:inherit}
+.quad a:hover{transform:none}
+.quad a[aria-current="page"]{border-color:var(--black);background:#FFFFFF;box-shadow:inset 0 0 0 1px var(--black)}
+.quad a[aria-current="page"] .qk::after{content:"\00a0\00a0this page";font-family:var(--mono);font-size:.62rem;font-weight:400;color:var(--gray);text-transform:uppercase;letter-spacing:.06em}
+.math-block{border-left-color:#C8C8C8}
+.btn.primary{border-color:var(--black);color:var(--black)}
+.btn.primary:hover{background:var(--black);color:#fff}
+.copybtn:hover{color:var(--black);border-color:var(--black)}
+.axioms dt{color:var(--black)}
+.steplist div.cur{border-left-color:var(--black);background:#F5F5F5}
+.qlead a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.qlead a:hover{border-bottom-color:var(--steel)}
+</style>
 </head>
 <body>
 
@@ -466,6 +486,8 @@ pre:has(> code){margin:1.3rem 0}
           <details class="nav-folder" open>
             <summary>Domains</summary>
             <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder" open>
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -507,6 +529,13 @@ pre:has(> code){margin:1.3rem 0}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -529,6 +558,7 @@ pre:has(> code){margin:1.3rem 0}
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -544,10 +574,7 @@ pre:has(> code){margin:1.3rem 0}
     <h2>Planning for what one agent <em>believes</em></h2>
     <div class="rule"></div>
     <p class="hero-p">
-      A robot that commands a door it cannot see. One oblivious ontic action
-      is enough to detach a single agent&#8217;s picture of the world from the
-      world, which takes the frame out of \(\mathrm{S5}\) with nobody else
-      involved at all.
+      A robot commands a door it cannot observe. A single ontic action to which the only agent is oblivious suffices to separate the agent&#8217;s accessible worlds from the actual one, and so to take the frame out of \(\mathrm{S5}\) without a second agent.
     </p>
   </div>
 </div>
@@ -558,29 +585,28 @@ pre:has(> code){margin:1.3rem 0}
     <h3>Two axes: how many agents, and knowledge or belief</h3>
     <p class="qlead">
       Adding an agent indexes the modality. Dropping the truth axiom turns
-      knowledge into belief. The four pages below are the four combinations,
-      each with a domain that reaches it.
+      knowledge into belief. The four pages below treat the four combinations, each through a domain that reaches it. <a href="domain_catalogue.html">All domains</a> places every domain of the repository in one of them.
     </p>
     <div class="quad">
       <a href="single_agent_knows.html">
         <span class="qk">Planning for what one agent <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}\) &#183; lone-inspector</span>
-        <span class="qd">Sensing refines one partition. Nothing is hidden, because there is nobody to hide it from.</span>
+        <span class="qd">Sensing refines a single partition, and every event is observed by the only agent.</span>
       </a>
       <a href="single_agent_believes.html" aria-current="page">
         <span class="qk">Planning for what one agent <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}\) &#183; remote-door</span>
-        <span class="qd">The world changes while the agent is not looking, and its picture of the world stops matching it.</span>
+        <span class="qd">An ontic change the agent does not observe leaves its accessible worlds apart from the actual one.</span>
       </a>
       <a href="domains.html">
         <span class="qk">Planning for what a fleet <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}_n\) &#183; ugv-coordination</span>
-        <span class="qd">Four observability models over one facility, and what each one costs to plan.</span>
+        <span class="qd">Four observability models over one facility, and the cost of planning under each.</span>
       </a>
       <a href="fleet_believes.html">
         <span class="qk">Planning for what a fleet <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}_n\) &#183; hotel-incident</span>
-        <span class="qd">One agent is told and another is not, so the fleet stops agreeing about what is the case.</span>
+        <span class="qd">An announcement made to part of the fleet leaves the uninformed agents holding false beliefs.</span>
       </a>
     </div>
   </div>
@@ -612,13 +638,10 @@ pre:has(> code){margin:1.3rem 0}
       Without reflexivity the world that is the case need not lie in the
       agent's own accessible set, so \(B\varphi \wedge \neg\varphi\) becomes
       satisfiable. The agent remains consistent and fully introspective about a
-      belief that is wrong, which is what makes the failure worth planning
-      against: nothing inside the agent's perspective reveals it.
+      belief that is wrong, and for this reason the failure has to be anticipated by the planner: no formula evaluated from the agent's perspective reveals it.
     </p>
     <p>
-      With a single agent there is nobody to hide anything from, so the usual
-      multi-agent route to false belief is closed. What remains is an action
-      the agent performs without observing its effect. That is enough.
+      With a single agent the multi-agent route to false belief, informing one agent and not another, is unavailable. The remaining route is an action whose effect the agent does not observe, and it suffices.
     </p>
   </div>
 </section>
@@ -645,7 +668,7 @@ pre:has(> code){margin:1.3rem 0}
       accordingly.
     </p>
     <p>
-      Going to the plant and looking is the repair. It is a sensing action with
+      The false belief is repaired by travelling to the plant and observing the door. It is a sensing action with
       one designated event per reading, and standing at the door makes the
       readings distinguishable:
     </p>
@@ -904,7 +927,7 @@ draw();
 })();
 </script>
     <p>
-      Read the product on the second row. The two surviving pairs are
+      Consider the product in the second row. The two surviving pairs are
       \((w_0, \textsf{e-command})\), where the door is shut, and
       \((w_0, \textsf{nil})\), where it is not; the first is designated,
       because the command is what actually happened. The relation is computed
@@ -918,8 +941,7 @@ draw();
     </p>
     <p>
       The loop above \(w_0\) in the first row is gone in the second, and
-      that missing loop is the whole of the difference between knowledge and
-      belief. Reflexivity is what makes \(K\varphi \to \varphi\)
+      the absence of this loop is precisely what distinguishes knowledge from belief. Reflexivity is what makes \(K\varphi \to \varphi\)
       valid, so an agent whose relation has lost the loop at the world that
       obtains can satisfy \(K\varphi \wedge \neg\varphi\). The
       relation remains serial, transitive and Euclidean (the loop at
@@ -948,19 +970,17 @@ draw();
       </tbody>
     </table>
     <p>
-      The first row is the result this page exists to show. The declaration
+      The first row is the principal result of this page. The declaration
       alone is enough for the parser to classify the task as
       \(\mathrm{KD45}\): a single-agent domain with one oblivious ontic action
       leaves the frame non-reflexive, and belief becomes the attitude the
       planner reasons about.
     </p>
     <p>
-      Shutting the door takes one action. Coming to <em>know</em> it is shut
-      does not currently reach a solution: the search reports its space
-      exhausted at depth three, below the length of the plan that ought to work
+      Achieving that the door is shut requires one action. Achieving that the agent <em>knows</em> it is shut is not currently solved: the search reports its space
+      exhausted at depth three, below the length of the plan that should succeed
       (command, drive, look). The repair path is stated in the domain and the
-      goal is expressible, so the gap is in the search rather than the
-      modelling. It is recorded here as an open item.
+      goal is expressible, so the deficiency lies in the search and not in the model. It is recorded here as an open item.
     </p>
   </div>
 </section>
@@ -971,8 +991,7 @@ draw();
     <p class="sec-label">The plan</p>
     <h3>The repair, and where the false belief sits</h3>
     <p>
-      That the gap is in the search and not in the modelling is a claim about
-      two different things, and the two are separable. Whether a sequence
+      The claim that the deficiency lies in the search and not in the model concerns two separable questions. Whether a sequence
       reaches the goal is decided by the product update and the satisfaction
       relation; whether the search finds it is decided by the search. The first
       is settled here by putting the three-action repair the domain states
@@ -1072,11 +1091,11 @@ draw();
     </svg>
     <div class="pdkey"><span><i style="border-color:#C8102E"></i>sensing</span><span><i style="border-color:#111111"></i>ontic</span><span><i style="border-color:#1A52A0"></i>announcement</span><span class="dot"><b></b>a world at which the goal holds</span><span class="dot"><b class="e"></b>a world at which it does not</span><span class="dot"><b class="d"></b>a designated world</span></div>
   </div>
-  <div class="fig-cap">The solution as the AND-OR tree it is, drawn from the planner&#8217;s output. Beside each action is the model that action is given: one dot per world, filled where \(\gamma\) holds and ringed where the world is designated, so a row in which every ringed dot is filled is a state satisfying the goal. An action with two outgoing edges has two designated events, and the continuation below each edge is applicable only in the state that edge produces, which is what makes a solution a policy rather than a sequence. The numbered notes give the modal conjuncts each action is guarded by; an action with no note has none, and is applicable on ontic grounds alone.</div>
+  <div class="fig-cap">The solution as the AND-OR tree it is, drawn from the planner&#8217;s output. Beside each action is the model that action is given: one dot per world, filled where \(\gamma\) holds and ringed where the world is designated, so a row in which every ringed dot is filled is a state satisfying the goal. An action with two outgoing edges has two designated events, and the continuation below each edge is applicable only in the state that edge produces, which is what makes a solution a policy and not a sequence. The numbered notes give the modal conjuncts each action is guarded by; an action with no note has none, and is applicable on ontic grounds alone.</div>
 </div>
 
     <p>
-      The command is the step the page exists to show. Its event model pairs
+      The command is the central step. Its event model pairs
       the event that shuts the door with
       <span class="mono-inline">nil</span>, and the only agent is oblivious, so
       \(Q_{\texttt{r}}\) sends the event that occurred to the one that did
@@ -1096,8 +1115,7 @@ draw();
     </p>
     <p>
       The domain declares one box modality and the figures write it \(K\)
-      throughout. Whether that symbol is read as knowledge or as belief is a
-      property of the frame rather than of the notation: it is knowledge where
+      throughout. Whether that symbol is read as knowledge or as belief is a property of the frame and not of the notation: it is knowledge where
       the relation is reflexive at the designated world, and belief where it is
       not. The step at which the reading changes is the step at which the edge
       above is lost, and it can be pointed at.
@@ -1144,7 +1162,7 @@ draw();
       </tbody>
     </table>
   </div>
-  <div class="fig-cap">The command splits one world into two. At the designated world \(\texttt{shut}\) is true and \(K_{\texttt{r}}\,\neg\texttt{shut}\) holds there as well: the box modality is satisfied at a world its argument is false at, which is a false belief exhibited rather than argued for. The look removes one edge, and \(K_{\texttt{r}}\,\texttt{shut}\) acquires the designated world.</div>
+  <div class="fig-cap">The command splits one world into two. At the designated world \(\texttt{shut}\) is true and \(K_{\texttt{r}}\,\neg\texttt{shut}\) holds there as well: the box modality is satisfied at a world its argument is false at, which exhibits a false belief directly. The look removes one edge, and \(K_{\texttt{r}}\,\texttt{shut}\) acquires the designated world.</div>
 </div>
 
     <p>
@@ -1153,8 +1171,7 @@ draw();
       \([\![K_{\texttt{r}}\,\neg\texttt{shut}]\!]\) at the same time, so
       \(K_{\texttt{r}}\varphi \wedge \neg\varphi\) is satisfied at the
       designated world. Nothing inside the agent's own perspective distinguishes
-      that state from the one before the command, which is precisely why it has
-      to be planned against rather than detected.
+      that state from the one before the command, and for that reason it has to be anticipated in planning, since it cannot be detected in execution.
     </p>
     <p>
       The look repairs it without repairing the frame. It removes one edge, and

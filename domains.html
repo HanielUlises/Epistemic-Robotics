@@ -445,6 +445,26 @@ pre:has(> code){margin:1.3rem 0}
 </style>
   <meta name="twitter:image:alt" content="A title card for the fleet knowledge domains.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/domains.html">
+<style>
+/* The four tier pages are set as a paper: numbered sections in grey, no
+   tinted highlight, and the red kept for the rule under the title alone. */
+body{counter-reset:sec}
+section .sec-label{color:var(--gray);text-transform:uppercase;letter-spacing:.08em;font-size:.6rem}
+section .sec-label::before{counter-increment:sec;content:counter(sec) ".\00a0\00a0";color:var(--black)}
+section:has(.quad) .sec-label::before{content:none;counter-increment:none}
+.hero h2 em{font-style:normal;font-weight:inherit;color:inherit}
+.quad a:hover{transform:none}
+.quad a[aria-current="page"]{border-color:var(--black);background:#FFFFFF;box-shadow:inset 0 0 0 1px var(--black)}
+.quad a[aria-current="page"] .qk::after{content:"\00a0\00a0this page";font-family:var(--mono);font-size:.62rem;font-weight:400;color:var(--gray);text-transform:uppercase;letter-spacing:.06em}
+.math-block{border-left-color:#C8C8C8}
+.btn.primary{border-color:var(--black);color:var(--black)}
+.btn.primary:hover{background:var(--black);color:#fff}
+.copybtn:hover{color:var(--black);border-color:var(--black)}
+.axioms dt{color:var(--black)}
+.steplist div.cur{border-left-color:var(--black);background:#F5F5F5}
+.qlead a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.qlead a:hover{border-bottom-color:var(--steel)}
+</style>
 </head>
 <body>
 
@@ -466,6 +486,8 @@ pre:has(> code){margin:1.3rem 0}
           <details class="nav-folder" open>
             <summary>Domains</summary>
             <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -507,6 +529,13 @@ pre:has(> code){margin:1.3rem 0}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -529,6 +558,7 @@ pre:has(> code){margin:1.3rem 0}
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -540,15 +570,14 @@ pre:has(> code){margin:1.3rem 0}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">Coordination domains · UGV fleets</p>
+    <p class="eyebrow">Fleet · knowledge</p>
     <h2>Planning for what a fleet <em>knows</em></h2>
     <div class="rule"></div>
     <p class="hero-p">
       Four EPDDL domains in which a fleet of unmanned ground vehicles must reach a
       prescribed configuration of knowledge, not a configuration of the world.
       Each domain fixes one thing only: who observes what. This page states the
-      planning task, gives the observability model of each domain, and executes
-      the policies the planner actually returned.
+      planning task, gives the observability model of each domain, and executes the policies the planner returned.
     </p>
   </div>
 </div>
@@ -559,29 +588,28 @@ pre:has(> code){margin:1.3rem 0}
     <h3>Two axes: how many agents, and knowledge or belief</h3>
     <p class="qlead">
       Adding an agent indexes the modality. Dropping the truth axiom turns
-      knowledge into belief. The four pages below are the four combinations,
-      each with a domain that reaches it.
+      knowledge into belief. The four pages below treat the four combinations, each through a domain that reaches it. <a href="domain_catalogue.html">All domains</a> places every domain of the repository in one of them.
     </p>
     <div class="quad">
       <a href="single_agent_knows.html">
         <span class="qk">Planning for what one agent <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}\) &#183; lone-inspector</span>
-        <span class="qd">Sensing refines one partition. Nothing is hidden, because there is nobody to hide it from.</span>
+        <span class="qd">Sensing refines a single partition, and every event is observed by the only agent.</span>
       </a>
       <a href="single_agent_believes.html">
         <span class="qk">Planning for what one agent <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}\) &#183; remote-door</span>
-        <span class="qd">The world changes while the agent is not looking, and its picture of the world stops matching it.</span>
+        <span class="qd">An ontic change the agent does not observe leaves its accessible worlds apart from the actual one.</span>
       </a>
       <a href="domains.html" aria-current="page">
         <span class="qk">Planning for what a fleet <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}_n\) &#183; ugv-coordination</span>
-        <span class="qd">Four observability models over one facility, and what each one costs to plan.</span>
+        <span class="qd">Four observability models over one facility, and the cost of planning under each.</span>
       </a>
       <a href="fleet_believes.html">
         <span class="qk">Planning for what a fleet <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}_n\) &#183; hotel-incident</span>
-        <span class="qd">One agent is told and another is not, so the fleet stops agreeing about what is the case.</span>
+        <span class="qd">An announcement made to part of the fleet leaves the uninformed agents holding false beliefs.</span>
       </a>
     </div>
   </div>
@@ -977,7 +1005,7 @@ pre:has(> code){margin:1.3rem 0}
         <b>Figure 4.</b> The star marks where the target actually is along the
         selected branch, which is settled from the outset; it is grey while the
         fleet is still ignorant of it and solid once a reading has resolved it.
-        Two behaviours repay attention. On the negative branch
+        Two features of the policies are noteworthy. On the negative branch
         the policy reports \(b_4\), a bay no vehicle ever scanned, because the
         reading together with the common knowledge that the target lies in
         exactly one of two bays entails it. And under the range-limited radio a
@@ -1115,7 +1143,7 @@ pre:has(> code){margin:1.3rem 0}
     <details class="dfolder">
       <summary>I &#183; Single-agent epistemic logic
         <span class="dtag">\(\mathrm{S5}\)</span>
-        <span class="dnames">no domain in this repository is single-agent</span></summary>
+        <span class="dnames">lone-inspector &#183; building-rooms</span></summary>
       <div class="dfolder-body">
         <p>
           One agent, one accessibility relation. The language is propositional
@@ -1154,10 +1182,7 @@ pre:has(> code){margin:1.3rem 0}
           sensing shrinks a class and ontic change moves within one.
         </p>
         <p>
-          The repository holds no domain at this tier. Every domain here names
-          at least two agents, because the questions the planner is used for are
-          questions about what one agent knows of another. The tier is stated
-          because the tiers below are defined by what they add to it.
+          Two domains of the repository are at this tier, <a href="single_agent_knows.html">lone-inspector</a> and <a href="domain_entries.html#d-building-rooms">building-rooms</a>; each names a single agent. The single-agent case of belief, \(\mathrm{KD45}\), is treated in <a href="single_agent_believes.html">One agent believes</a>. The tier is stated here because the tiers below are defined by what they add to it, and <a href="domain_catalogue.html">All domains</a> gives the measured placement of every domain.
         </p>
       </div>
     </details>
@@ -1165,8 +1190,7 @@ pre:has(> code){margin:1.3rem 0}
     <details class="dfolder">
       <summary>II &#183; Multi-agent epistemic logic
         <span class="dtag">\(\mathrm{S5}_n\)</span>
-        <span class="dnames">muddy-children &#183; Active-Muddy-Child &#183;
-          building-rooms &#183; robot-warehouse &#183; ugv-coordination</span></summary>
+        <span class="dnames">muddy-children &#183; Active-Muddy-Child &#183; robot-warehouse &#183; pass-through &#183; ugv-coordination</span></summary>
       <div class="dfolder-body">
         <p>
           The modality takes an index, and the model carries one relation per
@@ -1211,13 +1235,14 @@ pre:has(> code){margin:1.3rem 0}
                 <td>public sensing</td><td>&#8211;</td></tr>
             <tr><td><span class="mono-inline">Active-Muddy-Child</span></td>
                 <td>public sensing</td><td>&#8211;</td></tr>
-            <tr><td><span class="mono-inline">building-rooms</span></td>
-                <td>public ontic, semi-private sensing</td>
-                <td><a href="six_room_survey.html">six-room survey</a></td></tr>
+            
             <tr><td><span class="mono-inline">robot-warehouse</span></td>
                 <td>public ontic, semi-private sensing, public announcement</td>
                 <td><a href="warehouse_run.html">warehouse</a>,
                     <a href="warehouse_rmf.html">over RMF</a></td></tr>
+            <tr><td><span class="mono-inline">pass-through</span></td>
+                <td>public ontic, semi-private sensing, semi-private announcement</td>
+                <td><a href="pass_through.html">pass-through</a></td></tr>
             <tr><td><span class="mono-inline">ugv-coordination</span></td>
                 <td>four observability models over one facility</td>
                 <td>this page</td></tr>

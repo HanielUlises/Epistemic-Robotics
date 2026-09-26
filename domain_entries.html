@@ -4,27 +4,27 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A link that actually falls &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart, and the difference between them becomes something to measure.">
+<title>The sixteen domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The sixteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="A link that actually falls">
-<meta property="og:description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart.">
-<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/link_outage.html">
+<meta property="og:title" content="The sixteen domains">
+<meta property="og:description" content="The sixteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/link_outage.jpg">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Link card: A link that actually falls, over the belief error and the bound during a sixty-second outage.">
-<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/link_outage.jpg">
-<meta name="twitter:title" content="A link that actually falls">
-<meta name="twitter:description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart.">
+<meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
+<meta name="twitter:title" content="The sixteen domains">
+<meta name="twitter:description" content="The sixteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -400,32 +400,6 @@ table.data td .mono-inline{font-size:.78em}
 .ftr-l a:hover{border-bottom-color:var(--black)}
 footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
-/* ── stepped accessibility figure ──────────────────────────── */
-.kfig svg{display:block;width:100%;height:auto}
-.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
-.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
-.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
-.kframe.wrong{fill:var(--red)}
-.kworld{transition:opacity .45s ease}
-.kworld.dead{opacity:.12}
-.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
-  transition:stroke .4s ease,stroke-width .4s ease}
-.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
-.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
-.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
-.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
-  transition:opacity .45s ease}
-.kedge.cut{opacity:0}
-.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
-.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
-  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
-  color:var(--black);line-height:1.3}
-.kbtn:hover{border-color:var(--red);color:var(--red)}
-.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
-@media(prefers-reduced-motion:reduce){
-  .kworld,.kdot,.kedge{transition:none}
-}
-
 /* ── code blocks, and the button that copies them ──────────── */
 pre > code{display:block;background:var(--code-bg);
   border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
@@ -477,8 +451,65 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
-  <meta name="twitter:image:alt" content="Gazebo and the RMF schedule view during the warehouse run.">
-  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/warehouse_rmf.html">
+  <meta name="twitter:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
+
+<style>
+table.cat td,table.cat th{text-align:right}
+table.cat td:nth-child(2),table.cat th:nth-child(2),table.cat td:nth-child(3),table.cat th:nth-child(3){text-align:left}
+table.cat td:first-child{font-family:var(--mono);font-size:.72rem;color:var(--gray)}
+table.cat a{color:var(--black);text-decoration:none;border-bottom:1px solid var(--border)}
+table.cat a:hover{border-bottom-color:var(--black)}
+.tier-about{color:#444;max-width:48rem}
+.dom-list{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:1.6rem}
+@media(max-width:860px){.dom-list{grid-template-columns:1fr}}
+.dom{border:1px solid #DDDDDD;border-radius:3px;background:#fff;padding:1.05rem 1.2rem 1rem;scroll-margin-top:1rem}
+.dom-h{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  border-bottom:1px solid #ECECEC;padding-bottom:.6rem;margin-bottom:.7rem}
+.dom-h h4{margin:0;font-family:var(--mono);font-size:.95rem;font-weight:600;letter-spacing:0}
+.dom-f{font-size:.78rem;color:var(--gray);white-space:nowrap}
+.dom-dl{display:grid;grid-template-columns:7.2rem 1fr;gap:.35rem .8rem;margin:0;font-size:.82rem;line-height:1.5}
+.dom-dl dt{color:var(--gray);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;padding-top:.12rem}
+.dom-dl dd{margin:0;color:#222;min-width:0;overflow-wrap:anywhere}
+.dom-dl dd a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.dom-dl code{font-family:var(--mono);font-size:.74rem;color:#333}
+.tys .ty{display:inline-block;font-family:var(--mono);font-size:.68rem;border:1px solid #D8D8D8;
+  border-radius:2px;padding:.05rem .4rem;margin:0 .3rem .3rem 0;color:#333;background:#FAFAFA}
+.tys .ty.b{border-color:#C9A7AC;color:#7A1F2B;background:#FCF6F7}
+.dom-src{margin-top:.8rem}
+.dom-src summary{cursor:pointer;font-size:.76rem;color:var(--gray)}
+.dom-src summary:hover{color:var(--black)}
+.dom-src pre.code{font-size:.66rem;margin:.6rem 0 0}
+</style>
+
+<style>
+.quad{display:grid;grid-template-columns:8.5rem 1fr 1fr;gap:.9rem;margin:1.8rem 0 1.2rem}
+.quad .ax{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);align-self:end;padding-left:.2rem}
+.quad .ay{align-self:center;padding:0}
+.q{border:1px solid #DDDDDD;border-radius:3px;background:#fff;padding:1.1rem 1.2rem 1.15rem;display:flex;flex-direction:column;gap:.6rem}
+.q-h{display:flex;align-items:baseline;gap:.7rem}
+.q-n{font-family:var(--mono);font-size:.7rem;color:var(--gray)}
+.q-m{font-size:1.25rem}
+.q-w{display:none;margin-left:auto;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
+.q-a{font-size:1.02rem;font-weight:600;letter-spacing:-.01em;color:var(--black);text-decoration:none;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #ECECEC;padding-bottom:.5rem}
+.q-a .go{color:#999;font-weight:400;transition:transform .25s,color .25s}
+.q-a:hover .go{transform:translateX(4px);color:#000}
+.q:hover{border-color:#BDBDBD}
+.tier-more{font-size:.84rem;color:var(--gray);margin-top:.4rem}
+.tier-more a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.q-t{font-size:.86rem;color:#444;line-height:1.55;margin:0}
+.q-d{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.1rem}
+.qd{font-family:var(--mono);font-size:.7rem;color:#222;text-decoration:none;border:1px solid #D8D8D8;border-radius:2px;padding:.12rem .45rem;background:#FAFAFA;transition:border-color .2s,color .2s}
+.qd:hover{border-color:#888;color:#000}
+@media(max-width:760px){.quad{grid-template-columns:1fr}.quad>div:first-child,.quad .ax:not(.ay){display:none}.quad .ay{margin-top:.6rem}.q-w{display:inline}}
+.next-page{position:relative;display:flex;flex-direction:column;gap:.25rem;margin-top:2.2rem;padding:1.1rem 1.3rem;border-top:1px solid #CFCFCF;border-bottom:1px solid #CFCFCF;text-decoration:none;color:inherit;transition:background .25s}
+.next-page:hover{background:#FAFAFA}
+.next-page .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
+.next-page .t{font-size:1.15rem;font-weight:600;letter-spacing:-.02em}
+.next-page .s{font-size:.85rem;color:#555}
+.next-page .go{position:absolute;right:1.3rem;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#999;transition:transform .25s,color .25s}
+.next-page:hover .go{transform:translate(4px,-50%);color:#000}
+</style>
 </head>
 <body>
 
@@ -530,13 +561,13 @@ sup.cite a:hover{text-decoration:underline}
           <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             </div>
           </details>
-          <details class="nav-folder" open>
+          <details class="nav-folder">
             <summary>robot-warehouse</summary>
             <div class="nav-sub">
           <a href="demos.html#robot-warehouse">All warehouse demos</a>
           <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
-          <a href="warehouse_rmf.html" aria-current="page">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
           <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
           <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
@@ -584,304 +615,544 @@ sup.cite a:hover{text-decoration:underline}
 
 
 
+
+
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">Epistemic SLAM &#183; two robots, two maps &#183; AWS small warehouse &#183; ROS 2</p>
-    <h2>A link that actually falls</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 16 domains</p>
+    <h2>The sixteen domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      SLAM answers where the robot is and what the building looks like. It does
-      not answer who knows that, and on a floor with two robots on it the
-      second question stops being a philosophical extra: a bay
-      <span class="mono-inline">r2</span> has not entered is not something
-      <span class="mono-inline">r2</span> knows merely because
-      <span class="mono-inline">r1</span> drove past it. Every demonstration
-      here keeps the grid and the knowledge model as two views of one fact.
-      This one cuts the radio between the two robots and takes that
-      coincidence away, which is the only condition under which the difference
-      between them can be measured rather than asserted.
+      Every planning domain of the project, stated in EPDDL over the
+      <span class="mono-inline">intermediate</span> action-type library,
+      grounded by plank and solved by Aletheia. Each entry gives the domain's
+      signature, the event types it uses, the size of its grounded task and
+      initial model, and what the planner returned, all measured by grounding
+      and solving the instance named, and not taken from a description of it.
     </p>
-    <p class="hero-p" style="margin-top:1rem">
-      The cut has no appearance in the simulator: nothing about a warehouse
-      changes when a radio stops working. So the thing to watch is on the left.
-      The arrow is where <span class="mono-inline">r2</span> believes
-      <span class="mono-inline">r1</span> is, the disc around it is how far
-      that belief has drifted from being knowledge, and both turn red at the
-      point where it should stop being believed at all.
-    </p>
-    <p class="note" style="margin-top:1.4rem">
-      Fleet, world and per-robot SLAM from
-      <span class="mono-inline">warehouse_demo</span>, included unmodified.
-      Reconciliation from <span class="mono-inline">epistemic_slam</span>.
-      The outage, the belief engine and the measurement are
-      <span class="mono-inline">epistemic_comm</span>.
+    <p class="note" style="margin-top:1.2rem">
+      The domains are grouped by the frame their reachable models inhabit. That
+      frame is a consequence of the event types a domain uses: public and
+      semi-private types keep every relation an equivalence, and private or
+      quasi-private types do not. The <i>declared</i> frame each entry also
+      reports is the one the problem states for its initial model. Measured
+      with Aletheia as linked by ePlanSys 0.2.0, default strategy selection,
+      45-second budget, on one machine, 25 September 2026. The two axes that
+      group them are drawn in <a href="domain_catalogue.html">The domains</a>.
     </p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ THE RUN -->
-<section>
+<section class="tier" id="tier-i">
   <div class="container">
-    <p class="sec-label">The run</p>
-    <h3>Sixty seconds without a radio</h3>
+    <p class="sec-label">Tier I</p>
+    <h3>One agent, knowledge &#183; \(\mathrm{S5}\)</h3>
+    <p class="tier-about">One agent and one equivalence relation. Every event is observed by the only agent there is, so sensing shrinks a class and ontic change moves within one; the relation stays an equivalence.</p>
+    <p class="tier-more">The tier in full: <a href="single_agent_knows.html">One agent knows</a></p>
+    <div class="dom-list">
+    <article class="dom" id="d-lone-inspector">
+      <div class="dom-h">
+        <h4>lone-inspector</h4>
+        <span class="dom-f">S5 &#183; 1 agent</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r</i></dd>
+        <dt>Objects</dt><dd><code>(:objects dock bay1 bay2 - zone)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 1\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>23 atoms, 18 ground actions, goal of modal depth 0</dd>
+        <dt>Solved</dt><dd>depth 5, 42 expansions, 1 leaves</dd>
+        <dt>Stated in</dt><dd><a href="single_agent_knows.html">One agent knows</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+      (at-ag ?i - agent ?z - zone)
+      (crate-at ?z - zone)
+      (carrying ?i - agent)
+      (delivered)
+      (:fact adjacent ?z1 ?z2 - zone)
+      (:fact bay      ?z      - zone)
+      (:fact dock     ?z      - zone)
+  )
 
-    <figure class="demo-figure">
-      <video controls preload="metadata" playsinline width="100%"
-             poster="media/thumbs/link_outage.jpg">
-        <source src="media/link_outage.mp4" type="video/mp4">
-      </video>
-      <figcaption>
-        Left: what <span class="mono-inline">r2</span> believes about
-        <span class="mono-inline">r1</span>, over the map
-        <span class="mono-inline">r1</span> is building. Right: the simulator,
-        where nothing marks the outage at all. The cut is played at real time,
-        the minute of drift is sampled at 4&#215;, and the return is slowed to
-        0.9&#215; because the reconnection, the verdict and the reconciliation
-        land within three seconds of each other. Captions are matched against
-        the run's own log and timed by the ROS timestamp of the line that
-        carries them; where several events share an instant they are shown in
-        sequence, so a caption can trail its event by a second and none
-        precedes one.
-      </figcaption>
-    </figure>
+(:goal
+      (delivered)
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-building-rooms">
+      <div class="dom-h">
+        <h4>building-rooms</h4>
+        <span class="dom-f">S5 &#183; 1 agent</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 4\), \(|W_d| = 4\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>4 atoms, 4 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 4, 31 expansions, 4 leaves</dd>
+        <dt>Stated in</dt><dd><a href="demo.html">The six-room run</a> &#183; <a href="six_room_survey.html">The six-room survey</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (blocked-r3)
+    (blocked-r6)
+    (at-door3 ?i - agent)
+    (at-door6 ?i - agent)
+  )
 
-    <p>
-      The belief is not a guess about the future. While the link is up it is
-      the last pose that arrived. When the link falls, nothing arrives, and
-      what is drawn from then on is the last velocity integrated forward: the
-      partner is assumed to carry on doing what it was last seen doing. The
-      disc is the positional covariance, which grows for as long as the outage
-      lasts and never shrinks. At fifty seconds it crosses the threshold the
-      requirement sets, the arrow turns red, and the engine says in as many
-      words that where <span class="mono-inline">r1</span> is should no longer
-      be believed.
-    </p>
-
-    <table class="data">
-        <thead>
-          <tr><th>what happened</th><th>when</th><th>measured</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>the gate stops relaying</td><td>t = 0</td>
-              <td>1&#8239;764 odometry messages dropped, 64 map messages</td></tr>
-          <tr><td>the belief starts propagating</td><td>t = 0</td>
-              <td>from (&#8722;3.30, &#8722;8.57) at 0.150&#8202;m/s</td></tr>
-          <tr><td>the covariance passes the threshold</td><td>t = 50&#8202;s</td>
-              <td>trace 1.000&#8202;m&#178; against &#963;<sub>max</sub>&#178; = 1.0</td></tr>
-          <tr><td>the link returns</td><td>t = 60&#8202;s</td>
-              <td>worst error 7.632&#8202;m over 636 samples, no breach</td></tr>
-          <tr><td>the two maps are reconciled</td><td>t = 60&#8202;s</td>
-              <td>5&#8239;246 and 4&#8239;870 cells learned, 0 in conflict</td></tr>
-        </tbody>
-    </table>
+(:goal
+    (and
+      ([Kw. r1] (blocked-r3))
+      ([Kw. r1] (blocked-r6))
+    )
+  )</pre>
+      </details>
+    </article>
+    </div>
   </div>
 </section>
-
-<!-- ═══════════════════════════════════════════════ CONCEPT -->
-<section>
+<section class="tier" id="tier-ii">
   <div class="container">
-    <p class="sec-label">Epistemic SLAM</p>
-    <h3>Two views of one fact, and the moment they come apart</h3>
+    <p class="sec-label">Tier II</p>
+    <h3>One agent, belief &#183; \(\mathrm{KD45}\)</h3>
+    <p class="tier-about">One agent whose relation need not be reflexive. A private ontic change, an event the agent does not observe, leaves it considering possible only worlds the actual one no longer resembles; the truth axiom is lost and seriality is what remains.</p>
+    <p class="tier-more">The tier in full: <a href="single_agent_believes.html">One agent believes</a></p>
+    <div class="dom-list">
+    <article class="dom" id="d-remote-door">
+      <div class="dom-h">
+        <h4>remote-door</h4>
+        <span class="dom-f">KD45 &#183; 1 agent</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r</i></dd>
+        <dt>Objects</dt><dd><code>(:objects office plant - zone)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-ontic</span><span class="ty">public-ontic</span><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 1\), \(|W_d| = 1\) &#183; declared frame KD45</dd>
+        <dt>Grounded</dt><dd>9 atoms, 8 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 3, 14 expansions, 1 leaves</dd>
+        <dt>Stated in</dt><dd><a href="single_agent_believes.html">One agent believes</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (at-ag ?i - agent ?z - zone)
+    (shut)
+    (:fact adjacent ?z1 ?z2 - zone)
+    (:fact door-at  ?z     - zone)
+  )
 
-    <p>
-      The demonstrations on this site rest on a coincidence that is easy to
-      miss because it holds so consistently. A robot drives, its laser sweeps,
-      <span class="mono-inline">slam_toolbox</span> writes what it saw into a
-      grid, and the epistemic layer writes the same event into a Kripke model.
-      A bay the robot has not entered is unobserved in the grid and undecided
-      in the model at once. Those are two views of one fact, and keeping them
-      that way is what makes a run honest: no prepared map is published
-      anywhere, so the robot cannot know a thing it did not look at.
-    </p>
+(:goal
+    (and (shut) ([r] (shut)))
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-robot-relay">
+      <div class="dom-h">
+        <h4>robot-relay</h4>
+        <span class="dom-f">KD45 &#183; 1 agent</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i></dd>
+        <dt>Objects</dt><dd><code>(:objects home lane bayA bayB relay1 relay2 depot - zone)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty b">private-ontic</span><span class="ty b">private-sensing</span><span class="ty">public-announcement</span><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 2\) &#183; declared frame KD45</dd>
+        <dt>Grounded</dt><dd>80 atoms, 133 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 11&#8239; 1,233 expansions, 1 leaves</dd>
+        <dt>Stated in</dt><dd><a href="domains.html">Domains</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (at-ag      ?i - agent ?z - zone)
+    (package-at ?z - zone)
+    (carrying   ?i - agent)
+    (delivered)
+    (:fact adjacent ?z1 ?z2 - zone)
+    (:fact bay      ?z      - zone)
+    (:fact depot    ?z      - zone)
+    (:fact courier  ?i      - agent)
+  )
 
-    <p>
-      The coincidence holds because one robot's observation drives both views.
-      What this run does is take it away.
-    </p>
-
-    <h4>Three things SLAM does not store</h4>
-
-    <p>
-      An occupancy grid records a probability per cell. It does not record
-      <b>whose</b> probability it is. A robot handed a merged map holds cells it
-      never saw, and nothing in the format distinguishes them from cells it
-      measured itself. That distinction is the whole of what the collaborative
-      layer adds: coverage is a mask of what this robot observed, not of what
-      is free in the map it happens to hold.
-    </p>
-
-    <p>
-      Nor does the grid record <b>abstention</b>. A cell at &minus;1 was never
-      observed, and a cell whose probability sits between the thresholds was
-      observed and not resolved. Both are unknown to the epistemic layer, and
-      collapsing the second into free or occupied would hand the model a
-      certainty the sensor never produced. An occupancy grid stores a
-      probability and a modal formula needs a decision, so a threshold has to
-      be chosen somewhere; it is chosen once, in the classification, and
-      nowhere else.
-    </p>
-
-    <p>
-      And it does not record <b>disagreement</b>. Two robots that observed the
-      same cell and reached opposite conclusions have produced a fact about the
-      fleet, not a defect in either map. Reconciliation here records the
-      contradiction and does not stop; a disputed cell that somebody can go and
-      look at again is worth more than a hole punched in the map, and worth
-      much more than an average of the two readings, which would describe a
-      floor neither robot saw.
-    </p>
-
-    <h4>Where knowledge ends and belief begins, in metres</h4>
-
-    <p>
-      While the link is up, what one robot holds about its partner is a
-      received measurement: the partner said where it was, and the statement
-      inherits whatever the partner's own localisation was worth. The instant
-      the link falls that stops being an observation of anything. What
-      continues is inference from a motion model, and the covariance is the
-      distance it has travelled from the fact.
-    </p>
-
-    <p>
-      That gives the boundary a number, which is unusual. In the epistemic
-      models on this site an agent either knows which of two worlds it is in or
-      it does not, and the survey domains are built so that the question is
-      settled by looking. Here the same distinction is continuous: the disc on
-      the left of the film is how far the belief has drifted from being
-      knowledge, and it widens for as long as nothing arrives. At fifty seconds
-      it passes the threshold, and past that point the proposition about where
-      the partner is has no business being treated as something the robot
-      knows. The engine says so; what it cannot do is act on it, because
-      marking that proposition uncertain means editing a model, and there is
-      one model for the whole fleet rather than one per robot.
-    </p>
-
-    <p class="note">
-      That last clause is the honest edge of this run. The two grids diverge
-      because two robots observed different things while incommunicado, and
-      reconciling them is the operation this layer performs. The two
-      <em>models</em> never diverge, because there is only one, and an
-      accessibility relation in it is a column of a shared structure and not a
-      perspective held on a robot. Partitioning the model is a different piece
-      of work.
-    </p>
-
-    <h4>Why merging maps is not a registration problem</h4>
-
-    <p>
-      The obvious reading of what happens at reconnection is that two grids
-      must be aligned and combined. That reading is available and it is the
-      wrong one. The alignment is arithmetic: both maps came from the same
-      simulator at the same resolution, and putting them on a common extent is
-      a translation by whole cells, with no interpolation and no rotation. Maps
-      at different resolutions are refused rather than approximated, because a
-      wrong registration produces a merged map that is confidently wrong, which
-      is worse than one that is obviously missing.
-    </p>
-
-    <p>
-      What is not arithmetic is the question underneath: after the merge, what
-      does each robot know? The answer is not the union of the grids. It is a
-      per-robot fact, and this run reports it as one: the believing robot
-      learned 5&#8239;246 cells it had never observed, the patrolling one
-      4&#8239;870, and neither now confuses them with cells it measured. That
-      accounting is what the layer exists for, and it is the part an occupancy
-      grid has no field for.
-    </p>
+(:goal
+    (and
+      (delivered)
+      ([Kw. r1] (package-at bayA))
+    )
+  )</pre>
+      </details>
+    </article>
+    </div>
   </div>
 </section>
-
-<!-- ═══════════════════════════════════════════════ RESULT -->
-<section>
+<section class="tier" id="tier-iii">
   <div class="container">
-    <p class="sec-label">The measurement</p>
-    <h3>The bound is met, and that is weaker than it sounds</h3>
+    <p class="sec-label">Tier III</p>
+    <h3>Several agents, knowledge &#183; \(\mathrm{S5}_n\)</h3>
+    <p class="tier-about">One equivalence per agent. Public and semi-private event types keep every relation an equivalence under product update, so every reachable model stays in this tier; common and distributed knowledge are definable over the union and the intersection of the relations.</p>
+    <p class="tier-more">The tier in full: <a href="domains.html">A fleet knows</a></p>
+    <div class="dom-list">
+    <article class="dom" id="d-muddy-children">
+      <div class="dom-h">
+        <h4>muddy-children</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 2 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>c1</i>, <i>c2</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 4\), \(|W_d| = 1\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>2 atoms, 2 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 2, 6 expansions, 1 leaves</dd>
+        <dt>Stated in</dt><dd><a href="domains.html">Domains</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates (muddy ?i - agent))
 
-    <p>
-      The requirement admits an error of
-      <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>,
-      with <span class="mono-inline">v<sub>max</sub> = 0.22&#8202;m/s</span>
-      taken from the speed the fleet's own controller enforces. Three runs, of
-      thirty, sixty and a hundred and twenty seconds, meet it with no breaches:
-      worst errors of 3.63, 6.97 and 19.20&#8202;m, each at the last sample and
-      each larger than the one before, which is what an estimate that ages
-      should do.
-    </p>
+(:goal
+    (and
+      ([Kw. c1] (muddy c1))
+      ([Kw. c2] (muddy c2))
+    )
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-active-muddy-child">
+      <div class="dom-h">
+        <h4>Active-Muddy-Child</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 5 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>Child1</i>, <i>Child2</i>, <i>Child3</i>, <i>Child4</i>, <i>Child5</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 32\), \(|W_d| = 1\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>5 atoms, 5 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>no solution: the search space is exhausted at depth 1</dd>
+        <dt>Stated in</dt><dd><a href="domains.html">Domains</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates (muddy ?i - agent))
 
-    <figure class="demo-figure">
-      <img src="media/link_outage_bound.svg" width="100%"
-           alt="The belief error stays near one and a half metres while the admissible bound climbs linearly to thirteen metres over sixty seconds">
-      <figcaption>
-        Grey is the bound, which climbs at 0.22&#8202;m/s because that is what
-        the platform could do; red is the error actually made. They touch only
-        at the instant of the cut. The criterion is hardest to satisfy when the
-        estimate is freshest and easiest when it is oldest, which is the wrong
-        way round.
-      </figcaption>
-    </figure>
+(:goal ([Kw. Child1] (muddy Child1)))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-robot-warehouse">
+      <div class="dom-h">
+        <h4>robot-warehouse</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 2 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i>, <i>r2</i></dd>
+        <dt>Objects</dt><dd><code>(:objects dock_south corridor dock_north lane bay2 bay3 - zone)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-announcement</span><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 2\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>69 atoms, 132 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>replanning over the determinization: 14 expansions, 1 leaves</dd>
+        <dt>Stated in</dt><dd><a href="warehouse_run.html">The warehouse run</a> &#183; <a href="nested_run.html">Nested epistemic goals</a> &#183; <a href="warehouse_rmf.html">Over Open-RMF</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (at-ag     ?i - agent ?z - zone)
+    (pallet-at ?z - zone)
+    (carrying  ?i - agent)
+    (delivered)
+    (:fact adjacent ?z1 ?z2 - zone)
+    (:fact bay      ?z      - zone)
+    (:fact dock     ?z      - zone)
+  )
 
-    <p>
-      A propagation that holds the last velocity cannot fail this bound while
-      the partner keeps its course, and the arithmetic gives the other half: a
-      partner that reverses at full speed the instant the link falls separates
-      at <span class="mono-inline">2v&#183;&#916;t</span> and breaches the
-      bound after <span class="mono-inline">&#963;<sub>prop</sub>/v<sub>max</sub></span>,
-      which here is 0.23&#8202;s. What these runs show is that the engine
-      tracks a partner that holds its course. They do not show that the bound
-      cannot be broken.
-    </p>
+(:goal
+    (and
+      (delivered)
+      ([Kw. r2] (pallet-at bay2))
+    )
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-pass-through">
+      <div class="dom-h">
+        <h4>pass-through</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>west</i>, <i>east</i>, <i>carrier</i></dd>
+        <dt>Objects</dt><dd><code>(:objects t1 t2 t3 - tunnel)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">semi-private-announcement</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 3\), \(|W_d| = 3\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>16 atoms, 72 ground actions, goal of modal depth 0</dd>
+        <dt>Solved</dt><dd>depth 5, 445 expansions, 3 leaves</dd>
+        <dt>Stated in</dt><dd><a href="pass_through.html">A route through a bay no map contains</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (open ?t - tunnel)
+    (covers ?i - agent ?t - tunnel)
+    (hauls ?i - agent)
+    (delivered)
+  )
 
-    <p class="note">
-      The zero conflicts are the same kind of fact. The believing robot sits at
-      its dock and the partner patrols elsewhere, so the two sets of observed
-      cells barely touch; a contradiction needs two robots to have looked at
-      the same cell and disagreed, and this pair never did. Routing them
-      through one aisle from opposite ends is the next run.
-    </p>
+(:goal (delivered))</pre>
+      </details>
+    </article>
+    </div>
   </div>
 </section>
-
-<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
-<section>
+<section class="tier" id="tier-iv">
   <div class="container">
-    <p class="sec-label">Reproduction</p>
-    <h3>Running it</h3>
+    <p class="sec-label">Tier IV</p>
+    <h3>Several agents, belief &#183; \(\mathrm{KD45}_n\)</h3>
+    <p class="tier-about">Private and quasi-private event types relate what occurred to an event some agent does not observe. That agent keeps what it last had reason to hold, which may now be false: the reachable relations are serial, transitive and Euclidean, and no longer reflexive.</p>
+    <p class="tier-more">The tier in full: <a href="fleet_believes.html">A fleet believes</a></p>
+    <div class="dom-list">
+    <article class="dom" id="d-ugv-coordination">
+      <div class="dom-h">
+        <h4>ugv-coordination</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 2 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>R1</i>, <i>R2</i></dd>
+        <dt>Objects</dt><dd><code>(:objects b1 b2 b3 - location)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty b">private-sensing</span><span class="ty">public-ontic</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 2\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>20 atoms, 17 ground actions, goal of modal depth 2</dd>
+        <dt>Solved</dt><dd>depth 3, 37 expansions, 2 leaves</dd>
+        <dt>Stated in</dt><dd><a href="domains.html">A fleet knows</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+      (at ?i - agent ?l - location)
+      (target-at ?l - location)
+      (:fact adjacent    ?l1 ?l2 - location)
+      (:fact has-scanner ?i - agent)
+  )
 
-    <pre class="code">colcon build --packages-select epistemic_msgs epistemic_comm epistemic_slam
-colcon test --packages-select epistemic_comm      # 62 tests
+(:goal
+      ([R1] ([Kw. R2] (target-at b2)))
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-survey-team">
+      <div class="dom-h">
+        <h4>survey-team</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>scout</i>, <i>relay</i>, <i>observer</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty">public-announcement</span><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 2\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>4 atoms, 30 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 3, 21 expansions, 2 leaves</dd>
+        <dt>Stated in</dt><dd><a href="warehouse_xl.html">Epistemic planning on a warehouse floor at scale</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (contaminated)
+    (on-site ?i - agent)
+  )
 
-ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
+(:goal
+    (and
+      ([Kw. scout] (contaminated))
+      ([Kw. relay] (contaminated))
+      (&lt;Kw. observer&gt; (contaminated))
+    )
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-survey-sites">
+      <div class="dom-h">
+        <h4>survey-sites</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>scout</i>, <i>relay</i>, <i>observer</i></dd>
+        <dt>Objects</dt><dd><code>(:objects a17 a31 a06 - site)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 3\), \(|W_d| = 3\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>12 atoms, 72 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>replanning over the determinization: 8 expansions, 3 leaves</dd>
+        <dt>Stated in</dt><dd><a href="warehouse_xl_sites.html">Knowing which, and knowing about a place nobody went</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (contaminated ?s - site)
+    (on-site ?i - agent ?s - site)
+  )
 
-    <p>
-      <span class="mono-inline">t_disc</span> and
-      <span class="mono-inline">t_recon</span> are seconds from the monitor's
-      first clock tick, and the schedule is open loop on purpose: an outage
-      triggered by distance would make its own duration a function of the
-      trajectory it perturbs. Two JSON records are written per run, and the six
-      behind the numbers above are published beside this page:
-      <a href="data/link_outage_short.json">short</a>,
-      <a href="data/link_outage_baseline.json">baseline</a>,
-      <a href="data/link_outage_long.json">long</a>, and the run in the film as <a href="data/link_outage_demo.json">demo</a>.
-    </p>
+(:goal
+    (and
+      ([Kw. scout] (contaminated a17))
+      ([Kw. scout] (contaminated a31))
+      ([Kw. scout] (contaminated a06))
+      ([Kw. relay] (contaminated a17))
+      ([Kw. relay] (contaminated a31))
+      ([Kw. relay] (contaminated a06))
+      (&lt;Kw. observer&gt; (contaminated a17))
+      (&lt;Kw. observer&gt; (contaminated a31))
+      (&lt;Kw. observer&gt; (contaminated a06))
+  ...  (2 more lines)</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-coin-in-the-box">
+      <div class="dom-h">
+        <h4>coin-in-the-box</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>A</i>, <i>B</i>, <i>C</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty b">private-ontic</span><span class="ty b">quasi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 1\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>8 atoms, 21 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 2, 7 expansions, 1 leaves</dd>
+        <dt>Stated in</dt><dd><a href="fleet_believes.html">A fleet believes</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+      (tails)
+      (opened)
+      (looking ?i - agent)
+      (has-key ?i - agent)
+  )
 
-    <p>
-      The full account is the report,
-      <a href="link_outage.pdf">A Link That Actually Falls</a>: the three
-      outage lengths, the proposition that fixes what the bound is and is not
-      worth, the map alignment the reconciliation needed, and what it would
-      take to make two robots hold two models instead of one.
-    </p>
+(:goal
+      ([A] (tails))
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-box-task">
+      <div class="dom-h">
+        <h4>box-task</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 2 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i>, <i>r2</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty b">private-ontic</span><span class="ty">public-ontic</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 128\), \(|W_d| = 8\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>10 atoms, 14 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>linear plan by GBFS: length 1, 1 expansions</dd>
+        <dt>Stated in</dt><dd><a href="fleet_believes.html">A fleet believes</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (boxAt-A)
+    (boxAt-B)
+    (at-A    ?r - agent)
+    (at-B    ?r - agent)
+    (seen    ?r - agent)
+    (holding ?r - agent)
+  )
 
-    <p>
-      Two findings from building it are worth recording here, because both cost
-      a run to discover. Gating the announcement channel measures nothing: the
-      channel is an audit path, read only by the transcript recorder, and the
-      epistemic model advances through a service the executor calls when an
-      action completes. And the reconciliation refused the first real pair of
-      maps it was ever handed, for differing in size, which is correct and had
-      never been exercised, because a test that builds both grids builds them
-      the same shape and two maps that two robots built never are.
-    </p>
+(:goal
+    (and
+      (holding r2)
+      ([r1] (holding r2))
+    )
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-box-task-2.0">
+      <div class="dom-h">
+        <h4>box-task-2.0</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 2 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i>, <i>r2</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty b">private-ontic</span><span class="ty">public-ontic</span><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 256\), \(|W_d| = 4\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>14 atoms, 32 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>no solution: the search space is exhausted at depth 7</dd>
+        <dt>Stated in</dt><dd><a href="fleet_believes.html">A fleet believes</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (boxAt-A)
+    (boxAt-B)
+    (at-A              ?r - agent)
+    (at-B              ?r - agent)
+    (seen              ?r - agent)
+    (holding           ?r - agent)
+    (in-transit-A-to-B ?r - agent)
+    (in-transit-B-to-A ?r - agent)
+  )
+
+(:goal
+    (and
+      (holding r2)
+      ([r1] (holding r2))
+    )
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-doxastic-depot">
+      <div class="dom-h">
+        <h4>doxastic-depot</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>chief</i>, <i>rob1</i>, <i>rob2</i></dd>
+        <dt>Objects</dt><dd><code>(:objects bay1 bay2 bay3 - bay c1 c2 - crate )</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-announcement</span><span class="ty b">private-ontic</span><span class="ty b">private-sensing</span><span class="ty">public-announcement</span><span class="ty">public-ontic</span><span class="ty b">quasi-private-announcement</span><span class="ty b">quasi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 1\), \(|W_d| = 1\) &#183; declared frame KD45</dd>
+        <dt>Grounded</dt><dd>29 atoms, 315 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 2&#8239; 1,085 expansions, 1 leaves</dd>
+        <dt>Stated in</dt><dd><a href="fleet_believes.html">A fleet believes</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+      (at-ag    ?i - agent ?b - bay)
+      (at       ?c - crate ?b - bay)
+      (sealed   ?c - crate)
+      (:fact adjacent ?b1 ?b2 - bay)
+      (:fact office   ?b      - bay)
+  )
+
+(:goal
+      (and
+          (at c1 bay2)
+          ([chief] (at c1 bay1))
+      )
+  )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-hotel-incident">
+      <div class="dom-h">
+        <h4>hotel-incident</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>inspector</i>, <i>porter</i>, <i>guest</i></dd>
+        <dt>Objects</dt><dd><code>(:objects lobby l2_suite l3_suite - zone)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">private-ontic</span><span class="ty">public-announcement</span><span class="ty">public-ontic</span><span class="ty b">quasi-private-announcement</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 2\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>31 atoms, 840 ground actions, goal of modal depth 1</dd>
+        <dt>Solved</dt><dd>depth 3, 156 expansions, 2 leaves</dd>
+        <dt>Stated in</dt><dd><a href="fleet_believes.html">A fleet believes</a> &#183; <a href="hotel_run.html">The hotel incident</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (at-ag     ?i - agent ?z - zone)
+    (leak-at   ?z - zone)
+    (contained ?z - zone)
+    (safe)
+    (:fact adjacent ?z1 ?z2 - zone)
+    (:fact suite    ?z      - zone)
+    (:fact desk     ?z      - zone)
+  )
+
+(:goal
+    (and
+      ([Kw. inspector] (leak-at l2_suite))
+      ([Kw. porter]    (leak-at l2_suite))
+      (&lt;Kw. guest&gt;     (leak-at l2_suite))
+    )
+  )</pre>
+      </details>
+    </article>
+    </div>
   </div>
 </section>
 <footer>
@@ -898,7 +1169,7 @@ ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">AWS small warehouse &#183; 60&#8202;s outage &#183; 1&#8239;764 messages dropped</span>
+      <span class="ftr-r">Six recorded runs &#183; ROS 2 &#183; simulation</span>
     </div>
   </div>
 </footer>

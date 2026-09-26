@@ -433,6 +433,49 @@ pre:has(> code){margin:1.3rem 0}
 </style>
   <meta name="twitter:image:alt" content="The project wordmark over its title card.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/">
+
+<style>
+/* The home page opens on the thesis of the project, and on nothing else: the
+   statement fills the first screen, centred, and the ways into the site sit
+   under it with a cue to scroll. Scoped to .hero-home, so every other page
+   keeps its left-aligned hero. */
+.hero-home{position:relative;min-height:calc(100vh - 6.5rem);display:flex;flex-direction:column;
+  justify-content:center;padding:2.6rem 0 5rem;border-bottom:1px solid var(--border);
+  background:radial-gradient(ellipse 70% 55% at 50% 42%,#FFFFFF 0%,#FAFAFA 60%,#F3F3F1 100%)}
+.hero-home-inner{max-width:1040px;margin:0 auto;padding:0 2.2rem;text-align:center}
+.hero-home .eyebrow{letter-spacing:.18em;margin-bottom:1.4rem}
+.hero-home h2{font-size:clamp(2.5rem,5.6vw,4.5rem);line-height:1.03;letter-spacing:-.045em;
+  max-width:none;margin:0 auto}
+.hero-home h2 em{font-weight:300}
+.hero-home .rule{margin:1.9rem auto;width:3rem}
+.hero-home .hero-p{max-width:720px;margin:0 auto;font-size:clamp(1.02rem,1.35vw,1.16rem);
+  line-height:1.65;text-align:center;color:#333}
+.hero-ways{display:grid;grid-template-columns:repeat(4,1fr);margin:2.6rem auto 0;max-width:980px;
+  border-top:1px solid #CFCFCF;border-bottom:1px solid #CFCFCF}
+@media(max-width:820px){.hero-ways{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.hero-ways{grid-template-columns:1fr}}
+.hero-ways a{position:relative;display:flex;flex-direction:column;gap:.35rem;text-align:left;
+  text-decoration:none;color:inherit;padding:1.05rem 1.2rem 1.15rem;transition:background .25s ease}
+.hero-ways a+a{border-left:1px solid #E1E1E1}
+@media(max-width:820px){.hero-ways a:nth-child(3){border-left:none}
+  .hero-ways a:nth-child(n+3){border-top:1px solid #E1E1E1}}
+.hero-ways a:hover{background:rgba(255,255,255,.75)}
+.hero-ways .k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;text-transform:uppercase}
+.hero-ways .t{font-size:.92rem;font-weight:500;line-height:1.38;color:var(--black);padding-right:1.4rem}
+.hero-ways .go{position:absolute;right:1.1rem;bottom:1.05rem;font-size:.95rem;color:#9A9A9A;
+  transition:transform .25s ease,color .25s ease}
+.hero-ways a:hover .go{transform:translateX(4px);color:var(--black)}
+.hero-ways a:hover .t{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.hero-cue{position:absolute;left:50%;bottom:1.4rem;transform:translateX(-50%);display:flex;flex-direction:column;
+  align-items:center;gap:.1rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;
+  color:var(--gray);text-decoration:none;text-transform:uppercase}
+.hero-cue svg{animation:cue 1.8s ease-in-out infinite}
+.hero-cue:hover{color:var(--red)}
+@keyframes cue{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(6px);opacity:1}}
+#the-problem{scroll-margin-top:.5rem}
+@media(max-width:720px){.hero-home{min-height:auto;padding:3rem 0 4.8rem}}
+@media(prefers-reduced-motion:reduce){.hero-cue svg{animation:none}.hero-ways a{transition:none}}
+</style>
 </head>
 <body>
 
@@ -454,6 +497,8 @@ pre:has(> code){margin:1.3rem 0}
           <details class="nav-folder">
             <summary>Domains</summary>
             <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -495,6 +540,13 @@ pre:has(> code){margin:1.3rem 0}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -517,6 +569,7 @@ pre:has(> code){margin:1.3rem 0}
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -526,8 +579,8 @@ pre:has(> code){margin:1.3rem 0}
   </div>
 </header>
 
-<div class="hero">
-  <div class="container">
+<div class="hero hero-home">
+  <div class="hero-home-inner">
     <p class="eyebrow">Long-term Research Program</p>
     <h2>Robots that reason about<br><em>what they know<br> (and believe),</em><br>and what they do not.</h2>
     <div class="rule"></div>
@@ -539,11 +592,21 @@ pre:has(> code){margin:1.3rem 0}
       Epistemic Logic and the µ-calculus, targeting heterogeneous multi-robot fleets
       under partial observability and communication constraints.
     </p>
+    <nav class="hero-ways" aria-label="Explore">
+      <a href="domain_catalogue.html"><span class="k">01 &#183; Domains</span><span class="t">Every domain, stated and measured</span><span class="go">&#8594;</span></a>
+      <a href="demos.html"><span class="k">02 &#183; Demonstrations</span><span class="t">Every run, filmed in Gazebo and RViz</span><span class="go">&#8594;</span></a>
+      <a href="execution.html"><span class="k">03 &#183; Execution</span><span class="t">Policies as behaviour trees on ROS 2</span><span class="go">&#8594;</span></a>
+      <a href="pass_through.html"><span class="k">04 &#183; Newest</span><span class="t">A route through a bay no map contains</span><span class="go">&#8594;</span></a>
+    </nav>
   </div>
+  <a class="hero-cue" href="#the-problem" aria-label="Scroll to the problem">
+    <span>The problem</span>
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
 </div>
 
 <!-- ─── THE PROBLEM ─────────────────────────────────────────────────────── -->
-<section>
+<section id="the-problem">
   <div class="container">
     <p class="sec-label">The Problem</p>
     <h3>Classical planning assumes a world fully known</h3>

@@ -445,6 +445,26 @@ pre:has(> code){margin:1.3rem 0}
 </style>
   <meta name="twitter:image:alt" content="A title card for the single-agent knowledge domain.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/single_agent_knows.html">
+<style>
+/* The four tier pages are set as a paper: numbered sections in grey, no
+   tinted highlight, and the red kept for the rule under the title alone. */
+body{counter-reset:sec}
+section .sec-label{color:var(--gray);text-transform:uppercase;letter-spacing:.08em;font-size:.6rem}
+section .sec-label::before{counter-increment:sec;content:counter(sec) ".\00a0\00a0";color:var(--black)}
+section:has(.quad) .sec-label::before{content:none;counter-increment:none}
+.hero h2 em{font-style:normal;font-weight:inherit;color:inherit}
+.quad a:hover{transform:none}
+.quad a[aria-current="page"]{border-color:var(--black);background:#FFFFFF;box-shadow:inset 0 0 0 1px var(--black)}
+.quad a[aria-current="page"] .qk::after{content:"\00a0\00a0this page";font-family:var(--mono);font-size:.62rem;font-weight:400;color:var(--gray);text-transform:uppercase;letter-spacing:.06em}
+.math-block{border-left-color:#C8C8C8}
+.btn.primary{border-color:var(--black);color:var(--black)}
+.btn.primary:hover{background:var(--black);color:#fff}
+.copybtn:hover{color:var(--black);border-color:var(--black)}
+.axioms dt{color:var(--black)}
+.steplist div.cur{border-left-color:var(--black);background:#F5F5F5}
+.qlead a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.qlead a:hover{border-bottom-color:var(--steel)}
+</style>
 </head>
 <body>
 
@@ -466,6 +486,8 @@ pre:has(> code){margin:1.3rem 0}
           <details class="nav-folder" open>
             <summary>Domains</summary>
             <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder" open>
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -507,6 +529,13 @@ pre:has(> code){margin:1.3rem 0}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -529,6 +558,7 @@ pre:has(> code){margin:1.3rem 0}
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -545,9 +575,7 @@ pre:has(> code){margin:1.3rem 0}
     <div class="rule"></div>
     <p class="hero-p">
       One robot, one accessibility relation, and a crate it may lift only
-      where it knows the crate is. The degenerate case of the fleet domains:
-      no observability to declare, no agent to hide anything from, and the
-      whole of the content in the modal preconditions.
+      where it knows the crate is. It is the degenerate case of the multi-agent domains: there is no observability to declare, and the epistemic content of the domain resides in the modal preconditions of its actions.
     </p>
   </div>
 </div>
@@ -558,29 +586,28 @@ pre:has(> code){margin:1.3rem 0}
     <h3>Two axes: how many agents, and knowledge or belief</h3>
     <p class="qlead">
       Adding an agent indexes the modality. Dropping the truth axiom turns
-      knowledge into belief. The four pages below are the four combinations,
-      each with a domain that reaches it.
+      knowledge into belief. The four pages below treat the four combinations, each through a domain that reaches it. <a href="domain_catalogue.html">All domains</a> places every domain of the repository in one of them.
     </p>
     <div class="quad">
       <a href="single_agent_knows.html" aria-current="page">
         <span class="qk">Planning for what one agent <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}\) &#183; lone-inspector</span>
-        <span class="qd">Sensing refines one partition. Nothing is hidden, because there is nobody to hide it from.</span>
+        <span class="qd">Sensing refines a single partition, and every event is observed by the only agent.</span>
       </a>
       <a href="single_agent_believes.html">
         <span class="qk">Planning for what one agent <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}\) &#183; remote-door</span>
-        <span class="qd">The world changes while the agent is not looking, and its picture of the world stops matching it.</span>
+        <span class="qd">An ontic change the agent does not observe leaves its accessible worlds apart from the actual one.</span>
       </a>
       <a href="domains.html">
         <span class="qk">Planning for what a fleet <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}_n\) &#183; ugv-coordination</span>
-        <span class="qd">Four observability models over one facility, and what each one costs to plan.</span>
+        <span class="qd">Four observability models over one facility, and the cost of planning under each.</span>
       </a>
       <a href="fleet_believes.html">
         <span class="qk">Planning for what a fleet <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}_n\) &#183; hotel-incident</span>
-        <span class="qd">One agent is told and another is not, so the fleet stops agreeing about what is the case.</span>
+        <span class="qd">An announcement made to part of the fleet leaves the uninformed agents holding false beliefs.</span>
       </a>
     </div>
   </div>
@@ -613,7 +640,7 @@ pre:has(> code){margin:1.3rem 0}
       observed by the only agent there is, so each action type in the
       <span class="mono-inline">intermediate</span> library collapses to its
       public form, and the frame is \(\mathrm{S5}\) at every reachable state.
-      The interesting content is entirely in the modal preconditions.
+      The epistemic content of the domain therefore lies in the modal preconditions.
     </p>
   </div>
 </section>
@@ -636,11 +663,7 @@ pre:has(> code){margin:1.3rem 0}
   :effects
     (:and (carrying ?i) (not (crate-at ?z))))</code></pre>
     <p>
-      The conjunct \(([?i]\ (\textrm{crate-at}\ ?z))\) is the whole of the
-      domain. Drop it and the classical encoding returns: a robot standing in
-      the right bay lifts a crate it has no reason to believe is there, and a
-      plan that never inspects anything validates. Keep it and the robot has to
-      find out first.
+      The conjunct \(([?i]\ (\textrm{crate-at}\ ?z))\) carries the epistemic content of the domain. Without it the encoding reduces to the classical one: an agent located at the correct bay may lift a crate it has no reason to believe is there, and a plan containing no inspection validates. With it, the lift is applicable only once the agent knows the location.
     </p>
     <p>
       The inspection is a sensing action with two designated events, one per
@@ -697,10 +720,7 @@ pre:has(> code){margin:1.3rem 0}
     </p>
     <p>
       Making the model multi-pointed, so that the actual world is itself one of
-      several, is what turns the sequence into a policy with a branch. That
-      instance is the natural next one for this domain and is not yet solved
-      here: the search reports its space exhausted at a depth below the length
-      of the obvious plan, which is an open item rather than a result.
+      several, is what turns the sequence into a policy with a branch. That instance is the immediate extension of this domain and is not yet solved: the search reports its space exhausted at a depth below the length of the evident plan. It is recorded as an open item.
     </p>
   </div>
 </section>
@@ -713,8 +733,7 @@ pre:has(> code){margin:1.3rem 0}
     <p>
       The inspection is one application of the product update, and it is small
       enough to be drawn in full. Its event model has one event per reading,
-      both designated, and the only agent observes which one occurred. That is
-      the whole of the difference between this page and the three beside it.
+      both designated, and the only agent observes which one occurred. This choice of observability is the only respect in which the present case differs from the other three.
     </p>
 
 <style>
@@ -960,7 +979,7 @@ draw();
       between the two worlds does not survive. Both self-loops do.
     </p>
     <p>
-      That is what \(\mathrm{S5}\) sensing is: the partition is refined
+      This is the characteristic behaviour of sensing in \(\mathrm{S5}\): the partition is refined
       and never coarsened, no world is excluded, and reflexivity is untouched,
       so nothing the agent comes to believe can be false. The same figure on the
       three pages beside this one is the same construction with a different
@@ -976,10 +995,7 @@ draw();
     <p class="sec-label">The plan</p>
     <h3>What each action does to the model</h3>
     <p>
-      A plan is a list of action names, and the list does not say why any of
-      its actions is there. The reason lies between them, in the states the
-      actions pass through, so the solution is replayed here through the
-      product update
+      A plan lists its actions but not the reason for each. That reason is found in the intermediate states, and the solution is therefore replayed here through the product update
     </p>
     <p style="text-align:center">
       \(W' = \{(w,e) \in W \times E : \mathcal{M}, w \models
@@ -1107,7 +1123,7 @@ draw();
       <li><span class="ln">3</span>\(K_{\texttt{r}}\,\texttt{crate-at}\_\texttt{bay2}\) holds at 1 of the 2 worlds of the model this action is given, and \(|W^{*}| = 1\)</li>
     </ul>
   </div>
-  <div class="fig-cap">The solution as the AND-OR tree it is, drawn from the planner&#8217;s output. Beside each action is the model that action is given: one dot per world, filled where \(\gamma\) holds and ringed where the world is designated, so a row in which every ringed dot is filled is a state satisfying the goal. An action with two outgoing edges has two designated events, and the continuation below each edge is applicable only in the state that edge produces, which is what makes a solution a policy rather than a sequence. The numbered notes give the modal conjuncts each action is guarded by; an action with no note has none, and is applicable on ontic grounds alone.</div>
+  <div class="fig-cap">The solution as the AND-OR tree it is, drawn from the planner&#8217;s output. Beside each action is the model that action is given: one dot per world, filled where \(\gamma\) holds and ringed where the world is designated, so a row in which every ringed dot is filled is a state satisfying the goal. An action with two outgoing edges has two designated events, and the continuation below each edge is applicable only in the state that edge produces, which is what makes a solution a policy and not a sequence. The numbered notes give the modal conjuncts each action is guarded by; an action with no note has none, and is applicable on ontic grounds alone.</div>
 </div>
 
     <p>
@@ -1115,7 +1131,7 @@ draw();
       no world: \(|W| = 2\) before it and \(|W| = 2\) after. What it removes
       is two of the four edges of \(R_{\texttt{r}}\), which refines the
       partition \(\{\{w_0, w_1\}\}\) into \(\{\{w_0\},\{w_1\}\}\).
-      That refinement is the entire epistemic content of the action.
+      This refinement constitutes the epistemic content of the action.
     </p>
 
 <style>
@@ -1166,10 +1182,7 @@ draw();
       \(W^{*} \subseteq
       [\![K_{\texttt{r}}\,\texttt{crate-at}\_\texttt{bay2}]\!]\). Before
       the inspection that reads \(\{w_0\} \subseteq \varnothing\) and
-      fails; after it, \(\{w_0\} \subseteq \{w_0\}\) and holds. Deleting
-      the inspection from the sequence does not shorten the plan, it makes the
-      next action inapplicable, and that is the formal content of the claim
-      that the robot has to find out first.
+      fails; after it, \(\{w_0\} \subseteq \{w_0\}\) and holds. Removing the inspection from the sequence does not shorten the plan; it renders the next action inapplicable. This is the formal content of the requirement that the agent acquire the knowledge before acting on it.
     </p>
     <p>
       The model contracts once, at the pick-up, and for a non-modal reason: the
@@ -1177,8 +1190,7 @@ draw();
       precondition holds at \(w_0\) alone, so the update keeps one world. The
       same event's effect then makes the atom false, which empties
       \([\![K_{\texttt{r}}\,\texttt{crate-at}\_\texttt{bay2}]\!]\)
-      again. The robot has not stopped knowing where the crate was; the
-      proposition it knew has stopped being true. From that point the state is
+      again. The agent has not lost the knowledge it held; the proposition it knew is no longer true. From that point the state is
       a singleton and every formula of the language is decided by it.
     </p>
   </div>

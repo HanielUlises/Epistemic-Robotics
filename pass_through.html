@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A route through a bay no map contains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Two scouts read two bays from their own SLAM maps, and a carrier crosses the third, which no robot surveyed and no map contains, because the two maps together rule out the others.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="A route through a bay no map contains">
+<meta property="og:description" content="Two scouts, two SLAM maps, and a carrier that crosses a bay no map contains, by elimination.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/pass_through.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/pass_through.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Link card: A route through a bay no map contains, over the Gazebo view of the carrier inside bay t2.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/pass_through.jpg">
+<meta name="twitter:title" content="A route through a bay no map contains">
+<meta name="twitter:description" content="Two scouts, two SLAM maps, and a carrier that crosses a bay no map contains, by elimination.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="Gazebo and RViz during the pass-through run.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/pass_through.html">
+
+<style>
+/* The pass-through page. */
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html" aria-current="page">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">Graph recovery and integration defects on a derived warehouse floor</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Epistemic SLAM &#183; three agents &#183; 30 &#215; 50 m hall &#183; ROS 2</p>
+    <h2>A route through a bay no map contains</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      A racking block crosses the hall, and the only ways from the storage
+      floor to the dispatch floor are three pass-through bays in it,
+      <span class="mono-inline">t1</span>, <span class="mono-inline">t2</span>
+      and <span class="mono-inline">t3</span>. Exactly one is open; the other
+      two hold staged loads. That much is common knowledge, and which bay is
+      open is not. Two scouts carry twelve-metre mapping lasers, and a carrier
+      with a 3.5&#8202;m safety scanner has to take a load through a bay it
+      <i>knows</i> to be open.
+    </p>
+    <p class="hero-p">
+      What an agent knows about a bay comes from a map. A survey is read off
+      the scout's own SLAM map and nothing else; an exchange is one robot's
+      knowledge map fused into another's, applied to the model as an
+      announcement; and the carrier's route is a least fixed point over a safe
+      set that contains a bay exactly when the carrier knows it is open. In the
+      recorded run both scouts find loads, the two maps together rule out two
+      bays, and the carrier drives 43.1&#8202;m through
+      <span class="mono-inline">t2</span>: a bay no robot surveyed, of which the
+      exchanges carried not one cell.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>The building is common knowledge and only the bays are not:</b> every
+      robot is given the floor plan, with the three bay interiors left unknown.
+      <b>Localisation is the simulator's odometry,</b> so the SLAM maps are
+      records of observation and are not a test of SLAM. <b>The radio is always
+      up,</b> and the robots act one after the other because the executor runs
+      the policy in order. The epistemic state space is small by design: three
+      worlds and a policy of depth five. The size is in the floor.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">pass_through_demo</span>; map fusion
+      from <span class="mono-inline">epistemic_slam</span>; formula evaluation
+      from <span class="mono-inline">mu_path_planner</span>; policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>. Full account
+      in <a href="pass_through.pdf">The Pass-Through Problem</a> (PDF): the
+      domain and a variant the planner exploits, the maps as knowledge, the
+      route as the precondition, the three worlds, and every defect found on
+      the way.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The run</p>
+    <h3>Two surveys, two exchanges, one crossing</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/pass_through_poster.jpg">
+        <source src="media/pass_through.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Left: Gazebo, the world as it is, loads included; the camera holds a
+        shot down each scout's bay and then follows the carrier. Right: RViz,
+        what each agent has observed (its knowledge map, tinted in its colour),
+        one tile per agent on each bay in the colour of its answer, the map
+        exchanges as a line from sender to receiver, and the carrier's winning
+        region. Under both: the policy with the node being executed marked, the
+        step in formal notation, and the table of what each agent knows. Every
+        caption is a line the run wrote, placed at the instant it wrote it;
+        transits are sampled at up to 4&#215; and the epistemic events slowed
+        to 0.5&#215;, and the corner says which.
+      </figcaption>
+    </figure>
+
+    <table class="data pt-run">
+        <thead>
+          <tr><th>action</th><th>what the run reported</th><th>model after</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>plan</td><td>9 nodes, 3 leaves, found in 0.2&#8202;s; the carrier is not in W(dock), which stops at the racking</td><td>3 worlds, 3 designated</td></tr>
+          <tr><td>survey(east, t3)</td><td>east's own map over t3: 168 of 578 cells observed, 37 occupied; e-shut</td><td>3 worlds, 2 designated</td></tr>
+          <tr><td>share-shut(east, carrier, t3)</td><td>16&#8239;749 cells newly known to the carrier, 163 of them in t3</td><td>3 worlds, 2 designated</td></tr>
+          <tr><td>survey(west, t1)</td><td>west's own map over t1: 144 of 578 observed, 17 occupied; e-shut</td><td>3 worlds, 1 designated</td></tr>
+          <tr><td>share-shut(west, carrier, t1)</td><td>16&#8239;707 cells newly known, 144 in t1, <b>0 in t2</b></td><td>3 worlds, 1 designated</td></tr>
+          <tr><td>cross(carrier, t2)</td><td>t2 lifted into the safe set by knowledge; route 43.1&#8202;m; at the dock after 90&#8202;s</td><td>1 world</td></tr>
+        </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the run shows</p>
+    <h3 class="pt-findings-title">Three findings, each drawn from the robots' own grids</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#pt-model-sec">
+        <span class="pt-card-img"><img src="media/thumbs/pass_through_card_model.jpg" alt="The carrier's knowledge map after both exchanges, coloured by the robot that observed each cell" loading="lazy"></span>
+        <span class="pt-card-k">The model</span>
+        <span class="pt-card-h">Known to the pair, and to neither</span>
+        <span class="pt-card-p">After two surveys the scouts know t2 is open only jointly. Two exchanges that never mention t2 make it the carrier's.</span>
+        <span class="pt-card-go">Step through the Kripke model <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#pt-route-sec">
+        <span class="pt-card-img"><img src="media/thumbs/pass_through_card_route.jpg" alt="The winning region after the last exchange, reaching through bay t2" loading="lazy"></span>
+        <span class="pt-card-k">The route</span>
+        <span class="pt-card-h">A route made of knowledge</span>
+        <span class="pt-card-p">The fixed point stops at the racking after 327 iterations. One announcement later it runs 582 and reaches the carrier through a bay no map contains.</span>
+        <span class="pt-card-go">See the fixed point <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#pt-drift-sec">
+        <span class="pt-card-img"><img src="media/thumbs/pass_through_card_drift.jpg" alt="The carrier's own map inside t2, with its walls about a metre off, and the cells cut from the route" loading="lazy"></span>
+        <span class="pt-card-k">The map</span>
+        <span class="pt-card-h">The map drifts, and the corridor narrows</span>
+        <span class="pt-card-p">The carrier's own SLAM map slides west along the lane, draws t2's wall down the bay's centre, and cuts 277 of its 712 cells from the route.</span>
+        <span class="pt-card-go">Read the grids <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#pt-problem-sec">The problem</a>
+      <a href="#pt-events-sec">Event models</a>
+      <a href="#pt-model-sec">The model, step by step</a>
+      <a href="#pt-maps-sec">Maps as knowledge</a>
+      <a href="#pt-route-sec">The route</a>
+      <a href="#pt-drift-sec">The drift</a>
+      <a href="#pt-worlds-sec">Three worlds</a>
+      <a href="#pt-floor-sec">The floor</a>
+    </nav>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ THE PROBLEM -->
+<section id="pt-problem-sec">
+  <div class="container">
+    <p class="sec-label">The problem</p>
+    <h3>Three worlds, and a precondition on knowledge</h3>
+
+    <p>
+      Agents <span class="mono-inline">west</span>,
+      <span class="mono-inline">east</span> and
+      <span class="mono-inline">carrier</span>. The initial model has one world
+      per bay, all three designated, with every relation total:
+    </p>
+    <div class="math-block">
+      \[ s \models C_{\mathit{all}}\,\big(\mathit{open}(t_1) \oplus \mathit{open}(t_2) \oplus \mathit{open}(t_3)\big),
+         \qquad s \models \neg\,\mathit{Kw}_i\,\mathit{open}(t_k)\ \text{ for every } i, k. \]
+    </div>
+    <p>
+      Each scout is stationed at the bay on its side, which is static and
+      common knowledge. <span class="mono-inline">t2</span> opens onto the
+      carrier's own lane and is covered by no one, so the only way anyone comes
+      to know it is open is by ruling the other two out.
+    </p>
+
+    <table class="data">
+        <thead>
+          <tr><th>action</th><th>type</th><th>events</th><th>observers</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>survey(i, t)</td><td>semi-private sensing</td><td>e-open: open(t) &#183; e-shut: &#172;open(t)</td><td>i fully, the rest partially</td></tr>
+          <tr><td>share-open(i, j, t)</td><td>semi-private announcement</td><td>K<sub>i</sub> open(t)</td><td>i, j fully, the rest partially</td></tr>
+          <tr><td>share-shut(i, j, t)</td><td>semi-private announcement</td><td>K<sub>i</sub> &#172;open(t)</td><td>i, j fully, the rest partially</td></tr>
+          <tr><td>cross(i, t)</td><td>public ontic</td><td>pre hauls(i) &#8743; K<sub>i</sub> open(t); eff delivered</td><td>everyone</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      The goal is <span class="mono-inline">delivered</span>; its epistemic
+      content is the precondition of <span class="mono-inline">cross</span>.
+      plank grounds the problem into 16 atoms and 72 ground actions, and
+      Aletheia returns a policy of depth five with three leaves after 445
+      AO* expansions.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/pass-through-policy.svg" width="100%"
+           alt="The policy: east surveys t3; if open it tells the carrier and the carrier crosses t3; if shut it tells the carrier and west surveys t1; if t1 is open the carrier crosses t1, and if shut the carrier crosses t2">
+      <figcaption>
+        The policy the planner returned, with the branch the recorded run took.
+        Which scout looks first is the planner's choice, and so is the
+        structure of the third leaf: two exchanges to the carrier, and no
+        exchange between the scouts.
+      </figcaption>
+    </figure>
+
+    <h4>Known to the pair, and to neither</h4>
+    <p>
+      After the second survey of the third leaf,
+    </p>
+    <div class="math-block">
+      \[ s \models D_{\{\mathit{west},\mathit{east}\}}\,\mathit{open}(t_2)
+         \;\wedge\; \neg K_{\mathit{west}}\,\mathit{open}(t_2)
+         \;\wedge\; \neg K_{\mathit{east}}\,\mathit{open}(t_2). \]
+    </div>
+    <p>
+      The two scouts together know <span class="mono-inline">t2</span> is open
+      and neither of them does. The two exchanges make it the carrier's:
+      \(s \models K_{\mathit{carrier}}\,\mathit{open}(t_2)\), by elimination.
+      The crossing is public, so every agent then sees the carrier go through,
+      and the model collapses to one world.
+    </p>
+
+    <p>
+      The exchanges were first written as private announcements, and the
+      planner then found a policy that should not exist.
+      <a href="#pt-model-sec">The model, action by action</a> steps through it.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ EVENT MODELS -->
+<section id="pt-events-sec">
+  <div class="container">
+    <p class="sec-label">The epistemic actions</p>
+    <h3>Four event models, and what each does to a model</h3>
+
+    <p>
+      Every action of the domain is an event model: a set of events, each with
+      a precondition and possibly a postcondition, and for every agent a
+      relation saying which events that agent cannot tell apart. Executing it
+      in a model \(M\) is the product update \(M \otimes E\): a world of the
+      result is a pair of a world and an event whose precondition holds there,
+      and two pairs are indistinguishable to an agent when it could not tell
+      the worlds apart <i>and</i> cannot tell the events apart. Which agent
+      observes what is therefore entirely a property of the relation on
+      events, and the four diagrams below are the whole of the domain's
+      dynamics.
+    </p>
+
+    <div class="ev-grid">
+      <figure><img src="media/pass-through-event-sensing.svg" alt="Event model of survey: two designated events e-open and e-shut, related for every agent except the one sensing"></figure>
+      <figure><img src="media/pass-through-event-announce.svg" alt="Event model of share-shut: one designated event, related to its negation for the third agent only"></figure>
+      <figure><img src="media/pass-through-event-ontic.svg" alt="Event model of cross: a single public event with a knowledge precondition and the effect delivered"></figure>
+      <figure><img src="media/pass-through-event-private.svg" alt="Event model of the private variant: the third agent maps the announcement onto a nil event"></figure>
+    </div>
+
+    <table class="data">
+      <thead><tr><th>action</th><th>|E|</th><th>designated</th><th>bound on |M &#8855; E|</th><th>what the third agent keeps</th></tr></thead>
+      <tbody>
+        <tr><td>survey(i, t)</td><td>2</td><td>both</td><td>2|W|</td><td>that i looked, not what it saw</td></tr>
+        <tr><td>share-shut(i, j, t)</td><td>2</td><td>one</td><td>2|W|</td><td>that i spoke to j about t, not what</td></tr>
+        <tr><td>cross(i, t)</td><td>1</td><td>one</td><td>|W|</td><td>everything: the event is public</td></tr>
+        <tr><td>private variant</td><td>2</td><td>one</td><td>2|W|</td><td>the belief that nothing happened</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      Two properties of this set of actions carry the rest of the page. The
+      sensing action designates both of its events, so the executor cannot
+      apply it without being told which occurred; that is the point at which
+      the policy branches, and the point at which a map has to supply the
+      answer. And every non-public action lets the agents outside the audience
+      relate its events to one another, which is what keeps each relation an
+      equivalence. The one variant in which an outsider relates what happened
+      to <span class="mono-inline">nil</span> instead is the one the planner
+      exploited, below.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE MODEL, STEP BY STEP -->
+<section id="pt-model-sec">
+  <div class="container">
+    <p class="sec-label">The model, action by action</p>
+    <h3>Three worlds, and who can tell them apart</h3>
+
+    <p>
+      The figure steps through the model after every action of the branch the
+      chosen world selects. A world is labelled by the bay open in it; a red
+      ring marks a designated world, the planner's account of which worlds may
+      be the actual one; a line in an agent's colour joins two worlds that agent
+      cannot tell apart. The table reads the model as each agent sees it from
+      the designated worlds, and adds the one reading no single agent has:
+      distributed knowledge of the two scouts, which quantifies over the
+      intersection of their relations.
+    </p>
+
+    <div class="fig" id="pt-kripke">
+      <div class="fig-head">
+        <span class="fig-title">The Kripke model after each action</span>
+        <span class="ctrls">
+          <span class="ctrl-label">OPEN BAY</span>
+          <span class="seg">
+            <button class="btn" data-branch="t2">t2</button>
+            <button class="btn" data-branch="t1">t1</button>
+            <button class="btn" data-branch="t3">t3</button>
+          </span>
+          <button class="btn pt-prev">&#8592; Prev</button>
+          <button class="btn primary pt-next">Next &#8594;</button>
+          <span class="kstep"></span>
+        </span>
+      </div>
+      <div class="fig-body">
+        <div class="theatre pt-theatre">
+          <svg viewBox="0 0 520 360" role="img" aria-label="Kripke model"></svg>
+          <div class="panel"><h5>WHAT EACH AGENT KNOWS, AT THE DESIGNATED WORLDS</h5><div class="pt-info"></div></div>
+        </div>
+      </div>
+      <div class="fig-cap pt-cap"></div>
+    </div>
+
+    <p>
+      On the <span class="mono-inline">t2</span> branch, three steps carry the
+      argument. After east's survey the scouts' relations differ: east has
+      separated the world where <span class="mono-inline">t3</span> is open from
+      the other two, and west and the carrier have not, because sensing is
+      semi-private. After west's survey the same holds with the roles
+      exchanged, and the intersection of the two scouts' relations at the
+      designated world contains exactly one world:
+    </p>
+    <div class="math-block">
+      \[ R_{\mathit{west}}(w_2) = \{w_2, w_3\},\quad R_{\mathit{east}}(w_2) = \{w_1, w_2\},\quad
+         R_{\mathit{west}}(w_2) \cap R_{\mathit{east}}(w_2) = \{w_2\}
+         \;\Longrightarrow\; s \models D_{\{\mathit{west},\mathit{east}\}}\,\mathit{open}(t_2). \]
+    </div>
+    <p>
+      Neither exchange then mentions <span class="mono-inline">t2</span>. Each
+      removes one world from the carrier's relation, the one its speaker has
+      ruled out, and after both the carrier's relation at the designated world
+      is \(\{w_2\}\). That is \(K_{\mathit{carrier}}\,\mathit{open}(t_2)\), and it
+      is the pair's distributed knowledge made individual. The size of the
+      model never changes along the way: three worlds throughout, with only the
+      designated set and the relations narrowing, until the public crossing
+      collapses it to one.
+    </p>
+
+    <h4>The private variant, step by step</h4>
+    <p>
+      The same stepper, over the policy the planner returned when the
+      exchanges were private announcements. Follow the carrier's row. After the
+      private exchange between the scouts the model has five worlds, and the
+      carrier's relation leads only to copies in which nothing was said. After
+      west then tells the carrier that west knows <span class="mono-inline">t3</span>
+      is shut, the carrier's relation at the designated worlds is empty: no
+      world it considered possible is one in which west could have said that.
+      A box over an empty relation holds of every formula, so the carrier
+      "knows" <span class="mono-inline">t1</span> is open, and the policy sends
+      it through <span class="mono-inline">t1</span>, which in that world is
+      shut.
+    </p>
+
+    <div class="fig" id="pt-private">
+      <div class="fig-head">
+        <span class="fig-title">The private variant: the carrier's relation empties</span>
+        <span class="ctrls">
+          <button class="btn pt-prev">&#8592; Prev</button>
+          <button class="btn primary pt-next">Next &#8594;</button>
+          <span class="kstep"></span>
+        </span>
+      </div>
+      <div class="fig-body">
+        <div class="theatre pt-theatre">
+          <svg viewBox="0 0 520 360" role="img" aria-label="Kripke model of the private variant"></svg>
+          <div class="panel"><h5>WHAT EACH AGENT KNOWS, AT THE DESIGNATED WORLDS</h5><div class="pt-info"></div></div>
+        </div>
+      </div>
+      <div class="fig-cap pt-cap"></div>
+    </div>
+
+    <p class="note">
+      The models are computed by the product update of
+      <span class="mono-inline">scenarios/warehouse/tools/show_plan.py</span>
+      from the task plank ground, along each branch of the returned policy.
+      Their world and designated counts agree with the counts the epistemic
+      state logged during the recorded run.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ MAPS -->
+<section id="pt-maps-sec">
+  <div class="container">
+    <p class="sec-label">Epistemic SLAM</p>
+    <h3>What an agent observed, and what it knows</h3>
+
+    <p>
+      Each robot runs its own <span class="mono-inline">slam_toolbox</span>,
+      remapped off <span class="mono-inline">/map</span> so that three mappers
+      do not write one map; if they did, every observation would be public and
+      the semi-private sensing of the domain would be a fiction. A knowledge
+      node per robot keeps two grids on the floor plan's geometry.
+    </p>
+
+    <table class="data">
+        <thead><tr><th>grid</th><th>holds</th><th>read by</th></tr></thead>
+        <tbody>
+          <tr><td>own map</td><td>the robot's SLAM map, resampled</td><td>survey: a sensing action is the agent looking</td></tr>
+          <tr><td>knowledge map</td><td>the own map fused with every map the robot was sent</td><td>navigation, and the exchange check</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      A bay is read under one quantifier: <b>blocked</b> when any cell of its
+      corridor is occupied, <b>clear</b> when every cell has been observed
+      free, and undecided otherwise. The corridor is the bay less the
+      navigation's 0.35&#8202;m inflation from each wall, since a cell no route
+      can use says nothing about whether the bay can be crossed. A load decides
+      its bay from the mouth; an open bay does not, and a scout that stays
+      undecided moves in along the axis over floor its own map already shows
+      free, then backs out and parks off the carrier's approach.
+    </p>
+
+    <p>
+      An exchange is <span class="mono-inline">epistemic_slam::fuse</span> of
+      the sender's knowledge map into the receiver's. The reply counts the cells
+      the receiver newly holds, over the grid and inside each bay, and the
+      performer then checks the receiver's map against the announcement: the
+      load after <span class="mono-inline">share-shut</span>, the corridor free
+      after <span class="mono-inline">share-open</span>, or, when the speaker
+      knew by elimination, nothing at all. In the recorded run the exchanges
+      carried 163 cells of <span class="mono-inline">t3</span>, 144 of
+      <span class="mono-inline">t1</span>, and none of
+      <span class="mono-inline">t2</span>.
+    </p>
+
+    <h4>A survey, read off the scout's own map</h4>
+    <figure class="demo-figure">
+      <img src="media/pass-through-readings.png" width="100%"
+           alt="East's own map around t3 and west's own map around t1, each with the corridor outlined and the load's face observed as occupied cells">
+      <figcaption>
+        Each scout's own map at the moment its survey was reported, around the
+        bay it read. The red box is the corridor the reading quantifies over.
+        From the standoff most of it is shadowed by the load, and it does not
+        matter: one occupied cell decides <i>blocked</i>, and the load's south
+        face supplies dozens. Grids from a second run of the same world,
+        recorded at every change of the model.
+      </figcaption>
+    </figure>
+
+    <h4>What the carrier holds, and where it came from</h4>
+    <figure class="demo-figure">
+      <img src="media/pass-through-carrier-knowledge.png" width="100%"
+           alt="The carrier's knowledge map before any exchange, after east's map is fused in, and after west's, coloured by the robot that observed each cell">
+      <figcaption>
+        The carrier's knowledge map after each exchange, coloured by which robot
+        observed each cell. Its own 3.5&#8202;m scanner has seen 175 cells from
+        its start. Each fusion adds some sixteen thousand, including the loaded
+        bay the speaker read. The corridor of <span class="mono-inline">t2</span>
+        is empty in all three: the carrier's knowledge that the bay is open is
+        in the model and in no cell.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ ROUTE -->
+<section id="pt-route-sec">
+  <div class="container">
+    <p class="sec-label">The route</p>
+    <h3>The knowledge precondition as a fixed point</h3>
+
+    <p>
+      <span class="mono-inline">cross</span> drives the carrier along the
+      winning region of
+    </p>
+    <div class="math-block">
+      \[ W = \mu Z.\,\big(\mathit{dock} \vee (\mathit{Safe}_{\mathit{carrier}} \wedge \Diamond Z)\big),
+         \qquad
+         \mathit{Safe}_{\mathit{carrier}} = \Big[\!\Big[\, \mathit{free} \vee \bigvee_{t} \big(t \wedge K_{\mathit{carrier}}\,\mathit{open}(t)\big) \Big]\!\Big], \]
+    </div>
+    <p>
+      evaluated at every cell and world of the model the epistemic state
+      publishes, by <span class="mono-inline">mu_path_planner</span>'s own
+      formula evaluator, with each bay a zone. <span class="mono-inline">free</span>
+      reads the floor plan outside the bays and the carrier's knowledge map
+      inside them. A bay the carrier has observed free is safe by the first
+      disjunct; a bay it knows is open without having seen it is safe by the
+      second, and RViz draws those cells in cyan; a bay it does not know about
+      is in neither.
+    </p>
+    <p>
+      The precondition therefore holds twice and by independent roads. The
+      executor checks \(K_{\mathit{carrier}}\,\mathit{open}(t)\) against the
+      model before dispatching <span class="mono-inline">cross</span>, and the
+      route exists only because the safe set contains the bays the carrier
+      knows to be open. Before the last exchange \(W\) is 51&#8239;428 cells
+      after 327 iterations and stops at the racking; after it, 98&#8239;818
+      cells after 582 iterations, reaching the carrier through
+      <span class="mono-inline">t2</span>.
+    </p>
+    <p class="note">
+      <span class="mono-inline">mu_reach</span> computes the fixed point by
+      Kleene iteration, recomputing the backward image of all of \(Z_k\) at every
+      step, which on a 310 &#215; 510 grid is tens of seconds. The package
+      evaluates the same fixed point semi-naively, one visit per cell, and a
+      unit test checks region and iteration count against
+      <span class="mono-inline">mu_reach</span> on sixty random floors.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/pass-through-region.png" width="100%"
+           alt="The winning region before the last exchange, stopping at the racking, and after it, extending through t2 to the carrier">
+      <figcaption>
+        The winning region, coloured by the iteration of the fixed point at which
+        each cell entered it. Before the last exchange the iteration stops at the
+        racking after 327 steps: nothing south of the block is reachable over
+        what the carrier knows. After it the same computation runs 582 steps and
+        reaches the carrier, through the one bay the formula lifts, drawn in cyan.
+        The iteration counts computed here from the recorded regions equal those
+        the carrier logged.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DRIFT -->
+<section id="pt-drift-sec" class="pt-wide">
+  <div class="container">
+    <p class="sec-label">The carrier's own map</p>
+    <h3>A metre of drift, and a corridor cut in two</h3>
+
+    <p>
+      The carrier also maps as it drives, and its own map enters its knowledge
+      map like any other. Along the lane it is correct at the south end and
+      then slides west: the rack ends at \(x = \pm 1.5\)&#8202;m are drawn in
+      place at \(y = -18\), 0.3&#8202;m west at \(y = -12\), 0.45&#8202;m at
+      \(y = -9\), and by the bay about a metre. A 3.5&#8202;m scanner in a
+      three-metre lane between repeating racks gives slam_toolbox's scan matcher
+      little to hold across the lane, and its correction accumulates there.
+    </p>
+  </div>
+  <figure class="pt-hero-fig">
+    <img src="media/pass-through-drift.png" alt="Left: the carrier's own map inside t2, with both walls drawn about a metre west of where they are. Right: the cells of t2 in the winning region before the carrier sees the bay and while it crosses, with a strip cut out down the centre and the carrier's track west of it">
+  </figure>
+  <div class="container">
+    <p>
+      Inside <span class="mono-inline">t2</span> the displaced east wall runs
+      down the middle of the bay. With the navigation's inflation around it,
+      it removes a strip from the safe set: of the 712 cells of the bay in the
+      winning region before the carrier sees it, 277 are cut out once its own
+      scans arrive, and 435 remain, all west of the phantom wall. The carrier
+      drove through that western strip, at \(x \approx -0.5\)&#8202;m, and
+      reached the dock.
+    </p>
+    <p>
+      The epistemic reading of this is exact, and it is the reason to draw it.
+      The carrier knew <span class="mono-inline">t2</span> was open by
+      elimination, from two maps that were right. When its own observation of
+      the bay arrived, it was wrong, and the knowledge map merged it without
+      question: \(\mathit{free}\) is read from that map inside the bays, so a
+      misregistered wall is an obstacle to the fixed point exactly as a load is.
+      The route survived because the bay is wider than the robot, not because
+      anything reconciled what the carrier was told with what it saw.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ WORLDS -->
+<section id="pt-worlds-sec">
+  <div class="container">
+    <p class="sec-label">Three worlds</p>
+    <h3>One policy, three leaves, each run to the goal</h3>
+
+    <p>
+      The worlds differ by which two bays hold a load and by nothing else.
+      Each ran headless to the goal.
+    </p>
+
+    <table class="data">
+        <thead><tr><th>open</th><th>the scouts read</th><th>carrier's route</th><th>safe by</th><th>to the dock</th></tr></thead>
+        <tbody>
+          <tr><td>t3</td><td>east: t3 clear, 578 of 578 cells</td><td>60.6&#8202;m through t3</td><td>free (observed)</td><td>112&#8202;s</td></tr>
+          <tr><td>t1</td><td>east: t3 blocked; west: t1 clear, 578 of 578</td><td>60.7&#8202;m through t1</td><td>free (observed)</td><td>115&#8202;s</td></tr>
+          <tr><td>t2</td><td>east: t3 blocked; west: t1 blocked</td><td>43.1&#8202;m through t2</td><td>K<sub>carrier</sub> open(t2)</td><td>83&#8202;s</td></tr>
+        </tbody>
+    </table>
+
+    <p>
+      From the standoff the scouts saw 471 and 453 of an open bay's 578
+      corridor cells, and moved in to see the rest. In the first two worlds the
+      bay the carrier crosses is in its knowledge map, observed free, and the
+      formula lifts nothing. The third is the only one in which a robot drives
+      through a bay that no map contains.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FLOOR -->
+<section id="pt-floor-sec">
+  <div class="container">
+    <p class="sec-label">The floor</p>
+    <h3>A floor generated from one definition, and checked against its meshes</h3>
+
+    <figure class="demo-figure">
+      <img src="media/pass-through-floor.png" style="max-width:520px;margin:0 auto;display:block"
+           alt="The floor plan: storage rows in the south, a racking block across the middle with three bays, dispatch rows in the north, and the three robots' starting positions">
+      <figcaption>
+        The floor plan every robot holds. Amber is what it leaves unknown: the
+        three bays. The loads shown are the <span class="mono-inline">open:=t2</span>
+        world's, and are in no robot's plan.
+      </figcaption>
+    </figure>
+
+    <p>
+      The hall is the 30 &#215; 50&#8202;m Fuel warehouse; the racking and
+      loads are AWS RoboMaker models. The world, the plan, the regions, the
+      poses and the camera shots are written from one layout file, and the plan
+      is refused unless the carrier cannot reach the dock while no bay is
+      known, can through each bay once that bay is, a load closes its bay, and
+      each scout reaches its bay's mouth and its parking place. Every placed
+      model's collision mesh is also sliced at laser height and required to lie
+      inside the box the plan draws for it.
+    </p>
+    <p>
+      That last check exists because of what it would have caught. The AWS
+      shelf footprint was first taken from a table that gives it as
+      0.88 &#215; 2.613 &#215; 3.918&#8202;m; its collision mesh, read with its
+      node transform and unit, is 3.918 &#215; 0.88 &#215; 2.64. Every unit
+      stood a quarter turn from the plan, the block was a row of columns with
+      1.7&#8202;m gaps, and it was found when the carrier stopped against the
+      south end of a column the plan said was not there. The table is also used
+      by the larger warehouse demonstrations and has not been corrected there.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+    <pre class="code">ros2 launch pass_through_demo pass_through_launch.py            <span class="c"># open:=t2</span>
+ros2 launch pass_through_demo pass_through_launch.py open:=t3
+bash tools/validate.sh                                           <span class="c"># plank and Aletheia, no simulator</span>
+bash tools/record_demo.sh t2 /tmp/raw.mkv /tmp/run.log           <span class="c"># Xvfb, Gazebo left, RViz right</span>
+python3 tools/make_video.py --raw /tmp/raw.mkv --log /tmp/run.log \
+        --policy /tmp/raw_policy.json --out /tmp/pass_through.mp4</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">30 &#215; 50&#8202;m &#183; three bays &#183; 0 cells of t2 exchanged</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+
+<script>
+/* The Kripke model after every action of each branch, computed by the product
+   update of scenarios/warehouse/tools/show_plan.py from the task plank ground.
+   The world and designated counts agree with what the epistemic state logged
+   during the run. */
+const PT_MODELS = {"semi":{"t3":[{"action":"initial","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":true},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2","t3"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2","t3"]}},{"action":"survey_east_t3","outcome":"e-open","worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":true},{"id":"w1","open":["t2"],"delivered":false,"designated":false},{"id":"w2","open":["t1"],"delivered":false,"designated":false}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t3"],"west":["t1","t2","t3"],"D{west,east}":["t3"]}},{"action":"share-open_east_carrier_t3","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":true},{"id":"w1","open":["t2"],"delivered":false,"designated":false},{"id":"w2","open":["t1"],"delivered":false,"designated":false}],"relations":{"carrier":[["w1","w2"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t3"],"east":["t3"],"west":["t1","t2","t3"],"D{west,east}":["t3"]}},{"action":"cross_carrier_t3","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":true,"designated":true}],"relations":{"carrier":[],"east":[],"west":[]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t3"],"east":["t3"],"west":["t3"],"D{west,east}":["t3"]}}],"t1":[{"action":"initial","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":true},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2","t3"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2","t3"]}},{"action":"survey_east_t3","outcome":"e-shut","worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2"]}},{"action":"share-shut_east_carrier_t3","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w1","w2"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2"],"east":["t1","t2"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2"]}},{"action":"survey_west_t1","outcome":"e-open","worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":false},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w1","w2"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w1","w0"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2"],"east":["t1","t2"],"west":["t1"],"D{west,east}":["t1"]}},{"action":"share-open_west_carrier_t1","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":false},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w1","w0"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1"],"east":["t1","t2"],"west":["t1"],"D{west,east}":["t1"]}},{"action":"cross_carrier_t1","outcome":null,"worlds":[{"id":"w0","open":["t1"],"delivered":true,"designated":true}],"relations":{"carrier":[],"east":[],"west":[]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1"],"east":["t1"],"west":["t1"],"D{west,east}":["t1"]}}],"t2":[{"action":"initial","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":true},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2","t3"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2","t3"]}},{"action":"survey_east_t3","outcome":"e-shut","worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2"]}},{"action":"share-shut_east_carrier_t3","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w1","w2"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2"],"east":["t1","t2"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2"]}},{"action":"survey_west_t1","outcome":"e-shut","worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":false}],"relations":{"carrier":[["w1","w2"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w1","w0"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2"],"east":["t1","t2"],"west":["t2","t3"],"D{west,east}":["t2"]}},{"action":"share-shut_west_carrier_t1","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":false}],"relations":{"carrier":[],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w1","w0"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t2"],"east":["t1","t2"],"west":["t2","t3"],"D{west,east}":["t2"]}},{"action":"cross_carrier_t2","outcome":null,"worlds":[{"id":"w0","open":["t2"],"delivered":true,"designated":true}],"relations":{"carrier":[],"east":[],"west":[]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t2"],"east":["t2"],"west":["t2"],"D{west,east}":["t2"]}}]},"private":{"leaf2":[{"action":"initial","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":true},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2","t3"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2","t3"]}},{"action":"survey_east_t3","outcome":"e-shut","worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t1"],"delivered":false,"designated":true}],"relations":{"carrier":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]],"east":[["w1","w2"],["w2","w1"]],"west":[["w0","w1"],["w0","w2"],["w1","w0"],["w1","w2"],["w2","w0"],["w2","w1"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2"],"west":["t1","t2","t3"],"D{west,east}":["t1","t2"]}},{"action":"share-shut_east_west_t3","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t2"],"delivered":false,"designated":false},{"id":"w3","open":["t1"],"delivered":false,"designated":true},{"id":"w4","open":["t1"],"delivered":false,"designated":false}],"relations":{"carrier":[["w0","w2"],["w0","w4"],["w1","w0"],["w1","w2"],["w1","w4"],["w2","w0"],["w2","w4"],["w3","w0"],["w3","w2"],["w3","w4"],["w4","w0"],["w4","w2"]],"east":[["w1","w3"],["w2","w4"],["w3","w1"],["w4","w2"]],"west":[["w0","w2"],["w0","w4"],["w1","w3"],["w2","w0"],["w2","w4"],["w3","w1"],["w4","w0"],["w4","w2"]]},"empty":{"carrier":[],"east":[],"west":[]},"possible":{"carrier":["t1","t2","t3"],"east":["t1","t2"],"west":["t1","t2"],"D{west,east}":["t1","t2"]}},{"action":"share-shut_west_carrier_t3","outcome":null,"worlds":[{"id":"w0","open":["t3"],"delivered":false,"designated":false},{"id":"w1","open":["t2"],"delivered":false,"designated":true},{"id":"w2","open":["t2"],"delivered":false,"designated":false},{"id":"w3","open":["t2"],"delivered":false,"designated":false},{"id":"w4","open":["t1"],"delivered":false,"designated":true},{"id":"w5","open":["t1"],"delivered":false,"designated":false},{"id":"w6","open":["t1"],"delivered":false,"designated":false}],"relations":{"carrier":[["w0","w3"],["w0","w6"],["w2","w0"],["w2","w3"],["w2","w6"],["w3","w0"],["w3","w6"],["w5","w0"],["w5","w3"],["w5","w6"],["w6","w0"],["w6","w3"]],"east":[["w1","w2"],["w1","w5"],["w2","w5"],["w3","w6"],["w4","w2"],["w4","w5"],["w5","w2"],["w6","w3"]],"west":[["w0","w3"],["w0","w6"],["w1","w4"],["w2","w5"],["w3","w0"],["w3","w6"],["w4","w1"],["w5","w2"],["w6","w0"],["w6","w3"]]},"empty":{"carrier":["w1","w4"],"east":[],"west":[]},"possible":{"carrier":[],"east":["t1","t2"],"west":["t1","t2"],"D{west,east}":[]}},{"action":"cross_carrier_t1","outcome":null,"worlds":[{"id":"w0","open":["t2"],"delivered":true,"designated":true},{"id":"w1","open":["t1"],"delivered":true,"designated":true}],"relations":{"carrier":[],"east":[],"west":[["w0","w1"],["w1","w0"]]},"empty":{"carrier":["w0","w1"],"east":["w0","w1"],"west":[]},"possible":{"carrier":[],"east":[],"west":["t1","t2"],"D{west,east}":[]}}]}};
+const PT_COL = {west:'#3373CC', east:'#E68026', carrier:'#2E9959'};
+const PT_NOTE = {
+  'initial': 'M<sub>0</sub>: one world per bay, all designated. Every relation is total: nobody knows which bay is open, and that exactly one is open is common knowledge.',
+  'survey_east_t3': 'Semi-private sensing. east tells its two events apart; west and carrier relate them, so they learn that east looked and not what it saw.',
+  'survey_west_t1': 'The same, for west. After it the two scouts together rule out two worlds: D<sub>{west,east}</sub> settles every bay, while neither scout alone settles t2.',
+  'share-shut_east_carrier_t3': 'Semi-private announcement of K<sub>east</sub> &#172;open(t3): the carrier drops the world where t3 is open. west observes that east spoke, not what.',
+  'share-shut_west_carrier_t1': 'The carrier drops the world where t1 is open. One world is left in its relation: K<sub>carrier</sub> open(t2), by elimination.',
+  'share-open_east_carrier_t3': 'The carrier learns that east knows t3 is open.',
+  'share-open_west_carrier_t1': 'The carrier learns that west knows t1 is open.',
+  'cross_carrier_t3': 'Public ontic. Everyone sees the carrier go through, so everyone learns that it knew: the model has one world.',
+  'cross_carrier_t1': 'Public ontic. Everyone sees the carrier go through, so everyone learns that it knew: the model has one world.',
+  'cross_carrier_t2': 'Public ontic. Everyone sees the carrier go through t2, so everyone learns that it knew: one world, and open(t2) is common knowledge.',
+  'share-shut_east_west_t3': 'Private announcement, the variant: carrier is oblivious and relates what was said to nil. It keeps believing west knows nothing about t3.',
+  'share-shut_west_carrier_t3': 'Now west tells the carrier that west knows t3 is shut. In every world the carrier considered possible west does not know it: the carrier has no world left. Its relation at the designated worlds is empty, and K<sub>carrier</sub> &#966; holds for every &#966;.',
+};
+function ptPretty(a){ if(a==='initial') return 'initial model'; const p=a.split('_'); return p[0]+'('+p.slice(1).join(', ')+')'; }
+
+function ptFigure(root, branches, labels){
+  const svg = root.querySelector('svg'), info = root.querySelector('.pt-info'),
+        cap = root.querySelector('.pt-cap'), cnt = root.querySelector('.kstep');
+  let branch = Object.keys(branches)[0], step = 0;
+  const NS='http://www.w3.org/2000/svg';
+  function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;return e;}
+  function draw(){
+    const steps = branches[branch], s = steps[step];
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    const W=520,H=360,cx=260,cy=198,n=s.worlds.length,R=n<=3?108:122;
+    const pos={};
+    s.worlds.forEach((w,i)=>{const a=-Math.PI/2+2*Math.PI*i/n; pos[w.id]=[cx+R*Math.cos(a), cy+R*Math.sin(a)];});
+    const agents=['west','east','carrier'], off={west:-7,east:0,carrier:7};
+    agents.forEach(ag=>{
+      const pairs=s.relations[ag]||[], set=new Set(pairs.map(p=>p[0]+'>'+p[1]));
+      pairs.forEach(([a,b])=>{
+        const sym=set.has(b+'>'+a); if(sym && a>b) return;
+        const [x1,y1]=pos[a],[x2,y2]=pos[b]; const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1;
+        const nx=-dy/L*off[ag], ny=dx/L*off[ag];
+        const sx=x1+dx/L*30+nx, sy=y1+dy/L*30+ny, ex=x2-dx/L*30+nx, ey=y2-dy/L*30+ny;
+        svg.appendChild(el('line',{x1:sx,y1:sy,x2:ex,y2:ey,stroke:PT_COL[ag],'stroke-width':2.2,opacity:.85}));
+        if(!sym){ const ux=dx/L,uy=dy/L;
+          svg.appendChild(el('polygon',{points:`${ex},${ey} ${ex-ux*10-uy*5},${ey-uy*10+ux*5} ${ex-ux*10+uy*5},${ey-uy*10-ux*5}`,fill:PT_COL[ag]}));}
+      });
+    });
+    s.worlds.forEach(w=>{
+      const [x,y]=pos[w.id];
+      svg.appendChild(el('circle',{cx:x,cy:y,r:27,fill:w.designated?'#FFF4F5':'#FFFFFF',stroke:w.designated?'#C8102E':'#8A8A8A','stroke-width':w.designated?3:1.3}));
+      svg.appendChild(el('text',{x:x,y:y-2,'text-anchor':'middle','font-family':'Courier New,monospace','font-size':13,'font-weight':'bold',fill:'#111'},(w.open[0]||'-')));
+      svg.appendChild(el('text',{x:x,y:y+13,'text-anchor':'middle','font-family':'Arial','font-size':10,fill:'#5A5A5A'},w.id+(w.delivered?' · del.':'')));
+    });
+    svg.appendChild(el('text',{x:14,y:24,'font-family':'Arial','font-size':13,fill:'#111','font-weight':'bold'},ptPretty(s.action)+(s.outcome?'  →  '+s.outcome:'')));
+    const nd=s.worlds.filter(w=>w.designated).length;
+    svg.appendChild(el('text',{x:14,y:42,'font-family':'Arial','font-size':12,fill:'#5A5A5A'},`${s.worlds.length} worlds, ${nd} designated · a world is labelled by the bay open in it`));
+    let y0=H-18; agents.forEach((ag,i)=>{svg.appendChild(el('line',{x1:14+i*120,y1:y0,x2:36+i*120,y2:y0,stroke:PT_COL[ag],'stroke-width':3}));
+      svg.appendChild(el('text',{x:42+i*120,y:y0+4,'font-family':'Arial','font-size':12,fill:'#333'},ag));});
+    // knowledge table
+    const bays=['t1','t2','t3']; let h='<table class="data pt-k"><thead><tr><th></th>'+bays.map(b=>'<th>'+b+'</th>').join('')+'</tr></thead><tbody>';
+    ['west','east','carrier','D{west,east}'].forEach(ag=>{
+      const p=s.possible[ag]; const name=ag.startsWith('D')?'D<sub>{west,east}</sub>':'K<sub>'+ag+'</sub>';
+      h+='<tr><td style="color:'+(PT_COL[ag]||'#111')+'">'+name+'</td>';
+      bays.forEach(b=>{ let t,c;
+        if(p.length===0){t='any &#966;';c='#C8102E';}
+        else if(p.length===1&&p[0]===b){t='open';c='#1A8C46';}
+        else if(!p.includes(b)){t='&#172;open';c='#C8102E';}
+        else {t='?';c='#9A9A9A';}
+        h+='<td style="color:'+c+';font-weight:'+(t==='?'?400:600)+'">'+t+'</td>';});
+      h+='</tr>';});
+    info.innerHTML=h+'</tbody></table>';
+    cap.innerHTML=PT_NOTE[s.action]||'';
+    cnt.textContent=`step ${step} of ${steps.length-1}`;
+    root.querySelectorAll('[data-branch]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.branch===branch?'true':'false'));
+  }
+  root.querySelector('.pt-prev').onclick=()=>{if(step>0){step--;draw();}};
+  root.querySelector('.pt-next').onclick=()=>{if(step<branches[branch].length-1){step++;draw();}};
+  root.querySelectorAll('[data-branch]').forEach(b=>b.onclick=()=>{branch=b.dataset.branch;step=Math.min(step,branches[branch].length-1);draw();});
+  draw();
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const a=document.getElementById('pt-kripke'); if(a) ptFigure(a,{t2:PT_MODELS.semi.t2,t1:PT_MODELS.semi.t1,t3:PT_MODELS.semi.t3});
+  const b=document.getElementById('pt-private'); if(b) ptFigure(b,{leaf2:PT_MODELS.private.leaf2});
+});
+</script>
+</body>
+</html>

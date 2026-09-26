@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" font-family="Arial,Helvetica,sans-serif">
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<path d="M500,55 C500,90.0 200,90.0 200,125" fill="none" stroke="#9A9A9A" stroke-width="1.2"/>
+<text x="340.0" y="84.0" text-anchor="end" font-family="Courier New,monospace" font-size="13" fill="#C8102E">e-open</text>
+<path d="M500,55 C500,90.0 700,90.0 700,125" fill="none" stroke="#C8102E" stroke-width="2"/>
+<text x="610.0" y="84.0" text-anchor="start" font-family="Courier New,monospace" font-size="13" fill="#C8102E">e-shut</text>
+<path d="M200,155 C200,177.5 200,177.5 200,200" fill="none" stroke="#9A9A9A" stroke-width="1.2"/>
+<path d="M700,155 C700,177.5 700,177.5 700,200" fill="none" stroke="#C8102E" stroke-width="2"/>
+<path d="M700,230 C700,267.5 470,267.5 470,305" fill="none" stroke="#9A9A9A" stroke-width="1.2"/>
+<text x="575.0" y="261.5" text-anchor="end" font-family="Courier New,monospace" font-size="13" fill="#C8102E">e-open</text>
+<path d="M700,230 C700,267.5 825,267.5 825,305" fill="none" stroke="#C8102E" stroke-width="2"/>
+<text x="772.5" y="261.5" text-anchor="start" font-family="Courier New,monospace" font-size="13" fill="#C8102E">e-shut</text>
+<path d="M470,335 C470,357.5 470,357.5 470,380" fill="none" stroke="#9A9A9A" stroke-width="1.2"/>
+<path d="M825,335 C825,357.5 825,357.5 825,380" fill="none" stroke="#C8102E" stroke-width="2"/>
+<rect x="413" y="25" width="173" height="30" rx="3" fill="#FFF4F5" stroke="#C8102E" stroke-width="2.2"/>
+<text x="500" y="45" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">survey(east, t3)</text>
+<rect x="54" y="125" width="293" height="30" rx="3" fill="#FAFAFA" stroke="#111111" stroke-width="1.1"/>
+<text x="200" y="145" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">share-open(east, carrier, t3)</text>
+<rect x="104" y="200" width="192" height="30" rx="3" fill="#FAFAFA" stroke="#111111" stroke-width="1.1"/>
+<text x="200" y="220" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">cross(carrier, t3)</text>
+<rect x="554" y="125" width="293" height="30" rx="3" fill="#FFF4F5" stroke="#111111" stroke-width="2.2"/>
+<text x="700" y="145" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">share-shut(east, carrier, t3)</text>
+<rect x="613" y="200" width="173" height="30" rx="3" fill="#FFF4F5" stroke="#C8102E" stroke-width="2.2"/>
+<text x="700" y="220" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">survey(west, t1)</text>
+<rect x="324" y="305" width="293" height="30" rx="3" fill="#FAFAFA" stroke="#111111" stroke-width="1.1"/>
+<text x="470" y="325" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">share-open(west, carrier, t1)</text>
+<rect x="374" y="380" width="192" height="30" rx="3" fill="#FAFAFA" stroke="#111111" stroke-width="1.1"/>
+<text x="470" y="400" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">cross(carrier, t1)</text>
+<rect x="679" y="305" width="293" height="30" rx="3" fill="#FFF4F5" stroke="#111111" stroke-width="2.2"/>
+<text x="825" y="325" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">share-shut(west, carrier, t1)</text>
+<rect x="729" y="380" width="192" height="30" rx="3" fill="#FFF4F5" stroke="#111111" stroke-width="2.2"/>
+<text x="825" y="400" text-anchor="middle" font-family="Courier New,monospace" font-size="15" fill="#111">cross(carrier, t2)</text>
+<text x="20" y="432" font-size="13" fill="#5A5A5A">Red outline: sensing action. Filled, with red edges: the branch the recorded run took (open:=t2).</text>
+</svg>

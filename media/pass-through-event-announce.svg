@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 250" font-family="Arial,Helvetica,sans-serif">
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A5A5A"/></marker></defs>
+<text x="16" y="26" font-size="15" font-weight="bold" fill="#111111">share-shut(i, j, t)</text>
+<text x="16" y="45" font-size="12" fill="#5A5A5A">semi-private announcement</text>
+<line x1="172" y1="120" x2="286" y2="120" stroke="#E68026" stroke-width="2"/>
+<rect x="90" y="103" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#C8102E" stroke-width="2.6"/>
+<text x="130" y="124" text-anchor="middle" font-family="Courier New,monospace" font-size="12" fill="#111111">says</text>
+<text x="130" y="158" text-anchor="middle" font-size="12" fill="#5A5A5A">pre: K_i ¬open(t)</text>
+<rect x="290" y="103" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#111111" stroke-width="1.2"/>
+<text x="330" y="124" text-anchor="middle" font-family="Courier New,monospace" font-size="12" fill="#111111">other</text>
+<text x="330" y="158" text-anchor="middle" font-size="12" fill="#5A5A5A">pre: K_i open(t)</text>
+<text x="16" y="206" font-size="12" fill="#5A5A5A">i and j tell the two apart; the third agent does not,</text>
+<text x="16" y="224" font-size="12" fill="#5A5A5A">so it learns that i spoke to j about t, and not what.</text>
+</svg>

@@ -4,27 +4,27 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A link that actually falls &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart, and the difference between them becomes something to measure.">
+<title>The domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Every planning domain of the project: signature, event types, grounded size, initial model and solution, measured, and grouped by the frame its models reach.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="A link that actually falls">
-<meta property="og:description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart.">
-<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/link_outage.html">
+<meta property="og:title" content="The domains">
+<meta property="og:description" content="Every planning domain of the project: signature, event types, grounded size, initial model and solution, measured, and grouped by the frame its models reach.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_catalogue.html">
 
 
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/link_outage.jpg">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Link card: A link that actually falls, over the belief error and the bound during a sixty-second outage.">
-<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/link_outage.jpg">
-<meta name="twitter:title" content="A link that actually falls">
-<meta name="twitter:description" content="SLAM says where the robot is; it does not say who knows it. A radio cut between two robots takes the grid and the knowledge model apart.">
+<meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
+<meta name="twitter:title" content="The domains">
+<meta name="twitter:description" content="Every planning domain of the project: signature, event types, grounded size, initial model and solution, measured, and grouped by the frame its models reach.">
 
 
 <script>
@@ -400,32 +400,6 @@ table.data td .mono-inline{font-size:.78em}
 .ftr-l a:hover{border-bottom-color:var(--black)}
 footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
 
-/* ── stepped accessibility figure ──────────────────────────── */
-.kfig svg{display:block;width:100%;height:auto}
-.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
-.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
-.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
-.kframe.wrong{fill:var(--red)}
-.kworld{transition:opacity .45s ease}
-.kworld.dead{opacity:.12}
-.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
-  transition:stroke .4s ease,stroke-width .4s ease}
-.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
-.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
-.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
-.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
-  transition:opacity .45s ease}
-.kedge.cut{opacity:0}
-.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
-.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
-  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
-  color:var(--black);line-height:1.3}
-.kbtn:hover{border-color:var(--red);color:var(--red)}
-.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
-@media(prefers-reduced-motion:reduce){
-  .kworld,.kdot,.kedge{transition:none}
-}
-
 /* ── code blocks, and the button that copies them ──────────── */
 pre > code{display:block;background:var(--code-bg);
   border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
@@ -477,8 +451,65 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
-  <meta name="twitter:image:alt" content="Gazebo and the RMF schedule view during the warehouse run.">
-  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/warehouse_rmf.html">
+  <meta name="twitter:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/domain_catalogue.html">
+
+<style>
+table.cat td,table.cat th{text-align:right}
+table.cat td:nth-child(2),table.cat th:nth-child(2),table.cat td:nth-child(3),table.cat th:nth-child(3){text-align:left}
+table.cat td:first-child{font-family:var(--mono);font-size:.72rem;color:var(--gray)}
+table.cat a{color:var(--black);text-decoration:none;border-bottom:1px solid var(--border)}
+table.cat a:hover{border-bottom-color:var(--black)}
+.tier-about{color:#444;max-width:48rem}
+.dom-list{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:1.6rem}
+@media(max-width:860px){.dom-list{grid-template-columns:1fr}}
+.dom{border:1px solid #DDDDDD;border-radius:3px;background:#fff;padding:1.05rem 1.2rem 1rem;scroll-margin-top:1rem}
+.dom-h{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  border-bottom:1px solid #ECECEC;padding-bottom:.6rem;margin-bottom:.7rem}
+.dom-h h4{margin:0;font-family:var(--mono);font-size:.95rem;font-weight:600;letter-spacing:0}
+.dom-f{font-size:.78rem;color:var(--gray);white-space:nowrap}
+.dom-dl{display:grid;grid-template-columns:7.2rem 1fr;gap:.35rem .8rem;margin:0;font-size:.82rem;line-height:1.5}
+.dom-dl dt{color:var(--gray);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;padding-top:.12rem}
+.dom-dl dd{margin:0;color:#222;min-width:0;overflow-wrap:anywhere}
+.dom-dl dd a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.dom-dl code{font-family:var(--mono);font-size:.74rem;color:#333}
+.tys .ty{display:inline-block;font-family:var(--mono);font-size:.68rem;border:1px solid #D8D8D8;
+  border-radius:2px;padding:.05rem .4rem;margin:0 .3rem .3rem 0;color:#333;background:#FAFAFA}
+.tys .ty.b{border-color:#C9A7AC;color:#7A1F2B;background:#FCF6F7}
+.dom-src{margin-top:.8rem}
+.dom-src summary{cursor:pointer;font-size:.76rem;color:var(--gray)}
+.dom-src summary:hover{color:var(--black)}
+.dom-src pre.code{font-size:.66rem;margin:.6rem 0 0}
+</style>
+
+<style>
+.quad{display:grid;grid-template-columns:8.5rem 1fr 1fr;gap:.9rem;margin:1.8rem 0 1.2rem}
+.quad .ax{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);align-self:end;padding-left:.2rem}
+.quad .ay{align-self:center;padding:0}
+.q{border:1px solid #DDDDDD;border-radius:3px;background:#fff;padding:1.1rem 1.2rem 1.15rem;display:flex;flex-direction:column;gap:.6rem}
+.q-h{display:flex;align-items:baseline;gap:.7rem}
+.q-n{font-family:var(--mono);font-size:.7rem;color:var(--gray)}
+.q-m{font-size:1.25rem}
+.q-w{display:none;margin-left:auto;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
+.q-a{font-size:1.02rem;font-weight:600;letter-spacing:-.01em;color:var(--black);text-decoration:none;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #ECECEC;padding-bottom:.5rem}
+.q-a .go{color:#999;font-weight:400;transition:transform .25s,color .25s}
+.q-a:hover .go{transform:translateX(4px);color:#000}
+.q:hover{border-color:#BDBDBD}
+.tier-more{font-size:.84rem;color:var(--gray);margin-top:.4rem}
+.tier-more a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.q-t{font-size:.86rem;color:#444;line-height:1.55;margin:0}
+.q-d{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.1rem}
+.qd{font-family:var(--mono);font-size:.7rem;color:#222;text-decoration:none;border:1px solid #D8D8D8;border-radius:2px;padding:.12rem .45rem;background:#FAFAFA;transition:border-color .2s,color .2s}
+.qd:hover{border-color:#888;color:#000}
+@media(max-width:760px){.quad{grid-template-columns:1fr}.quad>div:first-child,.quad .ax:not(.ay){display:none}.quad .ay{margin-top:.6rem}.q-w{display:inline}}
+.next-page{position:relative;display:flex;flex-direction:column;gap:.25rem;margin-top:2.2rem;padding:1.1rem 1.3rem;border-top:1px solid #CFCFCF;border-bottom:1px solid #CFCFCF;text-decoration:none;color:inherit;transition:background .25s}
+.next-page:hover{background:#FAFAFA}
+.next-page .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
+.next-page .t{font-size:1.15rem;font-weight:600;letter-spacing:-.02em}
+.next-page .s{font-size:.85rem;color:#555}
+.next-page .go{position:absolute;right:1.3rem;top:50%;transform:translateY(-50%);font-size:1.2rem;color:#999;transition:transform .25s,color .25s}
+.next-page:hover .go{transform:translate(4px,-50%);color:#000}
+</style>
 </head>
 <body>
 
@@ -530,13 +561,13 @@ sup.cite a:hover{text-decoration:underline}
           <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
             </div>
           </details>
-          <details class="nav-folder" open>
+          <details class="nav-folder">
             <summary>robot-warehouse</summary>
             <div class="nav-sub">
           <a href="demos.html#robot-warehouse">All warehouse demos</a>
           <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
           <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
-          <a href="warehouse_rmf.html" aria-current="page">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
           <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
           <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
@@ -584,304 +615,70 @@ sup.cite a:hover{text-decoration:underline}
 
 
 
+
+
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">Epistemic SLAM &#183; two robots, two maps &#183; AWS small warehouse &#183; ROS 2</p>
-    <h2>A link that actually falls</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 16 domains</p>
+    <h2>The domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
-      SLAM answers where the robot is and what the building looks like. It does
-      not answer who knows that, and on a floor with two robots on it the
-      second question stops being a philosophical extra: a bay
-      <span class="mono-inline">r2</span> has not entered is not something
-      <span class="mono-inline">r2</span> knows merely because
-      <span class="mono-inline">r1</span> drove past it. Every demonstration
-      here keeps the grid and the knowledge model as two views of one fact.
-      This one cuts the radio between the two robots and takes that
-      coincidence away, which is the only condition under which the difference
-      between them can be measured rather than asserted.
-    </p>
-    <p class="hero-p" style="margin-top:1rem">
-      The cut has no appearance in the simulator: nothing about a warehouse
-      changes when a radio stops working. So the thing to watch is on the left.
-      The arrow is where <span class="mono-inline">r2</span> believes
-      <span class="mono-inline">r1</span> is, the disc around it is how far
-      that belief has drifted from being knowledge, and both turn red at the
-      point where it should stop being believed at all.
-    </p>
-    <p class="note" style="margin-top:1.4rem">
-      Fleet, world and per-robot SLAM from
-      <span class="mono-inline">warehouse_demo</span>, included unmodified.
-      Reconciliation from <span class="mono-inline">epistemic_slam</span>.
-      The outage, the belief engine and the measurement are
-      <span class="mono-inline">epistemic_comm</span>.
+      A planning domain says what agents there are, what can happen, and who
+      observes it. Two questions place every domain of the project: how many
+      agents it reasons about, and whether what they hold is knowledge, which
+      is always true, or belief, which may not be. The answer to the second is
+      not declared. It follows from the kinds of event a domain uses.
     </p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════ THE RUN -->
 <section>
   <div class="container">
-    <p class="sec-label">The run</p>
-    <h3>Sixty seconds without a radio</h3>
-
-    <figure class="demo-figure">
-      <video controls preload="metadata" playsinline width="100%"
-             poster="media/thumbs/link_outage.jpg">
-        <source src="media/link_outage.mp4" type="video/mp4">
-      </video>
-      <figcaption>
-        Left: what <span class="mono-inline">r2</span> believes about
-        <span class="mono-inline">r1</span>, over the map
-        <span class="mono-inline">r1</span> is building. Right: the simulator,
-        where nothing marks the outage at all. The cut is played at real time,
-        the minute of drift is sampled at 4&#215;, and the return is slowed to
-        0.9&#215; because the reconnection, the verdict and the reconciliation
-        land within three seconds of each other. Captions are matched against
-        the run's own log and timed by the ROS timestamp of the line that
-        carries them; where several events share an instant they are shown in
-        sequence, so a caption can trail its event by a second and none
-        precedes one.
-      </figcaption>
-    </figure>
-
-    <p>
-      The belief is not a guess about the future. While the link is up it is
-      the last pose that arrived. When the link falls, nothing arrives, and
-      what is drawn from then on is the last velocity integrated forward: the
-      partner is assumed to carry on doing what it was last seen doing. The
-      disc is the positional covariance, which grows for as long as the outage
-      lasts and never shrinks. At fifty seconds it crosses the threshold the
-      requirement sets, the arrow turns red, and the engine says in as many
-      words that where <span class="mono-inline">r1</span> is should no longer
-      be believed.
+    <p class="sec-label">Two axes</p>
+    <h3>How many agents, and knowledge or belief</h3>
+    <div class="quad">
+      <div></div><div class="ax">Knowledge</div><div class="ax">Belief</div>
+      <div class="ax ay">One agent</div><div class="q"><div class="q-h"><span class="q-n">I</span><span class="q-m">\(\mathrm{S5}\)</span><span class="q-w">knowledge</span></div><a class="q-a" href="single_agent_knows.html">One agent knows<span class="go">&#8594;</span></a><p class="q-t">One equivalence relation. Every event is observed by the only agent there is, so what it holds stays true.</p><div class="q-d"><a class="qd" href="domain_entries.html#d-lone-inspector">lone-inspector</a><a class="qd" href="domain_entries.html#d-building-rooms">building-rooms</a></div></div><div class="q"><div class="q-h"><span class="q-n">II</span><span class="q-m">\(\mathrm{KD45}\)</span><span class="q-w">belief</span></div><a class="q-a" href="single_agent_believes.html">One agent believes<span class="go">&#8594;</span></a><p class="q-t">A change the agent does not observe leaves it holding what is no longer the case: the relation loses reflexivity.</p><div class="q-d"><a class="qd" href="domain_entries.html#d-remote-door">remote-door</a><a class="qd" href="domain_entries.html#d-robot-relay">robot-relay</a></div></div>
+      <div class="ax ay">Several agents</div><div class="q"><div class="q-h"><span class="q-n">III</span><span class="q-m">\(\mathrm{S5}_n\)</span><span class="q-w">knowledge</span></div><a class="q-a" href="domains.html">A fleet knows<span class="go">&#8594;</span></a><p class="q-t">One equivalence per agent. Public and semi-private events keep them so, and common and distributed knowledge become definable.</p><div class="q-d"><a class="qd" href="domain_entries.html#d-muddy-children">muddy-children</a><a class="qd" href="domain_entries.html#d-active-muddy-child">Active-Muddy-Child</a><a class="qd" href="domain_entries.html#d-robot-warehouse">robot-warehouse</a><a class="qd" href="domain_entries.html#d-pass-through">pass-through</a></div></div><div class="q"><div class="q-h"><span class="q-n">IV</span><span class="q-m">\(\mathrm{KD45}_n\)</span><span class="q-w">belief</span></div><a class="q-a" href="fleet_believes.html">A fleet believes<span class="go">&#8594;</span></a><p class="q-t">Private and quasi-private events let agents diverge: each keeps what it last had reason to hold, which may now be false.</p><div class="q-d"><a class="qd" href="domain_entries.html#d-ugv-coordination">ugv-coordination</a><a class="qd" href="domain_entries.html#d-survey-team">survey-team</a><a class="qd" href="domain_entries.html#d-survey-sites">survey-sites</a><a class="qd" href="domain_entries.html#d-coin-in-the-box">coin-in-the-box</a><a class="qd" href="domain_entries.html#d-box-task">box-task</a><a class="qd" href="domain_entries.html#d-box-task-2.0">box-task-2.0</a><a class="qd" href="domain_entries.html#d-doxastic-depot">doxastic-depot</a><a class="qd" href="domain_entries.html#d-hotel-incident">hotel-incident</a></div></div>
+    </div>
+    <p class="note">
+      A domain sits in the belief column as soon as one of its events can go
+      unobserved by an agent it concerns. Public and semi-private events keep
+      every agent's relation an equivalence; private and quasi-private ones do
+      not. The title of each quadrant opens the page that treats it in full, and each name opens that domain's entry.
     </p>
+  </div>
+</section>
 
-    <table class="data">
-        <thead>
-          <tr><th>what happened</th><th>when</th><th>measured</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>the gate stops relaying</td><td>t = 0</td>
-              <td>1&#8239;764 odometry messages dropped, 64 map messages</td></tr>
-          <tr><td>the belief starts propagating</td><td>t = 0</td>
-              <td>from (&#8722;3.30, &#8722;8.57) at 0.150&#8202;m/s</td></tr>
-          <tr><td>the covariance passes the threshold</td><td>t = 50&#8202;s</td>
-              <td>trace 1.000&#8202;m&#178; against &#963;<sub>max</sub>&#178; = 1.0</td></tr>
-          <tr><td>the link returns</td><td>t = 60&#8202;s</td>
-              <td>worst error 7.632&#8202;m over 636 samples, no breach</td></tr>
-          <tr><td>the two maps are reconciled</td><td>t = 60&#8202;s</td>
-              <td>5&#8239;246 and 4&#8239;870 cells learned, 0 in conflict</td></tr>
-        </tbody>
+<section>
+  <div class="container">
+    <p class="sec-label">Solved by the planner</p>
+    <h3>What Aletheia returned for each</h3>
+    <p>
+      Each domain was grounded by plank and solved by Aletheia on the instance
+      its entry names, with the selection of strategy left to the planner.
+      Depth is that of the returned policy; expansions count the nodes the
+      search expanded to find it.
+    </p>
+    <table class="data cat">
+      <thead><tr><th>tier</th><th>domain</th><th>frame</th><th>agents</th><th>atoms</th><th>actions</th><th>|W<sub>0</sub>| / |W<sub>d</sub>|</th><th>goal depth</th><th>depth / expansions</th></tr></thead>
+      <tbody><tr><td>I</td><td><a href="domain_entries.html#d-lone-inspector">lone-inspector</a></td><td>S5</td><td>1</td><td>23</td><td>18</td><td>2 / 1</td><td>0</td><td>5 / 42</td></tr><tr><td>I</td><td><a href="domain_entries.html#d-building-rooms">building-rooms</a></td><td>S5</td><td>1</td><td>4</td><td>4</td><td>4 / 4</td><td>1</td><td>4 / 31</td></tr><tr><td>II</td><td><a href="domain_entries.html#d-remote-door">remote-door</a></td><td>KD45</td><td>1</td><td>9</td><td>8</td><td>1 / 1</td><td>1</td><td>3 / 14</td></tr><tr><td>II</td><td><a href="domain_entries.html#d-robot-relay">robot-relay</a></td><td>KD45</td><td>1</td><td>80</td><td>133</td><td>2 / 2</td><td>1</td><td>11 / 1&#8239;233</td></tr><tr><td>III</td><td><a href="domain_entries.html#d-muddy-children">muddy-children</a></td><td>S5<sub>n</sub></td><td>2</td><td>2</td><td>2</td><td>4 / 1</td><td>1</td><td>2 / 6</td></tr><tr><td>III</td><td><a href="domain_entries.html#d-active-muddy-child">Active-Muddy-Child</a></td><td>S5<sub>n</sub></td><td>5</td><td>5</td><td>5</td><td>32 / 1</td><td>1</td><td>none</td></tr><tr><td>III</td><td><a href="domain_entries.html#d-robot-warehouse">robot-warehouse</a></td><td>S5<sub>n</sub></td><td>2</td><td>69</td><td>132</td><td>2 / 2</td><td>1</td><td>replan</td></tr><tr><td>III</td><td><a href="domain_entries.html#d-pass-through">pass-through</a></td><td>S5<sub>n</sub></td><td>3</td><td>16</td><td>72</td><td>3 / 3</td><td>0</td><td>5 / 445</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-ugv-coordination">ugv-coordination</a></td><td>KD45<sub>n</sub></td><td>2</td><td>20</td><td>17</td><td>2 / 2</td><td>2</td><td>3 / 37</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-survey-team">survey-team</a></td><td>KD45<sub>n</sub></td><td>3</td><td>4</td><td>30</td><td>2 / 2</td><td>1</td><td>3 / 21</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-survey-sites">survey-sites</a></td><td>KD45<sub>n</sub></td><td>3</td><td>12</td><td>72</td><td>3 / 3</td><td>1</td><td>replan</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-coin-in-the-box">coin-in-the-box</a></td><td>KD45<sub>n</sub></td><td>3</td><td>8</td><td>21</td><td>2 / 1</td><td>1</td><td>2 / 7</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-box-task">box-task</a></td><td>KD45<sub>n</sub></td><td>2</td><td>10</td><td>14</td><td>128 / 8</td><td>1</td><td>GBFS</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-box-task-2.0">box-task-2.0</a></td><td>KD45<sub>n</sub></td><td>2</td><td>14</td><td>32</td><td>256 / 4</td><td>1</td><td>none</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-doxastic-depot">doxastic-depot</a></td><td>KD45<sub>n</sub></td><td>3</td><td>29</td><td>315</td><td>1 / 1</td><td>1</td><td>2 / 1&#8239;085</td></tr><tr><td>IV</td><td><a href="domain_entries.html#d-hotel-incident">hotel-incident</a></td><td>KD45<sub>n</sub></td><td>3</td><td>31</td><td>840</td><td>2 / 2</td><td>1</td><td>3 / 156</td></tr></tbody>
     </table>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ CONCEPT -->
-<section>
-  <div class="container">
-    <p class="sec-label">Epistemic SLAM</p>
-    <h3>Two views of one fact, and the moment they come apart</h3>
-
-    <p>
-      The demonstrations on this site rest on a coincidence that is easy to
-      miss because it holds so consistently. A robot drives, its laser sweeps,
-      <span class="mono-inline">slam_toolbox</span> writes what it saw into a
-      grid, and the epistemic layer writes the same event into a Kripke model.
-      A bay the robot has not entered is unobserved in the grid and undecided
-      in the model at once. Those are two views of one fact, and keeping them
-      that way is what makes a run honest: no prepared map is published
-      anywhere, so the robot cannot know a thing it did not look at.
-    </p>
-
-    <p>
-      The coincidence holds because one robot's observation drives both views.
-      What this run does is take it away.
-    </p>
-
-    <h4>Three things SLAM does not store</h4>
-
-    <p>
-      An occupancy grid records a probability per cell. It does not record
-      <b>whose</b> probability it is. A robot handed a merged map holds cells it
-      never saw, and nothing in the format distinguishes them from cells it
-      measured itself. That distinction is the whole of what the collaborative
-      layer adds: coverage is a mask of what this robot observed, not of what
-      is free in the map it happens to hold.
-    </p>
-
-    <p>
-      Nor does the grid record <b>abstention</b>. A cell at &minus;1 was never
-      observed, and a cell whose probability sits between the thresholds was
-      observed and not resolved. Both are unknown to the epistemic layer, and
-      collapsing the second into free or occupied would hand the model a
-      certainty the sensor never produced. An occupancy grid stores a
-      probability and a modal formula needs a decision, so a threshold has to
-      be chosen somewhere; it is chosen once, in the classification, and
-      nowhere else.
-    </p>
-
-    <p>
-      And it does not record <b>disagreement</b>. Two robots that observed the
-      same cell and reached opposite conclusions have produced a fact about the
-      fleet, not a defect in either map. Reconciliation here records the
-      contradiction and does not stop; a disputed cell that somebody can go and
-      look at again is worth more than a hole punched in the map, and worth
-      much more than an average of the two readings, which would describe a
-      floor neither robot saw.
-    </p>
-
-    <h4>Where knowledge ends and belief begins, in metres</h4>
-
-    <p>
-      While the link is up, what one robot holds about its partner is a
-      received measurement: the partner said where it was, and the statement
-      inherits whatever the partner's own localisation was worth. The instant
-      the link falls that stops being an observation of anything. What
-      continues is inference from a motion model, and the covariance is the
-      distance it has travelled from the fact.
-    </p>
-
-    <p>
-      That gives the boundary a number, which is unusual. In the epistemic
-      models on this site an agent either knows which of two worlds it is in or
-      it does not, and the survey domains are built so that the question is
-      settled by looking. Here the same distinction is continuous: the disc on
-      the left of the film is how far the belief has drifted from being
-      knowledge, and it widens for as long as nothing arrives. At fifty seconds
-      it passes the threshold, and past that point the proposition about where
-      the partner is has no business being treated as something the robot
-      knows. The engine says so; what it cannot do is act on it, because
-      marking that proposition uncertain means editing a model, and there is
-      one model for the whole fleet rather than one per robot.
-    </p>
-
     <p class="note">
-      That last clause is the honest edge of this run. The two grids diverge
-      because two robots observed different things while incommunicado, and
-      reconciling them is the operation this layer performs. The two
-      <em>models</em> never diverge, because there is only one, and an
-      accessibility relation in it is a column of a shared structure and not a
-      perspective held on a robot. Partitioning the model is a different piece
-      of work.
+      <i>replan</i>: solved by replanning over the all-outcomes determinization,
+      which the selection policy prefers for these shapes. <i>GBFS</i>: a
+      linear plan, since the instance needs no sensing. <i>none</i>: the search
+      space was exhausted without a solution; for both such instances the plan
+      stored in the repository is empty as well. Measured with Aletheia as
+      linked by ePlanSys 0.2.0, 45-second budget, on one machine, 25 September
+      2026.
     </p>
-
-    <h4>Why merging maps is not a registration problem</h4>
-
-    <p>
-      The obvious reading of what happens at reconnection is that two grids
-      must be aligned and combined. That reading is available and it is the
-      wrong one. The alignment is arithmetic: both maps came from the same
-      simulator at the same resolution, and putting them on a common extent is
-      a translation by whole cells, with no interpolation and no rotation. Maps
-      at different resolutions are refused rather than approximated, because a
-      wrong registration produces a merged map that is confidently wrong, which
-      is worse than one that is obviously missing.
-    </p>
-
-    <p>
-      What is not arithmetic is the question underneath: after the merge, what
-      does each robot know? The answer is not the union of the grids. It is a
-      per-robot fact, and this run reports it as one: the believing robot
-      learned 5&#8239;246 cells it had never observed, the patrolling one
-      4&#8239;870, and neither now confuses them with cells it measured. That
-      accounting is what the layer exists for, and it is the part an occupancy
-      grid has no field for.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ RESULT -->
-<section>
-  <div class="container">
-    <p class="sec-label">The measurement</p>
-    <h3>The bound is met, and that is weaker than it sounds</h3>
-
-    <p>
-      The requirement admits an error of
-      <span class="mono-inline">v<sub>max</sub>&#183;&#916;t + &#963;<sub>prop</sub></span>,
-      with <span class="mono-inline">v<sub>max</sub> = 0.22&#8202;m/s</span>
-      taken from the speed the fleet's own controller enforces. Three runs, of
-      thirty, sixty and a hundred and twenty seconds, meet it with no breaches:
-      worst errors of 3.63, 6.97 and 19.20&#8202;m, each at the last sample and
-      each larger than the one before, which is what an estimate that ages
-      should do.
-    </p>
-
-    <figure class="demo-figure">
-      <img src="media/link_outage_bound.svg" width="100%"
-           alt="The belief error stays near one and a half metres while the admissible bound climbs linearly to thirteen metres over sixty seconds">
-      <figcaption>
-        Grey is the bound, which climbs at 0.22&#8202;m/s because that is what
-        the platform could do; red is the error actually made. They touch only
-        at the instant of the cut. The criterion is hardest to satisfy when the
-        estimate is freshest and easiest when it is oldest, which is the wrong
-        way round.
-      </figcaption>
-    </figure>
-
-    <p>
-      A propagation that holds the last velocity cannot fail this bound while
-      the partner keeps its course, and the arithmetic gives the other half: a
-      partner that reverses at full speed the instant the link falls separates
-      at <span class="mono-inline">2v&#183;&#916;t</span> and breaches the
-      bound after <span class="mono-inline">&#963;<sub>prop</sub>/v<sub>max</sub></span>,
-      which here is 0.23&#8202;s. What these runs show is that the engine
-      tracks a partner that holds its course. They do not show that the bound
-      cannot be broken.
-    </p>
-
-    <p class="note">
-      The zero conflicts are the same kind of fact. The believing robot sits at
-      its dock and the partner patrols elsewhere, so the two sets of observed
-      cells barely touch; a contradiction needs two robots to have looked at
-      the same cell and disagreed, and this pair never did. Routing them
-      through one aisle from opposite ends is the next run.
-    </p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
-<section>
-  <div class="container">
-    <p class="sec-label">Reproduction</p>
-    <h3>Running it</h3>
-
-    <pre class="code">colcon build --packages-select epistemic_msgs epistemic_comm epistemic_slam
-colcon test --packages-select epistemic_comm      # 62 tests
-
-ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
-
-    <p>
-      <span class="mono-inline">t_disc</span> and
-      <span class="mono-inline">t_recon</span> are seconds from the monitor's
-      first clock tick, and the schedule is open loop on purpose: an outage
-      triggered by distance would make its own duration a function of the
-      trajectory it perturbs. Two JSON records are written per run, and the six
-      behind the numbers above are published beside this page:
-      <a href="data/link_outage_short.json">short</a>,
-      <a href="data/link_outage_baseline.json">baseline</a>,
-      <a href="data/link_outage_long.json">long</a>, and the run in the film as <a href="data/link_outage_demo.json">demo</a>.
-    </p>
-
-    <p>
-      The full account is the report,
-      <a href="link_outage.pdf">A Link That Actually Falls</a>: the three
-      outage lengths, the proposition that fixes what the bound is and is not
-      worth, the map alignment the reconciliation needed, and what it would
-      take to make two robots hold two models instead of one.
-    </p>
-
-    <p>
-      Two findings from building it are worth recording here, because both cost
-      a run to discover. Gating the announcement channel measures nothing: the
-      channel is an audit path, read only by the transcript recorder, and the
-      epistemic model advances through a service the executor calls when an
-      action completes. And the reconciliation refused the first real pair of
-      maps it was ever handed, for differing in size, which is correct and had
-      never been exercised, because a test that builds both grids builds them
-      the same shape and two maps that two robots built never are.
-    </p>
+    <a class="next-page" href="domain_entries.html">
+      <span class="k">Next</span>
+      <span class="t">The sixteen domains, one by one</span>
+      <span class="s">Signature, event types, initial model, grounded size, and the goal as written</span>
+      <span class="go">&#8594;</span>
+    </a>
   </div>
 </section>
 <footer>
@@ -898,7 +695,7 @@ ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">AWS small warehouse &#183; 60&#8202;s outage &#183; 1&#8239;764 messages dropped</span>
+      <span class="ftr-r">Six recorded runs &#183; ROS 2 &#183; simulation</span>
     </div>
   </div>
 </footer>

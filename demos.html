@@ -474,6 +474,8 @@ sup.cite a:hover{text-decoration:underline}
           <details class="nav-folder">
             <summary>Domains</summary>
             <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -515,6 +517,13 @@ sup.cite a:hover{text-decoration:underline}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -537,6 +546,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -774,6 +784,42 @@ sup.cite a:hover{text-decoration:underline}
           <div class="facts">
             <span>60&#8202;s outage</span><span>1&#8239;764 messages dropped</span>
             <span>7.63&#8202;m worst error</span><span>0 cells in conflict</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── pass-through -->
+    <div class="dgroup" id="pass-through">
+      <p class="sec-label">Domain</p>
+      <h3>pass-through &#183; three bays in a racking block</h3>
+      <p class="about">
+        Exactly one of three pass-through bays is open, and which one is
+        common knowledge only as a disjunction. Surveys are semi-private
+        sensing read off each scout's own SLAM map; map exchanges are
+        semi-private announcements carried by map fusion; and
+        <span class="mono-inline">cross</span> carries the precondition
+        \(K_{\mathit{carrier}}\,\mathit{open}(t)\), which the carrier's route
+        enforces as a least fixed point over what it knows. The frame stays
+        \(\mathrm{S5}_n\). One run so far, and all three worlds validated.
+      </p>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/pass_through.jpg"
+          alt="Gazebo and RViz as the carrier enters bay t2" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="pass_through.html">A route through a bay no map contains</a></h5>
+          <p>
+            Two scouts find loads in two bays, and the carrier crosses the
+            third, which no robot surveyed and of which the two map exchanges
+            carried not one cell. The scouts know it is open only jointly; the
+            exchanges make it the carrier's, and the safe set of its route lifts
+            the bay into the fixed point on that knowledge alone.
+          </p>
+          <div class="facts">
+            <span>S5</span><span>distributed knowledge</span>
+            <span>0 cells of t2 exchanged</span>
+            <span>depth 5, 445 expansions</span>
           </div>
         </div>
       </div>

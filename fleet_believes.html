@@ -445,6 +445,26 @@ pre:has(> code){margin:1.3rem 0}
 </style>
   <meta name="twitter:image:alt" content="A title card for the fleet belief domains.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/fleet_believes.html">
+<style>
+/* The four tier pages are set as a paper: numbered sections in grey, no
+   tinted highlight, and the red kept for the rule under the title alone. */
+body{counter-reset:sec}
+section .sec-label{color:var(--gray);text-transform:uppercase;letter-spacing:.08em;font-size:.6rem}
+section .sec-label::before{counter-increment:sec;content:counter(sec) ".\00a0\00a0";color:var(--black)}
+section:has(.quad) .sec-label::before{content:none;counter-increment:none}
+.hero h2 em{font-style:normal;font-weight:inherit;color:inherit}
+.quad a:hover{transform:none}
+.quad a[aria-current="page"]{border-color:var(--black);background:#FFFFFF;box-shadow:inset 0 0 0 1px var(--black)}
+.quad a[aria-current="page"] .qk::after{content:"\00a0\00a0this page";font-family:var(--mono);font-size:.62rem;font-weight:400;color:var(--gray);text-transform:uppercase;letter-spacing:.06em}
+.math-block{border-left-color:#C8C8C8}
+.btn.primary{border-color:var(--black);color:var(--black)}
+.btn.primary:hover{background:var(--black);color:#fff}
+.copybtn:hover{color:var(--black);border-color:var(--black)}
+.axioms dt{color:var(--black)}
+.steplist div.cur{border-left-color:var(--black);background:#F5F5F5}
+.qlead a{color:var(--steel);text-decoration:none;border-bottom:1px solid var(--border)}
+.qlead a:hover{border-bottom-color:var(--steel)}
+</style>
 </head>
 <body>
 
@@ -466,6 +486,8 @@ pre:has(> code){margin:1.3rem 0}
           <details class="nav-folder" open>
             <summary>Domains</summary>
             <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -507,6 +529,13 @@ pre:has(> code){margin:1.3rem 0}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -529,6 +558,7 @@ pre:has(> code){margin:1.3rem 0}
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -558,29 +588,28 @@ pre:has(> code){margin:1.3rem 0}
     <h3>Two axes: how many agents, and knowledge or belief</h3>
     <p class="qlead">
       Adding an agent indexes the modality. Dropping the truth axiom turns
-      knowledge into belief. The four pages below are the four combinations,
-      each with a domain that reaches it.
+      knowledge into belief. The four pages below treat the four combinations, each through a domain that reaches it. <a href="domain_catalogue.html">All domains</a> places every domain of the repository in one of them.
     </p>
     <div class="quad">
       <a href="single_agent_knows.html">
         <span class="qk">Planning for what one agent <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}\) &#183; lone-inspector</span>
-        <span class="qd">Sensing refines one partition. Nothing is hidden, because there is nobody to hide it from.</span>
+        <span class="qd">Sensing refines a single partition, and every event is observed by the only agent.</span>
       </a>
       <a href="single_agent_believes.html">
         <span class="qk">Planning for what one agent <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}\) &#183; remote-door</span>
-        <span class="qd">The world changes while the agent is not looking, and its picture of the world stops matching it.</span>
+        <span class="qd">An ontic change the agent does not observe leaves its accessible worlds apart from the actual one.</span>
       </a>
       <a href="domains.html">
         <span class="qk">Planning for what a fleet <em>knows</em></span>
         <span class="ql">\(\mathrm{S5}_n\) &#183; ugv-coordination</span>
-        <span class="qd">Four observability models over one facility, and what each one costs to plan.</span>
+        <span class="qd">Four observability models over one facility, and the cost of planning under each.</span>
       </a>
       <a href="fleet_believes.html" aria-current="page">
         <span class="qk">Planning for what a fleet <em>believes</em></span>
         <span class="ql">\(\mathrm{KD45}_n\) &#183; hotel-incident</span>
-        <span class="qd">One agent is told and another is not, so the fleet stops agreeing about what is the case.</span>
+        <span class="qd">An announcement made to part of the fleet leaves the uninformed agents holding false beliefs.</span>
       </a>
     </div>
   </div>
@@ -596,7 +625,7 @@ pre:has(> code){margin:1.3rem 0}
       \(M = (W, \{R_i\}_{i \in \mathcal{A}}, V, W^{*})\). Under
       \(\mathrm{S5}_n\) every \(R_i\) is an equivalence, and an action divides
       the fleet only into those who see an outcome and those who see that
-      something happened. Nobody is ever wrong.
+      something happened. No agent can hold a false belief.
     </p>
     <p>
       An action whose event model gives some agent a \(Q_i\) linking the event
@@ -608,8 +637,7 @@ pre:has(> code){margin:1.3rem 0}
       \((w,e)\,R'_i\,(v,f) \iff w R_i v \text{ and } e Q_i f\)
     </p>
     <p>
-      The frame that results is serial, transitive and Euclidean, so the agent
-      is consistent and introspective, and wrong. Two action types in the
+      The frame that results is serial, transitive and Euclidean, so the agent remains consistent and introspective while holding a false belief. Two action types in the
       <span class="mono-inline">intermediate</span> library produce it: private
       ontic change, and announcement made to some agents and not others.
     </p>
@@ -862,13 +890,12 @@ draw();
       to <span class="mono-inline">nil</span>.
     </p>
     <p>
-      Selecting each agent in turn shows what that difference costs. The model
-      goes from two worlds to four, and for the two informed agents the extra
-      worlds are simply more worlds: their relations gain edges and stay
+      Selecting each agent in turn shows the effect of that difference. The model
+      goes from two worlds to four, and for the two informed agents the additional worlds only enlarge their relations, which gain edges and remain
       \(\mathrm{S5}_n\). For the guest the designated world loses its
       loop and points instead at the two \(\textsf{nil}\) copies, which
       are the worlds in which no announcement was made. It is the only agent
-      whose relation changes character rather than size, and it is the agent the
+      whose relation changes in kind and not merely in size, and it is the agent the
       goal's secrecy conjunct is about.
     </p>
   </div>
@@ -901,8 +928,7 @@ draw();
       </tbody>
     </table>
     <p>
-      <span class="mono-inline">doxastic-depot</span> states the point most
-      plainly: its first instance asks for a state in which the chief believes
+      <span class="mono-inline">doxastic-depot</span> states the phenomenon most directly: its first instance asks for a state in which the chief believes
       a crate is still in bay 1 while it is in fact in bay 2. The goal is a
       false belief, and the plan that achieves it moves the chief out of the
       bay before moving the crate.
@@ -917,15 +943,14 @@ draw();
     <h3>The frame changing during a run</h3>
     <p>
       <span class="mono-inline">hotel-incident</span> is the domain that has
-      been executed on a fleet rather than only solved. A leak in one of two
+      been executed on a fleet, and not only solved. A leak in one of two
       suites on separate floors, an inspector, a porter and a guest, and a goal
       with a secrecy conjunct: the incident is to be over, the porter is to
       know it, and the guest is never to learn which suite was involved.
     </p>
     <p>
       The run was replayed against a standalone epistemic state and each
-      agent's accessibility relation was recorded after every action. The
-      frame is measured off the relation rather than assumed from the domain:
+      agent's accessibility relation was recorded after every action. The frame is measured from the relation, not assumed from the domain:
     </p>
 
     <figure class="demo-figure">
@@ -944,8 +969,7 @@ draw();
 
     <p>
       Two agents end the run holding beliefs the world contradicts, and both
-      continue to satisfy every formula their designated worlds support. The
-      model grows rather than shrinks: five worlds at the end against two at
+      continue to satisfy every formula their designated worlds support. The model grows: five worlds at the end against two at
       the start, because each partly-observed action introduces the distinction
       between what happened and what an uninformed agent still takes to be the
       case.
@@ -965,7 +989,7 @@ draw();
     <h3>What the planner returned, and what each action costs in worlds</h3>
     <p>
       The solution to <span class="mono-inline">hotel-incident</span> is a
-      policy rather than a sequence, and the diagram below is read off the
+      policy and not a sequence, and the diagram below is read off the
       planner's output and replayed through the product update. Every model in
       it was checked against the models the executor measured during the run:
       the reconstruction is bisimilar to the measurement at all five steps, and
@@ -1121,7 +1145,7 @@ draw();
       <li><span class="ln">7</span>\(K_{\texttt{porter}}\,\texttt{leak-at}\_\texttt{l3}\_\texttt{suite}\) holds at 1 of the 4 worlds of the model this action is given, and \(|W^{*}| = 1\)</li>
     </ul>
   </div>
-  <div class="fig-cap">The solution as the AND-OR tree it is, drawn from the planner&#8217;s output. Beside each action is the model that action is given: one dot per world, filled where \(\gamma\) holds and ringed where the world is designated, so a row in which every ringed dot is filled is a state satisfying the goal. An action with two outgoing edges has two designated events, and the continuation below each edge is applicable only in the state that edge produces, which is what makes a solution a policy rather than a sequence. The numbered notes give the modal conjuncts each action is guarded by; an action with no note has none, and is applicable on ontic grounds alone.</div>
+  <div class="fig-cap">The solution as the AND-OR tree it is, drawn from the planner&#8217;s output. Beside each action is the model that action is given: one dot per world, filled where \(\gamma\) holds and ringed where the world is designated, so a row in which every ringed dot is filled is a state satisfying the goal. An action with two outgoing edges has two designated events, and the continuation below each edge is applicable only in the state that edge produces, which is what makes a solution a policy and not a sequence. The numbered notes give the modal conjuncts each action is guarded by; an action with no note has none, and is applicable on ontic grounds alone.</div>
 </div>
 
     <p>
@@ -1182,7 +1206,7 @@ draw();
       </tbody>
     </table>
   </div>
-  <div class="fig-cap">The branch the recorded run took. The model grows rather than shrinks, and the two agents that end the run holding a false belief are the two whose relation loses an edge count it does not recover.</div>
+  <div class="fig-cap">The branch the recorded run took. The model grows, and the two agents that end the run holding a false belief are the two whose relation loses an edge count it does not recover.</div>
 </div>
 
     <p>
