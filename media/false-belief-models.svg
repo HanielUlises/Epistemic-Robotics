@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" font-family="Arial,Helvetica,sans-serif">
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<defs><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3373CC"/></marker><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E68026"/></marker></defs>
+<text x="16" y="26" font-size="15" fill="#111111" text-anchor="start" font-weight="bold">The model after each step, with the picker’s relation in blue</text>
+<text x="16" y="45" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">designated world in red; the mover’s relation is the identity throughout and is omitted; the crate’s bay in each world</text>
+<text x="120" y="84" font-size="12" fill="#111111" text-anchor="middle" font-weight="bold">after the move, oblivious</text>
+<text x="120" y="102" font-size="11" fill="#C8102E" text-anchor="middle" font-weight="normal">KD45: picker believes t1, wrongly</text>
+<circle cx="65" cy="180" r="26" fill="#FFF4F4" stroke="#C8102E" stroke-width="2.6"/>
+<text x="65" y="184" font-size="13" fill="#111111" text-anchor="middle" font-weight="bold">t3</text>
+<text x="65" y="224" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">(w, δ)</text>
+<circle cx="175" cy="180" r="26" fill="#FFFFFF" stroke="#111111" stroke-width="1.2"/>
+<text x="175" y="184" font-size="13" fill="#111111" text-anchor="middle" font-weight="bold">t1</text>
+<text x="175" y="224" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">(w, σ)</text>
+<line x1="92" y1="180" x2="146" y2="180" stroke="#3373CC" stroke-width="2.2"/>
+<polygon points="146,180 136.1,184.7 136.1,175.3" fill="#3373CC"/>
+<text x="119.0" y="172.0" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker</text>
+<path d="M163,156 C149,116 201,116 187,156" fill="none" stroke="#3373CC" stroke-width="2"/>
+<polygon points="187,156 185.8,145.1 194.7,148.1" fill="#3373CC"/>
+<text x="340" y="84" font-size="12" fill="#111111" text-anchor="middle" font-weight="bold">after the report</text>
+<text x="340" y="102" font-size="11" fill="#1A8C46" text-anchor="middle" font-weight="normal">picker believes t3; common belief</text>
+<circle cx="285" cy="180" r="26" fill="#FFF4F4" stroke="#C8102E" stroke-width="2.6"/>
+<text x="285" y="184" font-size="13" fill="#111111" text-anchor="middle" font-weight="bold">t3</text>
+<text x="285" y="224" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">((w,δ), ρ)</text>
+<circle cx="395" cy="180" r="26" fill="#FFFFFF" stroke="#111111" stroke-width="1.2"/>
+<text x="395" y="184" font-size="13" fill="#111111" text-anchor="middle" font-weight="bold">t3</text>
+<text x="395" y="224" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">((w,σ), μ)</text>
+<line x1="312" y1="180" x2="366" y2="180" stroke="#3373CC" stroke-width="2.2"/>
+<polygon points="366,180 356.1,184.7 356.1,175.3" fill="#3373CC"/>
+<text x="339.0" y="172.0" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker</text>
+<path d="M383,156 C369,116 421,116 407,156" fill="none" stroke="#3373CC" stroke-width="2"/>
+<polygon points="407,156 405.8,145.1 414.7,148.1" fill="#3373CC"/>
+<text x="560" y="84" font-size="12" fill="#111111" text-anchor="middle" font-weight="bold">after the move, doubting</text>
+<text x="560" y="102" font-size="11" fill="#1A8C46" text-anchor="middle" font-weight="normal">S5: picker believes neither</text>
+<circle cx="505" cy="180" r="26" fill="#FFF4F4" stroke="#C8102E" stroke-width="2.6"/>
+<text x="505" y="184" font-size="13" fill="#111111" text-anchor="middle" font-weight="bold">t3</text>
+<text x="505" y="224" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">(w, δ)</text>
+<circle cx="615" cy="180" r="26" fill="#FFFFFF" stroke="#111111" stroke-width="1.2"/>
+<text x="615" y="184" font-size="13" fill="#111111" text-anchor="middle" font-weight="bold">t1</text>
+<text x="615" y="224" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">(w, σ)</text>
+<line x1="532" y1="180" x2="588" y2="180" stroke="#3373CC" stroke-width="2.2"/>
+<text x="560.0" y="172.0" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker</text>
+<text x="780" y="84" font-size="12" fill="#111111" text-anchor="middle" font-weight="bold">untold, after looking in t1</text>
+<text x="780" y="102" font-size="11" fill="#C8102E" text-anchor="middle" font-weight="normal">picker has no world</text>
+<circle cx="725" cy="180" r="26" fill="#FFF4F4" stroke="#C8102E" stroke-width="2.6"/>
+<text x="725" y="184" font-size="13" fill="#111111" text-anchor="middle" font-weight="bold">t3</text>
+<text x="725" y="224" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">((w,δ), empty)</text>
+<text x="835" y="174" font-size="12" fill="#C8102E" text-anchor="middle" font-weight="bold">no world</text>
+<text x="835" y="192" font-size="12" fill="#C8102E" text-anchor="middle" font-weight="normal">for the picker</text>
+<line x1="752" y1="180" x2="795" y2="180" stroke="#3373CC" stroke-width="2" stroke-dasharray="4 4"/>
+<text x="16" y="268" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">Left to right: Proposition 1, Proposition 3, Proposition 4, Proposition 2. With no world, the picker</text>
+<text x="16" y="286" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">believes every formula; the planner, run with consistent beliefs, refuses the update that leads there.</text>
+</svg>

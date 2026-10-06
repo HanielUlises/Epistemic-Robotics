@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 250" font-family="Arial,Helvetica,sans-serif">
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<defs><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3373CC"/></marker><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E68026"/></marker></defs>
+<text x="16" y="26" font-size="15" fill="#111111" text-anchor="start" font-weight="bold">relocate(mover, t1, t3)</text>
+<text x="16" y="45" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">the move δ, or the mover’s slot passing with nothing moved σ</text>
+<text x="120" y="78" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker oblivious</text>
+<rect x="30" y="100" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#C8102E" stroke-width="2.6"/>
+<text x="70.0" y="122.0" text-anchor="middle" font-size="13" fill="#111111">δ</text>
+<rect x="170" y="100" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#111111" stroke-width="1.2"/>
+<text x="210.0" y="122.0" text-anchor="middle" font-size="13" fill="#111111">σ</text>
+<line x1="112" y1="117" x2="168" y2="117" stroke="#3373CC" stroke-width="2.2"/>
+<polygon points="168,117 158.1,121.7 158.1,112.3" fill="#3373CC"/>
+<text x="140.0" y="109.0" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker</text>
+<path d="M198,100 C184,60 236,60 222,100" fill="none" stroke="#3373CC" stroke-width="2"/>
+<polygon points="222,100 220.8,89.1 229.7,92.1" fill="#3373CC"/>
+<text x="70" y="152" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">crate t1 → t3</text>
+<text x="210" y="152" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">nothing moved</text>
+<text x="360" y="78" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker doubting</text>
+<rect x="270" y="100" width="70" height="34" rx="6" fill="#FAFAFA" stroke="#C8102E" stroke-width="2.6"/>
+<text x="305.0" y="122.0" text-anchor="middle" font-size="13" fill="#111111">δ</text>
+<rect x="380" y="100" width="70" height="34" rx="6" fill="#FAFAFA" stroke="#111111" stroke-width="1.2"/>
+<text x="415.0" y="122.0" text-anchor="middle" font-size="13" fill="#111111">σ</text>
+<line x1="342" y1="117" x2="378" y2="117" stroke="#3373CC" stroke-width="2.2"/>
+<text x="360.0" y="109.0" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker</text>
+<text x="305" y="152" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">crate t1 → t3</text>
+<text x="415" y="152" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">nothing moved</text>
+<text x="16" y="196" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">The mover sees which happened. Oblivious, the picker takes the move for</text>
+<text x="16" y="214" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">nothing having moved, and its belief is then false. Doubting, it relates the</text>
+<text x="16" y="232" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">two and is uncertain. Only δ is designated; σ moves the shift on.</text>
+</svg>

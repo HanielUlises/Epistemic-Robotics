@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A false belief on a warehouse floor &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Two robots must lift one load together, and the lift requires common knowledge of the stand. Four delivered radio messages reach E4 and the lift is refused; one beacon, seen from two viewpoints, reaches common knowledge in one update.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="A false belief on a warehouse floor">
+<meta property="og:description" content="A crate moved while the picker was away: it believed the crate in t1, and the mover believed it did. Told, it fetched from t3; untold, it found t1 empty.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/false_belief.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/false_belief.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Link card: A false belief on a warehouse floor, over the Gazebo view of the picker at the mouth of an empty bay.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/false_belief.jpg">
+<meta name="twitter:title" content="A false belief on a warehouse floor">
+<meta name="twitter:description" content="A crate moved while the picker was away: it believed the crate in t1, and the mover believed it did. Told, it fetched from t3; untold, it found t1 empty.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="RViz and Gazebo during the false-belief runs.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/false_belief.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The eighteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+            </div>
+          </details>
+          <details class="nav-folder open">
+            <summary>false-belief</summary>
+            <div class="nav-sub">
+          <a href="demos.html#false-belief">All false-belief demos</a>
+          <a href="false_belief.html" aria-current="page">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">Graph recovery and integration defects on a derived warehouse floor</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">False belief &#183; two agents &#183; 30 &#215; 50 m hall &#183; ROS 2</p>
+    <h2>A false belief on a warehouse floor</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      The <span class="mono-inline">picker</span> stores a crate in bay
+      <span class="mono-inline">t1</span> of the pass-through floor and goes to
+      charge at a dock from which neither bay is in sight. The
+      <span class="mono-inline">mover</span> carries the crate to
+      <span class="mono-inline">t3</span>. The picker is then to fetch it, and
+      <span class="mono-inline">fetch</span> requires that the crate be in the
+      bay and that the picker believe it is. Where will the picker look? The
+      setting follows the false-belief tasks of developmental psychology, the
+      Sally-Anne test in particular<sup class="cite"><a href="#ref-wp">[8]</a><a href="#ref-bc">[3]</a></sup>,
+      as formalised in dynamic epistemic logic by Bolander<sup class="cite"><a href="#ref-bol">[4]</a></sup>.
+    </p>
+    <p class="hero-p">
+      After the move the picker believes the crate is in
+      <span class="mono-inline">t1</span>, and the mover believes the picker
+      believes so: the model the planner and the executor compute by product
+      update has a false belief in it, and the mover's view of it. Finding
+      <span class="mono-inline">t1</span> empty would leave the picker with no
+      possible world at all, believing every formula; the planner, which
+      refuses such an update, finds no policy without a radio, and with one it
+      has the mover report the move before the picker fetches. A picker that
+      allows the move without seeing it is uncertain and not wrong, and looks
+      before it fetches. All three floors were executed in Gazebo, and on the
+      one without a radio the picker drove to <span class="mono-inline">t1</span>
+      and found it empty.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>The planner requires consistent beliefs:</b> without that, the floor
+      without a radio has a policy that looks into
+      <span class="mono-inline">t1</span> and then fetches from
+      <span class="mono-inline">t3</span> on a belief that holds only because
+      the look left the picker believing everything. <b>Belief revision is not
+      modelled:</b> an observation that contradicts a belief has no consistent
+      outcome here. <b>The crate is carried by the simulator</b> once a robot is
+      in position under it; the robots have no gripper.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">false_belief_demo</span>, on the floor of
+      <span class="mono-inline">pass_through_demo</span>; policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, grounding by
+      plank, search by Aletheia. Full account in
+      <a href="false_belief.pdf">A False Belief on a Warehouse Floor</a> (PDF):
+      the event models, the proofs, the planning results, the grounding on the
+      floor, the runs and the defects found on the way.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Untold, the picker went to t1; told, to t3; doubting, it looked</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/false_belief_poster.jpg">
+        <source src="media/false_belief.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Left: RViz, what the robots believe: the crate where it is, a ghost of
+        it in each robot's colour in the bay that robot believes, marked false
+        when it is, each robot's first- and second-order beliefs in the
+        central lane on its side, and a report as an arc from the mover to the
+        picker. Right: Gazebo, the world as it is. Under both: the policy, or
+        on the floor without a radio the picker's own plan, with the node being
+        executed marked; the action in formal notation; and what each robot
+        believes. Every caption is a line the runs wrote, placed at the instant
+        it was written; transits are sampled at up to 4&#215; and the corner
+        says when.
+      </figcaption>
+    </figure>
+
+    <h4>Untold</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>no policy for fetched, after 0.1&#8202;s: the search space is exhausted at depth 3</td><td>1 world</td></tr>
+        <tr><td>go-dock(picker)</td><td>at its dock after 33&#8202;s; bays in line of sight: t1 no, t3 no</td><td>1 / 1</td></tr>
+        <tr><td>relocate(mover, t1, t3)</td><td>takes the crate from t1 after 56&#8202;s, sets it down in t3 after 124&#8202;s; in sight of the picker: t1 no, t3 no</td><td>2 / 1 &#183; \(B_{picker}\) t1, false</td></tr>
+        <tr><td>fetch(picker, t1)</td><td>the belief requirement held and the executor dispatched; at the mouth of t1 after 34&#8202;s the laser read 11.2&#8202;m along the bay: empty, and the fetch was refused</td><td>refused</td></tr>
+      </tbody>
+    </table>
+    <p class="note">
+      The mission then asked the epistemic state, and it answered: the crate is
+      in t3; the picker believes it in t1; the mover believes the picker
+      believes so; and the picker believes the mover believes it in t1.
+    </p>
+
+    <h4>Told</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>a policy of 4 nodes and 1 leaf, in 0.1&#8202;s</td><td>1 world</td></tr>
+        <tr><td>go-dock(picker)</td><td>at its dock after 35&#8202;s; bays in line of sight: t1 no, t3 no</td><td>1 / 1</td></tr>
+        <tr><td>relocate(mover, t1, t3)</td><td>takes the crate from t1 after 57&#8202;s, sets it down in t3 after 128&#8202;s; in sight of the picker: t1 no, t3 no</td><td>2 / 1 &#183; \(B_{picker}\) t1, false</td></tr>
+        <tr><td>report(mover, picker, t1, t3)</td><td>&#8220;the crate was moved from t1 to t3&#8221;, delivered and acknowledged</td><td>2 / 1 &#183; \(B_{picker}\) t3</td></tr>
+        <tr><td>fetch(picker, t3)</td><td>at the mouth of t3 after 71&#8202;s the laser read 3.1&#8202;m: the crate; set down at the drop 131&#8202;s after fetch began</td><td>fetched</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Doubt</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>a policy of 4 nodes and 1 leaf, in 0.1&#8202;s</td><td>1 world</td></tr>
+        <tr><td>go-dock(picker)</td><td>at its dock after 36&#8202;s; bays in line of sight: t1 no, t3 no</td><td>1 / 1</td></tr>
+        <tr><td>relocate(mover, t1, t3)</td><td>takes the crate from t1 after 58&#8202;s, sets it down in t3 after 129&#8202;s</td><td>2 / 1 &#183; \(B_{picker}\) neither</td></tr>
+        <tr><td>look(picker, t1)</td><td>at the mouth of t1 after 33&#8202;s the laser read 11.2&#8202;m: empty, e-empty</td><td>2 / 1 &#183; \(K_{picker}\) t3</td></tr>
+        <tr><td>fetch(picker, t3)</td><td>at the mouth of t3 after 46&#8202;s the laser read 3.1&#8202;m: the crate; set down at the drop 108&#8202;s after fetch began</td><td>fetched</td></tr>
+      </tbody>
+    </table>
+    <p class="note">
+      Every node of the three runs exited cleanly when the launch shut down.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Three findings, each a statement about the model the executor kept</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#fb-false-sec">
+        <span class="pt-card-img"><img src="media/thumbs/false_belief_card_false.jpg" alt="RViz on the floor without a radio: the crate in t3, the picker's belief of it in t1 marked false" loading="lazy"></span>
+        <span class="pt-card-k">The false belief</span>
+        <span class="pt-card-h">The picker believes t1, and the mover knows it does</span>
+        <span class="pt-card-p">A move the picker does not observe leaves it believing the crate is where it was, and the mover believing it believes so. The frame is KD45.</span>
+        <span class="pt-card-go">Read the proposition <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#fb-collapse-sec">
+        <span class="pt-card-img"><img src="media/thumbs/false_belief_card_empty.jpg" alt="The picker at the mouth of t1, its laser reading the bay empty" loading="lazy"></span>
+        <span class="pt-card-k">No consistent observation</span>
+        <span class="pt-card-h">Finding t1 empty leaves the picker no world</span>
+        <span class="pt-card-p">An observation a belief rules out empties the believer's relation. A planner that refuses that state finds no policy without a radio.</span>
+        <span class="pt-card-go">See why <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#fb-report-sec">
+        <span class="pt-card-img"><img src="media/thumbs/false_belief_card_report.jpg" alt="The report from the mover to the picker, as an arc over the block" loading="lazy"></span>
+        <span class="pt-card-k">The report</span>
+        <span class="pt-card-h">News of the move, not an announcement of the place</span>
+        <span class="pt-card-p">The picker takes the report as the move it did not see. Its belief becomes true, and the location common belief.</span>
+        <span class="pt-card-go">Check the event model <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#fb-problem-sec">The problem</a>
+      <a href="#fb-events-sec">Event models</a>
+      <a href="#fb-false-sec">The false belief</a>
+      <a href="#fb-collapse-sec">No consistent observation</a>
+      <a href="#fb-report-sec">The report</a>
+      <a href="#fb-doubt-sec">Doubt</a>
+      <a href="#fb-planning-sec">Planning</a>
+      <a href="#fb-floor-sec">The floor</a>
+      <a href="#fb-defects-sec">Defects</a>
+      <a href="#fb-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE PROBLEM -->
+<section id="fb-problem-sec">
+  <div class="container">
+    <p class="sec-label">The problem</p>
+    <h3>One world, a shift, and three floors</h3>
+    <p>
+      Agents \(\mathit{picker}\) and \(\mathit{mover}\), bays \(t_1\) and
+      \(t_3\). Initially the model has one world, the crate is in \(t_1\), and
+      everything is common knowledge. The goal is \(\mathit{fetched}\), and
+      \[
+        \mathit{fetch}(\mathit{picker}, b)\ \text{ requires }\ \mathit{crate}(b) \wedge B_{\mathit{picker}}\,\mathit{crate}(b),
+      \]
+      so the picker drives to a bay only if it believes the crate is there. The
+      shift fixes its first two actions: the picker goes to its dock, a public
+      move, and the mover carries the crate from \(t_1\) to \(t_3\). Two phase
+      atoms hold that order; the planner plans what follows. The three floors
+      are three instances, two lines apart.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>floor</th><th>radio</th><th>the picker, during the move</th></tr></thead>
+      <tbody>
+        <tr><td>told</td><td>yes</td><td>oblivious: takes the move for nothing having moved</td></tr>
+        <tr><td>untold</td><td>no</td><td>oblivious</td></tr>
+        <tr><td>doubt</td><td>no</td><td>doubting: allows that the crate was moved</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Belief here is the modality of a \(\mathrm{KD45}\) model: \(B_a\varphi\)
+      holds at \(w\) when \(\varphi\) holds at every world \(a\) considers
+      possible from \(w\), and it can be false. When \(a\) considers no world
+      possible, \(B_a\varphi\) holds for every \(\varphi\), \(\bot\) included:
+      \(a\) believes everything. Product update keeps transitivity and
+      Euclideanness, and loses seriality exactly when an agent observes an event
+      that none of the worlds it believes possible allows.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ EVENT MODELS -->
+<section id="fb-events-sec">
+  <div class="container">
+    <p class="sec-label">The epistemic actions</p>
+    <h3>Two event models of the domain's own</h3>
+    <p>
+      The relocation has two events: the move \(\delta\), and \(\sigma\), the
+      mover's slot passing with nothing moved. \(\sigma\) carries the phase
+      change because the picker knows the schedule: it knows the slot has
+      passed and not whether the mover used it. The picker's type is Oblivious
+      or Doubting according to the floor. The report has two events too: the
+      report \(\rho\), designated, and \(\mu\), the move as the picker takes it,
+      applied to the world it believes. Its precondition is a belief about a
+      belief, \(B_{\mathit{mover}}B_{\mathit{picker}}\,\mathit{crate}(t_1)\):
+      the false-belief test, as the condition for speaking.
+    </p>
+    <div class="ev-grid">
+      <figure><img src="media/false-belief-event-relocation.svg" alt="The relocation: events delta and sigma; an oblivious picker maps delta onto sigma, a doubting picker relates the two"></figure>
+      <figure><img src="media/false-belief-event-report.svg" alt="The report: events rho and mu; the picker relates rho to mu, the move applied to the world it believes"></figure>
+    </div>
+    <p>
+      The other two actions come from the intermediate library:
+      <span class="mono-inline">look</span> is semi-private sensing, the
+      picker reading its laser along a bay while the mover sees only that it
+      looked, and <span class="mono-inline">fetch</span> is public and ontic.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE FALSE BELIEF -->
+<section id="fb-false-sec">
+  <div class="container">
+    <p class="sec-label">The false belief</p>
+    <h3>The picker believes t1, the mover believes it does</h3>
+    <h4>Proposition 1 (a false belief, and its attribution)</h4>
+    <p>
+      After the shift's two actions with the picker oblivious, the model has two
+      worlds, \((w,\delta)\) with the crate in \(t_3\), designated, and
+      \((w,\sigma)\) with it in \(t_1\). The picker's relation is
+      \(\{((w,\delta),(w,\sigma)), ((w,\sigma),(w,\sigma))\}\): serial,
+      transitive, Euclidean, and not reflexive. The model is \(\mathrm{KD45}\)
+      and not \(\mathrm{S5}\), and at the designated world
+      \[
+        \mathit{crate}(t_3) \wedge B_{\mathit{picker}}\,\mathit{crate}(t_1) \wedge
+        B_{\mathit{mover}}B_{\mathit{picker}}\,\mathit{crate}(t_1) \wedge
+        B_{\mathit{picker}}B_{\mathit{mover}}\,\mathit{crate}(t_1).
+      \]
+      &#8718; The third conjunct answers the Sally-Anne question. The fourth is
+      the picker believing the mover shares its belief: in the world the
+      picker believes, nothing happened to anyone.
+    </p>
+    <figure class="demo-figure"><img src="media/false-belief-models.svg" alt="Four models: after the oblivious move, after the report, after the doubting move, and after the look on the floor without a radio, where the picker has no world" style="width:100%"></figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ COLLAPSE -->
+<section id="fb-collapse-sec">
+  <div class="container">
+    <p class="sec-label">An observation the belief rules out</p>
+    <h3>Finding t1 empty leaves the picker no world</h3>
+    <h4>Proposition 2 (no consistent update)</h4>
+    <p>
+      If \(M, w \models B_a\neg\psi\), \(a\) observes \(E\) fully, and \(e\) is an
+      event with \(M, w \models \mathit{pre}(e)\) and \(\mathit{pre}(e) \models \psi\),
+      then \((w,e)\) has no \(a\)-successor in \(M \otimes E\). The only event
+      Fully relates to \(e\) is \(e\), and every world \(a\) believes possible
+      falsifies \(\mathit{pre}(e)\). &#8718;
+    </p>
+    <p>
+      Looking into \(t_1\) and finding it empty is such an event, with
+      \(\psi = \neg\mathit{crate}(t_1)\); so is a truthful public announcement
+      that the crate is in \(t_3\), which is why the report is not an
+      announcement. Without a radio, every action after the shift either fails
+      its precondition or leaves the picker believing everything, and the
+      planner, which refuses such a state, finds no policy: the search space is
+      exhausted at depth 3.
+    </p>
+    <p class="note">
+      Aletheia can keep a product that loses seriality (its default, as plank
+      does), repair it, or refuse it. Kept, the look leaves the picker
+      believing \(\mathit{crate}(t_3)\) along with everything else, and the
+      planner returns <i>look into t1, then fetch from t3</i> on the floor
+      without a radio. Refused, it returns nothing. ePlanSys's planner plugin
+      refuses by default, and <span class="mono-inline">validate.sh</span>
+      checks both.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE REPORT -->
+<section id="fb-report-sec">
+  <div class="container">
+    <p class="sec-label">The report</p>
+    <h3>News of the move, and a true belief</h3>
+    <h4>Proposition 3 (a report that repairs the belief)</h4>
+    <p>
+      In the model of Proposition 1 the report applies at the designated world,
+      and after it the two worlds are \(((w,\delta),\rho)\), designated, and
+      \(((w,\sigma),\mu)\), both with the crate in \(t_3\). The picker relates
+      the first to the second and the second to itself, the mover each to
+      itself. Every world keeps a successor, and
+      \(B_{\mathit{picker}}\,\mathit{crate}(t_3) \wedge
+      C_{\{\mathit{picker},\mathit{mover}\}}\,\mathit{crate}(t_3)\) holds. &#8718;
+    </p>
+    <p>
+      The picker's relation is still not reflexive: it believes the crate was
+      moved just now, and it was moved earlier. Nothing it believes about the
+      crate is false.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DOUBT -->
+<section id="fb-doubt-sec">
+  <div class="container">
+    <p class="sec-label">Doubt</p>
+    <h3>Uncertain, and not wrong</h3>
+    <h4>Proposition 4</h4>
+    <p>
+      With the picker doubting, the move leaves the same two worlds and the
+      picker relating them both ways: an equivalence, so the model is
+      \(\mathrm{S5}\), and the picker believes the crate in neither bay. Looking
+      into \(t_1\) and finding it empty is then consistent, and afterwards
+      \(K_{\mathit{picker}}\,\mathit{crate}(t_3)\). &#8718; The planner's
+      policy is that: look into \(t_1\), then fetch from \(t_3\).
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ PLANNING -->
+<section id="fb-planning-sec">
+  <div class="container">
+    <p class="sec-label">Planning</p>
+    <h3>What the planner returns</h3>
+    <p>
+      plank grounds each floor into 13 atoms and 18 ground actions. Aletheia,
+      with consistent beliefs required:
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>floor</th><th>policy</th></tr></thead>
+      <tbody>
+        <tr><td>told</td><td>go-dock, relocate, report(mover, picker, t1, t3), fetch(picker, t3); depth 4</td></tr>
+        <tr><td>untold</td><td>none: the space is exhausted at depth 3</td></tr>
+        <tr><td>doubt</td><td>go-dock, relocate, look(picker, t1), fetch(picker, t3); depth 4</td></tr>
+      </tbody>
+    </table>
+    <p>
+      <span class="mono-inline">tools/validate.sh</span> checks six statements
+      without a simulator: the false belief and its attribution after the
+      shift's two actions; the told policy, with every robot's belief consistent
+      at every node; no policy on the untold floor; the collapse after the look;
+      the vacuous policy when consistent beliefs are not required, and that the
+      trace finds the collapse in it; and the doubt policy, with the picker
+      uncertain and its relation reflexive after the move.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE FLOOR -->
+<section id="fb-floor-sec">
+  <div class="container">
+    <p class="sec-label">The floor</p>
+    <h3>The pass-through floor, read for a third question</h3>
+    <p>
+      The racking block crosses the hall with three tunnel bays. The picker
+      works the storage floor and reaches a bay from its south mouth; the mover
+      works the dispatch floor and reaches it from the north. The dock is
+      against the west wall between two rows of racking. Three claims about the
+      floor are checked by casting rays over the floor plan before it is
+      written: from the dock neither bay is in sight; from either mouth a robot
+      sees along a bay to the crate's place and through to the far floor; and
+      every place a robot is sent is reachable. The performers check the first
+      again during the run: the picker logs which bays it can see once docked,
+      and the mover, when it sets the crate down, which bays are in sight of
+      where the picker stands.
+    </p>
+    <p>
+      Looking is the picker's laser, read straight along the bay's axis from
+      its mouth: a crate reads at about three metres, an empty bay through to
+      the dispatch floor at about eleven. <span class="mono-inline">fetch</span>
+      reads the same before it drives in, and refuses if the bay is empty,
+      whatever the model says.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEFECTS -->
+<section id="fb-defects-sec">
+  <div class="container">
+    <p class="sec-label">Defects</p>
+    <h3>Found on the way</h3>
+    <p>
+      <b>A policy on every floor.</b> The first solve returned the same policy
+      for all three floors: look into <span class="mono-inline">t1</span>, then
+      fetch from <span class="mono-inline">t3</span>. Applied by hand, the look
+      left the picker with no world, and the fetch's belief precondition held
+      vacuously. Aletheia's default keeps such a product, as plank does; with
+      consistent beliefs required the untold floor has no policy, as it should.
+    </p>
+    <p>
+      <b>A phase the picker could not see pass.</b> With consistent beliefs
+      required, the told floor had no policy either. The relocation's
+      nothing-moved event was trivial, so the phase atom it should have cleared
+      stayed set in the world the picker believed, and the fetch had no world
+      to apply to there. The event now clears it: the picker knows the mover's
+      slot has passed, and does not know the mover used it. The same leak had
+      made the doubt floor's look decisive for the wrong reason.
+    </p>
+    <p>
+      <b>The tracked model keeps a collapse.</b> The epistemic state applies
+      updates with Aletheia's default. Had the picker looked into
+      <span class="mono-inline">t1</span> on the untold floor, the tracked
+      model would have let it pass every belief check that followed. The
+      untold run sends it to fetch, and the fetch is checked against the floor.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ LIMITS -->
+<section>
+  <div class="container">
+    <p class="sec-label">Limits</p>
+    <h3>What this does not show</h3>
+    <ul style="margin:0 0 0 1.2rem">
+      <li>Belief revision. An observation that contradicts a belief has no
+        consistent outcome in this logic; plausibility models<sup class="cite"><a href="#ref-bs">[1]</a></sup>
+        give one, and are outside what the planner implements.</li>
+      <li>A mover that chooses to report. The report is in the policy because
+        the planner needs it; the mover has no cost or reason of its own.</li>
+      <li>A physical carry. The crate is moved by the simulator once a robot is
+        in position under it.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<section id="fb-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-bs">A. Baltag and S. Smets. A qualitative theory of dynamic interactive belief revision. In <i>Logic and the Foundations of Game and Decision Theory (LOFT 7)</i>, Texts in Logic and Games 3, 11&#8211;58. Amsterdam University Press, 2008.</li>
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK VII</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-bc">S. Baron-Cohen, A. M. Leslie and U. Frith. Does the autistic child have a &#8220;theory of mind&#8221;? <i>Cognition</i> 21(1):37&#8211;46, 1985.</li>
+      <li id="ref-bol">T. Bolander. Seeing is believing: formalising false-belief tasks in dynamic epistemic logic. In <i>Jaakko Hintikka on Knowledge and Game-Theoretical Semantics</i>, Outstanding Contributions to Logic 12, 207&#8211;236. Springer, 2018.</li>
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-fhmv">R. Fagin, J. Y. Halpern, Y. Moses and M. Y. Vardi. <i>Reasoning About Knowledge</i>. MIT Press, 1995.</li>
+      <li id="ref-del">H. van Ditmarsch, W. van der Hoek and B. Kooi. <i>Dynamic Epistemic Logic</i>. Springer, 2007.</li>
+      <li id="ref-wp">H. Wimmer and J. Perner. Beliefs about beliefs: representation and constraining function of wrong beliefs in young children's understanding of deception. <i>Cognition</i> 13(1):103&#8211;128, 1983.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+    <pre class="code">ros2 launch false_belief_demo false_belief_launch.py floor:=told
+ros2 launch false_belief_demo false_belief_launch.py floor:=untold
+ros2 launch false_belief_demo false_belief_launch.py floor:=doubt
+bash tools/validate.sh                                       <span class="c"># six checks, no simulator</span>
+bash tools/record_demo.sh told   /tmp/raw_told.mkv   /tmp/run_told.log
+bash tools/record_demo.sh untold /tmp/raw_untold.mkv /tmp/run_untold.log
+bash tools/record_demo.sh doubt  /tmp/raw_doubt.mkv  /tmp/run_doubt.log</pre>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">30 &#215; 50&#8202;m &#183; two robots &#183; a false belief, its attribution, and a report</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+
+</body>
+</html>

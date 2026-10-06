@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 250" font-family="Arial,Helvetica,sans-serif">
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<defs><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3373CC"/></marker><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E68026"/></marker></defs>
+<text x="16" y="26" font-size="15" fill="#111111" text-anchor="start" font-weight="bold">report(mover, picker, t1, t3)</text>
+<text x="16" y="45" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">a report the picker takes as news of the move</text>
+<rect x="70" y="100" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#C8102E" stroke-width="2.6"/>
+<text x="110.0" y="122.0" text-anchor="middle" font-size="13" fill="#111111">ρ</text>
+<rect x="290" y="100" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#111111" stroke-width="1.2"/>
+<text x="330.0" y="122.0" text-anchor="middle" font-size="13" fill="#111111">μ</text>
+<line x1="152" y1="117" x2="288" y2="117" stroke="#3373CC" stroke-width="2.2"/>
+<polygon points="288,117 278.1,121.7 278.1,112.3" fill="#3373CC"/>
+<text x="220.0" y="109.0" font-size="12" fill="#3373CC" text-anchor="middle" font-weight="bold">picker</text>
+<path d="M318,100 C304,60 356,60 342,100" fill="none" stroke="#3373CC" stroke-width="2"/>
+<polygon points="342,100 340.8,89.1 349.7,92.1" fill="#3373CC"/>
+<text x="110" y="152" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">pre: crate(t3) ∧</text>
+<text x="110" y="167" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">B_mover B_picker crate(t1)</text>
+<text x="330" y="152" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">pre: crate(t1), post: crate(t3)</text>
+<text x="16" y="196" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">The mover sees the report as it is. The picker relates it to the move μ,</text>
+<text x="16" y="214" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">applied to the world it believes, where the crate is still in t1: afterwards</text>
+<text x="16" y="232" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">it believes the crate in t3, and every world keeps a successor.</text>
+</svg>
