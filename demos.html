@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The seventeen domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The eighteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -531,6 +531,13 @@ sup.cite a:hover{text-decoration:underline}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>false-belief</summary>
+            <div class="nav-sub">
+          <a href="demos.html#false-belief">All false-belief demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -555,6 +562,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
           <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -865,6 +873,45 @@ sup.cite a:hover{text-decoration:underline}
             <span>S5</span><span>common knowledge</span>
             <span>E<sup>4</sup>, then refused</span>
             <span>arrivals 0.40&#8202;s apart</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── false-belief -->
+    <div class="dgroup" id="false-belief">
+      <p class="sec-label">Domain</p>
+      <h3>false-belief &#183; a crate moved while one robot was away</h3>
+      <p class="about">
+        The picker stores a crate and goes to charge out of sight of the bays;
+        the mover carries the crate to another bay. The relocation is an event
+        model in which the picker either takes the move for nothing having
+        moved, and so believes something false, or allows it, and is uncertain.
+        <span class="mono-inline">fetch</span> requires the picker to believe
+        the crate is there, and the report from the mover requires
+        \(B_{mover}B_{picker}\,\mathit{crate}(t_1)\). The reachable frame is
+        \(\mathrm{KD45}_n\). Three floors recorded, two lines apart; the setting
+        follows the Sally-Anne false-belief task.
+      </p>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/false_belief.jpg"
+          alt="RViz and Gazebo as the picker reaches the mouth of an empty bay" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="false_belief.html">A false belief on a warehouse floor</a></h5>
+          <p>
+            After the move the picker believes the crate is where it left it, and
+            the mover believes it believes so. Without a radio the planner finds
+            no policy, since finding the bay empty would leave the picker
+            believing everything, and the picker, sent where it believes the
+            crate is, finds the bay empty. With a radio the mover reports the move
+            and the picker fetches from the right bay; a picker that doubts looks
+            first.
+          </p>
+          <div class="facts">
+            <span>KD45</span><span>a false belief</span>
+            <span>untold: t1 empty</span>
+            <span>told: fetched from t3</span>
           </div>
         </div>
       </div>

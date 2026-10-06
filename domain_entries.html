@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The seventeen domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The seventeen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The eighteen domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The eighteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The seventeen domains">
-<meta property="og:description" content="The seventeen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The eighteen domains">
+<meta property="og:description" content="The eighteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The seventeen domains">
-<meta name="twitter:description" content="The seventeen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The eighteen domains">
+<meta name="twitter:description" content="The eighteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The seventeen domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The eighteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -588,6 +588,13 @@ table.cat a:hover{border-bottom-color:var(--black)}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>false-belief</summary>
+            <div class="nav-sub">
+          <a href="demos.html#false-belief">All false-belief demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -612,6 +619,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
           <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
           <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -627,8 +635,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 17 domains</p>
-    <h2>The seventeen domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 18 domains</p>
+    <h2>The eighteen domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1185,6 +1193,36 @@ table.cat a:hover{border-bottom-color:var(--black)}
       (&lt;Kw. guest&gt;     (leak-at l2_suite))
     )
   )</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-false-belief">
+      <div class="dom-h">
+        <h4>false-belief</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 2 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>picker</i>, <i>mover</i></dd>
+        <dt>Objects</dt><dd><code>(:objects t1 t3 - bay)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty b">relocation</span><span class="ty b">report</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 1\), \(|W_d| = 1\) &#183; declared frame KD45</dd>
+        <dt>Grounded</dt><dd>13 atoms, 18 ground actions, goal of modal depth 0; the precondition of <code>fetch</code> is \(\mathit{crate}(b) \wedge B_{picker}\,\mathit{crate}(b)\), and that of <code>report</code> includes \(B_{mover}B_{picker}\,\mathit{crate}(t_1)\)</dd>
+        <dt>Solved</dt><dd>with consistent beliefs required: told, depth 4, 15 expansions; untold, no policy, space exhausted at depth 3; doubt, depth 4, 16 expansions</dd>
+        <dt>Stated in</dt><dd><a href="false_belief.html">A false belief on a warehouse floor</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (crate-at ?b - bay)
+    (at-dock ?i - agent)
+    (fetches ?i - agent)
+    (relocates ?i - agent)
+    (radio)
+    (doubts)
+    (charging-due)
+    (relocation-due)
+    (fetched)
+  )
+
+(:goal (fetched))</pre>
       </details>
     </article>
     </div>
