@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 250" font-family="Arial,Helvetica,sans-serif">
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<text x="16" y="26" font-size="15" fill="#111111" text-anchor="start" font-weight="bold">signal(i, s)</text>
+<text x="16" y="45" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">announcement of K_i job(s), conditional observability</text>
+<line x1="172" y1="117" x2="286" y2="117" stroke="#E68026" stroke-width="2"/>
+<polygon points="288,117 277,111 277,123" fill="#E68026"/>
+<path d="M316,100 C296,57 364,57 344,98" fill="none" stroke="#E68026" stroke-width="2"/><polygon points="344,100 340,88 352,90" fill="#E68026"/>
+<rect x="90" y="100" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#C8102E" stroke-width="2.6"/>
+<text x="130.0" y="121" text-anchor="middle" font-family="Courier New,monospace" font-size="12" fill="#111111">σ</text>
+<rect x="290" y="100" width="80" height="34" rx="6" fill="#FAFAFA" stroke="#111111" stroke-width="1.2"/>
+<text x="330.0" y="121" text-anchor="middle" font-family="Courier New,monospace" font-size="12" fill="#111111">n</text>
+<text x="130" y="154" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">pre: at-view(i) ∧ K_i job(s)</text>
+<text x="330" y="154" font-size="11" fill="#5A5A5A" text-anchor="middle" font-weight="normal">pre: true</text>
+<text x="230" y="108" font-size="11" fill="#E68026" text-anchor="middle" font-weight="normal">j oblivious</text>
+<text x="16" y="200" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">At a viewpoint an agent is Fully: σ and n are apart, and with both robots</text>
+<text x="16" y="218" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">there the signal is public. Elsewhere it is Oblivious (the orange edges):</text>
+<text x="16" y="236" font-size="12" fill="#5A5A5A" text-anchor="start" font-weight="normal">it takes the signal for nothing having happened.</text>
+</svg>

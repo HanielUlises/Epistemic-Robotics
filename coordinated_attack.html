@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The coordinated attack on a warehouse floor &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Two robots must lift one load together, and the lift requires common knowledge of the stand. Four delivered radio messages reach E4 and the lift is refused; one beacon, seen from two viewpoints, reaches common knowledge in one update.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="The coordinated attack on a warehouse floor">
+<meta property="og:description" content="Four delivered messages reach E4, and the lift is refused. One beacon, seen from two viewpoints, reaches common knowledge.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/coordinated_attack.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/coordinated_attack.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Link card: The coordinated attack on a warehouse floor, over the Gazebo view of the lit beacon in bay t2.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/coordinated_attack.jpg">
+<meta name="twitter:title" content="The coordinated attack on a warehouse floor">
+<meta name="twitter:description" content="Four delivered messages reach E4, and the lift is refused. One beacon, seen from two viewpoints, reaches common knowledge.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="RViz and Gazebo during the coordinated attack runs.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/coordinated_attack.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The seventeen domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder open">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html" aria-current="page">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">Graph recovery and integration defects on a derived warehouse floor</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Common knowledge &#183; two agents &#183; 30 &#215; 50 m hall &#183; ROS 2</p>
+    <h2>The coordinated attack on a warehouse floor</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      Two robots must lift one load together, one under each end. A work order
+      names which of two stands, <span class="mono-inline">s1</span> or
+      <span class="mono-inline">s2</span>, and only <span class="mono-inline">south</span>
+      can read it; the racking block of the pass-through floor keeps the two
+      robots out of sight of each other. An end raised alone tips the load,
+      so each robot raises its end only if it knows the other raises the
+      other, and the weakest condition that settles both is common knowledge
+      of the stand. That is the precondition of <span class="mono-inline">lift</span>.
+    </p>
+    <p class="hero-p">
+      Two channels are available. A radio reaches either robot from anywhere
+      and can lose a message without anyone knowing that it did. A stack light
+      in the open bay is seen only from that bay's two mouths. Over the radio,
+      four messages, every one of them delivered, raise the depth of mutual
+      knowledge from \(E^0\) to \(E^4\), and the executor refuses the lift. The
+      beacon, seen by both robots from their viewpoints, gives common knowledge
+      in one update, and the two robots lift the load from a joint start with
+      their arrivals 0.40&#8202;s apart.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>Every message in the runs is delivered:</b> only delivery is designated,
+      and the argument is that delivery does not suffice. <b>The radio floor has
+      no policy for any number of messages,</b> which is proved below over the
+      event model; the planner proves it for one message per level of nesting.
+      <b>The positions of the robots are common knowledge</b> by the policy both
+      robots run, and are not learned. <b>The lift is drawn</b> by moving the
+      load in the simulator once both robots are under it.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">coordinated_attack_demo</span>, on the
+      floor of <span class="mono-inline">pass_through_demo</span>; policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, grounding by
+      plank, search by Aletheia. Full account in
+      <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse
+      Floor</a> (PDF): the event models, the proofs, the planning results, the
+      grounding on the floor, the runs and the defects found on the way.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUN -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Four messages and a refusal; one signal and a lift</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/coordinated_attack_poster.jpg">
+        <source src="media/coordinated_attack.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Left: RViz, what the robots know: a tile per robot on each stand, green
+        when that robot knows the order names it, the depth of mutual knowledge
+        beside the stand, a radio message as an arc over the block, and the
+        beacon with its two sight lines. Right: Gazebo, the world as it is.
+        Under both: the policy, or on the radio floor the protocol run in its
+        place, with the node being executed marked; the action in formal
+        notation; and what each robot knows, with the depth drawn as a ladder
+        from \(E^1\) to \(C\). Every caption is a line the runs wrote, placed at
+        the instant it was written; transits are sampled at up to 4&#215; and
+        the corner says when.
+      </figcaption>
+    </figure>
+
+    <h4>The radio floor</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>no policy for lifted, after 0.2&#8202;s: the search space is exhausted at depth 5</td><td>2 worlds, 2 designated</td></tr>
+        <tr><td>read-order(south, s1)</td><td>at the terminal after 12&#8202;s; the order names s1; e-here</td><td>2 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td>tell(south, north, s1)</td><td>&#8220;\(K_{south}\,\mathit{job}(s_1)\)&#8221; delivered; south cannot tell whether it was</td><td>4 / 1 &#183; \(E^1\)</td></tr>
+        <tr><td>ack(north, south, s1)</td><td>&#8220;\(K_{north}K_{south}\,\mathit{job}(s_1)\)&#8221; delivered</td><td>6 / 1 &#183; \(E^2\)</td></tr>
+        <tr><td>ack2(south, north, s1)</td><td>delivered</td><td>8 / 1 &#183; \(E^3\)</td></tr>
+        <tr><td>ack3(north, south, s1)</td><td>delivered</td><td>10 / 1 &#183; \(E^4\)</td></tr>
+        <tr><td>lift(s1)</td><td><b>knowledge requirement does not hold: (C (south north) job_s1)</b>; neither robot moves</td><td>refused</td></tr>
+      </tbody>
+    </table>
+
+    <h4>The beacon floor</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>a policy of depth 5 with 2 leaves, in 0.2&#8202;s; it does not use the radio</td><td>2 worlds, 2 designated</td></tr>
+        <tr><td>go-view(north)</td><td>at its viewpoint after 17&#8202;s; the beacon in line of sight, 3.5&#8202;m</td><td>2 / 2</td></tr>
+        <tr><td>read-order(south, s1)</td><td>at the terminal after 12&#8202;s; the order names s1; e-here</td><td>2 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td>go-view(south)</td><td>at its viewpoint after 47&#8202;s; the beacon in line of sight, 3.5&#8202;m</td><td>2 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td>signal(south, s1)</td><td>the s1 tier lit; in line of sight of it: south (3.5&#8202;m), north (3.5&#8202;m)</td><td>3 / 1 &#183; <b>\(C\)</b></td></tr>
+        <tr><td>lift(s1)</td><td>both at their mouths of s1, out of sight of each other; one start for both; under the load after 13.5 and 13.1&#8202;s: starts 0.00&#8202;s apart, arrivals 0.40&#8202;s apart; load raised 0.12&#8202;m</td><td>1 world</td></tr>
+      </tbody>
+    </table>
+    <p class="note">
+      With the order naming s2, run headless, the read gave e-elsewhere, the
+      s2 tier was lit, \(C\,\mathit{job}(s_2)\) held, and the load on s2 came up
+      with the arrivals 0.60&#8202;s apart.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Three findings, each a statement about the model the executor kept</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#ca-radio-sec">
+        <span class="pt-card-img"><img src="media/thumbs/coordinated_attack_card_chain.jpg" alt="The Kripke model after four delivered messages: ten worlds, and a chain of five steps to a world where the order names the other stand" loading="lazy"></span>
+        <span class="pt-card-k">The radio</span>
+        <span class="pt-card-h">One level per message, and never more</span>
+        <span class="pt-card-p">A lossy message adds at most one level of mutual knowledge, delivered or not. Four delivered messages reached \(E^4\); no number of them reaches \(C\).</span>
+        <span class="pt-card-go">Read the proof <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#ca-beacon-sec">
+        <span class="pt-card-img"><img src="media/thumbs/coordinated_attack_card_beacon.jpg" alt="The beacon in bay t2, its lower tier lit, seen from behind south's viewpoint" loading="lazy"></span>
+        <span class="pt-card-k">The beacon</span>
+        <span class="pt-card-h">Common knowledge in one update</span>
+        <span class="pt-card-p">A signal seen from viewpoints that are themselves common knowledge is a public announcement. Seen by one robot, it gives the other nothing.</span>
+        <span class="pt-card-go">See the two cases <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#ca-floor-sec">
+        <span class="pt-card-img"><img src="media/thumbs/coordinated_attack_card_lift.jpg" alt="Looking down into bay t1: the load between the two robots, one at each end" loading="lazy"></span>
+        <span class="pt-card-k">The floor</span>
+        <span class="pt-card-h">Under one load, and blind to each other</span>
+        <span class="pt-card-p">Three metres apart with the load between them, the robots cannot see each other, so meeting at the stand gives nothing the start did not.</span>
+        <span class="pt-card-go">Check the geometry <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#ca-problem-sec">The problem</a>
+      <a href="#ca-events-sec">Event models</a>
+      <a href="#ca-radio-sec">The radio</a>
+      <a href="#ca-model-sec">The model, step by step</a>
+      <a href="#ca-beacon-sec">The beacon</a>
+      <a href="#ca-planning-sec">Planning</a>
+      <a href="#ca-floor-sec">The floor</a>
+      <a href="#ca-defects-sec">Defects</a>
+      <a href="#ca-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE PROBLEM -->
+<section id="ca-problem-sec">
+  <div class="container">
+    <p class="sec-label">The problem</p>
+    <h3>Two worlds, and a precondition on the group</h3>
+
+    <p>
+      Agents \(G = \{\mathit{south}, \mathit{north}\}\) and stands
+      \(s_1, s_2\). The initial model has two worlds, both designated, with
+      \(\mathit{job}(s_k)\) true in \(w_k\) only and both relations total:
+    </p>
+    <div class="math-block">
+      \[ s \models C_G\,\big(\mathit{job}(s_1) \oplus \mathit{job}(s_2)\big),
+         \qquad s \models \neg\,\mathit{Kw}_a\,\mathit{job}(s_k)\ \text{ for every } a, k,
+         \qquad \mathit{pre}(\mathit{lift}(s)) = \mathit{job}(s) \wedge C_G\,\mathit{job}(s). \]
+    </div>
+    <p>
+      With \(E_G\varphi\) for &#8220;both robots know \(\varphi\)&#8221;,
+      \(E_G^{k+1}\varphi = E_G E_G^k\varphi\), and \(C_G\varphi\) for every
+      \(E_G^k\varphi\) at once<sup class="cite"><a href="#ref-fhmv">[4]</a></sup>, the precondition is the coordinated attack of
+      Gray<sup class="cite"><a href="#ref-gray">[5]</a></sup> and of Akkoyunlu,
+      Ekanadham and Huber<sup class="cite"><a href="#ref-akk">[1]</a></sup> in
+      the form Halpern and Moses gave it<sup class="cite"><a href="#ref-hm">[6]</a></sup>:
+      an action that must be taken by both agents or by neither is taken only
+      where its being taken is common knowledge. The domain states that as a
+      precondition. It does not assume the other half of their result, that a
+      lossy channel cannot produce common knowledge; it is derived below for the
+      event model the domain gives a message.
+    </p>
+
+    <table class="data ca-left">
+      <thead><tr><th>action</th><th>type</th><th>events</th><th>observers</th></tr></thead>
+      <tbody>
+        <tr><td>read-order(i, s)</td><td>semi-private sensing</td><td>e-here: job(s) &#183; e-elsewhere: &#172;job(s); both &#172;at-view(i)</td><td>i fully, the other partially</td></tr>
+        <tr><td>tell, ack, ack2, ack3 (i, j, s)</td><td>lossy message</td><td>d, l: K<sub>i</sub>&#968;<sub>k</sub> &#8743; &#172;p<sub>k</sub>, post p<sub>k</sub> &#183; n: true</td><td>i sender, j receiver</td></tr>
+        <tr><td>go-view(i)</td><td>public ontic</td><td>beacon &#8743; &#172;at-view(i); post at-view(i)</td><td>everyone</td></tr>
+        <tr><td>signal(i, s)</td><td>conditional announcement</td><td>&#963;: at-view(i) &#8743; K<sub>i</sub> job(s) &#183; n: true</td><td>at a viewpoint fully, elsewhere obliviously</td></tr>
+        <tr><td>lift(s)</td><td>public ontic</td><td>job(s) &#8743; C<sub>G</sub> job(s); post lifted</td><td>everyone</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The two instances, the radio floor and the beacon floor, differ in one
+      line: whether \(\mathit{beacon}\) is common knowledge. \(\psi_1 = \mathit{job}(s)\)
+      and \(\psi_{k+1} = K_i\psi_k\), with sender and receiver alternating: each
+      message says that its sender knows what the last one said.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ EVENT MODELS -->
+<section id="ca-events-sec">
+  <div class="container">
+    <p class="sec-label">The epistemic actions</p>
+    <h3>Four event models</h3>
+    <p>
+      Each action is an event model<sup class="cite"><a href="#ref-bms">[2]</a><a href="#ref-del">[7]</a></sup>: events with preconditions and
+      postconditions, and for each observability type a relation saying which
+      events an agent of that type cannot tell apart. The product update
+      \(M \otimes E\) pairs a world with every event whose precondition holds
+      there, and relates two pairs for an agent when it could not tell the
+      worlds apart <i>and</i> cannot tell the events apart. The lossy message is
+      not in the intermediate action-type library and is given in a library of
+      its own; the signal's audience is conditional, decided at each world by
+      whether the agent stands at a viewpoint.
+    </p>
+    <div class="ev-grid">
+      <figure><img src="media/coordinated-attack-event-lossy.svg" alt="The lossy message: events d, l and n; the sender relates d and l, the receiver relates l and n; only d is designated"></figure>
+      <figure><img src="media/coordinated-attack-event-signal.svg" alt="The signal: events sigma and n; an agent away from a viewpoint maps sigma onto n"></figure>
+      <figure><img src="media/coordinated-attack-event-sensing.svg" alt="read-order: two designated events, related for the robot that does not read"></figure>
+      <figure><img src="media/coordinated-attack-event-lift.svg" alt="lift: one public event whose precondition is common knowledge of the stand"></figure>
+    </div>
+    <p>
+      The third event of the message is what lets the sender know that it sent.
+      A message with only <span class="mono-inline">d</span> and
+      <span class="mono-inline">n</span>, the sender relating them, also keeps
+      the model S5, but its sender considers possible a world in which it never
+      transmitted. With <span class="mono-inline">l</span> the sender's class at
+      the delivered copy is \(\{d, l\}\), at both of which the send log
+      \(p\) holds.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE RADIO -->
+<section id="ca-radio-sec">
+  <div class="container">
+    <p class="sec-label">The radio</p>
+    <h3>At most one level of mutual knowledge per message</h3>
+
+    <p>
+      Let \(\mathrm{dist}_M(\varphi)\) be the length of the shortest path, over
+      the union of the two relations, from a designated world to a world where
+      \(\varphi\) fails, and \(\mathrm{depth}_M(\varphi) = \mathrm{dist}_M(\varphi) - 1\).
+      Because every relation is reflexive, a path of length at most \(k\)
+      extends to one of length exactly \(k\), and so
+    </p>
+    <div class="math-block">
+      \[ M \models E_G^k\varphi \iff k \leq \mathrm{depth}_M(\varphi),
+         \qquad
+         M \models C_G\varphi \iff \mathrm{dist}_M(\varphi) = \infty. \]
+    </div>
+    <p>
+      The depth is therefore read off a breadth-first walk from the designated
+      worlds, and the walk gives a witness: the chain of agents along the
+      shortest path to a counterexample. The run's knowledge view and the
+      offline trace both compute it this way.
+    </p>
+
+    <h4>Proposition 1 (S5 is preserved)</h4>
+    <p>
+      If \(M\) is S5, so is \(M \otimes L(i,j,\pi,p)\). Each relation of the
+      product is the restriction, to the pairs that exist, of the product of an
+      equivalence on worlds with an equivalence on events.
+    </p>
+
+    <h4>Proposition 2 (one level per message)</h4>
+    <p>
+      Let \(M\) be S5 with \(M \models \varphi\), \(\varphi\) not mention
+      \(p\), and \(\pi\) be preserved along \(R_i\), as \(K_i\psi \wedge \neg p\)
+      is when \(p\) is false throughout. If \(L = L(i,j,\pi,p)\) is applicable,
+    </p>
+    <div class="math-block">
+      \[ \mathrm{dist}_{M \otimes L}(\varphi) \;\leq\; \mathrm{dist}_M(\varphi) + 1 . \]
+    </div>
+    <p>
+      <i>Proof.</i> Take a shortest path
+      \(w = v_0 \xrightarrow{a_1} v_1 \cdots \xrightarrow{a_m} v_m\) from a
+      designated \(w\) to \(v_m \not\models \varphi\). Since
+      \(\mathit{pre}(n) = \top\) and \((n,n)\) is in both relations, the
+      \(n\)-copies \((v,n)\) form a copy of \(M\), and \((v_m,n)\) still
+      falsifies \(\varphi\). If \(a_1 = j\), then
+      \((v_0,d) \mathrel{R'_i} (v_0,l) \mathrel{R'_j} (v_1,n)\); if \(a_1 = i\),
+      then \(\pi\) holds at \(v_1\) and
+      \((v_0,d) \mathrel{R'_i} (v_1,l) \mathrel{R'_j} (v_1,n)\). Either way two
+      steps reach \((v_1,n)\), and \(m-1\) more along the copy reach
+      \((v_m,n)\): a path of length \(m+1\). &#8718;
+    </p>
+    <p>
+      The witness path runs through the lost event and the event in which
+      nothing was sent, and never uses the fact that the message was delivered.
+      The bound is the same delivered or lost, and it is attained in the run,
+      where every message was delivered.
+    </p>
+
+    <h4>Corollary (no finite exchange gives common knowledge)</h4>
+    <p>
+      If \(M \not\models C_G\varphi\), no finite sequence of lossy messages
+      makes \(C_G\varphi\) hold, and each adds at most one to the depth. On the
+      radio floor every execution is <span class="mono-inline">read-order</span>
+      followed by messages; after the read, north still relates the actual world
+      to the other stand's, so \(\mathrm{dist} = 1\), and it stays finite after
+      every message. <b>No sequence of actions of any length makes
+      <span class="mono-inline">lift</span> applicable, and no policy for
+      lifted exists, of any depth.</b> This is stronger than what the search
+      shows: messages that may be repeated give a space no search exhausts, so
+      the domain lets each go out once, and the planner proves the bounded case.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/coordinated-attack-ladder.svg" width="100%"
+           alt="The depth of mutual knowledge after each action: E0 after the read, E1 to E4 after the four messages, the lift refused; on the beacon floor, C after one signal">
+      <figcaption>
+        The depth of \(\mathit{job}(s_1)\) after every action, as the
+        epistemic state's model gave it during the runs: one level per message
+        on the radio floor, the bound of Proposition 2 attained, and the lift
+        refused at \(E^4\); one signal on the beacon floor, from \(E^0\) to
+        \(C\).
+      </figcaption>
+    </figure>
+
+    <figure class="demo-figure">
+      <img src="media/coordinated-attack-chain.svg" width="100%"
+           alt="The model after four delivered messages: ten worlds, the actual one DDDD, and a chain DDDL, DDL, DL, L, then the world where nothing was sent and the order names s2">
+      <figcaption>
+        The model after the four messages. Each world is labelled by what
+        happened to each message along its history. The thick chain from the
+        actual world undoes one message per step: north, which sent
+        <span class="mono-inline">ack3</span>, cannot exclude that it was lost;
+        in that world south cannot exclude that <span class="mono-inline">ack2</span>
+        was lost; and so on until a world in which nothing was sent and north
+        cannot exclude <span class="mono-inline">s2</span>. Length five, so
+        \(E^4\) holds and \(E^5\) does not. A fifth message would add one step
+        at the front.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ STEPPER -->
+<section id="ca-model-sec">
+  <div class="container">
+    <p class="sec-label">The model, action by action</p>
+    <h3>Who can tell which worlds apart</h3>
+    <p>
+      The figure steps through the model after every action, for the radio
+      protocol, the beacon branch the recorded run took, and the beacon lit
+      with north at no viewpoint. Worlds are placed by their distance from the
+      designated world, so the chain that bounds the depth reads left to right.
+      A red ring marks a designated world; a line in a robot's colour joins two
+      worlds that robot cannot tell apart, and the chain is drawn thick. Only the
+      part of the model reachable from the designated world is drawn: nothing
+      else bears on what anyone knows.
+    </p>
+    <div class="fig" id="ca-kripke">
+      <div class="fig-head">
+        <span class="fig-title">The Kripke model after each action</span>
+        <span class="ctrls">
+          <span class="seg">
+            <button class="btn" data-seq="radio">radio</button>
+            <button class="btn" data-seq="beacon">beacon</button>
+            <button class="btn" data-seq="alone">beacon, alone</button>
+          </span>
+          <button class="btn ca-prev">&#8592; Prev</button>
+          <button class="btn primary ca-next">Next &#8594;</button>
+          <span class="kstep"></span>
+        </span>
+      </div>
+      <div class="fig-body">
+        <div class="theatre pt-theatre">
+          <svg viewBox="0 0 560 330" role="img" aria-label="Kripke model"></svg>
+          <div class="panel"><h5>AT THE DESIGNATED WORLD</h5><div class="ca-info"></div></div>
+        </div>
+      </div>
+      <div class="fig-cap pt-cap ca-cap"></div>
+    </div>
+    <p class="note">
+      Computed by the product update of
+      <span class="mono-inline">tools/trace.py</span> from the tasks plank
+      grounds (<span class="mono-inline">tools/export_models.py</span>). The world
+      counts agree with what the epistemic state logged during the runs.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE BEACON -->
+<section id="ca-beacon-sec">
+  <div class="container">
+    <p class="sec-label">The beacon</p>
+    <h3>A public announcement, because the viewpoints are public</h3>
+
+    <h4>Proposition 3 (a signal seen from common viewpoints)</h4>
+    <p>
+      If \(\mathit{at\text{-}view}(a)\) holds at every world for both robots and
+      \(S(i, K_i\chi)\) is applicable, then \(M \otimes S \models C_G\chi\).
+      Every type is Fully, so a relation of the product never changes the
+      event; every world reachable from the designated \((w,\sigma)\) is some
+      \((v,\sigma)\), whose existence requires \(K_i\chi\) at \(v\), hence
+      \(\chi\). &#8718;
+    </p>
+    <h4>Proposition 4 (a signal seen by one robot)</h4>
+    <p>
+      If \(\mathit{at\text{-}view}(j)\) fails everywhere, \(j\) is Oblivious,
+      its class at \((w,\sigma)\) is \(\{(v,n) : w R_j v\}\), and the
+      \(n\)-copies carry the old valuation: \(j\) knows after the signal exactly
+      what it knew before. If it did not know \(\chi\), \(E_G\chi\) fails after
+      the signal. &#8718;
+    </p>
+    <p>
+      So the announcement is public only because each robot's view of the
+      beacon is itself common knowledge, and that is what the floor and the
+      domain supply together: the viewpoints are on the floor plan, and the move
+      to them is public. Lit with north at no viewpoint, the model has three
+      worlds, the depth stays at \(E^0\), and <span class="mono-inline">lift</span>
+      does not apply; the validator checks this case.
+    </p>
+
+    <figure class="demo-figure">
+      <img src="media/coordinated-attack-policy.svg" width="100%"
+           alt="The policy: north to its viewpoint, south reads the order, then on each outcome south to its viewpoint, the signal for that stand, and the lift">
+      <figcaption>
+        The policy the planner returned. Before the branch both leaves prescribe
+        the same actions, and after it the branch is announced on the beacon,
+        so neither robot needs to know which branch it is in to execute its
+        part. The radio is in the domain and is not used.
+      </figcaption>
+    </figure>
+
+    <figure class="demo-figure">
+      <img src="media/coordinated-attack-frame-signal.jpg" width="100%"
+           alt="A frame of the film at the signal: RViz with the beacon lit and both sight lines bright, Gazebo with the lit tier, and the panel showing the announcement">
+      <figcaption>
+        The film at the signal. Both robots are at their viewpoints and the
+        <span class="mono-inline">s1</span> tier is lit; the signal node has
+        checked that every robot the model places at a viewpoint has the beacon
+        in line of sight, 3.5&#8202;m each, before lighting it.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ PLANNING -->
+<section id="ca-planning-sec">
+  <div class="container">
+    <p class="sec-label">Planning</p>
+    <h3>What the planner returns, and what it proves</h3>
+    <p>
+      The task is conditional epistemic planning in the sense of Bolander and
+      Andersen<sup class="cite"><a href="#ref-ba">[3]</a></sup>: a policy over
+      pointed models, branching on sensing outcomes. plank grounds each floor
+      into 12 atoms and 28 ground actions, with the intermediate and the lossy
+      libraries together.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>instance</th><th>result</th><th>measure</th></tr></thead>
+      <tbody>
+        <tr><td>beacon floor</td><td>policy, depth 5, 2 leaves</td><td>115 expansions, 154 generated, 0.2&#8202;s</td></tr>
+        <tr><td>radio floor, one message per level</td><td>no policy</td><td>space exhausted at depth 5</td></tr>
+        <tr><td>radio floor, messages repeatable</td><td>no answer</td><td>searched to depth 8; timed out at 9 in 240&#8202;s</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The exhaustion proves the bounded statement, the timeout proves nothing,
+      and the corollary above proves the unbounded one. The three agree.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FLOOR -->
+<section id="ca-floor-sec">
+  <div class="container">
+    <p class="sec-label">The floor</p>
+    <h3>The pass-through floor, read for a different question</h3>
+    <figure class="demo-figure">
+      <img src="media/coordinated-attack-floor.png" style="max-width:520px;margin:0 auto;display:block"
+           alt="The floor plan: the racking block across the hall, loads in t1 and t3 as stands s1 and s2, the beacon in t2 with its two sight lines, the terminal on the west wall, and the two robots">
+      <figcaption>
+        The floor plan both robots hold. The loads in t1 and t3 are the stands;
+        the squares beside them are where each robot stands under its end. The
+        beacon is in t2, and the dashed lines are its sight lines from the two
+        viewpoints. Everything here is common knowledge; the uncertainty is in
+        the work order.
+      </figcaption>
+    </figure>
+    <p>
+      The domain makes four claims about this geometry, and the floor generator
+      checks each on the plan, by casting rays over the occupied cells, before
+      it writes anything.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>claim</th><th>what depends on it</th></tr></thead>
+      <tbody>
+        <tr><td>from where they start, neither robot sees the other or the beacon</td><td>the radio is the only channel on the radio floor</td></tr>
+        <tr><td>from its viewpoint, each robot sees the beacon</td><td>the observability condition of signal</td></tr>
+        <tr><td>under the two ends of one load, the robots do not see each other</td><td>meeting at the stand does not replace the beacon</td></tr>
+        <tr><td>every place a robot is sent is reachable over the inflated plan</td><td>a correct policy is drivable</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Each action is performed by a ROS 2 node, and the model is advanced by the
+      ePlanSys epistemic state with Aletheia's own product update. The executor
+      checks each action's knowledge requirement against that model before
+      dispatching it; for <span class="mono-inline">lift(s1)</span> the
+      requirement is <span class="mono-inline">(C (south north) job_s1)</span>.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>action</th><th>performed by</th></tr></thead>
+      <tbody>
+        <tr><td>read-order</td><td>south drives to the terminal; the outcome is the work order, the warehouse's record</td></tr>
+        <tr><td>messages</td><td>put on the receiver's inbox and awaited, which checks that the designated event occurred; nothing tells the sender</td></tr>
+        <tr><td>go-view</td><td>drives to the mouth of t2 and checks the beacon is in line of sight from where it stopped</td></tr>
+        <tr><td>signal</td><td>lights the tier for the stand, and refuses if any robot the model places at a viewpoint cannot see the beacon</td></tr>
+        <tr><td>lift</td><td>drives both robots to their mouths, fixes one start, drives each under its end, and raises the load</td></tr>
+      </tbody>
+    </table>
+    <figure class="demo-figure">
+      <img src="media/coordinated-attack-frame-lift.jpg" width="100%"
+           alt="A frame of the film during the lift: RViz with both robots at the ends of s1 and the depth C, Gazebo looking down into the bay with the load between the two robots">
+      <figcaption>
+        The lift, seen from above the bay. The two robots started at the same
+        instant, out of sight of each other, and arrived under their ends
+        0.40&#8202;s apart.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEFECTS -->
+<section id="ca-defects-sec">
+  <div class="container">
+    <p class="sec-label">Defects</p>
+    <h3>Found on the way</h3>
+    <p>
+      <b>One event named twice is one event.</b> The lost event was first given
+      by passing the delivered one a second time. plank keys an event model by
+      event name, the two became one, the loss vanished from the model, and the
+      radio floor was reported unsolvable at depth three for the wrong reason.
+      Each message now has a lost event of its own.
+    </p>
+    <p>
+      <b>A signal from the terminal.</b> Before reading the order required the
+      reader to be away from its viewpoint, the policy sent south to its
+      viewpoint, then to the terminal, and had it signal from there. The model
+      placed south at its viewpoint; the line-of-sight check read
+      <span class="mono-inline">south no, north yes</span>. The domain now
+      orders the two, and the signal node refuses whenever the model and the
+      floor disagree about who sees the beacon.
+    </p>
+    <p>
+      <b>Teardown.</b> After the mission reports its result, the action nodes
+      exit on signal 11 as the launch shuts down. The result is logged first,
+      and the cause has not been traced.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ LIMITS -->
+<section>
+  <div class="container">
+    <p class="sec-label">Limits</p>
+    <h3>What this does not show</h3>
+    <ul style="margin:0 0 0 1.2rem">
+      <li>A lost message. Every message in the runs arrived; the proposition is
+        what says it would not have mattered.</li>
+      <li>Positions learned over the radio. Making the move to a viewpoint
+        public is what puts the observability of the signal in common
+        knowledge; a domain in which positions had to be learned would lose
+        Proposition 3.</li>
+      <li>Coordination with a bounded probability of failure, which a lossy
+        channel does allow, and which would trade the precondition for a
+        risk.</li>
+      <li>A physical lift. The load is moved by the simulator once both robots
+        are under it.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<section id="ca-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-akk">E. A. Akkoyunlu, K. Ekanadham and R. V. Huber. Some constraints and tradeoffs in the design of network communications. <i>Proceedings of the 5th ACM Symposium on Operating Systems Principles</i>, 67&#8211;74, 1975.</li>
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK VII</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-fhmv">R. Fagin, J. Y. Halpern, Y. Moses and M. Y. Vardi. <i>Reasoning About Knowledge</i>. MIT Press, 1995.</li>
+      <li id="ref-gray">J. Gray. Notes on data base operating systems. In <i>Operating Systems: An Advanced Course</i>, LNCS 60, 393&#8211;481. Springer, 1978.</li>
+      <li id="ref-hm">J. Y. Halpern and Y. Moses. Knowledge and common knowledge in a distributed environment. <i>Journal of the ACM</i> 37(3):549&#8211;587, 1990.</li>
+      <li id="ref-del">H. van Ditmarsch, W. van der Hoek and B. Kooi. <i>Dynamic Epistemic Logic</i>. Springer, 2007.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+    <pre class="code">ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=beacon
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2
+bash tools/validate.sh                                       <span class="c"># four checks, no simulator</span>
+bash tools/record_demo.sh radio  s1 /tmp/raw_radio.mkv  /tmp/run_radio.log
+bash tools/record_demo.sh beacon s1 /tmp/raw_beacon.mkv /tmp/run_beacon.log
+python3 tools/make_video.py --radio  /tmp/raw_radio.mkv  /tmp/run_radio.log  /tmp/raw_radio_policy.json \
+                            --beacon /tmp/raw_beacon.mkv /tmp/run_beacon.log /tmp/raw_beacon_policy.json \
+                            --out /tmp/coordinated_attack.mp4</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">30 &#215; 50&#8202;m &#183; two robots &#183; E<sup>4</sup> over the radio, C from one beacon</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+
+<script>
+const CA_MODELS = {"radio":[{"action":"initial","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"read-order_south_s1","outcome":"e-here","size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"tell_south_north_s1","outcome":null,"size":4,"worlds":[{"id":"u0","job":"s1","code":"D","des":true},{"id":"u1","job":"s1","code":"·","des":false},{"id":"u2","job":"s2","code":"·","des":false},{"id":"u3","job":"s1","code":"L","des":false}],"rel":{"south":[["u0","u3"],["u3","u0"]],"north":[["u1","u2"],["u1","u3"],["u2","u1"],["u2","u3"],["u3","u1"],["u3","u2"]]},"stand":"s1","depth":1,"chain":[["u0","south","u3"],["u3","north","u2"]],"knows":{"south":true,"north":true}},{"action":"ack_north_south_s1","outcome":null,"size":6,"worlds":[{"id":"u0","job":"s1","code":"DD","des":true},{"id":"u1","job":"s1","code":"··","des":false},{"id":"u2","job":"s1","code":"D·","des":false},{"id":"u3","job":"s2","code":"··","des":false},{"id":"u4","job":"s1","code":"L·","des":false},{"id":"u5","job":"s1","code":"DL","des":false}],"rel":{"south":[["u2","u4"],["u2","u5"],["u4","u2"],["u4","u5"],["u5","u2"],["u5","u4"]],"north":[["u0","u5"],["u1","u3"],["u1","u4"],["u3","u1"],["u3","u4"],["u4","u1"],["u4","u3"],["u5","u0"]]},"stand":"s1","depth":2,"chain":[["u0","north","u5"],["u5","south","u4"],["u4","north","u3"]],"knows":{"south":true,"north":true}},{"action":"ack2_south_north_s1","outcome":null,"size":8,"worlds":[{"id":"u0","job":"s1","code":"DDD","des":true},{"id":"u1","job":"s1","code":"···","des":false},{"id":"u2","job":"s1","code":"D··","des":false},{"id":"u3","job":"s2","code":"···","des":false},{"id":"u4","job":"s1","code":"DD·","des":false},{"id":"u5","job":"s1","code":"L··","des":false},{"id":"u6","job":"s1","code":"DL·","des":false},{"id":"u7","job":"s1","code":"DDL","des":false}],"rel":{"south":[["u0","u7"],["u2","u5"],["u2","u6"],["u5","u2"],["u5","u6"],["u6","u2"],["u6","u5"],["u7","u0"]],"north":[["u1","u3"],["u1","u5"],["u3","u1"],["u3","u5"],["u4","u6"],["u4","u7"],["u5","u1"],["u5","u3"],["u6","u4"],["u6","u7"],["u7","u4"],["u7","u6"]]},"stand":"s1","depth":3,"chain":[["u0","south","u7"],["u7","north","u6"],["u6","south","u5"],["u5","north","u3"]],"knows":{"south":true,"north":true}},{"action":"ack3_north_south_s1","outcome":null,"size":10,"worlds":[{"id":"u0","job":"s1","code":"DDDD","des":true},{"id":"u1","job":"s1","code":"····","des":false},{"id":"u2","job":"s1","code":"D···","des":false},{"id":"u3","job":"s2","code":"····","des":false},{"id":"u4","job":"s1","code":"DD··","des":false},{"id":"u5","job":"s1","code":"L···","des":false},{"id":"u6","job":"s1","code":"DDD·","des":false},{"id":"u7","job":"s1","code":"DL··","des":false},{"id":"u8","job":"s1","code":"DDL·","des":false},{"id":"u9","job":"s1","code":"DDDL","des":false}],"rel":{"south":[["u2","u5"],["u2","u7"],["u5","u2"],["u5","u7"],["u6","u8"],["u6","u9"],["u7","u2"],["u7","u5"],["u8","u6"],["u8","u9"],["u9","u6"],["u9","u8"]],"north":[["u0","u9"],["u1","u3"],["u1","u5"],["u3","u1"],["u3","u5"],["u4","u7"],["u4","u8"],["u5","u1"],["u5","u3"],["u7","u4"],["u7","u8"],["u8","u4"],["u8","u7"],["u9","u0"]]},"stand":"s1","depth":4,"chain":[["u0","north","u9"],["u9","south","u8"],["u8","north","u7"],["u7","south","u5"],["u5","north","u3"]],"knows":{"south":true,"north":true}},{"action":"lift_s1","refused":true}],"beacon":[{"action":"initial","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"go-view_north","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"read-order_south_s1","outcome":"e-here","size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"go-view_south","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"signal_south_s1","outcome":null,"size":3,"worlds":[{"id":"u0","job":"s1","code":"σ","des":true}],"rel":{"south":[],"north":[]},"stand":"s1","depth":"C","chain":[],"knows":{"south":true,"north":true}},{"action":"lift_s1","outcome":null,"size":1,"worlds":[{"id":"u0","job":"s1","code":"σ","des":true}],"rel":{"south":[],"north":[]},"stand":"s1","depth":"C","chain":[],"knows":{"south":true,"north":true}}],"alone":[{"action":"initial","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"read-order_south_s1","outcome":"e-here","size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"go-view_south","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"signal_south_s1","outcome":null,"size":3,"worlds":[{"id":"u0","job":"s1","code":"σ","des":true},{"id":"u1","job":"s1","code":"·","des":false},{"id":"u2","job":"s2","code":"·","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u0","u2"],["u1","u2"],["u2","u1"]]},"stand":"s1","depth":0,"chain":[["u0","north","u2"]],"knows":{"south":true,"north":false}}]};
+/* The Kripke model after every action of three sequences, computed by the
+   product update of coordinated_attack_demo/tools/trace.py from the tasks plank
+   grounds (tools/export_models.py). Only the part reachable from the
+   designated world is kept. The world counts agree with what the epistemic
+   state logged during the runs. */
+const CA_COL = {south:'#3373CC', north:'#E68026'};
+const CA_NOTE = {
+  'initial': 'M<sub>0</sub>: one world per stand, both designated, both relations total. That the order names exactly one stand is common knowledge; which, nobody knows.',
+  'read-order_south_s1': 'Semi-private sensing. south tells e-here from e-elsewhere; north relates them, so it learns that the order was read and not what it says. K<sub>south</sub> job(s<sub>1</sub>), and depth E<sup>0</sup>: north still considers s<sub>2</sub>.',
+  'tell_south_north_s1': 'The first message, delivered. north now knows; south cannot tell delivered from lost, and in the lost copy north knows nothing new. Depth E<sup>1</sup>: the chain is south, then north.',
+  'ack_north_south_s1': 'The acknowledgement, delivered. south now knows that north knows; north cannot tell whether its acknowledgement arrived. Depth E<sup>2</sup>, and two more worlds.',
+  'ack2_south_north_s1': 'Delivered. Depth E<sup>3</sup>. Each message adds the copy in which it was lost and the copy in which it was never sent.',
+  'ack3_north_south_s1': 'Delivered. Depth E<sup>4</sup>, ten worlds. The chain from the actual world undoes one message per step and ends where nothing was sent and north cannot exclude s<sub>2</sub>.',
+  'lift_s1:refused': 'lift(s<sub>1</sub>) requires C<sub>{south,north}</sub> job(s<sub>1</sub>). The chain above reaches &#172;job(s<sub>1</sub>), so it fails, and the executor refuses the action.',
+  'go-view_north': 'Public ontic: at-view(north) becomes common knowledge. Nothing about the order changes.',
+  'go-view_south': 'Public ontic: at-view(south) becomes common knowledge. Both viewpoints are now occupied, and both robots know it.',
+  'signal_south_s1': 'Both robots at their viewpoints: both types are Fully, and the signal is a public announcement of K<sub>south</sub> job(s<sub>1</sub>). One world is reachable: C<sub>{south,north}</sub> job(s<sub>1</sub>).',
+  'signal_south_s1:alone': 'north is at no viewpoint, so it is oblivious and takes the signal for nothing having happened. It knows what it knew before: the depth stays E<sup>0</sup>, and lift does not apply.',
+  'lift_s1': 'Public ontic, and its precondition holds. The load is lifted; the model has one world.',
+};
+function caPretty(a){ if(a==='initial') return 'initial model'; const p=a.split('_'); return p[0]+'('+p.slice(1).join(', ')+')'; }
+
+function caFigure(root){
+  const svg=root.querySelector('svg'), info=root.querySelector('.ca-info'),
+        cap=root.querySelector('.ca-cap'), cnt=root.querySelector('.kstep');
+  let seq='radio', step=0;
+  const NS='http://www.w3.org/2000/svg';
+  function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;return e;}
+  function model(i){
+    const steps=CA_MODELS[seq]; let k=i;
+    while(k>0 && steps[k].refused!==undefined && !steps[k].worlds) k--;
+    return steps[k];
+  }
+  function layout(s){
+    const adj={}; s.worlds.forEach(w=>adj[w.id]=new Set());
+    ['south','north'].forEach(a=>(s.rel[a]||[]).forEach(([u,v])=>{adj[u].add(v);adj[v].add(u);}));
+    const dist={}, q=[]; s.worlds.filter(w=>w.des).forEach(w=>{dist[w.id]=0;q.push(w.id);});
+    while(q.length){const u=q.shift(); adj[u].forEach(v=>{if(dist[v]===undefined){dist[v]=dist[u]+1;q.push(v);}});}
+    const cols={}; s.worlds.forEach(w=>{const d=dist[w.id]||0;(cols[d]=cols[d]||[]).push(w.id);});
+    const maxd=Math.max(...Object.keys(cols).map(Number)), colW=maxd?Math.min(96,470/maxd):0, pos={};
+    Object.entries(cols).forEach(([d,ids])=>{
+      // The chain's world first in each column, so the chain runs straight.
+      const onChain=new Set(s.chain.flatMap(c=>[c[0],c[2]]));
+      ids.sort((a,b)=>(onChain.has(b)-onChain.has(a)));
+      ids.forEach((id,i)=>{pos[id]=[45+Number(d)*colW, 128+i*82];});
+    });
+    return pos;
+  }
+  function draw(){
+    const steps=CA_MODELS[seq], cur=steps[step], s=model(step), refused=cur.refused===true;
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    const pos=layout(s);
+    const chain=new Set(s.chain.flatMap(([a,ag,b])=>[a+'|'+b+'|'+ag, b+'|'+a+'|'+ag]));
+    const off={south:-4,north:4};
+    ['south','north'].forEach(ag=>{
+      const seen=new Set();
+      (s.rel[ag]||[]).forEach(([u,v])=>{
+        const key=[u,v].sort().join('|'); if(seen.has(key)) return; seen.add(key);
+        const [x1,y1]=pos[u],[x2,y2]=pos[v],dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1;
+        const nx=-dy/L*off[ag], ny=dx/L*off[ag], thick=chain.has(u+'|'+v+'|'+ag);
+        svg.appendChild(el('line',{x1:x1+dx/L*24+nx,y1:y1+dy/L*24+ny,x2:x2-dx/L*24+nx,y2:y2-dy/L*24+ny,
+          stroke:CA_COL[ag],'stroke-width':thick?5:2,opacity:thick?1:.8}));
+      });
+    });
+    s.worlds.forEach(w=>{
+      const [x,y]=pos[w.id], other=s.stand && w.job!==s.stand;
+      svg.appendChild(el('circle',{cx:x,cy:y,r:24,fill:other?'#E4E4E4':(w.des?'#FFF4F5':'#FFFFFF'),
+        stroke:w.des?'#C8102E':'#8A8A8A','stroke-width':w.des?3:1.3}));
+      svg.appendChild(el('text',{x:x,y:y+1,'text-anchor':'middle','font-family':'Courier New,monospace','font-size':12,'font-weight':'bold',fill:'#111'},w.code||'-'));
+      svg.appendChild(el('text',{x:x,y:y+14,'text-anchor':'middle','font-family':'Arial','font-size':10,fill:other?'#C8102E':'#5A5A5A'},w.job));
+    });
+    const title=caPretty(cur.action)+(cur.outcome?'  →  '+cur.outcome:'')+(refused?'  :  refused':'');
+    svg.appendChild(el('text',{x:14,y:24,'font-family':'Arial','font-size':13,fill:refused?'#C8102E':'#111','font-weight':'bold'},title));
+    svg.appendChild(el('text',{x:14,y:42,'font-family':'Arial','font-size':11.5,fill:'#5A5A5A'},
+      `${s.worlds.length} world${s.worlds.length===1?'':'s'} reachable of ${s.size} · labels: D delivered, L lost, · not sent, σ signal`));
+    let y0=318; ['south','north'].forEach((ag,i)=>{svg.appendChild(el('line',{x1:14+i*110,y1:y0,x2:36+i*110,y2:y0,stroke:CA_COL[ag],'stroke-width':3}));
+      svg.appendChild(el('text',{x:42+i*110,y:y0+4,'font-family':'Arial','font-size':12,fill:'#333'},ag));});
+    svg.appendChild(el('text',{x:240,y:y0+4,'font-family':'Arial','font-size':11,fill:'#5A5A5A'},'grey: the order names the other stand'));
+    let h;
+    if(!s.stand){
+      h='<p style="font-size:.82rem;color:#5A5A5A;margin:0">The order has not been read: both stands are possible for both robots.</p>';
+    } else {
+      const job='job(s<sub>'+s.stand.slice(1)+'</sub>)';
+      h='<table class="data pt-k"><tbody>';
+      ['south','north'].forEach(ag=>{const k=s.knows[ag];
+        h+=`<tr><td style="color:${CA_COL[ag]}">K<sub>${ag}</sub> ${job}</td><td style="color:${k?'#1A8C46':'#9A9A9A'};font-weight:${k?600:400}">${k?'yes':'no'}</td></tr>`;});
+      const d=s.depth, dtext=d==='C'?'C':('E<sup>'+d+'</sup>');
+      h+=`<tr><td>depth of ${job}</td><td style="color:${d==='C'?'#C8102E':'#111'};font-weight:600">${dtext}</td></tr>`;
+      h+='</tbody></table>';
+      if(s.chain.length){
+        h+='<p style="font-size:.76rem;color:#5A5A5A;margin:.6rem 0 0">C blocked by: '+
+          s.chain.map(c=>`<span style="color:${CA_COL[c[1]]}">${c[1]}</span>`).join(' → ')+' → &#172;'+job+'</p>';
+      } else if(d==='C') {
+        h+='<p style="font-size:.76rem;color:#5A5A5A;margin:.6rem 0 0">No chain reaches &#172;'+job+': common knowledge.</p>';
+      }
+    }
+    info.innerHTML=h;
+    const key=refused?cur.action+':refused':(seq==='alone'&&cur.action==='signal_south_s1'?cur.action+':alone':cur.action);
+    cap.innerHTML=CA_NOTE[key]||'';
+    cnt.textContent=`step ${step} of ${steps.length-1}`;
+    root.querySelectorAll('[data-seq]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.seq===seq?'true':'false'));
+  }
+  root.querySelector('.ca-prev').onclick=()=>{if(step>0){step--;draw();}};
+  root.querySelector('.ca-next').onclick=()=>{if(step<CA_MODELS[seq].length-1){step++;draw();}};
+  root.querySelectorAll('[data-seq]').forEach(b=>b.onclick=()=>{seq=b.dataset.seq;step=Math.min(step,CA_MODELS[seq].length-1);draw();});
+  // #model=radio/5 opens the figure on that sequence and step.
+  const m=/model=(radio|beacon|alone)\/(\d+)/.exec(location.hash);
+  if(m){seq=m[1];step=Math.min(Number(m[2]),CA_MODELS[seq].length-1);}
+  draw();
+}
+document.addEventListener('DOMContentLoaded',()=>{const r=document.getElementById('ca-kripke'); if(r) caFigure(r);});
+</script>
+</body>
+</html>
