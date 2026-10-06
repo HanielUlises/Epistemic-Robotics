@@ -161,6 +161,29 @@ robots were accepted and executed concurrently with no process failures; how
 RMF's schedule mediates the lane under sustained three-robot traffic — the one
 resource all thirty-four aisles share — has not been measured yet.
 
+### Common knowledge as a precondition
+
+[`coordinated_attack_demo`](ros2_ws/src/coordinated_attack_demo) puts the
+coordinated attack on the pass-through floor. Two robots must lift one load
+together, one under each end of it, and the racking block keeps them out of
+sight of each other; a work order names which of two stands, and only one of
+them can read it. Each raises its end only if it knows the other will, and the
+weakest condition that settles both is common knowledge, so `lift` requires
+`C{south,north} job(s)`.
+
+A radio that can lose a message without anyone knowing adds one level of
+mutual knowledge per delivered message. With four messages, all delivered, the
+planner exhausts its space and returns no policy, and the executor refuses the
+lift at `E^4`. A stack light in the open bay, seen only from that bay's two
+mouths, gives common knowledge in one update, and the policy that uses it is
+run to a lift whose two halves start at the same instant.
+
+```bash
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=beacon
+bash ros2_ws/src/coordinated_attack_demo/tools/validate.sh
+```
+
 ## Components
 
 | Component | Role |
