@@ -67,6 +67,22 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 
+# The action nodes derive from plansys2's ActionExecutorClient, which derives
+# from rclcpp_cascade_lifecycle's CascadeLifecycleNode. ePlanSys builds every
+# one of its packages against the header /opt/ros/humble ships, and its overlay
+# puts the rolling-devel library it vendors first on the library path; that
+# library's class has two members more. Each action node was therefore built
+# with one layout and constructed by the other, and destroying it read its
+# members at the wrong offsets: every action node exited on signal 11 at
+# shutdown, after the mission had reported. Loading the library the headers
+# describe removes the mismatch, and the nodes exit cleanly.
+SYSTEM_CASCADE = '/opt/ros/humble/lib/librclcpp_cascade_lifecycle.so'
+
+
+def matching_cascade():
+    return {'LD_PRELOAD': SYSTEM_CASCADE} if os.path.exists(SYSTEM_CASCADE) else {}
+
+
 def flat_boxes(boxes):
     return [float(v) for b in boxes for v in b]
 
@@ -182,6 +198,7 @@ def setup(context, *args, **kwargs):
         ns = L.ROBOTS[agent][0]
         performers.append(Node(
             package='pass_through_demo', executable='survey_action',
+            additional_env=matching_cascade(),
             output='screen', arguments=['--agent', agent],
             parameters=[{**common, 'ns': ns, 'bay_boxes': bay_boxes, 'bay_regions': bay_regions,
                          'bay_mouths': bay_mouths, 'bay_parking': bay_parking,
@@ -190,6 +207,7 @@ def setup(context, *args, **kwargs):
     for kind in ('open', 'shut'):
         performers.append(Node(
             package='pass_through_demo', executable='share_action',
+            additional_env=matching_cascade(),
             output='screen', arguments=['--kind', kind],
             parameters=[{'agents': agents, 'namespaces': namespaces,
                          'action_name': f'tell_{kind}', 'rate': 10.0,
@@ -197,6 +215,7 @@ def setup(context, *args, **kwargs):
     carrier = [a for a in agents if not L.COVERS[a]][0]
     performers.append(Node(
         package='pass_through_demo', executable='cross_action',
+        additional_env=matching_cascade(),
         output='screen', arguments=['--agent', carrier],
         parameters=[{**common, 'ns': L.ROBOTS[carrier][0], 'bay_boxes': bay_boxes,
                      'dock': [L.DOCK[0], L.DOCK[1], L.DOCK_RADIUS],

@@ -1,0 +1,258 @@
+(define (domain coordinated-attack-positions)
+
+  ;; The coordinated attack, with positions that are not announced.
+  ;;
+  ;; In coordinated-attack a move to a viewpoint is public, so who sees the
+  ;; beacon is common knowledge for free, and one signal from two viewpoints
+  ;; is a public announcement. Here a move is witnessed only by the robot that
+  ;; makes it: the other considers possible that it did not happen. A signal
+  ;; then reaches a robot at its viewpoint, but the signaller does not know
+  ;; that it did, and the announcement gives one level of mutual knowledge and
+  ;; no more.
+  ;;
+  ;; What the floor offers is the sight line through t2: from their two
+  ;; viewpoints the robots see each other. A mutual sighting is an
+  ;; announcement, to whoever stands at a viewpoint, that both do, and it
+  ;; makes their positions common knowledge. The question is whether the
+  ;; planner finds that it must have the robots sight each other before the
+  ;; beacon means anything. The instances differ in whether the sight line
+  ;; exists.
+
+  (:requirements
+    :typing :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities :static-common-knowledge
+    :negative-preconditions :modal-preconditions :knowing-whether
+    :universal-preconditions
+  )
+
+  (:action-type-libraries intermediate lossy moves)
+
+  (:types stand)
+
+  (:predicates
+    ;; The work order names this stand: its load is the one to lift.
+    (job ?s - stand)
+    ;; Who can read the work order. Static, and common knowledge.
+    (reads-order ?i - agent)
+    ;; Whether this floor has a beacon at all. Static, and common knowledge.
+    (beacon)
+    ;; The robot stands at a viewpoint of the beacon.
+    (at-view ?i - agent)
+    ;; Whether the two viewpoints see each other. Static, and common knowledge.
+    (sightline)
+    ;; The beacon's tier for this stand is lit.
+    (lit ?s - stand)
+    (lifted)
+    ;; The sender's log: this message has gone out, arrived or not.
+    (sent-tell) (sent-ack) (sent-ack2) (sent-ack3)
+  )
+
+  (:event nil)
+
+  ;--------------------READ THE WORK ORDER------------------
+  ;
+  ; Semi-private sensing. The reader learns which stand; the other robot
+  ; learns that the order was read and not what it said.
+  ;
+  ; The order is read at a terminal, which is not a viewpoint of the beacon,
+  ; so a robot standing at its viewpoint would have to leave it to read. A
+  ; sensing event carries no effects in this library, so the domain cannot
+  ; say that reading takes the robot away from the viewpoint; it says instead
+  ; that the order is read before the reader goes there. Without this the
+  ; planner sent south to its viewpoint first, and the run then drove it back
+  ; to the terminal and had it signal from there, out of sight of the beacon.
+
+  (:event e-here
+    :parameters (?i - agent ?s - stand)
+    :precondition (and (reads-order ?i) (not (at-view ?i)) (job ?s) (<Kw. ?i> (job ?s)))
+  )
+
+  (:event e-elsewhere
+    :parameters (?i - agent ?s - stand)
+    :precondition (and (reads-order ?i) (not (at-view ?i)) (not (job ?s)) (<Kw. ?i> (job ?s)))
+  )
+
+  (:action read-order
+    :parameters (?i - agent ?s - stand)
+    :action-type (semi-private-sensing (e-here ?i ?s) (e-elsewhere ?i ?s))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;--------------------RADIO------------------
+  ;
+  ; Four messages, each one level deeper than the last: the order, its
+  ; acknowledgement, the acknowledgement of that, and so on. A robot sends
+  ; what it knows, so each message's precondition is the sender knowing the
+  ; content of the one before.
+  ;
+  ; Each goes out at most once, which the sender's log enforces. Without that
+  ; bound a message can be repeated, every repetition leaves a model no
+  ; earlier one is bisimilar to, and the space is infinite: the planner can
+  ; search it and cannot exhaust it. With the bound it can, and an exhausted
+  ; space is a proof that no policy exists, for this protocol of four
+  ; messages. That no longer protocol does better is the theorem, not the
+  ; search.
+
+  ; Each message has two events with one precondition, the message arriving
+  ; and the message lost, and they have to be two events and not one passed
+  ; twice: plank keys an event model by event name, so a single event named
+  ; in both places becomes one event and the loss disappears from the model.
+
+  (:event e-tell
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-tell)) ([?i] (job ?s)))
+    :effects (sent-tell)
+  )
+
+  (:event e-tell-lost
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-tell)) ([?i] (job ?s)))
+    :effects (sent-tell)
+  )
+
+  (:event e-ack
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-ack)) ([?i] ([?j] (job ?s))))
+    :effects (sent-ack)
+  )
+
+  (:event e-ack-lost
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-ack)) ([?i] ([?j] (job ?s))))
+    :effects (sent-ack)
+  )
+
+  (:event e-ack2
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-ack2)) ([?i] ([?j] ([?i] (job ?s)))))
+    :effects (sent-ack2)
+  )
+
+  (:event e-ack2-lost
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-ack2)) ([?i] ([?j] ([?i] (job ?s)))))
+    :effects (sent-ack2)
+  )
+
+  (:event e-ack3
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-ack3)) ([?i] ([?j] ([?i] ([?j] (job ?s))))))
+    :effects (sent-ack3)
+  )
+
+  (:event e-ack3-lost
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (not (sent-ack3)) ([?i] ([?j] ([?i] ([?j] (job ?s))))))
+    :effects (sent-ack3)
+  )
+
+  (:action tell
+    :parameters (?i ?j - agent ?s - stand | (/= ?i ?j))
+    :action-type (lossy-message (e-tell ?i ?j ?s) (e-tell-lost ?i ?j ?s) (nil))
+    :observability-conditions (:and (?i Sender) (?j Receiver))
+  )
+
+  (:action ack
+    :parameters (?i ?j - agent ?s - stand | (/= ?i ?j))
+    :action-type (lossy-message (e-ack ?i ?j ?s) (e-ack-lost ?i ?j ?s) (nil))
+    :observability-conditions (:and (?i Sender) (?j Receiver))
+  )
+
+  (:action ack2
+    :parameters (?i ?j - agent ?s - stand | (/= ?i ?j))
+    :action-type (lossy-message (e-ack2 ?i ?j ?s) (e-ack2-lost ?i ?j ?s) (nil))
+    :observability-conditions (:and (?i Sender) (?j Receiver))
+  )
+
+  (:action ack3
+    :parameters (?i ?j - agent ?s - stand | (/= ?i ?j))
+    :action-type (lossy-message (e-ack3 ?i ?j ?s) (e-ack3-lost ?i ?j ?s) (nil))
+    :observability-conditions (:and (?i Sender) (?j Receiver))
+  )
+
+  ;--------------------GO TO A VIEWPOINT------------------
+  ;
+  ; Witnessed by the mover only. The other robot relates the move to the robot
+  ; not having moved, and so does not know whether the mover stands at its
+  ; viewpoint. No robot believes anything false about the other's position.
+
+  (:event e-go-view
+    :parameters (?i - agent)
+    :precondition (and (beacon) (not (at-view ?i)))
+    :effects (at-view ?i)
+  )
+
+  (:action go-view
+    :parameters (?i - agent)
+    :action-type (unwitnessed-move (e-go-view ?i) (nil))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;--------------------SIGHT EACH OTHER------------------
+  ;
+  ; Through t2, from the two viewpoints. An announcement that both robots
+  ; stand at their viewpoints, observed fully by a robot at a viewpoint and not
+  ; at all by one elsewhere. In the actual world both are there, so it is
+  ; public, and both positions become common knowledge.
+  ;
+  ; The two robots are parameters, though the sighting is symmetric: plank
+  ; does not ground this action without parameters, and reports it as
+  ; undefined when a plan names it. The two ground actions are the same
+  ; event model.
+
+  (:event e-sight
+    :parameters (?i ?j - agent)
+    :precondition (and (sightline) (at-view ?i) (at-view ?j))
+  )
+
+  (:action sight
+    :parameters (?i ?j - agent | (/= ?i ?j))
+    :action-type (private-announcement (e-sight ?i ?j) (nil))
+    :observability-conditions
+      (:forall (?k - agent)
+        (?k (if (at-view ?k) Fully else Oblivious)))
+  )
+
+  ;--------------------SIGNAL ON THE BEACON------------------
+  ;
+  ; The tier for the stand is lit, and stays lit. The listener sees it if it
+  ; stands at its viewpoint. The announcer cannot tell whether it does unless
+  ; where the listener stands is common knowledge: the unconfirmed
+  ; announcement, whose two designated events differ only in that.
+
+  (:event e-signal-seen
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (at-view ?i) (at-view ?j) (not (lit ?s)) ([?i] (job ?s)))
+    :effects (lit ?s)
+  )
+
+  (:event e-signal-unseen
+    :parameters (?i ?j - agent ?s - stand)
+    :precondition (and (at-view ?i) (not (at-view ?j)) (not (lit ?s)) ([?i] (job ?s)))
+    :effects (lit ?s)
+  )
+
+  (:action signal
+    :parameters (?i ?j - agent ?s - stand | (/= ?i ?j))
+    :action-type (unconfirmed-announcement (e-signal-seen ?i ?j ?s) (e-signal-unseen ?i ?j ?s) (nil))
+    :observability-conditions (:and (?i Announcer) (?j Listener))
+  )
+
+  ;--------------------LIFT------------------
+  ;
+  ; Joint, and public: both robots drive under their ends of the load on the
+  ; stand and raise it at the moment the commitment fixes. The precondition
+  ; is the coordination requirement stated above.
+
+  (:event e-lift
+    :parameters (?s - stand)
+    :precondition (and (job ?s) ([C. All] (job ?s)))
+    :effects (lifted)
+  )
+
+  (:action lift
+    :parameters (?s - stand)
+    :action-type (public-ontic (e-lift ?s))
+    :observability-conditions (default Fully)
+  )
+)

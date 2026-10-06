@@ -27,6 +27,17 @@
 #   4. ALONE    the beacon lit with only south at a viewpoint: south knows, north
 #               does not, and lift does not apply.
 #
+# The same floor with moves only the mover witnesses (coordinated-attack-
+# positions), where who saw the beacon is no longer common knowledge:
+#
+#   5. SIGHT    the viewpoints see each other. A policy, and every leaf lifts
+#               under C; every leaf has the robots sight each other.
+#   6. BLIND    they do not. No policy, although the beacon is there.
+#   7. UNSEEN   on the sight floor, the signal without a sighting: E^1, as
+#               from one radio message, and lift does not apply.
+#   8. AFTER    the signal and then the sighting: C. The sighting makes the
+#               earlier signal common knowledge.
+#
 # Each step fails the script if its tool says anything other than the
 # expected result.
 set -eo pipefail
@@ -48,9 +59,10 @@ section() {
 }
 
 ground() {
-  "${PLANK}" export -d "${EPDDL}/coordinated-attack.epddl" -p "${EPDDL}/$1.epddl" \
-    -l "${LIB}" "${EPDDL}/lossy.epddl" -o "${OUT}/$1" > "${OUT}/$1.plank.log" 2>&1 \
-    || { cat "${OUT}/$1.plank.log"; exit 1; }
+  local domain="${2:-coordinated-attack}"
+  "${PLANK}" export -d "${EPDDL}/${domain}.epddl" -p "${EPDDL}/$1.epddl" \
+    -l "${LIB}" "${EPDDL}/lossy.epddl" "${EPDDL}/moves.epddl" -o "${OUT}/$1" \
+    > "${OUT}/$1.plank.log" 2>&1 || { cat "${OUT}/$1.plank.log"; exit 1; }
 }
 
 solve() {
@@ -61,6 +73,8 @@ solve() {
 mkdir -p "${OUT}"
 ground beacon
 ground radio
+ground positions-sight coordinated-attack-positions
+ground positions-blind coordinated-attack-positions
 
 section "1. BEACON: a policy, and common knowledge at every lift"
 solve beacon
@@ -86,5 +100,32 @@ python3 "${TRACE}" --task ${OUT}/beacon/beacon.json --actions \
   read-order_south_s1 go-view_south signal_south_s1 lift_s1 | tee ${OUT}/beacon/alone.log
 grep -q 'lift_s1  NOT APPLICABLE' ${OUT}/beacon/alone.log
 
+section "5. SIGHT: a policy, and a sighting on every branch"
+solve positions-sight
+grep -q 'Solution found' ${OUT}/positions-sight/search.log
+python3 "${TRACE}" --task ${OUT}/positions-sight/positions-sight.json \
+  --plan ${OUT}/positions-sight/plan.json | tee ${OUT}/positions-sight/trace.log
+test "$(grep -c 'goal holds' ${OUT}/positions-sight/trace.log)" -ge 2
+test "$(grep -c '^ *sight_' ${OUT}/positions-sight/trace.log)" -ge 2
+
+section "6. BLIND: no policy, beacon or not"
+solve positions-blind
+grep -q 'exhausted' ${OUT}/positions-blind/search.log
+test "$(cat ${OUT}/positions-blind/plan.json)" = "null"
+
+section "7. UNSEEN: the signal without a sighting is one level"
+python3 "${TRACE}" --task ${OUT}/positions-sight/positions-sight.json --actions \
+  go-view_north read-order_south_s1 go-view_south signal_south_north_s1 lift_s1 \
+  | tee ${OUT}/positions-sight/unseen.log
+grep -q 'depth E\^1$' ${OUT}/positions-sight/unseen.log
+grep -q 'lift_s1  NOT APPLICABLE' ${OUT}/positions-sight/unseen.log
+
+section "8. AFTER: a sighting after the signal makes it common knowledge"
+python3 "${TRACE}" --task ${OUT}/positions-sight/positions-sight.json --actions \
+  go-view_north read-order_south_s1 go-view_south signal_south_north_s1 \
+  sight_south_north lift_s1 | tee ${OUT}/positions-sight/after.log
+grep -q 'depth C' ${OUT}/positions-sight/after.log
+! grep -q 'NOT APPLICABLE' ${OUT}/positions-sight/after.log
+
 echo
-echo "all four checks passed"
+echo "all eight checks passed"
