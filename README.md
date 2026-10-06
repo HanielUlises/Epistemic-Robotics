@@ -83,8 +83,6 @@ and the approximants from above are the worlds at which $E_G^1\varphi, \dots, E_
   <sub><b>Figure 7.</b> X₀, …, X₅ on the model the radio protocol leaves after four messages: 10, 7, 5, 3, 1 and 0 worlds. Edges are the two robots' relations; <code>s2</code> marks the world where the order names the other stand.</sub>
 </p>
 
-`tools/mu_figures.py` draws Figures 1, 2, 5 and 7, computing each region by the iteration above.
-
 ## Demonstrations
 
 | package | question | written up |

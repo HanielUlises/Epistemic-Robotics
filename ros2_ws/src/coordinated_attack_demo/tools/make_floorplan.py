@@ -66,10 +66,10 @@ def fill(grid, box, value):
     grid[r0:r1 + 1, c0:c1 + 1] = value
 
 
-def floorplan(beacon=True):
+def floorplan(beacon=True, crates=False):
     grid = np.full((L.GRID_HEIGHT, L.GRID_WIDTH), OCCUPIED, dtype=np.int8)
     fill(grid, (L.HALL_MIN_X, L.HALL_MIN_Y, L.HALL_MAX_X, L.HALL_MAX_Y), FREE)
-    for b in L.static_obstacles(beacon=beacon):
+    for b in L.static_obstacles(beacon=beacon, crates=crates):
         fill(grid, b, OCCUPIED)
     return grid
 
@@ -123,6 +123,22 @@ def sight(grid, a, b, ignore=()):
 
 def start_of(agent):
     return L.ROBOTS[agent][1], L.ROBOTS[agent][2]
+
+
+def check_blind(grid):
+    """The blind floor's two claims: each viewpoint still sees the beacon, and
+    the viewpoints no longer see each other."""
+    post = L.beacon_box()
+    problems = []
+    for agent in L.ROBOTS:
+        if not sight(grid, L.viewpoint(agent), L.BEACON_POST, ignore=[post]):
+            problems.append(f'{agent} does not see the beacon from its viewpoint')
+    if sight(grid, L.viewpoint('south'), L.viewpoint('north'), ignore=[post]):
+        problems.append('the viewpoints see each other past the crates')
+    if problems:
+        raise SystemExit('blind floor check failed:\n  ' + '\n  '.join(problems))
+    return ['blind floor: each robot sees the beacon from its viewpoint, '
+            'and the crates hide the two from each other']
 
 
 def check(grid):
@@ -261,7 +277,7 @@ def plot(grid, path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True,
-                    help='directory; writes floorplan_beacon and floorplan_radio')
+                    help='directory; writes floorplan_beacon, floorplan_radio and floorplan_blind')
     ap.add_argument('--plot', help='also draw the beacon floor to this PNG')
     args = ap.parse_args()
 
@@ -273,8 +289,12 @@ def main():
     # The radio floor is the same less the post. Nothing there is checked
     # against the beacon, since there is none.
     write(floorplan(beacon=False), os.path.join(args.out, 'floorplan_radio'))
+    blind = floorplan(beacon=True, crates=True)
+    for fact in check_blind(blind):
+        print('  ' + fact)
+    write(blind, os.path.join(args.out, 'floorplan_blind'))
     print(f'{args.out}: {grid.shape[1]} x {grid.shape[0]} cells at {L.RESOLUTION} m, '
-          'both floors; floor check passed')
+          'three floors; floor check passed')
     if args.plot:
         plot(grid, args.plot)
         print(args.plot)

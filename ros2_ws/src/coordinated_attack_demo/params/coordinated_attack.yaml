@@ -24,7 +24,7 @@ executor:
     bt_node_plugins: ["libplansys2_epistemic_bt_nodes.so"]
     action_timeouts:
       actions: ["read_order", "radio_tell", "radio_ack", "radio_ack2", "radio_ack3",
-                "go_view", "signal", "lift"]
+                "go_view", "signal", "signal_to", "sight", "lift"]
       read_order:
         duration_overrun_percentage: 1000.0
       radio_tell:
@@ -38,6 +38,10 @@ executor:
       go_view:
         duration_overrun_percentage: 1000.0
       signal:
+        duration_overrun_percentage: 2000.0
+      signal_to:
+        duration_overrun_percentage: 2000.0
+      sight:
         duration_overrun_percentage: 2000.0
       lift:
         duration_overrun_percentage: 1000.0

@@ -73,6 +73,21 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+# The action nodes derive from plansys2's ActionExecutorClient, whose base,
+# rclcpp_cascade_lifecycle's CascadeLifecycleNode, ePlanSys compiles against
+# the header /opt/ros/humble ships while its overlay loads the rolling-devel
+# library it vendors, with two members more. Every action node is built with
+# one layout and constructed by the other, and the base's two extra members
+# overlap the derived class's. In pass_through_demo and coordinated_attack_demo
+# that crashed at shutdown; these nodes happened not to, and the overlap is
+# the same. Loading the library the headers describe removes it.
+SYSTEM_CASCADE = '/opt/ros/humble/lib/librclcpp_cascade_lifecycle.so'
+
+
+def matching_cascade():
+    return {'LD_PRELOAD': SYSTEM_CASCADE} if os.path.exists(SYSTEM_CASCADE) else {}
+
+
 # The fleet, in the order robots are added. Each entry is the agent name the
 # EPDDL instance uses, the zone it comes on shift in, and the constant in
 # warehouse_scenario's header that says where that is in metres.
@@ -715,6 +730,7 @@ def setup(context, *args, **kwargs):
                 package='warehouse_demo', executable=executable,
                 name=name + suffix, output='screen',
                 parameters=parameters,
+                additional_env=matching_cascade(),
                 # `or None` for the same reason as the empty argument list
                 # above: with one robot there is nothing to remap, and launch
                 # will not take an empty list.

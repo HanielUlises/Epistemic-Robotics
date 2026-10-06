@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(gazebo_msgs REQUIRED)
 find_package(nlohmann_json REQUIRED)
@@ -27,11 +28,12 @@ find_package(plansys2_epistemic_msgs REQUIRED)
 
 include_directories(include)
 
-foreach(performer read_order_action go_view_action radio_action signal_action lift_action)
+foreach(performer read_order_action go_view_action radio_action signal_action sight_action
+    lift_action)
   add_executable(${performer} src/${performer}_node.cpp)
   target_link_libraries(${performer} pass_through_demo::pass_through_driver)
   ament_target_dependencies(${performer}
-    rclcpp lifecycle_msgs nav_msgs std_msgs gazebo_msgs plansys2_executor)
+    rclcpp lifecycle_msgs nav_msgs sensor_msgs std_msgs gazebo_msgs plansys2_executor)
 endforeach()
 
 add_executable(coordinated_attack_mission src/mission_node.cpp)
@@ -40,7 +42,8 @@ ament_target_dependencies(coordinated_attack_mission
   rclcpp lifecycle_msgs plansys2_msgs plansys2_executor plansys2_planner
   plansys2_problem_expert plansys2_domain_expert plansys2_epistemic_msgs)
 
-install(TARGETS read_order_action go_view_action radio_action signal_action lift_action
+install(TARGETS read_order_action go_view_action radio_action signal_action sight_action
+  lift_action
   coordinated_attack_mission
   DESTINATION lib/${PROJECT_NAME})
 install(PROGRAMS scripts/knowledge_view.py scripts/camera_director.py

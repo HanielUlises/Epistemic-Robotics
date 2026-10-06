@@ -20,12 +20,11 @@ precondition, and the robots then do what it answers, in Gazebo.
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py                # beacon floor
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio   # no beacon
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2      # the other leaf
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=sight   # positions unannounced
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=blind   # and crates across t2
 bash tools/validate.sh                                                          # eight checks, no simulator
 bash tools/record_demo.sh radio  s1 /tmp/raw_radio.mkv  /tmp/run_radio.log      # Xvfb recording
 bash tools/record_demo.sh beacon s1 /tmp/raw_beacon.mkv /tmp/run_beacon.log
-python3 tools/make_video.py --radio  /tmp/raw_radio.mkv  /tmp/run_radio.log  /tmp/raw_radio_policy.json \
-                            --beacon /tmp/raw_beacon.mkv /tmp/run_beacon.log /tmp/raw_beacon_policy.json \
-                            --out /tmp/coordinated_attack.mp4
 ```
 
 ## The floor
@@ -207,7 +206,8 @@ after each one, with Aletheia's own product update.
 | `read-order` | `read_order_action` | south drives to the terminal and reads the order, which the node is given as the warehouse's record: `order:=s1` |
 | radio | `radio_action`, one per level | puts the message on the receiver's inbox and waits for it to arrive, the system's check that the designated event is the one that happened; nothing reports it to the sender |
 | `go-view` | `go_view_action`, one per robot | drives to the mouth of `t2`, and checks the beacon is in line of sight from where the robot stopped |
-| `signal` | `signal_action` | lights the beacon's tier for the stand, after checking that every robot the model places at a viewpoint has the beacon in line of sight, and refusing if one does not |
+| `signal` | `signal_action` | lights the beacon's tier for the stand, after checking that every robot the model places at a viewpoint has the beacon in line of sight, and refusing if one does not; as `signal_to`, in the positions domain, it also reports which event occurred, `e-signal-seen` when the listener has the beacon in line of sight from where it stands |
+| `sight` | `sight_action` | positions domain only: reads each robot's laser along the bearing to the other, and refuses unless both beams reach the other robot |
 | `lift` | `lift_action` | drives both robots to their mouths of the stand, fixes one start for both, drives each in under its end, then raises the load |
 
 Routes are `pass_through_demo`'s least fixed point over the floor plan, through
@@ -227,9 +227,9 @@ and reports the floor as complete only if the executor refused `lift` with
 ## The recorded runs
 
 Both floors were recorded on a 3840 × 1080 Xvfb display, RViz on the left
-half and Gazebo on the right, with `order:=s1`, and composed by
-`tools/make_video.py` into one film: an opening card, the radio floor, the
-beacon floor, and a closing card whose figures are the runs'. Every figure
+half and Gazebo on the right, with `order:=s1`, and composed into one film:
+an opening card, the radio floor, the beacon floor, and a closing card whose
+figures are the runs'. Every figure
 below is a line the runs wrote.
 
 **Radio floor.** The planner exhausted its space at depth 5 and the mission
@@ -347,6 +347,37 @@ every world where both robots stood at their viewpoints, the signal was seen.
 Neither the beacon nor the radio can make the positions common knowledge, so
 on the floor without the sight line there is no policy at all.
 
+### On the floor
+
+`floor:=sight` runs the sight instance on the beacon floor. `floor:=blind`
+runs the blind one on the same floor with a stack of crates on the axis of
+`t2`, which `make_floorplan.py` checks leaves the beacon in sight from each
+viewpoint and hides the viewpoints from each other. The sighting is
+`sight_action`: along the bearing from each robot to the other, the robot's
+own laser must read nothing short of the other robot. On the blind floor
+there is no policy, and the mission runs the sight floor's policy without the
+sighting, as the radio floor runs its protocol.
+
+```
+                         sight floor                       blind floor
+go-view(north)           4 worlds, 2 designated            4 / 2
+read-order(south, s1)    e-here                 4 / 1 E^0  e-here        4 / 1 E^0
+go-view(south)                                  8 / 1 E^0                8 / 1 E^0
+sight(north, south)      6.6 m apart, lasers read 6.7 m: clear
+                         both positions known  10 / 1 E^0  (no sight line)
+signal(south, north, s1) e-signal-seen         13 / 1 C    e-signal-seen 10 / 1 E^1
+lift(s1)                 starts 0.00 s apart, arrivals     refused: (C (south north) job_s1)
+                         0.40 s apart; raised 0.12 m
+```
+
+Until the sighting neither robot knows where the other stands, and RViz
+says so beside each viewpoint. On the blind floor the signal tells north the
+stand and also where south stands, since it is made only from a viewpoint;
+south learns nothing about north, and the chain that blocks `C` is south, then
+north. The mission confirms `K_north job(s1)` and not
+`K_south K_north job(s1)` before it reports the refusal as the expected
+outcome.
+
 ## What this does not show
 
 * That the search alone shows the general result. The planner proves it for
@@ -354,11 +385,11 @@ on the floor without the sight line there is no policy at all.
   the report, proved over the event model and not searched.
 * A lost message. Only delivery is designated, and every message in the runs
   arrived. The point is that it does not matter.
-* On the published floors, that the robots' positions are common knowledge
-  for a reason the robots can see: `go-view` is public there, on the argument
-  that each robot runs the same policy. The positions domain removes that
-  argument and the planner then requires a sighting; it has not yet been run
-  in the simulator.
+* On the beacon and radio floors, that the robots' positions are common
+  knowledge for a reason the robots can see: `go-view` is public there, on the
+  argument that each robot runs the same policy. The positions domain removes
+  that argument, and on its floors the reason is a sighting each robot makes
+  with its own laser.
 * A physical lift. The load is moved by the simulator once both robots are
   under it.
 
@@ -373,10 +404,8 @@ on the floor without the sight line there is no policy at all.
 | `epddl/moves.epddl` | the unwitnessed move and the unconfirmed announcement |
 | `epddl/positions-sight.epddl`, `epddl/positions-blind.epddl` | with and without the sight line, one line apart |
 | `tools/layout.py` | the floor, on pass_through_demo's |
-| `tools/make_floorplan.py` | the two floor plans and the four geometric claims |
+| `tools/make_floorplan.py` | the three floor plans, the four geometric claims, and the blind floor's two |
 | `tools/make_world.py` | the Gazebo world and the lamp models |
 | `tools/trace.py` | product update with conditional observability, and the depth of `E^k` |
-| `tools/export_models.py` | the Kripke model after every action of three sequences, for the pages' figures |
 | `tools/validate.sh` | grounds, solves and traces; eight checks, four per domain |
-| `tools/captions.py`, `tools/make_video.py` | the timeline from a run's log, and the film |
 | `tools/record_demo.sh` | one floor on an Xvfb display, RViz left and Gazebo right |
