@@ -40,6 +40,21 @@ from launch.actions import ExecuteProcess, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
+# The action nodes derive from plansys2's ActionExecutorClient, whose base,
+# rclcpp_cascade_lifecycle's CascadeLifecycleNode, ePlanSys compiles against
+# the header /opt/ros/humble ships while its overlay loads the rolling-devel
+# library it vendors, with two members more. Every action node is built with
+# one layout and constructed by the other, and the base's two extra members
+# overlap the derived class's. In pass_through_demo and coordinated_attack_demo
+# that crashed at shutdown; these nodes happened not to, and the overlap is
+# the same. Loading the library the headers describe removes it.
+SYSTEM_CASCADE = '/opt/ros/humble/lib/librclcpp_cascade_lifecycle.so'
+
+
+def matching_cascade():
+    return {'LD_PRELOAD': SYSTEM_CASCADE} if os.path.exists(SYSTEM_CASCADE) else {}
+
+
 
 def generate_launch_description():
     pkg = get_package_share_directory('eplansys_rooms_demo')
@@ -152,7 +167,8 @@ def generate_launch_description():
             executable=executable,
             name=name,
             output='screen',
-            parameters=parameters)
+            parameters=parameters,
+            additional_env=matching_cascade())
 
     # The routes, as flat [x1,y1,x2,y2,...] in the map frame. The node's own
     # defaults say the same thing; naming them here is what lets a different
