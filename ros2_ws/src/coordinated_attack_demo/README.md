@@ -20,7 +20,7 @@ precondition, and the robots then do what it answers, in Gazebo.
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py                # beacon floor
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio   # no beacon
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2      # the other leaf
-bash tools/validate.sh                                                          # no simulator
+bash tools/validate.sh                                                          # eight checks, no simulator
 bash tools/record_demo.sh radio  s1 /tmp/raw_radio.mkv  /tmp/run_radio.log      # Xvfb recording
 bash tools/record_demo.sh beacon s1 /tmp/raw_beacon.mkv /tmp/run_beacon.log
 python3 tools/make_video.py --radio  /tmp/raw_radio.mkv  /tmp/run_radio.log  /tmp/raw_radio_policy.json \
@@ -277,6 +277,76 @@ disagree about who sees the beacon.
 After `mission complete`, the performers exit with signal 11 when the launch
 shuts down. This happens after the result is logged and has not been traced.
 
+## When positions are not announced
+
+`epddl/coordinated-attack-positions.epddl` takes away the assumption the
+beacon floor rests on. A move to a viewpoint is witnessed only by the robot
+that makes it: the other relates it to the robot not having moved, so it does
+not know where the mover stands, and believes nothing false about it either
+(`unwitnessed-move` in `epddl/moves.epddl`). Two instances differ in one line:
+whether the two viewpoints see each other through `t2`, which the floor check
+already establishes.
+
+### Who saw the beacon
+
+The first version of the signal kept its conditional audience, a robot at a
+viewpoint observing it fully and any other obliviously, and the planner found
+a policy on the floor where the robots never see each other. The trace,
+which then evaluated each robot's observability condition at every world,
+said the lift should be refused there.
+
+The two disagreed about the semantics. plank's own product update, and
+Aletheia's after it, fix each agent's observability type once per state: the
+type whose condition holds at the designated worlds applies at every world.
+Whether a listener saw an announcement is therefore common knowledge by
+construction, whatever the listener's position is to the others. On the
+published floors the two readings agree, since the move to a viewpoint is
+public there, and the models exported for the pages are identical under
+both. Here they do not.
+
+So the domain says it in the event model. The signal is an
+`unconfirmed-announcement`: the tier lit where the listener can see it, the
+same tier lit where it cannot, and nothing. The announcer relates the first
+two and the listener the last two, which is the lossy message again, and
+which of the first two occurs is decided by where the listener stands. When
+the listener's position is common knowledge, the second has no world to
+occur in, and the signal is a public announcement. `trace.py` now uses the
+tools' semantics, and `--per-world` the other.
+
+The sighting is an announcement that both robots stand at their viewpoints,
+observed by whoever stands at one. In the actual world both do, so it is
+public, and their positions become common knowledge.
+
+### What the planner returns
+
+| instance | result |
+| --- | --- |
+| viewpoints see each other | policy of depth 6, two leaves, 298 expansions |
+| viewpoints do not | no policy: space exhausted at depth 8 |
+
+```
+go-view(north)
+read-order(south, s1)
+  e-here      → go-view(south) → sight → signal(south, north, s1) → lift(s1)
+  e-elsewhere → go-view(south) → sight → signal(south, north, s2) → lift(s2)
+```
+
+The trace gives the reason for the sighting:
+
+| after | depth of job(s1) |
+| --- | --- |
+| the signal, with no sighting | `E^1`, and lift not applicable |
+| the sighting, then the signal | `C` |
+| the signal, then the sighting | `C` |
+
+Without the sighting the beacon is worth one radio message: north sees it, and
+south cannot tell that north did, because south considers possible that north
+never left its start. With the sighting first, the signal is public. And a
+sighting after the signal makes the signal common knowledge after the fact: in
+every world where both robots stood at their viewpoints, the signal was seen.
+Neither the beacon nor the radio can make the positions common knowledge, so
+on the floor without the sight line there is no policy at all.
+
 ## What this does not show
 
 * That the search alone shows the general result. The planner proves it for
@@ -284,11 +354,11 @@ shuts down. This happens after the result is logged and has not been traced.
   the report, proved over the event model and not searched.
 * A lost message. Only delivery is designated, and every message in the runs
   arrived. The point is that it does not matter.
-* That the robots' positions are common knowledge for a reason the robots can
-  see. The domain makes `go-view` public, on the argument that each robot runs
-  the same policy and the public history fixes where the other is. A domain in
-  which the robots also had to learn each other's positions would be larger,
-  and would need the radio for that as well.
+* On the published floors, that the robots' positions are common knowledge
+  for a reason the robots can see: `go-view` is public there, on the argument
+  that each robot runs the same policy. The positions domain removes that
+  argument and the planner then requires a sighting; it has not yet been run
+  in the simulator.
 * A physical lift. The load is moved by the simulator once both robots are
   under it.
 
@@ -299,11 +369,14 @@ shuts down. This happens after the result is logged and has not been traced.
 | `epddl/coordinated-attack.epddl` | the domain |
 | `epddl/lossy.epddl` | the lossy message action type |
 | `epddl/beacon.epddl`, `epddl/radio.epddl` | the two floors, one line apart |
+| `epddl/coordinated-attack-positions.epddl` | the domain with moves only the mover witnesses |
+| `epddl/moves.epddl` | the unwitnessed move and the unconfirmed announcement |
+| `epddl/positions-sight.epddl`, `epddl/positions-blind.epddl` | with and without the sight line, one line apart |
 | `tools/layout.py` | the floor, on pass_through_demo's |
 | `tools/make_floorplan.py` | the two floor plans and the four geometric claims |
 | `tools/make_world.py` | the Gazebo world and the lamp models |
 | `tools/trace.py` | product update with conditional observability, and the depth of `E^k` |
 | `tools/export_models.py` | the Kripke model after every action of three sequences, for the pages' figures |
-| `tools/validate.sh` | grounds, solves and traces; four checks |
+| `tools/validate.sh` | grounds, solves and traces; eight checks, four per domain |
 | `tools/captions.py`, `tools/make_video.py` | the timeline from a run's log, and the film |
 | `tools/record_demo.sh` | one floor on an Xvfb display, RViz left and Gazebo right |

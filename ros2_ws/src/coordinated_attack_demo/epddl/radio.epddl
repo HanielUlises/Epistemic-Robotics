@@ -2,7 +2,7 @@
 
   (:domain coordinated-attack)
 
-;; The pass-through floor: a racking block crosses the hall from wall to
+  ;; The pass-through floor: a racking block crosses the hall from wall to
   ;; wall, south is on the storage floor below it and north on the dispatch
   ;; floor above it, and neither can see the other. Bays t1 and t3 each hold a
   ;; load across them, a stand that can be lifted from both mouths; they are

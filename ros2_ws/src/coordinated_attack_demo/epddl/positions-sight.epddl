@@ -1,16 +1,12 @@
-(define (problem coordinated-attack-beacon)
+(define (problem coordinated-attack-positions-sight)
 
-  (:domain coordinated-attack)
+  (:domain coordinated-attack-positions)
 
-  ;; The pass-through floor: a racking block crosses the hall from wall to
-  ;; wall, south is on the storage floor below it and north on the dispatch
-  ;; floor above it, and neither can see the other. Bays t1 and t3 each hold a
-  ;; load across them, a stand that can be lifted from both mouths; they are
-  ;; s1 and s2. The work order names one of them, south can read it and north
-  ;; cannot, and that it names exactly one is common knowledge.
+  ;; The beacon floor of coordinated-attack, with moves witnessed only by the
+  ;; mover. From their viewpoints in t2 the robots see each other.
   ;;
-  ;; This instance and radio.epddl differ in one line: here the floor has a
-  ;; beacon in t2, and there it does not.
+  ;; This instance and positions-blind.epddl differ in one line: here the
+  ;; viewpoints see each other, and there they do not.
 
   (:requirements
     :typing :equality :list-comprehensions
@@ -25,7 +21,9 @@
   (:init
     (:and
       ([C. All] (beacon))
+      ([C. All] (sightline))
       ([C. All] (not (lifted)))
+      (:forall (?s - stand) ([C. All] (not (lit ?s))))
       ([C. All] (not (sent-tell)))
       ([C. All] (not (sent-ack)))
       ([C. All] (not (sent-ack2)))
