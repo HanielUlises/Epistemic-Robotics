@@ -13,6 +13,8 @@
 // limitations under the License.
 
 // signal(i, s): i lights the beacon's tier for stand s.
+// signal_to(i, j, s): the same, in the positions domain, where whether the
+// listener j saw it is the action's outcome.
 //
 // The epistemic action is an announcement of K_i job(s) whose audience is
 // conditional: an agent at a viewpoint observes it fully, any other is
@@ -30,6 +32,11 @@
 // it observing an announcement it could not have seen, and the node refuses to
 // signal. The first run of this demonstration failed exactly so, before the
 // domain said the order is read before the reader goes to its viewpoint.
+//
+// In the positions domain the signal is an unconfirmed announcement with two
+// designated events, e-signal-seen and e-signal-unseen, and the executor needs
+// to be told which occurred. The node reports it from the same ray: seen when
+// the listener has the beacon in line of sight from where it stands.
 
 #include <chrono>
 #include <algorithm>
@@ -57,8 +64,8 @@ using namespace std::chrono_literals;   // NOLINT(build/namespaces)
 class SignalAction : public plansys2::ActionExecutorClient
 {
 public:
-  explicit SignalAction(rclcpp::Node::SharedPtr side)
-  : plansys2::ActionExecutorClient("signal"), side_(side)
+  SignalAction(const std::string & name, rclcpp::Node::SharedPtr side)
+  : plansys2::ActionExecutorClient(name), side_(side)
   {
     const auto floorplan = side_->declare_parameter<std::string>("floorplan", "");
     const auto agents = side_->declare_parameter<std::vector<std::string>>(
@@ -126,12 +133,15 @@ private:
   void do_work() override
   {
     const auto & args = get_arguments();
-    if (args.size() < 2 || !lamp_.count(args[1])) {
-      finish(false, 0.0, "signal needs (signal <agent> <stand>) with a stand that has a lamp");
+    const bool named = args.size() >= 3;
+    const std::string stand = args.empty() ? "" : args.back();
+    if (args.size() < 2 || !lamp_.count(stand)) {
+      finish(false, 0.0, "signal needs (signal <agent> <stand>) or (signal_to <agent> <agent> "
+        "<stand>) with a stand that has a lamp");
       return;
     }
     const auto & who = args[0];
-    const auto & stand = args[1];
+    const std::string listener = named ? args[1] : "";
 
     if (!lit_) {
       std_msgs::msg::String shot;
@@ -161,6 +171,18 @@ private:
       RCLCPP_INFO(
         get_logger(), "[signal] %s lights the %s tier of the beacon; in line of sight of it: %s",
         who.c_str(), stand.c_str(), seen.c_str());
+      if (named) {
+        bool sees = false;
+        if (pose_.count(listener)) {
+          const auto [x, y] = pose_.at(listener);
+          sees = coordinated_attack::line_of_sight(plan_, x, y, bx_, by_);
+        }
+        outcome_ = sees ? "e-signal-seen" : "e-signal-unseen";
+        RCLCPP_INFO(
+          get_logger(), "[signal] %s %s it -> %s", listener.c_str(),
+          sees ? "has the beacon in sight and sees" : "is out of sight of the beacon and misses",
+          outcome_.c_str());
+      }
 
       std::ifstream in(lamp_.at(stand));
       std::stringstream xml;
@@ -188,6 +210,10 @@ private:
       return;
     }
     lit_ = false;
+    if (named) {
+      finish(true, 1.0, "the beacon shows " + stand, outcome_);
+      return;
+    }
     finish(true, 1.0, "the beacon shows " + stand);
   }
 
@@ -205,14 +231,17 @@ private:
   double bx_{0.0}, by_{0.0};
   double hold_{5.0};
   bool lit_{false};
+  std::string outcome_;
   rclcpp::Time since_;
 };
 
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  auto side = std::make_shared<rclcpp::Node>("signal_beacon");
-  auto performer = std::make_shared<SignalAction>(side);
+  // signal for the coordinated-attack domain, signal_to for the positions one.
+  const auto name = coordinated_attack::argument(argc, argv, "--name", "signal");
+  auto side = std::make_shared<rclcpp::Node>(name + "_beacon");
+  auto performer = std::make_shared<SignalAction>(name, side);
   performer->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   rclcpp::executors::SingleThreadedExecutor executor;

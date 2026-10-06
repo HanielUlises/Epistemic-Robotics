@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Starts the coordinated attack, on one of its two floors.
+// Starts the coordinated attack, on one of its four floors.
 //
-// On both floors the mission asks the planner for a policy for `lifted`.
+// On every floor the mission asks the planner for a policy for `lifted`.
 //
-// On the beacon floor there is one, and it is run.
+// On the beacon floor there is one, and it is run. On the sight floor, where
+// the robots' positions are not announced, there is one too: it sights the
+// other robot through t2 before it signals, and it is run.
 //
 // On the radio floor there is none: the planner exhausts its space and says so.
 // The mission then runs the best the radio can do, written out here as a
@@ -27,6 +29,12 @@
 // C{south,north} job(s), and the executor refuses it. That refusal is the
 // result of this floor, and the mission reports it as the expected outcome and
 // not as a fault.
+//
+// The blind floor is the sight floor with crates across t2. There is no
+// policy there either, and the mission runs the sight floor's policy less the
+// sighting: both robots to their viewpoints, the order read, the signal, the
+// lift. The listener sees the signal, but the announcer cannot tell that it
+// did, so the signal gives E^1 and no more, and the executor refuses the lift.
 
 #include <fstream>
 #include <memory>
@@ -212,6 +220,53 @@ plansys2_msgs::msg::Plan radio_protocol(
   return plan;
 }
 
+/// The sight floor's policy without its sighting, which the blind floor
+/// cannot perform: the other robot to its viewpoint, the order read, the
+/// reader to its viewpoint, the signal, the lift.
+plansys2_msgs::msg::Plan blind_protocol(
+  const nlohmann::json & mapping, const std::string & reader, const std::string & other,
+  const std::vector<std::string> & stands)
+{
+  plansys2_msgs::msg::Plan plan;
+  plan.epistemic_goal = "lifted";
+  float clock = 0.0f;
+
+  const auto add = [&](const std::string & name, const std::vector<std::string> & reqs,
+      bool sensing) -> std::uint32_t {
+      PlanItem item;
+      item.epistemic_action = name;
+      item.action = mapping.at(name).at("action").get<std::string>();
+      item.duration = mapping.at(name).at("duration").get<float>();
+      item.time = clock;
+      clock += item.duration + 0.001f;
+      item.sensing = sensing;
+      item.knowledge_requirements = reqs;
+      plan.items.push_back(item);
+      return static_cast<std::uint32_t>(plan.items.size() - 1);
+    };
+  const auto link = [&](std::uint32_t from, std::uint32_t to, const std::string & event) {
+      plan.items[from].children.push_back(to);
+      plan.items[from].outcomes.push_back(event);
+    };
+
+  const auto root = add("go-view_" + other, {}, false);
+  const auto read = add("read-order_" + reader + "_" + stands.at(0), {}, true);
+  link(root, read, "e-go-view");
+  for (std::size_t k = 0; k < 2; ++k) {
+    const std::string s = stands.at(k);
+    const std::string job = "job_" + s;
+    const auto go = add("go-view_" + reader, {}, false);
+    link(read, go, k == 0 ? "e-here" : "e-elsewhere");
+    const auto signal = add(
+      "signal_" + reader + "_" + other + "_" + s, {"(K " + reader + " " + job + ")"}, true);
+    link(go, signal, "e-go-view");
+    const auto lift = add("lift_" + s, {"(C (" + reader + " " + other + ") " + job + ")"}, false);
+    link(signal, lift, "e-signal-seen");
+    link(lift, PlanItem::POLICY_DONE, "e-lift");
+  }
+  return plan;
+}
+
 /// Ask the epistemic state whether a formula holds now. Unanswered is false.
 bool holds(const rclcpp::Node::SharedPtr & node, const std::string & formula)
 {
@@ -262,6 +317,18 @@ int main(int argc, char ** argv)
     rclcpp::shutdown();
     return 1;
   }
+
+  // The reader is the agent the problem says reads the order.
+  std::string reader = agents[0];
+  {
+    const auto text = read_file(problem_path);
+    const std::regex reads{R"(\(\[C\. All\] \(reads-order (\w+)\)\))"};
+    std::smatch who;
+    if (std::regex_search(text, who, reads)) {
+      reader = who[1].str();
+    }
+  }
+  const std::string other = reader == agents[0] ? agents[1] : agents[0];
 
   auto problem = std::make_shared<plansys2::ProblemExpertClient>();
   auto planner = std::make_shared<plansys2::PlannerClient>();
@@ -314,21 +381,23 @@ int main(int argc, char ** argv)
     RCLCPP_INFO(
       node->get_logger(), "[mission] no policy for lifted: the planner returned none after "
       "%.1f s", planning);
-    if (floor != "radio") {
-      RCLCPP_ERROR(node->get_logger(), "[mission] mission failed: no policy on the beacon floor");
+    if (floor != "radio" && floor != "blind") {
+      RCLCPP_ERROR(
+        node->get_logger(), "[mission] mission failed: no policy on the %s floor", floor.c_str());
       rclcpp::shutdown();
       return 1;
     }
-    // The reader is the agent the problem says reads the order.
-    const auto text = read_file(problem_path);
-    const std::regex reads{R"(\(\[C\. All\] \(reads-order (\w+)\)\))"};
-    std::smatch who;
-    const std::string reader = std::regex_search(text, who, reads) ? who[1].str() : agents[0];
-    const std::string other = reader == agents[0] ? agents[1] : agents[0];
-    plan = radio_protocol(mapping, reader, other, stands);
-    RCLCPP_INFO(
-      node->get_logger(), "[mission] running the radio protocol instead: read the order, four "
-      "messages each one level deeper, then lift");
+    if (floor == "radio") {
+      plan = radio_protocol(mapping, reader, other, stands);
+      RCLCPP_INFO(
+        node->get_logger(), "[mission] running the radio protocol instead: read the order, four "
+        "messages each one level deeper, then lift");
+    } else {
+      plan = blind_protocol(mapping, reader, other, stands);
+      RCLCPP_INFO(
+        node->get_logger(), "[mission] running the sight floor's policy without the sighting: "
+        "both to their viewpoints, the order read, the signal, then lift");
+    }
   }
   show(node->get_logger(), plan.value(), 0, "  ", "");
   if (!policy_out.empty()) {
@@ -358,6 +427,35 @@ int main(int argc, char ** argv)
     result && result->result == plansys2_msgs::action::ExecutePlan::Result::SUCCESS;
   if (succeeded) {
     RCLCPP_INFO(node->get_logger(), "[mission] mission complete: lifted");
+  } else if (!planned && floor == "blind") {
+    // Expected: the listener knows the stand, the announcer does not know that
+    // it does, and so C does not hold and lift was refused for that reason.
+    std::string verdict;
+    for (const auto & s : stands) {
+      const std::string job = "job_" + s;
+      if (!holds(node, job)) {
+        continue;
+      }
+      const std::string k1 = "(K " + other + " " + job + ")";
+      const bool one = holds(node, k1);
+      const bool two = holds(node, "(K " + reader + " " + k1 + ")");
+      const bool common = holds(node, "(C (" + agents[0] + " " + agents[1] + ") " + job + ")");
+      verdict = "the order named " + s + "; after the signal " + other + " knows it: " +
+        (one ? "yes" : "no") + "; " + reader + " knows that " + other + " does: " +
+        (two ? "yes" : "no") + "; C " + job + ": " + (common ? "yes" : "no");
+      if (one && !two && !common) {
+        RCLCPP_INFO(
+          node->get_logger(), "[mission] mission complete: the executor refused lift, as the "
+          "planner said it would; %s", verdict.c_str());
+        rclcpp::shutdown();
+        return 0;
+      }
+    }
+    RCLCPP_ERROR(
+      node->get_logger(), "[mission] mission failed before the signal: %s",
+      verdict.empty() ? "the order was never read" : verdict.c_str());
+    rclcpp::shutdown();
+    return 1;
   } else if (!planned) {
     // The run is the expected one only if the protocol got as far as it can:
     // all four messages applied, so E^4 holds, and C does not, so lift was

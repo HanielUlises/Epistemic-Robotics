@@ -18,6 +18,8 @@ that needs common knowledge of which stand.
 
     ros2 launch coordinated_attack_demo coordinated_attack_launch.py                 # beacon floor
     ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio
+    ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=sight
+    ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=blind
     ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2
 
 What runs, per robot:
@@ -37,13 +39,21 @@ and once for the mission:
   read_order     south: drive to the terminal and read the order
   go_view        one per robot: drive to the viewpoint of the beacon
   radio          one per message level: tell, ack, ack2, ack3
-  signal         light the beacon's tier for a stand
+  signal         light the beacon's tier for a stand; on the sight and blind
+                 floors, signal_to, which also says whether the listener saw it
+  sight          on the sight and blind floors: the two robots look at each
+                 other through t2, each with its own laser
   lift           both robots, under the two ends of a load, at one start
   knowledge_view the model and the depth of mutual knowledge, drawn for RViz
-  mission        asks for a policy; on the radio floor runs the protocol
+  mission        asks for a policy; on the radio floor runs the protocol, and
+                 on the blind floor the policy without its sighting
 
-`floor:=` picks the floor and the EPDDL problem together: the two differ in
-the beacon and in nothing else. `order:=` is what the work order says.
+`floor:=` picks the floor and the EPDDL problem together. beacon and radio
+differ in the beacon and in nothing else, and share the domain in which where
+each robot stands is announced. sight and blind take the positions domain, in
+which it is not: sight is the beacon floor, and blind the same with crates
+across t2 that hide the two viewpoints from each other. `order:=` is what the
+work order says.
 """
 
 import os
@@ -97,32 +107,44 @@ def setup(context, *args, **kwargs):
     spec.loader.exec_module(robot)
 
     floor = LaunchConfiguration('floor').perform(context)
-    if floor not in ('beacon', 'radio'):
-        raise RuntimeError(f'floor:={floor} is not beacon or radio')
+    if floor not in ('beacon', 'radio', 'sight', 'blind'):
+        raise RuntimeError(f'floor:={floor} is not beacon, radio, sight or blind')
+    positions = floor in ('sight', 'blind')
+    # The world the floor is built from: the sight floor is the beacon floor.
+    built = 'beacon' if floor == 'sight' else floor
     order = LaunchConfiguration('order').perform(context)
     if order not in L.STANDS:
         raise RuntimeError(f'order:={order} is not one of {sorted(L.STANDS)}')
     gui = LaunchConfiguration('gui').perform(context).lower() == 'true'
 
     # The world and the lamps, built now from layout.py.
-    world = os.path.join(tempfile.gettempdir(), f'coordinated_attack_{floor}.world')
+    world = os.path.join(tempfile.gettempdir(), f'coordinated_attack_{built}.world')
     lamps = os.path.join(tempfile.gettempdir(), 'coordinated_attack_lamps')
     subprocess.run([sys.executable, os.path.join(share, 'tools', 'make_world.py'),
-                    '--floor', floor, '--out', world, '--lamps', lamps], check=True)
+                    '--floor', built, '--out', world, '--lamps', lamps], check=True)
 
-    floorplan = os.path.join(share, 'maps', f'floorplan_{floor}.yaml')
-    domain = os.path.join(share, 'epddl', 'coordinated-attack.epddl')
-    problem = os.path.join(share, 'epddl', f'{floor}.epddl')
+    floorplan = os.path.join(share, 'maps', f'floorplan_{built}.yaml')
+    if positions:
+        domain = os.path.join(share, 'epddl', 'coordinated-attack-positions.epddl')
+        problem = os.path.join(share, 'epddl', f'positions-{floor}.epddl')
+        mapping = os.path.join(share, 'pddl', 'coordinated-attack-positions-mapping.json')
+    else:
+        domain = os.path.join(share, 'epddl', 'coordinated-attack.epddl')
+        problem = os.path.join(share, 'epddl', f'{floor}.epddl')
+        mapping = os.path.join(share, 'pddl', 'coordinated-attack-mapping.json')
     lossy = os.path.join(share, 'epddl', 'lossy.epddl')
+    moves = os.path.join(share, 'epddl', 'moves.epddl')
     intermediate = os.path.join(get_package_share_directory('plansys2_epddl_grounder'),
                                 'libraries', 'intermediate.epddl')
-    mapping = os.path.join(share, 'pddl', 'coordinated-attack-mapping.json')
     model = os.path.join(share, 'pddl', 'coordinated-attack.pddl')
 
     with open(os.path.join(share, 'params', 'coordinated_attack.yaml')) as fh:
-        params = (fh.read().replace('EPDDL_DOMAIN', domain).replace('EPDDL_PROBLEM', problem)
+        params = fh.read()
+    if positions:
+        params = params.replace('"LOSSY_LIBRARY"]', '"LOSSY_LIBRARY", "MOVES_LIBRARY"]')
+    params = (params.replace('EPDDL_DOMAIN', domain).replace('EPDDL_PROBLEM', problem)
                   .replace('MAPPING_FILE', mapping).replace('INTERMEDIATE_LIBRARY', intermediate)
-                  .replace('LOSSY_LIBRARY', lossy))
+                  .replace('LOSSY_LIBRARY', lossy).replace('MOVES_LIBRARY', moves))
     filled = tempfile.NamedTemporaryFile('w', suffix='_coordinated_attack.yaml', delete=False)
     filled.write(params)
     filled.close()
@@ -171,6 +193,7 @@ def setup(context, *args, **kwargs):
             mx, my = L.mouth(s, a)
             ux, uy = L.under_end(s, a)
             poses += [mx, my, ux, uy, L.facing(a)]
+    signal = 'signal_to' if positions else 'signal'
     performers = [
         Node(package='coordinated_attack_demo', executable='read_order_action',
              additional_env=matching_cascade(),
@@ -181,11 +204,11 @@ def setup(context, *args, **kwargs):
                           'specialized_arguments': [reader, ''], 'rate': 10.0}]),
         Node(package='coordinated_attack_demo', executable='signal_action',
              additional_env=matching_cascade(),
-             output='screen',
+             output='screen', arguments=['--name', signal],
              parameters=[{**common, 'agents': agents, 'namespaces': namespaces,
                           'beacon': list(L.BEACON_POST),
                           'lamps': [f'{s}={os.path.join(lamps, f"lamp_{s}.sdf")}' for s in stands],
-                          'action_name': 'signal', 'rate': 10.0}]),
+                          'action_name': signal, 'rate': 10.0}]),
         Node(package='coordinated_attack_demo', executable='lift_action',
              additional_env=matching_cascade(),
              output='screen',
@@ -206,6 +229,13 @@ def setup(context, *args, **kwargs):
                          'beacon': list(L.BEACON_POST),
                          'action_name': 'go_view',
                          'specialized_arguments': [agent], 'rate': 10.0}]))
+    if positions:
+        performers.append(Node(
+            package='coordinated_attack_demo', executable='sight_action',
+            additional_env=matching_cascade(),
+            output='screen',
+            parameters=[{'agents': agents, 'namespaces': namespaces,
+                         'action_name': 'sight', 'rate': 10.0}]))
     for kind in ('tell', 'ack', 'ack2', 'ack3'):
         performers.append(Node(
             package='coordinated_attack_demo', executable='radio_action',
@@ -229,7 +259,9 @@ def setup(context, *args, **kwargs):
                      'load_boxes': flat([L.load_box(s) for s in stands]),
                      'beacon': list(L.BEACON_POST),
                      'viewpoints': flat([L.viewpoint(a) for a in agents]),
-                     'terminal': list(L.TERMINAL), 'has_beacon': floor == 'beacon'}])
+                     'terminal': list(L.TERMINAL), 'has_beacon': floor != 'radio',
+                     'positions': positions,
+                     'crates': list(L.crates_box()) if floor == 'blind' else [0.0]}])
 
     shots = [f'{a}={L.ROBOTS[a][0]}' for a in agents]
     shots += [f'{name}={L.shot_text(pose)}' for name, pose in L.SHOTS.items()]
@@ -271,7 +303,9 @@ def generate_launch_description():
     tb3 = get_package_share_directory('turtlebot3_gazebo')
     return LaunchDescription([
         DeclareLaunchArgument('floor', default_value='beacon',
-                              description='beacon: the floor with a beacon; radio: without.'),
+                              description='beacon: the floor with a beacon; radio: without; '
+                                          'sight and blind: positions not announced, with and '
+                                          'without a sight line through t2.'),
         DeclareLaunchArgument('order', default_value='s1',
                               description='The stand the work order names: s1 or s2.'),
         DeclareLaunchArgument('gui', default_value='true', description='gzclient'),

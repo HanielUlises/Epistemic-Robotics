@@ -18,6 +18,7 @@ Writes the coordinated attack's world.
 
     make_world.py --floor beacon --out /tmp/coordinated_attack_beacon.world
     make_world.py --floor radio  --out /tmp/coordinated_attack_radio.world
+    make_world.py --floor blind  --out /tmp/coordinated_attack_blind.world
 
 The two floors differ by the beacon post in t2 and by nothing else, as the two
 EPDDL problems differ by `(beacon)` and by nothing else. Both stands carry a
@@ -94,6 +95,36 @@ def beacon_post():
           <geometry><cylinder><radius>0.14</radius><length>0.04</length></cylinder></geometry>
           <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material>
         </visual>
+      </link>
+    </model>
+"""
+
+
+def crates():
+    """Two crates, one on the other, on the axis of t2."""
+    x, y = L.CRATES_CENTRE
+    w, d, h = L.CRATES_SIZE
+    lower, upper = 0.8 * h, 0.2 * h
+    wood = '<ambient>0.45 0.33 0.20 1</ambient><diffuse>0.55 0.40 0.24 1</diffuse>'
+    links = []
+    for name, z, height, inset in (('lower', lower / 2.0, lower, 0.0),
+                                   ('upper', lower + upper / 2.0, upper, 0.08)):
+        size = f'{w - inset:.2f} {d - inset:.2f} {height:.2f}'
+        links.append(f"""        <collision name="{name}">
+          <pose>0 0 {z:.3f} 0 0 0</pose>
+          <geometry><box><size>{size}</size></box></geometry>
+        </collision>
+        <visual name="{name}">
+          <pose>0 0 {z:.3f} 0 0 0</pose>
+          <geometry><box><size>{size}</size></box></geometry>
+          <material>{wood}</material>
+        </visual>""")
+    body = '\n'.join(links)
+    return f"""    <model name="crates_t2">
+      <static>true</static>
+      <pose>{x:.3f} {y:.3f} 0 0 0 0</pose>
+      <link name="link">
+{body}
       </link>
     </model>
 """
@@ -179,7 +210,7 @@ def load(stand):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--floor', choices=('beacon', 'radio'), required=True)
+    ap.add_argument('--floor', choices=('beacon', 'radio', 'blind'), required=True)
     ap.add_argument('--camera', default=','.join(str(v) for v in L.OPENING_SHOT),
                     help='X,Y,Z,PITCH,YAW the Gazebo view opens on')
     ap.add_argument('--out', required=True)
@@ -209,9 +240,12 @@ def main():
     parts.append('\n    <!-- The work-order terminal. -->\n')
     parts.append(terminal())
 
-    if args.floor == 'beacon':
+    if args.floor in ('beacon', 'blind'):
         parts.append('\n    <!-- The beacon in t2. Its lamp is spawned when it signals. -->\n')
         parts.append(beacon_post())
+    if args.floor == 'blind':
+        parts.append('\n    <!-- Crates on the axis of t2, between the two viewpoints. -->\n')
+        parts.append(crates())
 
     parts.append(W.camera([float(v) for v in args.camera.split(',')]))
     parts.append(W.FOOTER)

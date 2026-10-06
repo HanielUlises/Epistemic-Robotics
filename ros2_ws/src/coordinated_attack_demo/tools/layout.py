@@ -150,6 +150,20 @@ def beacon_box():
     return (x - r, y - r, x + r, y + r)
 
 
+# On the blind floor a stack of crates stands in t2, on its axis and short of
+# the beacon post: from each viewpoint the beacon is still in sight, and the
+# other viewpoint is not. The crates are taller than either laser's plane and
+# lower than the lamps.
+CRATES_CENTRE = (-0.35, 0.0)
+CRATES_SIZE = (0.9, 0.8, 1.4)
+
+
+def crates_box():
+    x, y = CRATES_CENTRE
+    w, d, _ = CRATES_SIZE
+    return (x - w / 2.0, y - d / 2.0, x + w / 2.0, y + d / 2.0)
+
+
 def viewpoint(agent):
     """Where a robot sees the beacon: outside its mouth of t2, on the axis."""
     x, _ = P.tunnel_centre(BEACON_BAY)
@@ -212,6 +226,13 @@ def stand_shot(stand):
     return look_at((x, -2.8, 11.2), (x, 0.3, 0.0))
 
 
+def sight_shot():
+    """High over t2, looking down its axis: both viewpoints, and on the blind
+    floor the crates between them. Held while the robots look at each other."""
+    x, _ = P.tunnel_centre(BEACON_BAY)
+    return look_at((x - 0.6, -8.4, 9.6), (x, 0.0, 0.0))
+
+
 def radio_shot():
     """High over the storage floor's west side: south at the terminal low in
     frame, the block that separates it from north across the top. Held while
@@ -230,6 +251,7 @@ SHOTS = {
     'radio': radio_shot(),
     'terminal': terminal_shot(),
     'beacon': beacon_shot(),
+    'sight': sight_shot(),
     's1': stand_shot('s1'),
     's2': stand_shot('s2'),
 }
@@ -241,13 +263,15 @@ def shot_text(pose):
 
 # ─── Everything a robot is told about ──────────────────────────────────────
 
-def static_obstacles(beacon=True):
+def static_obstacles(beacon=True, crates=False):
     """The pass-through floor's obstacles, and what this floor adds: the two
-    loads, the terminal and, on the floor that has one, the beacon post. All
-    of it common knowledge."""
+    loads, the terminal and, on the floors that have them, the beacon post and
+    the crates in t2. All of it common knowledge."""
     boxes = list(P.static_obstacles())
     boxes += [load_box(s) for s in STANDS]
     boxes.append(terminal_box())
     if beacon:
         boxes.append(beacon_box())
+    if crates:
+        boxes.append(crates_box())
     return boxes

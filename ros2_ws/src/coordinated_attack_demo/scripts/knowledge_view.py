@@ -38,6 +38,12 @@ the order names the stand; the depth beside the stand; the beacon, lit or
 dark; each robot's viewpoint and its sight line to the beacon; the terminal;
 and a radio message in flight, as an arc over the block from sender to
 receiver, with what it says.
+
+On the sight and blind floors, where the robots' positions are not
+announced, also: beside each viewpoint, whether the other robot knows that
+this one stands there, K_j at-view(i), which is logged on the same [knows]
+line; the crates in t2 on the blind floor; and, when the two look at each
+other through t2, the line between them, green when both lasers read clear.
 """
 
 import json
@@ -67,6 +73,9 @@ BEACON_ON = (0.15, 0.95, 0.40)
 BEACON_OFF = (0.20, 0.30, 0.22)
 INK = (0.12, 0.12, 0.12)
 COMMON = (0.78, 0.06, 0.18)
+CRATES = (0.55, 0.40, 0.24)
+BLOCKED = (0.85, 0.15, 0.10)
+WHERE_UNKNOWN = (0.40, 0.40, 0.40)
 
 
 def rgba(rgb, a=1.0):
@@ -162,6 +171,8 @@ class KnowledgeView(Node):
         self.declare_parameter('viewpoints', [0.0] * 4)
         self.declare_parameter('terminal', [0.0, 0.0])
         self.declare_parameter('has_beacon', True)
+        self.declare_parameter('positions', False)
+        self.declare_parameter('crates', [0.0])
 
         self.agents = list(self.get_parameter('agents').value)
         self.namespaces = dict(zip(self.agents, self.get_parameter('namespaces').value))
@@ -175,6 +186,11 @@ class KnowledgeView(Node):
         self.views = {a: (views[2 * i], views[2 * i + 1]) for i, a in enumerate(self.agents)}
         self.terminal = tuple(self.get_parameter('terminal').value)
         self.has_beacon = bool(self.get_parameter('has_beacon').value)
+        self.positions = bool(self.get_parameter('positions').value)
+        crates = list(self.get_parameter('crates').value)
+        self.crates = tuple(crates) if len(crates) == 4 else None
+        self.where = {}
+        self.sighting = {}
 
         self.model = None
         self.shape = (0, 0)
@@ -198,6 +214,7 @@ class KnowledgeView(Node):
         self.create_subscription(String, '/coordinated_attack/radio', self.on_radio, HISTORY)
         self.create_subscription(String, '/coordinated_attack/beacon', self.on_beacon, LATCHED)
         self.create_subscription(String, '/coordinated_attack/lift', self.on_lift, LATCHED)
+        self.create_subscription(String, '/coordinated_attack/sight', self.on_sight, LATCHED)
         for agent, ns in self.namespaces.items():
             self.create_subscription(
                 Odometry, f'/{ns}/odom', lambda m, a=agent: self.on_odom(a, m), 10)
@@ -236,6 +253,12 @@ class KnowledgeView(Node):
         except json.JSONDecodeError:
             pass
 
+    def on_sight(self, msg):
+        try:
+            self.sighting = json.loads(msg.data)
+        except json.JSONDecodeError:
+            pass
+
     def on_odom(self, agent, msg):
         p = msg.pose.pose
         yaw = math.atan2(2 * (p.orientation.w * p.orientation.z + p.orientation.x * p.orientation.y),
@@ -255,6 +278,14 @@ class KnowledgeView(Node):
             facts[s] = {'knows': {a: m.knows(a, atom) for a in self.agents},
                         'depth': 'C' if k is None else k, 'chain': chain}
         self.facts = facts
+        # Who knows where the other stands: K_j at-view(i), for i != j.
+        where = {}
+        if self.positions:
+            for i in self.agents:
+                for j in self.agents:
+                    if i != j:
+                        where[(j, i)] = m.knows(j, f'at-view_{i}')
+        self.where = where
         parts = []
         for s, f in facts.items():
             for a in self.agents:
@@ -263,6 +294,8 @@ class KnowledgeView(Node):
             parts.append(f'depth job_{s} ' + ('C' if d == 'C' else f'E^{d}'))
             if f['chain']:
                 parts.append('chain ' + '>'.join(f['chain']))
+        for (j, i), known in where.items():
+            parts.append(f'K_{j} {"" if known else "~"}at-view_{i}')
         body = ' · '.join(parts) if parts else 'the order has not been read'
         line = f'[knows] {self.shape[0]} worlds, {self.shape[1]} designated: {body}'
         if line != self.last_line:
@@ -356,6 +389,33 @@ class KnowledgeView(Node):
                 tri.scale.x = tri.scale.y = 0.9
                 tri.scale.z = 0.05
                 out.markers.append(tri)
+
+        # Unannounced positions: whether the other robot knows this one is at
+        # its viewpoint, written in the open aisle on this robot's side of t2.
+        if self.positions:
+            for j, agent in enumerate(self.agents):
+                vx, vy = self.views[agent]
+                other = [a for a in self.agents if a != agent][0]
+                known = self.where.get((other, agent), False)
+                side = 1.0 if vy > 0 else -1.0
+                words = f'K_{other} at-view({agent}): {"yes" if known else "no"}'
+                out.markers.append(self.text(j, 'where', vx, side * 9.6, 1.0, words,
+                                             1.0, KNOWS if known else WHERE_UNKNOWN))
+            if self.crates:
+                x0, y0, x1, y1 = self.crates
+                out.markers.append(self.cube(0, 'crates', 0.5 * (x0 + x1), 0.5 * (y0 + y1), 0.7,
+                                             x1 - x0, y1 - y0, 1.4, CRATES, 1.0))
+            a, b = self.sighting.get('a'), self.sighting.get('b')
+            if a in self.poses and b in self.poses:
+                clear = bool(self.sighting.get('clear'))
+                line = self.marker(0, 'robots_sight', Marker.LINE_STRIP,
+                                   KNOWS if clear else BLOCKED, 0.95)
+                line.points = [Point(x=self.poses[a][0], y=self.poses[a][1], z=0.6),
+                               Point(x=self.poses[b][0], y=self.poses[b][1], z=0.6)]
+                line.scale.x = 0.22
+                out.markers.append(line)
+            else:
+                out.markers.append(self.gone(0, 'robots_sight'))
 
         # The terminal.
         tx, ty = self.terminal

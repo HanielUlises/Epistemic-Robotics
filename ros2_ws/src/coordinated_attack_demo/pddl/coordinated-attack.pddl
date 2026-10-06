@@ -20,6 +20,7 @@
   (said ?from ?to - robot ?s - stand)
   (at-view ?r - robot)
   (signalled ?s - stand)
+  (sighted)
   (lifted)
 )
 
@@ -72,6 +73,23 @@
   :duration (= ?duration 6)
   :condition (and (at start (ready ?r)))
   :effect (and (at end (signalled ?s)))
+)
+
+;; The signal of the positions domain, which names its listener: whether the
+;; listener saw it is an outcome there, decided by where the listener stands.
+(:durative-action signal_to
+  :parameters (?from ?to - robot ?s - stand)
+  :duration (= ?duration 6)
+  :condition (and (at start (ready ?from)))
+  :effect (and (at end (signalled ?s)))
+)
+
+;; The two robots see each other through t2, each from its viewpoint.
+(:durative-action sight
+  :parameters (?a ?b - robot)
+  :duration (= ?duration 6)
+  :condition (and (at start (ready ?a)) (at start (ready ?b)))
+  :effect (and (at end (sighted)))
 )
 
 ;; Joint: one action for both robots, since neither half may run alone.

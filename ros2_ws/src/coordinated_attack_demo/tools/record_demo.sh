@@ -19,6 +19,8 @@
 #
 #     record_demo.sh radio  s1 /tmp/ca_radio.mkv  /tmp/ca_radio.log
 #     record_demo.sh beacon s1 /tmp/ca_beacon.mkv /tmp/ca_beacon.log
+#     record_demo.sh sight  s1 /tmp/ca_sight.mkv  /tmp/ca_sight.log
+#     record_demo.sh blind  s1 /tmp/ca_blind.mkv  /tmp/ca_blind.log
 #
 # The display is an Xvfb screen carrying the two windows and nothing else.
 # There is no window manager on it, so both windows are placed before they
@@ -53,7 +55,7 @@ export DISPLAY=$DISP LIBGL_ALWAYS_SOFTWARE=1 PYTHONNOUSERSITE=1
 kill_stack() {
   for p in gzserver gzclient rviz2 plansys2_node robot_state_publisher \
            static_transform_publisher read_order_action go_view_action radio_action \
-           signal_action lift_action coordinated_attack_mission chase_camera; do
+           signal_action sight_action lift_action coordinated_attack_mission chase_camera; do
     pkill -9 -x "$p" 2>/dev/null
   done
   pkill -9 -f "ros2 launch coordinated_attack""_demo" 2>/dev/null
@@ -139,4 +141,4 @@ wait $FF 2>/dev/null
 
 echo "raw:  $RAW"
 echo "t0:   $(cat "${RAW%.*}.t0")"
-grep -oE '\[(mission|order|view|radio|signal|lift|knows)\] .*' "$LOG" | cut -c1-170
+grep -oE '\[(mission|order|view|radio|signal|sight|lift|knows)\] .*' "$LOG" | cut -c1-170
