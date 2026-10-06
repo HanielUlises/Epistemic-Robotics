@@ -149,10 +149,13 @@ A stack light visible only from two viewpoints yields common knowledge in one
 update, and only when both robots stand at their viewpoints. When a move is
 witnessed only by the mover, the same signal yields one level of mutual
 knowledge, as a message does, and the planner has the robots sight each other
-first. Both floors were
+first. All four floors were
 executed in Gazebo through ePlanSys. Over the radio, four delivered messages
 reached $E^4$ and the executor refused the lift; with the beacon, the policy
-lifted the load from a joint start, with arrivals 0.40\,s apart.}
+lifted the load from a joint start, with arrivals 0.40\,s apart. With positions
+unannounced, the robots sighted each other with their own lasers and lifted;
+with crates across the sight line, north saw the signal, south could not know
+that it had, and the executor refused the lift at $E^1$.}
 \vspace{1.2cm}
 \end{titlepage}
 
@@ -875,8 +878,8 @@ The policy is $\mathit{go\text{-}view}(\ag{north})$,
 $\mathit{read\text{-}order}(\ag{south}, s_1)$, then on each outcome
 $\mathit{go\text{-}view}(\ag{south})$, the sighting, the signal for the stand,
 and the lift. The planner places the sighting before the signal; by
-Proposition~\ref{prop:sighting} the reverse order would serve as well. This
-domain has not been run in the simulator.
+Proposition~\ref{prop:sighting} the reverse order would serve as well. Both
+instances were run in the simulator; Section~\ref{sec:runs} reports the runs.
 
 %  ======================================================================
 \section{Planning results}
@@ -977,10 +980,13 @@ $\mathit{lift}$ & both robots drive to their mouths of the stand, one start time
 \section{Runs}
 \label{sec:runs}
 
-Both floors were recorded with the order naming $s_1$, on a $3840 \times 1080$
-virtual display with RViz on the left and Gazebo on the right, and composed into
-one film whose captions are the lines the runs wrote. The second branch was run
-without recording.
+The four floors were recorded with the order naming $s_1$, on a
+$3840 \times 1080$ virtual display with RViz on the left and Gazebo on the
+right, and composed into two films, the radio and beacon floors in one and the
+two positions floors in the other, whose captions are the lines the runs wrote.
+The second branch of the beacon floor was run without recording. In the tables
+the model column gives worlds and designated worlds after the update, and the
+depth of mutual knowledge of $\job(s_1)$.
 
 \subsection{The radio floor}
 
@@ -1044,6 +1050,77 @@ seen from above the bay: $C$, both robots under the load.}
 \label{fig:frames}
 \end{figure}
 
+\subsection{The positions floors}
+
+Both instances of Section~\ref{sec:positions} were run: the sight instance on
+the beacon floor, and the blind instance on the same floor with a stack of
+crates on the axis of $t_2$. The floor-plan check confirms that the crates
+leave the beacon in line of sight from each viewpoint and hide each viewpoint
+from the other. The sighting is performed by each robot's laser: along the
+bearing to the other robot, no beam may return short of it.
+
+\begin{table}[H]
+\centering\small
+\caption{The blind floor, as the run reported it.}
+\label{tab:blind-run}
+\begin{tabularx}{\textwidth}{@{}l X r@{}}
+\toprule
+action & reported & model \\
+\midrule
+plan & no policy for $\mathit{lifted}$ after 0.4\,s; space exhausted at depth 8 & 2 / 2 \\
+$\mathit{go\text{-}view}(\ag{north})$ & at its viewpoint after 18\,s; beacon in line of sight, 3.5\,m & 4 / 2 \\
+$\mathit{read\text{-}order}$ & at the terminal after 19\,s; the order names $s_1$; $e_h$ & 4 / 1, $E^0$ \\
+$\mathit{go\text{-}view}(\ag{south})$ & at its viewpoint after 48\,s; beacon in line of sight, 3.5\,m & 8 / 1, $E^0$ \\
+$\mathit{signal}(\ag{south}, \ag{north}, s_1)$ & in line of sight: south and north, 3.5\,m; north sees it: \code{e-signal-seen} & 10 / 1, $E^1$ \\
+$\mathit{lift}(s_1)$ & knowledge requirement does not hold: \code{(C (south north) job\_s1)} & refused \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\caption{The sight floor, as the run reported it.}
+\label{tab:sight-run}
+\begin{tabularx}{\textwidth}{@{}l X r@{}}
+\toprule
+action & reported & model \\
+\midrule
+plan & 10 policy items, 2 leaves, 0.2\,s & 2 / 2 \\
+$\mathit{go\text{-}view}(\ag{north})$ & at its viewpoint after 17\,s; beacon in line of sight, 3.5\,m & 4 / 2 \\
+$\mathit{read\text{-}order}$ & at the terminal after 13\,s; the order names $s_1$; $e_h$ & 4 / 1, $E^0$ \\
+$\mathit{go\text{-}view}(\ag{south})$ & at its viewpoint after 50\,s; beacon in line of sight, 3.5\,m & 8 / 1, $E^0$ \\
+$\mathit{sight}(\ag{north}, \ag{south})$ & each robot 6.6\,m from the other; each laser reads 6.7\,m along the bearing: clear & 10 / 1, $E^0$ \\
+$\mathit{signal}(\ag{south}, \ag{north}, s_1)$ & north sees it: \code{e-signal-seen} & 13 / 1, $C$ \\
+$\mathit{lift}(s_1)$ & at the mouths after 23\,s each; joint start; under the load after 14.1 and 14.5\,s: starts 0.00\,s apart, arrivals 0.40\,s apart; load raised 0.12\,m & 1 / 1, $C$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent
+Each unwitnessed move doubled the model, and until the sighting neither robot
+knew where the other stood: $\neg\Kop{south}\,\mathit{at\text{-}view}(\ag{north})$
+and $\neg\Kop{north}\,\mathit{at\text{-}view}(\ag{south})$ held on both floors. On
+the sight floor both became known with the sighting, and the signal then gave
+$\Cop{G}\job(s_1)$. On the blind floor the signal gave north the stand, and
+also south's position, since the signal is made only from a viewpoint; south
+learned nothing about north. The chain that blocked $C$ was
+$\ag{south} \to \ag{north}$: south considers a world in which north never left
+its start, and north there does not know the stand. The mission confirmed
+through the epistemic state that $\Kop{north}\job(s_1)$ held and
+$\Kop{south}\Kop{north}\job(s_1)$ did not, as
+Proposition~\ref{prop:unseen} states.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/coordinated_attack_frame_blind.jpg}\\[0.4em]
+\includegraphics[width=\textwidth]{figures/coordinated_attack_frame_sight.jpg}
+\caption{Two frames of the second film. Above, the blind floor at the refused
+lift: the crates in $t_2$, $E^1$, and south not knowing where north stands.
+Below, the sight floor at the signal: both positions known after the
+sighting.}
+\label{fig:positions-frames}
+\end{figure}
+
 %  ======================================================================
 \section{Defects}
 \label{sec:defects}
@@ -1065,9 +1142,13 @@ disagree about who sees the beacon.
 no action changes requires \code{:static-common-knowledge}, and plank warns
 under \code{:common-knowledge}.
 
-\paragraph{Teardown} After the mission reports its result, the action nodes
-exit on signal 11 as the launch shuts down. The result is logged first, and the
-cause has not been traced.
+\paragraph{Teardown} In the runs of the radio and beacon floors the action nodes
+exited on signal 11 as the launch shut down, after the result was logged. The
+cause was a mismatch of two builds of \code{rclcpp\_cascade\_lifecycle}: the
+executor's packages are compiled against the header ROS~2 Humble ships, and its
+workspace loads a newer library whose node class has two members more. The
+launch now preloads the library the headers describe, and in the runs of the
+positions floors every node exited cleanly.
 
 %  ======================================================================
 \section{What the runs establish}
@@ -1085,17 +1166,22 @@ the run, four delivered messages yielding $E^4$ and no more.
 
 And that a signal yields common knowledge exactly when each robot's observation
 of it is itself common knowledge, which the floor supplies through two
-viewpoints and the domain through a public move to them.
+viewpoints and the domain through a public move to them. When the move is not
+public, the runs show the same condition established on the floor: a sighting
+made with each robot's own laser preceded the signal on one floor and the lift
+was executed, and on the floor without a sight line the same signal gave $E^1$
+and the lift was refused.
 
 %  ======================================================================
 \section{Directions for the next iteration}
 \label{sec:next}
 
-\paragraph{Positions that must be learned} The domain makes the move to a
-viewpoint public. A domain in which robots also learned each other's positions
-over the same radio would put the observability condition of the signal itself
-out of common knowledge, and Proposition~\ref{prop:public} would no longer
-apply.
+\paragraph{Positions without a sight line} Section~\ref{sec:positions} restores
+common knowledge of the robots' positions by a sighting, and on the floor
+without a sight line no policy exists. The radio cannot replace the sighting,
+by Corollary~\ref{cor:radio}. A third observer that both robots are known to
+consult, such as a ceiling camera publishing positions to both, would be a
+public source of positions, and the natural next floor.
 
 \paragraph{Probabilistic coordination} Common knowledge is unattainable over a
 lossy channel; coordination with a bounded probability of failure is not. A
@@ -1140,13 +1226,13 @@ receiver reports.
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=beacon
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2
-bash tools/validate.sh                                   # four checks, no simulator
-python3 tools/export_models.py --radio radio.json --beacon beacon.json --out models.json
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=sight
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=blind
+bash tools/validate.sh                                   # eight checks, no simulator
 bash tools/record_demo.sh radio  s1 /tmp/raw_radio.mkv  /tmp/run_radio.log
 bash tools/record_demo.sh beacon s1 /tmp/raw_beacon.mkv /tmp/run_beacon.log
-python3 tools/make_video.py --radio  /tmp/raw_radio.mkv  /tmp/run_radio.log  /tmp/raw_radio_policy.json \
-                            --beacon /tmp/raw_beacon.mkv /tmp/run_beacon.log /tmp/raw_beacon_policy.json \
-                            --out /tmp/coordinated_attack.mp4
+bash tools/record_demo.sh sight  s1 /tmp/raw_sight.mkv  /tmp/run_sight.log
+bash tools/record_demo.sh blind  s1 /tmp/raw_blind.mkv  /tmp/run_blind.log
 \end{lstlisting}
 
 \end{document}

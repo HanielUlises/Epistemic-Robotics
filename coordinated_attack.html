@@ -669,8 +669,9 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       and the argument is that delivery does not suffice. <b>The radio floor has
       no policy for any number of messages,</b> which is proved below over the
       event model; the planner proves it for one message per level of nesting.
-      <b>The positions of the robots are common knowledge</b> by the policy both
-      robots run, and are not learned. <b>The lift is drawn</b> by moving the
+      <b>On the radio and beacon floors the positions of the robots are common
+      knowledge</b> by the policy both robots run; on the positions floors they
+      are learned, by a sighting each robot makes with its own laser. <b>The lift is drawn</b> by moving the
       load in the simulator once both robots are under it.
     </p>
     <p class="note" style="margin-top:1rem">
@@ -1019,8 +1020,8 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <p class="note">
       Computed by the product update of
       <span class="mono-inline">tools/trace.py</span> from the tasks plank
-      grounds (<span class="mono-inline">tools/export_models.py</span>). The world
-      counts agree with what the epistemic state logged during the runs.
+      grounds. The world counts agree with what the epistemic state logged
+      during the runs.
     </p>
   </div>
 </section>
@@ -1135,9 +1136,44 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       by construction. The trace, which then read the conditions world by
       world, refused the lift there. The domain now states in the event model
       what the observability conditions could not, and the trace uses the
-      tools' reading. This domain has been planned and validated, and not yet
-      run in the simulator.
+      tools' reading.
     </p>
+    <h4>On the floor</h4>
+    <p>
+      Both instances were run in Gazebo: the sight instance on the beacon
+      floor, and the blind instance on the same floor with a stack of crates on
+      the axis of t2, which the floor-plan check confirms leaves the beacon in
+      line of sight from each viewpoint and hides each viewpoint from the
+      other. The sighting is made by each robot's own laser: along the bearing
+      to the other robot, no beam may return short of it. Each unwitnessed move
+      doubled the model, and until the sighting neither robot knew where the
+      other stood.
+    </p>
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/coordinated_attack_positions_poster.jpg">
+        <source src="media/coordinated_attack_positions.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        The blind floor, then the sight floor. In RViz, beside each viewpoint,
+        whether the other robot knows that this one stands there, and when the
+        two look at each other, the line between them. In the panel, the same
+        two facts above the order and its depth. The frame is the first
+        film's; every caption is a line the runs wrote.
+      </figcaption>
+    </figure>
+    <table class="data pt-run">
+      <thead><tr><th>floor</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>blind</td><td>no policy, the space exhausted at depth 8 in 0.4&#8202;s; the policy for the sight floor run without its sighting; north at its viewpoint after 18&#8202;s, south after 48&#8202;s</td><td>8 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td></td><td>signal(south, north, s1): north sees it, e-signal-seen. North now knows the stand, and where south stands, since the signal is made only from a viewpoint; south knows nothing more about north</td><td>10 / 1 &#183; \(E^1\)</td></tr>
+        <tr><td></td><td>lift(s1) refused: (C (south north) job_s1) does not hold; the chain that blocks it is south, then north</td><td>refused</td></tr>
+        <tr><td>sight</td><td>policy of 10 nodes and 2 leaves in 0.2&#8202;s; north at its viewpoint after 17&#8202;s, south after 50&#8202;s</td><td>8 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td></td><td>sight(north, south): each robot 6.6&#8202;m from the other, each laser reads 6.7&#8202;m along the bearing; both positions known</td><td>10 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td></td><td>signal(south, north, s1): north sees it, e-signal-seen</td><td>13 / 1 &#183; \(C\)</td></tr>
+        <tr><td></td><td>lift(s1): starts 0.00&#8202;s apart, arrivals 0.40&#8202;s apart; load raised 0.12&#8202;m</td><td>1 / 1 &#183; \(C\)</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
@@ -1249,9 +1285,14 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       floor disagree about who sees the beacon.
     </p>
     <p>
-      <b>Teardown.</b> After the mission reports its result, the action nodes
-      exit on signal 11 as the launch shuts down. The result is logged first,
-      and the cause has not been traced.
+      <b>Teardown.</b> In the runs of the radio and beacon floors the action
+      nodes exited on signal 11 as the launch shut down, after the result was
+      logged. The cause was a mismatch of two builds of
+      <span class="mono-inline">rclcpp_cascade_lifecycle</span>: the executor's
+      packages are compiled against the header ROS 2 Humble ships, and its
+      workspace loads a newer library whose node class has two members more.
+      The launch now preloads the library the headers describe, and in the
+      runs of the positions floors every node exited cleanly.
     </p>
   </div>
 </section>
@@ -1264,10 +1305,9 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <ul style="margin:0 0 0 1.2rem">
       <li>A lost message. Every message in the runs arrived; the proposition is
         what says it would not have mattered.</li>
-      <li>Positions learned over the radio. Making the move to a viewpoint
-        public is what puts the observability of the signal in common
-        knowledge; a domain in which positions had to be learned would lose
-        Proposition 3.</li>
+      <li>Positions learned over the radio. The positions floors learn them by
+        a sighting; over the radio alone they could not become common
+        knowledge, by the corollary to Proposition 2.</li>
       <li>Coordination with a bounded probability of failure, which a lossy
         channel does allow, and which would trade the precondition for a
         risk.</li>
@@ -1301,12 +1341,13 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <pre class="code">ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=beacon
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2
-bash tools/validate.sh                                       <span class="c"># four checks, no simulator</span>
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=sight
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=blind
+bash tools/validate.sh                                       <span class="c"># eight checks, no simulator</span>
 bash tools/record_demo.sh radio  s1 /tmp/raw_radio.mkv  /tmp/run_radio.log
 bash tools/record_demo.sh beacon s1 /tmp/raw_beacon.mkv /tmp/run_beacon.log
-python3 tools/make_video.py --radio  /tmp/raw_radio.mkv  /tmp/run_radio.log  /tmp/raw_radio_policy.json \
-                            --beacon /tmp/raw_beacon.mkv /tmp/run_beacon.log /tmp/raw_beacon_policy.json \
-                            --out /tmp/coordinated_attack.mp4</pre>
+bash tools/record_demo.sh sight  s1 /tmp/raw_sight.mkv  /tmp/run_sight.log
+bash tools/record_demo.sh blind  s1 /tmp/raw_blind.mkv  /tmp/run_blind.log</pre>
   </div>
 </section>
 
@@ -1462,7 +1503,7 @@ python3 tools/make_video.py --radio  /tmp/raw_radio.mkv  /tmp/run_radio.log  /tm
 const CA_MODELS = {"radio":[{"action":"initial","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"read-order_south_s1","outcome":"e-here","size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"tell_south_north_s1","outcome":null,"size":4,"worlds":[{"id":"u0","job":"s1","code":"D","des":true},{"id":"u1","job":"s1","code":"·","des":false},{"id":"u2","job":"s2","code":"·","des":false},{"id":"u3","job":"s1","code":"L","des":false}],"rel":{"south":[["u0","u3"],["u3","u0"]],"north":[["u1","u2"],["u1","u3"],["u2","u1"],["u2","u3"],["u3","u1"],["u3","u2"]]},"stand":"s1","depth":1,"chain":[["u0","south","u3"],["u3","north","u2"]],"knows":{"south":true,"north":true}},{"action":"ack_north_south_s1","outcome":null,"size":6,"worlds":[{"id":"u0","job":"s1","code":"DD","des":true},{"id":"u1","job":"s1","code":"··","des":false},{"id":"u2","job":"s1","code":"D·","des":false},{"id":"u3","job":"s2","code":"··","des":false},{"id":"u4","job":"s1","code":"L·","des":false},{"id":"u5","job":"s1","code":"DL","des":false}],"rel":{"south":[["u2","u4"],["u2","u5"],["u4","u2"],["u4","u5"],["u5","u2"],["u5","u4"]],"north":[["u0","u5"],["u1","u3"],["u1","u4"],["u3","u1"],["u3","u4"],["u4","u1"],["u4","u3"],["u5","u0"]]},"stand":"s1","depth":2,"chain":[["u0","north","u5"],["u5","south","u4"],["u4","north","u3"]],"knows":{"south":true,"north":true}},{"action":"ack2_south_north_s1","outcome":null,"size":8,"worlds":[{"id":"u0","job":"s1","code":"DDD","des":true},{"id":"u1","job":"s1","code":"···","des":false},{"id":"u2","job":"s1","code":"D··","des":false},{"id":"u3","job":"s2","code":"···","des":false},{"id":"u4","job":"s1","code":"DD·","des":false},{"id":"u5","job":"s1","code":"L··","des":false},{"id":"u6","job":"s1","code":"DL·","des":false},{"id":"u7","job":"s1","code":"DDL","des":false}],"rel":{"south":[["u0","u7"],["u2","u5"],["u2","u6"],["u5","u2"],["u5","u6"],["u6","u2"],["u6","u5"],["u7","u0"]],"north":[["u1","u3"],["u1","u5"],["u3","u1"],["u3","u5"],["u4","u6"],["u4","u7"],["u5","u1"],["u5","u3"],["u6","u4"],["u6","u7"],["u7","u4"],["u7","u6"]]},"stand":"s1","depth":3,"chain":[["u0","south","u7"],["u7","north","u6"],["u6","south","u5"],["u5","north","u3"]],"knows":{"south":true,"north":true}},{"action":"ack3_north_south_s1","outcome":null,"size":10,"worlds":[{"id":"u0","job":"s1","code":"DDDD","des":true},{"id":"u1","job":"s1","code":"····","des":false},{"id":"u2","job":"s1","code":"D···","des":false},{"id":"u3","job":"s2","code":"····","des":false},{"id":"u4","job":"s1","code":"DD··","des":false},{"id":"u5","job":"s1","code":"L···","des":false},{"id":"u6","job":"s1","code":"DDD·","des":false},{"id":"u7","job":"s1","code":"DL··","des":false},{"id":"u8","job":"s1","code":"DDL·","des":false},{"id":"u9","job":"s1","code":"DDDL","des":false}],"rel":{"south":[["u2","u5"],["u2","u7"],["u5","u2"],["u5","u7"],["u6","u8"],["u6","u9"],["u7","u2"],["u7","u5"],["u8","u6"],["u8","u9"],["u9","u6"],["u9","u8"]],"north":[["u0","u9"],["u1","u3"],["u1","u5"],["u3","u1"],["u3","u5"],["u4","u7"],["u4","u8"],["u5","u1"],["u5","u3"],["u7","u4"],["u7","u8"],["u8","u4"],["u8","u7"],["u9","u0"]]},"stand":"s1","depth":4,"chain":[["u0","north","u9"],["u9","south","u8"],["u8","north","u7"],["u7","south","u5"],["u5","north","u3"]],"knows":{"south":true,"north":true}},{"action":"lift_s1","refused":true}],"beacon":[{"action":"initial","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"go-view_north","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"read-order_south_s1","outcome":"e-here","size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"go-view_south","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"signal_south_s1","outcome":null,"size":3,"worlds":[{"id":"u0","job":"s1","code":"σ","des":true}],"rel":{"south":[],"north":[]},"stand":"s1","depth":"C","chain":[],"knows":{"south":true,"north":true}},{"action":"lift_s1","outcome":null,"size":1,"worlds":[{"id":"u0","job":"s1","code":"σ","des":true}],"rel":{"south":[],"north":[]},"stand":"s1","depth":"C","chain":[],"knows":{"south":true,"north":true}}],"alone":[{"action":"initial","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s2","code":"","des":true},{"id":"u1","job":"s1","code":"","des":true}],"rel":{"south":[["u0","u1"],["u1","u0"]],"north":[["u0","u1"],["u1","u0"]]},"stand":null,"depth":null,"chain":[],"knows":{"south":false,"north":false}},{"action":"read-order_south_s1","outcome":"e-here","size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"go-view_south","outcome":null,"size":2,"worlds":[{"id":"u0","job":"s1","code":"","des":true},{"id":"u1","job":"s2","code":"","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u1","u0"]]},"stand":"s1","depth":0,"chain":[["u0","north","u1"]],"knows":{"south":true,"north":false}},{"action":"signal_south_s1","outcome":null,"size":3,"worlds":[{"id":"u0","job":"s1","code":"σ","des":true},{"id":"u1","job":"s1","code":"·","des":false},{"id":"u2","job":"s2","code":"·","des":false}],"rel":{"south":[],"north":[["u0","u1"],["u0","u2"],["u1","u2"],["u2","u1"]]},"stand":"s1","depth":0,"chain":[["u0","north","u2"]],"knows":{"south":true,"north":false}}]};
 /* The Kripke model after every action of three sequences, computed by the
    product update of coordinated_attack_demo/tools/trace.py from the tasks plank
-   grounds (tools/export_models.py). Only the part reachable from the
+   grounds. Only the part reachable from the
    designated world is kept. The world counts agree with what the epistemic
    state logged during the runs. */
 const CA_COL = {south:'#3373CC', north:'#E68026'};
