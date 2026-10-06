@@ -65,6 +65,22 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 
+# The action nodes derive from plansys2's ActionExecutorClient, which derives
+# from rclcpp_cascade_lifecycle's CascadeLifecycleNode. ePlanSys builds every
+# one of its packages against the header /opt/ros/humble ships, and its overlay
+# puts the rolling-devel library it vendors first on the library path; that
+# library's class has two members more. Each action node was therefore built
+# with one layout and constructed by the other, and destroying it read its
+# members at the wrong offsets: every action node exited on signal 11 at
+# shutdown, after the mission had reported. Loading the library the headers
+# describe removes the mismatch, and the nodes exit cleanly.
+SYSTEM_CASCADE = '/opt/ros/humble/lib/librclcpp_cascade_lifecycle.so'
+
+
+def matching_cascade():
+    return {'LD_PRELOAD': SYSTEM_CASCADE} if os.path.exists(SYSTEM_CASCADE) else {}
+
+
 def flat(items):
     return [float(v) for item in items for v in item]
 
@@ -157,18 +173,21 @@ def setup(context, *args, **kwargs):
             poses += [mx, my, ux, uy, L.facing(a)]
     performers = [
         Node(package='coordinated_attack_demo', executable='read_order_action',
+             additional_env=matching_cascade(),
              output='screen', arguments=['--agent', reader],
              parameters=[{**common, 'ns': L.ROBOTS[reader][0],
                           'terminal': [L.TERMINAL_READ[0], L.TERMINAL_READ[1], L.TERMINAL_YAW],
                           'order': order, 'action_name': 'read_order',
                           'specialized_arguments': [reader, ''], 'rate': 10.0}]),
         Node(package='coordinated_attack_demo', executable='signal_action',
+             additional_env=matching_cascade(),
              output='screen',
              parameters=[{**common, 'agents': agents, 'namespaces': namespaces,
                           'beacon': list(L.BEACON_POST),
                           'lamps': [f'{s}={os.path.join(lamps, f"lamp_{s}.sdf")}' for s in stands],
                           'action_name': 'signal', 'rate': 10.0}]),
         Node(package='coordinated_attack_demo', executable='lift_action',
+             additional_env=matching_cascade(),
              output='screen',
              parameters=[{**common, 'agents': agents, 'namespaces': namespaces,
                           'stands': stands, 'poses': poses,
@@ -180,6 +199,7 @@ def setup(context, *args, **kwargs):
         vx, vy = L.viewpoint(agent)
         performers.append(Node(
             package='coordinated_attack_demo', executable='go_view_action',
+            additional_env=matching_cascade(),
             output='screen', arguments=['--agent', agent],
             parameters=[{**common, 'ns': L.ROBOTS[agent][0],
                          'viewpoint': [vx, vy, L.facing(agent)],
@@ -189,6 +209,7 @@ def setup(context, *args, **kwargs):
     for kind in ('tell', 'ack', 'ack2', 'ack3'):
         performers.append(Node(
             package='coordinated_attack_demo', executable='radio_action',
+            additional_env=matching_cascade(),
             output='screen', arguments=['--kind', kind],
             parameters=[{'agents': agents, 'action_name': f'radio_{kind}', 'rate': 10.0,
                          'transfer_seconds': 4.0}]))
