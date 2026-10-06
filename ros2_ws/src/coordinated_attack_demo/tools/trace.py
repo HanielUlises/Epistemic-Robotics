@@ -30,7 +30,12 @@ The warehouse scenario's show_plan.py traces single-agent modalities and
 takes an agent's first observability class whatever its condition. This
 domain needs both C and an announcement whose audience depends on where the
 robots stand, so the update here evaluates each agent's observability
-condition at the world it is applied to.
+conditions, as plank's own updater and Aletheia do: once per state, at the
+designated worlds, and the type whose condition holds there applies at every
+world. --per-world evaluates them at each world instead, which is the
+textbook reading of a conditional observability; the two agree whenever the
+conditions are common knowledge, as on the published floors, and the domain
+with unwitnessed moves exists because they do not agree there.
 
   trace.py --task out/beacon/beacon.json --plan out/beacon/plan.json
   trace.py --task out/radio/radio.json --actions read-order_south_s1 \\
@@ -124,6 +129,8 @@ class Model:
             return not self.holds(w, a) or self.holds(w, b)
         raise ValueError('unreadable formula ' + json.dumps(node))
 
+    PER_WORLD = False
+
     def update(self, action, outcome=None):
         """Product update. @p outcome restricts the designated events to one,
         which is how a branch of a policy is followed."""
@@ -147,7 +154,7 @@ class Model:
                     value.discard(atom)
             labels[name[(w, e)]] = value
 
-        def kind(agent, w):
+        def kind_at(agent, w):
             classes = obs.get(agent)
             if not classes:
                 raise ValueError(f'{agent} has no observability class')
@@ -155,6 +162,20 @@ class Model:
                 if self.holds(w, cond.get('formula')):
                     return label
             raise ValueError(f'no observability class of {agent} holds at {w}')
+
+        # plank's updater: the type whose condition holds at every designated
+        # world, for the whole state.
+        state_kind = {}
+        for agent in self.agents:
+            classes = obs.get(agent) or {}
+            for label, cond in classes.items():
+                if all(self.holds(w, cond.get('formula')) for w in self.designated):
+                    state_kind[agent] = label
+
+        def kind(agent, w):
+            if Model.PER_WORLD or agent not in state_kind:
+                return kind_at(agent, w)
+            return state_kind[agent]
 
         relations = {}
         for a in self.agents:
@@ -261,7 +282,10 @@ def main():
     g = p.add_mutually_exclusive_group(required=True)
     g.add_argument('--plan')
     g.add_argument('--actions', nargs='+')
+    p.add_argument('--per-world', action='store_true',
+                   help='evaluate observability conditions at each world, not once per state')
     args = p.parse_args()
+    Model.PER_WORLD = args.per_world
 
     task = json.load(open(args.task))
     model = Model.of(task)
