@@ -29,7 +29,8 @@ find_package(plansys2_domain_expert REQUIRED)
 # the tests exercise it without a graph.
 add_library(pass_through_core STATIC src/grid.cpp src/reach.cpp)
 target_include_directories(pass_through_core PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>")
 set_target_properties(pass_through_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(pass_through_core
   epistemic_slam::map_fusion
@@ -62,6 +63,17 @@ ament_target_dependencies(pass_through_mission
 
 install(TARGETS knowledge_map survey_action share_action cross_action pass_through_mission
   DESTINATION lib/${PROJECT_NAME})
+
+# The core and the driver are exported, so a package on the same floor drives
+# its robots with the same fixed point instead of a copy of it.
+install(DIRECTORY include/ DESTINATION include)
+install(TARGETS pass_through_core pass_through_driver
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  INCLUDES DESTINATION include)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(rclcpp nav_msgs sensor_msgs geometry_msgs std_msgs
+  nlohmann_json epistemic_slam mu_path_planner)
 install(PROGRAMS scripts/knowledge_view.py scripts/camera_director.py
   DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY launch config params epddl pddl maps tools
