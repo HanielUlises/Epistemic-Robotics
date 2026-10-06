@@ -1,0 +1,37 @@
+(define (action-type-library lossy)
+
+  ;; A message over a link that can lose it.
+  ;;
+  ;; Three events. ?del is the message arriving and ?lost the same message sent
+  ;; and dropped; both carry the content as their precondition, because a robot
+  ;; can only send what it knows. ?nil is nothing having been sent at all.
+  ;;
+  ;; The sender knows it sent, and cannot tell whether the message arrived, so
+  ;; it confuses ?del with ?lost. The receiver knows whether something arrived,
+  ;; and when nothing did it cannot tell a dropped message from silence, so it
+  ;; confuses ?lost with ?nil. Both relations are equivalences, and an S5 model
+  ;; stays S5 under the update.
+  ;;
+  ;; ?del and ?lost may change the world, and the domain uses that to log on
+  ;; the sender's side that a message went out. ?nil changes nothing.
+  ;;
+  ;; Only ?del is designated: in the run the message does arrive. The point of
+  ;; the type is that this does not help. Delivery that happens and is not
+  ;; known to have happened adds one level of mutual knowledge per message and
+  ;; never yields common knowledge (Halpern and Moses, 1990).
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+  )
+
+  (:action-type lossy-message
+    :events     (?del ?lost ?nil)
+    :observability-types (Sender Receiver Oblivious)
+    :relations  (Sender    (:and (?del ?del) (?del ?lost) (?lost ?del) (?lost ?lost) (?nil ?nil))
+                 Receiver  (:and (?del ?del) (?lost ?lost) (?lost ?nil) (?nil ?lost) (?nil ?nil))
+                 Oblivious (:forall (?e - event) (?e ?nil)) )
+    :designated (?del)
+    :conditions (?nil (:trivial-event))
+  )
+)

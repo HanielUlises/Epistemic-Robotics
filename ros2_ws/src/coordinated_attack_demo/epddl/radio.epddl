@@ -1,0 +1,48 @@
+(define (problem coordinated-attack-radio)
+
+  (:domain coordinated-attack)
+
+;; The pass-through floor: a racking block crosses the hall from wall to
+  ;; wall, south is on the storage floor below it and north on the dispatch
+  ;; floor above it, and neither can see the other. Bays t1 and t3 each hold a
+  ;; load across them, a stand that can be lifted from both mouths; they are
+  ;; s1 and s2. The work order names one of them, south can read it and north
+  ;; cannot, and that it names exactly one is common knowledge.
+  ;;
+  ;; This instance and beacon.epddl differ in one line: here the floor has no beacon,
+  ;; and the radio is the only way to say which load to lift.
+
+  (:requirements
+    :typing :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents south north)
+
+  (:objects s1 s2 - stand)
+
+  (:init
+    (:and
+      ([C. All] (not (beacon)))
+      ([C. All] (not (lifted)))
+      ([C. All] (not (sent-tell)))
+      ([C. All] (not (sent-ack)))
+      ([C. All] (not (sent-ack2)))
+      ([C. All] (not (sent-ack3)))
+      ([C. All] (reads-order south))
+      ([C. All] (not (reads-order north)))
+      (:forall (?i - agent) ([C. All] (not (at-view ?i))))
+      ([C. All]
+        (or
+          (and (job s1) (not (job s2)))
+          (and (not (job s1)) (job s2))))
+      (:forall (?i - agent)
+        (:forall (?s - stand)
+          ([C. All] (<Kw. ?i> (job ?s)))))
+    )
+  )
+
+  ;; Ontic. The epistemic content is in the precondition of lift.
+  (:goal (lifted))
+)
