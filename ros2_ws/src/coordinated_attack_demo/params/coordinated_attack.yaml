@@ -1,0 +1,49 @@
+# The coordinated attack, as parameters. The launch file substitutes the
+# upper-case names with installed paths before handing this over.
+#
+# Both the planner and the epistemic state are given the lossy library beside
+# the intermediate one; a list here replaces the packaged default, so both are
+# named.
+
+planner:
+  ros__parameters:
+    plan_solver_plugins: ["EPISTEMIC"]
+    EPISTEMIC:
+      plugin: "plansys2/EpistemicPlanSolver"
+      epddl_domain: "EPDDL_DOMAIN"
+      epddl_problem: "EPDDL_PROBLEM"
+      epddl_libraries: ["INTERMEDIATE_LIBRARY", "LOSSY_LIBRARY"]
+      action_mapping: "MAPPING_FILE"
+      strategy: "aostar"
+      conditional_plan: "policy"
+    plan_solver_timeout: 120.0
+
+executor:
+  ros__parameters:
+    bt_builder_plugin: "EpistemicBTBuilder"
+    bt_node_plugins: ["libplansys2_epistemic_bt_nodes.so"]
+    action_timeouts:
+      actions: ["read_order", "radio_tell", "radio_ack", "radio_ack2", "radio_ack3",
+                "go_view", "signal", "lift"]
+      read_order:
+        duration_overrun_percentage: 1000.0
+      radio_tell:
+        duration_overrun_percentage: 2000.0
+      radio_ack:
+        duration_overrun_percentage: 2000.0
+      radio_ack2:
+        duration_overrun_percentage: 2000.0
+      radio_ack3:
+        duration_overrun_percentage: 2000.0
+      go_view:
+        duration_overrun_percentage: 1000.0
+      signal:
+        duration_overrun_percentage: 2000.0
+      lift:
+        duration_overrun_percentage: 1000.0
+
+epistemic_state:
+  ros__parameters:
+    epddl_domain: "EPDDL_DOMAIN"
+    epddl_problem: "EPDDL_PROBLEM"
+    epddl_libraries: ["INTERMEDIATE_LIBRARY", "LOSSY_LIBRARY"]

@@ -1,0 +1,114 @@
+{
+  "ack2_north_south_s1": {
+    "action": "(radio_ack2 north south s1)",
+    "duration": 4.0
+  },
+  "ack2_north_south_s2": {
+    "action": "(radio_ack2 north south s2)",
+    "duration": 4.0
+  },
+  "ack2_south_north_s1": {
+    "action": "(radio_ack2 south north s1)",
+    "duration": 4.0
+  },
+  "ack2_south_north_s2": {
+    "action": "(radio_ack2 south north s2)",
+    "duration": 4.0
+  },
+  "ack3_north_south_s1": {
+    "action": "(radio_ack3 north south s1)",
+    "duration": 4.0
+  },
+  "ack3_north_south_s2": {
+    "action": "(radio_ack3 north south s2)",
+    "duration": 4.0
+  },
+  "ack3_south_north_s1": {
+    "action": "(radio_ack3 south north s1)",
+    "duration": 4.0
+  },
+  "ack3_south_north_s2": {
+    "action": "(radio_ack3 south north s2)",
+    "duration": 4.0
+  },
+  "ack_north_south_s1": {
+    "action": "(radio_ack north south s1)",
+    "duration": 4.0
+  },
+  "ack_north_south_s2": {
+    "action": "(radio_ack north south s2)",
+    "duration": 4.0
+  },
+  "ack_south_north_s1": {
+    "action": "(radio_ack south north s1)",
+    "duration": 4.0
+  },
+  "ack_south_north_s2": {
+    "action": "(radio_ack south north s2)",
+    "duration": 4.0
+  },
+  "go-view_north": {
+    "action": "(go_view north)",
+    "duration": 60.0
+  },
+  "go-view_south": {
+    "action": "(go_view south)",
+    "duration": 60.0
+  },
+  "lift_s1": {
+    "action": "(lift south north s1)",
+    "duration": 90.0
+  },
+  "lift_s2": {
+    "action": "(lift south north s2)",
+    "duration": 90.0
+  },
+  "read-order_north_s1": {
+    "action": "(read_order north s1)",
+    "duration": 60.0
+  },
+  "read-order_north_s2": {
+    "action": "(read_order north s2)",
+    "duration": 60.0
+  },
+  "read-order_south_s1": {
+    "action": "(read_order south s1)",
+    "duration": 60.0
+  },
+  "read-order_south_s2": {
+    "action": "(read_order south s2)",
+    "duration": 60.0
+  },
+  "signal_north_s1": {
+    "action": "(signal north s1)",
+    "duration": 6.0
+  },
+  "signal_north_s2": {
+    "action": "(signal north s2)",
+    "duration": 6.0
+  },
+  "signal_south_s1": {
+    "action": "(signal south s1)",
+    "duration": 6.0
+  },
+  "signal_south_s2": {
+    "action": "(signal south s2)",
+    "duration": 6.0
+  },
+  "tell_north_south_s1": {
+    "action": "(radio_tell north south s1)",
+    "duration": 4.0
+  },
+  "tell_north_south_s2": {
+    "action": "(radio_tell north south s2)",
+    "duration": 4.0
+  },
+  "tell_south_north_s1": {
+    "action": "(radio_tell south north s1)",
+    "duration": 4.0
+  },
+  "tell_south_north_s2": {
+    "action": "(radio_tell south north s2)",
+    "duration": 4.0
+  }
+}

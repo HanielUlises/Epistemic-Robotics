@@ -73,8 +73,10 @@
 #include <cmath>
 #include <csignal>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <mutex>
+#include <sstream>
 #include <string>
 #include <thread>
 
@@ -97,10 +99,29 @@ struct Config
   double tau_yaw = 1.2;    // seconds; the travel-direction filter
   double lead = 0.0;       // metres ahead of the robot to aim
   double rate = 25.0;      // filter steps and camera poses per second
+  // Camera poses sent per second, when fewer than `rate`. gzclient under the
+  // software renderer draws four or five frames a second, and a stream of
+  // twenty-five poses a second against it backs up: the pass-through
+  // recording held a fixed shot for a minute and the view then stayed on it
+  // for the rest of the run while the chase poses queued behind it.
+  double publish_rate = 0.0;
 };
 
 Config config;
 gazebo::transport::PublisherPtr camera_pub;
+
+// A file naming the model to follow, re-read twice a second. Empty means
+// follow --model for the whole run, which is what the survey recordings do.
+// The pass-through recording writes the acting robot's name into it, so the
+// camera cuts to whichever robot the policy has just set to work.
+//
+// The file may instead hold `pose X Y Z PITCH YAW`, and the camera then holds
+// that pose: a fixed shot, for a robot whose route starts somewhere a chase
+// camera cannot be placed behind it -- facing a wall, or inside a rack row.
+std::string follow_file;
+std::string follow_line;
+bool fixed_shot = false;
+double shot[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
 
 std::mutex lock;
 bool have_robot = false;          // a pose for the model has been seen
@@ -137,13 +158,15 @@ double yaw_of(const gazebo::msgs::Pose & pose)
 
 void on_poses(ConstPosesStampedPtr & msg)
 {
+  // Held for the whole scan: with --follow-file the model being followed can
+  // change on the main thread while this runs.
+  std::lock_guard<std::mutex> held(lock);
   for (int i = 0; i < msg->pose_size(); ++i) {
     // The server reports a model's own pose under its name and its links
     // under "model::link". Only the first is the model, and matching on a
     // prefix would follow whichever link the world happened to list first.
     if (msg->pose(i).name() != config.model) {continue;}
     const auto & pose = msg->pose(i);
-    std::lock_guard<std::mutex> held(lock);
     rob_x = pose.position().x();
     rob_y = pose.position().y();
     rob_yaw = yaw_of(pose);
@@ -163,8 +186,29 @@ void on_poses(ConstPosesStampedPtr & msg)
 // robot was left a speck at the end of an aisle. Running the filter on a clock
 // converges the camera whether the robot moves or not, and a stationary robot
 // is exactly when a settled shot is wanted.
+long steps = 0;
+
+bool due()
+{
+  const double every = config.publish_rate > 0.0 ? config.rate / config.publish_rate : 1.0;
+  return every <= 1.0 || (steps % std::max(1L, (long)std::lround(every))) == 0;
+}
+
 void step(double dt)
 {
+  ++steps;
+  if (fixed_shot) {
+    // A held shot needs sending once; it is resent once a second in case the
+    // client missed it, and no more.
+    if (steps % std::max(1L, (long)config.rate) != 1) {return;}
+    gazebo::msgs::Pose out;
+    gazebo::msgs::Set(out.mutable_position(), ignition::math::Vector3d(shot[0], shot[1], shot[2]));
+    gazebo::msgs::Set(
+      out.mutable_orientation(), ignition::math::Quaterniond(0.0, shot[3], shot[4]));
+    camera_pub->Publish(out);
+    ++published;
+    return;
+  }
   double rx, ry, ryaw;
   {
     std::lock_guard<std::mutex> held(lock);
@@ -238,8 +282,10 @@ void step(double dt)
   gazebo::msgs::Set(
     out.mutable_orientation(),
     ignition::math::Quaterniond(0.0, aim_pitch, aim_yaw));
-  camera_pub->Publish(out);
-  ++published;
+  if (due()) {
+    camera_pub->Publish(out);
+    ++published;
+  }
 }
 
 // The callback runs on a transport thread. An exception escaping it takes the
@@ -272,10 +318,13 @@ int main(int argc, char ** argv)
       config.look = std::stod(value());
     } else if (arg == "--tau") {config.tau = std::stod(value());} else if (arg == "--lead") {
       config.lead = std::stod(value());
-    } else if (arg == "--rate") {config.rate = std::stod(value());} else if (
+    } else if (arg == "--follow-file") {follow_file = value();} else if (
+      arg == "--publish-rate") {config.publish_rate = std::stod(value());} else if (
+      arg == "--rate") {config.rate = std::stod(value());} else if (
       arg == "--tau-yaw") {config.tau_yaw = std::stod(value());} else if (arg == "--help") {
       std::cout << "chase_camera --model r2 --distance 2.6 --height 1.25 "
-                << "--look 0.30 --tau 0.45 --tau-yaw 1.2 --rate 25\n";
+                << "--look 0.30 --tau 0.45 --tau-yaw 1.2 --rate 25 [--publish-rate 5] "
+                << "[--follow-file PATH]\n";
       return 0;
     }
   }
@@ -312,6 +361,35 @@ int main(int argc, char ** argv)
       step(1.0 / config.rate);
     } catch (const std::exception & e) {
       std::cerr << "chase_camera: " << e.what() << "\n" << std::flush;
+    }
+    // A cut, not a pan: the robots can be forty metres apart through
+    // racking, and a camera flying between them passes through every shelf
+    // on the way.
+    if (!follow_file.empty() && ticks % std::max(1L, (long)(config.rate / 2)) == 0) {
+      std::ifstream in(follow_file);
+      std::string line;
+      if (std::getline(in, line) && !line.empty() && line != follow_line) {
+        follow_line = line;
+        std::istringstream words(line);
+        std::string first;
+        words >> first;
+        std::lock_guard<std::mutex> held(lock);
+        if (first == "pose") {
+          double v[5];
+          if (words >> v[0] >> v[1] >> v[2] >> v[3] >> v[4]) {
+            std::copy(v, v + 5, shot);
+            fixed_shot = true;
+            std::cerr << "chase_camera: fixed shot " << line << "\n" << std::flush;
+          }
+        } else {
+          std::cerr << "chase_camera: now following " << first << "\n" << std::flush;
+          fixed_shot = false;
+          config.model = first;
+          have_robot = false;
+          have_state = false;
+          vel_x = vel_y = 0.0;
+        }
+      }
     }
     if (++ticks % (long)(config.rate * 30) == 0) {
       // The two positions, so a shot that comes out wrong can be read back

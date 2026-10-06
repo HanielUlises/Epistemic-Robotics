@@ -1,0 +1,34 @@
+# Hand one robot another robot's map, to be fused into what it knows.
+#
+# This is the physical half of a map exchange; the epistemic half is the
+# announcement the executor applies to the model once the exchange completes.
+# The reply says what the exchange actually carried, because a model that is
+# told "the carrier now knows the bay is shut" should be checkable against a
+# map in which the carrier can see the load.
+#
+# The map must be on the receiver's grid: same width, height, resolution and
+# origin. The receiver refuses one that is not, for the reason
+# epistemic_slam::fuse refuses it: a registration nobody performed is a merged
+# map that is confidently wrong.
+
+nav_msgs/OccupancyGrid map
+
+# Who the map came from. Recorded, and used in the log line; the fusion itself
+# does not depend on it.
+string source
+
+---
+
+bool ok
+string message
+
+# Cells the receiver had not observed and now holds, over the whole grid.
+uint32 newly_known
+
+# The same, counted inside each named region the receiver watches, in the order
+# of `regions`.
+string[] regions
+uint32[] newly_known_in_region
+
+# Cells the two maps disagree about, free against occupied.
+uint32 conflicts

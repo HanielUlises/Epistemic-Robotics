@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>coordinated_attack_demo</name>
+  <version>0.1.0</version>
+  <description>
+    The coordinated attack on the pass-through floor: two robots must lift one
+    load together, the lift requires common knowledge of which stand, a lossy
+    radio adds one level of mutual knowledge per delivered message and never
+    reaches it, and a beacon seen from two viewpoints reaches it in one
+    update.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>lifecycle_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>gazebo_msgs</depend>
+  <depend>nlohmann-json-dev</depend>
+  <depend>pass_through_demo</depend>
+  <depend>plansys2_msgs</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_planner</depend>
+  <depend>plansys2_problem_expert</depend>
+  <depend>plansys2_domain_expert</depend>
+  <depend>plansys2_epistemic_msgs</depend>
+
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>plansys2_epistemic_executor</exec_depend>
+  <exec_depend>plansys2_epistemic_bt_builder</exec_depend>
+  <exec_depend>plansys2_epistemic_planner</exec_depend>
+  <exec_depend>plansys2_epddl_grounder</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>turtlebot3_description</exec_depend>
+  <exec_depend>aws_robomaker_small_warehouse_world</exec_depend>
+  <exec_depend>warehouse_xl_rmf_demo</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
