@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The sixteen domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The sixteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The seventeen domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The seventeen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The sixteen domains">
-<meta property="og:description" content="The sixteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The seventeen domains">
+<meta property="og:description" content="The seventeen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The sixteen domains">
-<meta name="twitter:description" content="The sixteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The seventeen domains">
+<meta name="twitter:description" content="The seventeen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The seventeen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -581,6 +581,13 @@ table.cat a:hover{border-bottom-color:var(--black)}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -604,6 +611,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
           <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -619,8 +627,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 16 domains</p>
-    <h2>The sixteen domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 17 domains</p>
+    <h2>The seventeen domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -892,6 +900,33 @@ table.cat a:hover{border-bottom-color:var(--black)}
   )
 
 (:goal (delivered))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-coordinated-attack">
+      <div class="dom-h">
+        <h4>coordinated-attack</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 2 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>south</i>, <i>north</i></dd>
+        <dt>Objects</dt><dd><code>(:objects s1 s2 - stand)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">private-announcement</span><span class="ty">semi-private-sensing</span><span class="ty">lossy-message</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 2\), \(|W_d| = 2\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>12 atoms, 28 ground actions, goal of modal depth 0; the precondition of <code>lift</code> is \(C_{\{south,north\}}\,\mathit{job}(s)\)</dd>
+        <dt>Solved</dt><dd>beacon floor: depth 5, 115 expansions, 2 leaves; radio floor: no policy, space exhausted at depth 5</dd>
+        <dt>Stated in</dt><dd><a href="coordinated_attack.html">The coordinated attack on a warehouse floor</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (job ?s - stand)
+    (reads-order ?i - agent)
+    (beacon)
+    (at-view ?i - agent)
+    (lifted)
+    (sent-tell) (sent-ack) (sent-ack2) (sent-ack3)
+  )
+
+(:goal (lifted))</pre>
       </details>
     </article>
     </div>

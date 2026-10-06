@@ -12,7 +12,7 @@
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/demos.html</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -76,13 +76,18 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/coordinated_attack.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/domain_catalogue.html</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <priority>0.80</priority>
   </url>
 </urlset>

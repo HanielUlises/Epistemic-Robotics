@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The sixteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The seventeen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -524,6 +524,13 @@ sup.cite a:hover{text-decoration:underline}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -547,6 +554,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
           <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
           <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -820,6 +828,43 @@ sup.cite a:hover{text-decoration:underline}
             <span>S5</span><span>distributed knowledge</span>
             <span>0 cells of t2 exchanged</span>
             <span>depth 5, 445 expansions</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── coordinated-attack -->
+    <div class="dgroup" id="coordinated-attack">
+      <p class="sec-label">Domain</p>
+      <h3>coordinated-attack &#183; one load, two robots, two channels</h3>
+      <p class="about">
+        Two robots must lift one load together, and
+        <span class="mono-inline">lift</span> carries the precondition
+        \(C_{\{south,north\}}\,\mathit{job}(s)\): common knowledge of which
+        stand the work order names. A message over the radio is a lossy event
+        model with three events, delivered, lost and never sent; a stack light
+        in the open bay of the pass-through floor is an announcement whose
+        audience is whoever stands at its two viewpoints. The frame stays
+        \(\mathrm{S5}_n\). Two floors recorded, one line apart.
+      </p>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/coordinated_attack.jpg"
+          alt="RViz and Gazebo as the two robots lift the load on s1" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="coordinated_attack.html">The coordinated attack on a warehouse floor</a></h5>
+          <p>
+            Over the radio, four messages, every one delivered, raise mutual
+            knowledge from \(E^0\) to \(E^4\), and the executor refuses the lift:
+            each message adds at most one level, which is proved over the event
+            model, so no number of them suffices. One signal on the beacon, seen
+            by both robots from their viewpoints, gives common knowledge in one
+            update, and the robots lift the load from a joint start.
+          </p>
+          <div class="facts">
+            <span>S5</span><span>common knowledge</span>
+            <span>E<sup>4</sup>, then refused</span>
+            <span>arrivals 0.40&#8202;s apart</span>
           </div>
         </div>
       </div>
