@@ -406,3 +406,39 @@ scenarios/*/out/*.log
 # and this repository is Apache-2.0, so its world is fetched rather than
 # vendored. tools/fetch_third_party.sh puts it here.
 ros2_ws/third_party/
+
+# Scripts that only make figures, films, captions, cards or page tables, and
+# the recorder that only a figure reads. They stay in the working tree and out
+# of the repository; what builds, runs or validates a demonstration is kept.
+/tools/mu_figures.py
+/artifacts/nested_G2_vs_G3/caption.py
+/artifacts/nested_G2_vs_G3/table.py
+/ros2_ws/src/coordinated_attack_demo/tools/captions.py
+/ros2_ws/src/coordinated_attack_demo/tools/export_models.py
+/ros2_ws/src/coordinated_attack_demo/tools/make_video.py
+/ros2_ws/src/epistemic_comm/tools/make_outage_captions.py
+/ros2_ws/src/pass_through_demo/tools/make_captions.py
+/ros2_ws/src/pass_through_demo/tools/make_video.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/make_captions.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/make_sites_captions.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/make_sites_cards.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/make_video.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/plot_dlw.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/plot_epistemic.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/plot_floor.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/plot_kripke.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/plot_sites.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/plot_state_drift.py
+/ros2_ws/src/warehouse_xl_rmf_demo/tools/record_run.py
+/scenarios/hotel/tools/animation.py
+/scenarios/hotel/tools/captions.py
+/scenarios/hotel/tools/figures.py
+/scenarios/hotel/tools/follow_floors.py
+/scenarios/hotel/tools/policy_figure.py
+/scenarios/warehouse/tools/caption_video.py
+/scenarios/warehouse_rmf/tools/animation.py
+/scenarios/warehouse_rmf/tools/captions.py
+/scenarios/warehouse_rmf/tools/figures.py
+/scenarios/warehouse_rmf/tools/floor_figure.py
+/scenarios/warehouse_rmf/tools/policy_figure.py
+/ros2_ws/src/coordinated_attack_demo/tools/make_positions_video.py
