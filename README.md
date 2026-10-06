@@ -95,6 +95,7 @@ and the approximants from above are the worlds at which $E_G^1\varphi, \dots, E_
 | [`epistemic_comm`](ros2_ws/src/epistemic_comm) | a radio link that actually falls, and the belief each robot keeps of the other | [link outage](https://hanielulises.github.io/Epistemic-Robotics/link_outage.html) |
 | [`pass_through_demo`](ros2_ws/src/pass_through_demo) | knowledge from the maps the robots build, and a carrier that crosses a bay no map contains | [pass-through](https://hanielulises.github.io/Epistemic-Robotics/pass_through.html) |
 | [`coordinated_attack_demo`](ros2_ws/src/coordinated_attack_demo) | common knowledge as the precondition of a joint lift: a lossy radio cannot supply it, a beacon can | [coordinated attack](https://hanielulises.github.io/Epistemic-Robotics/coordinated_attack.html) |
+| [`false_belief_demo`](ros2_ws/src/false_belief_demo) | a crate moved while one robot was away: its false belief, the other's attribution of it, and the report that repairs it | [false belief](https://hanielulises.github.io/Epistemic-Robotics/false_belief.html) |
 
 Each package has a README with its launch commands, and a `validate.sh` or equivalent that grounds, solves and checks its domain without a simulator.
 
