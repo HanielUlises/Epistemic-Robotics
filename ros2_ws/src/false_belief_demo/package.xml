@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>false_belief_demo</name>
+  <version>0.1.0</version>
+  <description>
+    A false belief on the pass-through floor: a crate is moved while the
+    robot that stored it is away, the other robot reasons about where it will
+    look, and the planner decides what has to be said. The setting follows
+    the false-belief tasks of developmental psychology, the Sally-Anne test in
+    particular, as formalised in dynamic epistemic logic by Bolander.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>lifecycle_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>gazebo_msgs</depend>
+  <depend>nlohmann-json-dev</depend>
+  <depend>pass_through_demo</depend>
+  <depend>plansys2_msgs</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_planner</depend>
+  <depend>plansys2_problem_expert</depend>
+  <depend>plansys2_domain_expert</depend>
+  <depend>plansys2_epistemic_msgs</depend>
+
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>plansys2_epistemic_executor</exec_depend>
+  <exec_depend>plansys2_epistemic_bt_builder</exec_depend>
+  <exec_depend>plansys2_epistemic_planner</exec_depend>
+  <exec_depend>plansys2_epddl_grounder</exec_depend>
+  <exec_depend>coordinated_attack_demo</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>turtlebot3_description</exec_depend>
+  <exec_depend>aws_robomaker_small_warehouse_world</exec_depend>
+  <exec_depend>warehouse_xl_rmf_demo</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

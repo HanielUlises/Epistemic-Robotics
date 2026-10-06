@@ -1,0 +1,74 @@
+{
+  "fetch_mover_t1": {
+    "action": "(fetch mover t1)",
+    "duration": 120.0
+  },
+  "fetch_mover_t3": {
+    "action": "(fetch mover t3)",
+    "duration": 120.0
+  },
+  "fetch_picker_t1": {
+    "action": "(fetch picker t1)",
+    "duration": 120.0
+  },
+  "fetch_picker_t3": {
+    "action": "(fetch picker t3)",
+    "duration": 120.0
+  },
+  "go-dock_mover": {
+    "action": "(go_dock mover)",
+    "duration": 60.0
+  },
+  "go-dock_picker": {
+    "action": "(go_dock picker)",
+    "duration": 60.0
+  },
+  "look_mover_t1": {
+    "action": "(look mover t1)",
+    "duration": 60.0
+  },
+  "look_mover_t3": {
+    "action": "(look mover t3)",
+    "duration": 60.0
+  },
+  "look_picker_t1": {
+    "action": "(look picker t1)",
+    "duration": 60.0
+  },
+  "look_picker_t3": {
+    "action": "(look picker t3)",
+    "duration": 60.0
+  },
+  "relocate_mover_t1_t3": {
+    "action": "(relocate mover t1 t3)",
+    "duration": 180.0
+  },
+  "relocate_mover_t3_t1": {
+    "action": "(relocate mover t3 t1)",
+    "duration": 180.0
+  },
+  "relocate_picker_t1_t3": {
+    "action": "(relocate picker t1 t3)",
+    "duration": 180.0
+  },
+  "relocate_picker_t3_t1": {
+    "action": "(relocate picker t3 t1)",
+    "duration": 180.0
+  },
+  "report_mover_picker_t1_t3": {
+    "action": "(report mover picker t1 t3)",
+    "duration": 4.0
+  },
+  "report_mover_picker_t3_t1": {
+    "action": "(report mover picker t3 t1)",
+    "duration": 4.0
+  },
+  "report_picker_mover_t1_t3": {
+    "action": "(report picker mover t1 t3)",
+    "duration": 4.0
+  },
+  "report_picker_mover_t3_t1": {
+    "action": "(report picker mover t3 t1)",
+    "duration": 4.0
+  }
+}

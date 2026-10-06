@@ -1,0 +1,35 @@
+(define (problem false-belief-told)
+
+  (:domain false-belief)
+
+  ;; The crate is in t1 and both robots know it. The three instances differ
+  ;; in two lines: whether there is a radio, and whether the picker knows the
+  ;; crate may be moved while it is away.
+
+  (:requirements
+    :KD45-frames :typing :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents picker mover)
+
+  (:objects t1 t3 - bay)
+
+  (:init
+    (:and
+      ([C. All] (radio))
+      ([C. All] (not (doubts)))
+      ([C. All] (fetches picker))
+      ([C. All] (not (fetches mover)))
+      ([C. All] (relocates mover))
+      ([C. All] (not (relocates picker)))
+      ([C. All] (charging-due))
+      ([C. All] (not (relocation-due)))
+      ([C. All] (not (fetched)))
+      (:forall (?i - agent) ([C. All] (not (at-dock ?i))))
+      ([C. All] (and (crate-at t1) (not (crate-at t3))))
+    )
+  )
+
+  (:goal (fetched))
+)
