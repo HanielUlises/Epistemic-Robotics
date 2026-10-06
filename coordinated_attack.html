@@ -778,6 +778,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       <a href="#ca-radio-sec">The radio</a>
       <a href="#ca-model-sec">The model, step by step</a>
       <a href="#ca-beacon-sec">The beacon</a>
+      <a href="#ca-positions-sec">Unannounced positions</a>
       <a href="#ca-planning-sec">Planning</a>
       <a href="#ca-floor-sec">The floor</a>
       <a href="#ca-defects-sec">Defects</a>
@@ -848,8 +849,12 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       there, and relates two pairs for an agent when it could not tell the
       worlds apart <i>and</i> cannot tell the events apart. The lossy message is
       not in the intermediate action-type library and is given in a library of
-      its own; the signal's audience is conditional, decided at each world by
-      whether the agent stands at a viewpoint.
+      its own; the signal's audience is conditional, decided by whether the
+      agent stands at a viewpoint. plank and Aletheia evaluate such conditions
+      once per state, at the designated worlds, so who observed an action is
+      common knowledge by construction; on this floor that agrees with the
+      per-world reading, since the move to a viewpoint is public, and
+      <a href="#ca-positions-sec">the next domain</a> is where it does not.
     </p>
     <div class="ev-grid">
       <figure><img src="media/coordinated-attack-event-lossy.svg" alt="The lossy message: events d, l and n; the sender relates d and l, the receiver relates l and n; only d is designated"></figure>
@@ -1073,6 +1078,66 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
         in line of sight, 3.5&#8202;m each, before lighting it.
       </figcaption>
     </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ POSITIONS -->
+<section id="ca-positions-sec">
+  <div class="container">
+    <p class="sec-label">Positions that are not announced</p>
+    <h3>The beacon is worth one message, until the robots see each other</h3>
+    <p>
+      Proposition 3 needs the positions to be common knowledge, and the domain
+      supplies that by making the move to a viewpoint public. The domain
+      <span class="mono-inline">coordinated-attack-positions</span> removes the
+      assumption. A move is witnessed only by the robot that makes it: the
+      other considers possible that it did not happen, and believes nothing
+      false about it. The signal is made where its listener may not be
+      watching, as an <i>unconfirmed announcement</i>: the tier lit where the
+      listener sees it, lit where it does not, or nothing, with the announcer
+      relating the first two and the listener the last two. It is the lossy
+      message again, the listener's position deciding which of the first two
+      occurs. The floor adds one action: from their viewpoints in t2 the robots
+      see each other, and a sighting announces to both that both are there.
+    </p>
+    <h4>Proposition 5 (a signal to a robot that may not be watching)</h4>
+    <p>
+      If the announcer considers possible a world \(u\) in which the listener
+      is not at its viewpoint, and the listener there does not know
+      \(\varphi\), then after the signal
+      \((w,\sigma) \mathrel{R'_i} (u,\sigma') \mathrel{R'_j} (v,n)\) with
+      \(v \not\models \varphi\): the distance is at most two, and
+      \(E^2\varphi\) fails. &#8718; On the floor, \(u\) is the copy in which
+      north never left its start.
+    </p>
+    <h4>Proposition 6 (the sighting)</h4>
+    <p>
+      With both robots at their viewpoints the sighting is public, and makes
+      their positions common knowledge. A signal after it has no world left in
+      which the listener was not watching, and gives \(C\). A sighting after
+      the signal removes those worlds too, and makes the earlier signal common
+      knowledge after the fact. &#8718;
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>instance or order</th><th>result</th></tr></thead>
+      <tbody>
+        <tr><td>viewpoints see each other</td><td>policy of depth 6, two leaves, 298 expansions: north to its viewpoint, the order read, south to its viewpoint, the sighting, the signal, the lift</td></tr>
+        <tr><td>viewpoints do not</td><td>no policy: the space is exhausted at depth 8, beacon or not</td></tr>
+        <tr><td>signal, no sighting</td><td>\(E^1\), as one radio message; lift not applicable</td></tr>
+        <tr><td>sighting, then signal</td><td>\(C\)</td></tr>
+        <tr><td>signal, then sighting</td><td>\(C\)</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The first version kept the signal's conditional audience, and the planner
+      found a policy on the floor where the robots never see each other: under
+      the per-state reading, whether north saw the beacon was common knowledge
+      by construction. The trace, which then read the conditions world by
+      world, refused the lift there. The domain now states in the event model
+      what the observability conditions could not, and the trace uses the
+      tools' reading. This domain has been planned and validated, and not yet
+      run in the simulator.
+    </p>
   </div>
 </section>
 

@@ -146,7 +146,10 @@ mutual knowledge and no finite sequence of them yields common knowledge. On the
 floor without a beacon this proves that no policy exists, for messages of any
 number; the planner, on a bounded protocol, exhausts its space at depth five.
 A stack light visible only from two viewpoints yields common knowledge in one
-update, and only when both robots stand at their viewpoints. Both floors were
+update, and only when both robots stand at their viewpoints. When a move is
+witnessed only by the mover, the same signal yields one level of mutual
+knowledge, as a message does, and the planner has the robots sight each other
+first. Both floors were
 executed in Gazebo through ePlanSys. Over the radio, four delivered messages
 reached $E^4$ and the executor refused the lift; with the beacon, the policy
 lifted the load from a joint start, with arrivals 0.40\,s apart.}
@@ -269,15 +272,29 @@ An \emph{event model} is $\Ev = (E, T, Q, \pre, \post, E_d)$ with $E$ a finite
 set of events, $T$ a finite set of observability types, $Q : T \to 2^{E\times E}$,
 $\pre : E \to \mathcal{L}$, $\post : E \to (P \to \mathcal{L})$ and
 $E_d \subseteq E$ the designated events. An \emph{observability assignment}
-gives each agent $a$ and world $w$ a type $\tau_a(w) \in T$, by the first
-observability condition of $a$ that holds at $w$.
+gives each agent $a$ a type $\tau_a \in T$ for the whole model: the type whose
+observability condition holds at every designated world. This is how plank's
+product update evaluates the conditions, and Aletheia's after it.
 \end{definition}
+
+\begin{remark}
+\label{rem:obs}
+The textbook reading of a conditional observability gives each agent a type
+$\tau_a(w)$ at each world, by the condition at $w$. The two readings agree
+whenever the conditions are common knowledge, which is the case in every model
+of Sections~\ref{sec:radio} and~\ref{sec:beacon}: the lossy message has fixed
+types, and the signal's condition is a position, which the public move to a
+viewpoint makes common knowledge. They disagree when it is not, and under the
+reading the tools implement, whether an agent observed an action is common
+knowledge by construction. Section~\ref{sec:positions} needs it not to be, and
+says so in the event model.
+\end{remark}
 
 \begin{definition}[Product update]
 $\Mod \prd \Ev = (W', R', V', W'_d)$ with
 $W' = \{(w,e) : \Mod, w \models \pre(e)\}$,
 \[
-  (w,e)\, R'_a\, (v,f) \iff w R_a v \ \text{and}\ (e,f) \in Q(\tau_a(w)),
+  (w,e)\, R'_a\, (v,f) \iff w R_a v \ \text{and}\ (e,f) \in Q(\tau_a),
 \]
 $V'(w,e) = \{p : \Mod, w \models \post(e)(p)\}$, with $\post(e)(p) = p$ where
 unspecified, and $W'_d = \{(w,e) \in W' : w \in W_d,\ e \in E_d\}$. $\Ev$ is
@@ -412,7 +429,7 @@ For an agent $i$ and a formula $\chi$, $S(i,\chi)$ has events $\sigma$ and $n$,
 $\pre(\sigma) = \atview(i) \wedge \chi$, $\pre(n) = \top$, both postconditions
 trivial, $E_d = \{\sigma\}$, and types $Q(\mathrm{Fully}) = \{(\sigma,\sigma),
 (n,n)\}$ and $Q(\mathrm{Oblivious}) = \{(\sigma,n), (n,n)\}$, with
-$\tau_a(w) = \mathrm{Fully}$ if $\Mod, w \models \atview(a)$ and
+$\tau_a = \mathrm{Fully}$ if $\atview(a)$ holds at the designated worlds and
 $\mathrm{Oblivious}$ otherwise.
 \end{definition}
 
@@ -713,6 +730,153 @@ actions; after it the branch is announced on the beacon, so neither robot needs
 to know which branch it is in to execute its part.}
 \label{fig:policy}
 \end{figure}
+
+%  ======================================================================
+\section{Positions that are not announced}
+\label{sec:positions}
+
+Proposition~\ref{prop:public} needs the positions of the robots to be common
+knowledge, and the domain of Section~\ref{sec:domain} supplies that by making
+the move to a viewpoint public. The domain
+\code{coordinated-attack-}\allowbreak\code{positions} removes the assumption. A move is witnessed only by the robot that makes it,
+the signal can be made without its listener watching, and the floor offers one
+further action: from their viewpoints in $t_2$ the robots see each other. Two
+instances differ in one line, whether that sight line exists.
+
+\begin{definition}[Unwitnessed move]
+$U(i)$ has events $do$, with the move's precondition and postcondition, and
+$skip$, with $\pre = \top$ and no effect; $E_d = \{do\}$; $Q(\tau_i)$ is the
+identity and $Q(\tau_j) = \{do, skip\}^2$ for the other agent $j$.
+\end{definition}
+
+The other robot considers possible that the move did not happen. It does not
+believe that it did not, as an oblivious agent of a private ontic action would:
+no robot holds a false belief about the other's position, and the model stays
+$\mathrm{S5}$.
+
+\begin{definition}[Unconfirmed announcement]
+$A(i,j,\chi)$ has events $\sigma$ with
+$\pre(\sigma) = \atview(i) \wedge \atview(j) \wedge \chi$, $\sigma'$ with
+$\pre(\sigma') = \atview(i) \wedge \neg\atview(j) \wedge \chi$, and $n$ with
+$\pre(n) = \top$; $\sigma$ and $\sigma'$ set $\mathit{lit}(s)$;
+$E_d = \{\sigma, \sigma'\}$; $Q(\tau_i) = \{\sigma,\sigma'\}^2 \cup \{(n,n)\}$
+and $Q(\tau_j) = \{(\sigma,\sigma)\} \cup \{\sigma', n\}^2$.
+\end{definition}
+
+It is the lossy message of Definition~\ref{def:lossy}, with the listener's
+position deciding which of the first two events occurs. By
+Remark~\ref{rem:obs}, a conditional audience would have made the listener's
+observation common knowledge regardless of where it stands; here it is not. The
+sighting is $S(\cdot,\top)$ with precondition $\mathit{sightline} \wedge
+\atview(i) \wedge \atview(j)$: an announcement that both robots stand at their
+viewpoints, to whoever stands at one.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  ev/.style={draw, rounded corners=3pt, minimum width=1.9cm, minimum height=0.75cm, fill=mist, font=\small},
+  des/.style={ev, draw=signal, line width=1.3pt},
+  lab/.style={font=\scriptsize, text=slate}]
+\node[des] (d) at (0,0) {$\sigma$};
+\node[des] (l) at (4,0) {$\sigma'$};
+\node[ev] (n) at (8,0) {$n$};
+\draw[southc, line width=1.4pt] (d) -- node[above, font=\small] {$i$} (l);
+\draw[northc, line width=1.4pt] (l) -- node[above, font=\small] {$j$} (n);
+\node[lab, below=0.15cm of d] {$\atview(j) \wedge \Kop{i}\job(s)$};
+\node[lab, below=0.15cm of l] {$\neg\atview(j) \wedge \Kop{i}\job(s)$};
+\node[lab, below=0.15cm of n] {$\top$};
+\node[lab, above=0.45cm of d] {lit, and seen};
+\node[lab, above=0.45cm of l] {lit, and not seen};
+\node[lab, above=0.45cm of n] {nothing};
+\end{tikzpicture}
+\caption{The unconfirmed announcement $A(i,j,\Kop{i}\job(s))$. Both $\sigma$ and
+$\sigma'$ are designated, and the listener's position decides which can occur.}
+\label{fig:unconfirmed}
+\end{figure}
+
+\begin{proposition}[A signal to a robot that may not be watching]
+\label{prop:unseen}
+Let $\Mod$ be $\mathrm{S5}$ with $\Mod \models \varphi$, let $w$ be designated
+with $\Mod, w \models \atview(i) \wedge \atview(j) \wedge \Kop{i}\varphi$, and
+let $w R_i u$ with $\Mod, u \models \neg\atview(j)$, and $u R_j v$ with
+$\Mod, v \not\models \varphi$. Then
+$\dist_{\Mod \prd A(i,j,\Kop{i}\varphi)}(\varphi) \leq 2$: after the signal
+$\Eop{G}^2\varphi$ fails.
+\end{proposition}
+
+\begin{proof}
+$\atview(i)$ holds at $u$, since $i$ witnesses its own moves and so knows its
+position, and $\Kop{i}\varphi$ holds at $u$ by positive introspection; hence
+$(u,\sigma') \in W'$. Then $(w,\sigma) \mathrel{R'_i} (u,\sigma')$ by $w R_i u$ and
+$(\sigma,\sigma') \in Q(\tau_i)$, and $(u,\sigma') \mathrel{R'_j} (v,n)$ by
+$u R_j v$ and $(\sigma',n) \in Q(\tau_j)$, with $\pre(n) = \top$; and
+$(v,n)$ falsifies $\varphi$, as $n$ changes nothing.
+\end{proof}
+
+\noindent
+On the floor, after $\mathit{go\text{-}view}(\ag{north})$,
+$\mathit{read\text{-}order}(\ag{south}, s_1)$ and $\mathit{go\text{-}view}(\ag{south})$,
+the hypotheses hold with $u$ the copy in which north skipped its move: south
+cannot exclude that north never left its start, and in that world north does
+not know the order. The signal then gives $\Eop{G}^1\job(s_1)$, as one radio
+message does, and no more.
+
+\begin{proposition}[The sighting]
+\label{prop:sighting}
+If $\atview(i) \wedge \atview(j)$ holds at the designated worlds, the sighting
+yields $\Cop{G}(\atview(i) \wedge \atview(j))$. If it holds before
+$A(i,j,\Kop{i}\chi)$, the signal yields $\Cop{G}\chi$; and if the sighting
+follows the signal, it also yields $\Cop{G}\chi$.
+\end{proposition}
+
+\begin{proof}
+Both robots are at their viewpoints at the designated worlds, so both types of
+the sighting are Fully, and it is a public announcement of
+$\atview(i) \wedge \atview(j)$: every world reachable afterwards satisfies it,
+which is the first claim. If the positions are common knowledge before the
+signal, no world reachable from the designated $(w,\sigma)$ satisfies
+$\neg\atview(j)$, so none of the form $(u,\sigma')$ is reachable, the listener's
+relation keeps the $\sigma$-copies apart from the $n$-copies, and every
+reachable world is a $\sigma$-copy, at which $\Kop{i}\chi$, hence $\chi$, held.
+If the sighting comes second, its precondition excludes every
+$\sigma'$-copy, in which $\atview(j)$ fails, and with them the $n$-copies, which
+were reachable only through a $\sigma'$-copy; what remains reachable is again
+$\sigma$-copies.
+\end{proof}
+
+\noindent
+The last case says that a sighting makes an earlier signal common knowledge
+after the fact: in every world in which both robots stood at their viewpoints,
+the signal was seen. Without the sight line nothing in the domain announces a
+position, the copies in which the listener did not move stay reachable through
+every action, and by Propositions~\ref{prop:unseen} and~\ref{prop:onelevel} the
+distance to a counterexample stays finite: $\Cop{G}\job(s)$ never holds.
+
+\begin{table}[H]
+\centering\small
+\caption{The positions domain: 15 atoms and 30 ground actions on each floor,
+and the depth of $\job(s_1)$ along three orders, from the trace.}
+\label{tab:positions}
+\begin{tabular}{@{}l l@{}}
+\toprule
+instance or order & result \\
+\midrule
+viewpoints see each other & policy, depth 6, 2 leaves, 298 expansions \\
+viewpoints do not & no policy, space exhausted at depth 8 \\
+signal, no sighting & $E^1$, $\mathit{lift}$ not applicable \\
+sighting, then signal & $C$ \\
+signal, then sighting & $C$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+The policy is $\mathit{go\text{-}view}(\ag{north})$,
+$\mathit{read\text{-}order}(\ag{south}, s_1)$, then on each outcome
+$\mathit{go\text{-}view}(\ag{south})$, the sighting, the signal for the stand,
+and the lift. The planner places the sighting before the signal; by
+Proposition~\ref{prop:sighting} the reverse order would serve as well. This
+domain has not been run in the simulator.
 
 %  ======================================================================
 \section{Planning results}
