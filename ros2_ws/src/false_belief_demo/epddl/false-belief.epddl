@@ -1,0 +1,127 @@
+(define (domain false-belief)
+
+  ;; A crate is moved while the robot that stored it is away, and the robot
+  ;; that moved it has to reason about where the other will look. The setting
+  ;; follows the false-belief tasks of developmental psychology, the
+  ;; Sally-Anne test in particular, as formalised in dynamic epistemic logic
+  ;; by Bolander.
+  ;;
+  ;; The shift fixes its first two actions: the picker goes to charge at a
+  ;; dock out of sight of the bays, and the mover clears t1 by carrying the
+  ;; crate to t3. Two phase predicates hold that order; the planner plans
+  ;; what follows, which is getting the crate fetched.
+
+  (:requirements
+    :KD45-frames :typing :equality :partial-observability :list-comprehensions
+    :lists :ontic-actions :negative-preconditions :modal-preconditions
+  )
+
+  (:action-type-libraries intermediate beliefs)
+
+  (:types bay)
+
+  (:predicates
+    (crate-at ?b - bay)
+    (at-dock ?i - agent)
+    ;; Roles, static and common knowledge.
+    (fetches ?i - agent)
+    (relocates ?i - agent)
+    ;; The floor: a radio between the robots, and a picker that knows the
+    ;; crate may be moved while it is away. Static and common knowledge.
+    (radio)
+    (doubts)
+    ;; The phases of the shift.
+    (charging-due)
+    (relocation-due)
+    (fetched)
+  )
+
+  (:event nil)
+
+  (:event e-go-dock
+    :parameters (?i - agent)
+    :precondition (and (fetches ?i) (charging-due) (not (at-dock ?i)))
+    :effects (:and (at-dock ?i) (not (charging-due)) (relocation-due))
+  )
+
+  (:action go-dock
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-go-dock ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;; The picker is at the dock whenever a relocation can happen, which the
+  ;; phases guarantee; what it makes of the move depends on the floor. The
+  ;; mover's slot passes either way, and the picker knows that much: e-stay is
+  ;; the slot passing with the crate where it was.
+  (:event e-relocate
+    :parameters (?m - agent ?from ?to - bay)
+    :precondition (and (relocates ?m) (relocation-due) (crate-at ?from) (not (crate-at ?to)))
+    :effects (:and (crate-at ?to) (not (crate-at ?from)) (not (relocation-due)))
+  )
+
+  (:event e-stay
+    :parameters (?m - agent)
+    :precondition (and (relocates ?m) (relocation-due))
+    :effects (:and (not (relocation-due)))
+  )
+
+  (:action relocate
+    :parameters (?m - agent ?from ?to - bay | (/= ?from ?to))
+    :action-type (relocation (e-relocate ?m ?from ?to) (e-stay ?m))
+    :observability-conditions
+      (:and (?m Fully)
+            (:forall (?j - agent | (/= ?j ?m))
+              (?j (if (doubts) Doubting else Oblivious))))
+  )
+
+  ;; The mover reports only what it believes the picker believes otherwise:
+  ;; the precondition is a belief about a belief.
+  (:event e-told
+    :parameters (?m ?p - agent ?from ?to - bay)
+    :precondition (and (radio) (relocates ?m) (fetches ?p) (not (charging-due))
+                       (not (relocation-due)) (crate-at ?to)
+                       ([?m] (crate-at ?to)) ([?m] ([?p] (crate-at ?from))))
+  )
+
+  (:event e-revise
+    :parameters (?from ?to - bay)
+    :precondition (crate-at ?from)
+    :effects (:and (crate-at ?to) (not (crate-at ?from)))
+  )
+
+  (:action report
+    :parameters (?m ?p - agent ?from ?to - bay | (and (/= ?m ?p) (/= ?from ?to)))
+    :action-type (report (e-told ?m ?p ?from ?to) (e-revise ?from ?to))
+    :observability-conditions (:and (?m Fully) (?p Recipient))
+  )
+
+  (:event e-full
+    :parameters (?p - agent ?b - bay)
+    :precondition (and (fetches ?p) (not (charging-due)) (not (relocation-due)) (crate-at ?b))
+  )
+
+  (:event e-empty
+    :parameters (?p - agent ?b - bay)
+    :precondition (and (fetches ?p) (not (charging-due)) (not (relocation-due)) (not (crate-at ?b)))
+  )
+
+  (:action look
+    :parameters (?p - agent ?b - bay)
+    :action-type (semi-private-sensing (e-full ?p ?b) (e-empty ?p ?b))
+    :observability-conditions (:and (?p Fully) (default Partially))
+  )
+
+  (:event e-fetch
+    :parameters (?p - agent ?b - bay)
+    :precondition (and (fetches ?p) (not (charging-due)) (not (relocation-due))
+                       (crate-at ?b) ([?p] (crate-at ?b)))
+    :effects (:and (fetched) (not (crate-at ?b)))
+  )
+
+  (:action fetch
+    :parameters (?p - agent ?b - bay)
+    :action-type (public-ontic (e-fetch ?p ?b))
+    :observability-conditions (default Fully)
+  )
+)

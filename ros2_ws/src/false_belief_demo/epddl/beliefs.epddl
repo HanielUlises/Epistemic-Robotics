@@ -1,0 +1,43 @@
+(define (action-type-library beliefs)
+
+  ;; A relocation the other robot may not see. Two events: ?do, the move, and
+  ;; ?skip, the same moment passing with nothing moved. The mover tells them
+  ;; apart. An oblivious observer maps the move onto nothing having moved and
+  ;; so keeps a belief that is now false; a doubting observer relates the two
+  ;; and is left uncertain, not wrong. The first makes the frame KD45, the
+  ;; second keeps it S5. ?skip may carry effects that both events share, such
+  ;; as a schedule moving on, so that the observer's worlds keep pace with the
+  ;; actual one in everything but the move.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+  )
+
+  (:action-type relocation
+    :events     (?do ?skip)
+    :observability-types (Fully Doubting Oblivious)
+    :relations  (Fully     (:forall (?e - event) (?e ?e))
+                 Doubting  (:forall (?e ?f - event) (?e ?f))
+                 Oblivious (:forall (?e - event) (?e ?skip)) )
+    :designated (?do)
+    :conditions (?do (:non-trivial-postconditions))
+  )
+
+  ;; A report of a change the recipient did not see. ?told is the report,
+  ;; true where it is made; ?revise is the change itself, applied where the
+  ;; recipient believes the old state. The recipient relates the report to
+  ;; the change, so it takes the report as news that the change happened. A
+  ;; truthful announcement of the new state would instead find no world among
+  ;; those the recipient believes possible, and leave its relation empty.
+
+  (:action-type report
+    :events     (?told ?revise)
+    :observability-types (Fully Recipient)
+    :relations  (Fully     (:forall (?e - event) (?e ?e))
+                 Recipient (:and (?told ?revise) (?revise ?revise)) )
+    :designated (?told)
+    :conditions (?told (:trivial-postconditions)
+                 ?revise (:non-trivial-postconditions))
+  )
+)
