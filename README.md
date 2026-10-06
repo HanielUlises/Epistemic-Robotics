@@ -1,188 +1,104 @@
 # Epistemic-Robotics
 
-Multi-agent task planning under partial observability, grounded in Dynamic Epistemic Logic. Each agent maintains a Kripke model of the environment: a set of possible worlds, a per-agent accessibility relation, and a designated subset standing for the situation as far as that agent can tell. Actions are epistemic events applied by product update rather than state transitions, and a goal may require that an agent reach a zone or that it *know* it has reached it. Route planning is the winning region of a µ-calculus fixed point over the occupancy graph rather than a geometric shortest path.
+Multi-agent task planning under partial observability, grounded in Dynamic Epistemic Logic. Each agent maintains a Kripke model of the environment: a set of possible worlds, a per-agent accessibility relation, and a designated subset standing for the situation as far as that agent can tell. Actions are epistemic events applied by product update, not state transitions, and a goal may require that an agent reach a zone or that it *know* it has reached it. Route planning is the winning region of a µ-calculus fixed point over the occupancy graph, not a geometric shortest path.
 
-Validation is in simulation. Robots are URDF descriptions under ROS 2 and Gazebo; hardware is out of scope.
+Validation is in simulation. Robots are URDF descriptions under ROS 2 and Gazebo; hardware is out of scope. Every run is filmed and written up on the [project site](https://hanielulises.github.io/Epistemic-Robotics/).
 
-## Fixed points over partial maps
+## Routes are least fixed points
 
-A cell that has never been observed is excluded from the reachability computation, since unknown is not free. The least fixed point therefore halts at the mouth of an unobserved corridor and reports no route. A sensing action resolves those cells, and the same computation then runs to completion.
+The occupancy grid is a transition system: its states are cells, and its one modality $\Diamond$ is a move to a 4-connected neighbour. The cells from which a goal can be reached without leaving a safe set are the winning region
+
+```math
+W \;=\; \mu Z.\; \mathit{goal} \;\lor\; (\mathit{Safe} \land \Diamond Z),
+\qquad Z_0 = \varnothing,\quad Z_{k+1} = \mathit{goal} \cup \{\, v \in \mathit{Safe} \mid \exists u \in Z_k,\ v \to u \,\}
+```
+
+computed by Kleene iteration until $Z_{k+1} = Z_k$. A robot has a route exactly when it stands in $W$.
+
+<p align="center">
+  <img src="docs/img/mu-approximants.png" alt="Five approximants of the least fixed point, growing from the goal through the gap in the wall to the robot" /><br>
+  <sub><b>Figure 1.</b> The approximants Z₁, Z₄, Z₈, Z₁₂ and the fixed point, reached at k = 22. Dark cells entered at the step shown.</sub>
+</p>
+
+The iteration is also the route. A cell that entered at step $k$ has a neighbour that entered at $k - 1$, so the path descends the index to the goal, and its length is the index at the start.
+
+<p align="center">
+  <img src="docs/img/mu-iteration.png" alt="The winning region with every cell labelled by the iteration at which it entered, and the route descending from 16 at the robot to 1 at the goal" /><br>
+  <sub><b>Figure 2.</b> W labelled by the iteration at which each cell entered it. The robot entered at 16; the route takes 15 steps down.</sub>
+</p>
+
+## Unknown is not free
+
+A cell that has never been observed is in no safe set. The least fixed point therefore halts at the mouth of an unobserved corridor and reports no route. A sensing action resolves those cells, and the same computation then runs to completion.
 
 | | |
 | --- | --- |
 | ![Reachability halted at an unobserved corridor](docs/img/sensing-before.png) | ![Reachability completing after the corridor is resolved](docs/img/sensing-after.png) |
 
-**Figure 1.** Least fixed point before and after a sensing action. Cells marked `?` are unobserved.
+**Figure 3.** The fixed point before and after a sensing action. Cells marked `?` are unobserved.
 
-When two goals must both be reached, the plan is a tree rather than a sequence: a shared approach followed by a branch, each subtree the winning region of its own reachability formula.
+When two goals must both be reached the plan is a tree: a shared approach followed by a branch, each subtree the winning region of its own formula. The dual computation bounds where an agent may go: the greatest fixed point keeps the cells from which every step stays in the known-free region, and its boundary is the exploration frontier, where a further sensing action is worth spending.
 
-<p align="center">
-  <img src="docs/img/branching-plan.png" alt="A shared approach followed by a branch toward two goals" /><br>
-  <sub><b>Figure 2.</b> Branching plan over two targets.</sub>
-</p>
+| | |
+| --- | --- |
+| ![A shared approach followed by a branch toward two goals](docs/img/branching-plan.png) | ![The greatest fixed point and its frontier](docs/img/safe-region.png) |
 
-The dual computation bounds where an agent may go rather than where it can arrive. The greatest fixed point retains the cells that remain within the known-free region under every step; its boundary is the exploration frontier, and the frontier is where a further sensing action is worth spending.
+**Figure 4.** A branching plan over two targets, and the safe known region with its frontier.
 
-<p align="center">
-  <img src="docs/img/safe-region.png" alt="The greatest fixed point and its frontier" /><br>
-  <sub><b>Figure 3.</b> Safe known region and exploration frontier.</sub>
-</p>
+## Knowledge in the safe set
 
-## A warehouse to run it on
+The safe set need not be geometric. Evaluated at every pair of a cell and a world of the Kripke model the executor maintains, an epistemic formula can admit a cell because an agent *knows* something about it:
 
-The world the RoboticsAcademy [multi-robot Amazon warehouse
-exercise](https://jderobot.github.io/RoboticsAcademy/exercises/MobileRobots/multi_robot_amazon_warehouse/)
-runs on — AWS RoboMaker's small warehouse — restated so that what the robots do
-not know is part of the map. Not a floor plan that resembles it: the grid is
-rasterised from the collision meshes Gazebo uses for that world, and the demo
-launches that world unmodified, so the racks the planner drives around are the
-racks the laser hits.
-
-What the exercise asks for is a centralised task planner that assigns the jobs;
-it is simply told where the pallet is. Here that is the whole problem. A part
-of the floor nobody has measured is unknown rather than free, and which aisle
-holds the pallet is a disagreement between two worlds one robot can tell apart
-and another cannot.
-
-```bash
-ros2 launch warehouse_demo warehouse_demo_launch.py   # the mission, executed
-bash scenarios/warehouse/run_demo.sh                  # cells: routes and where to look
-bash epddl-workspace/robot-warehouse/validate.sh      # zones: what must be known
+```math
+\mathit{Safe}_i \;=\; \Big[\!\Big[\; \mathit{free} \;\lor\; \bigvee_{t} \big(t \land K_i\, \mathit{open}(t)\big) \Big]\!\Big]
 ```
 
-The first drives the policy in Gazebo through ePlanSys on PlanSys2, with
-SLAM Toolbox building the map the µ-calculus planner routes over. The second
-runs six questions past that planner, twice each — once in process and once
-over ROS topics — and fails if the two answers differ. The third grounds the
-warehouse domain with plank, solves it with Aletheia into a branching policy,
-and prints the pointed model, the goal, the actions and the plan for one agent
-and then for two — followed by two plans that must be rejected.
+A bay nobody has seen is not free. It enters the fixed point when the agent comes to know it is open, which it can do without seeing it: told that the other two bays are shut, it knows the third is open by elimination.
 
-Written up in [`scenarios/warehouse/README.md`](scenarios/warehouse/README.md)
-(the map and the routes) and
-[`epddl-workspace/robot-warehouse/README.md`](epddl-workspace/robot-warehouse/README.md)
-(the domain and the policies).
+<p align="center">
+  <img src="docs/img/mu-epistemic.png" alt="Left: with Safe = free the region stops at the block of three unknown bays and the robot is outside it. Right: with t2 known open, t2 is lifted into the safe set and the region reaches the robot" /><br>
+  <sub><b>Figure 5.</b> The same floor and the same fixed point, before and after K open(t₂). The lifted cells are drawn in light blue.</sub>
+</p>
 
-### A larger floor
+On the 30 by 50 metre pass-through floor the same computation, evaluated by `mu_path_planner` over the model the epistemic state published, stops at the racking after 327 iterations and, one announcement later, runs 582 and reaches the carrier through a bay no robot surveyed and no map contains.
 
-The small warehouse is 14 by 21 metres with two aisles, which is enough to show
-the pipeline works and not enough to show it scaling.
-[`warehouse_xl_rmf_demo`](ros2_ws/src/warehouse_xl_rmf_demo) is 30 by 50 metres
-with thirty-four, a service lane running the length of the building, and three
-robots under Open-RMF.
+<p align="center">
+  <img src="docs/img/pass-through-region.png" alt="The winning region on the pass-through floor before and after the last map exchange, coloured by iteration, with t2 lifted in cyan" width="640" /><br>
+  <sub><b>Figure 6.</b> W(dock) from a run of <a href="ros2_ws/src/pass_through_demo"><code>pass_through_demo</code></a>, coloured by iteration. Cyan: cells safe only by K<sub>carrier</sub> open(t₂).</sub>
+</p>
 
-| | small | larger |
+## Common knowledge is a greatest fixed point
+
+The other fixed point the project depends on is in the logic itself. With $E_G\varphi$ for "every agent of $G$ knows $\varphi$",
+
+```math
+C_G\,\varphi \;=\; \nu X.\; E_G(\varphi \land X),
+\qquad X_0 = W,\quad X_{k+1} = [\![\, E_G(\varphi \land X_k) \,]\!]
+```
+
+and the approximants from above are the worlds at which $E_G^1\varphi, \dots, E_G^k\varphi$ all hold. A message over a channel that can lose it keeps the actual world in at most one further approximant, whether or not it arrives, so no number of messages puts it in the fixed point. In the coordinated attack two robots must lift one load together and `lift(s)` requires $C_G\,\mathit{job}(s)$; four delivered radio messages leave the actual world in $X_4$ and out of $X_5$, the greatest fixed point is empty, and the executor refuses the lift. A beacon both robots are known to see is a public announcement, after which one world remains, and it is in every $X_k$.
+
+<p align="center">
+  <img src="docs/img/mu-common-knowledge.png" alt="Six approximants of the greatest fixed point on a ten-world chain; the actual world, ringed red, is in X0 to X4 and out of X5" /><br>
+  <sub><b>Figure 7.</b> X₀, …, X₅ on the model the radio protocol leaves after four messages: 10, 7, 5, 3, 1 and 0 worlds. Edges are the two robots' relations; <code>s2</code> marks the world where the order names the other stand.</sub>
+</p>
+
+`tools/mu_figures.py` draws Figures 1, 2, 5 and 7, computing each region by the iteration above.
+
+## Demonstrations
+
+| package | question | written up |
 | --- | --- | --- |
-| floor | 14 × 21 m, 296 m² | 30 × 50 m, 1 500 m² |
-| aisles | 2 | 34 |
-| waypoints | 12 | 132 |
-| directed lanes | 11 | 262 |
-| robots | 2 | 3 |
+| [`eplansys_rooms_demo`](ros2_ws/src/eplansys_rooms_demo), [`demo/`](demo) | a survey of six rooms whose goal is knowledge, and the fixed point that routes it | [six-room run](https://hanielulises.github.io/Epistemic-Robotics/demo.html), [survey](https://hanielulises.github.io/Epistemic-Robotics/six_room_survey.html) |
+| [`warehouse_demo`](ros2_ws/src/warehouse_demo), [`scenarios/warehouse`](scenarios/warehouse) | the RoboticsAcademy Amazon warehouse, where which bay holds the pallet is unknown; the floor rasterised from Gazebo's collision meshes | [warehouse run](https://hanielulises.github.io/Epistemic-Robotics/warehouse_run.html), [nested goals](https://hanielulises.github.io/Epistemic-Robotics/nested_run.html) |
+| [`warehouse_rmf_demo`](ros2_ws/src/warehouse_rmf_demo) | the same mission over an Open-RMF fleet | [over Open-RMF](https://hanielulises.github.io/Epistemic-Robotics/warehouse_rmf.html) |
+| [`warehouse_xl_rmf_demo`](ros2_ws/src/warehouse_xl_rmf_demo) | a 30 by 50 m floor with thirty-four aisles, and three survey sites of which one is never visited | [at scale](https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl.html), [three sites](https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl_sites.html) |
+| [`hotel_rmf_demo`](ros2_ws/src/hotel_rmf_demo) | a leak on one of two floors, where the frame leaves S5 during the run | [hotel incident](https://hanielulises.github.io/Epistemic-Robotics/hotel_run.html) |
+| [`epistemic_comm`](ros2_ws/src/epistemic_comm) | a radio link that actually falls, and the belief each robot keeps of the other | [link outage](https://hanielulises.github.io/Epistemic-Robotics/link_outage.html) |
+| [`pass_through_demo`](ros2_ws/src/pass_through_demo) | knowledge from the maps the robots build, and a carrier that crosses a bay no map contains | [pass-through](https://hanielulises.github.io/Epistemic-Robotics/pass_through.html) |
+| [`coordinated_attack_demo`](ros2_ws/src/coordinated_attack_demo) | common knowledge as the precondition of a joint lift: a lossy radio cannot supply it, a beacon can | [coordinated attack](https://hanielulises.github.io/Epistemic-Robotics/coordinated_attack.html) |
 
-```bash
-ros2 launch warehouse_xl_rmf_demo warehouse_xl_fleet.launch.py
-ros2 run eplansys_rmf_probe submit_probe -F warehouseXL -R r1 -p east_08
-```
-
-It is built rather than downloaded because no large warehouse map for Open-RMF
-exists to download. Measured against their own meshes rather than their
-descriptions, the candidates each fail differently: `OpenRobotics/Depot` is the
-one usually reached for and collides with nothing but the floor, so a plan
-rasterised from it comes back empty; `OpenRobotics/Warehouse` is genuinely 30 by
-50 and is an empty box, 1.2% occupied at robot height and all of that pillars.
-The largest maps in `rmf_demos`, the airport terminal and the campus, are not
-warehouses. So the hall is the Fuel model, whose collision mesh is the building,
-and the shelving is AWS RoboMaker's, whose racks a laser can see.
-
-The arrangement keeps the property the approach needs. Every aisle opens onto
-the one service lane and onto nothing else, so an aisle cannot be seen into
-until a robot stands at its mouth — the same reason the least fixed point halts
-at an unobserved corridor above. A larger open hall would have been a longer
-demonstration of a weaker claim.
-
-Everything is generated from
-[`tools/layout.py`](ros2_ws/src/warehouse_xl_rmf_demo/tools/layout.py): the
-world, the navigation graph and the building map, so none of them can drift
-from the others. Every waypoint and lane is checked against the floor before it
-is written, and the check refused three layouts that looked right — aisle ends
-meeting the pillar row, a cross aisle that ran through the last row of shelving
-once the row count changed, and two robots nominating one charger.
-
-The fourth it did not refuse, and that is the one worth recording. A pallet
-jack placed at the south dock purely for the look of it overlapped the lane out
-of the east charger by twenty centimetres. The check passed, because it knew
-about racks and pillars and not about props; RMF reported the task underway;
-and the robot drove out of its charger, pressed into the pallet jack and
-stopped, with nothing anywhere reporting a collision. Props are part of the
-floor definition now, and the same check that missed it rejects it.
-
-<p align="center">
-  <img src="ros2_ws/src/warehouse_xl_rmf_demo/docs/warehouse_xl_floor.png"
-       alt="The warehouse_xl floor: rack rows either side of a central service lane, with the navigation graph over them"
-       width="380" /><br>
-  <sub><b>Figure 4.</b> The floor. Grey is rack and pillar, blue the navigation
-  graph, orange the aisle mouths; green the docks and red the chargers in the
-  outer bays. Thirty-four aisles, and each one meets the graph only at its
-  mouth on the central lane.</sub>
-</p>
-
-The claim that an aisle can only be entered from the lane is worth measuring
-rather than asserting, so a run is recorded from `/fleet_states` and drawn over
-the graph it was routing on.
-
-<p align="center">
-  <img src="ros2_ws/src/warehouse_xl_rmf_demo/docs/warehouse_xl_run.png"
-       alt="A recorded run: r1's path from its charger, along the south cross aisle, north up the service lane and east into aisle 8"
-       width="380" /><br>
-  <sub><b>Figure 5.</b> r1 from <code>charger_east_south</code> to aisle
-  <code>east_08</code>: 35.9 m of path for 25 m of separation, in 96 s. Out of
-  the charger, west along the south cross aisle, twenty-two metres north up the
-  service lane, then east into the aisle. The detour is the point — the racks
-  leave no way in but the lane.</sub>
-</p>
-
-```
-  t=0s   (11.00, -23.64)  charger_east_south
-  t=12s  ( 9.06, -22.05)  onto the south cross aisle
-  t=24s  ( 3.29, -22.04)  west along it, ~0.58 m/s
-  t=36s  ( 0.00, -22.04)  lane_00, the foot of the service lane
-  t=48s  ( 0.01, -16.86)  north up the lane
-  t=60s  ( 0.01, -11.35)
-  t=72s  ( 0.00,  -5.59)
-  t=84s  ( 2.70,   0.25)  turned east at the mouth of aisle 8
-  t=96s  ( 4.19,   0.25)  east_08
-```
-
-The samples are in
-[`docs/r1_run.csv`](ros2_ws/src/warehouse_xl_rmf_demo/docs/r1_run.csv);
-`tools/record_run.py` writes them, and `tools/plot_floor.py --run` draws them.
-The trace is r1's. All three robots run, and three tasks pinned to three
-robots were accepted and executed concurrently with no process failures; how
-RMF's schedule mediates the lane under sustained three-robot traffic — the one
-resource all thirty-four aisles share — has not been measured yet.
-
-### Common knowledge as a precondition
-
-[`coordinated_attack_demo`](ros2_ws/src/coordinated_attack_demo) puts the
-coordinated attack on the pass-through floor. Two robots must lift one load
-together, one under each end of it, and the racking block keeps them out of
-sight of each other; a work order names which of two stands, and only one of
-them can read it. Each raises its end only if it knows the other will, and the
-weakest condition that settles both is common knowledge, so `lift` requires
-`C{south,north} job(s)`.
-
-A radio that can lose a message without anyone knowing adds one level of
-mutual knowledge per delivered message. With four messages, all delivered, the
-planner exhausts its space and returns no policy, and the executor refuses the
-lift at `E^4`. A stack light in the open bay, seen only from that bay's two
-mouths, gives common knowledge in one update, and the policy that uses it is
-run to a lift whose two halves start at the same instant.
-
-```bash
-ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio
-ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=beacon
-bash ros2_ws/src/coordinated_attack_demo/tools/validate.sh
-```
+Each package has a README with its launch commands, and a `validate.sh` or equivalent that grounds, solves and checks its domain without a simulator.
 
 ## Components
 
@@ -194,4 +110,4 @@ bash ros2_ws/src/coordinated_attack_demo/tools/validate.sh
 | [SLAM Toolbox](https://github.com/SteveMacenski/slam_toolbox) | 2D mapping. Each robot's occupancy grid. |
 | [Nav2](https://github.com/ros-navigation/navigation2) | Navigation. Executes the ontic actions of a plan. |
 
-This repository holds what is specific to the work: the simulated fleet and its worlds, the collaborative layer that tracks which regions each robot has observed and reconciles two maps when a link is restored, µ-calculus route planning, the warehouse scenario, and the experiments. The EPDDL domains and instances are under `epddl-workspace/`. Papers and the project site are on the `gh-pages` branch.
+This repository holds what is specific to the work: the simulated fleet and its worlds, the collaborative layer that tracks which regions each robot has observed and reconciles two maps when a link is restored, µ-calculus route planning, the scenarios, and the experiments. The EPDDL domains and instances are under `epddl-workspace/`. Papers and the project site are on the `gh-pages` branch.
