@@ -21,6 +21,8 @@ that needs common knowledge of which stand.
     ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=sight
     ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=blind
     ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2
+    ros2 launch coordinated_attack_demo coordinated_attack_launch.py robots:=4 messages:=3
+    ros2 launch coordinated_attack_demo coordinated_attack_launch.py robots:=4 messages:=3 floor:=radio
 
 What runs, per robot:
 
@@ -54,9 +56,18 @@ each robot stands is announced. sight and blind take the positions domain, in
 which it is not: sight is the beacon floor, and blind the same with crates
 across t2 that hide the two viewpoints from each other. `order:=` is what the
 work order says.
+
+`robots:=` and `messages:=` run tools/scaled.py's domain instead of the
+published one: up to four robots, south2 and north2 joining south and north,
+and that many message levels. The domain, the two floors, the action mapping
+and the classical model are written at launch, as the world is. On the radio
+floor the mission runs the protocol in protocols/radio-n<robots>-m<messages>.json,
+which tools/ladder.py had the planner find, or the one `protocol:=` names. The
+positions floors are for two robots.
 """
 
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -95,6 +106,33 @@ def flat(items):
     return [float(v) for item in items for v in item]
 
 
+def rviz_for(fleet, source):
+    """The RViz configuration with a scan and a route for every robot: the
+    published one draws r1 and r2, and a copy is written with r2's two
+    displays cloned for each further robot, in its colour."""
+    import yaml
+    with open(source) as fh:
+        config = yaml.safe_load(fh)
+    displays = config['Visualization Manager']['Displays']
+    for agent, (ns, *_rest, colour) in fleet.items():
+        if any(d.get('Name') == f'scan {ns}' for d in displays):
+            continue
+        rgb = '; '.join(str(int(round(255 * c))) for c in colour)
+        for kind in ('scan', 'route'):
+            model = next(d for d in displays if d.get('Name') == f'{kind} r2')
+            clone = yaml.safe_load(yaml.safe_dump(model))
+            clone['Name'] = f'{kind} {ns}'
+            clone['Color'] = rgb
+            clone['Topic']['Value'] = f'/{ns}/{kind}'
+            last = max(i for i, d in enumerate(displays)
+                       if str(d.get('Name', '')).startswith(f'{kind} r'))
+            displays.insert(last + 1, clone)
+    out = tempfile.NamedTemporaryFile('w', suffix='_coordinated_attack.rviz', delete=False)
+    yaml.safe_dump(config, out, sort_keys=False)
+    out.close()
+    return out.name
+
+
 def setup(context, *args, **kwargs):
     share = get_package_share_directory('coordinated_attack_demo')
     pt_share = get_package_share_directory('pass_through_demo')
@@ -116,6 +154,12 @@ def setup(context, *args, **kwargs):
     if order not in L.STANDS:
         raise RuntimeError(f'order:={order} is not one of {sorted(L.STANDS)}')
     gui = LaunchConfiguration('gui').perform(context).lower() == 'true'
+    n = int(LaunchConfiguration('robots').perform(context))
+    m = int(LaunchConfiguration('messages').perform(context))
+    import scaled   # noqa: E402
+    general = (n, m) != (2, 4)
+    if general and positions:
+        raise RuntimeError(f'floor:={floor} is for two robots and four message levels')
 
     # The world and the lamps, built now from layout.py.
     world = os.path.join(tempfile.gettempdir(), f'coordinated_attack_{built}.world')
@@ -137,11 +181,32 @@ def setup(context, *args, **kwargs):
     intermediate = os.path.join(get_package_share_directory('plansys2_epddl_grounder'),
                                 'libraries', 'intermediate.epddl')
     model = os.path.join(share, 'pddl', 'coordinated-attack.pddl')
+    protocol = ''
+    if general:
+        written = scaled.write(
+            os.path.join(tempfile.gettempdir(), f'coordinated_attack_n{n}_m{m}'), n, m)
+        domain, problem = written['domain'], written[floor]
+        mapping, model = written['mapping'], written['pddl']
+        if floor == 'radio':
+            protocol = LaunchConfiguration('protocol').perform(context) or os.path.join(
+                share, 'protocols', f'radio-n{n}-m{m}.json')
+            if not os.path.exists(protocol):
+                raise RuntimeError(
+                    f'no radio protocol for {n} robots and {m} levels at {protocol}: '
+                    f'tools/ladder.py --robots {n} --depth {m} --protocol writes one')
 
     with open(os.path.join(share, 'params', 'coordinated_attack.yaml')) as fh:
         params = fh.read()
     if positions:
         params = params.replace('"LOSSY_LIBRARY"]', '"LOSSY_LIBRARY", "MOVES_LIBRARY"]')
+    # Message levels past the published four need timeouts of their own.
+    extra = [k for k in scaled.kinds(m) if k not in ('tell', 'ack', 'ack2', 'ack3')]
+    if extra:
+        params = params.replace('"radio_ack3",', '"radio_ack3", ' + ', '.join(
+            f'"radio_{k}"' for k in extra) + ',')
+        params = params.replace('      go_view:\n', ''.join(
+            f'      radio_{k}:\n        duration_overrun_percentage: 2000.0\n' for k in extra)
+            + '      go_view:\n')
     params = (params.replace('EPDDL_DOMAIN', domain).replace('EPDDL_PROBLEM', problem)
                   .replace('MAPPING_FILE', mapping).replace('INTERMEDIATE_LIBRARY', intermediate)
                   .replace('LOSSY_LIBRARY', lossy).replace('MOVES_LIBRARY', moves))
@@ -149,8 +214,9 @@ def setup(context, *args, **kwargs):
     filled.write(params)
     filled.close()
 
-    agents = list(L.ROBOTS)
-    namespaces = [L.ROBOTS[a][0] for a in agents]
+    fleet = L.robots(n)
+    agents = list(fleet)
+    namespaces = [fleet[a][0] for a in agents]
     stands = sorted(L.STANDS)
 
     gazebo = [ExecuteProcess(
@@ -167,7 +233,7 @@ def setup(context, *args, **kwargs):
 
     per_robot = []
     for k, agent in enumerate(agents):
-        ns, x, y, rng, samples, colour = L.ROBOTS[agent]
+        ns, x, y, rng, samples, colour = fleet[agent]
         sdf = tempfile.NamedTemporaryFile('w', suffix=f'_{ns}.sdf', delete=False)
         sdf.write(robot.robot_sdf(ns, rng, samples, colour=colour))
         sdf.close()
@@ -190,15 +256,15 @@ def setup(context, *args, **kwargs):
     poses = []
     for s in stands:
         for a in agents:
-            mx, my = L.mouth(s, a)
-            ux, uy = L.under_end(s, a)
+            mx, my = L.mouth(s, a, n)
+            ux, uy = L.under_end(s, a, n)
             poses += [mx, my, ux, uy, L.facing(a)]
     signal = 'signal_to' if positions else 'signal'
     performers = [
         Node(package='coordinated_attack_demo', executable='read_order_action',
              additional_env=matching_cascade(),
              output='screen', arguments=['--agent', reader],
-             parameters=[{**common, 'ns': L.ROBOTS[reader][0],
+             parameters=[{**common, 'ns': fleet[reader][0],
                           'terminal': [L.TERMINAL_READ[0], L.TERMINAL_READ[1], L.TERMINAL_YAW],
                           'order': order, 'action_name': 'read_order',
                           'specialized_arguments': [reader, ''], 'rate': 10.0}]),
@@ -219,12 +285,12 @@ def setup(context, *args, **kwargs):
                           'action_name': 'lift', 'rate': 10.0}]),
     ]
     for agent in agents:
-        vx, vy = L.viewpoint(agent)
+        vx, vy = L.viewpoint(agent, n)
         performers.append(Node(
             package='coordinated_attack_demo', executable='go_view_action',
             additional_env=matching_cascade(),
             output='screen', arguments=['--agent', agent],
-            parameters=[{**common, 'ns': L.ROBOTS[agent][0],
+            parameters=[{**common, 'ns': fleet[agent][0],
                          'viewpoint': [vx, vy, L.facing(agent)],
                          'beacon': list(L.BEACON_POST),
                          'action_name': 'go_view',
@@ -236,13 +302,13 @@ def setup(context, *args, **kwargs):
             output='screen',
             parameters=[{'agents': agents, 'namespaces': namespaces,
                          'action_name': 'sight', 'rate': 10.0}]))
-    for kind in ('tell', 'ack', 'ack2', 'ack3'):
+    for kind in scaled.kinds(m):
         performers.append(Node(
             package='coordinated_attack_demo', executable='radio_action',
             additional_env=matching_cascade(),
             output='screen', arguments=['--kind', kind],
             parameters=[{'agents': agents, 'action_name': f'radio_{kind}', 'rate': 10.0,
-                         'transfer_seconds': 4.0}]))
+                         'transfer_seconds': 4.0, 'group': general}]))
 
     plansys2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
@@ -251,36 +317,57 @@ def setup(context, *args, **kwargs):
         launch_arguments={'model_file': model, 'params_file': filled.name,
                           'epistemic_state': 'True'}.items())
 
-    colours = [c for a in agents for c in L.ROBOTS[a][5]]
+    colours = [c for a in agents for c in fleet[a][5]]
     view = Node(
         package='coordinated_attack_demo', executable='knowledge_view.py', output='screen',
         parameters=[{'floorplan': floorplan, 'agents': agents, 'namespaces': namespaces,
                      'colours': colours, 'stands': stands,
                      'load_boxes': flat([L.load_box(s) for s in stands]),
                      'beacon': list(L.BEACON_POST),
-                     'viewpoints': flat([L.viewpoint(a) for a in agents]),
+                     'viewpoints': flat([L.viewpoint(a, n) for a in agents]),
                      'terminal': list(L.TERMINAL), 'has_beacon': floor != 'radio',
                      'positions': positions,
                      'crates': list(L.crates_box()) if floor == 'blind' else [0.0]}])
 
-    shots = [f'{a}={L.ROBOTS[a][0]}' for a in agents]
-    shots += [f'{name}={L.shot_text(pose)}' for name, pose in L.SHOTS.items()]
+    shots = [f'{a}={fleet[a][0]}' for a in agents]
+    shot_poses = dict(L.SHOTS)
+    if n > 2:
+        # With more robots the published shots frame too little: a message
+        # crosses the whole hall, and four robots under a load are lost from
+        # eleven metres up.
+        shot_poses['radio'] = L.look_at((0.0, -27.0, 21.0), (0.0, -1.0, 0.0))
+        for s in L.STANDS:
+            x = L.stand_x(s)
+            shot_poses[s] = L.look_at((x - 0.4, -4.6, 6.0), (x, 0.4, 0.0))
+    shots += [f'{name}={L.shot_text(pose)}' for name, pose in shot_poses.items()]
     director = Node(
         package='coordinated_attack_demo', executable='camera_director.py', output='screen',
         condition=IfCondition(LaunchConfiguration('camera')),
         parameters=[{'follow_file': LaunchConfiguration('follow_file'),
                      'initial': L.shot_text(L.OPENING_SHOT), 'shots': shots}])
 
+    rviz_config = LaunchConfiguration('rviz_config').perform(context)
+    if n > 2:
+        rviz_config = rviz_for(fleet, rviz_config)
     rviz = Node(
         package='rviz2', executable='rviz2', name='rviz2', output='screen',
         condition=IfCondition(LaunchConfiguration('rviz')),
-        arguments=['-d', LaunchConfiguration('rviz_config')],
+        arguments=['-d', rviz_config],
         parameters=[{'use_sim_time': True}])
 
+    # The mission's PlannerClient is a node of its own in the mission's
+    # process, and waits plan_solver_timeout for an answer, 15 s unless told.
+    # On the published floors the planner answers in under a second; on the
+    # radio floor with four robots it searches its whole budget, and the
+    # client is given that budget and a margin, so that what the mission
+    # reports is the planner's answer and not its own impatience.
+    budget = float(re.search(r'plan_solver_timeout:\s*([\d.]+)', params).group(1))
     mission = Node(
         package='coordinated_attack_demo', executable='coordinated_attack_mission',
         output='screen',
+        arguments=['--ros-args', '-p', f'plan_solver_timeout:={budget + 15.0}'],
         parameters=[{'epddl_problem': problem, 'action_mapping': mapping, 'floor': floor,
+                     'protocol': protocol,
                      'policy_out': LaunchConfiguration('policy_out'),
                      'plan_only': LaunchConfiguration('plan_only'),
                      'hold': float(LaunchConfiguration('hold').perform(context))}])
@@ -308,6 +395,14 @@ def generate_launch_description():
                                           'without a sight line through t2.'),
         DeclareLaunchArgument('order', default_value='s1',
                               description='The stand the work order names: s1 or s2.'),
+        DeclareLaunchArgument('robots', default_value='2',
+                              description='2 to 4. Other than 2, or messages other than 4, '
+                                          'runs the domain tools/scaled.py writes.'),
+        DeclareLaunchArgument('messages', default_value='4',
+                              description='Message levels on the radio, tell, ack, ack2, ...'),
+        DeclareLaunchArgument('protocol', default_value='',
+                              description='With robots or messages given, the radio protocol '
+                                          'to run; default protocols/radio-n<r>-m<m>.json.'),
         DeclareLaunchArgument('gui', default_value='true', description='gzclient'),
         DeclareLaunchArgument('rviz', default_value='true'),
         DeclareLaunchArgument('camera', default_value='true',

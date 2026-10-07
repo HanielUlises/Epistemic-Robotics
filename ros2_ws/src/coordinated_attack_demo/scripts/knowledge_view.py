@@ -14,7 +14,7 @@
 # limitations under the License.
 
 """
-Draws what the two robots know about the work order, and how deep it goes.
+Draws what the robots know about the work order, and how deep it goes.
 
 Everything here is computed from the model the epistemic state publishes
 after every product update. For the stand the order names, once the branch
@@ -22,13 +22,16 @@ has settled which one it is:
 
   K_i job(s)   for each robot: job(s) holds in every world i considers
                possible from every designated world
-  depth        the largest k with E^k job(s), where E is "both robots know".
+  depth        the largest k with E^k job(s), where E is "every robot knows".
                A breadth-first walk over the union of the two relations from
                the designated worlds finds the nearest world where job(s)
                fails; if it is L steps away, E^(L-1) holds and E^L does not.
                No such world is common knowledge, C job(s).
   chain        the agents along that walk, which is the chain of "south
                considers ... north considers ..." that keeps C from holding
+
+With three or four robots the tiles beside a stand are two columns, south
+and north in the first and south2 and north2 in the second.
 
 These are logged as a [knows] line whenever they change, which the video's
 captions are timed from, and published on /coordinated_attack/knowledge.
@@ -350,10 +353,11 @@ class KnowledgeView(Node):
             f = self.facts.get(s)
             for j, agent in enumerate(self.agents):
                 knows = bool(f and f['knows'][agent])
-                ty = cy + (-1.0 if j == 0 else 1.0) * 0.55
-                out.markers.append(self.cube(10 * k + j, 'tile', cx + 1.9, ty, 0.6, 0.9, 0.9, 0.05,
+                tx = cx + 1.9 + 1.25 * (j // 2)
+                ty = cy + (-1.0 if j % 2 == 0 else 1.0) * 0.55
+                out.markers.append(self.cube(10 * k + j, 'tile', tx, ty, 0.6, 0.9, 0.9, 0.05,
                                              KNOWS if knows else UNSURE, 0.95))
-                out.markers.append(self.cube(10 * k + j, 'tile_rim', cx + 1.9, ty, 0.58, 1.15, 1.15,
+                out.markers.append(self.cube(10 * k + j, 'tile_rim', tx, ty, 0.58, 1.15, 1.15,
                                              0.04, self.colour[agent], 1.0))
             if f:
                 # On the storage floor beside the stand, clear of the block.
@@ -438,7 +442,20 @@ class KnowledgeView(Node):
                             Point(x=x + 1.1 * math.cos(yaw), y=y + 1.1 * math.sin(yaw), z=0.45)]
             arrow.scale.x, arrow.scale.y, arrow.scale.z = 0.18, 0.4, 0.4
             out.markers.append(arrow)
-            out.markers.append(self.text(j, 'robot_name', x - 1.5, y, 1.0, agent, 1.4,
+            # Beside the robot, to the west. Near the block, where robots face
+            # each other across a bay, the name goes out away from the block,
+            # since the view runs across it and two names at one x would print
+            # over each other; and a robot abreast of another on its side
+            # takes the side of its name away from that one.
+            partner = [p for a, p in self.poses.items() if a != agent
+                       and p[1] * y > 0 and abs(p[0] - x) < 2.5]
+            west = not any(p[0] < x for p in partner)
+            if abs(y) < 6.0 and len(self.agents) > 2:
+                lx = x - 1.0 if west else x + 1.0
+                ly = y + (2.4 if y > 0 else -2.4)
+            else:
+                lx, ly = (x - 1.5 if west else x + 1.5), y
+            out.markers.append(self.text(j, 'robot_name', lx, ly, 1.0, agent, 1.4,
                                          self.colour[agent]))
 
         # A radio message: an arc over the block from sender to receiver.

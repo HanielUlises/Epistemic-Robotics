@@ -97,13 +97,33 @@ def stand_x(stand):
 
 
 # Which mouth of a stand each robot takes: south the storage side, north the
-# dispatch side. A robot never crosses the block.
-SIDE = {'south': -1.0, 'north': 1.0}
+# dispatch side. A robot never crosses the block. With more than two robots,
+# south2 joins south on the storage side and north2 joins north on the
+# dispatch side.
+SIDE = {'south': -1.0, 'north': 1.0, 'south2': -1.0, 'north2': 1.0}
+
+# Two robots on one side stand abreast, at a mouth and under the load: which
+# of the two takes the west place. south and north2 take the west place,
+# since each comes in from the west of its partner, and so the two never
+# cross on the way between t2 and a stand.
+ABREAST = {'south': -1.0, 'north': 1.0, 'south2': 1.0, 'north2': -1.0}
+VIEW_ABREAST = 0.7    # m either side of the axis of t2
+LIFT_ABREAST = 0.55   # m either side of a stand's axis: the load's two corners
 
 
-def mouth(stand, agent):
-    """Where a robot waits to lift: on the stand's axis, outside its mouth."""
-    return stand_x(stand), SIDE[agent] * (BLOCK_HALF_DEPTH + P.MOUTH_STANDOFF)
+def lateral(agent, n, offset):
+    """How far off the axis @p agent stands, with @p n robots on the floor:
+    on it when it has its side to itself, @p offset to one side when it
+    shares it."""
+    shared = sum(1 for a in robots(n) if SIDE[a] == SIDE[agent]) > 1
+    return ABREAST[agent] * offset if shared else 0.0
+
+
+def mouth(stand, agent, n=2):
+    """Where a robot waits to lift: outside its mouth of the stand, on the
+    axis, or abreast of the other robot on its side."""
+    return (stand_x(stand) + lateral(agent, n, LIFT_ABREAST),
+            SIDE[agent] * (BLOCK_HALF_DEPTH + P.MOUTH_STANDOFF))
 
 
 # How far from the load's end a robot stops when it drives in under it. The
@@ -111,16 +131,17 @@ def mouth(stand, agent):
 LIFT_GAP = 0.38
 
 
-def under_end(stand, agent):
-    """Where a robot stands to take its end: in the bay, short of the load."""
+def under_end(stand, agent, n=2):
+    """Where a robot stands to take its end, or its corner: in the bay, short
+    of the load."""
     x0, y0, x1, y1 = load_box(stand)
-    y = y0 - LIFT_GAP - 0.14 if agent == 'south' else y1 + LIFT_GAP + 0.14
-    return stand_x(stand), y
+    y = y0 - LIFT_GAP - 0.14 if SIDE[agent] < 0 else y1 + LIFT_GAP + 0.14
+    return stand_x(stand) + lateral(agent, n, LIFT_ABREAST), y
 
 
 def facing(agent):
     """The heading into the block from a robot's side."""
-    return math.pi / 2 if agent == 'south' else -math.pi / 2
+    return math.pi / 2 if SIDE[agent] < 0 else -math.pi / 2
 
 
 # How far the load comes up when it is lifted.
@@ -164,10 +185,12 @@ def crates_box():
     return (x - w / 2.0, y - d / 2.0, x + w / 2.0, y + d / 2.0)
 
 
-def viewpoint(agent):
-    """Where a robot sees the beacon: outside its mouth of t2, on the axis."""
+def viewpoint(agent, n=2):
+    """Where a robot sees the beacon: outside its mouth of t2, on the axis, or
+    abreast of the other robot on its side."""
     x, _ = P.tunnel_centre(BEACON_BAY)
-    return x, SIDE[agent] * (BLOCK_HALF_DEPTH + P.MOUTH_STANDOFF)
+    return (x + lateral(agent, n, VIEW_ABREAST),
+            SIDE[agent] * (BLOCK_HALF_DEPTH + P.MOUTH_STANDOFF))
 
 
 # ─── The work order ─────────────────────────────────────────────────────────
@@ -194,12 +217,28 @@ def terminal_box():
 # Both carry a twelve-metre laser; neither is a scout here, but the laser is
 # what stops a robot short of a load it drives in under.
 
-ROBOTS = {
+FLEET = {
     # agent: (namespace, x, y, lidar range m, lidar samples, colour)
     'south': ('r1', -12.6, -10.5, 12.0, 720, (0.20, 0.45, 0.80)),
     'north': ('r2', 6.0, 5.6, 12.0, 720, (0.90, 0.50, 0.15)),
+    # With more robots: south2 at the east end of the storage floor's
+    # southern aisle, north2 at the west end of the dispatch floor's aisle,
+    # each behind a row of shelving from everyone else and from the beacon.
+    'south2': ('r3', 12.6, -19.5, 12.0, 720, (0.18, 0.60, 0.35)),
+    'north2': ('r4', -12.6, 20.0, 12.0, 720, (0.55, 0.30, 0.70)),
 }
 READS_ORDER = 'south'
+
+
+def robots(n=2):
+    """The first @p n robots, in the order tools/scaled.py names the agents.
+    The floor has places for four."""
+    if not 2 <= n <= len(FLEET):
+        raise ValueError(f'the floor has places for 2 to {len(FLEET)} robots, not {n}')
+    return {a: FLEET[a] for a in list(FLEET)[:n]}
+
+
+ROBOTS = robots(2)   # the published floors
 
 # ─── Camera shots ───────────────────────────────────────────────────────────
 #

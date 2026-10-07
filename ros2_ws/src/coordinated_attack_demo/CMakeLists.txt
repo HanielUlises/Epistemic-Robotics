@@ -48,7 +48,7 @@ install(TARGETS read_order_action go_view_action radio_action signal_action sigh
   DESTINATION lib/${PROJECT_NAME})
 install(PROGRAMS scripts/knowledge_view.py scripts/camera_director.py
   DESTINATION lib/${PROJECT_NAME})
-install(DIRECTORY launch config params epddl pddl maps tools
+install(DIRECTORY launch config params epddl pddl maps tools protocols
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)

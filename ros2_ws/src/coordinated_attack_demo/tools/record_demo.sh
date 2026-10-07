@@ -21,6 +21,7 @@
 #     record_demo.sh beacon s1 /tmp/ca_beacon.mkv /tmp/ca_beacon.log
 #     record_demo.sh sight  s1 /tmp/ca_sight.mkv  /tmp/ca_sight.log
 #     record_demo.sh blind  s1 /tmp/ca_blind.mkv  /tmp/ca_blind.log
+#     ROBOTS=4 MESSAGES=3 record_demo.sh beacon s1 /tmp/ca_n4_beacon.mkv /tmp/ca_n4_beacon.log
 #
 # The display is an Xvfb screen carrying the two windows and nothing else.
 # There is no window manager on it, so both windows are placed before they
@@ -42,6 +43,8 @@ WIDTH=3840
 HEIGHT=1080
 FPS=${FPS:-12}
 FOLLOW=/tmp/coordinated_attack_follow
+ROBOTS=${ROBOTS:-2}
+MESSAGES=${MESSAGES:-4}
 
 source /opt/ros/humble/setup.bash
 source "$HOME/eplansys_ws/install/setup.bash"
@@ -92,7 +95,8 @@ open(sys.argv[1], 'w').write(L.shot_text(L.OPENING_SHOT) + '\n')
 PY
 
 setsid ros2 launch coordinated_attack_demo coordinated_attack_launch.py \
-    floor:="$FLOOR" order:="$ORDER" gui:=true rviz:=true camera:=true \
+    floor:="$FLOOR" order:="$ORDER" robots:="$ROBOTS" messages:="$MESSAGES" \
+    gui:=true rviz:=true camera:=true \
     follow_file:="$FOLLOW" hold:="${HOLD:-10}" start_after:=45 shutdown:=false \
     policy_out:="${RAW%.*}_policy.json" > "$LOG" 2>&1 &
 LAUNCH=$!
@@ -103,7 +107,7 @@ for _ in $(seq 1 150); do
   sleep 2
 done
 for _ in $(seq 1 90); do
-  grep -q "uccessfully spawned entity \[r2\]" "$LOG" && break
+  grep -q "uccessfully spawned entity \[r$ROBOTS\]" "$LOG" && break
   sleep 2
 done
 sleep 5

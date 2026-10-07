@@ -12,22 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// lift(s): both robots take an end of the load on stand s and raise it
-// together.
+// lift(s): every robot takes its share of the load on stand s, and they raise
+// it together. With two robots each takes an end; with three or four, two on
+// one side take the two corners of that end.
 //
 // The epistemic action is public and ontic, with C job(s) in its precondition;
 // the executor checks that against the model before this node is ever
 // dispatched, and on the radio floor it is never dispatched.
 //
 // Each robot drives to its own mouth of the stand on a route the least fixed
-// point finds over the floor plan, and turns to face into the bay. Neither
-// sees the other: the load is between them. When both are in place one start
-// time is fixed for both, and at that instant each creeps in under its end of
-// the load. The joint start is the commitment the precondition licenses; the
-// node logs how far apart the two starts and the two arrivals were. The load
-// is then raised, by moving it through gazebo_ros_state: the Waffles have no
-// lift, and the frame shows the load coming up off the stand only once both
-// robots are under it.
+// point finds over the floor plan, and turns to face into the bay. None sees
+// a robot at the other mouth: the load is between them. When all are in
+// place one start time is fixed for all, and at that instant each creeps in
+// under its end of the load. The joint start is the commitment the
+// precondition licenses; the node logs how far apart the starts and the
+// arrivals were, the earliest to the latest. The load is then raised, by
+// moving it through gazebo_ros_state: the Waffles have no lift, and the frame
+// shows the load coming up off the stand only once every robot is under it.
 
 #include <chrono>
 #include <cmath>
@@ -165,8 +166,8 @@ private:
       shot_pub_->publish(shot);
       status(stand, "approach");
       RCLCPP_INFO(
-        get_logger(), "[lift] lift(%s): both robots set out for their mouths of %s",
-        stand.c_str(), stand.c_str());
+        get_logger(), "[lift] lift(%s): %s set out for their mouths of %s",
+        stand.c_str(), everyone().c_str(), stand.c_str());
     }
 
     if (phase_ == Phase::Approach) {
@@ -190,9 +191,15 @@ private:
         phase_ = Phase::Wait;
         go_at_ = now() + rclcpp::Duration::from_seconds(lead_);
         status(stand, "ready");
-        RCLCPP_INFO(
-          get_logger(), "[lift] both at %s, out of sight of each other; one start for both in "
-          "%.1f s", stand.c_str(), lead_);
+        if (agents_.size() == 2) {
+          RCLCPP_INFO(
+            get_logger(), "[lift] both at %s, out of sight of each other; one start for both in "
+            "%.1f s", stand.c_str(), lead_);
+        } else {
+          RCLCPP_INFO(
+            get_logger(), "[lift] all at %s, none in sight of a robot across the load; one start "
+            "for all in %.1f s", stand.c_str(), lead_);
+        }
       }
       send_feedback(0.3f, "driving to the stand");
       return;
@@ -206,10 +213,15 @@ private:
       phase_ = Phase::Enter;
       for (auto & [agent, end] : ends_) {
         end.started = now();
+        double x, y, yaw;
+        end.driver->pose(x, y, yaw);
+        RCLCPP_INFO(
+          get_logger(), "[lift] %s starts from (%.2f, %.2f), heading %.0f deg", agent.c_str(),
+          x, y, yaw * 180.0 / M_PI);
       }
       status(stand, "enter");
-      RCLCPP_INFO(get_logger(), "[lift] joint start: both robots drive in under %s",
-        stand.c_str());
+      RCLCPP_INFO(get_logger(), "[lift] joint start: %s drive in under %s",
+        everyone().c_str(), stand.c_str());
     }
 
     if (phase_ == Phase::Enter) {
@@ -230,7 +242,10 @@ private:
             get_logger(), "[lift] %s under its end of %s after %.1f s", agent.c_str(),
             stand.c_str(), (end.arrived - end.started).seconds());
         } else {
-          end.driver->creep(creep_);
+          // Along the line from its mouth, holding it: the base has just
+          // turned on the spot, and driven open loop it drifts back towards
+          // the heading it arrived on, into the side of the bay.
+          end.driver->creep(creep_, end.mouth_x, end.mouth_y, end.yaw);
           // The laser holds a robot short of the load if it is closer than the
           // target says; that is under it too.
           if ((now() - end.started).seconds() > 25.0) {
@@ -238,8 +253,8 @@ private:
             end.under = true;
             end.arrived = now();
             RCLCPP_WARN(
-              get_logger(), "[lift] %s held %.2f m short of its end of %s", agent.c_str(),
-              left, stand.c_str());
+              get_logger(), "[lift] %s held %.2f m short of its end of %s, at (%.2f, %.2f), "
+              "heading %.0f deg", agent.c_str(), left, stand.c_str(), x, y, yaw * 180.0 / M_PI);
           }
         }
         all = all && end.under;
@@ -248,12 +263,22 @@ private:
         send_feedback(0.7f, "driving in under the load");
         return;
       }
-      const auto & a = ends_.at(agents_[0]);
-      const auto & b = ends_.at(agents_[1]);
+      // The spread, earliest to latest; with two robots, the difference.
+      double first_start = 0.0, last_start = 0.0, first_arrival = 0.0, last_arrival = 0.0;
+      bool any = false;
+      for (const auto & [agent, end] : ends_) {
+        const double started = end.started.seconds();
+        const double arrived = end.arrived.seconds();
+        first_start = any ? std::min(first_start, started) : started;
+        last_start = any ? std::max(last_start, started) : started;
+        first_arrival = any ? std::min(first_arrival, arrived) : arrived;
+        last_arrival = any ? std::max(last_arrival, arrived) : arrived;
+        any = true;
+      }
       RCLCPP_INFO(
-        get_logger(), "[lift] both under %s: starts %.2f s apart, arrivals %.2f s apart",
-        stand.c_str(), std::fabs((a.started - b.started).seconds()),
-        std::fabs((a.arrived - b.arrived).seconds()));
+        get_logger(), "[lift] %s under %s: starts %.2f s apart, arrivals %.2f s apart",
+        agents_.size() == 2 ? "both" : "all", stand.c_str(), last_start - first_start,
+        last_arrival - first_arrival);
       phase_ = Phase::Raise;
       raise_from_ = now();
       status(stand, "raise");
@@ -271,6 +296,14 @@ private:
       stand.c_str(), height_, (now() - started_).seconds());
     phase_ = Phase::Idle;
     finish(true, 1.0, "lifted");
+  }
+
+  /// "both robots", or "the four robots".
+  std::string everyone() const
+  {
+    static const char * names[] = {"", "", "both", "the three", "the four", "the five"};
+    const auto n = agents_.size();
+    return (n < 6 ? std::string(names[n]) : std::to_string(n)) + " robots";
   }
 
   rclcpp::Node::SharedPtr side_;
