@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The muddy children at a muster point &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Four robots at a muster point in the AWS small warehouse, each seeing every other robot&#8217;s fault lamp and not its own. With three lamps lit, the announcement that at least one is faulty tells no robot anything new, and makes it common knowledge; after two silent bells the three faulty robots know, and leave. Without it, no bell informs.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="The muddy children at a muster point">
+<meta property="og:description" content="An announcement of what every robot already sees makes it common knowledge. After two bells at which nobody moves, the three faulty robots know, and leave.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/muddy_robots.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/muddy_robots.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gazebo, past the public-address mast onto the muster ring: four robots facing each other, three red lamps lit.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/muddy_robots.jpg">
+<meta name="twitter:title" content="The muddy children at a muster point">
+<meta name="twitter:description" content="An announcement of what every robot already sees makes it common knowledge. After two bells at which nobody moves, the three faulty robots know, and leave.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="RViz and Gazebo during the four-robot coordinated attack runs.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/muddy_robots.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The eighteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+          <a href="coordinated_attack_scale.html">&#183; The coordinated attack among many robots<span class="sub">Bystanders, the cost of a level, four robots</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>muster-point</summary>
+            <div class="nav-sub">
+          <a href="muddy_robots.html" aria-current="page">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>false-belief</summary>
+            <div class="nav-sub">
+          <a href="demos.html#false-belief">All false-belief demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">Graph recovery and integration defects on a derived warehouse floor</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Common knowledge &#183; the muddy children &#183; AWS small warehouse &#183; ROS 2</p>
+    <h2>The muddy children at a muster point</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      At the end of a shift four robots meet at the muster point of the AWS
+      RoboMaker small warehouse. Each carries a status lamp, lit by the fleet's
+      diagnostics when its calibration has drifted. Each robot sees every other
+      robot's lamp and never its own. The supervisor knows that at least one lamp
+      is lit, and not which. When a bell rings, every robot that knows it is faulty
+      drives to the calibration bay; whether anyone left, every robot sees.
+    </p>
+    <p class="hero-p">
+      With three lamps lit, every robot already sees a lit lamp, so the
+      supervisor's announcement over the public address, &#8220;at least one of
+      you is faulty&#8221;, tells no robot anything it did not know. It is still
+      what the bells need. Before it, &#8220;some lamp is lit&#8221; is mutual
+      knowledge to depth \(E^2\) and not common knowledge; after it, it is common
+      knowledge, and then a bell at which nobody moves is information: after two
+      such bells the three faulty robots know, and at the third they leave. On the
+      floor without a public address the planner proves that no policy exists,
+      and four bells ring with nobody ever moving. The muddy children puzzle is
+      the counterpart of the <a href="coordinated_attack.html">coordinated
+      attack</a>: there common knowledge was a precondition no lossy channel could
+      supply; here a public announcement supplies it, of a fact everyone already
+      knew.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>The lamps are the floor's, and the planner is not told them:</b> the
+      initial model designates every fault pattern with a lamp lit, and the
+      policy branches on what the bells show. <b>What a robot knows is evaluated
+      at the actual world</b>, the pattern the lamps make the case, and never
+      across the designated worlds, which are the executor's uncertainty and no
+      robot's. <b>Seeing is not simulated</b>: that each robot sees every other
+      lamp on the ring is checked on the floor plan, and the model takes it as
+      given. <b>The bay is a destination</b>, not a repair.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">muddy_robots_demo</span>; policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, grounding by
+      plank, search by Aletheia. Full account in
+      <a href="muddy_robots.pdf">The Muddy Children at a Muster Point</a> (PDF):
+      the model, the proofs, the planning table, the runs and the defects found on
+      the way.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Four bells and nobody moves; an announcement, two bells and three leave</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/muddy_robots_poster.jpg">
+        <source src="media/muddy_robots.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Four robots, r1 to r4, with r1, r2 and r3's lamps lit. Left: RViz, what
+        the robots know, with each robot's lamp, what it knows of its own beside
+        it, and the depth of mutual knowledge of &#8220;some lamp is lit&#8221; at
+        the ring. Right: Gazebo, the world as it is. Under both: the policy, the
+        action in formal notation, and the model as the 4-cube of fault patterns,
+        the patterns the robots can still consider drawn and the actual one
+        ringed. Every caption is a line the runs wrote, placed at the instant it
+        was written, and the cube's count is checked against the count the run
+        logged; the corner says when the film runs faster or slower than the
+        run.
+      </figcaption>
+    </figure>
+
+    <h4>The floor with a public address</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>assembly</td><td>every robot from its station to its place on the muster ring: r4 after 16&#8202;s, r3 19, r1 20, r2 25</td><td>16 worlds &#183; \(E^2\) some lamp lit, blocked r1 &#8594; r2 &#8594; r3</td></tr>
+        <tr><td>plan</td><td>a policy of 4 nodes and 4 leaves, in 0.1&#8202;s</td><td></td></tr>
+        <tr><td>announce</td><td>&#8220;at least one of you is faulty&#8221;: every robot hears it, and hears that every other does</td><td>15 &#183; <b>\(C\)</b></td></tr>
+        <tr><td>bell 1</td><td>no robot knows whether it is faulty, and nobody moves &#8594; e-stay</td><td>11 &#183; \(C\)</td></tr>
+        <tr><td>bell 2</td><td>nobody moves &#8594; e-stay; now r1, r2 and r3 know that they are faulty</td><td>5 &#183; \(C\)</td></tr>
+        <tr><td>bell 3</td><td><b>r1, r2, r3 know they are faulty and leave</b> for the calibration bay, nearest first, five seconds apart &#8594; e-leave; in the bay after 34, 41 and 48&#8202;s</td><td>1 &#183; r4 knows it is not</td></tr>
+        <tr><td>dismissal</td><td>each robot on what it knows: r1, r2 and r3 in the bay; r4 back to work, at its station after 20&#8202;s</td><td>every robot knows whether</td></tr>
+      </tbody>
+    </table>
+
+    <h4>The floor without one</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>no policy: Aletheia's relaxation proves the goal unreachable, in 0.2&#8202;s</td><td>16 worlds &#183; \(E^2\)</td></tr>
+        <tr><td>bells 1 to 4</td><td>rung by hand, as many as there are robots: each time no robot knows whether it is faulty, and nobody moves &#8594; e-stay</td><td>16 &#183; \(E^2\), unchanged</td></tr>
+        <tr><td>dismissal</td><td>no robot knows its lamp, and every robot stays where it is</td><td>nobody knows</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Three findings about an announcement nobody needed to hear</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#mr-depth-sec">
+        <span class="pt-card-img"><img src="media/thumbs/muddy_robots_card_pa.jpg" alt="Gazebo, past the public-address mast onto the muster ring: four robots facing each other, three red lamps lit" loading="lazy"></span>
+        <span class="pt-card-k">The announcement</span>
+        <span class="pt-card-h">From \(E^{k-1}\) to \(C\)</span>
+        <span class="pt-card-p">With \(k\) lamps lit every robot sees one, and &#8220;some lamp is lit&#8221; holds to depth \(E^{k-1}\). The announcement adds no fact to any robot; it adds the rest of the depth.</span>
+        <span class="pt-card-go">See the depth <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#mr-bells-sec">
+        <span class="pt-card-img"><img src="media/thumbs/muddy_robots_card_bell.jpg" alt="Gazebo, looking down on the muster ring during a bell: nobody moves" loading="lazy"></span>
+        <span class="pt-card-k">The bells</span>
+        <span class="pt-card-h">Nobody moving is information</span>
+        <span class="pt-card-p">Each bell at which nobody leaves removes every pattern with one more lamp lit. After \(k-1\) such bells the faulty robots know; at the \(k\)-th they leave, and the rest know they may stay.</span>
+        <span class="pt-card-go">See the model <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#mr-silent-sec">
+        <span class="pt-card-img"><img src="media/thumbs/muddy_robots_card_silent.jpg" alt="The 4-cube of fault patterns on the floor without a public address: after four bells all sixteen are still possible" loading="lazy"></span>
+        <span class="pt-card-k">Silence</span>
+        <span class="pt-card-h">Without it, no bell informs</span>
+        <span class="pt-card-p">Without the public address no robot ever knows its lamp, every bell is the identity update, and no policy exists at any depth. The planner proves it before searching.</span>
+        <span class="pt-card-go">Read the proof <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#mr-domain-sec">The domain</a>
+      <a href="#mr-depth-sec">The depth</a>
+      <a href="#mr-silent-sec">Silence</a>
+      <a href="#mr-bells-sec">The bells</a>
+      <a href="#mr-planning-sec">Planning</a>
+      <a href="#mr-floor-sec">The floor</a>
+      <a href="#mr-defects-sec">Defects</a>
+      <a href="#mr-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE DOMAIN -->
+<section id="mr-domain-sec">
+  <div class="container">
+    <p class="sec-label">The domain</p>
+    <h3>Each robot knows every lamp but its own</h3>
+    <p>
+      <span class="mono-inline">tools/muster.py</span> writes the domain for
+      \(N\) robots \(r_1,\dots,r_N\). The atoms are
+      \(\mathit{faulty}(r_i)\), and \(\mathit{pa}\), whether the hall has a
+      public address. The initial model is the hypercube: a world is a fault
+      pattern \(u \in \{0,1\}^N\), and \(r_i\) relates two patterns that differ in
+      its own lamp at most, so that it knows whether every other robot is faulty
+      and not whether it is. Every pattern with a lamp lit is designated, since
+      that much is true and the planner does not know which. The goal \(\gamma\)
+      is that every robot knows whether it is faulty,
+      \(\bigwedge_i \mathit{Kw}_{r_i}\,\mathit{faulty}(r_i)\).
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>action</th><th>type</th><th>events</th><th>observers</th></tr></thead>
+      <tbody>
+        <tr><td>announce</td><td>public announcement</td><td>pre \(\mathit{pa} \wedge \bigvee_i \mathit{faulty}(r_i)\)</td><td>every robot, fully</td></tr>
+        <tr><td>bell</td><td>public sensing</td><td>e-leave: \(\bigvee_i K_{r_i}\mathit{faulty}(r_i)\); e-stay: \(\bigwedge_i \neg K_{r_i}\mathit{faulty}(r_i)\)</td><td>every robot, fully</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The bell observes only whether anyone left. That is enough: once a robot
+      leaves, every robot knows its own lamp, and seeing who left adds nothing.
+      The robots that leave are the robots that know, at the actual world, that
+      they are faulty; the crew checks each one's lamp before it moves, and
+      refuses if the model says a robot knows something its lamp contradicts.
+      After the policy every robot is dismissed on what it knows: to the bay if
+      it knows it is faulty, back to work if it knows it is not, and nowhere if it
+      does not know.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE DEPTH -->
+<section id="mr-depth-sec">
+  <div class="container">
+    <p class="sec-label">Before the announcement</p>
+    <h3>Every robot sees a lit lamp, and that is not common knowledge</h3>
+    <p>
+      An edge of the hypercube changes one lamp, so the nearest pattern with no
+      lamp lit is \(k\) steps from a pattern with \(k\) lit, along a chain in which
+      each robot in turn considers its own lamp dark. In the run with r1, r2 and r3
+      lit the chain is r1, then r2, then r3: r1 considers that r2 considers that r3
+      considers that no lamp is lit.
+    </p>
+        <h4>Lemma 3 (the depth before the announcement)</h4>
+    <p>
+      At a pattern with
+      \(k\) lamps lit, the robots have \(E_G^{k-1}\) of &#8220;some lamp is
+      lit&#8221;, and not \(E_G^{k}\).
+    </p>
+    <h4>Lemma 4 (the announcement)</h4>
+    <p>
+      After the announcement the part of the
+      model reachable from a designated pattern is every pattern with a lamp lit,
+      and &#8220;some lamp is lit&#8221; is common knowledge,
+      \(C_G\).
+    </p>
+    <p>
+      So the announcement changes nothing any robot knows about the lamps. What it
+      changes is the depth, from \(E^{k-1}\) to \(C\), in one update: the pattern
+      with no lamp lit leaves the model, and every chain that ended there goes with
+      it. This is the public announcement of the
+      <a href="coordinated_attack.html#ca-beacon-sec">coordinated attack's
+      beacon</a>, made of a fact that was already known to everyone.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ SILENCE -->
+<section id="mr-silent-sec">
+  <div class="container">
+    <p class="sec-label">Without the public address</p>
+    <h3>Every bell is the identity update</h3>
+        <h4>Proposition 1 (without the announcement, no robot learns its
+      lamp)</h4>
+    <p>
+      In the hypercube no robot knows whether it is faulty, at any world.
+      Hence the bell's e-leave occurs nowhere, e-stay occurs everywhere, and the
+      update leaves the reachable model as it was.
+    </p>
+    <h4>Corollary 1 (no policy without the public address)</h4>
+    <p>
+      On the floor without a public address no sequence of
+      actions makes \(\gamma\) hold, and no policy exists, of any depth.
+    </p>
+    <p>
+      The reason is the pattern with no lamp lit. Each robot considers, at every
+      pattern, the pattern that differs from it in its own lamp, so it never knows
+      that lamp. Nobody ever leaves, and that nobody leaves is common knowledge
+      before the bell rings. Aletheia's knowledge relaxation reaches the same
+      verdict before any search, at every \(N\) from two to ten, and the run
+      confirms it: four bells, nobody moves, and the model is the one the robots
+      started with.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE BELLS -->
+<section id="mr-bells-sec">
+  <div class="container">
+    <p class="sec-label">After the announcement</p>
+    <h3>Each silent bell removes a layer of the cube</h3>
+    <figure class="demo-figure">
+      <img src="media/muddy-robots-cube.svg" alt="Five 4-cubes of fault patterns: at the muster point, after the announcement, after bells 1, 2 and 3; the patterns still possible shrink from 16 to 15, 11, 5 and 1" style="width:100%;height:auto">
+      <figcaption>
+        The model along the run with r1, r2 and r3 lit, computed by the product
+        update on the grounded task. The announcement removes the pattern with no
+        lamp lit; the first silent bell every pattern with one lit, the second
+        every pattern with two; the third bell gives e-leave, and only the actual
+        pattern is left. An edge joins two patterns one robot cannot tell apart, in
+        that robot's colour.
+      </figcaption>
+    </figure>
+        <h4>Proposition 2 (the bells after the announcement)</h4>
+    <p>
+      After \(j\)
+      silent bells the model is the patterns with at least \(j+1\) lamps lit. In
+      it, \(r_i\) knows that it is faulty iff its lamp is lit and exactly \(j+1\)
+      lamps are, and no robot knows that it is not faulty. The bell gives e-leave
+      iff exactly \(j+1\) lamps are lit, and after it every robot knows whether it
+      is faulty; otherwise it gives e-stay, and the model is the patterns with at
+      least \(j+2\) lit.
+    </p>
+    <h4>Corollary 2 (\(k\) faulty robots)</h4>
+    <p>
+      With \(k\) lamps lit the first
+      \(k-1\) bells give e-stay, after the \((k-1)\)-th the \(k\) faulty robots
+      know, and the \(k\)-th gives e-leave. With \(k = N\) every robot knows after
+      \(N-1\) bells.
+    </p>
+    <h4>Proposition 3 (the depth of a policy)</h4>
+    <p>
+      The policy that announces
+      and then rings until e-leave, or \(N-1\) times, satisfies \(\gamma\) at
+      every leaf; it has depth \(N\) and \(N\) leaves, and no policy of smaller
+      depth exists.
+    </p>
+    <p>
+      The proofs are in the <a href="muddy_robots.pdf">report</a>. The run
+      follows the corollary to the bell: e-stay, e-stay, e-leave, with the
+      robots able to consider 15, then 11, then 5 patterns, and r1, r2 and r3
+      knowing after the second bell, as the knowledge view logged.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ PLANNING -->
+<section id="mr-planning-sec">
+  <div class="container">
+    <p class="sec-label">Planning</p>
+    <h3>A policy of depth \(N\) with the public address, none without it</h3>
+    <p>
+      Both floors grounded by plank and solved by Aletheia with AO\(^*\) at one
+      thread. Every policy was replayed by <span class="mono-inline">tools/trace.py</span>,
+      which found the goal at every leaf, the leaves covering all \(2^N-1\) fault
+      patterns between them. Without the public address the knowledge
+      relaxation proves the goal unreachable before any search, at every
+      \(N\).
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>robots</th><th>worlds</th><th>designated</th><th>with the public address</th><th>expansions</th><th>time</th></tr></thead>
+      <tbody>
+        <tr><td>2</td><td>4</td><td>3</td><td>depth 2, 2 leaves</td><td>9</td><td>0.00&#8202;s</td></tr>
+        <tr><td>3</td><td>8</td><td>7</td><td>depth 3, 3 leaves</td><td>18</td><td>0.00&#8202;s</td></tr>
+        <tr><td>4</td><td>16</td><td>15</td><td>depth 4, 4 leaves</td><td>30</td><td>0.01&#8202;s</td></tr>
+        <tr><td>5</td><td>32</td><td>31</td><td>depth 5, 5 leaves</td><td>45</td><td>0.01&#8202;s</td></tr>
+        <tr><td>6</td><td>64</td><td>63</td><td>depth 6, 6 leaves</td><td>63</td><td>0.02&#8202;s</td></tr>
+        <tr><td>7</td><td>128</td><td>127</td><td>depth 7, 7 leaves</td><td>84</td><td>0.05&#8202;s</td></tr>
+        <tr><td>8</td><td>256</td><td>255</td><td>depth 8, 8 leaves</td><td>108</td><td>0.15&#8202;s</td></tr>
+        <tr><td>9</td><td>512</td><td>511</td><td>depth 9, 9 leaves</td><td>135</td><td>0.43&#8202;s</td></tr>
+        <tr><td>10</td><td>1024</td><td>1023</td><td>depth 10, 10 leaves</td><td>165</td><td>1.12&#8202;s</td></tr>
+      </tbody>
+    </table>
+    <p class="note">
+      The depth is Proposition 3's and so minimal. The expansions are exactly
+      \(3N(N+1)/2\) in every row, an observation about this search and not a
+      theorem.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE FLOOR -->
+<section id="mr-floor-sec">
+  <div class="container">
+    <p class="sec-label">The floor</p>
+    <h3>The AWS small warehouse, with a muster point on its open floor</h3>
+    <figure class="demo-figure">
+      <img src="media/muddy-robots-floor.png" alt="The AWS small warehouse floor plan with four stations, the muster ring and its sight lines, the public address and the calibration bay" style="max-width:520px;width:100%;height:auto;display:block;margin:0 auto">
+      <figcaption>
+        warehouse_scenario's floor plan of the AWS RoboMaker small warehouse,
+        rasterised from the world's own collision meshes. The muster ring is on
+        the largest open circle of the floor, 3.6&#8202;m of clearance about its
+        centre; the calibration bay is in the room at the north-west corner.
+      </figcaption>
+    </figure>
+    <p>
+      Nothing of the AWS world is moved. The ring, the bay and the public
+      address are added as visuals that collide with nothing, so the floor plan
+      the robots drive on is still the world's.
+      <span class="mono-inline">tools/check_floor.py</span> checks the two claims
+      the domain makes about it, for three, four and five robots, by casting rays
+      over the occupied cells: on the ring every robot has every other robot in
+      line of sight, and every place a robot is sent is reachable over the plan
+      inflated by the driver's 0.35&#8202;m.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEFECTS -->
+<section id="mr-defects-sec">
+  <div class="container">
+    <p class="sec-label">Defects</p>
+    <h3>Found on the way</h3>
+    <ul style="margin:0 0 0 1.2rem">
+      <li><b>Knowledge judged at the designated worlds.</b> The first run took a
+      robot to know that it was faulty when it did at every designated world.
+      After two silent bells r1 knows it at the actual world and not at the one
+      where r2, r3 and r4 are lit, so under that reading no robot knew, and the
+      third bell reported e-stay. The epistemic state applied it and removed
+      every pattern with three lamps lit, the actual one among them; the model
+      was left with all four lit, and r4, whose lamp was dark, was sent to the
+      bay. The designated worlds are the executor's uncertainty, not a robot's.
+      Knowledge is now evaluated at the actual world, and the crew refuses to
+      move a robot whose lamp contradicts what the model says it knows.</li>
+      <li><b>Three robots leaving at once.</b> The drivers plan over the floor
+      plan, which has no robots on it, and the three leavers crossed the ring
+      through each other's places; one took 243&#8202;s to reach the bay. Leavers
+      now step out of the ring along its radius and set off five seconds apart,
+      nearest the bay first, and take the bay's places from the far end.</li>
+      <li><b>A goal written in English.</b> The bells rung by hand on the silent
+      floor carried their goal as a sentence, which the executor parsed as a
+      formula and rejected. It is the formula now, and on that floor the
+      executor's report that the goal was not reached is the expected
+      outcome.</li>
+      <li><b>Guards from review.</b> A bell refuses when no model newer than the
+      previous action has arrived, or no designated world matches the lamps; a
+      relation missing from the model is an error and not ignorance; and the
+      mission fails when the epistemic state cannot answer, instead of reading the
+      silence as &#8220;does not know&#8221;.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Limits</p>
+    <h3>What this does not show</h3>
+    <ul style="margin:0 0 0 1.2rem">
+      <li>That the robots perceive the lamps. That each robot sees every other
+      lamp from the ring is a geometric claim checked on the floor plan; the
+      lamps' colours are the floor's record, and no camera reads them.</li>
+      <li>A protocol in which a robot can be wrong about another's lamp, or miss
+      the announcement. Every robot hears it and sees the others; a lossy
+      announcement would be the coordinated attack again.</li>
+      <li>More than four robots on the floor. The floor has stations for five and
+      the bay has places for five; the planning table goes to ten.</li>
+      <li>A repair. The bay is a destination.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="mr-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK VII</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-fhmv">R. Fagin, J. Y. Halpern, Y. Moses and M. Y. Vardi. <i>Reasoning About Knowledge</i>. MIT Press, 1995.</li>
+      <li id="ref-hm">J. Y. Halpern and Y. Moses. Knowledge and common knowledge in a distributed environment. <i>Journal of the ACM</i> 37(3):549&#8211;587, 1990.</li>
+      <li id="ref-ca">H. Ulises. <a href="coordinated_attack.pdf">The coordinated attack on a warehouse floor: common knowledge as an action precondition, a lossy channel that cannot supply it, and a signal that can</a>. Epistemic Robotics report, 2026.</li>
+      <li id="ref-del">H. van Ditmarsch, W. van der Hoek and B. Kooi. <i>Dynamic Epistemic Logic</i>. Springer, 2007.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+    <pre class="code">ros2 launch muddy_robots_demo muddy_robots_launch.py                         <span class="c"># public address; r1, r2, r3 lit</span>
+ros2 launch muddy_robots_demo muddy_robots_launch.py faults:=r2              <span class="c"># one lamp lit</span>
+ros2 launch muddy_robots_demo muddy_robots_launch.py floor:=silent           <span class="c"># no public address</span>
+bash tools/validate.sh                                    <span class="c"># planner, trace and floor checks, no simulator</span>
+python3 tools/muster.py --robots 6 --out /tmp/mr          <span class="c"># the domain and both floors for six robots</span>
+python3 tools/trace.py --task /tmp/mr/pa-n4/pa-n4.json --faults r1 r2 r3 --bells 4
+python3 tools/check_floor.py --robots 4
+bash tools/record_demo.sh pa r1,r2,r3 /tmp/raw_pa.mkv /tmp/run_pa.log</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">AWS small warehouse &#183; four robots &#183; E<sup>2</sup> to C, and three leave at the third bell</span>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>
+</html>
