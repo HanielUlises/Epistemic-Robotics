@@ -383,6 +383,21 @@ void Driver::creep(double speed)
   cmd_pub_->publish(cmd);
 }
 
+void Driver::creep(double speed, double x0, double y0, double heading)
+{
+  geometry_msgs::msg::Twist cmd;
+  cmd.linear.x = (speed > 0.0 && blocked_ahead()) ? 0.0 : speed;
+  double x, y, yaw;
+  if (pose(x, y, yaw)) {
+    // How far left of the line the base stands, and a heading that brings it
+    // back: half a metre off is a correction of about forty degrees.
+    const double left = -(x - x0) * std::sin(heading) + (y - y0) * std::cos(heading);
+    const double want = heading - std::clamp(1.5 * left, -0.7, 0.7);
+    cmd.angular.z = std::clamp(2.0 * wrap(want - yaw), -config_.turn_rate, config_.turn_rate);
+  }
+  cmd_pub_->publish(cmd);
+}
+
 void Driver::stop()
 {
   cmd_pub_->publish(geometry_msgs::msg::Twist{});

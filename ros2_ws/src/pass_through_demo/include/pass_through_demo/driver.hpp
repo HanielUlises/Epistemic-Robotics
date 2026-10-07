@@ -77,6 +77,13 @@ public:
   /// Creep straight ahead at `speed`; the laser still vetoes.
   void creep(double speed);
 
+  /// Creep at `speed` along the line through (x0, y0) at `heading`, steering
+  /// back onto it; the laser still vetoes. In the simulator a base that has
+  /// just turned on the spot drifts back towards its old heading when it is
+  /// then driven straight, about forty degrees over a metre and a half, and
+  /// an open-loop creep follows the drift.
+  void creep(double speed, double x0, double y0, double heading);
+
   void stop();
 
   bool pose(double & x, double & y, double & yaw) const;
