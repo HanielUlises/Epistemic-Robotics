@@ -1,0 +1,282 @@
+# The muddy robots' RViz: the AWS small warehouse's floor plan, the robots'
+# scans and routes, and what knowledge_view draws from the epistemic model:
+# each robot's lamp and what it knows of its own, the muster ring with the
+# depth of mutual knowledge of "some lamp is lit", the public address, the
+# bell and the calibration bay. Derived from coordinated_attack.rviz, and
+# placed on the left half of a 3840 x 1080 display for the same reason.
+Panels:
+- Class: rviz_common/Displays
+  Name: Displays
+- Class: rviz_common/Views
+  Name: Views
+Visualization Manager:
+  Class: ''
+  Displays:
+  - Alpha: 1.0
+    Class: rviz_default_plugins/Map
+    Color Scheme: map
+    Draw Behind: true
+    Enabled: true
+    Name: floor plan
+    Topic:
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /muddy_robots/floorplan
+    Update Topic:
+      Depth: 5
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /muddy_robots/floorplan_updates
+    Use Timestamp: false
+    Value: true
+  - Alpha: 1
+    Autocompute Intensity Bounds: true
+    Class: rviz_default_plugins/LaserScan
+    Color: 51; 115; 204
+    Color Transformer: FlatColor
+    Decay Time: 0
+    Enabled: true
+    Name: scan r1
+    Position Transformer: XYZ
+    Selectable: false
+    Size (Pixels): 3
+    Size (m): 0.05
+    Style: Flat Squares
+    Topic:
+      Depth: 5
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Best Effort
+      Value: /r1/scan
+    Use Fixed Frame: true
+    Use rainbow: false
+    Value: true
+  - Alpha: 1
+    Autocompute Intensity Bounds: true
+    Class: rviz_default_plugins/LaserScan
+    Color: 230; 128; 38
+    Color Transformer: FlatColor
+    Decay Time: 0
+    Enabled: true
+    Name: scan r2
+    Position Transformer: XYZ
+    Selectable: false
+    Size (Pixels): 3
+    Size (m): 0.05
+    Style: Flat Squares
+    Topic:
+      Depth: 5
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Best Effort
+      Value: /r2/scan
+    Use Fixed Frame: true
+    Use rainbow: false
+    Value: true
+  - Alpha: 1
+    Autocompute Intensity Bounds: true
+    Class: rviz_default_plugins/LaserScan
+    Color: 46; 153; 89
+    Color Transformer: FlatColor
+    Decay Time: 0
+    Enabled: true
+    Name: scan r3
+    Position Transformer: XYZ
+    Selectable: false
+    Size (Pixels): 3
+    Size (m): 0.05
+    Style: Flat Squares
+    Topic:
+      Depth: 5
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Best Effort
+      Value: /r3/scan
+    Use Fixed Frame: true
+    Use rainbow: false
+    Value: true
+  - Alpha: 1
+    Autocompute Intensity Bounds: true
+    Class: rviz_default_plugins/LaserScan
+    Color: 140; 76; 178
+    Color Transformer: FlatColor
+    Decay Time: 0
+    Enabled: true
+    Name: scan r4
+    Position Transformer: XYZ
+    Selectable: false
+    Size (Pixels): 3
+    Size (m): 0.05
+    Style: Flat Squares
+    Topic:
+      Depth: 5
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Reliability Policy: Best Effort
+      Value: /r4/scan
+    Use Fixed Frame: true
+    Use rainbow: false
+    Value: true
+  - Alpha: 1
+    Buffer Length: 1
+    Class: rviz_default_plugins/Path
+    Color: 51; 115; 204
+    Enabled: true
+    Head Diameter: 0.3
+    Head Length: 0.2
+    Length: 0.3
+    Line Style: Billboards
+    Line Width: 0.1
+    Name: route r1
+    Offset:
+      X: 0
+      Y: 0
+      Z: 0.6
+    Pose Color: 255; 85; 255
+    Pose Style: None
+    Radius: 0.03
+    Shaft Diameter: 0.1
+    Shaft Length: 0.1
+    Topic:
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /r1/route
+    Value: true
+  - Alpha: 1
+    Buffer Length: 1
+    Class: rviz_default_plugins/Path
+    Color: 230; 128; 38
+    Enabled: true
+    Head Diameter: 0.3
+    Head Length: 0.2
+    Length: 0.3
+    Line Style: Billboards
+    Line Width: 0.1
+    Name: route r2
+    Offset:
+      X: 0
+      Y: 0
+      Z: 0.6
+    Pose Color: 255; 85; 255
+    Pose Style: None
+    Radius: 0.03
+    Shaft Diameter: 0.1
+    Shaft Length: 0.1
+    Topic:
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /r2/route
+    Value: true
+  - Alpha: 1
+    Buffer Length: 1
+    Class: rviz_default_plugins/Path
+    Color: 46; 153; 89
+    Enabled: true
+    Head Diameter: 0.3
+    Head Length: 0.2
+    Length: 0.3
+    Line Style: Billboards
+    Line Width: 0.1
+    Name: route r3
+    Offset:
+      X: 0
+      Y: 0
+      Z: 0.6
+    Pose Color: 255; 85; 255
+    Pose Style: None
+    Radius: 0.03
+    Shaft Diameter: 0.1
+    Shaft Length: 0.1
+    Topic:
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /r3/route
+    Value: true
+  - Alpha: 1
+    Buffer Length: 1
+    Class: rviz_default_plugins/Path
+    Color: 140; 76; 178
+    Enabled: true
+    Head Diameter: 0.3
+    Head Length: 0.2
+    Length: 0.3
+    Line Style: Billboards
+    Line Width: 0.1
+    Name: route r4
+    Offset:
+      X: 0
+      Y: 0
+      Z: 0.6
+    Pose Color: 255; 85; 255
+    Pose Style: None
+    Radius: 0.03
+    Shaft Diameter: 0.1
+    Shaft Length: 0.1
+    Topic:
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /r4/route
+    Value: true
+  - Class: rviz_default_plugins/MarkerArray
+    Enabled: true
+    Name: knowledge
+    Namespaces: {}
+    Topic:
+      Depth: 5
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+      Value: /muddy_robots/markers
+    Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 250; 250; 248
+    Fixed Frame: map
+    Frame Rate: 15
+  Name: root
+  Tools:
+  - Class: rviz_default_plugins/MoveCamera
+  Transformation:
+    Current:
+      Class: rviz_default_plugins/TF
+  Value: true
+  Views:
+    Current:
+      Angle: 1.5708
+      Class: rviz_default_plugins/TopDownOrtho
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.01
+      Scale: 60.0
+      Target Frame: <Fixed Frame>
+      Value: TopDownOrtho (rviz_default_plugins)
+      X: 0.3
+      Y: 0.0
+    Saved: null
+Window Geometry:
+  Displays:
+    collapsed: true
+  Height: 1080
+  Hide Left Dock: true
+  Hide Right Dock: true
+  Views:
+    collapsed: true
+  Width: 1920
+  X: 0
+  Y: 0
