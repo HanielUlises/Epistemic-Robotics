@@ -35,6 +35,14 @@
 // sighting: both robots to their viewpoints, the order read, the signal, the
 // lift. The listener sees the signal, but the announcer cannot tell that it
 // did, so the signal gives E^1 and no more, and the executor refuses the lift.
+//
+// With more than two robots, from tools/scaled.py, the beacon floor is run as
+// before, and the lift needs C over all of them. On the radio floor the
+// protocol is not written here: it is the one tools/ladder.py had the planner
+// find, the fewest messages that reach E^k for the robots on the floor, and it
+// is given as `protocol`. Each message requires that its sender knows the
+// content, K_i E^(l-1) job(s), and at the end the mission confirms that E^k
+// holds and C does not before it reports the refusal of lift as expected.
 
 #include <fstream>
 #include <memory>
@@ -267,6 +275,97 @@ plansys2_msgs::msg::Plan blind_protocol(
   return plan;
 }
 
+/// E^k phi over the group, as the executor reads formulas: it has no E, and
+/// E is every agent's K.
+std::string everyone(int k, const std::string & phi, const std::vector<std::string> & group)
+{
+  if (k == 0) {
+    return phi;
+  }
+  const auto inner = everyone(k - 1, phi, group);
+  std::string out = "(and";
+  for (const auto & a : group) {
+    out += " (K " + a + " " + inner + ")";
+  }
+  return out + ")";
+}
+
+std::string common(const std::vector<std::string> & group, const std::string & phi)
+{
+  std::string names;
+  for (const auto & a : group) {
+    names += (names.empty() ? "" : " ") + a;
+  }
+  return "(C (" + names + ") " + phi + ")";
+}
+
+/// The level of a message from its kind: tell 1, ack 2, ack2 3, ...
+int level_of(const std::string & kind)
+{
+  if (kind == "tell") {
+    return 1;
+  }
+  if (kind == "ack") {
+    return 2;
+  }
+  return std::stoi(kind.substr(3)) + 1;
+}
+
+/// The radio protocol tools/ladder.py found, as a policy: read the order,
+/// then on each outcome that branch's messages, then lift. Each message
+/// requires that its sender knows what it says, K_i E^(l-1) job(s).
+plansys2_msgs::msg::Plan found_protocol(
+  const nlohmann::json & mapping, const std::string & reader,
+  const std::vector<std::string> & agents, const std::vector<std::string> & stands,
+  const nlohmann::json & protocol)
+{
+  plansys2_msgs::msg::Plan plan;
+  plan.epistemic_goal = "lifted";
+  float clock = 0.0f;
+
+  const auto add = [&](const std::string & name, const std::vector<std::string> & reqs,
+      bool sensing) -> std::uint32_t {
+      PlanItem item;
+      item.epistemic_action = name;
+      item.action = mapping.at(name).at("action").get<std::string>();
+      item.duration = mapping.at(name).at("duration").get<float>();
+      item.time = clock;
+      clock += item.duration + 0.001f;
+      item.sensing = sensing;
+      item.knowledge_requirements = reqs;
+      plan.items.push_back(item);
+      return static_cast<std::uint32_t>(plan.items.size() - 1);
+    };
+  const auto link = [&](std::uint32_t from, std::uint32_t to, const std::string & event) {
+      plan.items[from].children.push_back(to);
+      plan.items[from].outcomes.push_back(event);
+    };
+
+  const auto root = add("read-order_" + reader + "_" + stands.at(0), {}, true);
+  for (std::size_t k = 0; k < 2; ++k) {
+    const std::string s = stands.at(k);
+    const std::string job = "job_" + s;
+    auto from = root;
+    std::string event = k == 0 ? "e-here" : "e-elsewhere";
+    for (const auto & entry : protocol.at(s)) {
+      // kind_sender_receiver_stand; no agent or stand name has an underscore.
+      const auto name = entry.get<std::string>();
+      const auto first = name.find('_');
+      const auto kind = name.substr(0, first);
+      const auto sender = name.substr(first + 1, name.find('_', first + 1) - first - 1);
+      const auto message = add(
+        name, {"(K " + sender + " " + everyone(level_of(kind) - 1, job, agents) + ")"}, false);
+      link(from, message, event);
+      from = message;
+      event = "e-" + kind;
+    }
+    const auto lift = add("lift_" + s, {common(agents, job)}, false);
+    link(from, lift, event);
+    link(lift, PlanItem::POLICY_DONE, "e-lift");
+  }
+  return plan;
+}
+
 /// Ask the epistemic state whether a formula holds now. Unanswered is false.
 bool holds(const rclcpp::Node::SharedPtr & node, const std::string & formula)
 {
@@ -296,24 +395,35 @@ int main(int argc, char ** argv)
   const auto floor = node->declare_parameter<std::string>("floor", "beacon");
   const auto policy_out = node->declare_parameter<std::string>("policy_out", "");
   const bool plan_only = node->declare_parameter<bool>("plan_only", false);
+  const auto protocol_path = node->declare_parameter<std::string>("protocol", "");
   const double hold = node->declare_parameter<double>("hold", 0.0);
 
   std::vector<std::string> agents, stands;
-  nlohmann::json mapping;
+  nlohmann::json mapping, protocol;
   try {
     const auto text = read_file(problem_path);
     agents = section(text, "agents");
     stands = objects_of(section(text, "objects"), "stand");
     mapping = nlohmann::json::parse(read_file(mapping_path));
+    if (!protocol_path.empty()) {
+      protocol = nlohmann::json::parse(read_file(protocol_path));
+    }
   } catch (const std::exception & e) {
     RCLCPP_ERROR(node->get_logger(), "%s", e.what());
     rclcpp::shutdown();
     return 1;
   }
-  if (agents.size() != 2 || stands.size() != 2) {
+  // The positions floors and the published radio protocol are written for
+  // two robots; the beacon floor, and the radio floor with a protocol from
+  // tools/ladder.py, for any number.
+  const bool two_only = floor == "sight" || floor == "blind" ||
+    (floor == "radio" && protocol.is_null());
+  if (agents.size() < 2 || (two_only && agents.size() != 2) || stands.size() != 2) {
     RCLCPP_ERROR(
-      node->get_logger(), "%s names %zu agents and %zu stands; the mission needs two of each",
-      problem_path.c_str(), agents.size(), stands.size());
+      node->get_logger(), "%s names %zu agents and %zu stands; the %s floor needs %s robots and "
+      "two stands%s", problem_path.c_str(), agents.size(), stands.size(), floor.c_str(),
+      two_only ? "two" : "at least two",
+      floor == "radio" && protocol.is_null() ? ", or a protocol from tools/ladder.py" : "");
     rclcpp::shutdown();
     return 1;
   }
@@ -387,7 +497,13 @@ int main(int argc, char ** argv)
       rclcpp::shutdown();
       return 1;
     }
-    if (floor == "radio") {
+    if (floor == "radio" && !protocol.is_null()) {
+      plan = found_protocol(mapping, reader, agents, stands, protocol);
+      RCLCPP_INFO(
+        node->get_logger(), "[mission] running the radio protocol instead: read the order, the "
+        "%zu messages the planner found to reach E^%d among %zu robots, then lift",
+        protocol.at(stands.at(0)).size(), protocol.at("depth").get<int>(), agents.size());
+    } else if (floor == "radio") {
       plan = radio_protocol(mapping, reader, other, stands);
       RCLCPP_INFO(
         node->get_logger(), "[mission] running the radio protocol instead: read the order, four "
@@ -453,6 +569,38 @@ int main(int argc, char ** argv)
     }
     RCLCPP_ERROR(
       node->get_logger(), "[mission] mission failed before the signal: %s",
+      verdict.empty() ? "the order was never read" : verdict.c_str());
+    rclcpp::shutdown();
+    return 1;
+  } else if (!planned && !protocol.is_null()) {
+    // As below, for the protocol tools/ladder.py found: E^k holds after its
+    // last message, and C does not.
+    const int depth = protocol.at("depth").get<int>();
+    std::string verdict;
+    for (const auto & s : stands) {
+      const std::string job = "job_" + s;
+      if (!holds(node, job)) {
+        continue;
+      }
+      const bool deep = holds(node, everyone(depth, job, agents));
+      const bool c = holds(node, common(agents, job));
+      verdict = "the order named " + s + "; after the " +
+        std::to_string(protocol.at(s).size()) + " messages E^" + std::to_string(depth) + " " +
+        job + " " + (deep ? "holds" : "does not hold") + " among the " +
+        std::to_string(agents.size()) + " robots, and C " + job + " " +
+        (c ? "holds" : "does not hold");
+      if (deep && !c) {
+        // Not "as the planner said": with more robots its search may have
+        // ended on its budget, and then it said nothing.
+        RCLCPP_INFO(
+          node->get_logger(), "[mission] mission complete: the executor refused lift, for want "
+          "of C; %s", verdict.c_str());
+        rclcpp::shutdown();
+        return 0;
+      }
+    }
+    RCLCPP_ERROR(
+      node->get_logger(), "[mission] mission failed before the protocol ran out: %s",
       verdict.empty() ? "the order was never read" : verdict.c_str());
     rclcpp::shutdown();
     return 1;

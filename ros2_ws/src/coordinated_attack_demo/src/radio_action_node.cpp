@@ -13,7 +13,9 @@
 // limitations under the License.
 
 // tell, ack, ack2, ack3 (i, j, s): one radio message from i to j, at one level
-// of nesting.
+// of nesting. With tools/scaled.py's domains, any number of levels: ack4,
+// ack5, ..., and what a message at level l says is K_i E^(l-1) job(s), the
+// sender knowing that everyone knows, l-1 times over.
 //
 // The epistemic action is a lossy message: delivered, lost, or nothing sent,
 // with the sender unable to tell the first two apart and the receiver unable
@@ -26,6 +28,9 @@
 // block the message crosses.
 //
 //     radio_action --kind ack    (one process per message level)
+//
+// With `group: true` the content is printed in the scaled domains' form. The
+// published two-robot domain nests K_i and K_j, and so does its default.
 
 #include <chrono>
 #include <map>
@@ -47,9 +52,15 @@ namespace
 
 /// What the message says: the sender knows the content of the one before.
 std::string content(const std::string & kind, const std::string & i, const std::string & j,
-  const std::string & s)
+  const std::string & s, bool group)
 {
   const std::string job = "job(" + s + ")";
+  if (group) {
+    const int level = kind == "tell" ? 1 : kind == "ack" ? 2 : std::stoi(kind.substr(3)) + 1;
+    std::string es;
+    for (int k = 1; k < level; ++k) {es += "E ";}
+    return "K_" + i + " " + es + job;
+  }
   if (kind == "tell") {return "K_" + i + " " + job;}
   if (kind == "ack") {return "K_" + i + " K_" + j + " " + job;}
   if (kind == "ack2") {return "K_" + i + " K_" + j + " K_" + i + " " + job;}
@@ -65,6 +76,7 @@ public:
   : plansys2::ActionExecutorClient("radio_" + kind), kind_(kind), side_(side)
   {
     transfer_ = side_->declare_parameter<double>("transfer_seconds", 4.0);
+    group_ = side_->declare_parameter<bool>("group", false);
     const auto agents = side_->declare_parameter<std::vector<std::string>>(
       "agents", std::vector<std::string>{"south", "north"});
     for (const auto & a : agents) {
@@ -85,7 +97,7 @@ private:
     const std::string & s)
   {
     nlohmann::json msg = {{"kind", kind_}, {"from", i}, {"to", j}, {"stand", s},
-      {"content", content(kind_, i, j, s)}, {"state", state}};
+      {"content", content(kind_, i, j, s, group_)}, {"state", state}};
     std_msgs::msg::String out;
     out.data = msg.dump();
     radio_pub_->publish(out);
@@ -113,7 +125,7 @@ private:
       shot_pub_->publish(shot);
       RCLCPP_INFO(
         get_logger(), "[radio] %s(%s, %s, %s): %s sends \"%s\" to %s", kind_.c_str(), i.c_str(),
-        j.c_str(), s.c_str(), i.c_str(), content(kind_, i, j, s).c_str(), j.c_str());
+        j.c_str(), s.c_str(), i.c_str(), content(kind_, i, j, s, group_).c_str(), j.c_str());
     }
 
     const double elapsed = (now() - started_).seconds();
@@ -147,6 +159,7 @@ private:
   std::string kind_;
   rclcpp::Node::SharedPtr side_;
   double transfer_{4.0};
+  bool group_{false};
   std::map<std::string, rclcpp::Publisher<std_msgs::msg::String>::SharedPtr> inbox_pub_;
   std::map<std::string, rclcpp::Subscription<std_msgs::msg::String>::SharedPtr> receipt_sub_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr radio_pub_;

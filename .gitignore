@@ -442,5 +442,7 @@ ros2_ws/third_party/
 /scenarios/warehouse_rmf/tools/floor_figure.py
 /scenarios/warehouse_rmf/tools/policy_figure.py
 /ros2_ws/src/coordinated_attack_demo/tools/make_positions_video.py
+/ros2_ws/src/coordinated_attack_demo/tools/make_video_scaled.py
+/ros2_ws/src/coordinated_attack_demo/tools/captions_scaled.py
 /ros2_ws/src/false_belief_demo/tools/fb_captions.py
 /ros2_ws/src/false_belief_demo/tools/make_false_belief_video.py

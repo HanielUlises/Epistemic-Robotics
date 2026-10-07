@@ -18,6 +18,7 @@ Writes the floor plan both robots are given, and checks the geometry the
 domain assumes.
 
     make_floorplan.py --out maps --plot docs/floorplan.png
+    make_floorplan.py --out maps --robots 4 --plot docs/floorplan_n4.png
 
 Unlike the pass-through floor plan, this one has nothing unknown in it: the
 loads, the beacon and the terminal are drawn in, because where things are is
@@ -36,6 +37,13 @@ The first is why the radio is needed at all, the second is the observability
 condition of signal, and the third is why meeting at the stand does not
 replace the beacon: under the load the robots are as blind to each other as
 they were at the start.
+
+With --robots 3 or 4 the claims are checked for every robot and every pair:
+no robot starts in sight of another, and no robot under one end of a load
+sees one under the other. Two robots on one side stand abreast, at t2 and
+under their end, and see each other there; that is the same side, and C
+over all of them still needs the robots across the load. The floor plan
+itself does not change with the number of robots.
 """
 
 import argparse
@@ -122,7 +130,7 @@ def sight(grid, a, b, ignore=()):
 
 
 def start_of(agent):
-    return L.ROBOTS[agent][1], L.ROBOTS[agent][2]
+    return L.FLEET[agent][1], L.FLEET[agent][2]
 
 
 def check_blind(grid):
@@ -141,10 +149,13 @@ def check_blind(grid):
             'and the crates hide the two from each other']
 
 
-def check(grid):
-    """The four claims. Raises on any that fails; returns the facts it read."""
+def check(grid, n=2):
+    """The four claims, for @p n robots. Raises on any that fails; returns
+    the facts it read."""
     problems, facts = [], []
     free = (grid == FREE) & ~inflate(grid, INFLATION)
+    fleet = list(L.robots(n))
+    pairs = [(a, b) for i, a in enumerate(fleet) for b in fleet[i + 1:]]
 
     def at(region, point):
         c, r = to_cell(*point)
@@ -154,50 +165,57 @@ def check(grid):
     post = L.beacon_box()
 
     # 1. Out of sight at the start.
-    a, b = start_of('south'), start_of('north')
-    if sight(grid, a, b):
-        problems.append('south and north see each other from where they start')
-    for agent in L.ROBOTS:
+    for a, b in pairs:
+        if sight(grid, start_of(a), start_of(b)):
+            problems.append(f'{a} and {b} see each other from where they start')
+    for agent in fleet:
         if sight(grid, start_of(agent), beacon, ignore=[post]):
             problems.append(f'{agent} sees the beacon from where it starts')
-    facts.append('from the start: neither robot sees the other or the beacon')
+    facts.append('from the start: neither robot sees the other or the beacon' if n == 2 else
+                 f'from the start: none of the {n} robots sees another or the beacon')
 
     # 2. The viewpoints see the beacon, and each other.
-    for agent in L.ROBOTS:
-        if not sight(grid, L.viewpoint(agent), beacon, ignore=[post]):
+    for agent in fleet:
+        if not sight(grid, L.viewpoint(agent, n), beacon, ignore=[post]):
             problems.append(f'{agent} does not see the beacon from its viewpoint')
-    both = sight(grid, L.viewpoint('south'), L.viewpoint('north'), ignore=[post])
+    across = [(a, b) for a, b in pairs if L.SIDE[a] != L.SIDE[b]]
+    both = all(sight(grid, L.viewpoint(a, n), L.viewpoint(b, n), ignore=[post])
+               for a, b in across)
     facts.append('from the viewpoints: each robot sees the beacon'
-                 + (', and the two see each other through t2' if both else ''))
+                 + (', and the two see each other through t2' if both and n == 2 else
+                    ', and each sees those across t2' if both else ''))
     # And from no other place a robot is sent.
-    for agent in L.ROBOTS:
+    for agent in fleet:
         for stand in L.STANDS:
-            for p in (L.mouth(stand, agent), L.under_end(stand, agent)):
+            for p in (L.mouth(stand, agent, n), L.under_end(stand, agent, n)):
                 if sight(grid, p, beacon, ignore=[post]):
                     problems.append(f'{agent} sees the beacon at {stand}, not only from t2')
         if agent == L.READS_ORDER and sight(grid, L.TERMINAL_READ, beacon, ignore=[post]):
             problems.append(f'{agent} sees the beacon from the terminal')
 
-    # 3. Under one load, blind to each other.
+    # 3. Under one load, blind to each other across it.
     for stand in L.STANDS:
-        if sight(grid, L.under_end(stand, 'south'), L.under_end(stand, 'north')):
-            problems.append(f'the two ends of {stand} see each other past the load')
-    facts.append('under the two ends of a load: the robots do not see each other')
+        for a, b in across:
+            if sight(grid, L.under_end(stand, a, n), L.under_end(stand, b, n)):
+                problems.append(f'{a} and {b}, at the two ends of {stand}, see each other '
+                                'past the load')
+    facts.append('under the two ends of a load: the robots do not see each other' if n == 2
+                 else 'under the two ends of a load: no robot sees one at the other end')
 
     # 4. Reachable. The last metre into a stand is driven straight, not
     # planned, so it is checked against the uninflated plan along the axis.
-    for agent in L.ROBOTS:
+    for agent in fleet:
         region = reachable(free, start_of(agent))
-        goals = [('its viewpoint', L.viewpoint(agent))]
-        goals += [(f'the mouth of {s}', L.mouth(s, agent)) for s in L.STANDS]
+        goals = [('its viewpoint', L.viewpoint(agent, n))]
+        goals += [(f'the mouth of {s}', L.mouth(s, agent, n)) for s in L.STANDS]
         if agent == L.READS_ORDER:
             goals.append(('the terminal', L.TERMINAL_READ))
         for name, p in goals:
             if not at(region, p):
                 problems.append(f'{agent} cannot reach {name} at {p}')
         for s in L.STANDS:
-            mx, my = L.mouth(s, agent)
-            ux, uy = L.under_end(s, agent)
+            mx, my = L.mouth(s, agent, n)
+            ux, uy = L.under_end(s, agent, n)
             for dx in (-0.2, 0.0, 0.2):
                 if not sight(grid, (mx + dx, my), (ux + dx, uy)):
                     problems.append(f'{agent} cannot drive straight in under {s}')
@@ -227,7 +245,7 @@ def write(grid, stem):
                  f'free_thresh: 0.196\n')
 
 
-def plot(grid, path):
+def plot(grid, path, n=2):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -246,20 +264,20 @@ def plot(grid, path):
         ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc=load, alpha=0.85))
         ax.text(L.stand_x(s), 0.0, s, ha='center', va='center', fontsize=11,
                 weight='bold', color='white')
-        for agent in L.ROBOTS:
-            ax.plot(*L.under_end(s, agent), marker='s', ms=5, color=L.ROBOTS[agent][5])
+        for agent in L.robots(n):
+            ax.plot(*L.under_end(s, agent, n), marker='s', ms=5, color=L.FLEET[agent][5])
     bx, by = L.BEACON_POST
     ax.add_patch(Circle((bx, by), 0.35, color=(0.1, 0.7, 0.3)))
     ax.text(bx + 0.6, by, 'beacon', fontsize=9, va='center')
-    for agent in L.ROBOTS:
-        vx, vy = L.viewpoint(agent)
+    for agent in L.robots(n):
+        vx, vy = L.viewpoint(agent, n)
         ax.plot([vx, bx], [vy, by], color=(0.1, 0.7, 0.3), lw=0.8, ls='--')
-        ax.plot(vx, vy, marker='^' if agent == 'south' else 'v', ms=8,
-                color=L.ROBOTS[agent][5])
+        ax.plot(vx, vy, marker='^' if L.SIDE[agent] < 0 else 'v', ms=8,
+                color=L.FLEET[agent][5])
     x0, y0, x1, y1 = L.terminal_box()
     ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc=(0.15, 0.3, 0.6)))
     ax.text(x1 + 0.3, y1 + 0.3, 'work order', fontsize=8)
-    for agent, (ns, x, y, _, _, rgb) in L.ROBOTS.items():
+    for agent, (ns, x, y, _, _, rgb) in L.robots(n).items():
         ax.add_patch(Circle((x, y), 0.35, color=rgb))
         ax.text(x + 0.6, y + 0.6, f'{agent} ({ns})', color=rgb, fontsize=9, weight='bold')
 
@@ -269,7 +287,8 @@ def plot(grid, path):
     ax.set_xlabel('x (m)')
     ax.set_ylabel('y (m)')
     ax.set_title('coordinated attack on the pass-through floor, 30 x 50 m\n'
-                 'stands s1, s2 (loads in t1, t3); beacon in t2, seen from its two mouths',
+                 + ('' if n == 2 else f'{n} robots; ')
+                 + 'stands s1, s2 (loads in t1, t3); beacon in t2, seen from its two mouths',
                  fontsize=10)
     fig.savefig(path, dpi=110, bbox_inches='tight')
 
@@ -279,10 +298,12 @@ def main():
     ap.add_argument('--out', required=True,
                     help='directory; writes floorplan_beacon, floorplan_radio and floorplan_blind')
     ap.add_argument('--plot', help='also draw the beacon floor to this PNG')
+    ap.add_argument('--robots', type=int, default=2,
+                    help='check the claims for this many robots, 2 to 4, and draw them')
     args = ap.parse_args()
 
     grid = floorplan(beacon=True)
-    for fact in check(grid):
+    for fact in check(grid, args.robots):
         print('  ' + fact)
     os.makedirs(args.out, exist_ok=True)
     write(grid, os.path.join(args.out, 'floorplan_beacon'))
@@ -296,7 +317,7 @@ def main():
     print(f'{args.out}: {grid.shape[1]} x {grid.shape[0]} cells at {L.RESOLUTION} m, '
           'three floors; floor check passed')
     if args.plot:
-        plot(grid, args.plot)
+        plot(grid, args.plot, args.robots)
         print(args.plot)
 
 
