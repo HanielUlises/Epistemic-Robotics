@@ -22,9 +22,14 @@ ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=radio   
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py order:=s2      # the other leaf
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=sight   # positions unannounced
 ros2 launch coordinated_attack_demo coordinated_attack_launch.py floor:=blind   # and crates across t2
-bash tools/validate.sh                                                          # eight checks, no simulator
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py robots:=4 messages:=2               # four robots
+ros2 launch coordinated_attack_demo coordinated_attack_launch.py robots:=4 messages:=2 floor:=radio
+bash tools/validate.sh                                                          # thirteen checks, no simulator
+python3 tools/scaling.py --out /tmp/ca_scaling                                  # the scaling tables
+python3 tools/ladder.py --table 2,3,4,5 --depths 1,2,3,4,5 --out /tmp/ca_ladder # messages per level
 bash tools/record_demo.sh radio  s1 /tmp/raw_radio.mkv  /tmp/run_radio.log      # Xvfb recording
 bash tools/record_demo.sh beacon s1 /tmp/raw_beacon.mkv /tmp/run_beacon.log
+ROBOTS=4 MESSAGES=2 bash tools/record_demo.sh beacon s1 /tmp/raw_n4.mkv /tmp/run_n4.log
 ```
 
 ## The floor
@@ -378,6 +383,223 @@ north. The mission confirms `K_north job(s1)` and not
 `K_south K_north job(s1)` before it reports the refusal as the expected
 outcome.
 
+## More robots, and more message levels
+
+`tools/scaled.py` writes the domain for any number of robots and any number
+of message levels, and the launch file runs it with `robots:=` and
+`messages:=`. Two things are made general.
+
+Every robot takes a share of the load, so `lift` requires `C_All job(s)`,
+common knowledge over all of them. The robots are `south`, `north`, `south2`,
+`north2`, and so on, alternately on the storage and the dispatch floor, and
+south reads the order.
+
+A radio message at level l, from i to j, says `K_i E^(l-1) job(s)`: the
+sender knows that everyone knows, l-1 times over, which stand the order
+names. Level 1 is `tell`, level 2 `ack`, level 3 `ack2`, and each level goes
+from each sender to each receiver at most once. With two robots this is the
+published content: `E` is then `K_south` and `K_north` together, and
+`K_i E^(l-1) job(s)` is equivalent in S5 to `K_i K_j K_i ... job(s)`, l
+operators deep. What differs is the log, which the published domain keeps per
+level and this one per level and pair, so that at n = 2 it admits each
+message and its mirror image.
+
+With more than two robots a message has bystanders, which neither send nor
+receive it. `epddl/lossy.epddl` gives them a type of their own, `Bystander`,
+which relates all three events: a robot that does not hear the radio cannot
+tell a delivery from a loss or from silence. `Oblivious` would not do. It
+maps every event onto the one in which nothing was sent, and since the other
+two write the sender's log, an oblivious bystander would come to believe that
+no message went out when one did, and the frame would leave S5. The
+published floors never name the type, and their grounded tasks are unchanged
+apart from the added relation.
+
+### The beacon floor
+
+Measured by `tools/scaling.py`: plank's grounding, then Aletheia at one
+thread, once with AO\* and once replanning over the all-outcomes
+determinization, each with the whole 300 s. A cell is the result, the
+expansions and the time; four message levels throughout, since the beacon
+floor never uses them and its cost hardly moves with them.
+
+| robots | atoms | actions | AO\* | replanning | traced |
+| ---: | ---: | ---: | --- | --- | --- |
+| 2 | 24 | 28 | depth 5, 137, 0.0 s | depth 5, 8, 0.0 s | C at both leaves |
+| 3 | 46 | 65 | depth 6, 868, 0.2 s | depth 6, 11, 0.0 s | C at both leaves |
+| 4 | 76 | 118 | depth 7, 8 038, 4.6 s | depth 7, 14, 0.0 s | C at both leaves |
+| 5 | 114 | 187 | depth 8, 108 298, 112.3 s | depth 8, 17, 0.0 s | C at both leaves |
+| 6 | 160 | 272 | cut off at depth 8, 165 772 | depth 9, 20, 0.1 s | C at both leaves |
+| 7 | 214 | 373 | cut off at depth 7, 99 175 | depth 10, 23, 0.1 s | C at both leaves |
+| 8 | 276 | 490 | cut off at depth 7, 84 110 | depth 11, 26, 0.2 s | C at both leaves |
+| 9 | 346 | 623 | cut off at depth 7, 78 032 | depth 12, 29, 0.4 s | C at both leaves |
+| 10 | 424 | 772 | cut off at depth 7, 68 467 | depth 13, 32, 0.7 s | C at both leaves |
+
+The policy is the published one with a viewpoint for every robot: each robot
+but the reader goes to its viewpoint, the order is read, the reader goes to
+its viewpoint and signals, and the robots lift. Its depth is n + 3, and one
+signal yields C over all n robots, whatever n is, because each stands where
+the beacon is seen and that each does is common knowledge. `trace.py`
+replays every policy found and reports the goal at both leaves, so every lift
+in it is made under C over all n.
+
+AO\* pays about a factor of ten for each robot and does not finish at six.
+Replanning finds the same policy in 3n + 2 expansions, ten robots in under a
+second.
+
+### The radio floor
+
+| robots | levels | atoms | actions | AO\* | replanning |
+| ---: | ---: | ---: | ---: | --- | --- |
+| 2 | 1 | 12 | 16 | exhausted at depth 3, 14, 0.0 s | refuted, 5, 0.0 s |
+| 2 | 2 | 16 | 20 | exhausted at depth 5, 52, 0.0 s | refuted, 15, 0.0 s |
+| 2 | 3 | 20 | 24 | exhausted at depth 7, 282, 0.1 s | refuted, 81, 0.0 s |
+| 2 | 4 | 24 | 28 | exhausted at depth 9, 2 224, 1.7 s | refuted, 563, 0.8 s |
+| 2 | 5 | 28 | 32 | exhausted at depth 11, 18 990, 45.9 s | refuted, 3 989, 18.4 s |
+| 2 | 6 | 32 | 36 | cut off at depth 12, 89 529 | timeout, 16 350 |
+| 3 | 1 | 19 | 29 | exhausted at depth 7, 294, 0.1 s | refuted, 67, 0.1 s |
+| 3 | 2 | 28 | 41 | cut off at depth 10, 36 517 | timeout, 353 |
+| 3 | 3 | 37 | 53 | cut off at depth 10, 74 958 | timeout, 26 |
+| 4 | 1 | 28 | 46 | cut off at depth 9, 20 500 | timeout, 435 |
+| 4 | 2 | 44 | 70 | cut off at depth 9, 48 601 | timeout, 17 |
+| 5 | 1 | 39 | 67 | cut off at depth 8, 37 629 | timeout, 15 |
+
+There is no policy to find here, and what is measured is the price of
+proving it. AO\* proves it by exhausting the space. Replanning proves it by
+refuting the determinization, which is sound for unsolvability, since a
+policy of the task would be one of its determinization. At two robots both
+proofs finish up to five levels, and each level costs AO\* about a factor of
+eight. A third robot leaves one level within reach, and four robots none.
+The space is every order in which up to n(n-1)m messages can go out, and it
+outgrows the search long before the robots fill the floor.
+
+Where a search ran out of budget, nothing is claimed for that floor from the
+search. That none of these floors has a policy is the corollary of the
+report: a message adds at most one level of mutual knowledge, whether or not
+it is delivered. The report proves it for two robots, by a path through the
+sender's and the receiver's relations; a bystander relates all three events,
+which only adds edges to the product and cannot lengthen that path, so the
+bound holds with any number of robots.
+
+Aletheia (at 314bc29) prints a search's expansions only when it finds a
+policy. The counts for searches that ended without one were taken with a
+build that also prints them there and changes nothing else; on the four
+published floors it returns the installed planner's results, expansion for
+expansion. Replanning runs past its deadline on the larger floors, in a step
+that does not check the clock: by 40 % in the table, and in one earlier run to
+more than twice it before it was stopped. `scaling.py` kills a run at one and
+a half times its budget. The machine was running other searches alongside, so
+read the expansions, and the seconds as orders of magnitude.
+
+### What each level costs
+
+`tools/ladder.py` gives the planner the radio floor with the goal E^k job(s)
+in place of `lifted`. AO\* deepens one action at a time, so the first policy
+it finds has the fewest messages that reach E^k, among the messages of this
+domain. `trace.py`'s product update then replays it, and has to agree on the
+depth after every message, and that at the end C does not hold and `lift`
+does not apply.
+
+| robots | E^1 | E^2 | E^3 | E^4 | E^5 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 2 | 1 | 2 | 3 | 4 | 5 |
+| 3 | 2 | 4 | 6 | 8 | ≥ 10 |
+| 4 | 3 | 6 | ≥ 9 | | |
+| 5 | 4 | ≥ 8 | | | |
+
+A cell marked ≥ ran out of its budget, 600 s, or an hour for four robots and
+E^3. The deadline is checked between iterations, so every depth before the
+one it cut off was searched in full without a policy, and that bounds the
+count from below. In every cell, E^k costs k(n-1) messages where the search
+finished, and at least that where it did not.
+
+That is fewer than the levels suggest. A robot that knows where the load is
+can only have learnt it from one that knew first, so a message says more than
+its content: when north tells south2 `K_north job(s)`, south2 also learns that
+south knew, since north could have heard it from no one else. The protocols
+the planner finds use this. With three robots they relay along a line, south,
+north, south2 and back. With four, E^2 is a relay out to north2 and a
+broadcast back from it, and this is the protocol the mission runs on the
+four-robot radio floor:
+
+```
+read-order(south, s1)                 E^0
+tell(south, north)        4 worlds    E^0
+tell(north, south2)       6 worlds    E^0
+tell(south2, north2)      8 worlds    E^1
+ack(north2, north)       10 worlds    E^1
+ack(north2, south2)      16 worlds    E^1
+ack(north2, south)       34 worlds    E^2
+lift(s1)                 not applicable
+```
+
+The first version of `ladder.py` counted only the highest level each robot
+had heard from each other, and searched over that. The product update
+refuted the count on its first random sequences: after `tell(south, north)`,
+`tell(north, south)` and `ack(south, north)` the depth is E^3, where the count
+said E^2. The search is the planner's for that reason.
+
+### Four robots on the floor
+
+<p align="center">
+  <img src="docs/floorplan_n4.png" alt="The pass-through floor with four robots: south and south2 on the storage floor, north and north2 on the dispatch floor, two viewpoints at each mouth of t2 and four corners under each load" width="380" /><br>
+  <sub><b>Figure 2.</b> The floor plan with four robots. south2 starts at the east
+  end of the storage floor's southern aisle and north2 at the west end of the
+  dispatch floor's aisle. Two robots on one side stand abreast at t2, and under
+  a load each takes one corner of its end.</sub>
+</p>
+
+The floor plan does not change. `make_floorplan.py --robots 4` checks the four
+claims for every robot and every pair: no robot starts in sight of another or
+of the beacon, each viewpoint sees the beacon, no robot under one end of a
+load sees one under the other, and every place a robot is sent is reachable.
+Two robots at one end see each other, which is the same side; C over all four
+still needs the robots across the load.
+
+Both four-robot floors were recorded as the published ones were, with
+`order:=s1` and two message levels. **Beacon floor.** ePlanSys's AO\*
+returned the policy, 10 items and two leaves, in 4.2 s:
+
+```
+go-view(north)          at its viewpoint after 17 s; beacon in line of sight, 3.3 m
+go-view(south2)         at its viewpoint after 60 s; 3.4 m
+go-view(north2)         at its viewpoint after 62 s; 3.9 m
+read-order(south, s1)   at the terminal after 17 s; the order names s1 -> e-here        E^0
+go-view(south)          at its viewpoint after 53 s; 3.8 m
+signal(south, s1)       in line of sight of it: all four, 3.3 to 3.8 m                 C
+lift(s1)                all four at their mouths after 26 to 28 s; one start for all
+                        under the load after 13.7 and 13.8 s: starts 0.00 s apart,
+                        arrivals 0.10 s apart; load_s1 raised 0.12 m, 50 s after lift began
+```
+
+The other branch, `order:=s2`, was run headless: the order read as
+`e-elsewhere`, the `s2` tier lit, C held over all four, and `load_s2` came up
+with the arrivals 0.70 s apart.
+
+**Radio floor.** The planner searched its 120 s and was cut off at depth 8
+with no policy, which on this floor is its budget and not a proof. The mission ran
+the protocol above, and the knowledge view's depths after each message were
+the ones `ladder.py` computes offline: E^0, E^0, E^1, E^1, E^1, E^2, with 34
+worlds after the sixth. The executor refused `lift(s1)` with E^2 job(s1)
+holding among the four robots and C job(s1) not.
+
+
+The first four-robot runs left two robots short of the load. Having turned on
+the spot to face into the bay, a simulated Waffle driven straight drifts back
+towards the heading it arrived on, about forty degrees over the metre and a
+half into the bay, with no turn in any command it is sent; the outer two ran
+into the side of the bay, and the inner two drifted as far and counted as
+under only because depth into the bay was all that was measured. `lift` now
+creeps along the line from each robot's mouth and steers back onto it
+(`creep(speed, x0, y0, heading)` in pass_through_demo's driver), and the four
+arrive together. The published two-robot runs used the open-loop creep on
+the axis of the bay, where a drift of that size still ends inside it; whether
+they drifted was not measured.
+
+The mission's planner client also waited 15 s for an answer, its default,
+while the planner searched for 120. On the published floors the planner
+answers in under a second; on the four-robot radio floor it searches its whole
+budget, and the client is now given that budget and a margin.
+
 ## What this does not show
 
 * That the search alone shows the general result. The planner proves it for
@@ -392,20 +614,37 @@ outcome.
   with its own laser.
 * A physical lift. The load is moved by the simulator once both robots are
   under it.
+* With more robots or levels, that the search settles the radio floor. It
+  does for two robots up to five levels and for three robots at one; beyond
+  that the searches ran out of budget, and the floor is settled by the
+  argument given there and not by the planner.
+* That E^k costs k(n-1) messages in general. Each count in the table is
+  proved minimal for its cell by iterative deepening, within this family of
+  messages; the formula is a pattern over the cells.
+* The positions domain with more than two robots. The sighting and the
+  unconfirmed announcement are written for a pair, and the sight and blind
+  floors run with two.
+* More than four robots in Gazebo. The floor has places for four; the
+  planner's tables go to ten.
 
 ## Files
 
 | file | contents |
 | --- | --- |
 | `epddl/coordinated-attack.epddl` | the domain |
-| `epddl/lossy.epddl` | the lossy message action type |
+| `epddl/lossy.epddl` | the lossy message action type, with the bystander type more than two robots need |
 | `epddl/beacon.epddl`, `epddl/radio.epddl` | the two floors, one line apart |
 | `epddl/coordinated-attack-positions.epddl` | the domain with moves only the mover witnesses |
 | `epddl/moves.epddl` | the unwitnessed move and the unconfirmed announcement |
 | `epddl/positions-sight.epddl`, `epddl/positions-blind.epddl` | with and without the sight line, one line apart |
-| `tools/layout.py` | the floor, on pass_through_demo's |
-| `tools/make_floorplan.py` | the three floor plans, the four geometric claims, and the blind floor's two |
+| `tools/layout.py` | the floor, on pass_through_demo's, with places for four robots |
+| `tools/make_floorplan.py` | the three floor plans, the four geometric claims for two to four robots, and the blind floor's two |
 | `tools/make_world.py` | the Gazebo world and the lamp models |
-| `tools/trace.py` | product update with conditional observability, and the depth of `E^k` |
-| `tools/validate.sh` | grounds, solves and traces; eight checks, four per domain |
+| `tools/trace.py` | product update with conditional observability, bisimulation contraction, and the depth of `E^k` |
+| `tools/validate.sh` | grounds, solves and traces; thirteen checks, four per published domain and five for the scaled one |
+| `tools/scaled.py` | the domain and both floors for n robots and m message levels, with the action mapping and the classical model the launch runs them with |
+| `tools/scaling.py` | grounds and solves the scaled floors, and writes the two tables of the section on scale |
+| `tools/ladder.py` | the fewest messages that reach E^k, found by the planner and replayed by the product update; `--replay` checks a protocol file |
+| `protocols/radio-n4-m2.json` | the four-robot radio protocol the mission runs |
+| `docs/floorplan_n4.png` | the floor plan with four robots |
 | `tools/record_demo.sh` | one floor on an Xvfb display, RViz left and Gazebo right |
