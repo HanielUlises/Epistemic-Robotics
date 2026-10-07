@@ -1,0 +1,21 @@
+{
+  "robots": 4,
+  "depth": 2,
+  "levels": 2,
+  "s1": [
+    "tell_south_north_s1",
+    "tell_north_south2_s1",
+    "tell_south2_north2_s1",
+    "ack_north2_north_s1",
+    "ack_north2_south2_s1",
+    "ack_north2_south_s1"
+  ],
+  "s2": [
+    "tell_south_north_s2",
+    "tell_north_south2_s2",
+    "tell_south2_north2_s2",
+    "ack_north2_north_s2",
+    "ack_north2_south2_s2",
+    "ack_north2_south_s2"
+  ]
+}

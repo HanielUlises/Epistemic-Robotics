@@ -38,6 +38,19 @@
 #   8. AFTER    the signal and then the sighting: C. The sighting makes the
 #               earlier signal common knowledge.
 #
+# The domain tools/scaled.py writes for n robots and m message levels:
+#
+#   9. TWO      at n = 2, m = 4 it agrees with the published floors: a beacon
+#               policy of depth 5, and no radio policy.
+#  10. FOUR     the beacon floor with four robots, as run in Gazebo: a policy,
+#               and every leaf lifts under C over all four.
+#  11. THREE    the radio floor with three robots and one level: no policy.
+#  12. LADDER3  with three robots, E^3 costs six messages: the planner finds
+#               no fewer, and the product update confirms each level and that
+#               lift does not apply.
+#  13. PROTOCOL protocols/radio-n4-m2.json, which the mission runs on the
+#               four-robot radio floor, reaches E^2 and not C.
+#
 # Each step fails the script if its tool says anything other than the
 # expected result.
 set -eo pipefail
@@ -46,6 +59,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EPDDL="${HERE}/../epddl"
 OUT="${1:-/tmp/coordinated_attack_validate}"
 TRACE="${HERE}/trace.py"
+export EPISTEMIC_PLANNER PLANK PLANK_LIB
 
 PLANK="${PLANK:-$(command -v plank || echo "${HOME}/plank/build/plank")}"
 PLANNER="${EPISTEMIC_PLANNER:-${HOME}/eplansys_ws/install/aletheia/bin/epistemic_planner}"
@@ -63,6 +77,21 @@ ground() {
   "${PLANK}" export -d "${EPDDL}/${domain}.epddl" -p "${EPDDL}/$1.epddl" \
     -l "${LIB}" "${EPDDL}/lossy.epddl" "${EPDDL}/moves.epddl" -o "${OUT}/$1" \
     > "${OUT}/$1.plank.log" 2>&1 || { cat "${OUT}/$1.plank.log"; exit 1; }
+}
+
+# Writes and grounds the scaled floor: ground_scaled <robots> <levels> <floor>.
+ground_scaled() {
+  local d="${OUT}/scaled-n$1-m$2" name="$3-n$1-m$2"
+  python3 "${HERE}/scaled.py" --robots "$1" --messages "$2" --out "$d" > /dev/null
+  "${PLANK}" export -d "$d/coordinated-attack-m$2.epddl" -p "$d/${name}.epddl" \
+    -l "${LIB}" "${EPDDL}/lossy.epddl" -o "$d/${name}" \
+    > "$d/${name}.plank.log" 2>&1 || { cat "$d/${name}.plank.log"; exit 1; }
+}
+
+solve_scaled() {
+  local d="${OUT}/scaled-n$1-m$2/$3-n$1-m$2"
+  "${PLANNER}" --task "$d/$3-n$1-m$2.json" --plan "$d/plan.json" --timeout 240 \
+    --strategy aostar --no-portfolio 2>&1 | tee "$d/search.log" | grep -E 'aostar|validator|No solution'
 }
 
 solve() {
@@ -127,5 +156,37 @@ python3 "${TRACE}" --task ${OUT}/positions-sight/positions-sight.json --actions 
 grep -q 'depth C' ${OUT}/positions-sight/after.log
 ! grep -q 'NOT APPLICABLE' ${OUT}/positions-sight/after.log
 
+section "9. TWO: the scaled domain at two robots agrees with the published one"
+ground_scaled 2 4 beacon
+ground_scaled 2 4 radio
+solve_scaled 2 4 beacon
+grep -q 'Solution found at depth 5' ${OUT}/scaled-n2-m4/beacon-n2-m4/search.log
+solve_scaled 2 4 radio
+grep -q 'exhausted' ${OUT}/scaled-n2-m4/radio-n2-m4/search.log
+
+section "10. FOUR: four robots, one signal, C over all four"
+ground_scaled 4 2 beacon
+solve_scaled 4 2 beacon
+grep -q 'Solution found' ${OUT}/scaled-n4-m2/beacon-n4-m2/search.log
+python3 "${TRACE}" --task ${OUT}/scaled-n4-m2/beacon-n4-m2/beacon-n4-m2.json \
+  --plan ${OUT}/scaled-n4-m2/beacon-n4-m2/plan.json | tee ${OUT}/scaled-n4-m2/trace.log
+test "$(grep -c 'goal holds' ${OUT}/scaled-n4-m2/trace.log)" -eq 2
+grep -q 'depth C' ${OUT}/scaled-n4-m2/trace.log
+
+section "11. THREE: no radio policy for three robots"
+ground_scaled 3 1 radio
+solve_scaled 3 1 radio
+grep -q 'exhausted' ${OUT}/scaled-n3-m1/radio-n3-m1/search.log
+
+section "12. LADDER3: E^3 among three robots costs six messages"
+python3 "${HERE}/ladder.py" --robots 3 --depth 3 --out ${OUT}/ladder | tee ${OUT}/ladder.log
+grep -q '3 robots, E^3, branch e-here: 6 messages' ${OUT}/ladder.log
+! grep -q 'PROBLEM' ${OUT}/ladder.log
+
+section "13. PROTOCOL: the four-robot radio protocol reaches E^2, not C"
+python3 "${HERE}/ladder.py" --replay "$(cd "${HERE}/.." && pwd)/protocols/radio-n4-m2.json" \
+  --out ${OUT}/replay | tee ${OUT}/replay.log
+test "$(grep -c 'lift_s[12]  NOT APPLICABLE' ${OUT}/replay.log)" -eq 2
+
 echo
-echo "all eight checks passed"
+echo "all thirteen checks passed"
