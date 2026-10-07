@@ -154,7 +154,8 @@ python3 "${TRACE}" --task ${OUT}/positions-sight/positions-sight.json --actions 
   go-view_north read-order_south_s1 go-view_south signal_south_north_s1 \
   sight_south_north lift_s1 | tee ${OUT}/positions-sight/after.log
 grep -q 'depth C' ${OUT}/positions-sight/after.log
-! grep -q 'NOT APPLICABLE' ${OUT}/positions-sight/after.log
+# Not `! grep`: bash exempts a negated command from set -e, and it would never fail.
+if grep -q 'NOT APPLICABLE' ${OUT}/positions-sight/after.log; then exit 1; fi
 
 section "9. TWO: the scaled domain at two robots agrees with the published one"
 ground_scaled 2 4 beacon
@@ -181,7 +182,7 @@ grep -q 'exhausted' ${OUT}/scaled-n3-m1/radio-n3-m1/search.log
 section "12. LADDER3: E^3 among three robots costs six messages"
 python3 "${HERE}/ladder.py" --robots 3 --depth 3 --out ${OUT}/ladder | tee ${OUT}/ladder.log
 grep -q '3 robots, E^3, branch e-here: 6 messages' ${OUT}/ladder.log
-! grep -q 'PROBLEM' ${OUT}/ladder.log
+if grep -q 'PROBLEM' ${OUT}/ladder.log; then exit 1; fi
 
 section "13. PROTOCOL: the four-robot radio protocol reaches E^2, not C"
 python3 "${HERE}/ladder.py" --replay "$(cd "${HERE}/.." && pwd)/protocols/radio-n4-m2.json" \
