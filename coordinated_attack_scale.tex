@@ -747,8 +747,8 @@ $\job(s_1)$ among the four.
 \toprule
 action & reported & model \\
 \midrule
-plan & no policy for $\mathit{lifted}$ after 120.2\,s; cut off at depth 8 & 2 / 2 \\
-$\mathit{read\text{-}order}$ & at the terminal after 13\,s; the order names $s_1$; $e_h$ & 2 / 1, $E^0$ \\
+plan & no policy for $\mathit{lifted}$ after 120.3\,s; cut off at depth 8 & 2 / 2 \\
+$\mathit{read\text{-}order}$ & at the terminal after 16\,s; the order names $s_1$; $e_h$ & 2 / 1, $E^0$ \\
 $\mathit{tell}(\ag{south}, \ag{north})$ & ``$\Kop{south}\job(s_1)$'' delivered & 4 / 1, $E^0$ \\
 $\mathit{tell}(\ag{north}, \ag{south2})$ & ``$\Kop{north}\job(s_1)$'' delivered & 6 / 1, $E^0$ \\
 $\mathit{tell}(\ag{south2}, \ag{north2})$ & ``$\Kop{south2}\job(s_1)$'' delivered & 8 / 1, $E^1$ \\
@@ -781,14 +781,14 @@ $\Eop{G}^4$ within its budgets.
 \toprule
 action & reported & model \\
 \midrule
-plan & 10 policy items, 2 leaves, 3.5\,s & 2 / 2 \\
+plan & 10 policy items, 2 leaves, 4.2\,s & 2 / 2 \\
 $\mathit{go\text{-}view}(\ag{north})$ & at its viewpoint after 17\,s; beacon in line of sight, 3.3\,m & 2 / 2 \\
-$\mathit{go\text{-}view}(\ag{south2})$ & at its viewpoint after 59\,s; 3.4\,m & 2 / 2 \\
-$\mathit{go\text{-}view}(\ag{north2})$ & at its viewpoint after 61\,s; 3.9\,m & 2 / 2 \\
-$\mathit{read\text{-}order}$ & at the terminal after 15\,s; the order names $s_1$; $e_h$ & 2 / 1, $E^0$ \\
-$\mathit{go\text{-}view}(\ag{south})$ & at its viewpoint after 55\,s; 3.8\,m & 2 / 1, $E^0$ \\
+$\mathit{go\text{-}view}(\ag{south2})$ & at its viewpoint after 60\,s; 3.4\,m & 2 / 2 \\
+$\mathit{go\text{-}view}(\ag{north2})$ & at its viewpoint after 62\,s; 3.9\,m & 2 / 2 \\
+$\mathit{read\text{-}order}$ & at the terminal after 17\,s; the order names $s_1$; $e_h$ & 2 / 1, $E^0$ \\
+$\mathit{go\text{-}view}(\ag{south})$ & at its viewpoint after 53\,s; 3.8\,m & 2 / 1, $E^0$ \\
 $\mathit{signal}(\ag{south}, s_1)$ & in line of sight: all four, 3.3 to 3.8\,m & 3 / 1, $C$ \\
-$\mathit{lift}(s_1)$ & at the mouths after 26 to 28\,s; joint start; under the load after 15.1 and 15.2\,s: starts 0.00\,s apart, arrivals 0.10\,s apart; load raised 0.12\,m, 51\,s after the lift began & 1 / 1, $C$ \\
+$\mathit{lift}(s_1)$ & at the mouths after 26 to 28\,s; joint start; under the load after 13.7 and 13.8\,s: starts 0.00\,s apart, arrivals 0.10\,s apart; load raised 0.12\,m, 50\,s after the lift began & 1 / 1, $C$ \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -720,7 +720,9 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
         is. Under both: the policy, or on the radio floor the protocol run in its
         place; the action in formal notation; and what each robot knows, with
         the depth drawn as a ladder from \(E^1\) to \(C\). Every caption is a
-        line the runs wrote, placed at the instant it was written.
+        line the runs wrote, placed at the instant it was written; transits run
+        at 8&#215; and the planner's search at 16&#215;, and the corner says
+        when.
       </figcaption>
     </figure>
 
@@ -728,8 +730,8 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <table class="data pt-run">
       <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
       <tbody>
-        <tr><td>plan</td><td>no policy for lifted after 120.2&#8202;s; the search was cut off at depth 8, which is its budget and not a proof</td><td>2 worlds, 2 designated</td></tr>
-        <tr><td>read-order(south, s1)</td><td>at the terminal after 13&#8202;s; the order names s1; e-here</td><td>2 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td>plan</td><td>no policy for lifted after 120.3&#8202;s; the search was cut off at depth 8, which is its budget and not a proof</td><td>2 worlds, 2 designated</td></tr>
+        <tr><td>read-order(south, s1)</td><td>at the terminal after 16&#8202;s; the order names s1; e-here</td><td>2 / 1 &#183; \(E^0\)</td></tr>
         <tr><td>tell(south, north, s1)</td><td>&#8220;\(K_{south}\,\mathit{job}(s_1)\)&#8221; delivered; south cannot tell whether it was</td><td>4 / 1 &#183; \(E^0\)</td></tr>
         <tr><td>tell(north, south2, s1)</td><td>&#8220;\(K_{north}\,\mathit{job}(s_1)\)&#8221; delivered</td><td>6 / 1 &#183; \(E^0\)</td></tr>
         <tr><td>tell(south2, north2, s1)</td><td>&#8220;\(K_{south2}\,\mathit{job}(s_1)\)&#8221; delivered</td><td>8 / 1 &#183; \(E^1\)</td></tr>
@@ -744,14 +746,14 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <table class="data pt-run">
       <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
       <tbody>
-        <tr><td>plan</td><td>a policy of 10 items and 2 leaves, in 3.5&#8202;s; it does not use the radio</td><td>2 worlds, 2 designated</td></tr>
+        <tr><td>plan</td><td>a policy of 10 items and 2 leaves, in 4.2&#8202;s; it does not use the radio</td><td>2 worlds, 2 designated</td></tr>
         <tr><td>go-view(north)</td><td>at its viewpoint after 17&#8202;s; the beacon in line of sight, 3.3&#8202;m</td><td>2 / 2</td></tr>
-        <tr><td>go-view(south2)</td><td>at its viewpoint after 59&#8202;s; 3.4&#8202;m</td><td>2 / 2</td></tr>
-        <tr><td>go-view(north2)</td><td>at its viewpoint after 61&#8202;s; 3.9&#8202;m</td><td>2 / 2</td></tr>
-        <tr><td>read-order(south, s1)</td><td>at the terminal after 15&#8202;s; the order names s1; e-here</td><td>2 / 1 &#183; \(E^0\)</td></tr>
-        <tr><td>go-view(south)</td><td>at its viewpoint after 55&#8202;s; 3.8&#8202;m</td><td>2 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td>go-view(south2)</td><td>at its viewpoint after 60&#8202;s; 3.4&#8202;m</td><td>2 / 2</td></tr>
+        <tr><td>go-view(north2)</td><td>at its viewpoint after 62&#8202;s; 3.9&#8202;m</td><td>2 / 2</td></tr>
+        <tr><td>read-order(south, s1)</td><td>at the terminal after 17&#8202;s; the order names s1; e-here</td><td>2 / 1 &#183; \(E^0\)</td></tr>
+        <tr><td>go-view(south)</td><td>at its viewpoint after 53&#8202;s; 3.8&#8202;m</td><td>2 / 1 &#183; \(E^0\)</td></tr>
         <tr><td>signal(south, s1)</td><td>the s1 tier lit; in line of sight of it: all four, 3.3 to 3.8&#8202;m</td><td>3 / 1 &#183; <b>\(C\)</b></td></tr>
-        <tr><td>lift(s1)</td><td>all four at their mouths of s1 after 26 to 28&#8202;s, none in sight of a robot across the load; one start for all; under the load after 15.1 and 15.2&#8202;s: starts 0.00&#8202;s apart, arrivals 0.10&#8202;s apart; load raised 0.12&#8202;m, 51&#8202;s after the lift began</td><td>1 world</td></tr>
+        <tr><td>lift(s1)</td><td>all four at their mouths of s1 after 26 to 28&#8202;s, none in sight of a robot across the load; one start for all; under the load after 13.7 and 13.8&#8202;s: starts 0.00&#8202;s apart, arrivals 0.10&#8202;s apart; load raised 0.12&#8202;m, 50&#8202;s after the lift began</td><td>1 world</td></tr>
       </tbody>
     </table>
     <p class="note">
@@ -1101,7 +1103,8 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
            alt="A frame of the film after the sixth message: RViz with the acknowledgement from north2 to south and the depth E^2 beside s1, the executor's refusal of the lift, and what each robot knows">
       <figcaption>
         The radio floor after the sixth message: 34 worlds, \(E^2\) among the
-        four, and the lift refused for want of \(C\).
+        four, and the lift refused for want of \(C\). The chain that blocks it
+        runs from south through north to north2.
       </figcaption>
     </figure>
   </div>
