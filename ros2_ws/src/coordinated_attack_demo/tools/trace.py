@@ -59,6 +59,7 @@ class Model:
         self.relations = relations          # agent -> world -> [worlds]
         self.labels = {w: set(a) for w, a in labels.items()}
         self.designated = list(designated)
+        self.memo = {}
 
     @staticmethod
     def of(task):
@@ -94,7 +95,15 @@ class Model:
             if node == 'false':
                 return False
             return node in self.labels[w]
+        # A formula is a node of the task, which outlives the model, so its
+        # identity is a key. Without this a precondition l modalities deep is
+        # evaluated (n |R|)^l times over at every world.
+        key = (w, id(node))
+        if key not in self.memo:
+            self.memo[key] = self.evaluate(w, node)
+        return self.memo[key]
 
+    def evaluate(self, w, node):
         if 'modality-name' in node:
             name = node['modality-name']
             group = node['modality-index']
@@ -190,6 +199,37 @@ class Model:
         designated = [name[(w, e)] for w, e in pairs
                       if w in self.designated and e in chosen]
         return Model([name[p] for p in pairs], relations, labels, designated)
+
+    def contracted(self):
+        """The bisimulation contraction, by partition refinement: worlds with
+        one valuation, and for every agent the same blocks within reach, are
+        one world. A world is designated when any world of its block is.
+
+        The published floors are traced without it, since their world counts
+        are the ones the README prints. With more than two robots every
+        message has bystanders, who relate its three events to each other,
+        and without contraction the model triples per message."""
+        block = {w: frozenset(self.labels[w]) for w in self.worlds}
+        count = len(set(block.values()))
+        while True:
+            signature = {w: (block[w],) + tuple(
+                frozenset(block[v] for v in self.sees(a, w)) for a in self.agents)
+                for w in self.worlds}
+            ids = {}
+            refined = {w: ids.setdefault(signature[w], len(ids)) for w in self.worlds}
+            if len(ids) == count:
+                break
+            block, count = refined, len(ids)
+        block = {w: ids[signature[w]] for w in self.worlds}
+        rep = {}
+        for w in self.worlds:
+            rep.setdefault(block[w], w)
+        worlds = [f'b{b}' for b in sorted(rep)]
+        relations = {a: {f'b{b}': sorted({f'b{block[v]}' for v in self.sees(a, w)})
+                         for b, w in rep.items()} for a in self.agents}
+        labels = {f'b{b}': self.labels[w] for b, w in rep.items()}
+        designated = sorted({f'b{block[w]}' for w in self.designated})
+        return Model(worlds, relations, labels, designated)
 
     def applicable(self, action):
         """Every designated world has a designated event that can happen

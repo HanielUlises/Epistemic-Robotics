@@ -19,6 +19,13 @@
   ;; the type is that this does not help. Delivery that happens and is not
   ;; known to have happened adds one level of mutual knowledge per message and
   ;; never yields common knowledge (Halpern and Moses, 1990).
+  ;;
+  ;; With more than two robots a message has bystanders, robots that neither
+  ;; send nor receive it. A bystander does not hear the radio, so it cannot
+  ;; tell any of the three events from another, and relates all of them. It is
+  ;; not Oblivious: an oblivious robot maps every event onto ?nil, and since
+  ;; ?del and ?lost write the sender's log, it would believe that nothing was
+  ;; sent when something was, and the frame would leave S5.
 
   (:requirements
     :lists :list-comprehensions :equality
@@ -27,9 +34,10 @@
 
   (:action-type lossy-message
     :events     (?del ?lost ?nil)
-    :observability-types (Sender Receiver Oblivious)
+    :observability-types (Sender Receiver Bystander Oblivious)
     :relations  (Sender    (:and (?del ?del) (?del ?lost) (?lost ?del) (?lost ?lost) (?nil ?nil))
                  Receiver  (:and (?del ?del) (?lost ?lost) (?lost ?nil) (?nil ?lost) (?nil ?nil))
+                 Bystander (:forall (?e ?f - event) (?e ?f))
                  Oblivious (:forall (?e - event) (?e ?nil)) )
     :designated (?del)
     :conditions (?nil (:trivial-event))
