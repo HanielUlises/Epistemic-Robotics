@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/demo.html</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.60</priority>
   </url>
   <url>
@@ -17,7 +17,7 @@
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/domains.html</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -27,7 +27,7 @@
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/fleet_believes.html</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -37,7 +37,7 @@
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/nested_run.html</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -47,7 +47,7 @@
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/single_agent_knows.html</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -57,7 +57,7 @@
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/warehouse_rmf.html</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -68,6 +68,16 @@
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl.html</loc>
     <lastmod>2026-09-08</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/warehouse_xl_sites.html</loc>
+    <lastmod>2026-10-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/link_outage.html</loc>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -86,13 +96,18 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://hanielulises.github.io/Epistemic-Robotics/muddy_robots.html</loc>
+    <lastmod>2026-10-07</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/false_belief.html</loc>
     <lastmod>2026-10-06</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://hanielulises.github.io/Epistemic-Robotics/domain_catalogue.html</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>

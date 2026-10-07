@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The eighteen domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The eighteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The nineteen domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The nineteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The eighteen domains">
-<meta property="og:description" content="The eighteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The nineteen domains">
+<meta property="og:description" content="The nineteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The eighteen domains">
-<meta name="twitter:description" content="The eighteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The nineteen domains">
+<meta name="twitter:description" content="The nineteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -528,11 +528,11 @@ table.cat a:hover{border-bottom-color:var(--black)}
         <div class="nav-panel" id="site-contents">
           <h6>Pages</h6>
           <a href="index.html">Overview</a>
-          <details class="nav-folder">
+          <details class="nav-folder" open>
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The eighteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The nineteen domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -549,7 +549,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           </details>
             </div>
           </details>
-          <details class="nav-folder" open>
+          <details class="nav-folder">
             <summary>Demonstrations</summary>
             <div class="nav-sub">
           <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
@@ -596,6 +596,13 @@ table.cat a:hover{border-bottom-color:var(--black)}
             </div>
           </details>
           <details class="nav-folder">
+            <summary>muddy-robots</summary>
+            <div class="nav-sub">
+          <a href="demos.html#muddy-robots">All muddy-robots demos</a>
+          <a href="muddy_robots.html">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
             <summary>hotel-incident</summary>
             <div class="nav-sub">
           <a href="demos.html#hotel-incident">All hotel demos</a>
@@ -613,7 +620,6 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
           <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
           <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
-          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">Graph recovery and integration defects on a derived warehouse floor</span></a>
           <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
           <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
           <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
@@ -622,6 +628,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
           <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -638,7 +645,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
 <div class="hero">
   <div class="container">
     <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 18 domains</p>
-    <h2>The eighteen domains</h2>
+    <h2>The nineteen domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -937,6 +944,29 @@ table.cat a:hover{border-bottom-color:var(--black)}
   )
 
 (:goal (lifted))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-muddy-robots">
+      <div class="dom-h">
+        <h4>muddy-robots</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 4 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i>, <i>r2</i>, <i>r3</i>, <i>r4</i>; written for any number of robots</dd>
+        <dt>Objects</dt><dd><code>(:objects muster - hall)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-announcement</span><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 16\), \(|W_d| = 15\) &#183; declared frame S5</dd>
+        <dt>Grounded</dt><dd>5 atoms, 2 ground actions, goal of modal depth 1; the initial model is the hypercube of fault patterns</dd>
+        <dt>Solved</dt><dd>with a public address: depth 4, 30 expansions, 4 leaves, and depth \(N\) in \(3N(N+1)/2\) expansions for \(N\) from 2 to 10; without one: no policy, the goal proved unreachable by the knowledge relaxation</dd>
+        <dt>Stated in</dt><dd><a href="muddy_robots.html">The muddy children at a muster point</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (faulty ?i - agent)
+    (pa)
+  )
+
+(:goal (forall (?i - agent) ([Kw. ?i] (faulty ?i))))</pre>
       </details>
     </article>
     </div>
