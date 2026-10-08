@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The nineteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The twenty domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -552,6 +552,13 @@ sup.cite a:hover{text-decoration:underline}
           <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
             </div>
           </details>
+          <details class="nav-folder">
+            <summary>hotel-distributed</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-distributed">All hotel-distributed demos</a>
+          <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
             </div>
           </details>
           <a href="execution.html">Execution</a>
@@ -572,6 +579,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -1031,6 +1039,46 @@ sup.cite a:hover{text-decoration:underline}
       </div>
     </div>
 
+    <!-- ─────────────────────────────── hotel-distributed -->
+    <div class="dgroup" id="hotel-distributed">
+      <p class="sec-label">Domain</p>
+      <h3>hotel-distributed &#183; the same hotel, three fleets and a guest</h3>
+      <p class="about">
+        A leak in one of four rooms of the Open-RMF hotel. The cleaner knows the
+        column, the concierge the floor, and the porter, the only robot that can
+        ride a lift with the valve key, knows neither: the room is distributed
+        knowledge. Robots of different fleets tell each other only where they
+        meet, and whoever is there hears it; an absent agent relates every event
+        to every other, so the frame stays \(\mathrm{S5}_n\). The goal asks for
+        the leak contained, every responder knowing that every responder knows
+        it, and a guest unable to rule out any room. Four fleets of the same
+        planner, one run each.
+      </p>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/hotel_distributed.jpg"
+          alt="The film's board beside Gazebo: the cleaner, the concierge and the porter in the restaurant, each with the rooms it cannot rule out" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="hotel_distributed.html">Knowledge no robot holds alone</a></h5>
+          <p>
+            The planner walks the concierge away from the guest, has the cleaner
+            and the concierge say the column and the floor in the restaurant, sends
+            the porter up and brings it back down to say that the leak is
+            contained. An all-clear over the public address names no room and
+            still tells the guest which one, since the guest saw where the porter
+            went: a content filter that pages it fails at every leaf, a fleet that
+            pages everything fails sooner, and a fleet with no channel between
+            fleets opens three rooms and never stands down.
+          </p>
+          <div class="facts">
+            <span>S5</span><span>distributed knowledge</span>
+            <span>secrecy by inference</span>
+            <span>depth 7, 387 003 expansions</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1072,7 +1120,7 @@ sup.cite a:hover{text-decoration:underline}
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">Fourteen demonstrations in seven domains &#183; ROS 2 &#183; simulation</span>
+      <span class="ftr-r">Fifteen demonstrations in eight domains &#183; ROS 2 &#183; simulation</span>
     </div>
   </div>
 </footer>

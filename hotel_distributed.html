@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge no robot holds alone &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="A leak in one of four rooms of the Open-RMF hotel: the cleaner knows the column, the concierge the floor, and the porter, the only robot that can ride a lift with the valve key, knows neither. The planner pools what two robots know where the guest cannot hear, and rides the porter back down, because an all-clear over the public address would tell the guest the room.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="Knowledge no robot holds alone">
+<meta property="og:description" content="The room is distributed knowledge of two robots of two fleets, and the robot that must act on it knows nothing. An all-clear that names no room still tells the guest which one; only the epistemic fleet meets the goal.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/hotel_distributed.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/hotel_distributed.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gazebo from above the Open-RMF hotel beside a board of what each robot and the guest know.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/hotel_distributed.jpg">
+<meta name="twitter:title" content="Knowledge no robot holds alone">
+<meta name="twitter:description" content="The room is distributed knowledge of two robots of two fleets, and the robot that must act on it knows nothing. An all-clear that names no room still tells the guest which one; only the epistemic fleet meets the goal.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="RViz and Gazebo during the four-robot coordinated attack runs.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/muddy_robots.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The twenty domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+          <a href="coordinated_attack_scale.html">&#183; The coordinated attack among many robots<span class="sub">Bystanders, the cost of a level, four robots</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>false-belief</summary>
+            <div class="nav-sub">
+          <a href="demos.html#false-belief">All false-belief demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>muddy-robots</summary>
+            <div class="nav-sub">
+          <a href="demos.html#muddy-robots">All muddy-robots demos</a>
+          <a href="muddy_robots.html">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>hotel-distributed</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-distributed">All hotel-distributed demos</a>
+          <a href="hotel_distributed.html" aria-current="page">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Distributed knowledge &#183; secrecy by inference &#183; Open-RMF hotel &#183; ROS 2</p>
+    <h2>Knowledge no robot holds alone</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      Water is coming through from one of four guest rooms of the Open-RMF
+      hotel: room 1 or room 15, on the second floor or the third. The cleaner,
+      whose fleet cannot leave the ground floor, found it coming down a riser and
+      knows the column. The concierge reads the building's flow alarm at the
+      front desk and knows the floor. The porter carries the valve key and is the
+      only one of the three that can ride a lift; it knows neither. Which room it
+      is, is distributed knowledge of the cleaner and the concierge, and the robot
+      that has to act on it knows nothing. A guest is waiting in the lobby.
+    </p>
+    <p class="hero-p">
+      Robots of different fleets share no network: a robot can tell another only
+      where both stand, and whoever else stands there hears it; the public
+      address reaches everyone. Asked for the leak contained, every responder
+      knowing that every responder knows it, and the guest unable to rule out any
+      room, the planner walks the concierge away from the guest to the
+      restaurant, where the cleaner and the concierge say the column and the
+      floor; the porter rides up, shuts the valve, rides back down and says it
+      there. The ride down is the step a careful rule would save, and the rule is
+      wrong: an all-clear over the public address names no room and still tells
+      the guest which one, because the guest saw the porter go to it, and a valve
+      is shut only in the leaking room. The same planner, building and robots,
+      run as four fleets: the siloed fleet opens three rooms before it finds the
+      leak and never tells the other two; the broadcast fleet and the content
+      filter each leave the guest knowing the room; only the epistemic fleet
+      meets the goal.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>The room is the simulator's, and no robot's:</b> the launch names it, and
+      the bridge reports from it what the cleaner says, what the concierge says
+      and what an opened room shows, saying so in the log. <b>What an agent
+      knows is evaluated at the actual world</b>, the room the launch names, and
+      never across the executor's designated worlds. <b>The guest is an agent of
+      the model</b> and a figure on the floor, and is taken to see every robot's
+      position. <b>Every caption in the film is a line the run wrote.</b>
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">hotel_distributed_demo</span>; policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, grounding by
+      plank, search by Aletheia, robots by Open-RMF through
+      <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>. Full
+      account in <a href="hotel_distributed.pdf">Knowledge No Robot Holds
+      Alone</a> (PDF): the model, the proofs, the planning tables, the four runs
+      and the defects found on the way.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section id="hd-runs-sec">
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Four fleets in the same hotel, with the leak in L3 room 1</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/hotel_distributed_poster.jpg">
+        <source src="media/hotel_distributed.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        The four fleets in turn: siloed, broadcast, content filter, epistemic.
+        Left: Gazebo from above, showing the floor the porter is on, and closing
+        on the place where something is said or done; a ring and a letter mark a
+        robot standing at a waypoint the log says it reached, since the porter is
+        white on a white floor. Right: what each agent cannot rule out, as the
+        small grid of the four rooms, what it knows of the leak, the three
+        conjuncts of the goal and what the fleet has spent. Every caption, every
+        cell of the board and the final card are read from the run's log; moves
+        run at twenty times and what is said at one and a half, as the corner
+        says.
+      </figcaption>
+    </figure>
+
+    <h4>What each run cost</h4>
+    <table class="data">
+      <thead><tr><th>fleet</th><th>lift rides</th><th>rooms opened</th><th>told in person</th><th>paged</th><th>policy run</th><th>\(\gamma\)</th></tr></thead>
+      <tbody>
+        <tr><td>siloed</td><td>2</td><td>3</td><td>0</td><td>0</td><td>895&#8202;s</td><td>not met: stand-down</td></tr>
+        <tr><td>broadcast</td><td>1</td><td>0</td><td>0</td><td>3</td><td>327&#8202;s</td><td>not met: secret</td></tr>
+        <tr><td>filter</td><td>1</td><td>0</td><td>2</td><td>1</td><td>588&#8202;s</td><td>not met: secret</td></tr>
+        <tr><td>epistemic</td><td>2</td><td>0</td><td>3</td><td>0</td><td>1058&#8202;s</td><td><b>met</b></td></tr>
+      </tbody>
+    </table>
+    <p>
+      The policy run is the wall clock from the start of execution to the end of
+      the policy, with Gazebo rendering in software at a real-time factor between
+      0.5 and 0.8. In this world the epistemic run is not the fastest. The
+      concierge's walk and the ride down cost more than the siloed fleet's search,
+      which found the leak in the third room it opened; the broadcast fleet is
+      fastest of all. What the epistemic run buys is the last column, and the three
+      rooms of guests the siloed fleet opened to find the leak. With the leak in
+      L3 room 15 the siloed fleet opens the same three rooms and then drives on to
+      the fourth; the epistemic policy costs the same in every room.
+    </p>
+    <p>
+      Each table below is read from its run's log: the actions the epistemic
+      state applied, the bridge's and the crew's lines, and the knowledge view's
+      evaluation of every model at the actual world. The guest's column is what
+      the goal's third conjunct is about.
+    </p>
+    <h4>The siloed fleet: three rooms opened, and nobody told</h4>
+<table class="data pt-run ca-left">
+  <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
+  <tbody>
+    <tr><td>setup</td><td>the concierge in the lobby, the porter in the kitchen, the cleaner in the restaurant, by Open-RMF tasks</td><td>4 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 4 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>plan</td><td>policy with 11 nodes, 4 leaves, in 13.4 s</td><td></td></tr>
+    <tr><td>go</td><td>porter to L2 room 1, 385&#8202;s</td><td>4 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 4 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>inspect</td><td>porter opens L2 room 1: dry</td><td>8 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 3 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>go</td><td>porter to L2 room 15, 191&#8202;s</td><td>8 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 3 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>inspect</td><td>porter opens L2 room 15: dry</td><td>15 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 2 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>go</td><td>porter to L3 room 1, 268&#8202;s</td><td>15 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 2 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>inspect</td><td>porter opens L3 room 1: wet</td><td>27 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>contain</td><td>porter shuts the valve in L3 room 1</td><td>31 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>verdict</td><td>the leak contained: yes; every responder knows every responder knows it: no; the guest cannot rule out any room: yes</td><td></td></tr>
+    <tr><td>stand-down</td><td>concierge does not know the leak is contained (unsure): it stays where it is</td><td></td></tr>
+    <tr><td>stand-down</td><td>cleaner does not know the leak is contained (unsure): it stays where it is</td><td></td></tr>
+    <tr><td>end</td><td>the siloed fleet does not meet the whole goal, as the planner and the trace say it does</td><td></td></tr>
+  </tbody>
+</table>
+    <h4>The broadcast fleet: the guest hears the column and the floor</h4>
+<table class="data pt-run ca-left">
+  <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
+  <tbody>
+    <tr><td>setup</td><td>the concierge in the lobby, the porter in the kitchen, the cleaner in the restaurant, by Open-RMF tasks</td><td>4 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 4 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>plan</td><td>policy with 15 nodes, 4 leaves, in 7.7 s</td><td></td></tr>
+    <tr><td>page-column</td><td>cleaner pages the column</td><td>4 worlds &#183; cleaner 2 rooms, concierge L3 room 1, porter 2 rooms, <b>guest 2 rooms</b></td></tr>
+    <tr><td>page-floor</td><td>concierge pages the floor</td><td>4 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest L3 room 1</b></td></tr>
+    <tr><td>go</td><td>porter to L3 room 1, 285&#8202;s</td><td>4 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest L3 room 1</b></td></tr>
+    <tr><td>contain</td><td>porter shuts the valve in L3 room 1</td><td>5 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest L3 room 1</b></td></tr>
+    <tr><td>page-safe</td><td>porter pages the all-clear</td><td>1 world &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest L3 room 1</b></td></tr>
+    <tr><td>verdict</td><td>the leak contained: yes; every responder knows every responder knows it: yes; the guest cannot rule out any room: no</td><td></td></tr>
+    <tr><td>stand-down</td><td>concierge knows the leak is contained: it stands down, to the lobby</td><td></td></tr>
+    <tr><td>stand-down</td><td>cleaner knows the leak is contained: it stands down, to its charger</td><td></td></tr>
+    <tr><td>end</td><td>the broadcast fleet does not meet the whole goal, as the planner and the trace say it does</td><td></td></tr>
+  </tbody>
+</table>
+    <h4>The content filter: the all-clear tells the guest the room</h4>
+<table class="data pt-run ca-left">
+  <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
+  <tbody>
+    <tr><td>setup</td><td>the concierge in the lobby, the porter in the kitchen, the cleaner in the restaurant, by Open-RMF tasks</td><td>4 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 4 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>plan</td><td>policy with 16 nodes, 4 leaves, in 39.0 s</td><td></td></tr>
+    <tr><td>go</td><td>concierge to the restaurant, 186&#8202;s</td><td>4 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 4 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>tell-column</td><td>cleaner says the column room 1; heard by concierge, porter</td><td>8 worlds &#183; cleaner 2 rooms, concierge L3 room 1, porter 2 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>tell-floor</td><td>concierge says the floor L3; heard by cleaner, porter</td><td>16 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>go</td><td>porter to L3 room 1, 362&#8202;s</td><td>16 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>contain</td><td>porter shuts the valve in L3 room 1</td><td>17 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>page-safe</td><td>porter pages the all-clear</td><td>1 world &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest L3 room 1</b></td></tr>
+    <tr><td>verdict</td><td>the leak contained: yes; every responder knows every responder knows it: yes; the guest cannot rule out any room: no</td><td></td></tr>
+    <tr><td>stand-down</td><td>concierge knows the leak is contained: it stands down, to the lobby</td><td></td></tr>
+    <tr><td>stand-down</td><td>cleaner knows the leak is contained: it stands down, to its charger</td><td></td></tr>
+    <tr><td>end</td><td>the filter fleet does not meet the whole goal, as the planner and the trace say it does</td><td></td></tr>
+  </tbody>
+</table>
+    <h4>The epistemic fleet: the whole goal</h4>
+<table class="data pt-run ca-left">
+  <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
+  <tbody>
+    <tr><td>setup</td><td>the concierge in the lobby, the porter in the kitchen, the cleaner in the restaurant, by Open-RMF tasks</td><td>4 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 4 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>plan</td><td>policy with 20 nodes, 4 leaves, in 229.0 s</td><td></td></tr>
+    <tr><td>go</td><td>concierge to the restaurant, 224&#8202;s</td><td>4 worlds &#183; cleaner 2 rooms, concierge 2 rooms, porter 4 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>tell-column</td><td>cleaner says the column room 1; heard by concierge, porter</td><td>8 worlds &#183; cleaner 2 rooms, concierge L3 room 1, porter 2 rooms, <b>guest 4 rooms</b></td></tr>
+    <tr><td>tell-floor</td><td>concierge says the floor L3; heard by cleaner, porter</td><td>16 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>go</td><td>porter to L3 room 1, 428&#8202;s</td><td>16 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>contain</td><td>porter shuts the valve in L3 room 1</td><td>17 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>go</td><td>porter to the restaurant, 367&#8202;s</td><td>17 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>tell-safe</td><td>porter says the leak is contained; heard by cleaner, concierge</td><td>18 worlds &#183; cleaner L3 room 1, concierge L3 room 1, porter L3 room 1, <b>guest 4 rooms</b></td></tr>
+    <tr><td>verdict</td><td>the leak contained: yes; every responder knows every responder knows it: yes; the guest cannot rule out any room: yes</td><td></td></tr>
+    <tr><td>stand-down</td><td>concierge knows the leak is contained: it stands down, to the lobby</td><td></td></tr>
+    <tr><td>stand-down</td><td>cleaner knows the leak is contained: it stands down, to its charger</td><td></td></tr>
+    <tr><td>end</td><td>the epistemic fleet meets the whole goal, as the planner and the trace say it does</td><td></td></tr>
+  </tbody>
+</table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Three findings about a room no robot knew</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#hd-pool-sec">
+        <span class="pt-card-img"><img src="media/thumbs/hotel_distributed_card_pool.jpg" alt="The board during the tellings in the restaurant: the porter goes from four rooms to one" loading="lazy"></span>
+        <span class="pt-card-k">Pooling</span>
+        <span class="pt-card-h">Two sentences, or three rooms opened</span>
+        <span class="pt-card-p">The room is distributed knowledge of the cleaner and the concierge. Two tellings in the restaurant make it common knowledge among the three responders; without them the porter opens, on its deepest branch, every room but one.</span>
+        <span class="pt-card-go">Read the proof <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#hd-allclear-sec">
+        <span class="pt-card-img"><img src="media/thumbs/hotel_distributed_card_allclear.jpg" alt="The board after the content filter's all-clear: the guest can rule out every room but L3 room 1" loading="lazy"></span>
+        <span class="pt-card-k">The all-clear</span>
+        <span class="pt-card-h">A message that names no room, and tells it</span>
+        <span class="pt-card-p">The guest saw the porter go to the room, and a valve is shut only in the leaking room. Any public announcement that it was shut leaves the guest that room. The content filter fails at every leaf; the public address alone has no policy.</span>
+        <span class="pt-card-go">Read the proof <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#hd-cost-sec">
+        <span class="pt-card-img"><img src="media/thumbs/hotel_distributed_card_cost.jpg" alt="The board at the end of the epistemic run: every responder knows the leak is contained and the guest still considers four rooms" loading="lazy"></span>
+        <span class="pt-card-k">The cost</span>
+        <span class="pt-card-h">One ride down, and the goal</span>
+        <span class="pt-card-p">AO* shows no policy of six actions meets the whole goal; the filter's six are the epistemic seven with a page for the ride down and the telling. Across four and six rooms the epistemic policy keeps two rides and three messages.</span>
+        <span class="pt-card-go">See the tables <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#hd-new-sec">What is new</a>
+      <a href="#hd-model-sec">The model</a>
+      <a href="#hd-actions-sec">Who sees what</a>
+      <a href="#hd-goal-sec">The goal</a>
+      <a href="#hd-pool-sec">Pooling</a>
+      <a href="#hd-allclear-sec">The all-clear</a>
+      <a href="#hd-siloed-sec">Siloed</a>
+      <a href="#hd-policy-sec">The policy</a>
+      <a href="#hd-cost-sec">Planning</a>
+      <a href="#hd-floor-sec">The building</a>
+      <a href="#hd-defects-sec">Defects</a>
+      <a href="#hd-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════ WHAT IS NEW -->
+<section id="hd-new-sec">
+  <div class="container">
+    <p class="sec-label">What is new</p>
+    <h3>Three fleets, one room between two of them, and an outsider who reasons</h3>
+    <p>
+      The <a href="hotel_run.html">hotel incident</a> ran in the same building.
+      There two robots looked for a leak in one of two suites, the guest ruled
+      out the public address for the location, and the location was found by
+      inspection: every fact the mission needed was one robot's to observe.
+      Four things are different here.
+    </p>
+    <ul>
+      <li><b>The room is distributed knowledge.</b> Neither the cleaner nor the
+        concierge knows it, both together do, and the robot that must act on it
+        knows nothing. The plan has to move what two robots know into a third,
+        and no robot can do the job alone.</li>
+      <li><b>Channels are places, taken from the fleets' own graphs.</b> A
+        robot tells another only where both are, and whoever else is there
+        hears. The cleaners' graph has no upper floor and the delivery robot's
+        has no lobby vertex, so the restaurant is the only place all three
+        fleets reach; the guest is in the lobby. Who tells whom, and where, is
+        not written into the domain: it follows from the goal and the map.</li>
+      <li><b>Secrecy is a modal goal on an outsider who reasons.</b> The guest
+        must remain unable to rule out any room. An all-clear that names no room
+        violates it, because the guest saw where the porter went. No rule on the
+        content of messages captures this, and the content filter is run to show
+        it.</li>
+      <li><b>One planner, four fleets, measured.</b> The baselines are the same
+        planner given a weaker fleet or a weaker goal, on the same building, and
+        every run is judged by the same three conjuncts at the actual world.
+        Where the planner cannot settle a fleet, an exhaustive search of its
+        reachable models does.</li>
+    </ul>
+    <p>
+      The other demonstrations supply pieces of this. The
+      <a href="coordinated_attack_scale.html">coordinated attack</a> and the
+      <a href="muddy_robots.html">muddy children</a> obtain common knowledge for
+      a whole group from a public signal; here it is obtained for a subgroup, the
+      three responders, by meeting where the outsider is not. The
+      <a href="false_belief.html">false belief</a> leaves S5 on purpose; here
+      every relation stays an equivalence by construction, and what absent agents
+      lose is knowledge, never truth. The siloed fleet's search is the
+      <a href="pass_through.html">pass-through</a>'s knowledge by elimination,
+      paid for in rooms opened.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE MODEL -->
+<section id="hd-model-sec">
+  <div class="container">
+    <p class="sec-label">The model</p>
+    <h3>Four worlds, two partitions, and two agents who know nothing</h3>
+    <p>
+      <span class="mono-inline">tools/hotel_domain.py</span> writes the domain
+      for \(F\) floors and \(K\) columns; the hotel has \(F = \{L2, L3\}\) and
+      \(K = \{\mathit{room1}, \mathit{room15}\}\), and its rooms are
+      \(Z = F \times K\). The agents are
+      \(\mathcal{A} = \{c, t, p, g\}\), the cleaner, the concierge, the porter and
+      the guest, and the responders are \(R = \{c, t, p\}\). The atoms are
+      \(\mathit{floor}_f\) and \(\mathit{col}_k\) for each floor and column,
+      \(\mathit{source}_z\) for each room, \(\mathit{safe}\), and
+      \(\mathit{at}(a, x)\) for each agent and place
+      \(x \in X = \{\mathit{lobby}, \mathit{restaurant}\} \cup Z\).
+    </p>
+    <p>
+      The initial model \(\mathcal{M}_0 = (W, (R_a)_{a \in \mathcal{A}}, V, W_d)\)
+      has one world per room, \(W = Z\). At \(w = (f, k)\) the valuation makes
+      \(\mathit{floor}_f\), \(\mathit{col}_k\) and \(\mathit{source}_w\) true and
+      every other location atom false; the positions and \(\neg\mathit{safe}\) are
+      the same at every world. The relations are
+    </p>
+    <div class="math-block">
+      \[ (f,k) \mathrel{R_t} (f',k') \iff f = f', \qquad
+         (f,k) \mathrel{R_c} (f',k') \iff k = k', \qquad
+         R_p = R_g = W \times W, \]
+    </div>
+    <p>
+      and every world is designated, \(W_d = W\): the executor does not know the
+      room either, and its policy branches on what the robots say.
+    </p>
+    <figure class="demo-figure">
+      <svg viewBox="0 0 760 300" style="width:100%;max-width:760px;height:auto;display:block;margin:0 auto" role="img" aria-label="The initial model: four worlds in a two by two grid, floors as rows and columns as columns. The concierge relates worlds in the same row, the cleaner worlds in the same column, and the porter and the guest relate every pair.">
+        <style>
+          .w{fill:#fff;stroke:#111;stroke-width:1.6}
+          .wa{fill:#fff;stroke:#C8102E;stroke-width:2.6}
+          .lab{font:600 15px Arial,Helvetica,sans-serif;fill:#111}
+          .sm{font:13px Arial,Helvetica,sans-serif;fill:#5A5A5A}
+          .t{stroke:#285AB4;stroke-width:3}
+          .c{stroke:#288C50;stroke-width:3}
+        </style>
+        <text class="sm" x="150" y="28">room1</text><text class="sm" x="380" y="28">room15</text>
+        <text class="sm" x="40" y="96">L3</text><text class="sm" x="40" y="226">L2</text>
+        <line class="t" x1="210" y1="90" x2="370" y2="90"/>
+        <line class="t" x1="210" y1="220" x2="370" y2="220"/>
+        <line class="c" x1="170" y1="118" x2="170" y2="192"/>
+        <line class="c" x1="410" y1="118" x2="410" y2="192"/>
+        <circle class="wa" cx="170" cy="90" r="30"/><text class="lab" x="146" y="95">L3·1</text>
+        <circle class="w" cx="410" cy="90" r="30"/><text class="lab" x="382" y="95">L3·15</text>
+        <circle class="w" cx="170" cy="220" r="30"/><text class="lab" x="146" y="225">L2·1</text>
+        <circle class="w" cx="410" cy="220" r="30"/><text class="lab" x="382" y="225">L2·15</text>
+        <line class="t" x1="500" y1="80" x2="540" y2="80"/><text class="sm" x="550" y="85">concierge: same floor</text>
+        <line class="c" x1="500" y1="115" x2="540" y2="115"/><text class="sm" x="550" y="120">cleaner: same column</text>
+        <text class="sm" x="500" y="155">porter, guest: every pair</text>
+        <circle class="wa" cx="512" cy="190" r="10"/><text class="sm" x="530" y="195">the actual world in the runs</text>
+        <text class="sm" x="500" y="235">R<tspan baseline-shift="sub" font-size="10">c</tspan> &#8745; R<tspan baseline-shift="sub" font-size="10">t</tspan> is the identity:</text>
+        <text class="sm" x="500" y="255">together they know the room.</text>
+      </svg>
+      <figcaption>
+        The initial model. Reflexive loops are omitted, and every world is
+        designated. The concierge cannot tell rooms on one floor apart, the cleaner
+        rooms in one column; the porter and the guest cannot tell any two apart.
+      </figcaption>
+    </figure>
+    <h4>Lemma 1 (distributed, and nobody's)</h4>
+    <p>
+      For every \(w \in W\): \(\mathcal{M}_0, w \models D_{\{c,t\}}\,\mathit{source}_w\),
+      and \(\mathcal{M}_0, w \not\models K_a\,\mathit{source}_z\) for every agent
+      \(a\) and room \(z\). For a group \(G\) that does not contain both \(c\) and
+      \(t\), \(\mathcal{M}_0, w \not\models D_G\,\mathit{source}_z\) for every
+      \(z\).
+    </p>
+    <p class="proof">
+      <i>Proof.</i> \(D_G\) is evaluated over \(\bigcap_{a \in G} R_a\).
+      \(R_c(w) \cap R_t(w) = \{w\}\), and \(\mathit{source}_w\) holds at \(w\).
+      Each \(R_a(w)\) has at least two worlds when \(|F|, |K| \geq 2\), with
+      different sources. For \(G\) missing \(c\), \(\bigcap_{a \in G} R_a(w)
+      \supseteq R_t(w)\), which holds the whole floor; missing \(t\), it holds the
+      whole column. \(\square\)
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ WHO SEES WHAT -->
+<section id="hd-actions-sec">
+  <div class="container">
+    <p class="sec-label">Who sees what</p>
+    <h3>An action is seen by whoever is in the same place</h3>
+    <p>
+      Every action that is not a move or a page is located: it happens at a
+      place, and its observability depends on who is there. The library
+      <span class="mono-inline">earshot.epddl</span> has two types for this.
+      <i>Fully</i>, for an agent at the place, relates each event to itself.
+      <i>Absent</i>, for an agent elsewhere, relates every event to every other,
+      the null event \(\nu\) included: the absent agent knows where everyone is,
+      because Open-RMF publishes positions to every fleet, and not whether
+      anything was said or done, or what. Writing \(a \in x\) for
+      \(\mathit{at}(a, x)\):
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>action</th><th>events and preconditions</th><th>an agent at the place</th><th>an agent elsewhere</th></tr></thead>
+      <tbody>
+        <tr><td>go(i, x, y)</td><td>one event: \(i \in x\), a lane from \(x\) to \(y\) in \(i\)'s graph; post \(i \in y\)</td><td colspan="2">everyone sees it, the guest included</td></tr>
+        <tr><td>tell-floor(i, x)</td><td>\(\sigma_f\): \(\mathit{floor}_f \wedge i \in x \wedge K_i\)(which floor) \(\wedge\) someone at \(x\) does not know which; \(\nu\): \(\top\)</td><td>Fully</td><td>Absent</td></tr>
+        <tr><td>tell-column(i, x)</td><td>\(\sigma_k\): the same for the column</td><td>Fully</td><td>Absent</td></tr>
+        <tr><td>tell-safe(i, x)</td><td>\(\sigma\): \(\mathit{safe} \wedge K_i\,\mathit{safe} \wedge\) someone at \(x\) does not know it; \(\nu\)</td><td>Fully</td><td>Absent</td></tr>
+        <tr><td>page-floor, page-column, page-safe (i)</td><td>the same events without \(\nu\) or a place</td><td colspan="2">everyone, Fully</td></tr>
+        <tr><td>inspect(p, z)</td><td>\(\omega\): \(\mathit{source}_z\), \(\delta\): \(\neg\mathit{source}_z\), each with \(p \in z \wedge \neg\mathit{Kw}_p\,\mathit{source}_z\); \(\nu\)</td><td>Fully</td><td>Absent</td></tr>
+        <tr><td>contain(p, z)</td><td>\(\kappa\): \(p \in z \wedge \mathit{source}_z \wedge K_p\,\mathit{source}_z \wedge \neg\mathit{safe}\), post \(\mathit{safe}\); \(\nu\)</td><td>Fully</td><td>Absent</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The intermediate library's <i>Oblivious</i> type, which maps every event
+      onto \(\nu\), would make an absent agent believe that nothing happened even
+      when something did: after the porter has been seen to ride to a room, the
+      cleaner would believe it did nothing there. That is a false belief the hotel
+      gives no reason for, and the frame would leave S5.
+    </p>
+    <h4>Lemma 2 (S5 throughout)</h4>
+    <p>
+      Every model reachable from \(\mathcal{M}_0\) is S5.
+    </p>
+    <p class="proof">
+      <i>Proof.</i> A relation of \(\mathcal{M} \otimes \mathcal{E}\) is the
+      restriction, to the pairs that exist, of the product of an equivalence on
+      worlds with an equivalence on events; identity and \(E \times E\) are both
+      equivalences, and the product of equivalences restricted to a subset is an
+      equivalence. \(\square\)
+    </p>
+    <h4>Lemma 3 (positions are common knowledge)</h4>
+    <p>
+      In every reachable model the positions are the same at every world. Hence
+      each agent's observability type is the same at every world of a model, and
+      \(a \in x\) is a property of the model.
+    </p>
+    <p class="proof">
+      <i>Proof.</i> Only go changes a position. Its precondition mentions
+      positions and the fleets' static lanes, so it holds at every world or at
+      none, and its postcondition does not depend on the world. Every other event
+      leaves positions as they were. \(\square\)
+    </p>
+    <h4>Lemma 4 (an agent elsewhere learns no fact)</h4>
+    <p>
+      Let \(\mathcal{E}\) be a located action at \(x\) and \(j \notin x\). For
+      every formula \(\varphi\) without modalities that does not mention
+      \(\mathit{safe}\): if \(\mathcal{M} \otimes \mathcal{E}, (w, e) \models
+      K_j\,\varphi\) then \(\mathcal{M}, w \models K_j\,\varphi\).
+    </p>
+    <p class="proof">
+      <i>Proof.</i> \(\mathit{pre}(\nu) = \top\) and \(e\) is Absent-related to
+      \(\nu\), so \(R'_j(w, e) \supseteq \{(v, \nu) : v \in R_j(w)\}\), and
+      \((v, \nu)\) has the valuation of \(v\). \(\square\)
+    </p>
+    <h4>Lemma 5 (a move says nothing about the leak)</h4>
+    <p>
+      \(\mathcal{M} \otimes \mathit{go}(i, x, y)\) has the worlds of
+      \(\mathcal{M}\), with the same relations and the same location atoms.
+    </p>
+    <p class="proof">
+      <i>Proof.</i> By Lemma 3 the move applies at every world or at none, and its
+      single event is related to itself by everyone. \(\square\)
+    </p>
+    <p>
+      So an agent learns where the leak is only by hearing a telling where it
+      stands, by opening a room, or by the public address. The guest stands in the
+      lobby throughout.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE GOAL -->
+<section id="hd-goal-sec">
+  <div class="container">
+    <p class="sec-label">The goal, and four fleets</p>
+    <h3>Contained, a stand-down every responder can count on, and a guest who cannot rule out any room</h3>
+    <div class="math-block">
+      \[ \gamma \;=\; \mathit{safe} \;\wedge\; E_R E_R\,\mathit{safe} \;\wedge\;
+         \bigwedge_{z \in Z} \langle g \rangle\,\mathit{source}_z . \]
+    </div>
+    <p>
+      The second conjunct is the stand-down: every responder knows the leak is
+      contained, and knows that every responder knows it, so that none of them
+      stays on standby waiting for news the others have. The third keeps the
+      guest where it started: it cannot rule out any room. A weaker secrecy, that
+      the guest not know the room, would admit paging the column, or the floor,
+      and the guest would learn half of where the leak is.
+    </p>
+    <p>
+      The four fleets plan with the same planner over the same building. A fleet
+      is a problem: which channels its robots have, given as static facts, and
+      which goal it plans for. Every run is judged by \(\gamma\) at the actual
+      world, whatever its fleet planned for.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>fleet</th><th>channels between fleets</th><th>plans for</th><th>stands for</th></tr></thead>
+      <tbody>
+        <tr><td>siloed</td><td>none</td><td>\(\mathit{safe}\)</td><td>Open-RMF as deployed: fleets share the traffic schedule and nothing they observe</td></tr>
+        <tr><td>broadcast</td><td>in person, public address</td><td>\(\mathit{safe} \wedge E_RE_R\,\mathit{safe}\)</td><td>a fleet that does not model the guest as someone to keep in the dark</td></tr>
+        <tr><td>filter</td><td>in person, the all-clear on the public address</td><td>\(\mathit{safe} \wedge E_RE_R\,\mathit{safe}\)</td><td>a rule that keeps any message naming a floor or a column off the public address</td></tr>
+        <tr><td>epistemic</td><td>in person, public address</td><td>\(\gamma\)</td><td>the planner given the hotel as it is</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ POOLING -->
+<section id="hd-pool-sec">
+  <div class="container">
+    <p class="sec-label">Pooling what two robots know</p>
+    <h3>Two tellings, or up to three rooms opened</h3>
+    <h4>Proposition 1 (no robot can act alone)</h4>
+    <p>
+      Along every branch of every policy, before the containment, either the
+      porter has heard a telling of the floor and a telling of the column, or it
+      has opened rooms; and a policy that opens rooms and hears no telling opens,
+      on its deepest branch, \(|Z| - 1\) of them.
+    </p>
+    <p class="proof">
+      <i>Proof.</i> The containment requires \(K_p\,\mathit{source}_z\) for the
+      room it is in, and initially \(R_p\) is total (Lemma 1). By Lemmas 4 and 5
+      the porter's relation, restricted to the location atoms, shrinks only at a
+      telling it hears, a page, or a room it opens. A telling of the floor
+      intersects it with a floor's worlds, of the column with a column's; no
+      action of the domain tells the room in one event, and with
+      \(|F|, |K| \geq 2\) neither intersection alone is a single room. An
+      inspection removes at most one room from the porter's candidates on the
+      branch where it finds the room dry. Answer every inspection with
+      \(\delta\) while two rooms remain: the branch opens \(|Z| - 1\) rooms
+      before the porter knows the last one by elimination. \(\square\)
+    </p>
+    <p>
+      In the hotel that is three rooms opened against two sentences said; with
+      \(F\) floors and \(K\) columns it is \(FK - 1\) against two. The tellings
+      also do more than inform the porter. Said in the restaurant with all three
+      responders there, each is a public announcement among them, and after the
+      second the room is common knowledge among the responders,
+      \(C_R\,\mathit{source}_{z^*}\), as the product update confirms: distributed
+      knowledge of two agents made common knowledge of three by one meeting, which
+      is what Ågotnes and Wáng call resolving it.
+    </p>
+    <h4>Where to say it</h4>
+    <p>
+      The concierge knows the floor from the lobby, and the porter cannot reach
+      the lobby. Telling the floor there would reach the guest: by the type
+      Fully, an agent at the place hears the value, and after
+      <span class="mono-inline">tell-floor(concierge, lobby)</span> the guest
+      rules out the other floor, which <span class="mono-inline">validate.sh</span>
+      checks. So the concierge walks to the restaurant, the only place all three
+      fleets reach, and the planner's first action is that walk.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE ALL-CLEAR -->
+<section id="hd-allclear-sec">
+  <div class="container">
+    <p class="sec-label">The all-clear</p>
+    <h3>A message that names no room, and tells it</h3>
+    <p>
+      After the porter has shut the valve, the cleaner and the concierge do not
+      know it happened (Lemma 4: they were elsewhere). The public address would
+      tell them at once, and the porter is still upstairs. The all-clear names no
+      floor and no column, and a rule that keeps locations off the public address
+      lets it through.
+    </p>
+    <h4>Proposition 2 (the all-clear tells the room)</h4>
+    <p>
+      Let the porter contain the leak at \(z\), and let \(\psi\) be any formula
+      that holds at the worlds where the containment happened and fails at the
+      worlds where it did not; \(\mathit{safe}\) and \(K_p\,\mathit{safe}\) are two.
+      After the public announcement of \(\psi\), the guest knows
+      \(\mathit{source}_z\).
+    </p>
+    <p class="proof">
+      <i>Proof.</i> In \(\mathcal{M}' = \mathcal{M} \otimes
+      \mathit{contain}(p, z)\) the worlds are \((w, \kappa)\) for the \(w\) where
+      \(\mathit{pre}(\kappa)\) holds, all of which satisfy \(\mathit{source}_z\),
+      and \((w, \nu)\) for every \(w\). The guest's relation reaches both kinds.
+      Every event of a page is related only to itself, so announcing \(\psi\)
+      keeps exactly the worlds where \(\psi\) holds: the \(\kappa\)-worlds. All of
+      them satisfy \(\mathit{source}_z\), and \(\mathit{source}_z\) is not changed
+      by any later event. \(\square\)
+    </p>
+    <p>
+      The proof does not use what the message says, only that the guest knows
+      where the porter was when it happened, which Lemma 3 makes common knowledge.
+      Nothing in the content of the all-clear is secret; its information, given
+      what the guest has seen, is the room. A rule on content cannot express that,
+      and a goal on what the guest knows does.
+    </p>
+    <h4>Corollary 1 (the content filter fails at every leaf)</h4>
+    <p>
+      The filter fleet's policy ends with <span class="mono-inline">page-safe</span>
+      after the containment on every branch, so at each of its four leaves the
+      guest knows the room, and \(\gamma\) fails.
+    </p>
+    <h4>Corollary 2 (with the public address alone there is no policy)</h4>
+    <p>
+      For a fleet whose only channel between fleets is the public address,
+      \(\gamma\) is unreachable.
+    </p>
+    <p class="proof">
+      <i>Proof.</i> The cleaner can reach no room, so it is elsewhere at the
+      containment, and afterwards does not know \(\mathit{safe}\) (Lemma 4, the
+      \(\nu\)-copies). Only an action it observes can change that, and with no
+      telling the only ones are pages. A page of the floor or the column lets the
+      guest rule out rooms at once. A page of anything that makes the cleaner know
+      \(\mathit{safe}\) must remove the \(\nu\)-worlds the cleaner considers, which
+      are \(\nu\)-worlds the guest considers too, and Proposition 2 applies. Before
+      the containment no robot knows \(\mathit{safe}\), so no page-safe applies.
+      \(\square\)
+    </p>
+    <p>
+      <span class="mono-inline">tools/reach.py</span> confirms it on the hotel: the
+      fleet with the public address alone reaches 4&#8202;220 models, the stand-down
+      holds in 80 of them, all after a page, and the whole goal in none.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ SILOED -->
+<section id="hd-siloed-sec">
+  <div class="container">
+    <p class="sec-label">The siloed fleet</p>
+    <h3>The leak contained, and nobody stands down</h3>
+    <h4>Proposition 3 (without a channel, no stand-down)</h4>
+    <p>
+      With no telling and no page, \(K_c\,\mathit{safe}\) holds at no reachable
+      world, and neither does \(E_RE_R\,\mathit{safe}\).
+    </p>
+    <p class="proof">
+      <i>Proof.</i> Initially \(\neg\mathit{safe}\) is common knowledge. The
+      cleaner cannot reach a room, so it is elsewhere at every inspection and
+      every containment; moves change nothing about \(\mathit{safe}\) (Lemma 5).
+      Before any containment \(\mathit{safe}\) is false everywhere; after one, the
+      cleaner relates every world to a \(\nu\)-copy where \(\mathit{safe}\) is
+      false, and no later action it observes removes it. \(\square\)
+    </p>
+    <p>
+      The planner cannot show this: its relaxation finds the goal reachable, and
+      AO* deepens without end, because the porter can move in circles.
+      <span class="mono-inline">tools/reach.py</span> walks every model reachable by
+      any action and any outcome: 1&#8202;500 of them, and the stand-down holds in
+      none. The siloed fleet therefore plans for \(\mathit{safe}\) alone, and its
+      policy is the search of Proposition 1: room 1 and room 15 on L2, room 1 on
+      L3, and the last room by elimination.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE POLICY -->
+<section id="hd-policy-sec">
+  <div class="container">
+    <p class="sec-label">The epistemic policy</p>
+    <h3>Meet where the guest is not, ride up, ride down, say it there</h3>
+<pre class="code"><span class="c">; AO* at one thread: depth 7, four leaves, 387 003 expansions</span>
+go(concierge, lobby, restaurant)
+tell-column(cleaner, restaurant)          <span class="c">e-col-room1   | e-col-room15</span>
+  tell-floor(concierge, restaurant)       <span class="c">e-floor-L2    | e-floor-L3</span>
+    go(porter, restaurant, z)             <span class="c">z: the room the two tellings name</span>
+    contain(porter, z)
+    go(porter, z, restaurant)
+    tell-safe(porter, restaurant)</pre>
+    <h4>Proposition 4 (the policy meets the whole goal at every leaf)</h4>
+    <p>
+      At each leaf, \(\mathit{safe}\), \(C_R\,\mathit{safe}\), hence
+      \(E_RE_R\,\mathit{safe}\), and \(\langle g \rangle\,\mathit{source}_z\) for
+      every \(z\), at every designated world.
+    </p>
+    <p class="proof">
+      <i>Proof.</i> After the two tellings the porter knows the room (Lemma 1, the
+      intersection), so the containment applies and makes \(\mathit{safe}\) true.
+      The last telling is made in the restaurant with all three responders there,
+      every one of them Fully, so its event is related only to itself among them,
+      and only worlds where the porter knew \(\mathit{safe}\) survive in the
+      responders' view: \(C_R\,\mathit{safe}\). The guest is in the lobby at every
+      located action, and no page occurs; by Lemmas 4 and 5 its relation keeps,
+      at every step, a world with each source: the \(\nu\)-copies of every
+      original world. \(\square\)
+    </p>
+    <h4>Proposition 5 (no shorter policy)</h4>
+    <p>
+      Every policy for \(\gamma\) has depth at least 7.
+    </p>
+    <p class="proof">
+      <i>Proof.</i> Follow the branch on which every inspection finds the
+      room dry while two or more rooms remain for the porter. On it the porter
+      knows the room only after two informing actions at least: a telling at best
+      halves the rooms it considers, and an inspection on this branch removes one.
+      If the last of them is an inspection, it was of another room, and the porter
+      moves again. Add the move to the room and the containment. Afterwards the
+      cleaner and the concierge must come to know \(\mathit{safe}\). A page is
+      excluded by Proposition 2, and so is a telling in the lobby, which the guest
+      hears; so a telling in the restaurant by the porter, the only responder that
+      knows it, with both of them there. The porter moves down, and the concierge,
+      which starts in the lobby, moves there at some point. That is at least
+      \(2 + 1 + 1 + 1 + 1 + 1 = 7\). \(\square\)
+    </p>
+    <p>
+      A single branch can be shorter: if the first room the porter opens is the
+      wet one, six actions reach \(\gamma\), and that is the witness the
+      exhaustive search finds for this fleet. A policy has to cover the other
+      rooms too.
+    </p>
+    <p>
+      The planner shows the same thing its own way: AO* deepens one action at a
+      time, tried every depth from 1 to 6 for \(\gamma\) without a policy, and
+      found the policy above at 7. For the filter's goal it found one at 6. The
+      secret costs exactly one action, the ride down, and Corollary 1 says what
+      the action buys.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ PLANNING -->
+<section id="hd-cost-sec">
+  <div class="container">
+    <p class="sec-label">Planning</p>
+    <h3>Four fleets, one planner: what each policy costs and what it gets</h3>
+    <p>
+      Each fleet's problem grounded by plank and solved by Aletheia with AO* at
+      one thread, on the hotel's four rooms. Every policy was replayed by
+      <span class="mono-inline">tools/trace.py</span> against \(\gamma\), at every
+      leaf; the rides, rooms opened and messages are the most along any branch.
+    </p>
+    <table class="data">
+      <thead><tr><th>fleet</th><th>depth</th><th>leaves</th><th>expanded</th><th>time</th><th>lift rides</th><th>rooms opened</th><th>told, paged</th><th>safe</th><th>stand-down</th><th>secret</th></tr></thead>
+      <tbody>
+        <tr><td>siloed</td><td>8</td><td>4</td><td>394&#8202;987</td><td>8.3&#8202;s</td><td>2</td><td>3</td><td>0, 0</td><td>4/4</td><td>0/4</td><td>4/4</td></tr>
+        <tr><td>broadcast</td><td>5</td><td>4</td><td>26&#8202;532</td><td>7.0&#8202;s</td><td>1</td><td>0</td><td>0, 3</td><td>4/4</td><td>4/4</td><td>0/4</td></tr>
+        <tr><td>filter</td><td>6</td><td>4</td><td>105&#8202;519</td><td>29.9&#8202;s</td><td>1</td><td>0</td><td>2, 1</td><td>4/4</td><td>4/4</td><td>0/4</td></tr>
+        <tr><td><b>epistemic</b></td><td>7</td><td>4</td><td>387&#8202;003</td><td>177.0&#8202;s</td><td>2</td><td>0</td><td>3, 0</td><td>4/4</td><td>4/4</td><td>4/4</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Read across, the table is the argument of the propositions. The broadcast
+      fleet is shortest and tells the guest the room at its second page. The
+      filter is one action longer, keeps the location off the public address, and
+      tells the guest the room at its last page (Corollary 1). The siloed fleet
+      never tells anyone anything, and pays in rooms opened (Proposition 1) and in
+      a stand-down that never comes (Proposition 3). The epistemic fleet is one
+      action longer than the filter, and is the only one with a 4 in every
+      column of the goal.
+    </p>
+    <h4 id="hd-scaling-sec">As the building grows</h4>
+    <p>
+      <span class="mono-inline">tools/scaling.py</span> writes the domain for
+      \(F\) floors and \(K\) columns and solves every fleet the same way, with
+      an hour per search. Every policy found was replayed against \(\gamma\).
+    </p>
+    <table class="data">
+      <thead><tr><th>floors &#215; columns</th><th>fleet</th><th>worlds</th><th>actions</th><th>depth</th><th>leaves</th><th>expanded</th><th>time</th><th>rides, opened, told + paged</th><th>\(\gamma\) at</th></tr></thead>
+      <tbody>
+        <tr><td>2 &#215; 2</td><td>epistemic</td><td>4</td><td>59</td><td>7</td><td>4</td><td>387&#8202;003</td><td>177&#8202;s</td><td>2, 0, 3 + 0</td><td>4/4</td></tr>
+        <tr><td></td><td>filter</td><td>4</td><td>53</td><td>6</td><td>4</td><td>105&#8202;519</td><td>30&#8202;s</td><td>1, 0, 2 + 1</td><td>0/4</td></tr>
+        <tr><td></td><td>broadcast</td><td>4</td><td>59</td><td>5</td><td>4</td><td>26&#8202;532</td><td>7&#8202;s</td><td>1, 0, 0 + 3</td><td>0/4</td></tr>
+        <tr><td></td><td>siloed</td><td>4</td><td>32</td><td>8</td><td>4</td><td>394&#8202;987</td><td>8&#8202;s</td><td>2, 3, 0 + 0</td><td>0/4</td></tr>
+        <tr><td>2 &#215; 3</td><td>epistemic</td><td>6</td><td>85</td><td>7</td><td>6</td><td>2&#8202;284&#8202;313</td><td>1&#8202;425&#8202;s</td><td>2, 0, 3 + 0</td><td>6/6</td></tr>
+        <tr><td></td><td>filter</td><td>6</td><td>79</td><td>6</td><td>6</td><td>424&#8202;872</td><td>252&#8202;s</td><td>1, 0, 2 + 1</td><td>0/6</td></tr>
+        <tr><td></td><td>broadcast</td><td>6</td><td>85</td><td>5</td><td>6</td><td>75&#8202;104</td><td>45&#8202;s</td><td>1, 0, 0 + 3</td><td>0/6</td></tr>
+        <tr><td></td><td>siloed</td><td>6</td><td>58</td><td colspan="4">cut off at depth 10: no policy of fewer than 10 actions</td><td></td><td></td></tr>
+        <tr><td>3 &#215; 2</td><td>epistemic</td><td>6</td><td>85</td><td>7</td><td>6</td><td>2&#8202;286&#8202;125</td><td>1&#8202;419&#8202;s</td><td>2, 0, 3 + 0</td><td>6/6</td></tr>
+        <tr><td></td><td>filter</td><td>6</td><td>79</td><td>6</td><td>6</td><td>424&#8202;419</td><td>251&#8202;s</td><td>1, 0, 2 + 1</td><td>0/6</td></tr>
+        <tr><td></td><td>broadcast</td><td>6</td><td>85</td><td>5</td><td>6</td><td>74&#8202;129</td><td>44&#8202;s</td><td>1, 0, 0 + 3</td><td>0/6</td></tr>
+        <tr><td></td><td>siloed</td><td>6</td><td>58</td><td colspan="4">cut off at depth 10: no policy of fewer than 10 actions</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <h4>Proposition 6 (what grows, and what does not)</h4>
+    <p>
+      For any \(F, K \geq 2\), the epistemic fleet has a policy of depth 7 with
+      \(FK\) leaves, two lift rides and three messages on every branch, and none
+      shorter; every policy without a telling opens \(FK - 1\) rooms on its
+      deepest branch.
+    </p>
+    <p>
+      <i>Proof.</i> The policy above is written for any \(F\) and \(K\): the
+      tellings branch on the floor and on the column, and every argument of
+      Propositions 4 and 5 is independent of the number of values. The second
+      claim is Proposition 1. \(\square\)
+    </p>
+    <p>
+      The table shows it: from four rooms to six the epistemic policy keeps its
+      depth, its rides and its messages, and gains branches; the siloed search
+      outgrows the budget, cut off at depth 10 having shown that no policy of
+      fewer than ten actions exists, as a search of five rooms opened and as many
+      moves needs. What grows for the epistemic fleet is the planner's effort, by
+      a factor of six in expansions and eight in time, from 177&#8202;s to
+      24&#8202;minutes.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE BUILDING -->
+<section id="hd-floor-sec">
+  <div class="container">
+    <p class="sec-label">The building</p>
+    <h3>The stock hotel, its three fleets and two lifts, unchanged</h3>
+    <p>
+      The world is the <span class="mono-inline">rmf_demos</span> hotel, launched
+      through <span class="mono-inline">hotel_rmf_demo</span>'s copy, whose only
+      change is a camera looking straight down. The robots are its own:
+      <span class="mono-inline">cleanerBotA_1</span> is the cleaner,
+      <span class="mono-inline">tinyBot_1</span> the concierge and
+      <span class="mono-inline">deliveryBot_1</span> the porter. Which places each
+      can reach is read off the three fleets' navigation graphs: the cleaners'
+      has the ground floor alone; the delivery robot's has the restaurant and the
+      kitchen on the ground floor and no lobby vertex; the tiny robot's has both,
+      and the concierge keeps to the ground floor, where the desk is. The four
+      rooms are <span class="mono-inline">L2_room1</span>,
+      <span class="mono-inline">L2_room15</span>,
+      <span class="mono-inline">L3_room1</span> and
+      <span class="mono-inline">L3_room15</span>, the waypoints of the same names.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>in the model</th><th>on the floor</th></tr></thead>
+      <tbody>
+        <tr><td>a move</td><td>an Open-RMF <span class="mono-inline">go_to_place</span> task pinned to the robot, through <span class="mono-inline">eplansys_rmf_bridge</span>; a move between floors is a lift call and a ride, negotiated by Open-RMF</td></tr>
+        <tr><td>the restaurant</td><td>the concierge on the <span class="mono-inline">restaurant</span> waypoint, the porter on the <span class="mono-inline">kitchen</span> waypoint six metres away through the same room, the cleaner on its <span class="mono-inline">clean_restaurant</span> dock; two robots cannot share a waypoint</td></tr>
+        <tr><td>a telling, a page</td><td>a local action of the bridge; a page is published on the bridge's public channel</td></tr>
+        <tr><td>what is said, what is found</td><td>the bridge reports the event from the leak the launch names, and says so in the log: the simulator has no water sensor and no robot hears another</td></tr>
+        <tr><td>the containment</td><td>a local action in the room; the water drawn there is removed when the model says the leak is contained</td></tr>
+        <tr><td>the guest</td><td>a figure in the lobby, with no robot and no collision</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Before planning, the crew sends the concierge to the lobby, the porter to the
+      kitchen and the cleaner to its dock, and the model starts there. After the
+      policy the cleaner and the concierge each do what they know at the actual
+      world: one that knows the leak is contained stands down, the cleaner to its
+      charger and the concierge to the desk; one that does not stays where it is.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEFECTS -->
+<section id="hd-defects-sec">
+  <div class="container">
+    <p class="sec-label">Defects</p>
+    <h3>Found on the way</h3>
+    <p>
+      <b>A telling the executor would not dispatch.</b> The first run stopped at its
+      second action: <span class="mono-inline">knowledge requirement does not hold:
+      (K cleaner col-room1)</span>. The executor checks the modal part of every
+      designated event's precondition as a requirement of the action before it
+      dispatches it, at every designated world. A telling whose events say
+      different values required the cleaner to know both columns at once. Each
+      event now requires that its value holds and that the speaker knows which
+      value holds, the same requirement for every event; given that exactly one
+      value holds, which is common knowledge, this is equivalent to the speaker
+      knowing that value, and the planner's results did not change, to the
+      expansion.
+    </p>
+    <p>
+      <b>A verdict computed over too few rooms.</b> The second run of the content
+      filter reported that the guest could still not rule out any room after the
+      all-clear. The knowledge view took the rooms from the model it was given,
+      and after the all-clear the model has a single world, in which the secret
+      held of the one room left. The mission expected the secret to fail for this
+      fleet and refused the run. The view now keeps every room the run has had.
+    </p>
+    <p>
+      <b>Two robots in one corridor.</b> The first filmed run of the content filter
+      never planned: the crew sent the porter and the cleaner to the restaurant at
+      once, both took the west corridor, and Open-RMF's traffic negotiation between
+      them failed and was retried for twenty minutes, until the mission gave up.
+      The crew now sends the robots one after another.
+    </p>
+    <p>
+      <b>A camera on the wrong floor.</b> The first recording clicked the world's
+      floor buttons before Gazebo had drawn them and filmed the top floor
+      throughout. The film's floor follower now reads each button's state off the
+      screen and repeats a click until the button shows what was wanted.
+    </p>
+    <p>
+      <b>Constants, and a variable named <span class="mono-inline">?f</span>.</b>
+      The first domain named its floors and columns as domain constants, and
+      plank's grounder crashed. It numbers constants ahead of the agents, so an
+      observability condition naming an agent indexed past the end of the
+      agents' table; and it substitutes a library's relation variables textually,
+      so a library type relating <span class="mono-inline">?e</span> to
+      <span class="mono-inline">?f</span> captured an action parameter
+      <span class="mono-inline">?f</span>. Each value now has its own atom and
+      event, and the library's variables are <span class="mono-inline">?x</span>
+      and <span class="mono-inline">?y</span>.
+    </p>
+    <p>
+      <b>Common knowledge of a declared group.</b> plank parses
+      <span class="mono-inline">[C. responders]</span> over a declared agent group
+      and then fails to ground it. The goal asks for \(E_RE_R\), written with the
+      group modality <span class="mono-inline">[(cleaner concierge porter)]</span>
+      twice, which the policy exceeds: it reaches \(C_R\).
+    </p>
+    <p>
+      <b>A search that does not stop.</b> With every action and the hotel's six
+      rooms, AO* did not finish depth 7 in four minutes, and the replanning
+      strategy returned policies of depth 70, in which robots walked back and forth
+      before acting. The hotel's two columns, the porter starting in the kitchen,
+      and preconditions that refuse a telling nobody learns from bring the
+      epistemic fleet to under three minutes. The scaling table gives the larger
+      buildings.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ LIMITS -->
+<section>
+  <div class="container">
+    <p class="sec-label">Limits</p>
+    <h3>What this does not show</h3>
+    <ul>
+      <li><b>Robots perceiving anything.</b> What the cleaner says of the column,
+        what the concierge says of the floor, and what an opened room shows are
+        the bridge's, from the leak the launch names. No sensor and no microphone
+        is simulated.</li>
+      <li><b>Robots reasoning for themselves.</b> Who knows what is read from the
+        model the epistemic state maintains, evaluated at the actual world.</li>
+      <li><b>A guest.</b> The guest is an agent of the model and a figure on the
+        floor. That it sees every robot's position is an assumption, made
+        because a secret that holds only while the guest does not look is not
+        kept.</li>
+      <li><b>Buildings the planner cannot search.</b> The theorems hold for any
+        number of floors and columns; the planner's tables stop where its budget
+        does.</li>
+      <li><b>A lossy channel.</b> Every telling reaches everyone at the place, and
+        everyone knows it does.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REFERENCES -->
+<section id="hd-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-aw">T. &#197;gotnes and Y. N. W&#225;ng. Resolving distributed knowledge. <i>Artificial Intelligence</i> 252:1&#8211;21, 2017.</li>
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-fhmv">R. Fagin, J. Y. Halpern, Y. Moses and M. Y. Vardi. <i>Reasoning About Knowledge</i>. MIT Press, 1995.</li>
+      <li id="ref-hotel">H. Ulises. <a href="hotel_run.html">The hotel incident: belief measured during a fleet mission</a>. Epistemic Robotics, 2026.</li>
+      <li id="ref-cas">H. Ulises. <a href="coordinated_attack_scale.pdf">The coordinated attack among many robots: bystanders to a lossy message, and the cost of each level</a>. Epistemic Robotics report, 2026.</li>
+      <li id="ref-del">H. van Ditmarsch, W. van der Hoek and B. Kooi. <i>Dynamic Epistemic Logic</i>. Springer, 2007.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REPRODUCTION -->
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+<pre class="code">ros2 launch hotel_distributed_demo hotel_distributed_launch.py                    <span class="c"># the epistemic fleet, the leak in L3_room1</span>
+ros2 launch hotel_distributed_demo hotel_distributed_launch.py fleet:=filter
+ros2 launch hotel_distributed_demo hotel_distributed_launch.py fleet:=broadcast
+ros2 launch hotel_distributed_demo hotel_distributed_launch.py fleet:=siloed leak:=L2_room15
+bash tools/validate.sh                                                            <span class="c"># eight checks, no simulator</span>
+python3 tools/scaling.py --cells 2x2 2x3 3x2 --out /tmp/hotel_scaling
+python3 tools/reach.py --task &lt;validate&gt;/siloed/siloed.json --whole &lt;validate&gt;/epistemic/epistemic.json
+bash tools/record_demo.sh epistemic L3_room1 /tmp/hd_epistemic.mkv /tmp/hd_epistemic.log</pre>
+    <p>
+      The package is <span class="mono-inline">ros2_ws/src/hotel_distributed_demo</span>;
+      the domain and the five problems are in
+      <span class="mono-inline">epddl-workspace/hotel-distributed/</span>, written
+      by <span class="mono-inline">tools/hotel_domain.py</span>.
+    </p>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">Open-RMF hotel &#183; three fleets &#183; the room pooled where the guest cannot hear</span>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>
+</html>

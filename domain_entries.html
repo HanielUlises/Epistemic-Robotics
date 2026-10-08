@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The nineteen domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The nineteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The twenty domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The twenty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The nineteen domains">
-<meta property="og:description" content="The nineteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The twenty domains">
+<meta property="og:description" content="The twenty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The nineteen domains">
-<meta name="twitter:description" content="The nineteen planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The twenty domains">
+<meta name="twitter:description" content="The twenty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The nineteen domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The twenty domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -609,6 +609,13 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
             </div>
           </details>
+          <details class="nav-folder">
+            <summary>hotel-distributed</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-distributed">All hotel-distributed demos</a>
+          <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
             </div>
           </details>
           <a href="execution.html">Execution</a>
@@ -629,6 +636,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -644,8 +652,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 18 domains</p>
-    <h2>The nineteen domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 20 domains</p>
+    <h2>The twenty domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -967,6 +975,42 @@ table.cat a:hover{border-bottom-color:var(--black)}
   )
 
 (:goal (forall (?i - agent) ([Kw. ?i] (faulty ?i))))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-hotel-distributed">
+      <div class="dom-h">
+        <h4>hotel-distributed</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 4 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>cleaner</i>, <i>concierge</i>, <i>porter</i>, <i>guest</i>; written for any number of floors and columns</dd>
+        <dt>Objects</dt><dd><code>(:objects lobby restaurant L2_room1 L2_room15 L3_room1 L3_room15 - zone)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">local-ontic</span><span class="ty">local-sensing</span><span class="ty">local-tell</span><span class="ty">public-ontic</span><span class="ty">public-tell</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 4\), \(|W_d| = 4\) &#183; declared frame S5; the cleaner's relation is the column, the concierge's the floor, and the room is their distributed knowledge</dd>
+        <dt>Grounded</dt><dd>202 atoms, 59 ground actions, goal of modal depth 2: \(\mathit{safe} \wedge E_RE_R\,\mathit{safe} \wedge \bigwedge_z \langle g\rangle\,\mathit{source}_z\); an absent agent relates every event of a located action to every other, so every reachable model stays S5</dd>
+        <dt>Solved</dt><dd>depth 7, 387&#8239;003 expansions, 4 leaves; on six rooms depth 7, 2&#8239;284&#8239;313 expansions, 6 leaves. With the location kept off the public address by rule, depth 6, and the guest knows the room at every leaf; with no channel between fleets, no policy, which an exhaustive search of 1&#8239;500 reachable models shows</dd>
+        <dt>Stated in</dt><dd><a href="hotel_distributed.html">Knowledge no robot holds alone</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (at-ag ?i - agent ?z - zone)
+    (source ?z - zone)
+    (floor-L2) (floor-L3) (col-room1) (col-room15)
+    (safe)
+    (:fact link ?i - agent ?a ?b - zone)
+    (:fact room ?z - zone)
+    (:fact meeting ?z - zone)
+    (:fact kit ?i - agent)
+    (:fact robot ?i - agent)
+    (:fact local-talk)
+    (:fact pa-location)
+    (:fact pa-all-clear)
+  )
+
+(:goal (and (safe)
+            ([(cleaner concierge porter)] ([(cleaner concierge porter)] (safe)))
+            (and (&lt;guest&gt; (source L2_room1)) (&lt;guest&gt; (source L2_room15))
+                 (&lt;guest&gt; (source L3_room1)) (&lt;guest&gt; (source L3_room15)))))</pre>
       </details>
     </article>
     </div>
