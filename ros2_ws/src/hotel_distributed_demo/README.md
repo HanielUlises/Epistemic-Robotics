@@ -115,7 +115,8 @@ the whole goal reachable.
 ## On the floor
 
 * **Setup**, before planning: the concierge goes to the lobby, the porter to
-  the kitchen and the cleaner to its dock in the restaurant, by Open-RMF tasks.
+  the kitchen and the cleaner to its dock in the restaurant, by Open-RMF tasks,
+  one after another.
   The model starts there. The guest is a figure in the lobby, and the water a
   pool in the leaking room; neither collides and no robot sees either.
 * **Moves** are Open-RMF tasks through `eplansys_rmf_bridge`, a ride between
@@ -131,6 +132,45 @@ the whole goal reachable.
 * **The verdict** is the knowledge view's, at the actual world, and the
   mission completes only if it is the verdict the analysis gives that fleet.
 
+## The recorded runs
+
+All four fleets, the leak in L3 room 1, recorded with `tools/record_demo.sh`.
+Every figure is read from the run's log; times are wall clock while recording,
+with Gazebo rendering in software at a real-time factor between 0.5 and 0.8.
+
+| fleet | planned in | lift rides | rooms opened | told, paged | policy run | verdict |
+| --- | ---: | ---: | ---: | --- | ---: | --- |
+| siloed | 13 s | 2 | 3 | 0, 0 | 895 s | stand-down fails: the cleaner and the concierge do not know, and stay |
+| broadcast | 8 s | 1 | 0 | 0, 3 | 327 s | secret fails: the guest knows the room from the second page |
+| filter | 39 s | 1 | 0 | 2, 1 | 588 s | secret fails: the guest knows the room from the all-clear |
+| epistemic | 229 s | 2 | 0 | 3, 0 | 1058 s | the whole goal |
+
+Each mission completed with the verdict the analysis gives its fleet. In this
+world the epistemic run is not the fastest; what it buys is the goal, and the
+rooms the siloed fleet opened.
+
+## Found on the way
+
+* **A telling the executor would not dispatch.** The executor checks the modal
+  part of every designated event's precondition as a requirement of the
+  action. A telling whose events require knowing different values could never
+  pass. Each event now requires its value and that the speaker knows which
+  value holds, the same for every event, which is equivalent given that
+  exactly one value holds.
+* **A verdict over too few rooms.** After the all-clear the model has one
+  world, and the knowledge view read the rooms off it, so the secret held of
+  the one room left. The mission expected the secret to fail for the filter
+  and refused the run; the view now keeps every room the run has had.
+* **Two robots in one corridor.** Sent to the restaurant at once, the porter
+  and the cleaner deadlocked in Open-RMF's negotiation for twenty minutes. The
+  crew now sends the robots one after another.
+* **plank.** Domain constants are numbered ahead of the agents, which breaks
+  observability conditions that name an agent; a library's relation
+  variables are substituted textually, so `?f` in a library captured an
+  action parameter `?f`; and `[C. group]` over a declared group parses and
+  does not ground. Values have their own atoms, the library uses `?x` and
+  `?y`, and the goal asks for E_R E_R.
+
 ## Files
 
 | file | contents |
@@ -140,7 +180,7 @@ the whole goal reachable.
 | `tools/reach.py` | every model a fleet can reach, for the fleets the planner cannot settle |
 | `tools/validate.sh` | grounds, solves, traces and searches; eight checks, no simulator |
 | `tools/scaling.py` | the planning table as the building grows |
-| `tools/record_demo.sh` | one fleet on an Xvfb display, Gazebo from above, with the run's log beside it |
+| `tools/record_demo.sh` | one fleet on an Xvfb display, Gazebo from above, with the run's log beside it; the floor follower and the film composer it is used with are kept out of the repository |
 | `scripts/knowledge_view.py` | what every agent knows at the actual world after every update, logged as `[knows]` |
 | `scripts/hotel_crew.py` | the setup, the guest and the water, and the stand-down |
 | `src/mission_node.cpp` | sets the scene, plans, runs the policy, and judges the run |

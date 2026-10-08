@@ -17,10 +17,10 @@
 Everything in the hotel that is not an action of the policy.
 
   setup      before planning, the three robots go where the model starts
-             them: the concierge to the lobby, where the guest is, the porter
-             to the kitchen and the cleaner to its dock in the restaurant. The
-             mission asks for it on /hotel/crew/request and is told on
-             /hotel/crew when every robot has arrived.
+             them, one after another: the concierge to the lobby, where the
+             guest is, the porter to the kitchen and the cleaner to its dock in
+             the restaurant. The mission asks for it on /hotel/crew/request and
+             is told on /hotel/crew when every robot has arrived.
   the scene  the guest, a figure in the lobby with no robot and no collision,
              and the water in the room the leak is in, which goes when the
              model says the leak is contained. Both are drawn for the film;
@@ -144,6 +144,7 @@ class Crew(Node):
         self.job = None             # 'setup' or 'stand-down'
         self.job_began = None
         self.said = []
+        self.queue = []
         self.water = False
         self.water_gone = False
         self.shown = None
@@ -186,15 +187,24 @@ class Crew(Node):
         what = msg.data.strip()
         if what == 'setup' and self.job is None:
             self.job, self.job_began = 'setup', self.now()
-            for agent, wp in SETUP.items():
-                if self.at(agent, wp):
-                    self.get_logger().info(f'[crew] {agent} is already at {wp}')
-                    continue
-                self.pending[agent] = (wp, self.now(), f'{agent} in {WHERE[wp]}')
-                self.send(agent, wp)
-                self.get_logger().info(f'[crew] setup: {agent} to {wp}')
+            # One robot at a time. Sent together, the porter and the cleaner
+            # take the same corridor to the restaurant, and in one recording
+            # Open-RMF's negotiation between them failed for twenty minutes.
+            self.queue = list(SETUP.items())
+            self.next_setup()
         elif what == 'stand-down' and self.job is None:
             self.stand_down()
+
+    def next_setup(self):
+        while self.queue:
+            agent, wp = self.queue.pop(0)
+            if self.at(agent, wp):
+                self.get_logger().info(f'[crew] {agent} is already at {wp}')
+                continue
+            self.pending[agent] = (wp, self.now(), f'{agent} in {WHERE[wp]}')
+            self.send(agent, wp)
+            self.get_logger().info(f'[crew] setup: {agent} to {wp}')
+            return
 
     def stand_down(self):
         self.job, self.job_began = 'stand-down', self.now()
@@ -238,6 +248,8 @@ class Crew(Node):
                 self.finish(f'{self.job} failed: {agent} never reached {wp}')
                 self.pending.clear()
                 return
+        if self.job == 'setup' and not self.pending and self.queue:
+            self.next_setup()
         if self.job and not self.pending:
             if self.job == 'setup':
                 self.finish('ready: the concierge in the lobby, the porter in the kitchen, '
