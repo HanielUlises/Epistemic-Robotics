@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>hotel_distributed_demo</name>
+  <version>0.1.0</version>
+  <description>
+    A leak in the Open-RMF hotel that no robot can place alone: the cleaner
+    knows the column, the concierge the floor, and the porter, the only robot
+    that can ride a lift with the valve key, knows neither. Robots of different
+    fleets can tell each other only where they meet, and the guest in the
+    lobby must not learn the room. Four fleets plan with the same planner and
+    different channels or goals, and only the epistemic one meets the goal.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Vásquez Morales</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>lifecycle_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>nlohmann-json-dev</depend>
+  <depend>plansys2_msgs</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_planner</depend>
+  <depend>plansys2_problem_expert</depend>
+  <depend>plansys2_domain_expert</depend>
+  <depend>plansys2_epistemic_msgs</depend>
+
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>plansys2_epistemic_executor</exec_depend>
+  <exec_depend>plansys2_epistemic_bt_builder</exec_depend>
+  <exec_depend>plansys2_epistemic_planner</exec_depend>
+  <exec_depend>plansys2_epddl_grounder</exec_depend>
+  <exec_depend>eplansys_rmf_bridge</exec_depend>
+  <exec_depend>hotel_rmf_demo</exec_depend>
+  <exec_depend>coordinated_attack_demo</exec_depend>
+  <exec_depend>rmf_demos</exec_depend>
+  <exec_depend>rmf_demos_maps</exec_depend>
+  <exec_depend>rmf_fleet_msgs</exec_depend>
+  <exec_depend>rmf_task_msgs</exec_depend>
+  <exec_depend>gazebo_msgs</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

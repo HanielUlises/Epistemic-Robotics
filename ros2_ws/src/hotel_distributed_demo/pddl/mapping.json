@@ -1,0 +1,238 @@
+{
+  "contain_porter_L2_room1": {
+    "action": "(shut_valve porter l2_room1)",
+    "duration": 15.0
+  },
+  "contain_porter_L2_room15": {
+    "action": "(shut_valve porter l2_room15)",
+    "duration": 15.0
+  },
+  "contain_porter_L3_room1": {
+    "action": "(shut_valve porter l3_room1)",
+    "duration": 15.0
+  },
+  "contain_porter_L3_room15": {
+    "action": "(shut_valve porter l3_room15)",
+    "duration": 15.0
+  },
+  "go_cleaner_lobby_restaurant": {
+    "action": "(goto_zone cleaner clean_lobby clean_restaurant)",
+    "duration": 240.0
+  },
+  "go_cleaner_restaurant_lobby": {
+    "action": "(goto_zone cleaner clean_restaurant clean_lobby)",
+    "duration": 240.0
+  },
+  "go_concierge_lobby_restaurant": {
+    "action": "(goto_zone concierge lobby restaurant)",
+    "duration": 240.0
+  },
+  "go_concierge_restaurant_lobby": {
+    "action": "(goto_zone concierge restaurant lobby)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room15_L2_room1": {
+    "action": "(goto_zone porter l2_room15 l2_room1)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room15_L3_room1": {
+    "action": "(goto_zone porter l2_room15 l3_room1)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room15_L3_room15": {
+    "action": "(goto_zone porter l2_room15 l3_room15)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room15_restaurant": {
+    "action": "(goto_zone porter l2_room15 kitchen)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room1_L2_room15": {
+    "action": "(goto_zone porter l2_room1 l2_room15)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room1_L3_room1": {
+    "action": "(goto_zone porter l2_room1 l3_room1)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room1_L3_room15": {
+    "action": "(goto_zone porter l2_room1 l3_room15)",
+    "duration": 240.0
+  },
+  "go_porter_L2_room1_restaurant": {
+    "action": "(goto_zone porter l2_room1 kitchen)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room15_L2_room1": {
+    "action": "(goto_zone porter l3_room15 l2_room1)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room15_L2_room15": {
+    "action": "(goto_zone porter l3_room15 l2_room15)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room15_L3_room1": {
+    "action": "(goto_zone porter l3_room15 l3_room1)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room15_restaurant": {
+    "action": "(goto_zone porter l3_room15 kitchen)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room1_L2_room1": {
+    "action": "(goto_zone porter l3_room1 l2_room1)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room1_L2_room15": {
+    "action": "(goto_zone porter l3_room1 l2_room15)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room1_L3_room15": {
+    "action": "(goto_zone porter l3_room1 l3_room15)",
+    "duration": 240.0
+  },
+  "go_porter_L3_room1_restaurant": {
+    "action": "(goto_zone porter l3_room1 kitchen)",
+    "duration": 240.0
+  },
+  "go_porter_restaurant_L2_room1": {
+    "action": "(goto_zone porter kitchen l2_room1)",
+    "duration": 240.0
+  },
+  "go_porter_restaurant_L2_room15": {
+    "action": "(goto_zone porter kitchen l2_room15)",
+    "duration": 240.0
+  },
+  "go_porter_restaurant_L3_room1": {
+    "action": "(goto_zone porter kitchen l3_room1)",
+    "duration": 240.0
+  },
+  "go_porter_restaurant_L3_room15": {
+    "action": "(goto_zone porter kitchen l3_room15)",
+    "duration": 240.0
+  },
+  "inspect_porter_L2_room1": {
+    "action": "(look_into porter l2_room1)",
+    "duration": 10.0
+  },
+  "inspect_porter_L2_room15": {
+    "action": "(look_into porter l2_room15)",
+    "duration": 10.0
+  },
+  "inspect_porter_L3_room1": {
+    "action": "(look_into porter l3_room1)",
+    "duration": 10.0
+  },
+  "inspect_porter_L3_room15": {
+    "action": "(look_into porter l3_room15)",
+    "duration": 10.0
+  },
+  "page-column_cleaner": {
+    "action": "(page_column cleaner)",
+    "duration": 7.0
+  },
+  "page-column_concierge": {
+    "action": "(page_column concierge)",
+    "duration": 7.0
+  },
+  "page-column_porter": {
+    "action": "(page_column porter)",
+    "duration": 7.0
+  },
+  "page-floor_cleaner": {
+    "action": "(page_floor cleaner)",
+    "duration": 7.0
+  },
+  "page-floor_concierge": {
+    "action": "(page_floor concierge)",
+    "duration": 7.0
+  },
+  "page-floor_porter": {
+    "action": "(page_floor porter)",
+    "duration": 7.0
+  },
+  "page-safe_cleaner": {
+    "action": "(page_safe cleaner)",
+    "duration": 7.0
+  },
+  "page-safe_concierge": {
+    "action": "(page_safe concierge)",
+    "duration": 7.0
+  },
+  "page-safe_porter": {
+    "action": "(page_safe porter)",
+    "duration": 7.0
+  },
+  "tell-column_cleaner_lobby": {
+    "action": "(say_column cleaner clean_lobby)",
+    "duration": 6.0
+  },
+  "tell-column_cleaner_restaurant": {
+    "action": "(say_column cleaner clean_restaurant)",
+    "duration": 6.0
+  },
+  "tell-column_concierge_lobby": {
+    "action": "(say_column concierge lobby)",
+    "duration": 6.0
+  },
+  "tell-column_concierge_restaurant": {
+    "action": "(say_column concierge restaurant)",
+    "duration": 6.0
+  },
+  "tell-column_porter_lobby": {
+    "action": "(say_column porter lobby)",
+    "duration": 6.0
+  },
+  "tell-column_porter_restaurant": {
+    "action": "(say_column porter kitchen)",
+    "duration": 6.0
+  },
+  "tell-floor_cleaner_lobby": {
+    "action": "(say_floor cleaner clean_lobby)",
+    "duration": 6.0
+  },
+  "tell-floor_cleaner_restaurant": {
+    "action": "(say_floor cleaner clean_restaurant)",
+    "duration": 6.0
+  },
+  "tell-floor_concierge_lobby": {
+    "action": "(say_floor concierge lobby)",
+    "duration": 6.0
+  },
+  "tell-floor_concierge_restaurant": {
+    "action": "(say_floor concierge restaurant)",
+    "duration": 6.0
+  },
+  "tell-floor_porter_lobby": {
+    "action": "(say_floor porter lobby)",
+    "duration": 6.0
+  },
+  "tell-floor_porter_restaurant": {
+    "action": "(say_floor porter kitchen)",
+    "duration": 6.0
+  },
+  "tell-safe_cleaner_lobby": {
+    "action": "(say_safe cleaner clean_lobby)",
+    "duration": 6.0
+  },
+  "tell-safe_cleaner_restaurant": {
+    "action": "(say_safe cleaner clean_restaurant)",
+    "duration": 6.0
+  },
+  "tell-safe_concierge_lobby": {
+    "action": "(say_safe concierge lobby)",
+    "duration": 6.0
+  },
+  "tell-safe_concierge_restaurant": {
+    "action": "(say_safe concierge restaurant)",
+    "duration": 6.0
+  },
+  "tell-safe_porter_lobby": {
+    "action": "(say_safe porter lobby)",
+    "duration": 6.0
+  },
+  "tell-safe_porter_restaurant": {
+    "action": "(say_safe porter kitchen)",
+    "duration": 6.0
+  }
+}

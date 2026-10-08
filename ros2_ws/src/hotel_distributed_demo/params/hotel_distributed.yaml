@@ -1,0 +1,54 @@
+# The hotel's distributed leak, as parameters. The launch file substitutes the
+# upper-case names with installed paths before handing this over.
+#
+# Both the planner and the epistemic state are given the earshot library
+# beside the intermediate one; a list here replaces the packaged default, so
+# both are named.
+
+planner:
+  ros__parameters:
+    plan_solver_plugins: ["EPISTEMIC"]
+    EPISTEMIC:
+      plugin: "plansys2/EpistemicPlanSolver"
+      epddl_domain: "EPDDL_DOMAIN"
+      epddl_problem: "EPDDL_PROBLEM"
+      epddl_libraries: ["INTERMEDIATE_LIBRARY", "EARSHOT_LIBRARY"]
+      action_mapping: "MAPPING_FILE"
+      # AO* deepens one action at a time, so the first policy it finds is one
+      # of the fewest actions, which is what the comparison between the fleets
+      # measures. The epistemic fleet's takes it about three minutes.
+      strategy: "aostar"
+      conditional_plan: "policy"
+    plan_solver_timeout: 1200.0
+
+executor:
+  ros__parameters:
+    bt_builder_plugin: "EpistemicBTBuilder"
+    bt_node_plugins: ["libplansys2_epistemic_bt_nodes.so"]
+    action_timeouts:
+      actions: ["goto_zone", "look_into", "shut_valve", "say_floor", "say_column",
+                "say_safe", "page_floor", "page_column", "page_safe"]
+      goto_zone:
+        duration_overrun_percentage: 2000.0
+      look_into:
+        duration_overrun_percentage: 2000.0
+      shut_valve:
+        duration_overrun_percentage: 2000.0
+      say_floor:
+        duration_overrun_percentage: 2000.0
+      say_column:
+        duration_overrun_percentage: 2000.0
+      say_safe:
+        duration_overrun_percentage: 2000.0
+      page_floor:
+        duration_overrun_percentage: 2000.0
+      page_column:
+        duration_overrun_percentage: 2000.0
+      page_safe:
+        duration_overrun_percentage: 2000.0
+
+epistemic_state:
+  ros__parameters:
+    epddl_domain: "EPDDL_DOMAIN"
+    epddl_problem: "EPDDL_PROBLEM"
+    epddl_libraries: ["INTERMEDIATE_LIBRARY", "EARSHOT_LIBRARY"]
