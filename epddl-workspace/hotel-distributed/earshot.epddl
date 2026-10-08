@@ -1,0 +1,86 @@
+(define (action-type-library earshot)
+
+  ;; Actions heard or seen only by whoever is in the same place.
+  ;;
+  ;; Two observability types, and every type below uses them the same way.
+  ;; Fully: the agent is there and tells each event from every other. Absent:
+  ;; the agent is elsewhere, knows where everyone is, and cannot tell whether
+  ;; anything happened or what, so it relates every event to every other,
+  ;; ?nil (nothing happened) included. Both relations are equivalences, and
+  ;; the product of an S5 model with any of these is S5.
+  ;;
+  ;; The intermediate library's Oblivious type would serve an absent agent
+  ;; badly here. It maps every event onto ?nil, so an oblivious agent believes
+  ;; nothing happened even when something did, and an agent that saw the
+  ;; porter ride to a room would believe the porter did nothing there. The
+  ;; frame would leave S5 for no reason the hotel gives.
+  ;;
+  ;; The relation variables are ?x and ?y: plank substitutes a library's
+  ;; variables textually, and ?e and ?f are action parameters elsewhere.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+  )
+
+  (:action-type local-ontic
+    :events (?pos ?nil)
+    :observability-types (Fully Absent)
+    :relations (Fully  (:forall (?x - event) (?x ?x))
+                Absent (:forall (?x ?y - event) (?x ?y)))
+    :designated (?pos)
+    :conditions (?pos (:non-trivial-postconditions) ?nil (:trivial-event))
+  )
+
+  (:action-type local-sensing
+    :events (?pos ?neg ?nil)
+    :observability-types (Fully Absent)
+    :relations (Fully  (:forall (?x - event) (?x ?x))
+                Absent (:forall (?x ?y - event) (?x ?y)))
+    :designated (?pos ?neg)
+    :conditions (?pos (:trivial-postconditions) ?neg (:trivial-postconditions)
+                 ?nil (:trivial-event))
+  )
+
+  ;; A robot says which of 1 values holds, to whoever is in the same place.
+
+  (:action-type local-tell-1
+    :events (?v1 ?nil)
+    :observability-types (Fully Absent)
+    :relations (Fully  (:forall (?x - event) (?x ?x))
+                Absent (:forall (?x ?y - event) (?x ?y)))
+    :designated (?v1)
+    :conditions (?v1 (:trivial-postconditions) ?nil (:trivial-event))
+  )
+
+  ;; The same over the public address: everyone hears which.
+
+  (:action-type public-tell-1
+    :events (?v1)
+    :observability-types (Fully)
+    :relations (Fully (:forall (?x - event) (?x ?x)))
+    :designated (?v1)
+    :conditions (?v1 (:trivial-postconditions))
+  )
+
+  ;; A robot says which of 2 values holds, to whoever is in the same place.
+
+  (:action-type local-tell-2
+    :events (?v1 ?v2 ?nil)
+    :observability-types (Fully Absent)
+    :relations (Fully  (:forall (?x - event) (?x ?x))
+                Absent (:forall (?x ?y - event) (?x ?y)))
+    :designated (?v1 ?v2)
+    :conditions (?v1 (:trivial-postconditions) ?v2 (:trivial-postconditions) ?nil (:trivial-event))
+  )
+
+  ;; The same over the public address: everyone hears which.
+
+  (:action-type public-tell-2
+    :events (?v1 ?v2)
+    :observability-types (Fully)
+    :relations (Fully (:forall (?x - event) (?x ?x)))
+    :designated (?v1 ?v2)
+    :conditions (?v1 (:trivial-postconditions) ?v2 (:trivial-postconditions))
+  )
+)

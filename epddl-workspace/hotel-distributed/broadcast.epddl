@@ -1,0 +1,97 @@
+(define (problem hotel-distributed-broadcast)
+
+  ;; Every channel, and the guest is not someone to keep in the dark: the goal
+  ;; is the leak contained and every responder knowing that every responder
+  ;; knows it.
+  ;; Written by tools/hotel_domain.py: 2 floors, 2 columns.
+
+  (:domain hotel-distributed)
+
+  (:requirements
+    :typing :facts :equality :finitary-S5-theories :multi-pointed-models
+    :modal-goals :negative-goals :negative-preconditions :knowing-whether
+    :list-comprehensions :group-modalities
+  )
+
+  (:agents cleaner concierge porter guest)
+
+  (:objects lobby restaurant L2_room1 L2_room15 L3_room1 L3_room15 - zone)
+
+  (:facts-init
+    (link concierge lobby restaurant)
+    (link concierge restaurant lobby)
+    (link cleaner lobby restaurant)
+    (link cleaner restaurant lobby)
+    (link porter restaurant L2_room1)
+    (link porter L2_room1 restaurant)
+    (link porter restaurant L2_room15)
+    (link porter L2_room15 restaurant)
+    (link porter restaurant L3_room1)
+    (link porter L3_room1 restaurant)
+    (link porter restaurant L3_room15)
+    (link porter L3_room15 restaurant)
+    (link porter L2_room1 L2_room15)
+    (link porter L2_room15 L2_room1)
+    (link porter L2_room1 L3_room1)
+    (link porter L3_room1 L2_room1)
+    (link porter L2_room1 L3_room15)
+    (link porter L3_room15 L2_room1)
+    (link porter L2_room15 L3_room1)
+    (link porter L3_room1 L2_room15)
+    (link porter L2_room15 L3_room15)
+    (link porter L3_room15 L2_room15)
+    (link porter L3_room1 L3_room15)
+    (link porter L3_room15 L3_room1)
+    (room L2_room1)
+    (room L2_room15)
+    (room L3_room1)
+    (room L3_room15)
+    (meeting lobby)
+    (meeting restaurant)
+    (kit porter)
+    (robot cleaner)
+    (robot concierge)
+    (robot porter)
+    (local-talk)
+    (pa-location)
+    (pa-all-clear)
+  )
+
+  (:init
+    (:and
+      ;; Where everyone is, and that everyone knows it.
+      (at-ag cleaner restaurant) (at-ag concierge lobby) (at-ag porter restaurant) (at-ag guest lobby) (not (at-ag cleaner lobby)) (not (at-ag cleaner L2_room1)) (not (at-ag cleaner L2_room15)) (not (at-ag cleaner L3_room1)) (not (at-ag cleaner L3_room15)) (not (at-ag concierge restaurant)) (not (at-ag concierge L2_room1)) (not (at-ag concierge L2_room15)) (not (at-ag concierge L3_room1)) (not (at-ag concierge L3_room15)) (not (at-ag porter lobby)) (not (at-ag porter L2_room1)) (not (at-ag porter L2_room15)) (not (at-ag porter L3_room1)) (not (at-ag porter L3_room15)) (not (at-ag guest restaurant)) (not (at-ag guest L2_room1)) (not (at-ag guest L2_room15)) (not (at-ag guest L3_room1)) (not (at-ag guest L3_room15))
+      ([C. All] (and (at-ag cleaner restaurant) (at-ag concierge lobby) (at-ag porter restaurant) (at-ag guest lobby) (not (at-ag cleaner lobby)) (not (at-ag cleaner L2_room1)) (not (at-ag cleaner L2_room15)) (not (at-ag cleaner L3_room1)) (not (at-ag cleaner L3_room15)) (not (at-ag concierge restaurant)) (not (at-ag concierge L2_room1)) (not (at-ag concierge L2_room15)) (not (at-ag concierge L3_room1)) (not (at-ag concierge L3_room15)) (not (at-ag porter lobby)) (not (at-ag porter L2_room1)) (not (at-ag porter L2_room15)) (not (at-ag porter L3_room1)) (not (at-ag porter L3_room15)) (not (at-ag guest restaurant)) (not (at-ag guest L2_room1)) (not (at-ag guest L2_room15)) (not (at-ag guest L3_room1)) (not (at-ag guest L3_room15))))
+
+      ;; The leak is not yet contained, and everyone knows that too.
+      (not (safe)) ([C. All] (not (safe)))
+
+      ;; One floor, one column, and the room is the pair.
+      ([C. All] (or (and (floor-L2) (not (floor-L3))) (and (not (floor-L2)) (floor-L3))))
+      ([C. All] (or (and (col-room1) (not (col-room15))) (and (not (col-room1)) (col-room15))))
+      ([C. All] (and (or (and (source L2_room1) (floor-L2) (col-room1)) (and (not (source L2_room1)) (not (and (floor-L2) (col-room1))))) (or (and (source L2_room15) (floor-L2) (col-room15)) (and (not (source L2_room15)) (not (and (floor-L2) (col-room15))))) (or (and (source L3_room1) (floor-L3) (col-room1)) (and (not (source L3_room1)) (not (and (floor-L3) (col-room1))))) (or (and (source L3_room15) (floor-L3) (col-room15)) (and (not (source L3_room15)) (not (and (floor-L3) (col-room15))))) (not (source lobby)) (not (source restaurant))))
+
+      ;; The concierge knows the floor, the cleaner the column, and nobody
+      ;; else knows either. Which floor and which column is not stated: the
+      ;; planner does not know, and every pair is a designated world.
+      ([C. All] ([Kw. concierge] (floor-L2)))
+      ([C. All] (<Kw. cleaner> (floor-L2)))
+      ([C. All] (<Kw. porter> (floor-L2)))
+      ([C. All] (<Kw. guest> (floor-L2)))
+      ([C. All] ([Kw. concierge] (floor-L3)))
+      ([C. All] (<Kw. cleaner> (floor-L3)))
+      ([C. All] (<Kw. porter> (floor-L3)))
+      ([C. All] (<Kw. guest> (floor-L3)))
+      ([C. All] ([Kw. cleaner] (col-room1)))
+      ([C. All] (<Kw. concierge> (col-room1)))
+      ([C. All] (<Kw. porter> (col-room1)))
+      ([C. All] (<Kw. guest> (col-room1)))
+      ([C. All] ([Kw. cleaner] (col-room15)))
+      ([C. All] (<Kw. concierge> (col-room15)))
+      ([C. All] (<Kw. porter> (col-room15)))
+      ([C. All] (<Kw. guest> (col-room15)))
+    )
+  )
+
+  (:goal (and (safe) ([(cleaner concierge porter)] ([(cleaner concierge porter)] (safe)))))
+)

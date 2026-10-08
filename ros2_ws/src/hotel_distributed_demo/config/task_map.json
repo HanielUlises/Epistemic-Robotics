@@ -1,0 +1,45 @@
+{
+  "zones": {
+    "lobby": "lobby",
+    "restaurant": "restaurant",
+    "kitchen": "kitchen",
+    "clean_restaurant": "clean_restaurant",
+    "clean_lobby": "clean_lobby",
+    "l2_room1": "L2_room1",
+    "l2_room15": "L2_room15",
+    "l3_room1": "L3_room1",
+    "l3_room15": "L3_room15"
+  },
+
+  "agents": {
+    "concierge": {"fleet": "tinyRobot",     "robot": "tinyBot_1"},
+    "porter":    {"fleet": "deliveryRobot", "robot": "deliveryBot_1"},
+    "cleaner":   {"fleet": "cleanerBotA",   "robot": "cleanerBotA_1"}
+  },
+
+  "actions": {
+    "goto_zone": {"waypoint_arg": 2},
+
+    "look_into": {
+      "local": true, "duration": 10.0, "sensing": true, "outcome_arg": 1,
+      "outcomes": {
+        "l2_room1": "e-dry", "l2_room15": "e-dry",
+        "l3_room1": "e-wet", "l3_room15": "e-dry"
+      },
+      "default_outcome": "e-dry"
+    },
+    "shut_valve": {"local": true, "duration": 15.0},
+
+    "say_floor":  {"local": true, "duration": 6.0, "sensing": true,
+                   "default_outcome": "e-floor-L3"},
+    "say_column": {"local": true, "duration": 6.0, "sensing": true,
+                   "default_outcome": "e-col-room1"},
+    "say_safe":   {"local": true, "duration": 6.0},
+
+    "page_floor":  {"local": true, "duration": 7.0, "channel": "public", "sensing": true,
+                    "default_outcome": "e-page-floor-L3"},
+    "page_column": {"local": true, "duration": 7.0, "channel": "public", "sensing": true,
+                    "default_outcome": "e-page-col-room1"},
+    "page_safe":   {"local": true, "duration": 7.0, "channel": "public"}
+  }
+}

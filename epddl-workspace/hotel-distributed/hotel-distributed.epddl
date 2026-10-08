@@ -1,0 +1,221 @@
+(define (domain hotel-distributed)
+
+  ;; A leak no robot can place alone. Written by tools/hotel_domain.py for
+  ;; 2 floors and 2 columns; the docstring there says what each agent
+  ;; knows and why.
+  ;;
+  ;; The room is not an atom anyone observes. floor-f and col-k are, and
+  ;; source(z) holds exactly when the floor and the column of z do, which the
+  ;; problem makes common knowledge. Each value has its own atom and its own
+  ;; event so that the domain names no object: plank numbers domain constants
+  ;; ahead of the agents, and an observability condition that names an agent
+  ;; then indexes past the end of the agents.
+
+  (:requirements
+    :typing :facts :equality :partial-observability :ontic-actions
+    :lists :list-comprehensions :negative-preconditions :modal-preconditions
+    :existential-preconditions :knowing-whether :group-modalities
+    :multi-pointed-models
+  )
+
+  (:action-type-libraries intermediate earshot)
+
+  (:types zone)
+
+  (:predicates
+    (at-ag ?i - agent ?z - zone)
+    (source ?z - zone)
+    (floor-L2) (floor-L3) (col-room1) (col-room15)
+    (safe)
+    ;; Rigid, from the hotel's map and the fleets' graphs.
+    (:fact link ?i - agent ?a ?b - zone)
+    (:fact room ?z - zone)
+    (:fact meeting ?z - zone)
+    (:fact kit ?i - agent)
+    (:fact robot ?i - agent)
+    ;; Which channels this fleet has. Rigid, and the only difference between
+    ;; the fleets' problems apart from the goal.
+    (:fact local-talk)
+    (:fact pa-location)
+    (:fact pa-all-clear)
+  )
+
+  (:event nil)
+
+  ;--------------------MOVING------------------
+  ;
+  ; Public: Open-RMF publishes every robot's position to every fleet, and the
+  ; guest is taken to see it too. A secret that holds only while the guest is
+  ; not looking is not kept, so the model gives the guest the robots'
+  ; positions, and the mission has to keep the secret anyway.
+  ;
+  ; A move between floors is one action here and a lift call, a ride and a
+  ; traffic negotiation on Open-RMF's side of the bridge.
+
+  (:event e-go
+    :parameters (?i - agent ?a ?b - zone)
+    :precondition (and (at-ag ?i ?a) (link ?i ?a ?b))
+    :effects (:and (not (at-ag ?i ?a)) (at-ag ?i ?b))
+  )
+
+  (:action go
+    :parameters (?i - agent ?a ?b - zone | (link ?i ?a ?b))
+    :action-type (public-ontic (e-go ?i ?a ?b))
+    :observability-conditions (default Fully)
+  )
+
+  ;--------------------CONTAINING------------------
+  ;
+  ; Shutting the room's valve. Only a robot with the key, standing in the
+  ; room, that knows the leak is there: without the modal precondition a
+  ; porter sent to the right room by luck would fix a leak it has no reason
+  ; to believe in. Whoever is in the room sees it; everyone else relates it
+  ; to nothing having happened.
+
+  (:event e-contain
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (kit ?i) (room ?z) (not (safe))
+                       (source ?z) ([?i] (source ?z)))
+    :effects (safe)
+  )
+
+  (:action contain
+    :parameters (?i - agent ?z - zone | (and (kit ?i) (room ?z)))
+    :action-type (local-ontic (e-contain ?i ?z) (nil))
+    :observability-conditions
+      (:forall (?j - agent) (?j (if (at-ag ?j ?z) Fully else Absent)))
+  )
+
+  ;--------------------INSPECTING------------------
+  ;
+  ; Opening a room and looking. One room per inspection, and only one whose
+  ; state the inspector does not already know.
+
+  (:event e-wet
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (kit ?i) (room ?z)
+                       (source ?z) (<Kw. ?i> (source ?z)))
+  )
+
+  (:event e-dry
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (at-ag ?i ?z) (kit ?i) (room ?z)
+                       (not (source ?z)) (<Kw. ?i> (source ?z)))
+  )
+
+  (:action inspect
+    :parameters (?i - agent ?z - zone | (and (kit ?i) (room ?z)))
+    :action-type (local-sensing (e-wet ?i ?z) (e-dry ?i ?z) (nil))
+    :observability-conditions
+      (:forall (?j - agent) (?j (if (at-ag ?j ?z) Fully else Absent)))
+  )
+
+  ;--------------------TELLING------------------
+  ;
+  ; A robot says what it knows to whoever is where it is. Truthful, because
+  ; the speaker has to know it and knowledge is factive, and said only when
+  ; somebody there does not know it yet: a message nobody learns from is not
+  ; an action, it is a delay.
+
+  (:event e-floor-L2
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (robot ?i) (at-ag ?i ?z) (floor-L2) (and ([Kw. ?i] (floor-L2)) ([Kw. ?i] (floor-L3)))
+                       (exists (?j - agent) (and (at-ag ?j ?z) (not (and ([Kw. ?j] (floor-L2)) ([Kw. ?j] (floor-L3)))))))
+  )
+
+  (:event e-floor-L3
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (robot ?i) (at-ag ?i ?z) (floor-L3) (and ([Kw. ?i] (floor-L2)) ([Kw. ?i] (floor-L3)))
+                       (exists (?j - agent) (and (at-ag ?j ?z) (not (and ([Kw. ?j] (floor-L2)) ([Kw. ?j] (floor-L3)))))))
+  )
+
+  (:event e-col-room1
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (robot ?i) (at-ag ?i ?z) (col-room1) (and ([Kw. ?i] (col-room1)) ([Kw. ?i] (col-room15)))
+                       (exists (?j - agent) (and (at-ag ?j ?z) (not (and ([Kw. ?j] (col-room1)) ([Kw. ?j] (col-room15)))))))
+  )
+
+  (:event e-col-room15
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (robot ?i) (at-ag ?i ?z) (col-room15) (and ([Kw. ?i] (col-room1)) ([Kw. ?i] (col-room15)))
+                       (exists (?j - agent) (and (at-ag ?j ?z) (not (and ([Kw. ?j] (col-room1)) ([Kw. ?j] (col-room15)))))))
+  )
+
+  (:event e-safe
+    :parameters (?i - agent ?z - zone)
+    :precondition (and (robot ?i) (at-ag ?i ?z) (safe) (and ([Kw. ?i] (safe)))
+                       (exists (?j - agent) (and (at-ag ?j ?z) (not (and ([Kw. ?j] (safe)))))))
+  )
+
+  (:event e-page-floor-L2
+    :parameters (?i - agent)
+    :precondition (and (robot ?i) (floor-L2) (and ([Kw. ?i] (floor-L2)) ([Kw. ?i] (floor-L3)))
+                       (exists (?j - agent) (not (and ([Kw. ?j] (floor-L2)) ([Kw. ?j] (floor-L3))))))
+  )
+
+  (:event e-page-floor-L3
+    :parameters (?i - agent)
+    :precondition (and (robot ?i) (floor-L3) (and ([Kw. ?i] (floor-L2)) ([Kw. ?i] (floor-L3)))
+                       (exists (?j - agent) (not (and ([Kw. ?j] (floor-L2)) ([Kw. ?j] (floor-L3))))))
+  )
+
+  (:event e-page-col-room1
+    :parameters (?i - agent)
+    :precondition (and (robot ?i) (col-room1) (and ([Kw. ?i] (col-room1)) ([Kw. ?i] (col-room15)))
+                       (exists (?j - agent) (not (and ([Kw. ?j] (col-room1)) ([Kw. ?j] (col-room15))))))
+  )
+
+  (:event e-page-col-room15
+    :parameters (?i - agent)
+    :precondition (and (robot ?i) (col-room15) (and ([Kw. ?i] (col-room1)) ([Kw. ?i] (col-room15)))
+                       (exists (?j - agent) (not (and ([Kw. ?j] (col-room1)) ([Kw. ?j] (col-room15))))))
+  )
+
+  (:event e-page-safe
+    :parameters (?i - agent)
+    :precondition (and (robot ?i) (safe) (and ([Kw. ?i] (safe)))
+                       (exists (?j - agent) (not (and ([Kw. ?j] (safe))))))
+  )
+
+  (:action tell-floor
+    :parameters (?i - agent ?z - zone | (and (local-talk) (robot ?i) (meeting ?z)))
+    :action-type (local-tell-2 (e-floor-L2 ?i ?z) (e-floor-L3 ?i ?z) (nil))
+    :observability-conditions (:forall (?j - agent) (?j (if (at-ag ?j ?z) Fully else Absent)))
+  )
+
+  (:action tell-column
+    :parameters (?i - agent ?z - zone | (and (local-talk) (robot ?i) (meeting ?z)))
+    :action-type (local-tell-2 (e-col-room1 ?i ?z) (e-col-room15 ?i ?z) (nil))
+    :observability-conditions (:forall (?j - agent) (?j (if (at-ag ?j ?z) Fully else Absent)))
+  )
+
+  (:action tell-safe
+    :parameters (?i - agent ?z - zone | (and (local-talk) (robot ?i) (meeting ?z)))
+    :action-type (local-tell-1 (e-safe ?i ?z) (nil))
+    :observability-conditions (:forall (?j - agent) (?j (if (at-ag ?j ?z) Fully else Absent)))
+  )
+
+  ;--------------------PAGING------------------
+  ;
+  ; The public address. Everyone hears it, the guest included. Nothing marks
+  ; it as dangerous: whether a page is admissible depends on what its hearers
+  ; can infer from it, and that is the goal's to decide.
+
+  (:action page-floor
+    :parameters (?i - agent | (and (pa-location) (robot ?i)))
+    :action-type (public-tell-2 (e-page-floor-L2 ?i) (e-page-floor-L3 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:action page-column
+    :parameters (?i - agent | (and (pa-location) (robot ?i)))
+    :action-type (public-tell-2 (e-page-col-room1 ?i) (e-page-col-room15 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:action page-safe
+    :parameters (?i - agent | (and (pa-all-clear) (robot ?i)))
+    :action-type (public-tell-1 (e-page-safe ?i))
+    :observability-conditions (default Fully)
+  )
+)
