@@ -185,4 +185,78 @@ Fusion fuse(
   return result;
 }
 
+const char * to_string(MergeRule rule)
+{
+  switch (rule) {
+    case MergeRule::Confidence: return "confidence";
+    case MergeRule::Overwrite: return "overwrite";
+    case MergeRule::Recency: return "recency";
+  }
+  return "?";
+}
+
+bool parse_rule(const std::string & text, MergeRule & out)
+{
+  if (text == "confidence") {out = MergeRule::Confidence; return true;}
+  if (text == "overwrite") {out = MergeRule::Overwrite; return true;}
+  if (text == "recency") {out = MergeRule::Recency; return true;}
+  return false;
+}
+
+Merge merge_cells(
+  std::vector<std::int8_t> & receiver, std::vector<double> & receiver_observed,
+  const std::vector<std::int8_t> & sender, const std::vector<double> & sender_observed,
+  const std::vector<std::size_t> & cells, MergeRule rule,
+  const Thresholds & thresholds)
+{
+  Merge out;
+  const bool stamps = receiver_observed.size() == receiver.size() &&
+    sender_observed.size() == sender.size();
+  for (const auto i : cells) {
+    if (i >= receiver.size() || i >= sender.size() || !is_known(sender[i])) {
+      continue;
+    }
+    ++out.considered;
+    const std::int8_t mine = receiver[i];
+    const std::int8_t theirs = sender[i];
+    const auto take = [&]() {
+        receiver[i] = theirs;
+        if (stamps) {receiver_observed[i] = sender_observed[i];}
+      };
+
+    if (!is_known(mine)) {
+      take();
+      ++out.learned;
+      continue;
+    }
+    const CellClass a = classify(mine, thresholds);
+    const CellClass b = classify(theirs, thresholds);
+    const bool contradiction =
+      (a == CellClass::Free && b == CellClass::Occupied) ||
+      (a == CellClass::Occupied && b == CellClass::Free);
+
+    bool replace = false;
+    switch (rule) {
+      case MergeRule::Confidence:
+        replace = confidence(theirs) > confidence(mine);
+        break;
+      case MergeRule::Overwrite:
+        replace = true;
+        break;
+      case MergeRule::Recency:
+        // Without times there is no telling which is later, and the
+        // receiver keeps what it has.
+        replace = stamps && sender_observed[i] > receiver_observed[i];
+        break;
+    }
+    if (replace) {
+      if (contradiction) {++out.changed;}
+      take();
+    } else if (contradiction) {
+      ++out.kept;
+    }
+  }
+  return out;
+}
+
 }  // namespace epistemic_slam

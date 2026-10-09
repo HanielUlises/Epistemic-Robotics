@@ -22,11 +22,18 @@ find_package(nav_msgs REQUIRED)
 # robot's map handed to another to fuse. It is a service and not a topic
 # because an exchange is an event with a result, and the result is what the
 # announcement the executor applies has to agree with.
+#
+# OfferMap and ReceiveMap are the same exchange in stale_map_demo, split in
+# two so that neither robot calls the other from inside a callback, and
+# carrying when each cell was observed: what a merge needs to tell a stale
+# reading from a fresh one, and an occupancy grid does not hold.
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/MuPathQuery.msg"
   "msg/LinkEvent.msg"
   "msg/PartnerBelief.msg"
   "srv/AbsorbMap.srv"
+  "srv/OfferMap.srv"
+  "srv/ReceiveMap.srv"
   DEPENDENCIES std_msgs geometry_msgs nav_msgs
 )
 
