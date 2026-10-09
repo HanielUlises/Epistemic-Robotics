@@ -1,0 +1,70 @@
+(define (problem stale-maps-radio-n8)
+
+  (:domain stale-maps)
+
+  ;; 8 robots, 3 of them haulers, with a radio, and maps taken to be the floor. Written by
+  ;; tools/stale_maps.py.
+
+  (:requirements
+    :KD45-frames :typing :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents r1 r2 r3 r4 r5 r6 r7 r8)
+
+  (:objects t1 t2 t3 - bay)
+
+  (:init
+    (:and
+      ([C. All] (radio))
+      ([C. All] (not (doubts)))
+      ;; The shift map, which every robot holds.
+      ([C. All] (not (blocked t1)))
+      ([C. All] (blocked t2))
+      ([C. All] (blocked t3))
+      ;; The forklift's schedule.
+      ([C. All] (stage-due t1))
+      ([C. All] (not (clear-due t1)))
+      ([C. All] (not (stage-due t2)))
+      ([C. All] (not (clear-due t2)))
+      ([C. All] (not (stage-due t3)))
+      ([C. All] (clear-due t3))
+      ;; The stations' sight lines into the bays.
+      ([C. All] (sees r1 t1))
+      ([C. All] (sees r2 t1))
+      ([C. All] (sees r3 t1))
+      ([C. All] (not (sees r4 t1)))
+      ([C. All] (not (sees r5 t1)))
+      ([C. All] (not (sees r6 t1)))
+      ([C. All] (not (sees r7 t1)))
+      ([C. All] (not (sees r8 t1)))
+      ([C. All] (not (sees r1 t2)))
+      ([C. All] (not (sees r2 t2)))
+      ([C. All] (not (sees r3 t2)))
+      ([C. All] (not (sees r4 t2)))
+      ([C. All] (not (sees r5 t2)))
+      ([C. All] (not (sees r6 t2)))
+      ([C. All] (not (sees r7 t2)))
+      ([C. All] (not (sees r8 t2)))
+      ([C. All] (not (sees r1 t3)))
+      ([C. All] (not (sees r2 t3)))
+      ([C. All] (not (sees r3 t3)))
+      ([C. All] (not (sees r4 t3)))
+      ([C. All] (not (sees r5 t3)))
+      ([C. All] (sees r6 t3))
+      ([C. All] (sees r7 t3))
+      ([C. All] (not (sees r8 t3)))
+      ([C. All] (not (hauls r1)))
+      ([C. All] (hauls r2))
+      ([C. All] (not (hauls r3)))
+      ([C. All] (hauls r4))
+      ([C. All] (not (hauls r5)))
+      ([C. All] (not (hauls r6)))
+      ([C. All] (not (hauls r7)))
+      ([C. All] (hauls r8))
+      (:forall (?i - agent) ([C. All] (not (delivered ?i))))
+    )
+  )
+
+  (:goal (and (delivered r2) (delivered r4) (delivered r8)))
+)

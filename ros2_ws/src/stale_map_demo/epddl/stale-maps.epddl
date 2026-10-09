@@ -1,0 +1,204 @@
+(define (domain stale-maps)
+
+  ;; A fleet whose maps go stale. Written by tools/stale_maps.py; the README
+  ;; says why each part is as it is.
+
+  (:requirements
+    :KD45-frames :typing :equality :partial-observability :list-comprehensions
+    :lists :ontic-actions :negative-preconditions :modal-preconditions
+  )
+
+  (:action-type-libraries intermediate maps)
+
+  (:types bay)
+
+  (:predicates
+    ;; A load stands in the bay, and nothing can be taken through it.
+    (blocked ?t - bay)
+    ;; The robot's station has a sight line into the bay. Static, and common
+    ;; knowledge: the fleet's positions are.
+    (sees ?i - agent ?t - bay)
+    (hauls ?i - agent)
+    (delivered ?i - agent)
+    ;; The forklift's slots, as the schedule has them. Common knowledge;
+    ;; whether a slot was used is not.
+    (stage-due ?t - bay)
+    (clear-due ?t - bay)
+    ;; The floor: a radio between the robots, and robots that know their
+    ;; maps may go stale. Static, and common knowledge.
+    (radio)
+    (doubts)
+  )
+
+  (:event nil)
+
+  ;--------------------THE FORKLIFT------------------
+  ;
+  ; A robot that sees the bay sees the change. One that does not either takes
+  ; the slot to have passed with nothing moved, which leaves its map stale and
+  ; its belief false, or, on the doubting floor, does not know which.
+  ;
+  ; Each change is two actions, one per floor, and not one action with an
+  ; else-if over the floor: plank grounds an else-if branch without its own
+  ; condition, and puts that condition, and its negation, into the else.
+
+  (:event e-stage-sure
+    :parameters (?t - bay)
+    :precondition (and (not (doubts)) (stage-due ?t) (not (blocked ?t)))
+    :effects (:and (blocked ?t) (not (stage-due ?t)))
+  )
+
+  (:event e-stage-slot-sure
+    :parameters (?t - bay)
+    :precondition (and (not (doubts)) (stage-due ?t))
+    :effects (:and (not (stage-due ?t)))
+  )
+
+  (:action stage
+    :parameters (?t - bay)
+    :action-type (change (e-stage-sure ?t) (e-stage-slot-sure ?t))
+    :observability-conditions
+      (:forall (?j - agent) (?j (if (sees ?j ?t) Fully else Oblivious)))
+  )
+
+  (:event e-stage-doubted
+    :parameters (?t - bay)
+    :precondition (and (doubts) (stage-due ?t) (not (blocked ?t)))
+    :effects (:and (blocked ?t) (not (stage-due ?t)))
+  )
+
+  (:event e-stage-slot-doubted
+    :parameters (?t - bay)
+    :precondition (and (doubts) (stage-due ?t))
+    :effects (:and (not (stage-due ?t)))
+  )
+
+  (:action stage-doubted
+    :parameters (?t - bay)
+    :action-type (change (e-stage-doubted ?t) (e-stage-slot-doubted ?t))
+    :observability-conditions
+      (:forall (?j - agent) (?j (if (sees ?j ?t) Fully else Doubting)))
+  )
+
+  (:event e-clear-sure
+    :parameters (?t - bay)
+    :precondition (and (not (doubts)) (clear-due ?t) (blocked ?t))
+    :effects (:and (not (blocked ?t)) (not (clear-due ?t)))
+  )
+
+  (:event e-clear-slot-sure
+    :parameters (?t - bay)
+    :precondition (and (not (doubts)) (clear-due ?t))
+    :effects (:and (not (clear-due ?t)))
+  )
+
+  (:action clear
+    :parameters (?t - bay)
+    :action-type (change (e-clear-sure ?t) (e-clear-slot-sure ?t))
+    :observability-conditions
+      (:forall (?j - agent) (?j (if (sees ?j ?t) Fully else Oblivious)))
+  )
+
+  (:event e-clear-doubted
+    :parameters (?t - bay)
+    :precondition (and (doubts) (clear-due ?t) (blocked ?t))
+    :effects (:and (not (blocked ?t)) (not (clear-due ?t)))
+  )
+
+  (:event e-clear-slot-doubted
+    :parameters (?t - bay)
+    :precondition (and (doubts) (clear-due ?t))
+    :effects (:and (not (clear-due ?t)))
+  )
+
+  (:action clear-doubted
+    :parameters (?t - bay)
+    :action-type (change (e-clear-doubted ?t) (e-clear-slot-doubted ?t))
+    :observability-conditions
+      (:forall (?j - agent) (?j (if (sees ?j ?t) Fully else Doubting)))
+  )
+
+  ;--------------------SENDING A MAP------------------
+  ;
+  ; A robot sends its map of a bay to another. It sends what its map says,
+  ; which is what it believes, and it sends only to a robot it believes holds
+  ; the opposite: the precondition is a belief about a belief, and it is what
+  ; keeps a stale map from being sent over a fresh one. The recipient takes a
+  ; reading that contradicts its own map as news that the bay changed.
+
+  (:event e-says-open
+    :parameters (?i ?j - agent ?t - bay)
+    :precondition (and (radio) (and (not (stage-due t1)) (not (clear-due t1)) (not (stage-due t2)) (not (clear-due t2)) (not (stage-due t3)) (not (clear-due t3)))
+                       ([?i] (not (blocked ?t))) ([?i] ([?j] (blocked ?t))))
+  )
+
+  (:event e-opened
+    :parameters (?t - bay)
+    :precondition (blocked ?t)
+    :effects (:and (not (blocked ?t)))
+  )
+
+  (:action send-open
+    :parameters (?i ?j - agent ?t - bay | (/= ?i ?j))
+    :action-type (map-report (e-says-open ?i ?j ?t) (e-opened ?t) (nil))
+    :observability-conditions (:and (?i Fully) (?j Recipient) (default Oblivious))
+  )
+
+  (:event e-says-blocked
+    :parameters (?i ?j - agent ?t - bay)
+    :precondition (and (radio) (and (not (stage-due t1)) (not (clear-due t1)) (not (stage-due t2)) (not (clear-due t2)) (not (stage-due t3)) (not (clear-due t3)))
+                       ([?i] (blocked ?t)) ([?i] ([?j] (not (blocked ?t)))))
+  )
+
+  (:event e-closed
+    :parameters (?t - bay)
+    :precondition (not (blocked ?t))
+    :effects (:and (blocked ?t))
+  )
+
+  (:action send-blocked
+    :parameters (?i ?j - agent ?t - bay | (/= ?i ?j))
+    :action-type (map-report (e-says-blocked ?i ?j ?t) (e-closed ?t) (nil))
+    :observability-conditions (:and (?i Fully) (?j Recipient) (default Oblivious))
+  )
+
+  ;--------------------LOOKING------------------
+  ;
+  ; A robot drives to the bay's mouth and reads it with its own laser. Only
+  ; on the doubting floor: a robot sure of its map has no reason to look, and
+  ; one that looked and found its map wrong would be left with no world.
+
+  (:event e-sees-open
+    :parameters (?i - agent ?t - bay)
+    :precondition (and (doubts) (and (not (stage-due t1)) (not (clear-due t1)) (not (stage-due t2)) (not (clear-due t2)) (not (stage-due t3)) (not (clear-due t3))) (not (blocked ?t)) (<Kw. ?i> (blocked ?t)))
+  )
+
+  (:event e-sees-blocked
+    :parameters (?i - agent ?t - bay)
+    :precondition (and (doubts) (and (not (stage-due t1)) (not (clear-due t1)) (not (stage-due t2)) (not (clear-due t2)) (not (stage-due t3)) (not (clear-due t3))) (blocked ?t) (<Kw. ?i> (blocked ?t)))
+  )
+
+  (:action look
+    :parameters (?i - agent ?t - bay)
+    :action-type (private-sensing (e-sees-open ?i ?t) (e-sees-blocked ?i ?t) (nil))
+    :observability-conditions (:and (?i Fully) (default Oblivious))
+  )
+
+  ;--------------------CROSSING------------------
+  ;
+  ; The knowledge precondition. The other robots are at their own work and do
+  ; not watch the crossing.
+
+  (:event e-cross
+    :parameters (?h - agent ?t - bay)
+    :precondition (and (hauls ?h) (and (not (stage-due t1)) (not (clear-due t1)) (not (stage-due t2)) (not (clear-due t2)) (not (stage-due t3)) (not (clear-due t3))) (not (delivered ?h))
+                       (not (blocked ?t)) ([?h] (not (blocked ?t))))
+    :effects (:and (delivered ?h))
+  )
+
+  (:action cross
+    :parameters (?h - agent ?t - bay)
+    :action-type (private-ontic (e-cross ?h ?t) (nil))
+    :observability-conditions (:and (?h Fully) (default Oblivious))
+  )
+)
