@@ -450,3 +450,4 @@ ros2_ws/third_party/
 /ros2_ws/src/false_belief_demo/tools/make_false_belief_video.py
 /ros2_ws/src/hotel_distributed_demo/tools/make_film.py
 /ros2_ws/src/hotel_distributed_demo/tools/follow_floors.py
+/ros2_ws/src/stale_map_demo/tools/make_film.py

@@ -1,0 +1,1466 @@
+{
+  "clear_t1": {
+    "action": "(clear t1)",
+    "duration": 20.0
+  },
+  "clear_t2": {
+    "action": "(clear t2)",
+    "duration": 20.0
+  },
+  "clear_t3": {
+    "action": "(clear t3)",
+    "duration": 20.0
+  },
+  "cross_r1_t1": {
+    "action": "(cross r1 t1)",
+    "duration": 90.0
+  },
+  "cross_r1_t2": {
+    "action": "(cross r1 t2)",
+    "duration": 90.0
+  },
+  "cross_r1_t3": {
+    "action": "(cross r1 t3)",
+    "duration": 90.0
+  },
+  "cross_r2_t1": {
+    "action": "(cross r2 t1)",
+    "duration": 90.0
+  },
+  "cross_r2_t2": {
+    "action": "(cross r2 t2)",
+    "duration": 90.0
+  },
+  "cross_r2_t3": {
+    "action": "(cross r2 t3)",
+    "duration": 90.0
+  },
+  "cross_r3_t1": {
+    "action": "(cross r3 t1)",
+    "duration": 90.0
+  },
+  "cross_r3_t2": {
+    "action": "(cross r3 t2)",
+    "duration": 90.0
+  },
+  "cross_r3_t3": {
+    "action": "(cross r3 t3)",
+    "duration": 90.0
+  },
+  "cross_r4_t1": {
+    "action": "(cross r4 t1)",
+    "duration": 90.0
+  },
+  "cross_r4_t2": {
+    "action": "(cross r4 t2)",
+    "duration": 90.0
+  },
+  "cross_r4_t3": {
+    "action": "(cross r4 t3)",
+    "duration": 90.0
+  },
+  "cross_r5_t1": {
+    "action": "(cross r5 t1)",
+    "duration": 90.0
+  },
+  "cross_r5_t2": {
+    "action": "(cross r5 t2)",
+    "duration": 90.0
+  },
+  "cross_r5_t3": {
+    "action": "(cross r5 t3)",
+    "duration": 90.0
+  },
+  "cross_r6_t1": {
+    "action": "(cross r6 t1)",
+    "duration": 90.0
+  },
+  "cross_r6_t2": {
+    "action": "(cross r6 t2)",
+    "duration": 90.0
+  },
+  "cross_r6_t3": {
+    "action": "(cross r6 t3)",
+    "duration": 90.0
+  },
+  "cross_r7_t1": {
+    "action": "(cross r7 t1)",
+    "duration": 90.0
+  },
+  "cross_r7_t2": {
+    "action": "(cross r7 t2)",
+    "duration": 90.0
+  },
+  "cross_r7_t3": {
+    "action": "(cross r7 t3)",
+    "duration": 90.0
+  },
+  "cross_r8_t1": {
+    "action": "(cross r8 t1)",
+    "duration": 90.0
+  },
+  "cross_r8_t2": {
+    "action": "(cross r8 t2)",
+    "duration": 90.0
+  },
+  "cross_r8_t3": {
+    "action": "(cross r8 t3)",
+    "duration": 90.0
+  },
+  "send-blocked_r1_r2_t1": {
+    "action": "(send_blocked r1 r2 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r2_t2": {
+    "action": "(send_blocked r1 r2 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r2_t3": {
+    "action": "(send_blocked r1 r2 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r3_t1": {
+    "action": "(send_blocked r1 r3 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r3_t2": {
+    "action": "(send_blocked r1 r3 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r3_t3": {
+    "action": "(send_blocked r1 r3 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r4_t1": {
+    "action": "(send_blocked r1 r4 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r4_t2": {
+    "action": "(send_blocked r1 r4 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r4_t3": {
+    "action": "(send_blocked r1 r4 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r5_t1": {
+    "action": "(send_blocked r1 r5 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r5_t2": {
+    "action": "(send_blocked r1 r5 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r5_t3": {
+    "action": "(send_blocked r1 r5 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r6_t1": {
+    "action": "(send_blocked r1 r6 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r6_t2": {
+    "action": "(send_blocked r1 r6 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r6_t3": {
+    "action": "(send_blocked r1 r6 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r7_t1": {
+    "action": "(send_blocked r1 r7 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r7_t2": {
+    "action": "(send_blocked r1 r7 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r7_t3": {
+    "action": "(send_blocked r1 r7 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r8_t1": {
+    "action": "(send_blocked r1 r8 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r8_t2": {
+    "action": "(send_blocked r1 r8 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r1_r8_t3": {
+    "action": "(send_blocked r1 r8 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r1_t1": {
+    "action": "(send_blocked r2 r1 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r1_t2": {
+    "action": "(send_blocked r2 r1 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r1_t3": {
+    "action": "(send_blocked r2 r1 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r3_t1": {
+    "action": "(send_blocked r2 r3 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r3_t2": {
+    "action": "(send_blocked r2 r3 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r3_t3": {
+    "action": "(send_blocked r2 r3 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r4_t1": {
+    "action": "(send_blocked r2 r4 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r4_t2": {
+    "action": "(send_blocked r2 r4 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r4_t3": {
+    "action": "(send_blocked r2 r4 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r5_t1": {
+    "action": "(send_blocked r2 r5 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r5_t2": {
+    "action": "(send_blocked r2 r5 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r5_t3": {
+    "action": "(send_blocked r2 r5 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r6_t1": {
+    "action": "(send_blocked r2 r6 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r6_t2": {
+    "action": "(send_blocked r2 r6 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r6_t3": {
+    "action": "(send_blocked r2 r6 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r7_t1": {
+    "action": "(send_blocked r2 r7 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r7_t2": {
+    "action": "(send_blocked r2 r7 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r7_t3": {
+    "action": "(send_blocked r2 r7 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r8_t1": {
+    "action": "(send_blocked r2 r8 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r8_t2": {
+    "action": "(send_blocked r2 r8 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r2_r8_t3": {
+    "action": "(send_blocked r2 r8 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r1_t1": {
+    "action": "(send_blocked r3 r1 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r1_t2": {
+    "action": "(send_blocked r3 r1 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r1_t3": {
+    "action": "(send_blocked r3 r1 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r2_t1": {
+    "action": "(send_blocked r3 r2 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r2_t2": {
+    "action": "(send_blocked r3 r2 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r2_t3": {
+    "action": "(send_blocked r3 r2 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r4_t1": {
+    "action": "(send_blocked r3 r4 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r4_t2": {
+    "action": "(send_blocked r3 r4 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r4_t3": {
+    "action": "(send_blocked r3 r4 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r5_t1": {
+    "action": "(send_blocked r3 r5 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r5_t2": {
+    "action": "(send_blocked r3 r5 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r5_t3": {
+    "action": "(send_blocked r3 r5 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r6_t1": {
+    "action": "(send_blocked r3 r6 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r6_t2": {
+    "action": "(send_blocked r3 r6 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r6_t3": {
+    "action": "(send_blocked r3 r6 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r7_t1": {
+    "action": "(send_blocked r3 r7 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r7_t2": {
+    "action": "(send_blocked r3 r7 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r7_t3": {
+    "action": "(send_blocked r3 r7 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r8_t1": {
+    "action": "(send_blocked r3 r8 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r8_t2": {
+    "action": "(send_blocked r3 r8 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r3_r8_t3": {
+    "action": "(send_blocked r3 r8 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r1_t1": {
+    "action": "(send_blocked r4 r1 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r1_t2": {
+    "action": "(send_blocked r4 r1 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r1_t3": {
+    "action": "(send_blocked r4 r1 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r2_t1": {
+    "action": "(send_blocked r4 r2 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r2_t2": {
+    "action": "(send_blocked r4 r2 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r2_t3": {
+    "action": "(send_blocked r4 r2 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r3_t1": {
+    "action": "(send_blocked r4 r3 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r3_t2": {
+    "action": "(send_blocked r4 r3 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r3_t3": {
+    "action": "(send_blocked r4 r3 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r5_t1": {
+    "action": "(send_blocked r4 r5 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r5_t2": {
+    "action": "(send_blocked r4 r5 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r5_t3": {
+    "action": "(send_blocked r4 r5 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r6_t1": {
+    "action": "(send_blocked r4 r6 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r6_t2": {
+    "action": "(send_blocked r4 r6 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r6_t3": {
+    "action": "(send_blocked r4 r6 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r7_t1": {
+    "action": "(send_blocked r4 r7 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r7_t2": {
+    "action": "(send_blocked r4 r7 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r7_t3": {
+    "action": "(send_blocked r4 r7 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r8_t1": {
+    "action": "(send_blocked r4 r8 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r8_t2": {
+    "action": "(send_blocked r4 r8 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r4_r8_t3": {
+    "action": "(send_blocked r4 r8 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r1_t1": {
+    "action": "(send_blocked r5 r1 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r1_t2": {
+    "action": "(send_blocked r5 r1 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r1_t3": {
+    "action": "(send_blocked r5 r1 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r2_t1": {
+    "action": "(send_blocked r5 r2 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r2_t2": {
+    "action": "(send_blocked r5 r2 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r2_t3": {
+    "action": "(send_blocked r5 r2 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r3_t1": {
+    "action": "(send_blocked r5 r3 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r3_t2": {
+    "action": "(send_blocked r5 r3 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r3_t3": {
+    "action": "(send_blocked r5 r3 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r4_t1": {
+    "action": "(send_blocked r5 r4 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r4_t2": {
+    "action": "(send_blocked r5 r4 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r4_t3": {
+    "action": "(send_blocked r5 r4 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r6_t1": {
+    "action": "(send_blocked r5 r6 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r6_t2": {
+    "action": "(send_blocked r5 r6 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r6_t3": {
+    "action": "(send_blocked r5 r6 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r7_t1": {
+    "action": "(send_blocked r5 r7 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r7_t2": {
+    "action": "(send_blocked r5 r7 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r7_t3": {
+    "action": "(send_blocked r5 r7 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r8_t1": {
+    "action": "(send_blocked r5 r8 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r8_t2": {
+    "action": "(send_blocked r5 r8 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r5_r8_t3": {
+    "action": "(send_blocked r5 r8 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r1_t1": {
+    "action": "(send_blocked r6 r1 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r1_t2": {
+    "action": "(send_blocked r6 r1 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r1_t3": {
+    "action": "(send_blocked r6 r1 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r2_t1": {
+    "action": "(send_blocked r6 r2 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r2_t2": {
+    "action": "(send_blocked r6 r2 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r2_t3": {
+    "action": "(send_blocked r6 r2 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r3_t1": {
+    "action": "(send_blocked r6 r3 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r3_t2": {
+    "action": "(send_blocked r6 r3 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r3_t3": {
+    "action": "(send_blocked r6 r3 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r4_t1": {
+    "action": "(send_blocked r6 r4 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r4_t2": {
+    "action": "(send_blocked r6 r4 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r4_t3": {
+    "action": "(send_blocked r6 r4 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r5_t1": {
+    "action": "(send_blocked r6 r5 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r5_t2": {
+    "action": "(send_blocked r6 r5 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r5_t3": {
+    "action": "(send_blocked r6 r5 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r7_t1": {
+    "action": "(send_blocked r6 r7 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r7_t2": {
+    "action": "(send_blocked r6 r7 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r7_t3": {
+    "action": "(send_blocked r6 r7 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r8_t1": {
+    "action": "(send_blocked r6 r8 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r8_t2": {
+    "action": "(send_blocked r6 r8 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r6_r8_t3": {
+    "action": "(send_blocked r6 r8 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r1_t1": {
+    "action": "(send_blocked r7 r1 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r1_t2": {
+    "action": "(send_blocked r7 r1 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r1_t3": {
+    "action": "(send_blocked r7 r1 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r2_t1": {
+    "action": "(send_blocked r7 r2 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r2_t2": {
+    "action": "(send_blocked r7 r2 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r2_t3": {
+    "action": "(send_blocked r7 r2 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r3_t1": {
+    "action": "(send_blocked r7 r3 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r3_t2": {
+    "action": "(send_blocked r7 r3 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r3_t3": {
+    "action": "(send_blocked r7 r3 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r4_t1": {
+    "action": "(send_blocked r7 r4 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r4_t2": {
+    "action": "(send_blocked r7 r4 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r4_t3": {
+    "action": "(send_blocked r7 r4 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r5_t1": {
+    "action": "(send_blocked r7 r5 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r5_t2": {
+    "action": "(send_blocked r7 r5 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r5_t3": {
+    "action": "(send_blocked r7 r5 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r6_t1": {
+    "action": "(send_blocked r7 r6 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r6_t2": {
+    "action": "(send_blocked r7 r6 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r6_t3": {
+    "action": "(send_blocked r7 r6 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r8_t1": {
+    "action": "(send_blocked r7 r8 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r8_t2": {
+    "action": "(send_blocked r7 r8 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r7_r8_t3": {
+    "action": "(send_blocked r7 r8 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r1_t1": {
+    "action": "(send_blocked r8 r1 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r1_t2": {
+    "action": "(send_blocked r8 r1 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r1_t3": {
+    "action": "(send_blocked r8 r1 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r2_t1": {
+    "action": "(send_blocked r8 r2 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r2_t2": {
+    "action": "(send_blocked r8 r2 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r2_t3": {
+    "action": "(send_blocked r8 r2 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r3_t1": {
+    "action": "(send_blocked r8 r3 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r3_t2": {
+    "action": "(send_blocked r8 r3 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r3_t3": {
+    "action": "(send_blocked r8 r3 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r4_t1": {
+    "action": "(send_blocked r8 r4 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r4_t2": {
+    "action": "(send_blocked r8 r4 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r4_t3": {
+    "action": "(send_blocked r8 r4 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r5_t1": {
+    "action": "(send_blocked r8 r5 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r5_t2": {
+    "action": "(send_blocked r8 r5 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r5_t3": {
+    "action": "(send_blocked r8 r5 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r6_t1": {
+    "action": "(send_blocked r8 r6 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r6_t2": {
+    "action": "(send_blocked r8 r6 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r6_t3": {
+    "action": "(send_blocked r8 r6 t3)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r7_t1": {
+    "action": "(send_blocked r8 r7 t1)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r7_t2": {
+    "action": "(send_blocked r8 r7 t2)",
+    "duration": 3.0
+  },
+  "send-blocked_r8_r7_t3": {
+    "action": "(send_blocked r8 r7 t3)",
+    "duration": 3.0
+  },
+  "send-open_r1_r2_t1": {
+    "action": "(send_open r1 r2 t1)",
+    "duration": 3.0
+  },
+  "send-open_r1_r2_t2": {
+    "action": "(send_open r1 r2 t2)",
+    "duration": 3.0
+  },
+  "send-open_r1_r2_t3": {
+    "action": "(send_open r1 r2 t3)",
+    "duration": 3.0
+  },
+  "send-open_r1_r3_t1": {
+    "action": "(send_open r1 r3 t1)",
+    "duration": 3.0
+  },
+  "send-open_r1_r3_t2": {
+    "action": "(send_open r1 r3 t2)",
+    "duration": 3.0
+  },
+  "send-open_r1_r3_t3": {
+    "action": "(send_open r1 r3 t3)",
+    "duration": 3.0
+  },
+  "send-open_r1_r4_t1": {
+    "action": "(send_open r1 r4 t1)",
+    "duration": 3.0
+  },
+  "send-open_r1_r4_t2": {
+    "action": "(send_open r1 r4 t2)",
+    "duration": 3.0
+  },
+  "send-open_r1_r4_t3": {
+    "action": "(send_open r1 r4 t3)",
+    "duration": 3.0
+  },
+  "send-open_r1_r5_t1": {
+    "action": "(send_open r1 r5 t1)",
+    "duration": 3.0
+  },
+  "send-open_r1_r5_t2": {
+    "action": "(send_open r1 r5 t2)",
+    "duration": 3.0
+  },
+  "send-open_r1_r5_t3": {
+    "action": "(send_open r1 r5 t3)",
+    "duration": 3.0
+  },
+  "send-open_r1_r6_t1": {
+    "action": "(send_open r1 r6 t1)",
+    "duration": 3.0
+  },
+  "send-open_r1_r6_t2": {
+    "action": "(send_open r1 r6 t2)",
+    "duration": 3.0
+  },
+  "send-open_r1_r6_t3": {
+    "action": "(send_open r1 r6 t3)",
+    "duration": 3.0
+  },
+  "send-open_r1_r7_t1": {
+    "action": "(send_open r1 r7 t1)",
+    "duration": 3.0
+  },
+  "send-open_r1_r7_t2": {
+    "action": "(send_open r1 r7 t2)",
+    "duration": 3.0
+  },
+  "send-open_r1_r7_t3": {
+    "action": "(send_open r1 r7 t3)",
+    "duration": 3.0
+  },
+  "send-open_r1_r8_t1": {
+    "action": "(send_open r1 r8 t1)",
+    "duration": 3.0
+  },
+  "send-open_r1_r8_t2": {
+    "action": "(send_open r1 r8 t2)",
+    "duration": 3.0
+  },
+  "send-open_r1_r8_t3": {
+    "action": "(send_open r1 r8 t3)",
+    "duration": 3.0
+  },
+  "send-open_r2_r1_t1": {
+    "action": "(send_open r2 r1 t1)",
+    "duration": 3.0
+  },
+  "send-open_r2_r1_t2": {
+    "action": "(send_open r2 r1 t2)",
+    "duration": 3.0
+  },
+  "send-open_r2_r1_t3": {
+    "action": "(send_open r2 r1 t3)",
+    "duration": 3.0
+  },
+  "send-open_r2_r3_t1": {
+    "action": "(send_open r2 r3 t1)",
+    "duration": 3.0
+  },
+  "send-open_r2_r3_t2": {
+    "action": "(send_open r2 r3 t2)",
+    "duration": 3.0
+  },
+  "send-open_r2_r3_t3": {
+    "action": "(send_open r2 r3 t3)",
+    "duration": 3.0
+  },
+  "send-open_r2_r4_t1": {
+    "action": "(send_open r2 r4 t1)",
+    "duration": 3.0
+  },
+  "send-open_r2_r4_t2": {
+    "action": "(send_open r2 r4 t2)",
+    "duration": 3.0
+  },
+  "send-open_r2_r4_t3": {
+    "action": "(send_open r2 r4 t3)",
+    "duration": 3.0
+  },
+  "send-open_r2_r5_t1": {
+    "action": "(send_open r2 r5 t1)",
+    "duration": 3.0
+  },
+  "send-open_r2_r5_t2": {
+    "action": "(send_open r2 r5 t2)",
+    "duration": 3.0
+  },
+  "send-open_r2_r5_t3": {
+    "action": "(send_open r2 r5 t3)",
+    "duration": 3.0
+  },
+  "send-open_r2_r6_t1": {
+    "action": "(send_open r2 r6 t1)",
+    "duration": 3.0
+  },
+  "send-open_r2_r6_t2": {
+    "action": "(send_open r2 r6 t2)",
+    "duration": 3.0
+  },
+  "send-open_r2_r6_t3": {
+    "action": "(send_open r2 r6 t3)",
+    "duration": 3.0
+  },
+  "send-open_r2_r7_t1": {
+    "action": "(send_open r2 r7 t1)",
+    "duration": 3.0
+  },
+  "send-open_r2_r7_t2": {
+    "action": "(send_open r2 r7 t2)",
+    "duration": 3.0
+  },
+  "send-open_r2_r7_t3": {
+    "action": "(send_open r2 r7 t3)",
+    "duration": 3.0
+  },
+  "send-open_r2_r8_t1": {
+    "action": "(send_open r2 r8 t1)",
+    "duration": 3.0
+  },
+  "send-open_r2_r8_t2": {
+    "action": "(send_open r2 r8 t2)",
+    "duration": 3.0
+  },
+  "send-open_r2_r8_t3": {
+    "action": "(send_open r2 r8 t3)",
+    "duration": 3.0
+  },
+  "send-open_r3_r1_t1": {
+    "action": "(send_open r3 r1 t1)",
+    "duration": 3.0
+  },
+  "send-open_r3_r1_t2": {
+    "action": "(send_open r3 r1 t2)",
+    "duration": 3.0
+  },
+  "send-open_r3_r1_t3": {
+    "action": "(send_open r3 r1 t3)",
+    "duration": 3.0
+  },
+  "send-open_r3_r2_t1": {
+    "action": "(send_open r3 r2 t1)",
+    "duration": 3.0
+  },
+  "send-open_r3_r2_t2": {
+    "action": "(send_open r3 r2 t2)",
+    "duration": 3.0
+  },
+  "send-open_r3_r2_t3": {
+    "action": "(send_open r3 r2 t3)",
+    "duration": 3.0
+  },
+  "send-open_r3_r4_t1": {
+    "action": "(send_open r3 r4 t1)",
+    "duration": 3.0
+  },
+  "send-open_r3_r4_t2": {
+    "action": "(send_open r3 r4 t2)",
+    "duration": 3.0
+  },
+  "send-open_r3_r4_t3": {
+    "action": "(send_open r3 r4 t3)",
+    "duration": 3.0
+  },
+  "send-open_r3_r5_t1": {
+    "action": "(send_open r3 r5 t1)",
+    "duration": 3.0
+  },
+  "send-open_r3_r5_t2": {
+    "action": "(send_open r3 r5 t2)",
+    "duration": 3.0
+  },
+  "send-open_r3_r5_t3": {
+    "action": "(send_open r3 r5 t3)",
+    "duration": 3.0
+  },
+  "send-open_r3_r6_t1": {
+    "action": "(send_open r3 r6 t1)",
+    "duration": 3.0
+  },
+  "send-open_r3_r6_t2": {
+    "action": "(send_open r3 r6 t2)",
+    "duration": 3.0
+  },
+  "send-open_r3_r6_t3": {
+    "action": "(send_open r3 r6 t3)",
+    "duration": 3.0
+  },
+  "send-open_r3_r7_t1": {
+    "action": "(send_open r3 r7 t1)",
+    "duration": 3.0
+  },
+  "send-open_r3_r7_t2": {
+    "action": "(send_open r3 r7 t2)",
+    "duration": 3.0
+  },
+  "send-open_r3_r7_t3": {
+    "action": "(send_open r3 r7 t3)",
+    "duration": 3.0
+  },
+  "send-open_r3_r8_t1": {
+    "action": "(send_open r3 r8 t1)",
+    "duration": 3.0
+  },
+  "send-open_r3_r8_t2": {
+    "action": "(send_open r3 r8 t2)",
+    "duration": 3.0
+  },
+  "send-open_r3_r8_t3": {
+    "action": "(send_open r3 r8 t3)",
+    "duration": 3.0
+  },
+  "send-open_r4_r1_t1": {
+    "action": "(send_open r4 r1 t1)",
+    "duration": 3.0
+  },
+  "send-open_r4_r1_t2": {
+    "action": "(send_open r4 r1 t2)",
+    "duration": 3.0
+  },
+  "send-open_r4_r1_t3": {
+    "action": "(send_open r4 r1 t3)",
+    "duration": 3.0
+  },
+  "send-open_r4_r2_t1": {
+    "action": "(send_open r4 r2 t1)",
+    "duration": 3.0
+  },
+  "send-open_r4_r2_t2": {
+    "action": "(send_open r4 r2 t2)",
+    "duration": 3.0
+  },
+  "send-open_r4_r2_t3": {
+    "action": "(send_open r4 r2 t3)",
+    "duration": 3.0
+  },
+  "send-open_r4_r3_t1": {
+    "action": "(send_open r4 r3 t1)",
+    "duration": 3.0
+  },
+  "send-open_r4_r3_t2": {
+    "action": "(send_open r4 r3 t2)",
+    "duration": 3.0
+  },
+  "send-open_r4_r3_t3": {
+    "action": "(send_open r4 r3 t3)",
+    "duration": 3.0
+  },
+  "send-open_r4_r5_t1": {
+    "action": "(send_open r4 r5 t1)",
+    "duration": 3.0
+  },
+  "send-open_r4_r5_t2": {
+    "action": "(send_open r4 r5 t2)",
+    "duration": 3.0
+  },
+  "send-open_r4_r5_t3": {
+    "action": "(send_open r4 r5 t3)",
+    "duration": 3.0
+  },
+  "send-open_r4_r6_t1": {
+    "action": "(send_open r4 r6 t1)",
+    "duration": 3.0
+  },
+  "send-open_r4_r6_t2": {
+    "action": "(send_open r4 r6 t2)",
+    "duration": 3.0
+  },
+  "send-open_r4_r6_t3": {
+    "action": "(send_open r4 r6 t3)",
+    "duration": 3.0
+  },
+  "send-open_r4_r7_t1": {
+    "action": "(send_open r4 r7 t1)",
+    "duration": 3.0
+  },
+  "send-open_r4_r7_t2": {
+    "action": "(send_open r4 r7 t2)",
+    "duration": 3.0
+  },
+  "send-open_r4_r7_t3": {
+    "action": "(send_open r4 r7 t3)",
+    "duration": 3.0
+  },
+  "send-open_r4_r8_t1": {
+    "action": "(send_open r4 r8 t1)",
+    "duration": 3.0
+  },
+  "send-open_r4_r8_t2": {
+    "action": "(send_open r4 r8 t2)",
+    "duration": 3.0
+  },
+  "send-open_r4_r8_t3": {
+    "action": "(send_open r4 r8 t3)",
+    "duration": 3.0
+  },
+  "send-open_r5_r1_t1": {
+    "action": "(send_open r5 r1 t1)",
+    "duration": 3.0
+  },
+  "send-open_r5_r1_t2": {
+    "action": "(send_open r5 r1 t2)",
+    "duration": 3.0
+  },
+  "send-open_r5_r1_t3": {
+    "action": "(send_open r5 r1 t3)",
+    "duration": 3.0
+  },
+  "send-open_r5_r2_t1": {
+    "action": "(send_open r5 r2 t1)",
+    "duration": 3.0
+  },
+  "send-open_r5_r2_t2": {
+    "action": "(send_open r5 r2 t2)",
+    "duration": 3.0
+  },
+  "send-open_r5_r2_t3": {
+    "action": "(send_open r5 r2 t3)",
+    "duration": 3.0
+  },
+  "send-open_r5_r3_t1": {
+    "action": "(send_open r5 r3 t1)",
+    "duration": 3.0
+  },
+  "send-open_r5_r3_t2": {
+    "action": "(send_open r5 r3 t2)",
+    "duration": 3.0
+  },
+  "send-open_r5_r3_t3": {
+    "action": "(send_open r5 r3 t3)",
+    "duration": 3.0
+  },
+  "send-open_r5_r4_t1": {
+    "action": "(send_open r5 r4 t1)",
+    "duration": 3.0
+  },
+  "send-open_r5_r4_t2": {
+    "action": "(send_open r5 r4 t2)",
+    "duration": 3.0
+  },
+  "send-open_r5_r4_t3": {
+    "action": "(send_open r5 r4 t3)",
+    "duration": 3.0
+  },
+  "send-open_r5_r6_t1": {
+    "action": "(send_open r5 r6 t1)",
+    "duration": 3.0
+  },
+  "send-open_r5_r6_t2": {
+    "action": "(send_open r5 r6 t2)",
+    "duration": 3.0
+  },
+  "send-open_r5_r6_t3": {
+    "action": "(send_open r5 r6 t3)",
+    "duration": 3.0
+  },
+  "send-open_r5_r7_t1": {
+    "action": "(send_open r5 r7 t1)",
+    "duration": 3.0
+  },
+  "send-open_r5_r7_t2": {
+    "action": "(send_open r5 r7 t2)",
+    "duration": 3.0
+  },
+  "send-open_r5_r7_t3": {
+    "action": "(send_open r5 r7 t3)",
+    "duration": 3.0
+  },
+  "send-open_r5_r8_t1": {
+    "action": "(send_open r5 r8 t1)",
+    "duration": 3.0
+  },
+  "send-open_r5_r8_t2": {
+    "action": "(send_open r5 r8 t2)",
+    "duration": 3.0
+  },
+  "send-open_r5_r8_t3": {
+    "action": "(send_open r5 r8 t3)",
+    "duration": 3.0
+  },
+  "send-open_r6_r1_t1": {
+    "action": "(send_open r6 r1 t1)",
+    "duration": 3.0
+  },
+  "send-open_r6_r1_t2": {
+    "action": "(send_open r6 r1 t2)",
+    "duration": 3.0
+  },
+  "send-open_r6_r1_t3": {
+    "action": "(send_open r6 r1 t3)",
+    "duration": 3.0
+  },
+  "send-open_r6_r2_t1": {
+    "action": "(send_open r6 r2 t1)",
+    "duration": 3.0
+  },
+  "send-open_r6_r2_t2": {
+    "action": "(send_open r6 r2 t2)",
+    "duration": 3.0
+  },
+  "send-open_r6_r2_t3": {
+    "action": "(send_open r6 r2 t3)",
+    "duration": 3.0
+  },
+  "send-open_r6_r3_t1": {
+    "action": "(send_open r6 r3 t1)",
+    "duration": 3.0
+  },
+  "send-open_r6_r3_t2": {
+    "action": "(send_open r6 r3 t2)",
+    "duration": 3.0
+  },
+  "send-open_r6_r3_t3": {
+    "action": "(send_open r6 r3 t3)",
+    "duration": 3.0
+  },
+  "send-open_r6_r4_t1": {
+    "action": "(send_open r6 r4 t1)",
+    "duration": 3.0
+  },
+  "send-open_r6_r4_t2": {
+    "action": "(send_open r6 r4 t2)",
+    "duration": 3.0
+  },
+  "send-open_r6_r4_t3": {
+    "action": "(send_open r6 r4 t3)",
+    "duration": 3.0
+  },
+  "send-open_r6_r5_t1": {
+    "action": "(send_open r6 r5 t1)",
+    "duration": 3.0
+  },
+  "send-open_r6_r5_t2": {
+    "action": "(send_open r6 r5 t2)",
+    "duration": 3.0
+  },
+  "send-open_r6_r5_t3": {
+    "action": "(send_open r6 r5 t3)",
+    "duration": 3.0
+  },
+  "send-open_r6_r7_t1": {
+    "action": "(send_open r6 r7 t1)",
+    "duration": 3.0
+  },
+  "send-open_r6_r7_t2": {
+    "action": "(send_open r6 r7 t2)",
+    "duration": 3.0
+  },
+  "send-open_r6_r7_t3": {
+    "action": "(send_open r6 r7 t3)",
+    "duration": 3.0
+  },
+  "send-open_r6_r8_t1": {
+    "action": "(send_open r6 r8 t1)",
+    "duration": 3.0
+  },
+  "send-open_r6_r8_t2": {
+    "action": "(send_open r6 r8 t2)",
+    "duration": 3.0
+  },
+  "send-open_r6_r8_t3": {
+    "action": "(send_open r6 r8 t3)",
+    "duration": 3.0
+  },
+  "send-open_r7_r1_t1": {
+    "action": "(send_open r7 r1 t1)",
+    "duration": 3.0
+  },
+  "send-open_r7_r1_t2": {
+    "action": "(send_open r7 r1 t2)",
+    "duration": 3.0
+  },
+  "send-open_r7_r1_t3": {
+    "action": "(send_open r7 r1 t3)",
+    "duration": 3.0
+  },
+  "send-open_r7_r2_t1": {
+    "action": "(send_open r7 r2 t1)",
+    "duration": 3.0
+  },
+  "send-open_r7_r2_t2": {
+    "action": "(send_open r7 r2 t2)",
+    "duration": 3.0
+  },
+  "send-open_r7_r2_t3": {
+    "action": "(send_open r7 r2 t3)",
+    "duration": 3.0
+  },
+  "send-open_r7_r3_t1": {
+    "action": "(send_open r7 r3 t1)",
+    "duration": 3.0
+  },
+  "send-open_r7_r3_t2": {
+    "action": "(send_open r7 r3 t2)",
+    "duration": 3.0
+  },
+  "send-open_r7_r3_t3": {
+    "action": "(send_open r7 r3 t3)",
+    "duration": 3.0
+  },
+  "send-open_r7_r4_t1": {
+    "action": "(send_open r7 r4 t1)",
+    "duration": 3.0
+  },
+  "send-open_r7_r4_t2": {
+    "action": "(send_open r7 r4 t2)",
+    "duration": 3.0
+  },
+  "send-open_r7_r4_t3": {
+    "action": "(send_open r7 r4 t3)",
+    "duration": 3.0
+  },
+  "send-open_r7_r5_t1": {
+    "action": "(send_open r7 r5 t1)",
+    "duration": 3.0
+  },
+  "send-open_r7_r5_t2": {
+    "action": "(send_open r7 r5 t2)",
+    "duration": 3.0
+  },
+  "send-open_r7_r5_t3": {
+    "action": "(send_open r7 r5 t3)",
+    "duration": 3.0
+  },
+  "send-open_r7_r6_t1": {
+    "action": "(send_open r7 r6 t1)",
+    "duration": 3.0
+  },
+  "send-open_r7_r6_t2": {
+    "action": "(send_open r7 r6 t2)",
+    "duration": 3.0
+  },
+  "send-open_r7_r6_t3": {
+    "action": "(send_open r7 r6 t3)",
+    "duration": 3.0
+  },
+  "send-open_r7_r8_t1": {
+    "action": "(send_open r7 r8 t1)",
+    "duration": 3.0
+  },
+  "send-open_r7_r8_t2": {
+    "action": "(send_open r7 r8 t2)",
+    "duration": 3.0
+  },
+  "send-open_r7_r8_t3": {
+    "action": "(send_open r7 r8 t3)",
+    "duration": 3.0
+  },
+  "send-open_r8_r1_t1": {
+    "action": "(send_open r8 r1 t1)",
+    "duration": 3.0
+  },
+  "send-open_r8_r1_t2": {
+    "action": "(send_open r8 r1 t2)",
+    "duration": 3.0
+  },
+  "send-open_r8_r1_t3": {
+    "action": "(send_open r8 r1 t3)",
+    "duration": 3.0
+  },
+  "send-open_r8_r2_t1": {
+    "action": "(send_open r8 r2 t1)",
+    "duration": 3.0
+  },
+  "send-open_r8_r2_t2": {
+    "action": "(send_open r8 r2 t2)",
+    "duration": 3.0
+  },
+  "send-open_r8_r2_t3": {
+    "action": "(send_open r8 r2 t3)",
+    "duration": 3.0
+  },
+  "send-open_r8_r3_t1": {
+    "action": "(send_open r8 r3 t1)",
+    "duration": 3.0
+  },
+  "send-open_r8_r3_t2": {
+    "action": "(send_open r8 r3 t2)",
+    "duration": 3.0
+  },
+  "send-open_r8_r3_t3": {
+    "action": "(send_open r8 r3 t3)",
+    "duration": 3.0
+  },
+  "send-open_r8_r4_t1": {
+    "action": "(send_open r8 r4 t1)",
+    "duration": 3.0
+  },
+  "send-open_r8_r4_t2": {
+    "action": "(send_open r8 r4 t2)",
+    "duration": 3.0
+  },
+  "send-open_r8_r4_t3": {
+    "action": "(send_open r8 r4 t3)",
+    "duration": 3.0
+  },
+  "send-open_r8_r5_t1": {
+    "action": "(send_open r8 r5 t1)",
+    "duration": 3.0
+  },
+  "send-open_r8_r5_t2": {
+    "action": "(send_open r8 r5 t2)",
+    "duration": 3.0
+  },
+  "send-open_r8_r5_t3": {
+    "action": "(send_open r8 r5 t3)",
+    "duration": 3.0
+  },
+  "send-open_r8_r6_t1": {
+    "action": "(send_open r8 r6 t1)",
+    "duration": 3.0
+  },
+  "send-open_r8_r6_t2": {
+    "action": "(send_open r8 r6 t2)",
+    "duration": 3.0
+  },
+  "send-open_r8_r6_t3": {
+    "action": "(send_open r8 r6 t3)",
+    "duration": 3.0
+  },
+  "send-open_r8_r7_t1": {
+    "action": "(send_open r8 r7 t1)",
+    "duration": 3.0
+  },
+  "send-open_r8_r7_t2": {
+    "action": "(send_open r8 r7 t2)",
+    "duration": 3.0
+  },
+  "send-open_r8_r7_t3": {
+    "action": "(send_open r8 r7 t3)",
+    "duration": 3.0
+  },
+  "stage_t1": {
+    "action": "(stage t1)",
+    "duration": 20.0
+  },
+  "stage_t2": {
+    "action": "(stage t2)",
+    "duration": 20.0
+  },
+  "stage_t3": {
+    "action": "(stage t3)",
+    "duration": 20.0
+  }
+}
