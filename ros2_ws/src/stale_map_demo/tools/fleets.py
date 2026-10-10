@@ -67,6 +67,13 @@ import layout as L  # noqa: E402
 
 FLEETS = ('epistemic', 'fuse', 'overwrite', 'recency')
 
+# The secret floor: r4 is a contractor's robot that hauls and must not learn
+# that t1 was staged. The plan, and three protocols from the communication
+# study, whose sends are computed by study/protocols.py on this floor and
+# executed by the mission in the same order.
+SECRET_FLEETS = ('secret', 'flood', 'flood3', 'pull')
+PROTOCOL = {'flood': ('flood', None), 'flood3': ('flood', 3), 'pull': ('pull', None)}
+
 
 def after_forklift(sees):
     """Each robot's reading of each bay after the forklift: 'x' blocked, 'o'
@@ -215,11 +222,38 @@ def drive(h, held, through=None, parked=()):
     return False, entered, held, story
 
 
+def floor_instance(sees):
+    """The floor as an instance of the communication study."""
+    study = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'study')
+    sys.path.insert(0, study)
+    import instances as SI  # noqa: E402
+    changes = [SI.Change(t, kind, {a for a in L.ROBOTS if sees[a][t] == 'all'},
+                         10.0 + 10.0 * k)
+               for k, (t, kind) in enumerate(sorted(L.CHANGES.items(), key=lambda kv: kv[0] != 't3'))]
+    return SI.Instance('secrecy', 1, list(L.ROBOTS), list(L.BAYS), set(L.SHIFT_BLOCKED), changes,
+                       list(L.HAULERS), contractors=set(L.CONTRACTORS), secret_bays=set(L.SECRET))
+
+
+def protocol_run(fleet, sees):
+    study = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'study')
+    sys.path.insert(0, study)
+    import protocols as SP  # noqa: E402
+    proto, budget = PROTOCOL[fleet]
+    return SP.PROTOCOLS[proto](floor_instance(sees), 'recency', budget, seed=1)
+
+
 def predict(fleet, sees, looking=True):
     maps = after_forklift(sees)
     regressions = 0
-    if fleet == 'epistemic':
+    sequence, requests = [], 0
+    if fleet in ('epistemic', 'secret'):
         maps, sends = policy(maps)
+    elif fleet in PROTOCOL:
+        run = protocol_run(fleet, sees)
+        maps = {a: {t: (r.value, r.version) for t, r in run.maps[a].items()} for a in L.ROBOTS}
+        sends, requests = run.sent, run.requests
+        sequence = [list(x) for x in run.log]
+        regressions = run.overwrote_fresh
     else:
         maps, sends, regressions = broadcast(
             maps, {'fuse': 'confidence'}.get(fleet, fleet), sees, looking)
@@ -230,11 +264,13 @@ def predict(fleet, sees, looking=True):
     for h in L.HAULERS:
         start = {t: maps[h][t][0] for t in L.BAYS}
         ok, entered, end, story = drive(
-            h, start, 't3' if fleet == 'epistemic' else None, parked)
+            h, start, 't3' if fleet in ('epistemic', 'secret') else None, parked)
         hauls[h] = {'delivered': ok, 'entered': entered, 'map_at_start': ''.join(start.values()),
                     'map_at_end': ''.join(end[t] for t in L.BAYS), 'story': story}
         parked.append(L.DROPS[h] if ok else L.ROBOTS[h][:2])
+    leak = [c for c in L.CONTRACTORS for t in L.SECRET if maps[c][t][0] == 'x']
     return {'fleet': fleet, 'sends': sends, 'regressions': regressions,
+            'sequence': sequence, 'requests': requests, 'leak': leak,
             'maps_after_exchange': held_after,
             'stale_after_exchange': stale_before, 'hauls': hauls,
             'delivered': [h for h in L.HAULERS if hauls[h]['delivered']]}
@@ -244,7 +280,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--json', help='write the predictions here')
-    ap.add_argument('--fleets', nargs='*', default=list(FLEETS))
+    ap.add_argument('--fleets', nargs='*', default=list(FLEETS + SECRET_FLEETS))
     ap.add_argument('--transient', action='store_true',
                     help='the robots that saw a change stop looking at it before the maps are sent')
     args = ap.parse_args()
@@ -255,7 +291,8 @@ def main():
         out[fleet] = p
         print(f'{fleet:10s} {p["sends"]:4d} maps of a bay sent, {p["regressions"]:2d} of them over a '
               f'fresh reading; {p["stale_after_exchange"]:2d} stale entries after; '
-              f'delivered: {" ".join(p["delivered"]) or "none"}')
+              f'delivered: {" ".join(p["delivered"]) or "none"}' +
+              (f'; secret held by {" ".join(p["leak"])}' if p['leak'] else ''))
         print('           maps (t1 t2 t3): ' + ' '.join(f'{a}:{m}' for a, m in p['maps_after_exchange'].items()))
         for h, d in p['hauls'].items():
             print(f'           {h}: starts {d["map_at_start"]}, enters {" ".join(d["entered"]) or "no bay"}; '

@@ -131,6 +131,11 @@ ROBOTS = {
 }
 HAULERS = ('r2', 'r4', 'r8')
 
+# On the secret floor r4 is a contractor's robot: it hauls, and it must end
+# the shift not believing that t1 was staged. It sees neither change.
+CONTRACTORS = ('r4',)
+SECRET = ('t1',)
+
 # Where each hauler sets its load down on the dispatch floor: between the two
 # clutter piles north of the block, clear of the dispatch rows.
 DROPS = {
@@ -153,7 +158,7 @@ def fleet():
     sees = sight_lines()
     return Fleet(list(ROBOTS), list(BAYS), SHIFT_BLOCKED, CHANGES,
                  {t: [a for a, s in sees.items() if s[t] == 'all'] for t in BAYS},
-                 list(HAULERS))
+                 list(HAULERS), CONTRACTORS, SECRET)
 
 
 def static_obstacles():

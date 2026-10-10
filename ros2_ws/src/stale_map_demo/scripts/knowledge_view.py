@@ -137,6 +137,7 @@ class KnowledgeView(Node):
         self.declare_parameter('load_boxes', [0.0])
         self.declare_parameter('shift_blocked', [''])
         self.declare_parameter('fleet', 'epistemic')
+        self.declare_parameter('contractors', [''])
 
         self.agents = self.get_parameter('agents').value
         self.haulers = set(self.get_parameter('haulers').value)
@@ -147,6 +148,7 @@ class KnowledgeView(Node):
         self.load_boxes = {t: tuple(b[4 * k:4 * k + 4]) for k, t in enumerate(self.bays)}
         self.blocked = set(self.get_parameter('shift_blocked').value)
         self.fleet = self.get_parameter('fleet').value
+        self.contractors = {c for c in self.get_parameter('contractors').value if c}
 
         self.readings = {}
         self.poses = {}
@@ -307,7 +309,8 @@ class KnowledgeView(Node):
             name.pose.position.z = 0.8
             name.scale.z = 0.6
             name.color = rgba(self.colours.get(a, (1, 1, 1)))
-            name.text = a + (' hauls' if a in self.haulers else '')
+            name.text = a + (' hauls' if a in self.haulers else '') + (
+                ' · contractor' if a in self.contractors else '')
             out.markers.append(name)
             rows = [('map', 1.0)] + ([('model', 0.35)] if self.model else [])
             for r, (kind, z) in enumerate(rows):

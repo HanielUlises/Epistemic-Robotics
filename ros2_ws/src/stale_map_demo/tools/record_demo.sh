@@ -40,6 +40,9 @@ source /opt/ros/humble/setup.bash
 source "$HOME/eplansys_ws/install/setup.bash"
 source "$HOME/rmf_ws/install/setup.bash" 2>/dev/null
 source "$HOME/Projects/Epistemic-Robotics/ros2_ws/install/setup.bash"
+# An overlay of this package alone, built while the shared install space is
+# in use by other runs and must not be rebuilt under them.
+[ -n "$STALE_MAPS_OVERLAY" ] && source "$STALE_MAPS_OVERLAY/setup.bash"
 
 export DISPLAY=$DISP LIBGL_ALWAYS_SOFTWARE=1 PYTHONNOUSERSITE=1
 
