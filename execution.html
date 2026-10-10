@@ -343,6 +343,9 @@ table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var
 table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
 table.data tr:last-child td{border-bottom:none}
 table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+table.data.txt th,table.data.txt td{text-align:left;vertical-align:top}
+@media(min-width:760px){table.data.txt td:first-child{white-space:nowrap;padding-right:1.2rem}}
+@media(max-width:759px){table.data.txt td{overflow-wrap:anywhere}}
 
 .warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
   background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
@@ -575,9 +578,18 @@ pre:has(> code){margin:1.3rem 0}
       policy takes on the wire, the behavior tree that runs it, and the epistemic
       state the tree consults while it does.
     </p>
+    <p class="hero-p">
+      The page was first written on 19 August 2026, before the layer had run on a
+      robot. It is revised to release 0.3.0 (28 September 2026), after the
+      demonstrations listed at the end had run on it. Those runs brought
+      perception, replanning from the belief the mission reached, interruption by
+      announcements and parallel dispatch, and they run the full stack on ROS 2
+      Humble, which the first version could not test.
+    </p>
     <p class="note" style="margin-top:1.4rem">
-      Implemented in <a href="https://github.com/HanielUlises/eplansys">eplansys</a>,
+      Implemented in <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
       on top of <a href="https://github.com/PlanSys2/ros2_planning_system">PlanSys2</a>.
+      <a class="ext-chip" href="https://eplansys.github.io/eplansys">Documentation</a>
       <a class="ext-chip" href="eplansys_execution.pdf">Technical report (PDF)</a>
     </p>
   </div>
@@ -637,12 +649,12 @@ pre:has(> code){margin:1.3rem 0}
 
     <p>
       Two interfaces stand between the planner and the executor and both take a flat
-      plan: the solver plugin returns one, and the tree builder consumes one. Rather
-      than fork either, the policy travels in additional fields of the existing
+      plan: the solver plugin returns one, and the tree builder consumes one. Neither
+      is forked: the policy travels in additional fields of the existing
       message, so that the two components keep exchanging the same type.
     </p>
 
-    <table class="data">
+    <table class="data txt">
       <thead>
         <tr><th>Field on PlanItem</th><th>What it carries</th></tr>
       </thead>
@@ -680,10 +692,12 @@ pre:has(> code){margin:1.3rem 0}
 <section>
   <div class="container">
     <p class="sec-label">The behavior tree</p>
-    <h3>PlanSys2's subtree, and the three components around it</h3>
+    <h3>PlanSys2's subtree, and the nodes around it</h3>
 
     <p>
-      Each policy node renders as the PlanSys2 action subtree, unchanged, the same       nodes driving the same action performers against the same problem expert, wrapped in what a sequence cannot express.
+      Each policy node renders as the PlanSys2 action subtree, unchanged, the same
+      nodes driving the same action performers against the same problem expert,
+      wrapped in what a sequence cannot express.
     </p>
 
     <div class="fig">
@@ -779,11 +793,14 @@ pre:has(> code){margin:1.3rem 0}
       <div class="fig-cap">
         <b>The extension is additive.</b> The grey block is PlanSys2's action subtree,
         untouched. The four red nodes are what a policy needs on top of it, and the
-        switch is the only one with no classical counterpart at all.
+        switch is the only one with no classical counterpart at all. A fifth,
+        <span class="mono-inline">CheckBeliefUnchanged</span>, sits in the
+        reactive sequence beside <span class="mono-inline">CheckOverAllReq</span>
+        and is not drawn.
       </div>
     </div>
 
-    <table class="data">
+    <table class="data txt">
       <thead>
         <tr><th>Node</th><th>PlanSys2 counterpart</th><th>What it adds</th></tr>
       </thead>
@@ -806,7 +823,12 @@ pre:has(> code){margin:1.3rem 0}
         <tr>
           <td><span class="mono-inline">CheckEpistemicGoal</span></td>
           <td>the executor's goal check</td>
-          <td>asks whether the goal holds, and does not assume assuming a leaf implies it</td>
+          <td>asks whether the goal holds, and does not assume that reaching a leaf implies it</td>
+        </tr>
+        <tr>
+          <td><span class="mono-inline">CheckBeliefUnchanged</span></td>
+          <td>none</td>
+          <td>fails while an action runs if an announcement has changed the belief, so the policy it invalidates stops</td>
         </tr>
       </tbody>
     </table>
@@ -847,27 +869,53 @@ pre:has(> code){margin:1.3rem 0}
 
     <p>
       The tree needs something to ask. A lifecycle node holds a pointed Kripke model
-      \(\mathcal{M} = (W, \{R_i\}, V, W^{*})\) and answers three questions, which are
-      exactly the three that executing a policy raises.
+      \(\mathcal{M} = (W, \{R_i\}, V, W^{*})\). The first three of its services
+      are the three questions that executing a policy raises. The next three
+      make it the problem expert's counterpart for whoever runs the mission, and
+      the last three let a planner or a tool read it.
     </p>
 
-    <table class="data">
+    <table class="data txt">
       <thead>
         <tr><th>Service</th><th>Question</th></tr>
       </thead>
       <tbody>
-        <tr><td><span class="mono-inline">load_task</span></td><td>be the model of <em>this</em> grounded task</td></tr>
+        <tr><td><span class="mono-inline">load_task</span></td><td>be the model of <em>this</em> task, given grounded or as EPDDL sources to ground</td></tr>
         <tr><td><span class="mono-inline">check_formula</span></td><td>does <span class="mono-inline">(K r1 (clear corridor))</span> hold now?</td></tr>
         <tr><td><span class="mono-inline">apply_action</span></td><td>this action ran: update, and say what was observed</td></tr>
+        <tr><td><span class="mono-inline">get_goal</span></td><td>what is the mission aiming at, and does it hold yet?</td></tr>
+        <tr><td><span class="mono-inline">set_goal</span></td><td>aim at this instead, without grounding the problem again</td></tr>
+        <tr><td><span class="mono-inline">announce</span></td><td>every agent has just learned that this is true</td></tr>
+        <tr><td><span class="mono-inline">get_agent_perspective</span></td><td>what does the model look like from one agent's point of view?</td></tr>
+        <tr><td><span class="mono-inline">get_epistemic_domain</span></td><td>which agents, atoms and actions does the EPDDL domain declare?</td></tr>
+        <tr><td><span class="mono-inline">get_epistemic_action_details</span></td><td>what are one action's events, their preconditions and effects, and what each agent observes of them?</td></tr>
       </tbody>
     </table>
 
     <p>
+      Announcing is <span class="mono-inline">set predicate</span> one level up,
+      and not the same operation: setting a predicate changes what is true,
+      announcing changes what is known. All of it is reachable from a shell as
+      <span class="mono-inline">ros2 plansys2 epistemic</span>, with the verbs
+      <span class="mono-inline">show</span>, <span class="mono-inline">check</span>,
+      <span class="mono-inline">goal</span>, <span class="mono-inline">announce</span>
+      and <span class="mono-inline">apply</span>.
+    </p>
+
+    <p>
       It advances by executed actions and not by watching the world, which is
-      what makes it a belief state and not a log. When it disagrees with what the
-      robot observed, the disagreement surfaces at
-      <span class="mono-inline">apply_action</span> as an outcome the model cannot
-      account for, a reason to replan, not to overwrite the model quietly.
+      what makes it a belief state and not a log. When the robot observes an
+      outcome the model holds impossible, and the task asks for repair, the state
+      trusts the observation: it re-designates the worlds in which the observed
+      event could have fired, logs the repair at warning level, and reports what
+      the repair gave up. Repair corrects which world is believed actual; it
+      cannot add a world the model never contained, and an observation no world
+      could have produced is refused. A separate repair concerns belief under
+      KD45, where an announcement can leave an agent no world it considers
+      possible. Since 0.3.0 the tracked model applies that repair only when the
+      task asks for it, as the planner does, since a model repaired where the
+      planner's was not would refuse an action the policy had every reason to
+      send.
     </p>
 
     <p>
@@ -917,6 +965,79 @@ check_formula  (Kw B tails)          <span class="k">&#8594;</span> holds=<span 
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════ THE WORLD -->
+<section>
+  <div class="container">
+    <p class="sec-label">When the policy meets the world</p>
+    <h3>Perception, failure, interruption and concurrency</h3>
+
+    <p>
+      The first version of this page ended with one piece of open work: the
+      observation a sensing action produces came from whatever a tree bound to
+      a port, and nothing in the stack looked at a map. The demonstrations
+      supplied that piece, and four others that a mission needs once a robot
+      is in the loop.
+    </p>
+
+    <p>
+      <b>The map, read as knowledge.</b>
+      <span class="mono-inline">plansys2_epistemic_perception</span> watches an occupancy grid and decides
+      what each named region of it is. A region is
+      <em class="term">clear</em> when every cell in it has been observed and
+      settled as free, <em class="term">blocked</em> when any one cell is
+      occupied, and <em class="term">unknown</em> otherwise; a cell between the two
+      thresholds counts as unobserved, since calling it free would give an agent
+      knowledge it does not have. A region bound to a sensing action reports
+      through <span class="mono-inline">apply_action</span>, as the outcome of that action. An unbound
+      region reports through <span class="mono-inline">announce</span>, as information from outside the
+      plan. A performer can also report an outcome itself, alongside its status,
+      and the packaged tree forwards it to the update.
+    </p>
+
+    <p>
+      <b>Replanning from where the mission got to.</b> The executor's answer to a
+      failed plan is to replan, and an epistemic policy usually fails because the
+      switch saw an outcome the policy did not plan for. The solver therefore
+      plans from the model the epistemic state holds, and not from the one
+      grounding produced, which the divergence has already disproved. A replan
+      that arrives with no action completed since the last one counts as no
+      progress, and after three in a row the plan is aborted through the
+      ordinary failure path.
+    </p>
+
+    <p>
+      <b>An announcement interrupts the action it invalidates.</b>
+      <span class="mono-inline">CheckBeliefUnchanged</span> is re-checked while the action runs, and fails
+      when the model has been changed by an announcement: perception resolving a
+      region, an operator, or two robots reconciling their maps. The policy's own
+      updates do not count, or a policy would abandon itself every time one of
+      its actions worked. The executor then replans from the model the
+      announcement produced.
+    </p>
+
+    <p>
+      <b>Plans that rest on a contradiction are refused.</b> Under KD45 a plan can
+      be valid only because some agent ends up believing a contradiction, from
+      which every formula follows. Since 0.3.0 the planner refuses such plans by
+      default, and the external solver validates what it returns under the same
+      check.
+    </p>
+
+    <p>
+      <b>Independent actions run together.</b> A policy dispatched one node at a
+      time never overlaps two robots' work, even when nothing orders them. With
+      <span class="mono-inline">parallel_dispatch</span> on, the builder moves each action as early as the
+      actions it depends on allow, lifts an action above a branch point when every
+      branch begins with it, and dispatches each run of independent actions as one
+      <span class="mono-inline">Parallel</span>. Two actions are independent classically when neither
+      one's effects touch what the other requires, and epistemically when the
+      agents they name are disjoint. On the two-site survey the mission takes
+      about 15 s, against about 22.5 s when dispatched one node at a time. The
+      option is off by default.
+    </p>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════════ PACKAGES -->
 <section>
   <div class="container">
@@ -927,17 +1048,22 @@ check_formula  (Kw B tails)          <span class="k">&#8594;</span> holds=<span 
       Extending an executor usually means depending on it. That was worth avoiding:
       a package that needs <span class="mono-inline">plansys2_executor</span> can only
       be built against this fork, while one that does not can be built and tested
-      against a released distribution.
+      against a released distribution. Of the seven epistemic packages, one
+      needs it.
     </p>
 
-    <table class="data">
+    <table class="data txt">
       <thead>
         <tr><th>Package</th><th>Contents</th><th>Needs the executor</th></tr>
       </thead>
       <tbody>
-        <tr><td><span class="mono-inline">plansys2_epistemic_msgs</span></td><td>the three service definitions</td><td>no</td></tr>
-        <tr><td><span class="mono-inline">plansys2_epistemic_executor</span></td><td>policy, tree rendering, the four nodes, the state</td><td>no</td></tr>
+        <tr><td><span class="mono-inline">plansys2_epistemic_msgs</span></td><td>the nine service definitions</td><td>no</td></tr>
+        <tr><td><span class="mono-inline">plansys2_epistemic_executor</span></td><td>policy, tree rendering, the five nodes, the state, the parallel schedule</td><td>no</td></tr>
         <tr><td><span class="mono-inline">plansys2_epistemic_bt_builder</span></td><td>the tree-builder plugin</td><td>yes</td></tr>
+        <tr><td><span class="mono-inline">plansys2_epistemic_perception</span></td><td>regions of an occupancy grid, reported as outcomes or announcements</td><td>no</td></tr>
+        <tr><td><span class="mono-inline">plansys2_epddl_grounder</span></td><td>builds and runs plank, so EPDDL is the input</td><td>no</td></tr>
+        <tr><td><span class="mono-inline">plansys2_epistemic_planner</span></td><td>the solver plugin, with Aletheia linked as a library</td><td>no</td></tr>
+        <tr><td><span class="mono-inline">plansys2_aletheia_plan_solver</span></td><td>Aletheia run as an external process, held to the same policy as the plugin</td><td>no</td></tr>
       </tbody>
     </table>
 
@@ -946,7 +1072,9 @@ check_formula  (Kw B tails)          <span class="k">&#8594;</span> holds=<span 
       a parameter naming behavior tree node libraries to load before a tree is built,
       and the plan already published on the blackboard. Twenty-four lines in the
       executor, no new dependencies, and nothing in it that knows what an epistemic
-      node is.
+      node is. The epistemic state is started by both bringup launch files with
+      <span class="mono-inline">epistemic_state:=True</span>, and grounds the same two EPDDL files the
+      solver is given.
     </p>
 
 <pre class="code"><span class="c"># the whole configuration, on top of the ordinary PlanSys2 params</span>
@@ -954,7 +1082,19 @@ executor:
   ros__parameters:
     bt_builder_plugin: <span class="k">"EpistemicBTBuilder"</span>
     bt_node_plugins:   [<span class="k">"libplansys2_epistemic_bt_nodes.so"</span>]
+epistemic_state:
+  ros__parameters:
+    epddl_domain:  <span class="k">"/abs/path/to/domain.epddl"</span>
+    epddl_problem: <span class="k">"/abs/path/to/problem.epddl"</span>
 </pre>
+
+    <p>
+      Releases 0.2.0 (17 September 2026) and 0.3.0 (28 September 2026) carry
+      Debian packages for ROS 2 Humble on Ubuntu 22.04, with the release itself
+      serving as the apt repository, and a Docker image that runs the two-site
+      survey from a clean clone. Aletheia, published since as del-planner, and
+      plank are pinned to commits.
+    </p>
   </div>
 </section>
 
@@ -969,53 +1109,119 @@ executor:
         <tr><th>Package</th><th>Tests</th><th>Failures</th></tr>
       </thead>
       <tbody>
-        <tr><td>plansys2_epistemic_planner</td><td>38</td><td>0</td></tr>
-        <tr><td>plansys2_epistemic_executor</td><td>39</td><td>0</td></tr>
-        <tr><td>plansys2_epistemic_msgs</td><td>5</td><td>0</td></tr>
-        <tr class="sum"><td>from a clean build of six packages</td><td>82</td><td>0</td></tr>
+        <tr><td>plansys2_epistemic_executor</td><td>67</td><td>0</td></tr>
+        <tr><td>plansys2_epistemic_planner</td><td>62</td><td>0</td></tr>
+        <tr><td>plansys2_epistemic_perception</td><td>45</td><td>0</td></tr>
+        <tr><td>plansys2_epistemic_bt_builder</td><td>14</td><td>0</td></tr>
+        <tr><td>plansys2_aletheia_plan_solver</td><td>12</td><td>0</td></tr>
+        <tr class="sum"><td>the epistemic packages, linters not counted</td><td>200</td><td>0</td></tr>
       </tbody>
     </table>
+    <p class="note">
+      The last test run of each package in the local workspace: 28 September
+      2026, and 1 September for perception. The first version of this page
+      counted 82.
+    </p>
 
     <p>
       Three of these are worth naming. Every rendered tree is handed to the real
       BehaviorTree.CPP parser, because a tree that will not parse is worthless
       however good it looks. The formula written by the planner is parsed back by
       the state and compared as a <em class="term">formula</em>, not as a string. The two are separate processes with separate interning, and nothing but that
-      agreement connects them. And the node library is loaded exactly as the
-      executor loads it, so the extension mechanism is checked.
+      agreement connects them. And the two Aletheia plugins, the linked library
+      and the external process, are held to the same policy on the fleet tasks.
     </p>
 
     <p>
-      Not checked here: the four nodes ticking against a live state node under a
-      full stack, and the builder inside a running executor. Both need the whole
-      PlanSys2 system up, which this fork's sources cannot build on the distribution
-      available locally; they are exercised in continuous integration. The live
-      trace above was produced against the real state node, driven by hand.
+      The first version could not check the nodes ticking against a live state
+      node, or the builder inside a running executor, because the fork did not
+      build on ROS 2 Humble. It builds there now, and every demonstration below
+      runs the full stack. Running it found faults no unit test had:
     </p>
+
+    <table class="data txt">
+      <thead>
+        <tr><th>Found by</th><th>What was wrong</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="six_room_survey.html">The six-room survey</a></td><td>rendering any policy killed the executor with SIGSEGV, through a range-for over a destroyed parameter vector; it bit only when behavior tree node plugins were configured, that is, only in the epistemic setup</td></tr>
+        <tr><td><a href="six_room_survey.html">The six-room survey</a></td><td>an observation arriving 78 ms before the executor's own update was refused as a divergence, and the tree then applied the sensing action again and was refused because it had succeeded</td></tr>
+        <tr><td><a href="six_room_survey.html">The six-room survey</a></td><td>rolling-only executor and QoS classes made the fork unbuildable on the Humble its own CI targets</td></tr>
+        <tr><td><a href="hotel_distributed.html">Knowledge no robot holds alone</a></td><td>the executor checks the modal part of every designated event's precondition, so a telling whose events required different knowledge was never dispatched</td></tr>
+        <tr><td><a href="coordinated_attack.html">The coordinated attack</a></td><td>the action nodes exited on signal 11 at shutdown, from two builds of rclcpp_cascade_lifecycle with different class layouts</td></tr>
+        <tr><td><a href="stale_maps.html">Maps that go stale</a></td><td>a best-first strategy returns a flat plan without its epistemic fields, and the executor applied an action named '' at the first step</td></tr>
+      </tbody>
+    </table>
 
     <div class="warn">
       <h4>Open work</h4>
       <p>
-        The observation a sensing action produces is supplied on a port that a
-        domain-specific tree binds to whatever its performer reports. Wiring that to
-        real perception, so that the branch a robot takes is chosen by its sensors and not by a model that happens to designate one world, is the next step, and
-        the one that turns this from an architecture into a demonstration.
+        <b>Strategies that return a flat plan.</b> Best-first and enforced
+        hill-climbing return a sequence with no epistemic fields, which the
+        executor cannot run on a task that senses. The missions here use AO* or
+        replanning, which return policies.
+      </p>
+      <p>
+        <b>What repair cannot reach.</b> Repair re-designates worlds the model
+        already has. An observation no world could have produced means the model
+        cannot represent what happened, and the mission stops there.
+      </p>
+      <p>
+        <b>Concurrency beyond disjoint agents.</b> Parallel dispatch is off by
+        default, and two actions that name the same agent always run in order,
+        even when that agent only listens.
       </p>
     </div>
   </div>
 </section>
+
 <!-- ═══════════════════════════════════════════════ SEE IT RUN -->
 <section>
   <div class="container">
     <p class="sec-label">See it run</p>
-    <h3>The same layer, on a robot</h3>
+    <h3>The same layer, on robots</h3>
 
     <p>
       Everything above is the architecture: the policy on the wire, the tree
-      that runs it, the epistemic state it consults. The six-room survey is that
-      layer executing a mission end to end, with the knowledge coming from a map
-      the robot builds with its own laser while it drives.
+      that runs it, the epistemic state it consults. Each demonstration below is
+      that layer executing a mission end to end in Gazebo, and each exercises a
+      different part of it.
     </p>
+
+    <table class="data txt">
+      <thead>
+        <tr><th>Demonstration</th><th>What it exercises</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="six_room_survey.html">The six-room survey</a></td><td>perception: a branch decided by a map the robot builds with its own laser; a sensing action that ends when the knowledge holds</td></tr>
+        <tr><td><a href="warehouse_run.html">The warehouse run</a></td><td>one robot, then two, then three, each with its own map and perception node; the goal reported by check_formula during the run</td></tr>
+        <tr><td><a href="warehouse_rmf.html">Over Open-RMF</a></td><td>a policy of seventeen nodes, nine actions dispatched through Open-RMF in 172.5 s</td></tr>
+        <tr><td><a href="warehouse_xl.html">At scale</a></td><td>an outcome resolved by a laser and a perception node ahead of the task map's default</td></tr>
+        <tr><td><a href="coordinated_attack.html">The coordinated attack</a></td><td>a common-knowledge requirement checked before dispatch, and refused at \(E^4\)</td></tr>
+        <tr><td><a href="false_belief.html">A false belief</a></td><td>a belief requirement that held, a dispatch, and a fetch the world then refused</td></tr>
+        <tr><td><a href="hotel_distributed.html">Knowledge no robot holds alone</a></td><td>a policy branching on what the robots say, from a model in which every world is designated</td></tr>
+        <tr><td><a href="stale_maps.html">Maps that go stale</a></td><td>eight robots, a policy found by replanning, and maps sent as updates</td></tr>
+        <tr><td><a href="when_planning_pays.html">When planning pays</a></td><td>the plan's three messages on the same floor as flooding and pull, with the model and the maps agreeing on 24 of 24 beliefs</td></tr>
+      </tbody>
+    </table>
+
+    <div class="cta">
+      <div class="cta-txt">
+        <h4>Newest: when planning pays</h4>
+        <p>
+          The plan against flooding, pulling and gossip on 2400 paired instances:
+          the conditions under which sharing maps is enough, and those under
+          which a plan does what sharing cannot.
+        </p>
+      </div>
+      <a class="cta-go" href="when_planning_pays.html">
+        When planning pays
+        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+          <path d="M1 5h8M5.5 1.5L9 5l-3.5 3.5" stroke="currentColor" stroke-width="1.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
 
     <div class="cta">
       <div class="cta-txt">
