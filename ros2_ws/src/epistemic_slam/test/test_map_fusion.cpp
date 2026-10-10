@@ -175,3 +175,90 @@ int main(int argc, char ** argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
+
+// ---------------------------------------------------------------------------
+// Merge rules, on a map that has gone stale
+//
+// Two cells. Both robots held both as the shift map had them at time 0: the
+// first free, the second occupied. Then the first was staged and the second
+// cleared. The receiver saw the first change at time 10, the sender the
+// second at time 20, and neither saw the other's.
+// ---------------------------------------------------------------------------
+
+namespace
+{
+
+struct Stale
+{
+  std::vector<std::int8_t> receiver{O, O};
+  std::vector<double> receiver_at{10.0, 0.0};
+  std::vector<std::int8_t> sender{F, F};
+  std::vector<double> sender_at{0.0, 20.0};
+  std::vector<std::size_t> cells{0, 1};
+};
+
+}  // namespace
+
+TEST(Merge, ConfidenceNeverRepairsAStaleMap)
+{
+  // 0 and 100 are equally confident, the tie keeps the receiver's, and the
+  // receiver keeps the cell the sender saw cleared.
+  Stale s;
+  const auto m = epistemic_slam::merge_cells(
+    s.receiver, s.receiver_at, s.sender, s.sender_at, s.cells,
+    epistemic_slam::MergeRule::Confidence);
+  EXPECT_EQ(s.receiver, (std::vector<std::int8_t>{O, O}));
+  EXPECT_EQ(m.changed, 0u);
+  EXPECT_EQ(m.kept, 2u);
+}
+
+TEST(Merge, OverwriteSpreadsTheSendersStaleCell)
+{
+  // The receiver's fresh reading of the first cell is replaced by the
+  // sender's stale one.
+  Stale s;
+  const auto m = epistemic_slam::merge_cells(
+    s.receiver, s.receiver_at, s.sender, s.sender_at, s.cells,
+    epistemic_slam::MergeRule::Overwrite);
+  EXPECT_EQ(s.receiver, (std::vector<std::int8_t>{F, F}));
+  EXPECT_EQ(m.changed, 2u);
+}
+
+TEST(Merge, RecencyTakesEachCellFromWhoeverSawItLast)
+{
+  Stale s;
+  const auto m = epistemic_slam::merge_cells(
+    s.receiver, s.receiver_at, s.sender, s.sender_at, s.cells,
+    epistemic_slam::MergeRule::Recency);
+  EXPECT_EQ(s.receiver, (std::vector<std::int8_t>{O, F}));
+  EXPECT_EQ(m.changed, 1u);
+  EXPECT_EQ(m.kept, 1u);
+  // The cell taken keeps the time it was observed, not the time it arrived.
+  EXPECT_DOUBLE_EQ(s.receiver_at[1], 20.0);
+}
+
+TEST(Merge, RecencyWithoutTimesKeepsTheReceiver)
+{
+  Stale s;
+  std::vector<double> none;
+  epistemic_slam::merge_cells(
+    s.receiver, none, s.sender, none, s.cells, epistemic_slam::MergeRule::Recency);
+  EXPECT_EQ(s.receiver, (std::vector<std::int8_t>{O, O}));
+}
+
+TEST(Merge, UnobservedCellsAreLearnedUnderEveryRule)
+{
+  for (const auto rule : {epistemic_slam::MergeRule::Confidence,
+      epistemic_slam::MergeRule::Overwrite, epistemic_slam::MergeRule::Recency})
+  {
+    std::vector<std::int8_t> receiver{U, F};
+    std::vector<double> receiver_at{0.0, 0.0};
+    const std::vector<std::int8_t> sender{O, U};
+    const std::vector<double> sender_at{5.0, 0.0};
+    const auto m = epistemic_slam::merge_cells(
+      receiver, receiver_at, sender, sender_at, {0, 1}, rule);
+    EXPECT_EQ(receiver, (std::vector<std::int8_t>{O, F})) << epistemic_slam::to_string(rule);
+    EXPECT_EQ(m.learned, 1u);
+    EXPECT_EQ(m.considered, 1u);
+  }
+}

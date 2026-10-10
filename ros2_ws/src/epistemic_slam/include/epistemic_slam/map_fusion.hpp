@@ -117,6 +117,59 @@ Fusion fuse(
   const nav_msgs::msg::OccupancyGrid & b,
   const Thresholds & thresholds = {});
 
+/// How a receiver settles a cell it and the sender have both observed.
+///
+/// `fuse` above is the first: of two readings the more confident survives,
+/// and a tie keeps the receiver's. A SLAM map writes its settled cells as 0
+/// and 100, so every free-against-occupied conflict between two of them is a
+/// tie, and under this rule a received map never changes a cell the receiver
+/// has already settled. A map that has gone stale is never repaired by it.
+///
+/// The second takes the sender's reading wherever the sender has one. A
+/// stale map sent to a robot whose map is current then makes it stale, and
+/// what a receiver ends with depends on the order the maps arrived in.
+///
+/// The third takes the reading observed later, by the time each robot
+/// observed the cell, carried with the map. It is the rule under which a
+/// received map updates the receiver's exactly where the receiver missed a
+/// change: an update, in the sense of Katsuno and Mendelzon, of a map that
+/// was right when it was made. It needs the observation times, which an
+/// occupancy grid does not carry.
+enum class MergeRule
+{
+  Confidence,
+  Overwrite,
+  Recency,
+};
+
+const char * to_string(MergeRule rule);
+
+/// Parse "confidence", "overwrite" or "recency". False on anything else.
+bool parse_rule(const std::string & text, MergeRule & out);
+
+/// What merging one map into another did, over the cells it was asked about.
+struct Merge
+{
+  std::size_t considered{0};   ///< cells the sender had observed
+  std::size_t learned{0};      ///< unobserved by the receiver, now known
+  std::size_t changed{0};      ///< the receiver's settled reading replaced
+  std::size_t kept{0};         ///< a contradicting reading the receiver kept
+};
+
+/// Merge the sender's readings of `cells` into the receiver's, in place.
+///
+/// `receiver_observed` and `sender_observed` hold, for every cell of the
+/// grid, when that robot last observed it, in seconds; they are read only by
+/// MergeRule::Recency, and may be empty for the other two. A cell the
+/// receiver takes from the sender takes the sender's observation time with
+/// it, so that a reading passed on by a robot that did not observe it is
+/// still as old as the observation and no older.
+Merge merge_cells(
+  std::vector<std::int8_t> & receiver, std::vector<double> & receiver_observed,
+  const std::vector<std::int8_t> & sender, const std::vector<double> & sender_observed,
+  const std::vector<std::size_t> & cells, MergeRule rule,
+  const Thresholds & thresholds = {});
+
 }  // namespace epistemic_slam
 
 #endif  // EPISTEMIC_SLAM__MAP_FUSION_HPP_

@@ -62,6 +62,9 @@ public:
     double lookahead{0.6};         ///< m
     double veto{0.32};             ///< m ahead within which the laser stops it
     double replan_period{2.0};     ///< s
+    /// Namespaces of the other robots, whose odometry is read so that a
+    /// route keeps off where they stand. Empty on the pass-through floor.
+    std::vector<std::string> others;
   };
 
   enum class Progress {Moving, Arrived, NoRoute, Waiting};
@@ -85,6 +88,10 @@ public:
   void creep(double speed, double x0, double y0, double heading);
 
   void stop();
+
+  /// Boxes routes may not enter until set again; empty to lift them. A new
+  /// set takes effect at the next plan, which it forces.
+  void set_closed(const std::vector<Box> & closed);
 
   bool pose(double & x, double & y, double & yaw) const;
 
@@ -147,6 +154,9 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub_;
   rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr known_sub_;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr state_sub_;
+  std::vector<rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr> others_subs_;
+  std::map<std::string, std::pair<double, double>> others_;
+  std::vector<Box> closed_;
 };
 
 }  // namespace pass_through

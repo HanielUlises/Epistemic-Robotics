@@ -1,0 +1,21 @@
+# Ask a robot for its map of one region, with when it observed each cell.
+#
+# The sending half of a map exchange in stale_map_demo. The reply is the
+# robot's whole grid with every cell outside the region set to -1, so that it
+# is on the receiver's geometry, and the time, in seconds, at which the robot
+# last observed each cell, or at which the robot it took the reading from
+# did. An occupancy grid alone cannot say which of two contradicting readings
+# is the later; this is what can.
+
+# A region the robot watches, by name. Empty for the whole grid.
+string region
+
+---
+
+bool ok
+string message
+nav_msgs/OccupancyGrid map
+float64[] observed
+
+# What the robot's map says of the region: "clear", "blocked" or "unknown".
+string verdict

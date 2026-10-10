@@ -1,0 +1,28 @@
+# Hand a robot another robot's map of a region, to be merged into its own.
+#
+# The receiving half of a map exchange in stale_map_demo. How a cell the two
+# maps read differently is settled is the receiver's merge rule, a parameter
+# of the receiver and not of the message: epistemic_slam::MergeRule.
+
+string source
+string region
+nav_msgs/OccupancyGrid map
+float64[] observed
+
+---
+
+bool ok
+string message
+
+# The rule the receiver merged by.
+string rule
+
+# Over the region's cells: cells the receiver had not observed and now holds;
+# settled readings it replaced; contradicting readings it kept.
+uint32 learned
+uint32 changed
+uint32 kept
+
+# What the receiver's map says of the region before and after.
+string verdict_before
+string verdict_after

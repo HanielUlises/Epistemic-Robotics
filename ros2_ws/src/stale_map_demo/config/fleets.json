@@ -1,0 +1,200 @@
+{
+ "epistemic": {
+  "fleet": "epistemic",
+  "sends": 3,
+  "regressions": 0,
+  "maps_after_exchange": {
+   "r1": "xxx",
+   "r2": "xxo",
+   "r3": "xxx",
+   "r4": "oxo",
+   "r5": "oxx",
+   "r6": "oxo",
+   "r7": "oxo",
+   "r8": "oxo"
+  },
+  "stale_after_exchange": 8,
+  "hauls": {
+   "r2": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "xxo",
+    "map_at_end": "xxo",
+    "story": []
+   },
+   "r4": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "oxo",
+    "map_at_end": "oxo",
+    "story": []
+   },
+   "r8": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "oxo",
+    "map_at_end": "oxo",
+    "story": []
+   }
+  },
+  "delivered": [
+   "r2",
+   "r4",
+   "r8"
+  ]
+ },
+ "fuse": {
+  "fleet": "fuse",
+  "sends": 168,
+  "regressions": 0,
+  "maps_after_exchange": {
+   "r1": "xxx",
+   "r2": "xxx",
+   "r3": "xxx",
+   "r4": "oxx",
+   "r5": "oxx",
+   "r6": "oxo",
+   "r7": "oxo",
+   "r8": "oxx"
+  },
+  "stale_after_exchange": 11,
+  "hauls": {
+   "r2": {
+    "delivered": false,
+    "entered": [],
+    "map_at_start": "xxx",
+    "map_at_end": "xxx",
+    "story": [
+     "no route on its map"
+    ]
+   },
+   "r4": {
+    "delivered": false,
+    "entered": [],
+    "map_at_start": "oxx",
+    "map_at_end": "xxx",
+    "story": [
+     "its laser reads t1 blocked on the way",
+     "no route on its map"
+    ]
+   },
+   "r8": {
+    "delivered": false,
+    "entered": [],
+    "map_at_start": "oxx",
+    "map_at_end": "xxx",
+    "story": [
+     "its laser reads t1 blocked on the way",
+     "no route on its map"
+    ]
+   }
+  },
+  "delivered": []
+ },
+ "overwrite": {
+  "fleet": "overwrite",
+  "sends": 168,
+  "regressions": 10,
+  "maps_after_exchange": {
+   "r1": "xxo",
+   "r2": "xxo",
+   "r3": "xxo",
+   "r4": "xxo",
+   "r5": "xxo",
+   "r6": "xxo",
+   "r7": "xxo",
+   "r8": "xxo"
+  },
+  "stale_after_exchange": 0,
+  "hauls": {
+   "r2": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "xxo",
+    "map_at_end": "xxo",
+    "story": []
+   },
+   "r4": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "xxo",
+    "map_at_end": "xxo",
+    "story": []
+   },
+   "r8": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "xxo",
+    "map_at_end": "xxo",
+    "story": []
+   }
+  },
+  "delivered": [
+   "r2",
+   "r4",
+   "r8"
+  ]
+ },
+ "recency": {
+  "fleet": "recency",
+  "sends": 168,
+  "regressions": 0,
+  "maps_after_exchange": {
+   "r1": "xxo",
+   "r2": "xxo",
+   "r3": "xxo",
+   "r4": "xxo",
+   "r5": "xxo",
+   "r6": "xxo",
+   "r7": "xxo",
+   "r8": "xxo"
+  },
+  "stale_after_exchange": 0,
+  "hauls": {
+   "r2": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "xxo",
+    "map_at_end": "xxo",
+    "story": []
+   },
+   "r4": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "xxo",
+    "map_at_end": "xxo",
+    "story": []
+   },
+   "r8": {
+    "delivered": true,
+    "entered": [
+     "t3"
+    ],
+    "map_at_start": "xxo",
+    "map_at_end": "xxo",
+    "story": []
+   }
+  },
+  "delivered": [
+   "r2",
+   "r4",
+   "r8"
+  ]
+ }
+}

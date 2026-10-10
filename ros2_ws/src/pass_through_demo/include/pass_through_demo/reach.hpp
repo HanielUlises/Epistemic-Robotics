@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "mu_path_planner/mu_calculus.hpp"
@@ -58,6 +59,14 @@ struct SafeSetInput
   std::string model_json;           ///< the epistemic state's model; may be empty
   double inflation{0.35};           ///< metres obstacles are grown by
   epistemic_slam::Thresholds thresholds{};
+  /// Where the other robots stand, as discs the route must keep off; they
+  /// are grown by the inflation like any obstacle. Empty by default: on the
+  /// pass-through floor no robot stands on another's way.
+  std::vector<std::pair<double, double>> keep_out;
+  double keep_out_radius{0.30};
+  /// Boxes the route must not enter, whatever the map says of them: the bays
+  /// an action that names one bay does not name.
+  std::vector<Box> closed;
 };
 
 struct SafeSet

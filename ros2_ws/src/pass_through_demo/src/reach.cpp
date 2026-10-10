@@ -130,6 +130,21 @@ SafeSet build_safe_set(const SafeSetInput & in)
       occupied[i] = 1;
     }
   }
+  for (const auto & box : in.closed) {
+    for (const auto i : plan.cells_in(box)) {
+      occupied[i] = 1;
+    }
+  }
+  for (const auto & [kx, ky] : in.keep_out) {
+    const double r = in.keep_out_radius;
+    for (const auto i : plan.cells_in(Box{kx - r, ky - r, kx + r, ky + r})) {
+      double cx, cy;
+      plan.centre(i, cx, cy);
+      if (std::hypot(cx - kx, cy - ky) <= r) {
+        occupied[i] = 1;
+      }
+    }
+  }
   const auto inflated = dilate(plan, occupied, in.inflation);
 
   // The formula, evaluated by the µ-calculus planner's own evaluator over the

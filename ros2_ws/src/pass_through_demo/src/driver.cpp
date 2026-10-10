@@ -66,6 +66,15 @@ Driver::Driver(rclcpp::Node::SharedPtr node, const Config & config)
   state_sub_ = node_->create_subscription<std_msgs::msg::String>(
     "/epistemic_state/state", rclcpp::QoS(10).transient_local(),
     [this](std_msgs::msg::String::SharedPtr m) {on_state(m);});
+
+  for (const auto & other : config_.others) {
+    others_subs_.push_back(node_->create_subscription<nav_msgs::msg::Odometry>(
+        "/" + other + "/odom", rclcpp::SensorDataQoS(),
+        [this, other](nav_msgs::msg::Odometry::SharedPtr m) {
+          std::lock_guard<std::mutex> held(lock_);
+          others_[other] = {m->pose.pose.position.x, m->pose.pose.position.y};
+        }));
+  }
 }
 
 void Driver::on_odom(nav_msgs::msg::Odometry::SharedPtr msg)
@@ -112,6 +121,14 @@ void Driver::on_state(std_msgs::msg::String::SharedPtr msg)
   }
 }
 
+void Driver::set_closed(const std::vector<Box> & closed)
+{
+  std::lock_guard<std::mutex> held(lock_);
+  closed_ = closed;
+  ++knowledge_version_;
+  route_.clear();
+}
+
 bool Driver::pose(double & x, double & y, double & yaw) const
 {
   std::lock_guard<std::mutex> held(lock_);
@@ -151,10 +168,17 @@ Driver::Assessment Driver::assess(double gx, double gy, double radius, bool publ
   Grid known;
   std::string model;
   double x, y, yaw;
+  std::vector<std::pair<double, double>> others;
+  std::vector<Box> closed;
   {
     std::lock_guard<std::mutex> held(lock_);
+    closed = closed_;
     known = known_;
     model = model_json_;
+    for (const auto & [ns, at] : others_) {
+      (void)ns;
+      others.push_back(at);
+    }
     x = x_;
     y = y_;
     yaw = yaw_;
@@ -168,6 +192,8 @@ Driver::Assessment Driver::assess(double gx, double gy, double radius, bool publ
   input.agent = config_.agent;
   input.model_json = model;
   input.inflation = config_.inflation;
+  input.keep_out = others;
+  input.closed = closed;
   const auto safe = build_safe_set(input);
   out.formula = safe.formula;
   if (!safe.ok) {

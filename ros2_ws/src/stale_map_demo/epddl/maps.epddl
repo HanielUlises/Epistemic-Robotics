@@ -1,0 +1,55 @@
+(define (action-type-library maps)
+
+  ;; Two action types for maps that go stale.
+  ;;
+  ;; The variables are ?x and ?y, never ?e or ?f: plank substitutes a library
+  ;; type's variables as text, and a library variable that shares its name
+  ;; with an action parameter captures it.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+  )
+
+  ;; A change on the floor that only some robots see. ?do is the change;
+  ;; ?skip is the same slot passing with nothing changed, and carries the
+  ;; effects both share, so that every robot's worlds keep pace with the
+  ;; schedule. A robot that sees the bay tells the two apart. One that does
+  ;; not, and takes its map to be the floor, maps the change onto nothing
+  ;; having changed: the static-world assumption every occupancy map is built
+  ;; on, and the reason a map goes stale without its holder knowing. One that
+  ;; knows maps go stale relates the two and is left uncertain instead.
+
+  (:action-type change
+    :events     (?do ?skip)
+    :observability-types (Fully Doubting Oblivious)
+    :relations  (Fully     (:forall (?x - event) (?x ?x))
+                 Doubting  (:forall (?x ?y - event) (?x ?y))
+                 Oblivious (:forall (?x - event) (?x ?skip)) )
+    :designated (?do)
+    :conditions (?do (:non-trivial-postconditions))
+  )
+
+  ;; One robot's reading of a region sent to another, point to point. ?told
+  ;; is the report, made where it is true. ?revise is the change the report
+  ;; implies, applied where the recipient believes the region is as its own
+  ;; map has it: the recipient relates the first to the second, and so takes
+  ;; a reading that contradicts its map as news that the floor changed after
+  ;; its map was made. That is an update in the sense of Katsuno and
+  ;; Mendelzon, and not a revision: the recipient's map was right when it was
+  ;; made. A truthful announcement of the new state would find no world among
+  ;; those the recipient believes possible, and leave it believing everything.
+  ;; Every robot not party to the exchange is oblivious to it.
+
+  (:action-type map-report
+    :events     (?told ?revise ?nil)
+    :observability-types (Fully Recipient Oblivious)
+    :relations  (Fully     (:forall (?x - event) (?x ?x))
+                 Recipient (:and (?told ?revise) (?revise ?revise) (?nil ?nil))
+                 Oblivious (:forall (?x - event) (?x ?nil)) )
+    :designated (?told)
+    :conditions (?told (:trivial-postconditions)
+                 ?revise (:non-trivial-postconditions)
+                 ?nil (:trivial-event))
+  )
+)
