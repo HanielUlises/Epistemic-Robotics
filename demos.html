@@ -564,6 +564,7 @@ sup.cite a:hover{text-decoration:underline}
             <div class="nav-sub">
           <a href="demos.html#stale-maps">All stale-maps demos</a>
           <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+          <a href="when_planning_pays.html">&#183; When planning pays<span class="sub">The plan against flooding, pulling and gossip: when sharing is enough, and when not</span></a>
             </div>
           </details>
             </div>
@@ -588,6 +589,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
           <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+          <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -1101,7 +1103,7 @@ sup.cite a:hover{text-decoration:underline}
         the receiver applies where it believes it missed a change, and a robot
         sends one only to a robot it believes holds the opposite,
         \(B_iB_j\,\mathit{blocked}(t)\). Four fleets of eight robots, one run
-        each.
+        each; then the plan against the protocols, condition by condition.
       </p>
 
       <div class="dcard">
@@ -1122,6 +1124,29 @@ sup.cite a:hover{text-decoration:underline}
             <span>KD45</span><span>update, not revision</span>
             <span>3 maps against 168</span>
             <span>model and maps agree, 24 of 24</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/when_planning_pays.jpg"
+          alt="The pull run on the secret floor: r4, the contractor, crossing t3 with t1 blocked on its map after it asked and was told" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="when_planning_pays.html">When planning pays</a></h5>
+          <p>
+            The plan against flooding, pull and gossip on 2400 paired instances.
+            With an unlimited budget, goals over the floor and clocks that agree,
+            flooding does whatever any strategy can. Under a budget the plan
+            needed 3 to 6 messages where the protocols needed 96 to 512; with a
+            contractor that must not learn a change, flooding kept the secret only
+            when nobody had seen it; clock skew broke recency, which a merge by
+            version repairs without a planner. On the floor, only the plan
+            delivered every hauler without telling the contractor.
+          </p>
+          <div class="facts">
+            <span>5 propositions</span><span>2400 instances, paired</span>
+            <span>600 of 600 predicted</span>
+            <span>4 strategies in Gazebo</span>
           </div>
         </div>
       </div>

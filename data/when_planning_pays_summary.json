@@ -1,0 +1,5419 @@
+{
+ "budget/n16-full": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 4.0,
+    "messages_iqr": [
+     3.0,
+     4.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 765.0,
+    "messages_iqr": [
+     750.0,
+     810.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 228.75,
+     "wilcoxon_p": 7.013359918337265e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 765.0,
+    "messages_iqr": [
+     750.0,
+     810.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 228.75,
+     "wilcoxon_p": 7.013359918337265e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 58,
+    "n": 200,
+    "rate": [
+     0.29,
+     0.2315392689125782,
+     0.3563760535731166
+    ],
+    "messages_median": 720.0,
+    "messages_iqr": [
+     720.0,
+     720.0
+    ],
+    "mcnemar": [
+     142,
+     0,
+     3.587324068671532e-43
+    ],
+    "paired_messages": {
+     "n": 58,
+     "median_ratio": 210.0,
+     "wilcoxon_p": 1.2135071349496154e-11
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 450.0,
+    "messages_iqr": [
+     450.0,
+     450.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 112.5,
+     "wilcoxon_p": 1.4867039914633563e-35
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 450.0,
+    "messages_iqr": [
+     450.0,
+     450.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 112.5,
+     "wilcoxon_p": 1.4867039914633563e-35
+    }
+   },
+   "pull-overwrite": {
+    "k": 4,
+    "n": 200,
+    "rate": [
+     0.02,
+     0.007804300176394188,
+     0.050287865505193874
+    ],
+    "messages_median": 450.0,
+    "messages_iqr": [
+     450.0,
+     450.0
+    ],
+    "mcnemar": [
+     196,
+     0,
+     1.9913648889155653e-59
+    ]
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 198,
+    "n": 200,
+    "rate": [
+     0.99,
+     0.9642775148038205,
+     0.9972533993962251
+    ],
+    "messages_median": 318.0,
+    "messages_iqr": [
+     288.0,
+     360.0
+    ],
+    "mcnemar": [
+     2,
+     0,
+     0.5
+    ],
+    "paired_messages": {
+     "n": 198,
+     "median_ratio": 92.0,
+     "wilcoxon_p": 1.5219012137792223e-34
+    }
+   },
+   "gossip-version": {
+    "k": 198,
+    "n": 200,
+    "rate": [
+     0.99,
+     0.9642775148038205,
+     0.9972533993962251
+    ],
+    "messages_median": 318.0,
+    "messages_iqr": [
+     288.0,
+     360.0
+    ],
+    "mcnemar": [
+     2,
+     0,
+     0.5
+    ],
+    "paired_messages": {
+     "n": 198,
+     "median_ratio": 92.0,
+     "wilcoxon_p": 1.5219012137792223e-34
+    }
+   },
+   "gossip-overwrite": {
+    "k": 68,
+    "n": 200,
+    "rate": [
+     0.34,
+     0.2779143922159556,
+     0.40811632967790723
+    ],
+    "messages_median": 1053.0,
+    "messages_iqr": [
+     733.5,
+     1599.0
+    ],
+    "mcnemar": [
+     132,
+     0,
+     3.6734198463196485e-40
+    ],
+    "paired_messages": {
+     "n": 68,
+     "median_ratio": 356.25,
+     "wilcoxon_p": 3.8186613163843915e-13
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 2.5815,
+  "plan_seconds_max": 5.442,
+  "plan_solved": 200,
+  "elimination_removed_median": 0.0,
+  "plan_inferred_sends": 0,
+  "skipped": 1
+ },
+ "budget/n16-radio": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 4.0,
+    "messages_iqr": [
+     3.0,
+     5.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 255.5,
+    "messages_iqr": [
+     231.0,
+     278.25
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 67.29166666666666,
+     "wilcoxon_p": 7.155289878871302e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 255.5,
+    "messages_iqr": [
+     231.0,
+     278.25
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 67.29166666666666,
+     "wilcoxon_p": 7.155289878871302e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 62,
+    "n": 200,
+    "rate": [
+     0.31,
+     0.24998842733633997,
+     0.377173054912622
+    ],
+    "messages_median": 247.0,
+    "messages_iqr": [
+     221.25,
+     283.75
+    ],
+    "mcnemar": [
+     138,
+     0,
+     5.739718509874451e-42
+    ],
+    "paired_messages": {
+     "n": 62,
+     "median_ratio": 74.875,
+     "wilcoxon_p": 3.773321934754056e-12
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 131,
+    "n": 200,
+    "rate": [
+     0.655,
+     0.5867546071792236,
+     0.7174031309860971
+    ],
+    "messages_median": 144.0,
+    "messages_iqr": [
+     126.0,
+     153.0
+    ],
+    "mcnemar": [
+     69,
+     0,
+     3.3881317890172014e-21
+    ],
+    "paired_messages": {
+     "n": 131,
+     "median_ratio": 44.0,
+     "wilcoxon_p": 1.510096915551975e-23
+    }
+   },
+   "pull-version": {
+    "k": 131,
+    "n": 200,
+    "rate": [
+     0.655,
+     0.5867546071792236,
+     0.7174031309860971
+    ],
+    "messages_median": 144.0,
+    "messages_iqr": [
+     126.0,
+     153.0
+    ],
+    "mcnemar": [
+     69,
+     0,
+     3.3881317890172014e-21
+    ],
+    "paired_messages": {
+     "n": 131,
+     "median_ratio": 44.0,
+     "wilcoxon_p": 1.510096915551975e-23
+    }
+   },
+   "pull-overwrite": {
+    "k": 2,
+    "n": 200,
+    "rate": [
+     0.01,
+     0.0027466006037749346,
+     0.03572248519617954
+    ],
+    "messages_median": 117.0,
+    "messages_iqr": [
+     112.5,
+     121.5
+    ],
+    "mcnemar": [
+     198,
+     0,
+     4.9784122222889134e-60
+    ]
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 186,
+    "n": 200,
+    "rate": [
+     0.93,
+     0.8859442178331628,
+     0.9578482170770813
+    ],
+    "messages_median": 372.0,
+    "messages_iqr": [
+     312.0,
+     418.5
+    ],
+    "mcnemar": [
+     14,
+     0,
+     0.0001220703125
+    ],
+    "paired_messages": {
+     "n": 186,
+     "median_ratio": 100.25,
+     "wilcoxon_p": 1.415894786162467e-32
+    }
+   },
+   "gossip-version": {
+    "k": 186,
+    "n": 200,
+    "rate": [
+     0.93,
+     0.8859442178331628,
+     0.9578482170770813
+    ],
+    "messages_median": 372.0,
+    "messages_iqr": [
+     312.0,
+     418.5
+    ],
+    "mcnemar": [
+     14,
+     0,
+     0.0001220703125
+    ],
+    "paired_messages": {
+     "n": 186,
+     "median_ratio": 100.25,
+     "wilcoxon_p": 1.415894786162467e-32
+    }
+   },
+   "gossip-overwrite": {
+    "k": 28,
+    "n": 200,
+    "rate": [
+     0.14,
+     0.09866918625271481,
+     0.19489993800847627
+    ],
+    "messages_median": 1806.0,
+    "messages_iqr": [
+     859.5,
+     5000.0
+    ],
+    "mcnemar": [
+     172,
+     0,
+     3.3409558876152446e-52
+    ],
+    "paired_messages": {
+     "n": 28,
+     "median_ratio": 604.25,
+     "wilcoxon_p": 1.8743681000777662e-06
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 2.245,
+  "plan_seconds_max": 3.007,
+  "plan_solved": 200,
+  "elimination_removed_median": 0.0,
+  "plan_inferred_sends": 0,
+  "skipped": 1
+ },
+ "budget/n8-full": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     175.0,
+     210.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.783166120197886e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     175.0,
+     210.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.783166120197886e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 58,
+    "n": 200,
+    "rate": [
+     0.29,
+     0.2315392689125782,
+     0.3563760535731166
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     142,
+     0,
+     3.587324068671532e-43
+    ],
+    "paired_messages": {
+     "n": 58,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 3.5056094647966146e-12
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 1.0389027182889271e-36
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 1.0389027182889271e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 31,
+    "n": 200,
+    "rate": [
+     0.155,
+     0.11139568514638545,
+     0.211608058937256
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     169,
+     0,
+     2.6727647100921956e-51
+    ],
+    "paired_messages": {
+     "n": 31,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.1396508196911668e-07
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.040492959450768e-35
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.040492959450768e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 51,
+    "n": 200,
+    "rate": [
+     0.255,
+     0.19960402982802747,
+     0.3196305130719498
+    ],
+    "messages_median": 318.0,
+    "messages_iqr": [
+     255.0,
+     435.0
+    ],
+    "mcnemar": [
+     149,
+     0,
+     2.802596928649634e-45
+    ],
+    "paired_messages": {
+     "n": 51,
+     "median_ratio": 234.0,
+     "wilcoxon_p": 2.5664946335136047e-10
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.083,
+  "plan_seconds_max": 0.148,
+  "plan_solved": 200,
+  "elimination_removed_median": 7.0,
+  "plan_inferred_sends": 0,
+  "skipped": 21
+ },
+ "budget/n8-radio": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     3.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 75.0,
+    "messages_iqr": [
+     66.0,
+     88.25
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 35.0,
+     "wilcoxon_p": 7.087672670440457e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 75.0,
+    "messages_iqr": [
+     66.0,
+     88.25
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 35.0,
+     "wilcoxon_p": 7.087672670440457e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 51,
+    "n": 200,
+    "rate": [
+     0.255,
+     0.19960402982802747,
+     0.3196305130719498
+    ],
+    "messages_median": 68.0,
+    "messages_iqr": [
+     60.0,
+     77.5
+    ],
+    "mcnemar": [
+     149,
+     0,
+     2.802596928649634e-45
+    ],
+    "paired_messages": {
+     "n": 51,
+     "median_ratio": 36.5,
+     "wilcoxon_p": 2.5570262701076266e-10
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 115,
+    "n": 200,
+    "rate": [
+     0.575,
+     0.5057080512046821,
+     0.6414650479075696
+    ],
+    "messages_median": 36.0,
+    "messages_iqr": [
+     30.0,
+     42.0
+    ],
+    "mcnemar": [
+     85,
+     0,
+     5.169878828456423e-26
+    ],
+    "paired_messages": {
+     "n": 115,
+     "median_ratio": 21.0,
+     "wilcoxon_p": 6.217323081503681e-21
+    }
+   },
+   "pull-version": {
+    "k": 115,
+    "n": 200,
+    "rate": [
+     0.575,
+     0.5057080512046821,
+     0.6414650479075696
+    ],
+    "messages_median": 36.0,
+    "messages_iqr": [
+     30.0,
+     42.0
+    ],
+    "mcnemar": [
+     85,
+     0,
+     5.169878828456423e-26
+    ],
+    "paired_messages": {
+     "n": 115,
+     "median_ratio": 21.0,
+     "wilcoxon_p": 6.217323081503681e-21
+    }
+   },
+   "pull-overwrite": {
+    "k": 29,
+    "n": 200,
+    "rate": [
+     0.145,
+     0.1028928513530641,
+     0.20048781284894374
+    ],
+    "messages_median": 30.0,
+    "messages_iqr": [
+     24.0,
+     36.0
+    ],
+    "mcnemar": [
+     171,
+     0,
+     6.681911775230489e-52
+    ],
+    "paired_messages": {
+     "n": 29,
+     "median_ratio": 21.0,
+     "wilcoxon_p": 1.2465618122616381e-06
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 195,
+    "n": 200,
+    "rate": [
+     0.975,
+     0.9428208558483829,
+     0.9892754385292123
+    ],
+    "messages_median": 246.0,
+    "messages_iqr": [
+     216.0,
+     282.0
+    ],
+    "mcnemar": [
+     5,
+     0,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 108.0,
+     "wilcoxon_p": 4.71737623883341e-34
+    }
+   },
+   "gossip-version": {
+    "k": 195,
+    "n": 200,
+    "rate": [
+     0.975,
+     0.9428208558483829,
+     0.9892754385292123
+    ],
+    "messages_median": 246.0,
+    "messages_iqr": [
+     216.0,
+     282.0
+    ],
+    "mcnemar": [
+     5,
+     0,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 108.0,
+     "wilcoxon_p": 4.71737623883341e-34
+    }
+   },
+   "gossip-overwrite": {
+    "k": 32,
+    "n": 200,
+    "rate": [
+     0.16,
+     0.11567342208544587,
+     0.2171418619390124
+    ],
+    "messages_median": 930.0,
+    "messages_iqr": [
+     444.0,
+     5000.0
+    ],
+    "mcnemar": [
+     168,
+     0,
+     5.345529420184391e-51
+    ],
+    "paired_messages": {
+     "n": 32,
+     "median_ratio": 694.0,
+     "wilcoxon_p": 3.943579306158045e-07
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.082,
+  "plan_seconds_max": 0.128,
+  "plan_solved": 200,
+  "elimination_removed_median": 7.0,
+  "plan_inferred_sends": 0,
+  "skipped": 21
+ },
+ "elimination/b4": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 195,
+    "n": 200,
+    "rate": [
+     0.975,
+     0.9428208558483829,
+     0.9892754385292123
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     1.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 112.0,
+     "wilcoxon_p": 4.564951617708814e-36
+    }
+   },
+   "flood-recency-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 112.0,
+     "wilcoxon_p": 4.564951617708814e-36
+    }
+   },
+   "flood-version-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 112.0,
+     "wilcoxon_p": 4.564951617708814e-36
+    }
+   },
+   "flood-overwrite-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "flood-confidence": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 112.0,
+     "wilcoxon_p": 4.564951617708814e-36
+    }
+   },
+   "flood-confidence-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 224.0,
+    "messages_iqr": [
+     224.0,
+     224.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 3.898795820589065e-36
+    }
+   },
+   "pull-recency-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 3.898795820589065e-36
+    }
+   },
+   "pull-version-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "pull-overwrite": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 3.898795820589065e-36
+    }
+   },
+   "pull-overwrite-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "pull-confidence": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 3.898795820589065e-36
+    }
+   },
+   "pull-confidence-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 112.0,
+    "messages_iqr": [
+     112.0,
+     112.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 1.2066488902708635e-35
+    }
+   },
+   "gossip-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 271.0,
+    "messages_iqr": [
+     244.0,
+     295.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 182.5,
+     "wilcoxon_p": 4.727452863797224e-34
+    }
+   },
+   "gossip-recency-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 272.0,
+    "messages_iqr": [
+     245.75,
+     296.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 204.5,
+     "wilcoxon_p": 1.4672540374831693e-33
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 271.0,
+    "messages_iqr": [
+     244.0,
+     295.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 182.5,
+     "wilcoxon_p": 4.727452863797224e-34
+    }
+   },
+   "gossip-version-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 272.0,
+    "messages_iqr": [
+     245.75,
+     296.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 204.5,
+     "wilcoxon_p": 1.4672540374831693e-33
+    }
+   },
+   "gossip-overwrite": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 271.0,
+    "messages_iqr": [
+     244.0,
+     295.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 182.5,
+     "wilcoxon_p": 4.727452863797224e-34
+    }
+   },
+   "gossip-overwrite-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 272.0,
+    "messages_iqr": [
+     245.75,
+     296.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 204.5,
+     "wilcoxon_p": 1.4672540374831693e-33
+    }
+   },
+   "gossip-confidence": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 271.0,
+    "messages_iqr": [
+     244.0,
+     295.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 182.5,
+     "wilcoxon_p": 4.727452863797224e-34
+    }
+   },
+   "gossip-confidence-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 272.0,
+    "messages_iqr": [
+     245.75,
+     296.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 204.5,
+     "wilcoxon_p": 1.4672540374831693e-33
+    }
+   }
+  },
+  "plan_seconds_median": 0.038,
+  "plan_seconds_max": 120.009,
+  "plan_solved": 195,
+  "elimination_removed_median": 2.0,
+  "plan_inferred_sends": 13,
+  "skipped": 25
+ },
+ "elimination/b6": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 195,
+    "n": 200,
+    "rate": [
+     0.975,
+     0.9428208558483829,
+     0.9892754385292123
+    ],
+    "messages_median": 1.0,
+    "messages_iqr": [
+     1.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 4.3851686796888134e-36
+    }
+   },
+   "flood-recency-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 4.3851686796888134e-36
+    }
+   },
+   "flood-version-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 4.3851686796888134e-36
+    }
+   },
+   "flood-overwrite-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "flood-confidence": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 4.3851686796888134e-36
+    }
+   },
+   "flood-confidence-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 336.0,
+    "messages_iqr": [
+     336.0,
+     336.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 336.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 4.0222981145200005e-36
+    }
+   },
+   "pull-recency-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 4.0222981145200005e-36
+    }
+   },
+   "pull-version-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "pull-overwrite": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 4.0222981145200005e-36
+    }
+   },
+   "pull-overwrite-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "pull-confidence": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 4.0222981145200005e-36
+    }
+   },
+   "pull-confidence-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 1.1573720833504941e-35
+    }
+   },
+   "gossip-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 418.5,
+    "messages_iqr": [
+     382.75,
+     453.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 347.0,
+     "wilcoxon_p": 4.731587526502355e-34
+    }
+   },
+   "gossip-recency-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 420.5,
+    "messages_iqr": [
+     385.5,
+     454.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 352.0,
+     "wilcoxon_p": 1.4685553285946446e-33
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 418.5,
+    "messages_iqr": [
+     382.75,
+     453.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 347.0,
+     "wilcoxon_p": 4.731587526502355e-34
+    }
+   },
+   "gossip-version-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 420.5,
+    "messages_iqr": [
+     385.5,
+     454.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 352.0,
+     "wilcoxon_p": 1.4685553285946446e-33
+    }
+   },
+   "gossip-overwrite": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 418.5,
+    "messages_iqr": [
+     382.75,
+     453.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 347.0,
+     "wilcoxon_p": 4.731587526502355e-34
+    }
+   },
+   "gossip-overwrite-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 420.5,
+    "messages_iqr": [
+     385.5,
+     454.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 352.0,
+     "wilcoxon_p": 1.4685553285946446e-33
+    }
+   },
+   "gossip-confidence": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 418.5,
+    "messages_iqr": [
+     382.75,
+     453.25
+    ],
+    "mcnemar": [
+     0,
+     5,
+     0.0625
+    ],
+    "paired_messages": {
+     "n": 195,
+     "median_ratio": 347.0,
+     "wilcoxon_p": 4.731587526502355e-34
+    }
+   },
+   "gossip-confidence-noinfer": {
+    "k": 192,
+    "n": 200,
+    "rate": [
+     0.96,
+     0.9230670617058012,
+     0.9795946128493436
+    ],
+    "messages_median": 420.5,
+    "messages_iqr": [
+     385.5,
+     454.25
+    ],
+    "mcnemar": [
+     3,
+     0,
+     0.25
+    ],
+    "paired_messages": {
+     "n": 192,
+     "median_ratio": 352.0,
+     "wilcoxon_p": 1.4685553285946446e-33
+    }
+   }
+  },
+  "plan_seconds_median": 0.066,
+  "plan_seconds_max": 120.01,
+  "plan_solved": 195,
+  "elimination_removed_median": 2.0,
+  "plan_inferred_sends": 5,
+  "skipped": 22
+ },
+ "joint/pairs1": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 1.5,
+    "messages_iqr": [
+     1.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     175.0,
+     210.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 148.75,
+     "wilcoxon_p": 6.85346011921081e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     175.0,
+     210.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 148.75,
+     "wilcoxon_p": 6.85346011921081e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 58,
+    "n": 200,
+    "rate": [
+     0.29,
+     0.2315392689125782,
+     0.3563760535731166
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     142,
+     0,
+     3.587324068671532e-43
+    ],
+    "paired_messages": {
+     "n": 58,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 4.690999646298638e-12
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 63.0,
+     "wilcoxon_p": 3.2705045980744436e-36
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 63.0,
+     "wilcoxon_p": 3.2705045980744436e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 31,
+    "n": 200,
+    "rate": [
+     0.155,
+     0.11139568514638545,
+     0.211608058937256
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     169,
+     0,
+     2.6727647100921956e-51
+    ],
+    "paired_messages": {
+     "n": 31,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 3.8083491836872096e-07
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 154.5,
+     "wilcoxon_p": 7.064641699178254e-35
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 154.5,
+     "wilcoxon_p": 7.064641699178254e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 51,
+    "n": 200,
+    "rate": [
+     0.255,
+     0.19960402982802747,
+     0.3196305130719498
+    ],
+    "messages_median": 318.0,
+    "messages_iqr": [
+     255.0,
+     435.0
+    ],
+    "mcnemar": [
+     149,
+     0,
+     2.802596928649634e-45
+    ],
+    "paired_messages": {
+     "n": 51,
+     "median_ratio": 234.0,
+     "wilcoxon_p": 2.5664946335136047e-10
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.066,
+  "plan_seconds_max": 10.145,
+  "plan_solved": 200,
+  "elimination_removed_median": 9.0,
+  "plan_inferred_sends": 0,
+  "skipped": 21
+ },
+ "joint/pairs2": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 3.0,
+    "messages_iqr": [
+     2.0,
+     3.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     175.0,
+     210.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 67.66666666666667,
+     "wilcoxon_p": 6.894071012995524e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     175.0,
+     210.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 67.66666666666667,
+     "wilcoxon_p": 6.894071012995524e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 60,
+    "n": 200,
+    "rate": [
+     0.3,
+     0.24074644243406385,
+     0.3667919599332645
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     140,
+     0,
+     1.4349296274686127e-42
+    ],
+    "paired_messages": {
+     "n": 60,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 3.782200719885353e-12
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 2.7651682623105964e-36
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 2.7651682623105964e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 12,
+    "n": 200,
+    "rate": [
+     0.06,
+     0.0346518499012715,
+     0.10193263530685089
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     188,
+     0,
+     5.0978941156238473e-57
+    ],
+    "paired_messages": {
+     "n": 12,
+     "median_ratio": 56.0,
+     "wilcoxon_p": 0.000244140625
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 76.0,
+     "wilcoxon_p": 7.080586116610388e-35
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 76.0,
+     "wilcoxon_p": 7.080586116610388e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 56,
+    "n": 200,
+    "rate": [
+     0.28,
+     0.22236792842635128,
+     0.34592431417771
+    ],
+    "messages_median": 318.0,
+    "messages_iqr": [
+     252.0,
+     445.5
+    ],
+    "mcnemar": [
+     144,
+     0,
+     8.96831017167883e-44
+    ],
+    "paired_messages": {
+     "n": 56,
+     "median_ratio": 115.5,
+     "wilcoxon_p": 3.7622053085731885e-11
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.068,
+  "plan_seconds_max": 0.158,
+  "plan_solved": 200,
+  "elimination_removed_median": 0.0,
+  "plan_inferred_sends": 0,
+  "skipped": 2
+ },
+ "secrecy/n12": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 3.0,
+    "messages_iqr": [
+     2.0,
+     3.0
+    ]
+   },
+   "flood-recency": {
+    "k": 2,
+    "n": 200,
+    "rate": [
+     0.01,
+     0.0027466006037749346,
+     0.03572248519617954
+    ],
+    "messages_median": 401.5,
+    "messages_iqr": [
+     398.75,
+     404.25
+    ],
+    "mcnemar": [
+     198,
+     0,
+     4.9784122222889134e-60
+    ]
+   },
+   "flood-version": {
+    "k": 2,
+    "n": 200,
+    "rate": [
+     0.01,
+     0.0027466006037749346,
+     0.03572248519617954
+    ],
+    "messages_median": 401.5,
+    "messages_iqr": [
+     398.75,
+     404.25
+    ],
+    "mcnemar": [
+     198,
+     0,
+     4.9784122222889134e-60
+    ]
+   },
+   "flood-overwrite": {
+    "k": 37,
+    "n": 200,
+    "rate": [
+     0.185,
+     0.13730116322736063,
+     0.2445718205011816
+    ],
+    "messages_median": 396.0,
+    "messages_iqr": [
+     396.0,
+     396.0
+    ],
+    "mcnemar": [
+     163,
+     0,
+     1.7105694144590052e-49
+    ],
+    "paired_messages": {
+     "n": 37,
+     "median_ratio": 132.0,
+     "wilcoxon_p": 3.73269128652307e-08
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 264.0,
+    "messages_iqr": [
+     264.0,
+     264.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 88.0,
+     "wilcoxon_p": 8.887527237134927e-36
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 264.0,
+    "messages_iqr": [
+     264.0,
+     264.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 88.0,
+     "wilcoxon_p": 8.887527237134927e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 9,
+    "n": 200,
+    "rate": [
+     0.045,
+     0.023852271724704166,
+     0.08329759366096785
+    ],
+    "messages_median": 264.0,
+    "messages_iqr": [
+     264.0,
+     264.0
+    ],
+    "mcnemar": [
+     191,
+     0,
+     6.372367644529809e-58
+    ],
+    "paired_messages": {
+     "n": 9,
+     "median_ratio": 132.0,
+     "wilcoxon_p": 0.001953125
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 1,
+    "n": 200,
+    "rate": [
+     0.005,
+     0.0008831459893662054,
+     0.02777439986977148
+    ],
+    "messages_median": 186.0,
+    "messages_iqr": [
+     186.0,
+     186.0
+    ],
+    "mcnemar": [
+     199,
+     0,
+     2.4892061111444567e-60
+    ]
+   },
+   "gossip-version": {
+    "k": 1,
+    "n": 200,
+    "rate": [
+     0.005,
+     0.0008831459893662054,
+     0.02777439986977148
+    ],
+    "messages_median": 186.0,
+    "messages_iqr": [
+     186.0,
+     186.0
+    ],
+    "mcnemar": [
+     199,
+     0,
+     2.4892061111444567e-60
+    ]
+   },
+   "gossip-overwrite": {
+    "k": 45,
+    "n": 200,
+    "rate": [
+     0.225,
+     0.17262283786915622,
+     0.28774246538592035
+    ],
+    "messages_median": 654.0,
+    "messages_iqr": [
+     450.0,
+     960.0
+    ],
+    "mcnemar": [
+     155,
+     0,
+     4.3790577010150533e-47
+    ],
+    "paired_messages": {
+     "n": 45,
+     "median_ratio": 268.0,
+     "wilcoxon_p": 2.842170943040401e-14
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.3615,
+  "plan_seconds_max": 1.426,
+  "plan_solved": 200,
+  "elimination_removed_median": 0.0,
+  "plan_inferred_sends": 0,
+  "skipped": 1
+ },
+ "secrecy/n8": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 1.5,
+    "messages_iqr": [
+     1.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 9,
+    "n": 200,
+    "rate": [
+     0.045,
+     0.023852271724704166,
+     0.08329759366096785
+    ],
+    "messages_median": 182.0,
+    "messages_iqr": [
+     168.0,
+     189.0
+    ],
+    "mcnemar": [
+     191,
+     0,
+     6.372367644529809e-58
+    ],
+    "paired_messages": {
+     "n": 9,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 0.001953125
+    }
+   },
+   "flood-version": {
+    "k": 9,
+    "n": 200,
+    "rate": [
+     0.045,
+     0.023852271724704166,
+     0.08329759366096785
+    ],
+    "messages_median": 182.0,
+    "messages_iqr": [
+     168.0,
+     189.0
+    ],
+    "mcnemar": [
+     191,
+     0,
+     6.372367644529809e-58
+    ],
+    "paired_messages": {
+     "n": 9,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 0.001953125
+    }
+   },
+   "flood-overwrite": {
+    "k": 35,
+    "n": 200,
+    "rate": [
+     0.175,
+     0.12860441174608936,
+     0.23364549210081922
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     165,
+     0,
+     4.276423536147513e-50
+    ],
+    "paired_messages": {
+     "n": 35,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 4.2854678989541223e-08
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 63.0,
+     "wilcoxon_p": 4.820426674891677e-37
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 63.0,
+     "wilcoxon_p": 4.820426674891677e-37
+    }
+   },
+   "pull-overwrite": {
+    "k": 31,
+    "n": 200,
+    "rate": [
+     0.155,
+     0.11139568514638545,
+     0.211608058937256
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     169,
+     0,
+     2.6727647100921956e-51
+    ],
+    "paired_messages": {
+     "n": 31,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.646866146304702e-07
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 9,
+    "n": 200,
+    "rate": [
+     0.045,
+     0.023852271724704166,
+     0.08329759366096785
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     198.0,
+     216.0
+    ],
+    "mcnemar": [
+     191,
+     0,
+     6.372367644529809e-58
+    ],
+    "paired_messages": {
+     "n": 9,
+     "median_ratio": 162.0,
+     "wilcoxon_p": 0.001953125
+    }
+   },
+   "gossip-version": {
+    "k": 9,
+    "n": 200,
+    "rate": [
+     0.045,
+     0.023852271724704166,
+     0.08329759366096785
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     198.0,
+     216.0
+    ],
+    "mcnemar": [
+     191,
+     0,
+     6.372367644529809e-58
+    ],
+    "paired_messages": {
+     "n": 9,
+     "median_ratio": 162.0,
+     "wilcoxon_p": 0.001953125
+    }
+   },
+   "gossip-overwrite": {
+    "k": 34,
+    "n": 200,
+    "rate": [
+     0.17,
+     0.12427835351105657,
+     0.22816001039503528
+    ],
+    "messages_median": 276.0,
+    "messages_iqr": [
+     237.0,
+     427.5
+    ],
+    "mcnemar": [
+     166,
+     0,
+     2.1382117680737565e-50
+    ],
+    "paired_messages": {
+     "n": 34,
+     "median_ratio": 240.0,
+     "wilcoxon_p": 1.8201654705006e-07
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.1335,
+  "plan_seconds_max": 8.52,
+  "plan_solved": 200,
+  "elimination_removed_median": 0.0,
+  "plan_inferred_sends": 0,
+  "skipped": 21
+ },
+ "secrecy/n8-hauls": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     1.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 10,
+    "n": 200,
+    "rate": [
+     0.05,
+     0.027382349028644986,
+     0.08957905629784384
+    ],
+    "messages_median": 182.0,
+    "messages_iqr": [
+     169.75,
+     189.0
+    ],
+    "mcnemar": [
+     190,
+     0,
+     1.2744735289059618e-57
+    ],
+    "paired_messages": {
+     "n": 10,
+     "median_ratio": 131.25,
+     "wilcoxon_p": 0.0009765625
+    }
+   },
+   "flood-version": {
+    "k": 10,
+    "n": 200,
+    "rate": [
+     0.05,
+     0.027382349028644986,
+     0.08957905629784384
+    ],
+    "messages_median": 182.0,
+    "messages_iqr": [
+     169.75,
+     189.0
+    ],
+    "mcnemar": [
+     190,
+     0,
+     1.2744735289059618e-57
+    ],
+    "paired_messages": {
+     "n": 10,
+     "median_ratio": 131.25,
+     "wilcoxon_p": 0.0009765625
+    }
+   },
+   "flood-overwrite": {
+    "k": 34,
+    "n": 200,
+    "rate": [
+     0.17,
+     0.12427835351105657,
+     0.22816001039503528
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     166,
+     0,
+     2.1382117680737565e-50
+    ],
+    "paired_messages": {
+     "n": 34,
+     "median_ratio": 168.0,
+     "wilcoxon_p": 5.5271234190510046e-08
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 10,
+    "n": 200,
+    "rate": [
+     0.05,
+     0.027382349028644986,
+     0.08957905629784384
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     190,
+     0,
+     1.2744735289059618e-57
+    ],
+    "paired_messages": {
+     "n": 10,
+     "median_ratio": 63.0,
+     "wilcoxon_p": 0.0009765625
+    }
+   },
+   "pull-version": {
+    "k": 10,
+    "n": 200,
+    "rate": [
+     0.05,
+     0.027382349028644986,
+     0.08957905629784384
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     190,
+     0,
+     1.2744735289059618e-57
+    ],
+    "paired_messages": {
+     "n": 10,
+     "median_ratio": 63.0,
+     "wilcoxon_p": 0.0009765625
+    }
+   },
+   "pull-overwrite": {
+    "k": 21,
+    "n": 200,
+    "rate": [
+     0.105,
+     0.0697069624619373,
+     0.15518138221353622
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     179,
+     0,
+     2.61012178719941e-54
+    ],
+    "paired_messages": {
+     "n": 21,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 1.7627722724118547e-05
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 10,
+    "n": 200,
+    "rate": [
+     0.05,
+     0.027382349028644986,
+     0.08957905629784384
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     199.5,
+     216.0
+    ],
+    "mcnemar": [
+     190,
+     0,
+     1.2744735289059618e-57
+    ],
+    "paired_messages": {
+     "n": 10,
+     "median_ratio": 136.5,
+     "wilcoxon_p": 0.0009765625
+    }
+   },
+   "gossip-version": {
+    "k": 10,
+    "n": 200,
+    "rate": [
+     0.05,
+     0.027382349028644986,
+     0.08957905629784384
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     199.5,
+     216.0
+    ],
+    "mcnemar": [
+     190,
+     0,
+     1.2744735289059618e-57
+    ],
+    "paired_messages": {
+     "n": 10,
+     "median_ratio": 136.5,
+     "wilcoxon_p": 0.0009765625
+    }
+   },
+   "gossip-overwrite": {
+    "k": 35,
+    "n": 200,
+    "rate": [
+     0.175,
+     0.12860441174608936,
+     0.23364549210081922
+    ],
+    "messages_median": 276.0,
+    "messages_iqr": [
+     231.0,
+     423.0
+    ],
+    "mcnemar": [
+     165,
+     0,
+     4.276423536147513e-50
+    ],
+    "paired_messages": {
+     "n": 35,
+     "median_ratio": 228.0,
+     "wilcoxon_p": 1.2339431712015195e-07
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.101,
+  "plan_seconds_max": 3.78,
+  "plan_solved": 200,
+  "elimination_removed_median": 0.0,
+  "plan_inferred_sends": 0,
+  "skipped": 23
+ },
+ "skew/n8/sigma=0": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     182.0,
+     203.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.78048760760553e-35
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     182.0,
+     203.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.78048760760553e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 63,
+    "n": 200,
+    "rate": [
+     0.315,
+     0.25462218077944276,
+     0.38235084141033604
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     137,
+     0,
+     1.1479437019748901e-41
+    ],
+    "paired_messages": {
+     "n": 63,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 3.3973697902992256e-13
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.658043020341318e-36
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.658043020341318e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 27,
+    "n": 200,
+    "rate": [
+     0.135,
+     0.09446507976920289,
+     0.18929250455117141
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     173,
+     0,
+     1.6704779438076223e-52
+    ],
+    "paired_messages": {
+     "n": 27,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 1.9925546160055056e-06
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.060163634108861e-35
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.060163634108861e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 68,
+    "n": 200,
+    "rate": [
+     0.34,
+     0.2779143922159556,
+     0.40811632967790723
+    ],
+    "messages_median": 324.0,
+    "messages_iqr": [
+     250.5,
+     438.0
+    ],
+    "mcnemar": [
+     132,
+     0,
+     3.6734198463196485e-40
+    ],
+    "paired_messages": {
+     "n": 68,
+     "median_ratio": 237.0,
+     "wilcoxon_p": 3.810274884512413e-13
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.046,
+  "plan_seconds_max": 0.086,
+  "plan_solved": 200,
+  "elimination_removed_median": 3.0,
+  "plan_inferred_sends": 0,
+  "skipped": 27
+ },
+ "skew/n8/sigma=2.5": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 199,
+    "n": 200,
+    "rate": [
+     0.995,
+     0.9722256001302286,
+     0.999116854010634
+    ],
+    "messages_median": 238.0,
+    "messages_iqr": [
+     217.0,
+     259.0
+    ],
+    "mcnemar": [
+     1,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 199,
+     "median_ratio": 119.0,
+     "wilcoxon_p": 1.022951174079044e-34
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     182.0,
+     203.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.78048760760553e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 63,
+    "n": 200,
+    "rate": [
+     0.315,
+     0.25462218077944276,
+     0.38235084141033604
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     137,
+     0,
+     1.1479437019748901e-41
+    ],
+    "paired_messages": {
+     "n": 63,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 3.3973697902992256e-13
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 199,
+    "n": 200,
+    "rate": [
+     0.995,
+     0.9722256001302286,
+     0.999116854010634
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     1,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 199,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 3.808095653832121e-36
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.658043020341318e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 26,
+    "n": 200,
+    "rate": [
+     0.13,
+     0.09028141365225628,
+     0.18366463072730121
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     174,
+     0,
+     8.352389719038111e-53
+    ],
+    "paired_messages": {
+     "n": 26,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 3.041534281267941e-06
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 199,
+    "n": 200,
+    "rate": [
+     0.995,
+     0.9722256001302286,
+     0.999116854010634
+    ],
+    "messages_median": 240.0,
+    "messages_iqr": [
+     222.0,
+     267.0
+    ],
+    "mcnemar": [
+     1,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 199,
+     "median_ratio": 120.0,
+     "wilcoxon_p": 1.0331500013589898e-34
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.060163634108861e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 68,
+    "n": 200,
+    "rate": [
+     0.34,
+     0.2779143922159556,
+     0.40811632967790723
+    ],
+    "messages_median": 330.0,
+    "messages_iqr": [
+     280.5,
+     445.5
+    ],
+    "mcnemar": [
+     132,
+     0,
+     3.6734198463196485e-40
+    ],
+    "paired_messages": {
+     "n": 68,
+     "median_ratio": 267.0,
+     "wilcoxon_p": 3.8135342498065026e-13
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.046,
+  "plan_seconds_max": 0.086,
+  "plan_solved": 200,
+  "elimination_removed_median": 3.0,
+  "plan_inferred_sends": 0,
+  "skipped": 27
+ },
+ "skew/n8/sigma=5": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 188,
+    "n": 200,
+    "rate": [
+     0.94,
+     0.8980673646931491,
+     0.9653481500987285
+    ],
+    "messages_median": 245.0,
+    "messages_iqr": [
+     217.0,
+     259.0
+    ],
+    "mcnemar": [
+     12,
+     0,
+     0.00048828125
+    ],
+    "paired_messages": {
+     "n": 188,
+     "median_ratio": 122.5,
+     "wilcoxon_p": 6.515565098651433e-33
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     182.0,
+     203.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.78048760760553e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 63,
+    "n": 200,
+    "rate": [
+     0.315,
+     0.25462218077944276,
+     0.38235084141033604
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     137,
+     0,
+     1.1479437019748901e-41
+    ],
+    "paired_messages": {
+     "n": 63,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 3.3973697902992256e-13
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 188,
+    "n": 200,
+    "rate": [
+     0.94,
+     0.8980673646931491,
+     0.9653481500987285
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     12,
+     0,
+     0.00048828125
+    ],
+    "paired_messages": {
+     "n": 188,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.3932499530585676e-34
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.658043020341318e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 26,
+    "n": 200,
+    "rate": [
+     0.13,
+     0.09028141365225628,
+     0.18366463072730121
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     174,
+     0,
+     8.352389719038111e-53
+    ],
+    "paired_messages": {
+     "n": 26,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 3.041534281267941e-06
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 188,
+    "n": 200,
+    "rate": [
+     0.94,
+     0.8980673646931491,
+     0.9653481500987285
+    ],
+    "messages_median": 240.0,
+    "messages_iqr": [
+     216.0,
+     258.0
+    ],
+    "mcnemar": [
+     12,
+     0,
+     0.00048828125
+    ],
+    "paired_messages": {
+     "n": 188,
+     "median_ratio": 120.0,
+     "wilcoxon_p": 6.570980245524301e-33
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.060163634108861e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 68,
+    "n": 200,
+    "rate": [
+     0.34,
+     0.2779143922159556,
+     0.40811632967790723
+    ],
+    "messages_median": 330.0,
+    "messages_iqr": [
+     280.5,
+     445.5
+    ],
+    "mcnemar": [
+     132,
+     0,
+     3.6734198463196485e-40
+    ],
+    "paired_messages": {
+     "n": 68,
+     "median_ratio": 267.0,
+     "wilcoxon_p": 3.8135342498065026e-13
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.046,
+  "plan_seconds_max": 0.086,
+  "plan_solved": 200,
+  "elimination_removed_median": 3.0,
+  "plan_inferred_sends": 0,
+  "skipped": 27
+ },
+ "skew/n8/sigma=10": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 154,
+    "n": 200,
+    "rate": [
+     0.77,
+     0.7069157192180299,
+     0.8229074375860769
+    ],
+    "messages_median": 241.5,
+    "messages_iqr": [
+     217.0,
+     266.0
+    ],
+    "mcnemar": [
+     46,
+     0,
+     2.842170943040401e-14
+    ],
+    "paired_messages": {
+     "n": 154,
+     "median_ratio": 122.5,
+     "wilcoxon_p": 2.4949980171613733e-27
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     182.0,
+     203.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.78048760760553e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 63,
+    "n": 200,
+    "rate": [
+     0.315,
+     0.25462218077944276,
+     0.38235084141033604
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     137,
+     0,
+     1.1479437019748901e-41
+    ],
+    "paired_messages": {
+     "n": 63,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 3.3973697902992256e-13
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 154,
+    "n": 200,
+    "rate": [
+     0.77,
+     0.7069157192180299,
+     0.8229074375860769
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     46,
+     0,
+     2.842170943040401e-14
+    ],
+    "paired_messages": {
+     "n": 154,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 1.1889322623747589e-28
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.658043020341318e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 26,
+    "n": 200,
+    "rate": [
+     0.13,
+     0.09028141365225628,
+     0.18366463072730121
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     174,
+     0,
+     8.352389719038111e-53
+    ],
+    "paired_messages": {
+     "n": 26,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 3.041534281267941e-06
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 154,
+    "n": 200,
+    "rate": [
+     0.77,
+     0.7069157192180299,
+     0.8229074375860769
+    ],
+    "messages_median": 234.0,
+    "messages_iqr": [
+     216.0,
+     256.5
+    ],
+    "mcnemar": [
+     46,
+     0,
+     2.842170943040401e-14
+    ],
+    "paired_messages": {
+     "n": 154,
+     "median_ratio": 117.0,
+     "wilcoxon_p": 2.493989712069491e-27
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.060163634108861e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 68,
+    "n": 200,
+    "rate": [
+     0.34,
+     0.2779143922159556,
+     0.40811632967790723
+    ],
+    "messages_median": 330.0,
+    "messages_iqr": [
+     280.5,
+     445.5
+    ],
+    "mcnemar": [
+     132,
+     0,
+     3.6734198463196485e-40
+    ],
+    "paired_messages": {
+     "n": 68,
+     "median_ratio": 267.0,
+     "wilcoxon_p": 3.8135342498065026e-13
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.046,
+  "plan_seconds_max": 0.086,
+  "plan_solved": 200,
+  "elimination_removed_median": 3.0,
+  "plan_inferred_sends": 0,
+  "skipped": 27
+ },
+ "skew/n8/sigma=20": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 115,
+    "n": 200,
+    "rate": [
+     0.575,
+     0.5057080512046821,
+     0.6414650479075696
+    ],
+    "messages_median": 245.0,
+    "messages_iqr": [
+     217.0,
+     273.0
+    ],
+    "mcnemar": [
+     85,
+     0,
+     5.169878828456423e-26
+    ],
+    "paired_messages": {
+     "n": 115,
+     "median_ratio": 126.0,
+     "wilcoxon_p": 6.467030022387196e-21
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     182.0,
+     203.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.78048760760553e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 63,
+    "n": 200,
+    "rate": [
+     0.315,
+     0.25462218077944276,
+     0.38235084141033604
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     137,
+     0,
+     1.1479437019748901e-41
+    ],
+    "paired_messages": {
+     "n": 63,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 3.3973697902992256e-13
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 115,
+    "n": 200,
+    "rate": [
+     0.575,
+     0.5057080512046821,
+     0.6414650479075696
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     85,
+     0,
+     5.169878828456423e-26
+    ],
+    "paired_messages": {
+     "n": 115,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 5.826392632060574e-22
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.658043020341318e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 25,
+    "n": 200,
+    "rate": [
+     0.125,
+     0.0861191515921568,
+     0.1780153528465839
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     175,
+     0,
+     4.176194859519056e-53
+    ],
+    "paired_messages": {
+     "n": 25,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 4.625149599796367e-06
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 115,
+    "n": 200,
+    "rate": [
+     0.575,
+     0.5057080512046821,
+     0.6414650479075696
+    ],
+    "messages_median": 228.0,
+    "messages_iqr": [
+     210.0,
+     252.0
+    ],
+    "mcnemar": [
+     85,
+     0,
+     5.169878828456423e-26
+    ],
+    "paired_messages": {
+     "n": 115,
+     "median_ratio": 120.0,
+     "wilcoxon_p": 6.4485664115377e-21
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.060163634108861e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 68,
+    "n": 200,
+    "rate": [
+     0.34,
+     0.2779143922159556,
+     0.40811632967790723
+    ],
+    "messages_median": 330.0,
+    "messages_iqr": [
+     280.5,
+     445.5
+    ],
+    "mcnemar": [
+     132,
+     0,
+     3.6734198463196485e-40
+    ],
+    "paired_messages": {
+     "n": 68,
+     "median_ratio": 267.0,
+     "wilcoxon_p": 3.8135342498065026e-13
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.046,
+  "plan_seconds_max": 0.086,
+  "plan_solved": 200,
+  "elimination_removed_median": 3.0,
+  "plan_inferred_sends": 0,
+  "skipped": 27
+ },
+ "skew/n8/sigma=40": {
+  "n": 200,
+  "strategies": {
+   "plan": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 2.0,
+    "messages_iqr": [
+     2.0,
+     2.0
+    ]
+   },
+   "flood-recency": {
+    "k": 89,
+    "n": 200,
+    "rate": [
+     0.445,
+     0.3778048169746545,
+     0.5142682436763609
+    ],
+    "messages_median": 245.0,
+    "messages_iqr": [
+     210.0,
+     273.0
+    ],
+    "mcnemar": [
+     111,
+     0,
+     7.703719777548943e-34
+    ],
+    "paired_messages": {
+     "n": 89,
+     "median_ratio": 136.5,
+     "wilcoxon_p": 1.2509953548907482e-16
+    }
+   },
+   "flood-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 189.0,
+    "messages_iqr": [
+     182.0,
+     203.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 94.5,
+     "wilcoxon_p": 6.78048760760553e-35
+    }
+   },
+   "flood-overwrite": {
+    "k": 63,
+    "n": 200,
+    "rate": [
+     0.315,
+     0.25462218077944276,
+     0.38235084141033604
+    ],
+    "messages_median": 168.0,
+    "messages_iqr": [
+     168.0,
+     168.0
+    ],
+    "mcnemar": [
+     137,
+     0,
+     1.1479437019748901e-41
+    ],
+    "paired_messages": {
+     "n": 63,
+     "median_ratio": 84.0,
+     "wilcoxon_p": 3.3973697902992256e-13
+    }
+   },
+   "flood-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "pull-recency": {
+    "k": 89,
+    "n": 200,
+    "rate": [
+     0.445,
+     0.3778048169746545,
+     0.5142682436763609
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     111,
+     0,
+     7.703719777548943e-34
+    ],
+    "paired_messages": {
+     "n": 89,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.585803321451767e-17
+    }
+   },
+   "pull-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 2.658043020341318e-36
+    }
+   },
+   "pull-overwrite": {
+    "k": 25,
+    "n": 200,
+    "rate": [
+     0.125,
+     0.0861191515921568,
+     0.1780153528465839
+    ],
+    "messages_median": 84.0,
+    "messages_iqr": [
+     84.0,
+     84.0
+    ],
+    "mcnemar": [
+     175,
+     0,
+     4.176194859519056e-53
+    ],
+    "paired_messages": {
+     "n": 25,
+     "median_ratio": 42.0,
+     "wilcoxon_p": 4.625149599796367e-06
+    }
+   },
+   "pull-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   },
+   "gossip-recency": {
+    "k": 89,
+    "n": 200,
+    "rate": [
+     0.445,
+     0.3778048169746545,
+     0.5142682436763609
+    ],
+    "messages_median": 228.0,
+    "messages_iqr": [
+     210.0,
+     246.0
+    ],
+    "mcnemar": [
+     111,
+     0,
+     7.703719777548943e-34
+    ],
+    "paired_messages": {
+     "n": 89,
+     "median_ratio": 120.0,
+     "wilcoxon_p": 1.2553743982157002e-16
+    }
+   },
+   "gossip-version": {
+    "k": 200,
+    "n": 200,
+    "rate": [
+     1.0,
+     0.9811539940816791,
+     1.0
+    ],
+    "messages_median": 210.0,
+    "messages_iqr": [
+     192.0,
+     240.0
+    ],
+    "mcnemar": [
+     0,
+     0,
+     1.0
+    ],
+    "paired_messages": {
+     "n": 200,
+     "median_ratio": 102.0,
+     "wilcoxon_p": 7.060163634108861e-35
+    }
+   },
+   "gossip-overwrite": {
+    "k": 68,
+    "n": 200,
+    "rate": [
+     0.34,
+     0.2779143922159556,
+     0.40811632967790723
+    ],
+    "messages_median": 330.0,
+    "messages_iqr": [
+     280.5,
+     445.5
+    ],
+    "mcnemar": [
+     132,
+     0,
+     3.6734198463196485e-40
+    ],
+    "paired_messages": {
+     "n": 68,
+     "median_ratio": 267.0,
+     "wilcoxon_p": 3.8135342498065026e-13
+    }
+   },
+   "gossip-confidence": {
+    "k": 0,
+    "n": 200,
+    "rate": [
+     0.0,
+     0.0,
+     0.018846005918320894
+    ],
+    "mcnemar": [
+     200,
+     0,
+     1.2446030555722283e-60
+    ]
+   }
+  },
+  "plan_seconds_median": 0.046,
+  "plan_seconds_max": 0.086,
+  "plan_solved": 200,
+  "elimination_removed_median": 3.0,
+  "plan_inferred_sends": 0,
+  "skipped": 27
+ }
+}
