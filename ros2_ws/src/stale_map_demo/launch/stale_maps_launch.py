@@ -71,7 +71,10 @@ from launch_ros.actions import Node
 SYSTEM_CASCADE = '/opt/ros/humble/lib/librclcpp_cascade_lifecycle.so'
 
 RULES = {'epistemic': 'recency', 'fuse': 'confidence', 'overwrite': 'overwrite',
-         'recency': 'recency'}
+         'recency': 'recency', 'secret': 'recency', 'flood': 'recency', 'flood3': 'recency',
+         'pull': 'recency'}
+PLANNED = ('epistemic', 'secret')
+SECRET_FLOOR = ('secret', 'flood', 'flood3', 'pull')
 
 
 def matching_cascade():
@@ -94,7 +97,7 @@ def setup(context, *args, **kwargs):
     if fleet not in RULES:
         raise RuntimeError(f'fleet:={fleet} is not one of {sorted(RULES)}')
     gui = LaunchConfiguration('gui').perform(context).lower() == 'true'
-    epistemic = fleet == 'epistemic'
+    epistemic = fleet in PLANNED
 
     world = os.path.join(tempfile.gettempdir(), 'stale_maps.world')
     subprocess.run([sys.executable, os.path.join(share, 'tools', 'make_world.py'),
@@ -169,14 +172,15 @@ def setup(context, *args, **kwargs):
                      'load_sdf': load_sdf,
                      'observer_bays': list(L.CHANGES),
                      'observer_lists': [' '.join(sees[t]) for t in L.CHANGES],
-                     'transfer_seconds': 4.0 if epistemic else 0.3}])
+                     'transfer_seconds': 4.0 if epistemic or fleet == 'flood3' else 0.3}])
 
     view = Node(
         package='stale_map_demo', executable='knowledge_view.py', output='screen',
         parameters=[{'floorplan': floorplan, 'agents': agents, 'haulers': list(L.HAULERS),
                      'colours': [c for a in agents for c in L.ROBOTS[a][2]],
                      'bays': bays, 'load_boxes': flat([L.load_box(t) for t in bays]),
-                     'shift_blocked': list(L.SHIFT_BLOCKED), 'fleet': fleet}])
+                     'shift_blocked': list(L.SHIFT_BLOCKED), 'fleet': fleet,
+                     'contractors': list(L.CONTRACTORS) if fleet in SECRET_FLOOR else ['']}])
 
     shots = [f'forklift {t}=' + L.shot_text(L.bay_shot(t)) for t in L.CHANGES]
     director = Node(
@@ -192,7 +196,8 @@ def setup(context, *args, **kwargs):
         arguments=['-d', LaunchConfiguration('rviz_config')],
         parameters=[{'use_sim_time': True}])
 
-    problem = os.path.join(share, 'epddl', 'radio.epddl')
+    problem = os.path.join(share, 'epddl', 'secret.epddl' if fleet == 'secret' else 'radio.epddl')
+    secret_floor = fleet in SECRET_FLOOR
     mission = Node(
         package='stale_map_demo', executable='stale_maps_mission', output='screen',
         arguments=['--ros-args', '-p', 'plan_solver_timeout:=150.0'],
@@ -201,6 +206,11 @@ def setup(context, *args, **kwargs):
                      'changes': changes,
                      'expected_delivered': expected['delivered'] or [''],
                      'expected_sends': int(expected['sends']),
+                     'expected_leak': bool(expected.get('leak')) and secret_floor,
+                     'sequence': [' '.join(x) for x in expected.get('sequence', [])] or [''],
+                     'requests': int(expected.get('requests', 0)),
+                     'contractors': list(L.CONTRACTORS) if secret_floor else [''],
+                     'secret': list(L.SECRET) if secret_floor else [''],
                      'policy_out': LaunchConfiguration('policy_out'),
                      'hold': float(LaunchConfiguration('hold').perform(context))}])
 
@@ -251,7 +261,8 @@ def generate_launch_description():
     tb3 = get_package_share_directory('turtlebot3_gazebo')
     return LaunchDescription([
         DeclareLaunchArgument('fleet', default_value='epistemic',
-                              description='epistemic, fuse, overwrite or recency.'),
+                              description='epistemic, fuse, overwrite or recency; on the secret '
+                                          'floor, secret, flood, flood3 or pull.'),
         DeclareLaunchArgument('gui', default_value='true', description='gzclient'),
         DeclareLaunchArgument('rviz', default_value='true'),
         DeclareLaunchArgument('camera', default_value='true',

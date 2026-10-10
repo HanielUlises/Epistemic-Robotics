@@ -27,6 +27,7 @@ stale; the fourth differs from the first in its goal:
   silent   no radio, and the same robots
   doubt    no radio, and robots that know the floor may have changed
   resync   a radio, and the goal that every robot's map be current
+  secret   the radio floor, and a contractor that must not learn of a change
 
 At the start of the shift every robot holds the same map of the floor: the
 shift map, in which bay t1 is open and t2 and t3 hold staged loads. During
@@ -305,7 +306,10 @@ def domain_text(bays):
 class Fleet:
     """One instance: who sees which bay, who hauls, what changes."""
 
-    def __init__(self, agents, bays, shift_blocked, changes, sees, haulers):
+    def __init__(self, agents, bays, shift_blocked, changes, sees, haulers,
+                 contractors=(), secret=()):
+        self.contractors = list(contractors)
+        self.secret = list(secret)
         self.agents = list(agents)
         self.bays = list(bays)
         self.shift_blocked = set(shift_blocked)
@@ -338,12 +342,12 @@ class Fleet:
         return {'agents': self.agents, 'bays': self.bays,
                 'shift_blocked': sorted(self.shift_blocked), 'changes': self.changes,
                 'sees': {t: sorted(s) for t, s in self.sees.items()},
-                'haulers': self.haulers}
+                'haulers': self.haulers, 'contractors': self.contractors, 'secret': self.secret}
 
     @staticmethod
     def from_json(d):
         return Fleet(d['agents'], d['bays'], d['shift_blocked'], d['changes'],
-                     d['sees'], d['haulers'])
+                     d['sees'], d['haulers'], d.get('contractors', ()), d.get('secret', ()))
 
     def problem_text(self, floor):
         doubts = floor == 'doubt'
@@ -359,8 +363,9 @@ class Fleet:
                          for t in self.bays for a in self.agents)
         hauls = '\n'.join(ck(f'(hauls {a})' if a in self.haulers else f'(not (hauls {a}))')
                           for a in self.agents)
-        radio = floor in ('radio', 'resync')
+        radio = floor in ('radio', 'resync', 'secret')
         where = {'radio': 'with a radio, and maps taken to be the floor',
+                 'secret': 'with a radio, and a contractor that must not learn of a change',
                  'resync': 'with a radio, and every map to be brought up to date',
                  'silent': 'with no radio, and maps taken to be the floor',
                  'doubt': 'with no radio, and robots that know maps go stale'}[floor]
@@ -373,6 +378,9 @@ class Fleet:
             goal=self.goal_text(floor))
 
     def goal_text(self, floor):
+        if floor == 'secret':
+            return ' '.join([f'(delivered {h})' for h in self.haulers] +
+                            [f'(not ([{c}] (blocked {t})))' for c in self.contractors for t in self.secret])
         if floor != 'resync':
             return ' '.join(f'(delivered {h})' for h in self.haulers)
         actual = self.actual_blocked()
@@ -382,7 +390,7 @@ class Fleet:
             for a in self.agents)
 
 
-FLOORS = ('radio', 'silent', 'doubt', 'resync')
+FLOORS = ('radio', 'silent', 'doubt', 'resync', 'secret')
 
 
 def random_fleet(n, haulers, seed, p_see=0.3):

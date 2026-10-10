@@ -28,7 +28,18 @@
 //   recency     the same exchanges, merged by the time each cell was
 //               observed, as the epistemic fleet merges
 //
-// The last three send their maps in a fixed order, sender by sender, and
+// On the secret floor r4 is a contractor's robot that hauls and must not be
+// sent the staging of t1:
+//
+//   secret      the plan over the secret floor
+//   flood       recency flooding with deltas, unlimited
+//   flood3      the same, stopped after three maps of a bay, the plan's count
+//   pull        each hauler asks every robot about each bay in turn
+//
+// whose sends are computed by study/protocols.py on this floor and arrive
+// here as a sequence the mission runs in order.
+//
+// The fuse, overwrite and recency fleets send their maps in a fixed order, sender by sender, and
 // then send the haulers with no bay named: each goes through whichever bay
 // its map shows clear. The epistemic fleet runs its policy, in which the
 // forklift's two changes come first and each hauler is sent through the bay
@@ -121,8 +132,9 @@ class Floor
 public:
   Floor(
     rclcpp::Node::SharedPtr node, const std::vector<std::string> & agents,
-    const std::vector<std::string> & blocked_after)
-  : node_(std::move(node)), blocked_after_(blocked_after)
+    const std::vector<std::string> & blocked_after,
+    const std::vector<std::string> & contractors = {}, const std::vector<std::string> & secret = {})
+  : node_(std::move(node)), blocked_after_(blocked_after), contractors_(contractors), secret_(secret)
   {
     const auto latched = rclcpp::QoS(1).transient_local().reliable();
     for (const auto & a : agents) {
@@ -150,6 +162,14 @@ public:
             const std::string truth = blocked ? "blocked" : "clear";
             if (e.value("before", "") == truth && e.value("after", "") != truth) {
               ++regressions_;
+            }
+            // A contractor now holds a secret change, told by a message.
+            const auto to = e["args"][1].get<std::string>();
+            if (std::find(contractors_.begin(), contractors_.end(), to) != contractors_.end() &&
+              std::find(secret_.begin(), secret_.end(), bay) != secret_.end() &&
+              e.value("after", "") == "blocked" && e.value("before", "") != "blocked")
+            {
+              leaks_.push_back(to + " " + bay + " from " + e["args"][0].get<std::string>());
             }
           }
           if (e.value("verb", "") == "haul" && e.value("ok", false)) {
@@ -190,11 +210,15 @@ public:
 
   std::size_t sends() const {return sends_;}
   std::size_t regressions() const {return regressions_;}
+  const std::vector<std::string> & leaks() const {return leaks_;}
   const std::vector<std::string> & delivered() const {return delivered_;}
 
 private:
   rclcpp::Node::SharedPtr node_;
   std::vector<std::string> blocked_after_;
+  std::vector<std::string> contractors_;
+  std::vector<std::string> secret_;
+  std::vector<std::string> leaks_;
   std::map<std::string, json> readings_;
   std::vector<rclcpp::Subscription<std_msgs::msg::String>::SharedPtr> subs_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr commands_;
@@ -298,10 +322,23 @@ int main(int argc, char ** argv)
     std::remove(expected_delivered.begin(), expected_delivered.end(), std::string{}),
     expected_delivered.end());
   const auto expected_sends = node->declare_parameter<int>("expected_sends", 0);
+  const auto expected_leak = node->declare_parameter<bool>("expected_leak", false);
+  // A protocol's sends, computed by study/protocols.py on this floor and run
+  // here in order: "sender receiver bay". Empty: every map of every bay to
+  // every other robot, sender by sender. `requests` are the messages a pull
+  // sends that carry no reading, counted with the rest.
+  auto sequence = node->declare_parameter<std::vector<std::string>>("sequence", std::vector<std::string>{});
+  sequence.erase(std::remove(sequence.begin(), sequence.end(), std::string{}), sequence.end());
+  const auto requests = node->declare_parameter<int>("requests", 0);
+  auto contractors = node->declare_parameter<std::vector<std::string>>("contractors", std::vector<std::string>{});
+  contractors.erase(std::remove(contractors.begin(), contractors.end(), std::string{}), contractors.end());
+  auto secret = node->declare_parameter<std::vector<std::string>>("secret", std::vector<std::string>{});
+  secret.erase(std::remove(secret.begin(), secret.end(), std::string{}), secret.end());
+  const bool planned = fleet == "epistemic" || fleet == "secret";
   const auto policy_out = node->declare_parameter<std::string>("policy_out", "");
   const double hold = node->declare_parameter<double>("hold", 0.0);
 
-  Floor floor(node, agents, after);
+  Floor floor(node, agents, after, contractors, secret);
   RCLCPP_INFO(node->get_logger(), "[mission] fleet %s: %zu robots, %zu haulers", fleet.c_str(),
     agents.size(), haulers.size());
 
@@ -326,7 +363,7 @@ int main(int argc, char ** argv)
   }
 
   bool ran = true;
-  if (fleet == "epistemic") {
+  if (planned) {
     ran = run_policy(node, agents, bays, policy_out);
     if (!ran) {
       RCLCPP_ERROR(node->get_logger(), "[mission] the policy did not complete");
@@ -341,16 +378,30 @@ int main(int argc, char ** argv)
         return fail(node, "the forklift: " + e.value("message", std::string{}));
       }
     }
-    // Every map of every bay to every other robot.
-    RCLCPP_INFO(node->get_logger(), "[mission] %s: every robot sends every other its map of every bay",
-      fleet.c_str());
-    for (const auto & from : agents) {
-      for (const auto & to : agents) {
-        if (from == to) {continue;}
-        for (const auto & bay : bays) {
-          const auto e = floor.run("send", {from, to, bay}, 30s);
-          if (!e.value("ok", false)) {
-            return fail(node, "an exchange failed: " + e.value("message", std::string{}));
+    if (!sequence.empty()) {
+      RCLCPP_INFO(node->get_logger(), "[mission] %s: %zu maps of a bay sent as the protocol sends them, "
+        "and %ld requests", fleet.c_str(), sequence.size(), static_cast<long>(requests));
+      for (const auto & line : sequence) {
+        std::istringstream in(line);
+        std::string from, to, bay;
+        in >> from >> to >> bay;
+        const auto e = floor.run("send", {from, to, bay}, 30s);
+        if (!e.value("ok", false)) {
+          return fail(node, "an exchange failed: " + e.value("message", std::string{}));
+        }
+      }
+    } else {
+      // Every map of every bay to every other robot.
+      RCLCPP_INFO(node->get_logger(), "[mission] %s: every robot sends every other its map of every bay",
+        fleet.c_str());
+      for (const auto & from : agents) {
+        for (const auto & to : agents) {
+          if (from == to) {continue;}
+          for (const auto & bay : bays) {
+            const auto e = floor.run("send", {from, to, bay}, 30s);
+            if (!e.value("ok", false)) {
+              return fail(node, "an exchange failed: " + e.value("message", std::string{}));
+            }
           }
         }
       }
@@ -360,7 +411,8 @@ int main(int argc, char ** argv)
       maps += " " + a + ":" + floor.verdict(a, "t1").substr(0, 1) + floor.verdict(a, "t2").substr(0, 1) +
         floor.verdict(a, "t3").substr(0, 1);
     }
-    RCLCPP_INFO(node->get_logger(), "[mission] after %zu maps sent:%s", floor.sends(), maps.c_str());
+    RCLCPP_INFO(node->get_logger(), "[mission] after %zu maps sent:%s", floor.sends() + requests,
+      maps.c_str());
     for (const auto & h : haulers) {
       floor.run("haul", {h}, 420s);
     }
@@ -389,10 +441,16 @@ int main(int argc, char ** argv)
   RCLCPP_INFO(
     node->get_logger(), "[mission] verdict: %zu of %zu haulers delivered (%s ); %zu maps of a bay "
     "sent, %zu of them over a fresh reading; %zu stale entries at the end:%s", delivered.size(),
-    haulers.size(), got.empty() ? " none" : got.c_str(), floor.sends(), floor.regressions(), stale,
+    haulers.size(), got.empty() ? " none" : got.c_str(), floor.sends() + requests, floor.regressions(), stale,
     rows.c_str());
+  if (!contractors.empty()) {
+    std::string leaked;
+    for (const auto & l : floor.leaks()) {leaked += " " + l + ";";}
+    RCLCPP_INFO(node->get_logger(), "[mission] secret: %s", floor.leaks().empty() ?
+      "no contractor was sent it" : ("sent to a contractor:" + leaked).c_str());
+  }
 
-  if (fleet == "epistemic") {
+  if (planned) {
     // The model against the maps: B_i blocked(t), B_i not blocked(t), or
     // neither, for every robot and bay.
     std::size_t agree = 0, differ = 0;
@@ -421,7 +479,8 @@ int main(int argc, char ** argv)
   std::sort(sorted_got.begin(), sorted_got.end());
   std::sort(sorted_want.begin(), sorted_want.end());
   const bool as_expected = sorted_got == sorted_want &&
-    floor.sends() == static_cast<std::size_t>(expected_sends) && (fleet != "epistemic" || ran);
+    floor.sends() + requests == static_cast<std::size_t>(expected_sends) && (!planned || ran) &&
+    floor.leaks().empty() != expected_leak;
   if (!as_expected) {
     std::string want;
     for (const auto & h : expected_delivered) {want += " " + h;}

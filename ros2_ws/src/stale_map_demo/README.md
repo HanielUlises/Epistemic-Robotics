@@ -329,6 +329,25 @@ with the robot's map on all 24.
   generate, 14 worlds for the same policy, which changes no formula evaluated
   from them.
 
+## When planning pays
+
+The plan sends three maps where sharing sends 168; `study/` asks when that
+difference is more than a count. It proves that flooding with a merge that
+orders readings as they were taken does whatever any strategy can, given an
+unlimited budget on a connected graph, goals over the floor alone and clocks
+that agree, and measures what happens without each condition on 2400 paired
+instances. On the floor, the `secret` floor makes r4 a contractor that hauls and
+must not learn that `t1` was staged; four fleets ran on it:
+
+| fleet | messages | delivered | contractor sent the secret |
+| --- | --- | --- | --- |
+| `flood` | 189 | r2, r4, r8 | yes |
+| `flood3` | 3 | none | no |
+| `pull` | 126 | r2, r4, r8 | yes |
+| **`secret`**, the plan | **3** | **r2, r4, r8** | **no** |
+
+See [`study/README.md`](study/README.md).
+
 ## What this does not show
 
 * Localisation. Every robot's odometry is the world frame, as on every floor
@@ -349,13 +368,14 @@ with the robot's map on all 24.
 | file | contents |
 | --- | --- |
 | `epddl/maps.epddl` | the change and the map report, as action types |
-| `epddl/stale-maps.epddl`, `epddl/{radio,silent,doubt,resync}.epddl` | the domain and the eight-robot floors, written by `tools/stale_maps.py` |
-| `tools/stale_maps.py` | the domain and the four floors for any fleet, and random fleets |
+| `epddl/stale-maps.epddl`, `epddl/{radio,silent,doubt,resync,secret}.epddl` | the domain and the eight-robot floors, written by `tools/stale_maps.py` |
+| `tools/stale_maps.py` | the domain and the five floors for any fleet, and random fleets |
 | `tools/trace.py` | product update, every robot's map after every action, beliefs about each other's maps, and a plain announcement for comparison |
 | `tools/validate.sh` | grounds, solves and traces; eight checks |
 | `tools/scaling.py` | the radio and resync floors for fleets of many robots |
 | `tools/layout.py`, `tools/check_floor.py` | the floor, its three claims, and the two maps |
-| `tools/fleets.py` | what each fleet will do on the floor |
+| `tools/fleets.py` | what each fleet will do on the floor; on the secret floor, the protocols' sends, computed by `study/protocols.py` |
+| `study/` | the communication study: the plan against flooding, pull and gossip, under four regimes |
 | `tools/make_world.py`, `tools/make_mapping.py` | the Gazebo world; the action mapping |
 | `tools/record_demo.sh` | one fleet on an Xvfb display, on a ROS domain and Gazebo master of its own; the film composer is kept out of the repository |
 | `src/living_map_node.cpp` | one robot's map, kept current by its laser and by the maps it is sent |
