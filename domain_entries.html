@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The twenty domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The twenty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The twenty-one domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The twenty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The twenty domains">
-<meta property="og:description" content="The twenty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The twenty-one domains">
+<meta property="og:description" content="The twenty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The twenty domains">
-<meta name="twitter:description" content="The twenty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The twenty-one domains">
+<meta name="twitter:description" content="The twenty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The twenty domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The twenty-one domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -616,6 +616,13 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
             </div>
           </details>
+          <details class="nav-folder">
+            <summary>stale-maps</summary>
+            <div class="nav-sub">
+          <a href="demos.html#stale-maps">All stale-maps demos</a>
+          <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+            </div>
+          </details>
             </div>
           </details>
           <a href="execution.html">Execution</a>
@@ -637,6 +644,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
           <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+          <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -652,8 +660,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 20 domains</p>
-    <h2>The twenty domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 21 domains</p>
+    <h2>The twenty-one domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1299,6 +1307,35 @@ table.cat a:hover{border-bottom-color:var(--black)}
   )
 
 (:goal (fetched))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-stale-maps">
+      <div class="dom-h">
+        <h4>stale-maps</h4>
+        <span class="dom-f">KD45<sub>n</sub> &#183; 8 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i> to <i>r8</i>, three of them haulers; written for any fleet</dd>
+        <dt>Objects</dt><dd><code>(:objects t1 t2 t3 - bay)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty b">change</span><span class="ty b">map-report</span><span class="ty">private-sensing</span><span class="ty">private-ontic</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 1\), \(|W_d| = 1\) &#183; declared frame KD45; the shift map and every station's sight lines are common knowledge, and after the forklift the model has four worlds whatever the size of the fleet</dd>
+        <dt>Grounded</dt><dd>51 atoms, 396 ground actions, goal of modal depth 0; the precondition of <code>send-open</code> is \(B_i\,\neg\mathit{blocked}(t) \wedge B_iB_j\,\mathit{blocked}(t)\), and that of <code>cross</code> is \(\neg\mathit{blocked}(t) \wedge B_h\,\neg\mathit{blocked}(t)\)</dd>
+        <dt>Solved</dt><dd>with consistent beliefs required: radio, depth 8, 8 expansions by replanning; resync, every map current, depth 13, one message per stale entry; doubt, depth 8, 3&#8239;382 expansions; silent, no policy, space exhausted at depth 2. Random fleets solve to 32 robots and not, within 600&#8239;s, at 64</dd>
+        <dt>Stated in</dt><dd><a href="stale_maps.html">Maps that go stale</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (blocked ?t - bay)
+    (sees ?i - agent ?t - bay)
+    (hauls ?i - agent)
+    (delivered ?i - agent)
+    (stage-due ?t - bay)
+    (clear-due ?t - bay)
+    (radio)
+    (doubts)
+  )
+
+(:goal (and (delivered r2) (delivered r4) (delivered r8)))</pre>
       </details>
     </article>
     </div>

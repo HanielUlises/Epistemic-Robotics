@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The twenty domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The twenty-one domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -559,6 +559,13 @@ sup.cite a:hover{text-decoration:underline}
           <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
             </div>
           </details>
+          <details class="nav-folder">
+            <summary>stale-maps</summary>
+            <div class="nav-sub">
+          <a href="demos.html#stale-maps">All stale-maps demos</a>
+          <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+            </div>
+          </details>
             </div>
           </details>
           <a href="execution.html">Execution</a>
@@ -580,6 +587,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
           <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+          <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -1079,6 +1087,46 @@ sup.cite a:hover{text-decoration:underline}
       </div>
     </div>
 
+    <!-- ─────────────────────────────── stale-maps -->
+    <div class="dgroup" id="stale-maps">
+      <p class="sec-label">Domain</p>
+      <h3>stale-maps &#183; eight robots, a forklift, and one map each</h3>
+      <p class="about">
+        Every robot holds the shift map. A forklift stages a load in one bay and
+        clears another, and a robot sees a change only when its station has a
+        sight line into the bay, decided by casting rays over the floor plan.
+        Every other robot takes the change for nothing having changed, and its
+        map goes stale: a false belief, in a frame that is
+        \(\mathrm{KD45}_n\). A map sent from one robot to another is an update
+        the receiver applies where it believes it missed a change, and a robot
+        sends one only to a robot it believes holds the opposite,
+        \(B_iB_j\,\mathit{blocked}(t)\). Four fleets of eight robots, one run
+        each.
+      </p>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/stale_maps.jpg"
+          alt="RViz on the pass-through floor: every robot's map of the three bays beside it, stale tiles ringed, and r6 sending its map of t3 to r2" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="stale_maps.html">Maps that go stale</a></h5>
+          <p>
+            After the forklift eleven entries of the eight maps are false and no
+            robot has both bays right. The planner sends t3 to the three haulers
+            that need it and to nobody else, three maps in all, and all three
+            deliver. Sharing every map of every bay sends 168: with the fusion
+            this repository has it repairs nothing, since 0 against 100 is a tie;
+            taking the sender's reading overwrites a fresh map with a stale one
+            ten times; observation times deliver, with 56 times the messages.
+          </p>
+          <div class="facts">
+            <span>KD45</span><span>update, not revision</span>
+            <span>3 maps against 168</span>
+            <span>model and maps agree, 24 of 24</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1120,7 +1168,7 @@ sup.cite a:hover{text-decoration:underline}
         &nbsp;&#183;&nbsp;
         <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
       </span>
-      <span class="ftr-r">Fifteen demonstrations in eight domains &#183; ROS 2 &#183; simulation</span>
+      <span class="ftr-r">Sixteen demonstrations in nine domains &#183; ROS 2 &#183; simulation</span>
     </div>
   </div>
 </footer>
