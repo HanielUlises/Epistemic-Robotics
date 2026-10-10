@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maps that go stale &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Eight robots hold one map of the floor; a forklift stages a load in one bay and clears another, and each robot sees at most one change. A map sent between robots is an update the receiver applies where it believes it missed a change, sent only where the sender believes the receiver&#8217;s map is stale: three maps where sharing every map sends 168.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="Maps that go stale">
+<meta property="og:description" content="Each robot sees at most one of two changes, and its map goes stale without its knowing. A map sent is an update, sent only where the sender believes the receiver&#8217;s is stale: three maps, where sharing everything sends 168.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/stale_maps.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/stale_maps.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The epistemic run in the film: RViz with every robot&#8217;s map of the three bays and r6 sending its map of t3 to r2, Gazebo beside it, and the eight maps under both.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/stale_maps.jpg">
+<meta name="twitter:title" content="Maps that go stale">
+<meta name="twitter:description" content="Each robot sees at most one of two changes, and its map goes stale without its knowing. A map sent is an update, sent only where the sender believes the receiver&#8217;s is stale: three maps, where sharing everything sends 168.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="The epistemic run in the film: RViz with every robot&#8217;s map of the three bays and r6 sending its map of t3 to r2, Gazebo beside it, and the eight maps under both.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/stale_maps.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The twenty-one domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+          <a href="coordinated_attack_scale.html">&#183; The coordinated attack among many robots<span class="sub">Bystanders, the cost of a level, four robots</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>false-belief</summary>
+            <div class="nav-sub">
+          <a href="demos.html#false-belief">All false-belief demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>muddy-robots</summary>
+            <div class="nav-sub">
+          <a href="demos.html#muddy-robots">All muddy-robots demos</a>
+          <a href="muddy_robots.html">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-distributed</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-distributed">All hotel-distributed demos</a>
+          <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>stale-maps</summary>
+            <div class="nav-sub">
+          <a href="demos.html#stale-maps">All stale-maps demos</a>
+          <a href="stale_maps.html" aria-current="page">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+          <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Epistemic SLAM &#183; belief update &#183; eight robots &#183; pass-through floor &#183; ROS 2</p>
+    <h2>Maps that go stale</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      Eight robots begin the shift holding the same map of the pass-through
+      floor: bay t1 open, a load in each of t2 and t3. During the shift a
+      forklift stages a load in t1 and takes the load out of t3. A robot's laser
+      sees a change only when its station has a sight line into the bay, and no
+      station sees both. Every other robot keeps the static-world assumption its
+      occupancy map is built on, maps the change onto nothing having changed,
+      and holds a map that is now wrong without knowing it. After the forklift
+      eleven entries of the eight maps are false, and no robot holds a current
+      map of both bays. Three haulers must then take loads through the racking,
+      and a hauler crosses a bay only if the bay is open and its map says so.
+    </p>
+    <p class="hero-p">
+      What a map sent from one robot to another should do to the receiver
+      depends on what the receiver believes the sender saw. A reading that
+      contradicts the receiver's map is news that the bay changed when the
+      sender saw a change the receiver missed, and a stale reading to ignore
+      when the receiver saw a change the sender missed. The domain draws that
+      line with a belief about a belief: a robot sends its map of a bay only to
+      a robot it believes holds the opposite, and the receiver takes the reading
+      as an update. The planner sends three maps. Three fleets that share every
+      map of every bay send 168, and the one that merges them with the fusion
+      this repository has repairs nothing.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>The model is built from the floor:</b> who sees each change is decided
+      by casting rays over the floor plan, and every run checked that the change
+      was read on exactly those robots' maps and on no other. <b>A map is a
+      belief of the robot that made it</b>, and a map sent carries
+      \(B_i\varphi\), not \(\varphi\). <b>Robots localise by odometry</b>, as on
+      every floor here; the SLAM is mapping with known poses over a prior that
+      goes stale.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">stale_map_demo</span>; policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, grounding by
+      plank, search by Aletheia. Full account in
+      <a href="stale_maps.pdf">Maps That Go Stale</a> (PDF): the model, the
+      propositions and their proofs, the planning and scaling tables, the four
+      runs and the defects found on the way.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>One forklift, four ways of sharing maps</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/stale_maps_poster.jpg">
+        <source src="media/stale_maps.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        The four fleets in turn: fuse, overwrite, recency and the plan. Left:
+        RViz, each robot's map of the three bays as three tiles beside it, a
+        stale tile ringed in yellow, and a map being sent drawn as a line from
+        sender to receiver. Right: Gazebo, the floor as it is. Under both: the
+        policy or protocol, the step in formal notation, and every robot's map
+        against the floor, with the model's row beside it on the epistemic
+        fleet. Every figure is a line one of the runs wrote; the corner says
+        when the film runs faster than the run.
+      </figcaption>
+    </figure>
+
+    <table class="data ca-left">
+      <thead><tr><th>fleet</th><th>maps sent</th><th>merged by</th><th>maps of a bay sent</th><th>over a fresh reading</th><th>stale after the exchanges</th><th>delivered</th></tr></thead>
+      <tbody>
+        <tr><td>fuse</td><td>every map of every bay to every other robot</td><td>the more confident reading</td><td>168</td><td>0</td><td>11</td><td>none</td></tr>
+        <tr><td>overwrite</td><td>the same</td><td>the sender's</td><td>168</td><td>10</td><td>0</td><td>r2, r4, r8</td></tr>
+        <tr><td>recency</td><td>the same</td><td>the later observation</td><td>168</td><td>0</td><td>0</td><td>r2, r4, r8</td></tr>
+        <tr><td><b>epistemic</b></td><td>the radio policy's</td><td>the later observation</td><td><b>3</b></td><td>0</td><td>8</td><td><b>r2, r4, r8</b></td></tr>
+      </tbody>
+    </table>
+
+    <h4>The epistemic fleet</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>a policy of 8 steps, by replanning in 8 expansions</td><td>1 world</td></tr>
+        <tr><td>clear(t3)</td><td>the load taken out of t3; read clear by r6 and r7, by their own lasers, after 3.7&#8202;s; every other map unchanged</td><td>2 worlds</td></tr>
+        <tr><td>stage(t1)</td><td>a load staged in t1; read blocked by r1, r2 and r3 after 1.8&#8202;s; every other map unchanged</td><td>4 worlds &#183; 11 stale entries</td></tr>
+        <tr><td>send-open(r6, r2, t3)</td><td>r6's map of t3 to r2: 374 cells replaced, none kept against it; r2 read t3 blocked, now clear</td><td>\(B_{r2}\neg\mathit{blocked}(t_3)\)</td></tr>
+        <tr><td>cross(r2, t3)</td><td>r2 through t3 to its drop: delivered after 88&#8202;s, 46.6&#8202;m</td><td></td></tr>
+        <tr><td>send-open(r2, r4, t3)</td><td>r2 relays it to r4: 374 cells replaced</td><td>\(B_{r4}\neg\mathit{blocked}(t_3)\)</td></tr>
+        <tr><td>cross(r4, t3)</td><td>delivered after 79&#8202;s, 40.9&#8202;m</td><td></td></tr>
+        <tr><td>send-open(r2, r8, t3)</td><td>r2 relays it to r8: 374 cells replaced</td><td>\(B_{r8}\neg\mathit{blocked}(t_3)\)</td></tr>
+        <tr><td>cross(r8, t3)</td><td>delivered after 86&#8202;s, 43.2&#8202;m</td><td>8 stale entries left</td></tr>
+        <tr><td>check</td><td><b>the model and the maps agree on 24 of 24 beliefs</b>: for every robot and bay, the epistemic state's answer to whether the robot believes it blocked, open or neither matched the robot's map</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h4>The fuse fleet</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>maps after</th></tr></thead>
+      <tbody>
+        <tr><td>forklift</td><td>as above: t3 read clear by r6 and r7, t1 read blocked by r1, r2 and r3, every other map unchanged</td><td>11 stale entries</td></tr>
+        <tr><td>168 sends</td><td>every robot's map of every bay to every other robot, merged by <span class="mono-inline">epistemic_slam::fuse</span>'s rule: not one settled cell replaced; when r2 sent r6 its stale t3, 374 cells were kept against it</td><td>11 stale entries</td></tr>
+        <tr><td>haul r2</td><td>its map shows every bay blocked: no route</td><td></td></tr>
+        <tr><td>haul r4</td><td>a route of 43.9&#8202;m through t1, which its map shows open; its laser reads the load in t1 after 21.3&#8202;m, and t3, the open bay, is blocked on its map: no route</td><td></td></tr>
+        <tr><td>haul r8</td><td>the same, after 14.9&#8202;m</td><td>none delivered</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Three findings about maps that stopped being the floor</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#sm-model-sec">
+        <span class="pt-card-img"><img src="media/thumbs/stale_maps_card_stale.jpg" alt="Gazebo down bay t1 as the forklift&#8217;s load stands in it, seen by three robots and by no other" loading="lazy"></span>
+        <span class="pt-card-k">The forklift</span>
+        <span class="pt-card-h">A stale map is a false belief</span>
+        <span class="pt-card-p">An unseen change maps onto nothing having changed. After the forklift the model has four worlds, each robot believes the one its own laser left its map in, and none believes the actual one.</span>
+        <span class="pt-card-go">See the model <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#sm-update-sec">
+        <span class="pt-card-img"><img src="media/thumbs/stale_maps_card_update.jpg" alt="RViz as r6 sends r2 its map of t3: a line from sender to receiver, and every robot&#8217;s three tiles beside it" loading="lazy"></span>
+        <span class="pt-card-k">A map sent</span>
+        <span class="pt-card-h">An update, sent to whoever needs it</span>
+        <span class="pt-card-p">Taken as fact, a contradicting map leaves the receiver believing everything. Taken as news that the bay changed, it is an update; and a robot sends it only where it believes the receiver's map is stale.</span>
+        <span class="pt-card-go">See the update <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#sm-fleets-sec">
+        <span class="pt-card-img"><img src="media/thumbs/stale_maps_card_fleets.jpg" alt="The film's closing card: the four fleets with the maps each sent, the fresh readings overwritten, the stale entries left and the haulers delivered" loading="lazy"></span>
+        <span class="pt-card-k">Four fleets</span>
+        <span class="pt-card-h">168 messages, or 3</span>
+        <span class="pt-card-p">The fusion this repository has keeps every stale cell, since 0 against 100 is a tie. Overwriting and timestamps deliver with 168 messages; the plan delivers with 3.</span>
+        <span class="pt-card-go">See the fleets <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#sm-floor-sec">The floor</a>
+      <a href="#sm-domain-sec">The domain</a>
+      <a href="#sm-model-sec">The model</a>
+      <a href="#sm-update-sec">The update</a>
+      <a href="#sm-planning-sec">Planning</a>
+      <a href="#sm-scale-sec">Many robots</a>
+      <a href="#sm-fleets-sec">Four fleets</a>
+      <a href="#sm-defects-sec">Defects</a>
+      <a href="#sm-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE FLOOR -->
+<section id="sm-floor-sec">
+  <div class="container">
+    <p class="sec-label">The floor</p>
+    <h3>Eight stations, and who sees each change</h3>
+    <figure class="demo-figure">
+      <img src="media/stale-maps-floor.png" alt="The pass-through floor with eight robots, the three bays, and the sight lines from r1, r2 and r3 to t1 and from r6 and r7 to t3" style="max-width:420px;width:100%;height:auto;display:block;margin:0 auto">
+      <figcaption>
+        The pass-through floor. t1, dashed, is staged during the shift; t3,
+        outlined, is cleared; t2 holds its load throughout. A line joins a
+        station to each change it sees. r2, r4 and r8 haul; their drops are the
+        rings north of the block.
+      </figcaption>
+    </figure>
+    <p>
+      The hall, the racking block and its three bays are the
+      <a href="pass_through.html">pass-through floor</a>'s.
+      <span class="mono-inline">tools/check_floor.py</span> stations the eight
+      robots and checks the domain's claims on the floor plan before anything
+      runs, by casting rays over the occupied cells with the other robots
+      standing at their stations, or by flooding the plan inflated by the
+      driver's 0.35&#8202;m. A staged load is in view of a station with at least
+      fifteen of its cells or with none, and a cleared bay with every cell the
+      load covered or with none: a station that saw part of a cleared bay would
+      hold a reading neither the shift map's nor the floor's. t1 is seen by r1,
+      r2 and r3, t3 by r6 and r7. A hauler with a current map reaches its drop
+      through t3 and no other bay; with the shift map, through t1. r2 sees t1
+      staged and not t3 cleared, so its map shows no bay open at all; r4 and r8
+      see neither, and their maps send them to t1.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE DOMAIN -->
+<section id="sm-domain-sec">
+  <div class="container">
+    <p class="sec-label">The domain</p>
+    <h3>A change some robots see, and a map sent as an update</h3>
+    <p>
+      <span class="mono-inline">tools/stale_maps.py</span> writes the domain
+      and four floors for any fleet. The atoms are
+      \(\mathit{blocked}(t)\) for each bay, the static
+      \(\mathit{sees}(i,t)\), whether robot \(i\)'s station sees bay \(t\),
+      \(\mathit{hauls}(i)\), \(\mathit{delivered}(i)\), the forklift's schedule,
+      and two that tell the floors apart, \(\mathit{radio}\) and
+      \(\mathit{doubts}\). At the start every robot holds the shift map, and the
+      initial model is one world, all of it common knowledge, the stations
+      included: the fleet's positions are known. Whether the forklift used its
+      slots is not.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>action</th><th>type</th><th>events</th><th>observers</th></tr></thead>
+      <tbody>
+        <tr><td>stage(t), clear(t)</td><td>change</td><td>the change; the slot passing with nothing changed</td><td>Fully where \(\mathit{sees}(i,t)\), Oblivious elsewhere</td></tr>
+        <tr><td>send-open(i, j, t)</td><td>map report</td><td>the report; the change it implies, applied where \(j\) believes the old state; nothing</td><td>\(i\) Fully, \(j\) Recipient, the rest Oblivious</td></tr>
+        <tr><td>look(i, t)</td><td>private sensing</td><td>open; blocked</td><td>\(i\) Fully, the rest Oblivious; doubting floor only</td></tr>
+        <tr><td>cross(h, t)</td><td>private ontic</td><td>\(\mathit{delivered}(h)\)</td><td>\(h\) Fully, the rest Oblivious</td></tr>
+      </tbody>
+    </table>
+    <p>The preconditions carry the epistemic content:</p>
+    \[
+      \mathit{send\text{-}open}(i,j,t):\ B_i\,\neg\mathit{blocked}(t)\ \wedge\ B_iB_j\,\mathit{blocked}(t)
+      \qquad
+      \mathit{cross}(h,t):\ \neg\mathit{blocked}(t)\ \wedge\ B_h\,\neg\mathit{blocked}(t)
+    \]
+    <p>
+      A robot sends what its map says, which is what it believes, and sends it
+      only to a robot it believes holds the opposite. The goal of the radio floor
+      is that every hauler has delivered; the resync floor asks instead that
+      every robot believe every bay as it is. Two floors more change two lines:
+      without a radio, and with robots that know their maps may go stale, for
+      whom an unseen change is doubtful, not invisible.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE MODEL -->
+<section id="sm-model-sec">
+  <div class="container">
+    <p class="sec-label">After the forklift</p>
+    <h3>Four worlds, and no robot in the actual one</h3>
+    <figure class="demo-figure">
+      <img src="media/stale-maps-model.svg" alt="Four worlds after the forklift: nothing moved, believed by r4, r5 and r8; t3 cleared only, believed by r6 and r7; t1 staged only, believed by r1, r2 and r3; both, the actual world, believed by no robot" style="width:100%;height:auto">
+      <figcaption>
+        The model after stage(t1) and clear(t3), computed by the product update
+        on the grounded task. Each robot's relation leads, from the actual world,
+        to the world its own laser left its map in.
+      </figcaption>
+    </figure>
+    <h4>Proposition 1 (the model is the maps)</h4>
+    <p>
+      After the forklift, for every robot \(i\) and bay \(t\),
+      \(B_i\,\mathit{blocked}(t)\) holds at the actual world exactly when
+      \(t\) is blocked in the shift map with the changes \(i\)'s station sees
+      applied, and \(B_i\,\neg\mathit{blocked}(t)\) otherwise. On this floor,
+      where no station sees both changes, no robot's relation reaches the actual
+      world, and the frame is no longer S5.
+    </p>
+    <p>
+      So the model gives every robot exactly the map its station leaves it,
+      which the validator checks robot by robot, and on the floor the same
+      partition was read off the robots' own living maps in every run. Beliefs
+      about other robots' maps are stale too: fifteen of the 56 beliefs the
+      robots hold about each other's map of t1 are false, and twelve about t3.
+      r1 saw t1 staged and not t3 cleared, and believes r6's map shows t3
+      blocked; it shows t3 open.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE UPDATE -->
+<section id="sm-update-sec">
+  <div class="container">
+    <p class="sec-label">A map sent</p>
+    <h3>Taken as fact it leaves no world; taken as news it is an update</h3>
+    <h4>Proposition 2 (a received map taken as fact)</h4>
+    <p>
+      If \(j\) believes \(\mathit{blocked}(t)\) and is privately told
+      \(\neg\mathit{blocked}(t)\), the others oblivious, then after the update
+      \(j\)'s relation is empty at the actual world, and \(j\) believes every
+      formula.
+    </p>
+    <p>
+      This is what fusing a received map as a fact does to a robot whose map
+      says otherwise, and the validator shows it on r4. The map report relates
+      the report to the change it implies, applied to the worlds the recipient
+      believes, so r4 takes the reading as news that t3 was cleared after its
+      map was made.
+    </p>
+    <h4>Proposition 3 (the report is an update)</h4>
+    <p>
+      If \(B_i\neg\mathit{blocked}(t)\) and \(B_iB_j\,\mathit{blocked}(t)\) hold
+      and \(j\) does believe \(\mathit{blocked}(t)\), then after \(\mathit{send\text{-}open}(i,j,t)\) the recipient believes
+      \(\neg\mathit{blocked}(t)\), its relation is serial, its beliefs about
+      every other bay are what they were, and so are the beliefs of every robot
+      but \(i\) and \(j\).
+    </p>
+    <p>
+      That is an update in the sense of Katsuno and Mendelzon, not a revision:
+      r4's map was right when it was made. The action type is the
+      <a href="false_belief.html">false-belief</a> demonstration's report,
+      generalised to a fleet with the other robots oblivious. That page lists
+      belief revision among what it does not show; a stale map is a case in
+      which update, not revision, is the right answer, and the logic needs
+      nothing beyond \(\mathrm{KD45}_n\) to give it.
+    </p>
+    <h4>Proposition 4 (the guard)</h4>
+    <p>
+      After the forklift, a robot whose map has bay \(t\) wrong can send its
+      reading of \(t\) to no robot: it believes that every robot's map agrees
+      with its own about \(t\), so the conjunct \(B_iB_j\) of the opposite fails
+      for every \(j\).
+    </p>
+    <p>
+      A robot that missed the change believes the forklift's slot passed with
+      nothing moved, and in that world every robot saw the same. So a stale
+      reading is never sent, and in particular never over a fresh one. The
+      validator checks the case: r4's stale t1 cannot be sent to r2, whose map
+      is fresh.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ PLANNING -->
+<section id="sm-planning-sec">
+  <div class="container">
+    <p class="sec-label">Planning</p>
+    <h3>Three messages, only to haulers; or eleven, one per stale entry</h3>
+    <p>
+      The four floors grounded by plank and solved by Aletheia, consistent
+      beliefs required, and every policy replayed by
+      <span class="mono-inline">tools/trace.py</span>. Eight checks, run by
+      <span class="mono-inline">tools/validate.sh</span> without a simulator:
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>check</th><th>result</th></tr></thead>
+      <tbody>
+        <tr><td>FLOOR</td><td>the floor's three claims hold</td></tr>
+        <tr><td>STALE</td><td>after the forklift every robot believes exactly the map its station leaves it, and 11 entries are false</td></tr>
+        <tr><td>RADIO</td><td>clear(t3), stage(t1), send-open(r6, r2, t3), cross(r2, t3), send-open(r2, r4, t3), cross(r4, t3), send-open(r2, r8, t3), cross(r8, t3)</td></tr>
+        <tr><td>GUARD</td><td>send-open(r4, r2, t1), r4's stale t1 to r2, does not apply</td></tr>
+        <tr><td>COLLAPSE</td><td>a plain announcement to r4 that t3 is open leaves r4 with no world</td></tr>
+        <tr><td>SILENT</td><td>without a radio there is no policy</td></tr>
+        <tr><td>DOUBT</td><td>robots that know maps go stale hold no false belief after the forklift, only uncertainty, and the policy sends each hauler to look at t3</td></tr>
+        <tr><td>RESYNC</td><td>every map brought up to date with 11 messages, one per stale entry</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The radio policy leaves eight entries stale: nothing requires r1, r3, r5,
+      r6 and r7 to have current maps, and no message is spent on them. The relay
+      is the planner's: r6 tells r2, and r2, now believing t3 open and believing
+      r4 and r8 hold the shift map's reading, tells them.
+    </p>
+    <h4>Proposition 5 (the least number of messages)</h4>
+    <p>
+      A map report changes the recipient's belief about one bay, and no robot's
+      belief about any other bay. A policy that makes every robot believe every bay as it is sends
+      at least one report per stale entry, and the resync policy sends exactly
+      that many.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ MANY ROBOTS -->
+<section id="sm-scale-sec">
+  <div class="container">
+    <p class="sec-label">Many robots</p>
+    <h3>The counts scale to any fleet; the search, to thirty-two</h3>
+    <p>
+      <span class="mono-inline">tools/scaling.py</span> draws random fleets,
+      each robot seeing each changed bay with probability 0.3 and a third of them
+      hauling, and solves the radio and resync floors. Three seeds per size.
+      Times are the planner's, on eight cores of sixteen, while another
+      session's simulations ran on the rest.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>robots</th><th>haulers</th><th>stale entries</th><th>radio: maps sent</th><th>resync: maps sent</th><th>time</th><th>broadcast</th></tr></thead>
+      <tbody>
+        <tr><td>4</td><td>1</td><td>5 to 6</td><td>0, or no policy</td><td>5, or no policy</td><td>0.01&#8202;s</td><td>36</td></tr>
+        <tr><td>8</td><td>2</td><td>10 to 13</td><td>2</td><td>one per stale entry</td><td>0.1 to 3&#8202;s</td><td>168</td></tr>
+        <tr><td>16</td><td>5</td><td>19 to 24</td><td>2 to 5</td><td>one per stale entry</td><td>1 to 3&#8202;s</td><td>720</td></tr>
+        <tr><td>32</td><td>10</td><td>43 to 52</td><td>7 to 10</td><td>one per stale entry</td><td>41 to 104&#8202;s</td><td>2976</td></tr>
+        <tr><td>64</td><td>21</td><td>91 to 97</td><td>none in 600&#8202;s</td><td>none in 600&#8202;s</td><td>600&#8202;s, the budget</td><td>12096</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Wherever there is a policy, resync sends exactly one message per stale
+      entry, and radio a handful, only to haulers. Two of the four-robot fleets
+      have no policy, correctly: nobody saw t3, so no robot can come to know it
+      is open. The search does not scale as far as the counts do. The model is
+      not what grows: after the forklift it has four worlds whatever the size of
+      the fleet. What grows is the number of ground actions,
+      \(N(N-1)\cdot 3\cdot 2\) map reports, 24&#8239;192 at 64 robots, over which
+      the planner finds no policy within its budget.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FOUR FLEETS -->
+<section id="sm-fleets-sec">
+  <div class="container">
+    <p class="sec-label">On the floor</p>
+    <h3>Living maps, a merge rule, and what each fleet did</h3>
+    <p>
+      Each robot runs a living map: the shift map, every cell observed at time
+      zero, into which each scan of the robot's own laser is cast from its pose
+      as log-odds evidence, each cell stamped with when it was last observed and
+      the other robots masked out. A map sent carries the region's cells and
+      their observation times, and the receiver merges by its rule:
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>rule</th><th>a cell both robots have settled, read differently</th></tr></thead>
+      <tbody>
+        <tr><td>confidence</td><td>the reading further from 50, a tie keeping the receiver's: <span class="mono-inline">epistemic_slam::fuse</span>'s rule</td></tr>
+        <tr><td>overwrite</td><td>the sender's</td></tr>
+        <tr><td>recency</td><td>the one observed later</td></tr>
+      </tbody>
+    </table>
+    <p>
+      A SLAM map writes its settled cells as 0 and 100, so under the confidence
+      rule every contradiction between two maps is a tie and the receiver keeps
+      its own. That rule never repairs a stale map, and the fuse fleet, which
+      shares every map with it, delivers nothing. <span class="mono-inline">tools/fleets.py</span>
+      said what each fleet would do before it ran, by replaying the exchanges and
+      then driving each hauler along its route over the floor plan, its map
+      updated wherever the route brings a change into sight; the mission failed
+      any run that did otherwise, and none did.
+    </p>
+    <p>
+      Overwrite delivers, but only because the robots that saw the changes were
+      still looking: ten times a stale reading was written over a fresh one, and
+      each time the robot's own laser read the bay again within seconds. With
+      those robots no longer looking (<span class="mono-inline">fleets.py
+      --transient</span>) the first sender's stale t3 cascades through the fleet,
+      and no hauler delivers. Recency delivers with nothing overwritten: the
+      observation times do mechanically what the update does. What they do not
+      do is say who needs a map. The plan sends three where recency sends 168.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEFECTS -->
+<section id="sm-defects-sec">
+  <div class="container">
+    <p class="sec-label">Defects</p>
+    <h3>Found on the way</h3>
+    <ul style="margin:0 0 0 1.2rem">
+      <li><b>An else-if that grounds as never.</b> The forklift's observability
+      was first one condition, Fully if the robot sees the bay, else-if the floor
+      doubts then Doubting, else Oblivious. plank grounds the else-if branch
+      without its own condition and puts that condition and its negation into
+      the else, so every robot that did not see a change became doubting and
+      none oblivious. No robot held a stale map, nothing was worth sending, and
+      the radio floor came back unsolvable at depth 2. Each change is now one
+      action per floor.</li>
+      <li><b>A plan without its epistemic fields.</b> The planner plugin's
+      best-first search returns a flat plan, and the epistemic executor then
+      applies an action named <span class="mono-inline">''</span> to the model and
+      fails at the first step. AO\(^*\), which returns a policy, spends its whole
+      budget over 396 ground actions before depth 8; replanning returns the same
+      eight steps as a policy in eight expansions.</li>
+      <li><b>A map that forgot the load it had just seen.</b> The living map
+      first wrote a return as occupied and every cell a beam crossed as free. A
+      beam grazing past a load's face crossed the cell the beam before it had
+      ended in, and a hauler that had read t1 blocked read it clear half a second
+      later. Evidence is now log-odds, one update per cell per scan.</li>
+      <li><b>A prediction that left the observers standing still.</b>
+      <span class="mono-inline">fleets.py</span> first froze every map after the
+      forklift, and predicted that under overwrite no hauler would deliver. On
+      the floor r6 and r7 read t3 again after each overwrite and sent it on
+      their own turns; every hauler delivered. The floor was right, and the
+      prediction now lets an observer read its bay before it sends.</li>
+      <li><b>Another world in the recording.</b> Four takes showed, in the Gazebo
+      pane, the static scene of a different scenario another session was running
+      on the same machine, with this floor's robots drawn inside it. The server
+      was simulating this floor all the while, and the runs' data are unaffected.
+      The sessions shared neither a ROS domain nor a Gazebo master, and the
+      cause was not established. The recorder now compares the client's opening
+      shot with a reference and launches again when it differs, and every take
+      was checked by eye.</li>
+      <li><b>A trace that doubled at every message.</b> The trace kept every
+      world the product update produced; the resync policy's eleven reports took
+      the model to 6208 worlds. It now keeps the submodel the designated worlds
+      generate, 14 worlds for the same policy.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Limits</p>
+    <h3>What this does not show</h3>
+    <ul style="margin:0 0 0 1.2rem">
+      <li>Localisation. Every robot's odometry is the world frame; the living map
+      is mapping with known poses over a prior. A robot that did not know where
+      it is would not know which bay it saw.</li>
+      <li>A stale map that is wrong about the walls. The forklift changes only bay
+      contents, and the driver plans outside the bays over the floor plan.</li>
+      <li>Observation the model does not contain. A hauler's laser keeps reading
+      the floor as it drives, and its map learns what it passes; the model learns
+      only from actions. On the recorded epistemic run they still agreed at the
+      end, because no hauler's route brought a bay into view whose reading it did
+      not already hold.</li>
+      <li>Communication that can fail. Every map sent arrives; the
+      <a href="link_outage.html">link outage</a> is the lossy case.</li>
+      <li>More than 32 robots planned. The counts hold at any size; the search
+      does not finish at 64.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="sm-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-agm">C. E. Alchourr&#243;n, P. G&#228;rdenfors and D. Makinson. On the logic of theory change: partial meet contraction and revision functions. <i>Journal of Symbolic Logic</i> 50(2):510&#8211;530, 1985.</li>
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK VII</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-bs">A. Baltag and S. Smets. A qualitative theory of dynamic interactive belief revision. In <i>Logic and the Foundations of Game and Decision Theory</i>, 11&#8211;58. Amsterdam University Press, 2008.</li>
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-km">H. Katsuno and A. O. Mendelzon. On the difference between updating a knowledge base and revising it. <i>Proceedings of KR</i>, 387&#8211;394, 1991.</li>
+      <li id="ref-fb">H. Ulises. <a href="false_belief.pdf">A false belief on a warehouse floor: a relocation one robot does not see, and the report that repairs it</a>. Epistemic Robotics report, 2026.</li>
+      <li id="ref-pt">H. Ulises. <a href="pass_through.pdf">The pass-through problem: multi-agent epistemic planning over maps the robots build</a>. Epistemic Robotics report, 2026.</li>
+      <li id="ref-tbf">S. Thrun, W. Burgard and D. Fox. <i>Probabilistic Robotics</i>. MIT Press, 2005.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+    <pre class="code">ros2 launch stale_map_demo stale_maps_launch.py                  <span class="c"># fleet:=epistemic</span>
+ros2 launch stale_map_demo stale_maps_launch.py fleet:=fuse       <span class="c"># also overwrite, recency</span>
+bash tools/validate.sh                                             <span class="c"># eight checks, no simulator</span>
+python3 tools/fleets.py                                            <span class="c"># what each fleet will do</span>
+python3 tools/fleets.py --transient                                <span class="c"># the same, observers gone</span>
+python3 tools/scaling.py --robots 8 16 32 64 --seeds 1 2 3
+python3 tools/check_floor.py --maps maps --plot docs/floorplan.png
+bash tools/record_demo.sh epistemic /tmp/raw.mkv /tmp/run.log</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">pass-through floor &#183; eight robots &#183; three maps sent, where sharing every map sends 168</span>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>
+</html>
