@@ -773,7 +773,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
         <dt>Initial model</dt><dd>\(|W_0| = 6\), \(|W_d| = 6\) &#183; declared frame S5; that at most one view is screened is common knowledge</dd>
         <dt>Grounded</dt><dd>5 atoms, 5 ground actions, goal of modal depth 1; the precondition of a look from lookout \(k\) is \(\mathit{at}\text{-}m_k \wedge K_{r1}\neg\mathit{tapado}\text{-}k\)</dd>
         <dt>Solved</dt><dd>depth 4, 26 expansions, 4 leaves, by AO* in the Aletheia build installed with ePlanSys (28 September 2026), the one the robot ran; an earlier build (1 June 2026) expands 34. No sequence exists, since every look's precondition is false in two of the six worlds: the installed build's GBFS exhausts its search, and the earlier build's returns the sequence <code>goto-m1</code>, <code>vista-1</code>, <code>mirar-1</code>, which <code>plank validate</code> rejects, <code>mirar-1</code> not being applicable after <code>vista-1</code></dd>
-        <dt>Stated in</dt><dd><a href="two_lookouts.html">Where to look from</a> &#183; <a href="two_lookouts.pdf">the report</a>; built and measured in the author's thesis</dd>
+        <dt>Stated in</dt><dd><a href="two_lookouts.html">Where to look from</a> &#183; <a href="two_lookouts.pdf">the report</a></dd>
       </dl>
       <details class="dom-src"><summary>Atoms and goal, in notation</summary>
 <pre class="code">blocked-z            the zone is blocked

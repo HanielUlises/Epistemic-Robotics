@@ -719,9 +719,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     </p>
     <p class="note" style="margin-top:1rem">
       Policy from <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
-      search by Aletheia; the classical plans from POPF, through PlanSys2. The
-      scenario is the third of the repeated simulator runs in the author's
-      thesis, built and measured there; this page films it and states it. Full
+      search by Aletheia; the classical plans from POPF, through PlanSys2. Full
       account in <a href="two_lookouts.pdf">Where to Look From</a> (PDF): the
       domain, the proof that it has no conformant plan and that the policy
       reaches the goal, the batch and the four takes.
@@ -1015,8 +1013,8 @@ vista-1(r1)
       time favours the policy, with a Hodges&#8211;Lehmann estimate of
       26.6&#8202;s&nbsp;<sup class="cite"><a href="#ref-hl">[6]</a></sup>.
       No run of any formulation reported the zone with the wrong class, and no
-      run failed. Each figure on this page was recomputed from the batch's
-      table of runs; the two statistics agree with the thesis's analysis.
+      run failed. Each figure on this page was computed from the batch's
+      table of runs.
     </p>
   </div>
 </section>
@@ -1067,8 +1065,8 @@ vista-1(r1)
       domain writes as a precondition, written instead into the monitor, and
       what a look decides written into the replanning.</li>
       <li>Noise that confuses a screen with a clear view. At 0.01&#8202;m the
-      regions decided correctly in every run; the effect of noisier lasers is
-      measured in the thesis on the first scenario, not here.</li>
+      regions decided correctly in every run; noisier lasers were not run
+      here.</li>
       <li>More than one robot, or more than two lookouts. Neither was built or
       measured.</li>
       <li>Localisation. The map is built with the simulator's odometry, and the
@@ -1098,7 +1096,7 @@ vista-1(r1)
     <h3>Running it</h3>
     <p>
       The scenario, its launch file and the harness that runs and measures it
-      live with the thesis experiments. One run, from the harness's directory:
+      are not in this repository. One run, from the harness's directory:
     </p>
     <pre class="code">source entorno.sh
 python3 generar_mundo.py --semilla 1 --ruido 0.01 --salida DIR --escenario miradores
