@@ -671,6 +671,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
           <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
+          <a href="two_lookouts.pdf">Where to Look From<span class="sub">Knowing whether, a look with a modal precondition, and no conformant plan</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -720,7 +721,10 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       Policy from <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
       search by Aletheia; the classical plans from POPF, through PlanSys2. The
       scenario is the third of the repeated simulator runs in the author's
-      thesis, built and measured there; this page films it and states it.
+      thesis, built and measured there; this page films it and states it. Full
+      account in <a href="two_lookouts.pdf">Where to Look From</a> (PDF): the
+      domain, the proof that it has no conformant plan and that the policy
+      reaches the goal, the batch and the four takes.
     </p>
   </div>
 </div>
@@ -950,6 +954,15 @@ vista-1(r1)
       those two. The two classical plans are those two sequences: POPF given
       the goal of having looked from lookout 1, and POPF given the goal of
       having looked from both.
+    </p>
+    <p>
+      In the domain itself the gap is wider: no sequence of its actions is
+      applicable in every world and reaches the goal. The first look in such a
+      sequence would have to be applicable in a world where its own lookout is
+      screened, and there \(K_{r1}\neg\mathit{tapado}\text{-}k\) is false,
+      since what is known is true. The classical plans exist only because
+      their looks carry no such precondition. The proof is in the
+      <a href="two_lookouts.pdf">report</a>.
     </p>
     <p>
       The policy is not slower than the sequence that commits. Its looks end
