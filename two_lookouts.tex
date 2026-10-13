@@ -143,8 +143,7 @@ precondition of every look is false in two of the six worlds. A policy of five
 nodes reaches the goal in all six, and drives to the second lookout in exactly
 the two worlds with a screen at the first. In the world, any sequence either
 drives to the second lookout in every run or leaves the zone unobserved behind a
-screen. Thirty paired seeds per formulation in Gazebo, from the repeated runs of
-the author's thesis, measure this: the policy's success is backed by the map the
+screen. Thirty paired seeds per formulation in Gazebo measure this: the policy's success is backed by the map the
 robot built in 30 of 30 runs, and it drives to the second lookout in 10; the
 classical sequence committed to the first lookout reports success in 30 and is
 backed in 20, every unbacked run behind a screen with no cell of the zone
@@ -160,17 +159,16 @@ backed in 30 and slower in every pair, by a Hodges--Lehmann estimate of
 %  ======================================================================
 \section{Scope}
 
-This report states one scenario of the repeated simulator runs in the author's
-thesis, the third, which the thesis calls \emph{dos miradores}, and the film
-recorded of it for the Epistemic Robotics site. The scenario, its launch file,
-the harness that runs and measures it and the batch of runs were built in the
-thesis; the domain is restated here in notation, and every figure is recomputed
-from the batch's table of runs. The film's four takes were recorded with the
-harness unchanged.
+This report states one scenario of a harness for repeated simulator runs, and
+the film recorded of it for the Epistemic Robotics site. The scenario, its
+launch file, the harness that runs and measures it and the batch of runs are
+not in this repository; the domain is restated here in notation, and every
+figure is computed from the batch's table of runs. The film's four takes were
+recorded with the harness unchanged.
 
-The question the scenario asks is narrow. The first scenario of the thesis left
-a look that can end without deciding as a problem, with noise as its cause; an
-outcome that may occur in any world leaves no policy that guarantees the goal.
+The question the scenario asks is narrow. A look that can end without deciding
+is a problem when noise is its cause: an outcome that may occur in any world
+leaves no policy that guarantees the goal.
 Here the undecided look has a cause the robot can observe, a screen across the
 sight line, and the planner can choose where to look from. The planning is
 epistemic planning over dynamic epistemic logic~\cite{ba2011}, with a goal of
@@ -294,7 +292,7 @@ $K_{r1}\neg\tap{2}$, is why no check of lookout 2 is needed.
 \paragraph{Classical plans}
 A classical planner given the task without knowledge has looks with no modal
 precondition: \code{look\_into} requires only that the robot stand at a lookout,
-and lasts its declared 8\,s. The two plans the thesis compares are POPF's for
+and lasts its declared 8\,s. The two plans compared are POPF's for
 the goal of having looked from lookout 1, a sequence of two actions, and for the
 goal of having looked from both, a sequence of four. In the world, a look from
 lookout $k$ behind a screen observes no cell of the zone. So, as in the proof of
@@ -373,7 +371,7 @@ plan the differences change sign with the world, the policy being faster in the
 four worlds it decides from lookout 1, by about 8\,s, since its looks end on
 knowledge, and slower by about 12\,s in the two it is forced to lookout 2. No
 run of any formulation reported the zone with the wrong class, and every mission
-ended in success. The two statistics agree with the thesis's own analysis.
+ended in success.
 
 %  ======================================================================
 \section{The film}
@@ -439,8 +437,7 @@ zone behind a screen. It would need the condition the epistemic domain writes as
 a precondition written into the monitor, and what a look decides written into
 the replanning.
 \item Noise that confuses a screen with a clear view. At 0.01\,m the regions
-decided correctly in every run; noisier lasers are measured in the thesis on the
-first scenario, not here.
+decided correctly in every run; noisier lasers were not run here.
 \item More than one robot, or more than two lookouts. Neither was built or
 measured.
 \item Localisation. The map is built with the simulator's odometry, and the
