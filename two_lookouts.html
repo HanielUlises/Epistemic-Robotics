@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where to look from &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="A robot must know whether a zone is blocked, from either of two lookouts, with a screen in front of at most one. The policy checks the view, and goes to the second lookout only when a screen forces it: backed by the map in 30 of 30 runs, where committing to one lookout reports success unseen behind a screen.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="Where to look from">
+<meta property="og:description" content="A robot must know whether a zone is blocked, from either of two lookouts, with a screen in front of at most one. The policy checks the view, and goes to the second lookout only when a screen forces it: backed by the map in 30 of 30 runs, where committing to one lookout reports success unseen behind a screen.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/two_lookouts.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/two_lookouts.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The film at the screen: Gazebo over the robot&#8217;s shoulder at lookout 1 with the screen filling the view, RViz with the map, and the panel with the observation and what the robot knows.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/two_lookouts.jpg">
+<meta name="twitter:title" content="Where to look from">
+<meta name="twitter:description" content="A robot must know whether a zone is blocked, from either of two lookouts, with a screen in front of at most one. The policy checks the view, and goes to the second lookout only when a screen forces it: backed by the map in 30 of 30 runs, where committing to one lookout reports success unseen behind a screen.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="The film at the screen: Gazebo over the robot&#8217;s shoulder at lookout 1 with the screen filling the view, RViz with the map, and the panel with the observation and what the robot knows.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/two_lookouts.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The twenty-one domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by domain</span></a>
+          <details class="nav-folder">
+            <summary>building-rooms</summary>
+            <div class="nav-sub">
+          <a href="demos.html#building-rooms">All six-room demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>robot-warehouse</summary>
+            <div class="nav-sub">
+          <a href="demos.html#robot-warehouse">All warehouse demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>pass-through</summary>
+            <div class="nav-sub">
+          <a href="demos.html#pass-through">All pass-through demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>coordinated-attack</summary>
+            <div class="nav-sub">
+          <a href="demos.html#coordinated-attack">All coordinated-attack demos</a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+          <a href="coordinated_attack_scale.html">&#183; The coordinated attack among many robots<span class="sub">Bystanders, the cost of a level, four robots</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>false-belief</summary>
+            <div class="nav-sub">
+          <a href="demos.html#false-belief">All false-belief demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>muddy-robots</summary>
+            <div class="nav-sub">
+          <a href="demos.html#muddy-robots">All muddy-robots demos</a>
+          <a href="muddy_robots.html">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-incident</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-incident">All hotel demos</a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>hotel-distributed</summary>
+            <div class="nav-sub">
+          <a href="demos.html#hotel-distributed">All hotel-distributed demos</a>
+          <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>stale-maps</summary>
+            <div class="nav-sub">
+          <a href="demos.html#stale-maps">All stale-maps demos</a>
+          <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+          <a href="when_planning_pays.html">&#183; When planning pays<span class="sub">The plan against flooding, pulling and gossip: when sharing is enough, and when not</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>two-lookouts</summary>
+            <div class="nav-sub">
+          <a href="demos.html#two-lookouts">All two-lookouts demos</a>
+          <a href="two_lookouts.html" aria-current="page">&#183; Where to look from<span class="sub">Knowing whether: two lookouts, a screen, and success the map backs</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+          <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+          <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Knowing whether &#183; sensing with a modal precondition &#183; one robot &#183; two lookouts &#183; ROS 2</p>
+    <h2>Where to look from</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      A robot must find out whether a zone is blocked. It can see the zone from
+      either of two lookouts, and a screen may stand in front of one of them:
+      in front of lookout 1, in front of lookout 2, or in front of neither, but
+      never in front of both. The robot does not know which. A look through a
+      screen tells it nothing about the zone, and a look that ends without
+      deciding is not noise to be averaged away: it is a fact about the world
+      that the robot can observe, by checking the view.
+    </p>
+    <p class="hero-p">
+      The epistemic planner is asked for \(\mathit{Kw}_{r1}\,\mathit{blocked}\text{-}z\),
+      that the robot know whether the zone is blocked, and returns a policy of
+      five nodes that branches. The robot drives to lookout 1 and checks the
+      view. If it is clear, it looks from there and stops. If a screen stands
+      in front of it, the robot knows by elimination that the view from
+      lookout 2 is clear, drives there and looks without checking. A classical
+      planner, given the same task without knowledge, must commit to a
+      sequence. Committed to lookout 1, it reports success in all thirty runs
+      and in the ten behind a screen has not observed one cell of the zone.
+      Committed to both lookouts, it always knows, and always travels to the
+      second.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>Backed by the map.</b> A run counts as backed when the map the robot built during the run classifies the zone,
+      by the same rule the perception applies, as the robot reported.
+      <b>The look ends when the robot knows</b>: the epistemic look action
+      returns as soon as \(\mathit{Kw}\) holds in the robot's epistemic state,
+      the classical one when its declared 8&#8202;s are up. <b>The six worlds
+      rotate over the seeds</b>, so each formulation meets each world five
+      times in thirty runs.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Policy from <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
+      search by Aletheia; the classical plans from POPF, through PlanSys2. The
+      scenario is the third of the repeated simulator runs in the author's
+      thesis, built and measured there; this page films it and states it.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>One screen, three ways of looking</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/two_lookouts_poster.jpg">
+        <source src="media/two_lookouts.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Four takes: on seed 1, with a screen in front of lookout 1 and the zone
+        clear, the policy, the classical plan that commits to lookout 1 and the
+        classical plan that visits both; then the policy again on seed 3, with
+        no screen. Left: RViz, the map the robot builds, with the screen's place
+        and the zone outlined in the colour the map gives them, grey while
+        undecided. Right: Gazebo, the hall as it is. Under both: the policy or
+        plan with the action running marked, the step, and what the robot knows
+        beside what its map holds of the zone. At each observation the frame is
+        held while it is read, and marked as held. Every figure is a line one
+        of the runs wrote.
+      </figcaption>
+    </figure>
+
+    <table class="data ca-left">
+      <thead><tr><th>take</th><th>world</th><th>lookouts visited</th><th>looks</th><th>reports</th><th>sim time</th><th>the zone, on the map</th></tr></thead>
+      <tbody>
+        <tr><td><b>epistemic</b>, seed 1</td><td>clear, screen 1</td><td>1, 2</td><td>vista-1, mirar-2</td><td>SUCCESS</td><td>34.9&#8202;s</td><td><b>256 of 256 cells, clear</b></td></tr>
+        <tr><td>classical, one lookout, seed 1</td><td>clear, screen 1</td><td>1</td><td>mirar-1</td><td>SUCCESS</td><td>22.3&#8202;s</td><td><b>0 of 256 cells, unknown</b></td></tr>
+        <tr><td>classical, both lookouts, seed 1</td><td>clear, screen 1</td><td>1, 2</td><td>mirar-1, mirar-2</td><td>SUCCESS</td><td>51.1&#8202;s</td><td>256 of 256 cells, clear</td></tr>
+        <tr><td><b>epistemic</b>, seed 3</td><td>clear, no screen</td><td>1</td><td>vista-1, mirar-1</td><td>SUCCESS</td><td>14.3&#8202;s</td><td>256 of 256 cells, clear</td></tr>
+      </tbody>
+    </table>
+
+    <h4>The policy, seed 1</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>a policy of 5 nodes, branching, in 0.12&#8202;s</td><td>6 worlds, 6 designated</td></tr>
+        <tr><td>goto-m1(r1)</td><td>from the start to lookout 1, 0.6 to 12.4&#8202;s</td><td>6 worlds, 6 designated</td></tr>
+        <tr><td>vista-1(r1)</td><td>the screen's place read blocked; \(\mathit{Kw}_{r1}\,\mathit{tapado}\text{-}1\) held on the first grid; observed <span class="mono-inline">e-vista1-tapada</span>, 12.5 to 14.5&#8202;s</td><td>6 worlds, 2 designated &#183; \(K_{r1}\,\neg\mathit{tapado}\text{-}2\)</td></tr>
+        <tr><td>goto-m2(r1)</td><td>the branch for a screen: lookout 1 to lookout 2, 14.5 to 32.8&#8202;s</td><td></td></tr>
+        <tr><td>mirar-2(r1)</td><td>the zone read clear, 256 of 256 cells; observed <span class="mono-inline">e-mirar2-libre</span>, 32.9 to 35.2&#8202;s</td><td>2 worlds, 1 designated</td></tr>
+        <tr><td>goal</td><td><b>\(\mathit{Kw}_{r1}\,\mathit{blocked}\text{-}z\) holds</b>, and the map backs it</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h4>The classical plan with one lookout, seed 1</h4>
+    <table class="data pt-run">
+      <thead><tr><th>action</th><th>what the run reported</th><th>the map, over the zone</th></tr></thead>
+      <tbody>
+        <tr><td>plan</td><td>a sequence of 2 actions, from POPF</td><td></td></tr>
+        <tr><td>goto-m1(r1)</td><td>from the start to lookout 1, 1.5 to 13.5&#8202;s</td><td>0 cells observed</td></tr>
+        <tr><td>mirar-1(r1)</td><td>faces the zone through the screen until its declared 8&#8202;s are up, 13.5 to 23.4&#8202;s</td><td>0 of 256 cells observed</td></tr>
+        <tr><td>end</td><td><b>the mission reports SUCCESS</b>; the zone was never observed</td><td>unknown</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Three findings about choosing where to look</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#tl-domain-sec">
+        <span class="pt-card-img"><img src="media/thumbs/two_lookouts_card_screen.jpg" alt="Gazebo over the robot&#8217;s shoulder at lookout 1, the screen filling the view of the zone" loading="lazy"></span>
+        <span class="pt-card-k">The screen</span>
+        <span class="pt-card-h">A look needs a view</span>
+        <span class="pt-card-p">Looking at the zone requires knowing that the view is clear, a modal precondition. So the policy checks the view first, and a screened lookout is a branch, not a failed look.</span>
+        <span class="pt-card-go">See the domain <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#tl-policy-sec">
+        <span class="pt-card-img"><img src="media/thumbs/two_lookouts_card_policy.jpg" alt="RViz at the end of the epistemic run: the robot at lookout 2, the zone outlined in green, the screen&#8217;s place in red" loading="lazy"></span>
+        <span class="pt-card-k">The policy</span>
+        <span class="pt-card-h">The second lookout, only when forced</span>
+        <span class="pt-card-p">A screen at lookout 1 tells the robot, by elimination, that lookout 2 has a clear view. It goes there in the ten runs with that screen and in no other.</span>
+        <span class="pt-card-go">See the policy <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#tl-batch-sec">
+        <span class="pt-card-img"><img src="media/thumbs/two_lookouts_card_batch.jpg" alt="The film&#8217;s closing card: the four takes and the thirty-seed batch, per formulation" loading="lazy"></span>
+        <span class="pt-card-k">Thirty seeds</span>
+        <span class="pt-card-h">Backed 30 of 30, against 20 or a second trip</span>
+        <span class="pt-card-p">Committing to one lookout reports success unseen in all ten screened runs (McNemar p&#8202;=&#8202;0.002). Visiting both is backed every time and 26.6&#8202;s slower.</span>
+        <span class="pt-card-go">See the batch <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#tl-hall-sec">The hall</a>
+      <a href="#tl-domain-sec">The domain</a>
+      <a href="#tl-model-sec">The model</a>
+      <a href="#tl-policy-sec">The policy</a>
+      <a href="#tl-batch-sec">Thirty seeds</a>
+      <a href="#tl-exec-sec">On the robot</a>
+      <a href="#tl-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE HALL -->
+<section id="tl-hall-sec">
+  <div class="container">
+    <p class="sec-label">The hall</p>
+    <h3>A zone, two lookouts, and two places a screen may stand</h3>
+    <p>
+      The hall is 7 by 6&#8202;m. The zone is a 0.8&#8202;m square at the origin,
+      closed to the south and east by two back walls; a laser certifies a cell
+      free only along a ray that ends on something, and the back walls give the
+      rays that cross the zone an end. Lookout 1 stands 2&#8202;m north of the
+      zone, lookout 2 stands 2&#8202;m west of it. Screen 1, when present, stands
+      across the sight line from lookout 1, at \(y = 1.15\)&#8202;m; screen 2,
+      when present, across the line from lookout 2, at \(x = -1.15\)&#8202;m.
+      In the blocked worlds a 0.35&#8202;m crate stands in the zone. The robot is
+      a TurtleBot3 Burger that maps the hall with slam_toolbox as it drives,
+      from a start in the north-east corner, perturbed by the seed.
+    </p>
+    <figure class="demo-figure" style="max-width:560px;margin-left:auto;margin-right:auto">
+      <img src="media/two-lookouts-floor.svg" alt="Floor plan: the hall, the zone at the centre with back walls to the south and east, lookout 1 to its north and lookout 2 to its west, a screen place across each sight line, and the routes from the start to lookout 1 and on to lookout 2" width="100%">
+      <figcaption>
+        The hall. The dotted lines are the two sight lines to the zone, and the
+        two blue bars the places a screen may stand; at most one holds a screen.
+        The solid route goes from the start to lookout 1; the dashed one, from
+        lookout 1 to lookout 2, is driven only in the branch for a screen.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE DOMAIN -->
+<section id="tl-domain-sec">
+  <div class="container">
+    <p class="sec-label">The domain</p>
+    <h3>Checking the view is a sensing action, and looking requires its result</h3>
+    <p>
+      Five atoms: \(\mathit{blocked}\text{-}z\), the zone is blocked;
+      \(\mathit{tapado}\text{-}1\) and \(\mathit{tapado}\text{-}2\), a screen
+      hides the zone from lookout 1 or 2; and \(\mathit{at}\text{-}m_1(r1)\),
+      \(\mathit{at}\text{-}m_2(r1)\), where the robot stands. Five actions, each
+      written as event models of dynamic epistemic logic&nbsp;<sup class="cite"><a href="#ref-bms">[2]</a></sup>:
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>action</th><th>kind</th><th>precondition</th><th>outcomes</th></tr></thead>
+      <tbody>
+        <tr><td>goto-m1(r1), goto-m2(r1)</td><td>public ontic</td><td>not already there</td><td>the robot is at the lookout, and no longer at the other</td></tr>
+        <tr><td>vista-1(r1)</td><td>sensing</td><td>\(\mathit{at}\text{-}m_1(r1)\)</td><td>the view is screened, or clear: \(\mathit{Kw}_{r1}\,\mathit{tapado}\text{-}1\)</td></tr>
+        <tr><td>mirar-1(r1)</td><td>sensing</td><td>\(\mathit{at}\text{-}m_1(r1) \wedge K_{r1}\neg\mathit{tapado}\text{-}1\)</td><td>the zone is blocked, or clear: \(\mathit{Kw}_{r1}\,\mathit{blocked}\text{-}z\)</td></tr>
+        <tr><td>mirar-2(r1)</td><td>sensing</td><td>\(\mathit{at}\text{-}m_2(r1) \wedge K_{r1}\neg\mathit{tapado}\text{-}2\)</td><td>the same, from lookout 2</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The precondition of a look is the point of the domain. Looking through a
+      screen informs of nothing, and \(K_{r1}\neg\mathit{tapado}\text{-}k\) is
+      the weakest condition under which a look from lookout \(k\) is certain to
+      decide the zone. A planner that cannot state it, as a classical one
+      cannot, has no reason to check the view, and no way to tell a look that
+      decided from one that did not.
+    </p>
+    <p>
+      There is no action that checks the view from lookout 2, and none is
+      needed. That a screen stands in front of at most one lookout is common
+      knowledge, \(C\,\neg(\mathit{tapado}\text{-}1 \wedge \mathit{tapado}\text{-}2)\),
+      so a screen at lookout 1 gives \(K_{r1}\neg\mathit{tapado}\text{-}2\)
+      without a look; and with the view from lookout 1 clear the robot never
+      needs lookout 2. The goal is \(\mathit{Kw}_{r1}\,\mathit{blocked}\text{-}z\),
+      knowing whether, which the robot reaches whichever way the zone turns
+      out&nbsp;<sup class="cite"><a href="#ref-fhmv">[3]</a></sup><sup class="cite"><a href="#ref-pb">[5]</a></sup>.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE MODEL -->
+<section id="tl-model-sec">
+  <div class="container">
+    <p class="sec-label">The model</p>
+    <h3>Six worlds, and what each observation leaves</h3>
+    <p>
+      The initial model has six worlds, all designated: the zone blocked or
+      clear, by a screen at lookout 1, at lookout 2 or at neither. The seeds run
+      through them in rotation.
+    </p>
+    <table class="data ca-left">
+      <thead><tr><th>seed mod 6</th><th>zone</th><th>screen in front of</th><th>after vista-1</th><th>the policy then</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>clear</td><td>lookout 1</td><td rowspan="2">screened: 2 designated, \(K_{r1}\neg\mathit{tapado}\text{-}2\)</td><td rowspan="2">goto-m2, mirar-2</td></tr>
+        <tr><td>2</td><td>blocked</td><td>lookout 1</td></tr>
+        <tr><td>3</td><td>clear</td><td>neither</td><td rowspan="4">clear: 4 designated, \(K_{r1}\neg\mathit{tapado}\text{-}1\)</td><td rowspan="4">mirar-1</td></tr>
+        <tr><td>4</td><td>blocked</td><td>neither</td></tr>
+        <tr><td>5</td><td>clear</td><td>lookout 2</td></tr>
+        <tr><td>0</td><td>blocked</td><td>lookout 2</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The actions are semi-private sensing: the robot sees the outcome, and the
+      model keeps the worlds it rules out as worlds an outside observer could
+      not rule out. The robot's epistemic state counts the designated ones, and
+      on the recorded runs it went from 6 to 2 at the screen and to 1 at the
+      zone on seed 1, and from 6 to 4 and to 2 on seed 3, where what is left
+      open is whether a screen stands at lookout 2, which no longer
+      matters.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE POLICY -->
+<section id="tl-policy-sec">
+  <div class="container">
+    <p class="sec-label">The policy</p>
+    <h3>Five nodes, and no sequence that does as well</h3>
+<pre class="code">goto-m1(r1)
+vista-1(r1)
+  e-vista1-tapada     &#8594; goto-m2(r1)
+                        mirar-2(r1)
+  e-vista1-despejada  &#8594; mirar-1(r1)</pre>
+    <p>
+      The policy reaches \(\mathit{Kw}_{r1}\,\mathit{blocked}\text{-}z\) in all
+      six worlds, and drives to lookout 2 in two of them. A sequence cannot do
+      both. In the two worlds with a screen at lookout 1, no look from lookout 1
+      decides the zone, so a sequence that reaches the goal in every world
+      contains a look from lookout 2, and drives there in all six worlds; and a
+      sequence that does not drive to lookout 2 leaves the zone undecided in
+      those two. The two classical plans are those two sequences: POPF given
+      the goal of having looked from lookout 1, and POPF given the goal of
+      having looked from both.
+    </p>
+    <p>
+      The policy is not slower than the sequence that commits. Its looks end
+      when \(\mathit{Kw}\) holds, which on these runs was on the first grid
+      after the robot faced the region, and the classical looks last their
+      declared 8&#8202;s; so in the four worlds the policy decides from lookout 1
+      it finishes in about 15&#8202;s against the committed plan's 23&#8202;s,
+      and in the two it is forced to lookout 2, in about 35&#8202;s.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE BATCH -->
+<section id="tl-batch-sec">
+  <div class="container">
+    <p class="sec-label">Thirty seeds</p>
+    <h3>Backed in every run, and the second lookout only when forced</h3>
+    <p>
+      Thirty seeds per formulation, the same seed giving the same world, start
+      pose and laser noise to all three, so the comparison is paired. Laser
+      noise 0.01&#8202;m; times in simulated seconds, from the order to the end
+      of the mission.
+    </p>
+    <table class="data">
+      <thead><tr><th></th><th>reports success</th><th>backed by the map</th><th>drives to lookout 2</th><th>median time</th><th>median path</th></tr></thead>
+      <tbody>
+        <tr><td><b>epistemic</b></td><td>30/30</td><td><b>30/30</b></td><td><b>10/30</b></td><td><b>15.1&#8202;s</b></td><td>2.71&#8202;m</td></tr>
+        <tr><td>classical, one lookout</td><td>30/30</td><td>20/30</td><td>0/30</td><td>22.8&#8202;s</td><td>2.63&#8202;m</td></tr>
+        <tr><td>classical, both lookouts</td><td>30/30</td><td>30/30</td><td>30/30</td><td>51.2&#8202;s</td><td>6.28&#8202;m</td></tr>
+      </tbody>
+    </table>
+    <table class="data ca-left">
+      <thead><tr><th>world</th><th>epistemic looks</th><th>epistemic</th><th>classical, one</th><th>classical, both</th></tr></thead>
+      <tbody>
+        <tr><td>clear, screen 1</td><td>vista-1, mirar-2</td><td>5/5 backed &#183; 34.9&#8202;s</td><td><b>0/5 backed</b> &#183; 22.5&#8202;s</td><td>5/5 &#183; 51.2&#8202;s</td></tr>
+        <tr><td>blocked, screen 1</td><td>vista-1, mirar-2</td><td>5/5 &#183; 35.6&#8202;s</td><td><b>0/5</b> &#183; 22.8&#8202;s</td><td>5/5 &#183; 51.9&#8202;s</td></tr>
+        <tr><td>clear, no screen</td><td>vista-1, mirar-1</td><td>5/5 &#183; 14.5&#8202;s</td><td>5/5 &#183; 22.6&#8202;s</td><td>5/5 &#183; 50.8&#8202;s</td></tr>
+        <tr><td>blocked, no screen</td><td>vista-1, mirar-1</td><td>5/5 &#183; 14.4&#8202;s</td><td>5/5 &#183; 22.4&#8202;s</td><td>5/5 &#183; 50.7&#8202;s</td></tr>
+        <tr><td>clear, screen 2</td><td>vista-1, mirar-1</td><td>5/5 &#183; 15.1&#8202;s</td><td>5/5 &#183; 23.0&#8202;s</td><td>5/5 &#183; 51.4&#8202;s</td></tr>
+        <tr><td>blocked, screen 2</td><td>vista-1, mirar-1</td><td>5/5 &#183; 14.9&#8202;s</td><td>5/5 &#183; 22.8&#8202;s</td><td>5/5 &#183; 51.3&#8202;s</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Every one of the ten unbacked classical runs is a run behind screen 1: the
+      map holds the screen's place as blocked and not one cell of the zone as
+      observed, and the mission reports success. On the paired comparison of
+      backed success the discordant pairs are 10 to 0, and McNemar's exact test
+      gives \(p = 0.002\)&nbsp;<sup class="cite"><a href="#ref-mcn">[4]</a></sup>.
+      Against the classical plan with both lookouts every paired difference in
+      time favours the policy, with a Hodges&#8211;Lehmann estimate of
+      26.6&#8202;s&nbsp;<sup class="cite"><a href="#ref-hl">[6]</a></sup>.
+      No run of any formulation reported the zone with the wrong class, and no
+      run failed. Each figure on this page was recomputed from the batch's
+      table of runs; the two statistics agree with the thesis's analysis.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ ON THE ROBOT -->
+<section id="tl-exec-sec">
+  <div class="container">
+    <p class="sec-label">On the robot</p>
+    <h3>Regions of the map, and an action that ends on knowledge</h3>
+    <p>
+      The perception watches three regions of the occupancy grid: the strip
+      where screen 1 would stand, and the zone, once for each look. A region is
+      blocked when one of its cells is occupied, clear when every cell is free,
+      and undecided otherwise. Each region answers one sensing action, and the
+      epistemic state applies an observation only when its event is
+      applicable; the zone's two regions share a box and differ only in the
+      action they answer. The
+      <span class="mono-inline">vista-1</span> region decides the screen: a
+      screen across the sight line puts occupied cells in it.
+    </p>
+    <p>
+      The look action turns the robot to the region and returns when the
+      epistemic state reports \(\mathit{Kw}\) of the action's atom. On the
+      recorded runs that happened on the first grid after the robot faced the
+      region, and the action took between 0.2 and 2.3&#8202;s. The executor
+      then takes the branch the observed event selects. The classical look
+      turns to the same point and returns after its declared duration.
+    </p>
+    <p>
+      The log of an epistemic run repeats one error, that
+      <span class="mono-inline">mirar-1_r1</span> is not applicable and the model
+      and the world disagree. It is the zone's region for the look not in
+      progress, offered to the epistemic state and refused; it changes
+      nothing, and is the intended behaviour of a state that applies only
+      events whose precondition holds.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Limits</p>
+    <h3>What this does not show</h3>
+    <ul style="margin:0 0 0 1.2rem">
+      <li>A stronger classical agent. A classical planner inside a loop that
+      monitors execution and replans when a look does not decide would also
+      reach the zone behind a screen. It would need the check the epistemic
+      domain writes as a precondition, written instead into the monitor, and
+      what a look decides written into the replanning.</li>
+      <li>Noise that confuses a screen with a clear view. At 0.01&#8202;m the
+      regions decided correctly in every run; the effect of noisier lasers is
+      measured in the thesis on the first scenario, not here.</li>
+      <li>More than one robot, or more than two lookouts. Neither was built or
+      measured.</li>
+      <li>Localisation. The map is built with the simulator's odometry, and the
+      world frame is the map frame.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="tl-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK VII</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-fhmv">R. Fagin, J. Y. Halpern, Y. Moses and M. Y. Vardi. <i>Reasoning About Knowledge</i>. MIT Press, 1995.</li>
+      <li id="ref-mcn">Q. McNemar. Note on the sampling error of the difference between correlated proportions or percentages. <i>Psychometrika</i> 12(2):153&#8211;157, 1947.</li>
+      <li id="ref-pb">R. P. A. Petrick and F. Bacchus. A knowledge-based approach to planning with incomplete information and sensing. <i>Proceedings of AIPS</i>, 212&#8211;221, 2002.</li>
+      <li id="ref-hl">J. L. Hodges and E. L. Lehmann. Estimates of location based on rank tests. <i>Annals of Mathematical Statistics</i> 34(2):598&#8211;611, 1963.</li>
+      <li id="ref-pt">H. Ulises. <a href="pass_through.pdf">The pass-through problem: multi-agent epistemic planning over maps the robots build</a>. Epistemic Robotics report, 2026.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Running it</h3>
+    <p>
+      The scenario, its launch file and the harness that runs and measures it
+      live with the thesis experiments. One run, from the harness's directory:
+    </p>
+    <pre class="code">source entorno.sh
+python3 generar_mundo.py --semilla 1 --ruido 0.01 --salida DIR --escenario miradores
+ros2 launch ./esc3_launch.py dir:=DIR formulacion:=epistemica   <span class="c"># or clasica, clasica-ambos</span>
+ESCENARIO=miradores ./run.sh 1 30 0.01 6                        <span class="c"># the batch, three formulations a seed</span></pre>
+    <p>
+      The film was recorded with the harness unchanged and headless: a Gazebo
+      client and RViz of the recorder's own on a virtual display, the world held
+      paused until both had drawn, and the camera cut on the executor's own
+      actions.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">two lookouts &#183; one robot &#183; backed by the map in 30 of 30 runs, the second lookout in 10</span>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>
+</html>

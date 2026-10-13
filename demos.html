@@ -567,6 +567,13 @@ sup.cite a:hover{text-decoration:underline}
           <a href="when_planning_pays.html">&#183; When planning pays<span class="sub">The plan against flooding, pulling and gossip: when sharing is enough, and when not</span></a>
             </div>
           </details>
+          <details class="nav-folder">
+            <summary>two-lookouts</summary>
+            <div class="nav-sub">
+          <a href="demos.html#two-lookouts">All two-lookouts demos</a>
+          <a href="two_lookouts.html">&#183; Where to look from<span class="sub">Knowing whether: two lookouts, a screen, and success the map backs</span></a>
+            </div>
+          </details>
             </div>
           </details>
           <a href="execution.html">Execution</a>
@@ -1147,6 +1154,43 @@ sup.cite a:hover{text-decoration:underline}
             <span>5 propositions</span><span>2400 instances, paired</span>
             <span>600 of 600 predicted</span>
             <span>4 strategies in Gazebo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── two-lookouts -->
+    <div class="dgroup" id="two-lookouts">
+      <p class="sec-label">Domain</p>
+      <h3>two-lookouts &#183; one robot, a zone, and a screen at one lookout or neither</h3>
+      <p class="about">
+        A robot must know whether a zone is blocked, \(\mathit{Kw}_{r1}\,\mathit{blocked}\text{-}z\).
+        It can look from either of two lookouts, and a screen may hide the zone
+        from one of them, never both. Looking at the zone requires knowing that
+        the view is clear, \(K_{r1}\neg\mathit{tapado}\text{-}k\), so a look
+        that cannot decide is a branch of the policy and not a failed action.
+        Six worlds, rotated over thirty seeds; the policy against the two
+        sequences a classical planner can commit to.
+      </p>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/two_lookouts.jpg"
+          alt="Gazebo over the robot&#8217;s shoulder at lookout 1, the screen filling the view of the zone" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="two_lookouts.html">Where to look from</a></h5>
+          <p>
+            The policy drives to lookout 1 and checks the view. Behind a screen
+            it knows by elimination that lookout 2 sees the zone, drives there
+            and looks; otherwise it looks from where it stands. Backed by the map
+            in 30 of 30 runs, to lookout 2 in 10. The sequence committed to
+            lookout 1 reports success in all 30 and, in the 10 behind a screen,
+            has not observed a cell of the zone; the one that visits both is
+            backed every time, and 26.6&#8202;s slower.
+          </p>
+          <div class="facts">
+            <span>S5 &#183; Kw goal</span><span>modal precondition</span>
+            <span>30/30 backed, against 20/30</span>
+            <span>McNemar p = 0.002</span>
           </div>
         </div>
       </div>
