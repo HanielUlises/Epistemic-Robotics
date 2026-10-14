@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The watcher &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="A carrier must let an ally know which bay its load goes to and must not let a watcher know. The watcher stands at one of two posts, and every way of telling the ally is on a side. No plan that does not branch works in more than two of the four worlds; the epistemic policy reads a duty board no goal mentions and tells on the side the watcher is not. Judged by the robots' own lasers.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="The watcher">
+<meta property="og:description" content="A carrier must let an ally know which bay its load goes to and must not let a watcher know. The watcher stands at one of two posts, and every way of telling the ally is on a side. No plan that does not branch works in more than two of the four worlds; the epistemic policy reads a duty board no goal mentions and tells on the side the watcher is not. Judged by the robots' own lasers.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/watcher.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/watcher.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The film as the policy shows its lamp at the far window: the plan view with what the ally and the watcher can see shaded, Gazebo, and the panel with the branch taken and what each robot can name.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/watcher.jpg">
+<meta name="twitter:title" content="The watcher">
+<meta name="twitter:description" content="A carrier must let an ally know which bay its load goes to and must not let a watcher know. The watcher stands at one of two posts, and every way of telling the ally is on a side. No plan that does not branch works in more than two of the four worlds; the epistemic policy reads a duty board no goal mentions and tells on the side the watcher is not. Judged by the robots' own lasers.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="The film as the policy shows its lamp at the far window: the plan view with what the ally and the watcher can see shaded, Gazebo, and the panel with the branch taken and what each robot can name.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/watcher.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The twenty-five domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by what it demonstrates</span></a>
+          <details class="nav-folder">
+            <summary>Single-agent sensing</summary>
+            <div class="nav-sub">
+          <a href="demos.html#single-agent">All single-agent sensing demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+          <a href="two_lookouts.html">&#183; Where to look from<span class="sub">Knowing whether: two lookouts, a screen, and success the map backs</span></a>
+          <a href="lookout_board.html">&#183; The lookout board<span class="sub">Information gathering under epistemic and classical planning</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Fleet missions at scale</summary>
+            <div class="nav-sub">
+          <a href="demos.html#fleet-missions">All fleet missions at scale demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Higher-order and group knowledge</summary>
+            <div class="nav-sub">
+          <a href="demos.html#group-knowledge">All higher-order and group knowledge demos</a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+          <a href="coordinated_attack_scale.html">&#183; The coordinated attack among many robots<span class="sub">Bystanders, the cost of a level, four robots</span></a>
+          <a href="muddy_robots.html">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+          <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Belief and belief change</summary>
+            <div class="nav-sub">
+          <a href="demos.html#belief">All belief and belief change demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+          <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Communication and coordination</summary>
+            <div class="nav-sub">
+          <a href="demos.html#communication">All communication and coordination demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+          <a href="when_planning_pays.html">&#183; When planning pays<span class="sub">The plan against flooding, pulling and gossip: when sharing is enough, and when not</span></a>
+          <a href="gate_signal.html">&#183; The gate signal<span class="sub">Implicit coordination: a route chosen to be seen, against classical teams</span></a>
+          <a href="watcher.html" aria-current="page">&#183; The watcher<span class="sub">Knowledge that must not spread: told to one robot, hidden from another</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <details class="nav-folder">
+            <summary>Single-agent sensing</summary>
+            <div class="nav-sub">
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="two_lookouts.pdf">Where to Look From<span class="sub">Knowing whether, a look with a modal precondition, and no conformant plan</span></a>
+          <a href="lookout_board.pdf">The Lookout Board<span class="sub">Information gathering under epistemic and classical planning, one robot and four lookouts</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Fleet missions at scale</summary>
+            <div class="nav-sub">
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Higher-order and group knowledge</summary>
+            <div class="nav-sub">
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Belief and belief change</summary>
+            <div class="nav-sub">
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Communication and coordination</summary>
+            <div class="nav-sub">
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
+          <a href="gate_signal.pdf">The Gate Signal<span class="sub">Implicit coordination by an observable route, against classical teams</span></a>
+          <a href="watcher.pdf">The Watcher<span class="sub">A negative knowledge goal, conditional observability, and no conformant plan</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Methods and general reports</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>/* wt-narrow: on a phone a wide table scrolls within its own width */
+@media(max-width:720px){table.data{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+td.wt-no{color:#a0202d;font-weight:600} td.wt-yes{color:#1a8c46;font-weight:600}</style>
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Negative knowledge goals &#183; conditional observability &#183; no conformant plan &#183; epistemic against classical &#183; three robots &#183; ROS 2</p>
+    <h2>The watcher</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      A carrier must take its load into the bay its order names, let an ally
+      in a booth know which bay that is, and <i>not</i> let a watcher know.
+      The watcher stands at one of two posts, west or east; it knows which,
+      and the others do not. It sees what happens on its own side of the hall
+      and nothing on the other. Every way of telling the ally is on a side:
+      the gate of each bay, which the booth sees, is on that bay's side, and
+      so is each of the booth's two windows, where the carrier can show a
+      lamp.
+    </p>
+    <p class="hero-p">
+      The goal is \(\mathit{in\text{-}bay} \wedge \mathit{Kw}_{r2}\,\mathit{dest}\text{-}x
+      \wedge \neg\mathit{Kw}_{r3}\,\mathit{dest}\text{-}x\). A classical
+      planner cannot state its last conjunct, and no plan that does not branch
+      meets the goal in more than two of the four worlds. The epistemic policy
+      reads a duty board that names the watcher's post, which nothing in the
+      goal mentions, and then tells the ally on the side the watcher is not.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>The policy met the goal in 39 of 40 runs, and the
+      watcher's laser had the carrier in view 0 times.</b> The
+      direct classical carrier met it in 20, the discreet one in
+      17; between them they gave the bay away in
+      40 runs, and their executors reported
+      37 of those as a success. <b>Judged by sensors, not by the planner</b>: each
+      run is scored by what the ally's and the watcher's own lasers recorded.
+      <b>40 seeds</b>, ten per world, each run under all three
+      formulations from the same start.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">watcher_demo</span>; policy from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, search by
+      Aletheia, classical plans by POPF<sup class="cite"><a href="#ref-popf">[4]</a></sup>
+      through PlanSys2<sup class="cite"><a href="#ref-ps2">[5]</a></sup>. Full
+      account in <a href="watcher.pdf">The Watcher</a> (PDF): the domain, the
+      proof that no sequence works, the classical formulations, the batch and
+      the defects found on the way.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Recorded runs</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/watcher_poster.jpg">
+        <source src="media/watcher.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Seed 2, where the order names bay Y and the watcher holds the east
+        post, the side of bay Y: the policy, the direct classical carrier and
+        the discreet one. Then the policy on seed 3, bay X with the watcher
+        east, where it takes the gate. Left: the hall from above, drawn from
+        the recorded poses, with what the ally sees shaded blue and what the
+        watcher sees shaded red; a line joins an observer to the carrier
+        whenever its own laser has it. Right: Gazebo, the carrier with an
+        orange cap, the ally blue, the watcher red. Under both: the policy or
+        the plan, the step, and what each robot can name from its own laser.
+        Drives play three times faster than they ran, and the corner says so.
+      </figcaption>
+    </figure>
+
+    <table class="data">
+      <thead><tr><th>take</th><th>world</th><th>what the carrier did</th><th>ally named</th><th>watcher named</th><th>executor</th><th>by the lasers</th><th>time</th></tr></thead>
+      <tbody>
+        <tr><td>epistemic policy</td><td>seed 2: bay Y, watcher east</td><td>duty board, window W, lamp, back route</td><td>Y</td><td>nothing</td><td>SUCCESS</td><td class="wt-yes">goal met</td><td>165.7&#8202;s</td></tr>
+        <tr><td>direct classical</td><td>seed 2: bay Y, watcher east</td><td>gate</td><td>Y</td><td>Y</td><td>SUCCESS</td><td class="wt-no">secret given away</td><td>75.3&#8202;s</td></tr>
+        <tr><td>discreet classical</td><td>seed 2: bay Y, watcher east</td><td>window E, lamp, back route</td><td>Y</td><td>Y</td><td>SUCCESS</td><td class="wt-no">secret given away</td><td>158.2&#8202;s</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Principal findings</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#wt-noplan-sec">
+        <span class="pt-card-img"><img src="media/thumbs/watcher_card_board.jpg" alt="Over the carrier's shoulder at the order board and the duty board" loading="lazy"></span>
+        <span class="pt-card-k">The policy</span>
+        <span class="pt-card-h">It looks at what no goal mentions</span>
+        <span class="pt-card-p">No sequence of actions meets the goal in more than two of the four worlds. The policy reads the duty board first, for what it will know when it chooses a side, and meets it in all four.</span>
+        <span class="pt-card-go">See the proof <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#wt-classical-sec">
+        <span class="pt-card-img"><img src="media/thumbs/watcher_card_seen.jpg" alt="The plan view as the direct classical carrier stands in gate Y, a red line from the watcher to it" loading="lazy"></span>
+        <span class="pt-card-k">Classical planning</span>
+        <span class="pt-card-h">Success reported, the secret given away</span>
+        <span class="pt-card-p">The direct carrier takes the gate, the discreet one always the east window. Each gave the bay away in 20 and 20 of 40 runs, and the executors reported 37 of those 40 as a success.</span>
+        <span class="pt-card-go">See the formulations <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#wt-batch-sec">
+        <span class="pt-card-img"><img src="media/thumbs/watcher_card_window.jpg" alt="The policy at the far window, the watcher's sight shaded red on the other side" loading="lazy"></span>
+        <span class="pt-card-k">Evaluation</span>
+        <span class="pt-card-h">39 of 40 against 20 and 17</span>
+        <span class="pt-card-p">The watcher would name the bay 50&#8202;% of the time against the policy, and 75 and 75&#8202;% against the classical carriers. The secret costs time only where the watcher stands on the bay's side.</span>
+        <span class="pt-card-go">See the evaluation <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#wt-hall-sec">Environment</a>
+      <a href="#wt-domain-sec">The domain</a>
+      <a href="#wt-noplan-sec">No plan, one policy</a>
+      <a href="#wt-classical-sec">Classical planning</a>
+      <a href="#wt-measure-sec">Who saw what</a>
+      <a href="#wt-batch-sec">Evaluation</a>
+      <a href="#wt-defects-sec">Defects</a>
+      <a href="#wt-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE HALL -->
+<section id="wt-hall-sec">
+  <div class="container">
+    <p class="sec-label">Environment</p>
+    <h3>Environment</h3>
+    <p>
+      The hall is 14 by 7.6&#8202;m. From west to east: bay X,
+      the west hall, a solid block with the ally's booth in it, the east hall,
+      bay Y. Each bay opens onto its hall by a gate and onto the south
+      corridor by a door. The booth has a window onto each hall. Each hall has
+      a watcher's post near its north wall and an entry from the corridor,
+      under which a baffle stands so that nothing of the corridor can be seen
+      from the post. The carrier starts in the corridor before two boards:
+      the order board, whose lit slot names the bay, and the duty board, whose
+      lit slot names the watcher's post.
+    </p>
+    <figure class="demo-figure" style="max-width:820px;margin-left:auto;margin-right:auto">
+      <img src="media/watcher-floor.svg" alt="Floor plan: bay X and bay Y at the ends, two halls with a watcher's post each, the ally's booth between them with two windows, the south corridor with the carrier's start and the two boards, the routes through the gates, to the windows, and the back routes along the corridor" width="100%">
+      <figcaption>
+        Blue: what the ally's laser reaches from its station. Red: what a
+        watcher's laser reaches from each post; only one is held in a run.
+        Orange: the drives through each gate and to each window. Grey: the
+        back routes along the corridor. Before any simulator ran,
+        <span class="mono-inline">tools/check_views.py</span> cast straight
+        lines from each observer to every 5&#8202;cm of every route: each post
+        sees its own side's gate and window and nothing of the other hall, the
+        corridor, a back route once it has left its hall, or the floor near
+        either bay's drop.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE DOMAIN -->
+<section id="wt-domain-sec">
+  <div class="container">
+    <p class="sec-label">The domain</p>
+    <h3>Actions, observers and goal</h3>
+    <table class="data ca-left">
+      <thead><tr><th>action</th><th>kind</th><th>the ally observes</th><th>the watcher observes</th></tr></thead>
+      <tbody>
+        <tr><td>read-order(r1)</td><td>semi-private sensing</td><td>that r1 read, not what</td><td>that r1 read, not what</td></tr>
+        <tr><td>peek(r1, r3)</td><td>semi-private sensing</td><td>that r1 read the duty board</td><td>that r1 read the duty board</td></tr>
+        <tr><td>gate(r1, r2, r3)</td><td>quasi-private ontic</td><td>which gate</td><td>which gate, if on the bay's side; otherwise nothing</td></tr>
+        <tr><td>to-win-w, to-win-e</td><td>public ontic</td><td>everything</td><td>everything (more than it sees)</td></tr>
+        <tr><td>say-w(r1, r2, r3)</td><td>quasi-private sensing</td><td>the lamp</td><td>the lamp, if west; otherwise nothing</td></tr>
+        <tr><td>say-e(r1, r2, r3)</td><td>quasi-private sensing</td><td>the lamp</td><td>the lamp, if east; otherwise nothing</td></tr>
+        <tr><td>back(r1)</td><td>quasi-private ontic</td><td>that r1 went, not where</td><td>that r1 went, not where</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The actions are event models of dynamic epistemic
+      logic<sup class="cite"><a href="#ref-bms">[1]</a></sup>, planned over
+      as in<sup class="cite"><a href="#ref-ba">[2]</a></sup>. Four worlds, one
+      per order and post, all designated; the watcher knows its post, nobody
+      knows the order. What the watcher observes is decided world by world by
+      an observability condition on its post, in EPDDL
+      <span class="mono-inline">(?w (if (west ?w) Fully else Oblivious))</span>
+      for the west window; an oblivious watcher believes nothing happened.
+      The ontic type with a null event is the domain's own library,
+      <span class="mono-inline">sightlines.epddl</span>. The drive to a window
+      is declared public, which is more than the watcher sees: the
+      declaration is cautious, and the runs are judged by sensors, not by it.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ NO PLAN, ONE POLICY -->
+<section id="wt-noplan-sec">
+  <div class="container">
+    <p class="sec-label">No plan, one policy</p>
+    <h3>Why no sequence works, and what the policy does</h3>
+    <p>
+      <b>No sequence meets the goal in more than two of the four worlds.</b>
+      The ally comes to know the bay only from an action it observes fully
+      whose events name the bay: <i>gate</i>, <i>say-w</i> or <i>say-e</i>.
+      A sequence contains its actions in every world, and each of the three is
+      observed fully by the watcher in two of the four: the gate where the
+      watcher stands on the bay's side, each window where it stands on that
+      window's side. And knowledge of a fact no action changes is never lost
+      under the product update, since an edge of the updated model needs an
+      edge of the old one. So every informing action a sequence contains
+      loses two worlds, and a sequence with none informs nobody. Aletheia's
+      GBFS, which searches for one sequence for all four worlds, exhausts.
+    </p>
+<pre class="code">read-order(r1)
+peek(r1, r3)                        <span class="c"># the duty board: nothing in the goal mentions it</span>
+on order X, watcher west:  to-win-e(r1) · say-e(r1, r2, r3) · back(r1)
+on order X, watcher east:  gate(r1, r2, r3)
+on order Y, watcher west:  gate(r1, r2, r3)
+on order Y, watcher east:  to-win-w(r1) · say-w(r1, r2, r3) · back(r1)</pre>
+    <p>
+      Aletheia's AO* returns this policy, of depth 5, 11 nodes and 4 leaves,
+      in 68 expansions. Where the watcher stands on the bay's side
+      it tells the ally at the far window and goes in along the corridor;
+      elsewhere it takes the gate. Beside the planner's own validator, plank's
+      validator checks every branch and every classical sequence on four
+      copies of the problem that each designate one world:
+    </p>
+    <table class="data">
+      <thead><tr><th>sequence</th><th>X, west</th><th>X, east</th><th>Y, west</th><th>Y, east</th></tr></thead>
+      <tbody>
+        <tr><td>read-order, gate (the direct carrier)</td><td class="wt-no">false</td><td>true</td><td>true</td><td class="wt-no">false</td></tr>
+        <tr><td>read-order, to-win-w, say-w, back</td><td class="wt-no">false</td><td>true</td><td class="wt-no">false</td><td>true</td></tr>
+        <tr><td>read-order, to-win-e, say-e, back (the discreet carrier)</td><td>true</td><td class="wt-no">false</td><td>true</td><td class="wt-no">false</td></tr>
+        <tr><td>read-order, to-win-w, back (tells nobody)</td><td class="wt-no">false</td><td class="wt-no">false</td><td class="wt-no">false</td><td class="wt-no">false</td></tr>
+        <tr><td><b>the policy, branch taken</b></td><td class="wt-yes">true</td><td class="wt-yes">true</td><td class="wt-yes">true</td><td class="wt-yes">true</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ CLASSICAL -->
+<section id="wt-classical-sec">
+  <div class="container">
+    <p class="sec-label">Classical planning</p>
+    <h3>Classical planning, with every action the epistemic domain has</h3>
+    <p>
+      The classical model has the same actions, each lasting the time its
+      route takes: reading the order and the duty board, the drive through a
+      gate, the drives to a window, the lamp, the back route. Telling the ally
+      is a fact a gate or a lamp makes true. What it cannot have is a goal
+      that a third robot not know: a goal over facts can at most forbid an
+      action, and which one to forbid depends on where the watcher stands.
+      The carrier reads its order and plans its delivery with POPF.
+    </p>
+    <ul>
+      <li><b>Direct.</b> POPF takes the gate, 61.6&#8202;s against
+      114.8&#8202;s for the shortest window plan. It gives the bay away
+      wherever the watcher stands on the bay's side.</li>
+      <li><b>Discreet.</b> The modeller, who knows a watcher exists and cannot
+      say where, rules the gates out. POPF takes the east window for either
+      bay, and gives the bay away wherever the watcher stands east.</li>
+    </ul>
+    <p>
+      Neither reads the duty board: no goal a classical planner is given
+      needs it, and replanning would not change that, since the plan has
+      nothing to learn from it. Neither fails loudly: in the worlds it gets
+      wrong it still reaches its bay and informs the ally, and its executor
+      reports success.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ WHO SAW WHAT -->
+<section id="wt-measure-sec">
+  <div class="container">
+    <p class="sec-label">Who saw what</p>
+    <h3>Judged by the robots' own lasers</h3>
+    <p>
+      On the ally and on the watcher runs an observer node that the planner
+      and the executor tell nothing (<span class="mono-inline">src/observer_node.cpp</span>).
+      It reads its robot's laser, places the returns in the world with the
+      robot's own odometry, and records when the carrier was in view in each
+      region: the gates, the window spots, the halls, the bays. The lamp
+      counts as seen only while the laser has the carrier at a window. From
+      that record each observer names a bay, or nothing. A run meets the goal
+      when the carrier ended in its bay, the ally named that bay, and the
+      watcher named none. For the policy, the executor's model, asked at the
+      end whether \(\mathit{Kw}_{r2}\) and \(\mathit{Kw}_{r3}\) hold, agreed
+      with both observers in 40 of 40 runs.
+    </p>
+    <p>
+      <b>Against a watcher that knows the policy.</b> The product update says
+      what the watcher knows from the events it observes; a watcher that also
+      knew the policy could ask which of the policy's runs fit what it saw. The
+      policy keeps the secret from it if, in any two worlds the watcher cannot
+      tell apart at the start and that differ on the bay, it shows the watcher
+      the same observations.
+      <span class="mono-inline">tools/opacity.py</span> walks the policy in
+      every world and compares. As declared it is not opaque: with the watcher
+      west, the world of bay X shows it the drive to the east window, declared
+      public, and the world of bay Y does not. Those declarations are more than
+      the watcher sees. Declared by the sightlines instead
+      (<span class="mono-inline">watcher-sightlines.epddl</span>), Aletheia
+      returns the same policy in the same 68 expansions, and the
+      watcher observes nothing in any of the four worlds: opaque, as long as
+      the watcher stays at its post.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE BATCH -->
+<section id="wt-batch-sec">
+  <div class="container">
+    <p class="sec-label">Evaluation</p>
+    <h3>Paired evaluation over 40 seeds</h3>
+    <table class="data">
+      <thead><tr><th></th><th>goal met, by the lasers</th><th>executor reported success</th><th>ally named the bay</th><th>watcher named the bay</th><th>watcher right</th><th>median time</th></tr></thead>
+      <tbody>
+        <tr><td><b>epistemic policy</b></td><td>39 / 40 <span class="mono-inline">[0.87, 1.00]</span></td><td>39 / 40</td><td>40 / 40</td><td>0 / 40</td><td>50&#8202;%</td><td>75.4&#8202;s</td></tr>
+        <tr><td>direct classical</td><td>20 / 40 <span class="mono-inline">[0.35, 0.65]</span></td><td>40 / 40</td><td>40 / 40</td><td>20 / 40</td><td>75&#8202;%</td><td>74.8&#8202;s</td></tr>
+        <tr><td>discreet classical</td><td>17 / 40 <span class="mono-inline">[0.28, 0.58]</span></td><td>34 / 40</td><td>40 / 40</td><td>20 / 40</td><td>75&#8202;%</td><td>155.6&#8202;s</td></tr>
+      </tbody>
+    </table>
+    <p>Goal met, with the Wilson 95&#8202;% interval: the carrier in its bay, the ally naming it, the watcher naming none, all read off the observers. Watcher right: how often the watcher would name the bay of the order, naming what it saw and guessing when it saw nothing; a half is chance. Median time: simulated seconds from the common start, over runs the executor reported as a success.</p>
+<table class="data">
+      <thead><tr><th>world</th><th>epistemic</th><th>direct</th><th>discreet</th></tr></thead>
+      <tbody>
+        <tr><td>bay X, watcher west</td><td class="wt-no">9 / 10 &#183; 158.2&#8202;s</td><td class="wt-no">0 / 10</td><td class="wt-no">9 / 10 &#183; 158.3&#8202;s</td></tr>
+        <tr><td>bay X, watcher east</td><td class="wt-yes">10 / 10 &#183; 74.8&#8202;s</td><td class="wt-yes">10 / 10 &#183; 74.7&#8202;s</td><td class="wt-no">0 / 10</td></tr>
+        <tr><td>bay Y, watcher west</td><td class="wt-yes">10 / 10 &#183; 74.7&#8202;s</td><td class="wt-yes">10 / 10 &#183; 74.8&#8202;s</td><td class="wt-no">8 / 10 &#183; 149.6&#8202;s</td></tr>
+        <tr><td>bay Y, watcher east</td><td class="wt-yes">10 / 10 &#183; 163.9&#8202;s</td><td class="wt-no">0 / 10</td><td class="wt-no">0 / 10</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Goal met world by world, with the median time of the runs that met it.
+      Paired by seed, the policy met the goal and the direct carrier did not
+      in 19 seeds, the reverse in
+      0 (exact McNemar, \(p = 3.8 \times 10^{-6}\));
+      against the discreet carrier, 23 and
+      1 (\(p = 3.0 \times 10^{-6}\)).
+      Over the policy's 40 runs the watcher's laser
+      recorded 0 sightings of the
+      carrier; over the direct carrier's, 73,
+      and the discreet one's, 40.
+    </p>
+    <p>
+      What the secret costs is time, and only where the watcher stands on the
+      bay's side: there the policy tells at the far window and goes in along
+      the corridor, 160.5&#8202;s median,
+      against 74.8&#8202;s for the direct carrier, which in
+      those worlds gives the bay away. Elsewhere it takes the gate as the
+      direct carrier does, 74.7&#8202;s.
+      With the four worlds equally likely the policy's expected time is
+      119.2&#8202;s.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEFECTS -->
+<section id="wt-defects-sec">
+  <div class="container">
+    <p class="sec-label">Found on the way</p>
+    <h3>Defects found, and a batch discarded</h3>
+    <ul>
+      <li><b>The executor's knowledge requirements.</b> ePlanSys's executor
+      checks the modal conjuncts of all of an action's designated events
+      together, as one conjunction. An action whose events need
+      \(K_{r1}\,\mathit{dest}\text{-}x\) in one and
+      \(K_{r1}\,\neg\mathit{dest}\text{-}x\) in the other can never be
+      dispatched, and the first runs failed at the lamp. Every such event
+      now asks \(\mathit{Kw}_{r1}\,\mathit{dest}\text{-}x\) beside its own
+      fact, which says the same, as the gate signal's domain does. The check
+      should be the disjunction over events.</li>
+      <li><b>A library named like its domain.</b> plank stops with an unknown
+      exception when a domain and one of its action-type libraries share a
+      name; the library is called <span class="mono-inline">sightlines</span>.</li>
+      <li><b>A label YAML reads as true.</b> A sensing node's label
+      <span class="mono-inline">y</span>, written to a parameter file, came
+      back a boolean and the node aborted.</li>
+      <li><b>A dangling reference, and a batch discarded.</b> The drive node
+      iterated over the string array of a parameter object already destroyed.
+      In a first batch of 120 runs it crashed the carrier's drive in
+      17, 17 of them in the policy's gate branch; the
+      carrier, its last velocity still applied, then wandered until the time
+      limit. That batch is kept apart as discarded, and every figure on this
+      page is from the second, run on the fixed node.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Limits</p>
+    <h3>Limitations</h3>
+    <ul>
+      <li>A watcher at its post. Against a watcher that knows the policy and
+      stays where it is, the policy is opaque under the sightlines. A watcher
+      that moves, choosing where to look from what it has seen, is not
+      modelled.</li>
+      <li>A narrow pocket. 7 of the 120 runs ended at the time
+      limit with the carrier stalled at the east baffle, in or just past the
+      pocket between it and the corridor wall, 0.6&#8202;m tall: 1 of the policy's,
+      0 of the direct carrier's and 6 of the discreet
+      carrier's, which takes that route every time. They count against the
+      goal, and they are the controller's, not the planner's.</li>
+      <li>The duty board. The carrier learns the watcher's post by reading a
+      duty board, a sensing action like the order board, whose outcome its
+      laser decides. Where the watcher stands is given to the carrier by the
+      hall.</li>
+      <li>Timing. A watcher that timed the mission could tell the window
+      branch, which is longer, from the gate branch; the domain has no
+      durations.</li>
+      <li>The classical side is a classical planner given the task's facts.
+      Compilations of multi-agent epistemic planning into classical
+      planning<sup class="cite"><a href="#ref-kg">[3]</a></sup> represent what
+      each agent believes as facts of their own, and could state the goal; they
+      are epistemic planning in another form, and are not compared here.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="wt-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK VII</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-kg">F. Kominis and H. Geffner. Beliefs in multiagent planning: from one agent to many. <i>Proceedings of ICAPS</i>, 147&#8211;155, 2015.</li>
+      <li id="ref-popf">A. J. Coles, A. I. Coles, M. Fox and D. Long. Forward-chaining partial-order planning. <i>Proceedings of ICAPS</i>, 42&#8211;49, 2010.</li>
+      <li id="ref-ps2">F. Mart&#237;n, J. Gin&#233;s, F. J. Rodr&#237;guez-Lera and V. Matell&#225;n. PlanSys2: a planning system framework for ROS2. <i>Proceedings of IROS</i>, 9742&#8211;9749, 2021.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Commands</h3>
+    <pre class="code">bash tools/validate.sh                                       <span class="c"># views, policy, no sequence, plank world by world, POPF, opacity</span>
+python3 tools/make_world.py --seed 2 --out RUN
+ros2 launch watcher_demo watcher_launch.py dir:=RUN formulation:=epistemic   <span class="c"># or direct, discreet</span>
+bash tools/batch.sh 1 40 BATCH 2                             <span class="c"># every seed under all three, side by side</span>
+python3 tools/analyse.py BATCH                               <span class="c"># runs.csv and the paired comparison</span></pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">the watcher &#183; three robots &#183; told to one, hidden from another</span>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>
+</html>
