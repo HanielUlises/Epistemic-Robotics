@@ -1,0 +1,70 @@
+{
+ "goto-board_r1": {
+  "action": "(goto r1 start board)",
+  "duration": 8.0
+ },
+ "goto-l1_r1": {
+  "action": "(goto r1 board l1)",
+  "duration": 66.8
+ },
+ "read-1_r1": {
+  "action": "(read_slot r1 board s1)",
+  "duration": 2.0
+ },
+ "check-1_r1": {
+  "action": "(check_view r1 l1)",
+  "duration": 2.0
+ },
+ "look-1_r1": {
+  "action": "(look_zone r1 l1)",
+  "duration": 3.0
+ },
+ "goto-l2_r1": {
+  "action": "(goto r1 board l2)",
+  "duration": 67.5
+ },
+ "read-2_r1": {
+  "action": "(read_slot r1 board s2)",
+  "duration": 2.0
+ },
+ "check-2_r1": {
+  "action": "(check_view r1 l2)",
+  "duration": 2.0
+ },
+ "look-2_r1": {
+  "action": "(look_zone r1 l2)",
+  "duration": 3.0
+ },
+ "goto-l3_r1": {
+  "action": "(goto r1 board l3)",
+  "duration": 27.3
+ },
+ "read-3_r1": {
+  "action": "(read_slot r1 board s3)",
+  "duration": 2.0
+ },
+ "check-3_r1": {
+  "action": "(check_view r1 l3)",
+  "duration": 2.0
+ },
+ "look-3_r1": {
+  "action": "(look_zone r1 l3)",
+  "duration": 3.0
+ },
+ "goto-l4_r1": {
+  "action": "(goto r1 board l4)",
+  "duration": 26.6
+ },
+ "read-4_r1": {
+  "action": "(read_slot r1 board s4)",
+  "duration": 2.0
+ },
+ "check-4_r1": {
+  "action": "(check_view r1 l4)",
+  "duration": 2.0
+ },
+ "look-4_r1": {
+  "action": "(look_zone r1 l4)",
+  "duration": 3.0
+ }
+}
