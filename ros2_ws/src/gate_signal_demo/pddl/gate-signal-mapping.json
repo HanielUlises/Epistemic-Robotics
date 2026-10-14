@@ -1,0 +1,42 @@
+{
+ "read-order_r1": {
+  "action": "(read_order r1)",
+  "duration": 10.0
+ },
+ "to-gate_r1": {
+  "action": "(to_gate r1)",
+  "duration": 10.0
+ },
+ "back-route_r1": {
+  "action": "(back_route r1)",
+  "duration": 10.0
+ },
+ "enter-bay_r1": {
+  "action": "(enter_bay r1)",
+  "duration": 10.0
+ },
+ "watch_r2_r1": {
+  "action": "(watch r2 r1)",
+  "duration": 10.0
+ },
+ "go-x_r2": {
+  "action": "(go r2 bay_x)",
+  "duration": 10.0
+ },
+ "go-y_r2": {
+  "action": "(go r2 bay_y)",
+  "duration": 10.0
+ },
+ "drop-carrier_r1": {
+  "action": "(unload r1)",
+  "duration": 10.0
+ },
+ "drop-other-x_r2": {
+  "action": "(unload r2)",
+  "duration": 10.0
+ },
+ "drop-other-y_r2": {
+  "action": "(unload r2)",
+  "duration": 10.0
+ }
+}

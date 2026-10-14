@@ -1,0 +1,25 @@
+(define (action-type-library gate)
+
+  ;; A move whose destination only the mover tells apart. Two events, one per
+  ;; destination, both designated, each with its own effects; the mover
+  ;; observes which one occurred, and anyone else, Partially, relates the two:
+  ;; it knows the move happened and not where it went. The frame stays S5.
+  ;; Variables are ?x and ?y, not ?e or ?f: plank substitutes a library's
+  ;; relation variables as text, and ?f would capture an action parameter.
+  ;; The :conditions clause is required: without one plank's parser crashes.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+  )
+
+  (:action-type semi-private-ontic
+    :events     (?pos ?neg)
+    :observability-types (Fully Partially)
+    :relations  (Fully     (:forall (?x - event) (?x ?x))
+                 Partially (:forall (?x ?y - event) (?x ?y)) )
+    :designated (?pos ?neg)
+    :conditions (?pos (:non-trivial-postconditions)
+                 ?neg (:non-trivial-postconditions))
+  )
+)

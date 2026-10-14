@@ -1,0 +1,185 @@
+;; THE GATE SIGNAL, WITH A LOOK INTO BAY X. A variant of gate-signal.epddl for
+;; one question: what the planner returns when r2 has a second way to learn the
+;; order, looking over bay X from inside it, as the cautious classical r2 does.
+;; Aletheia's AO* finds a policy of depth 7 that never uses the gates: r1 takes
+;; the back route, r2 drives into bay X, looks, and crosses to bay Y if r1 is
+;; there. It has the depth of the gate policy, and the planner, which counts
+;; steps and not seconds, has no reason to prefer either. The look is
+;; restricted to the robot that does not carry the order: a look by r1, whose
+;; occurrence r2 observes, would tell r2 where r1 stands as surely as the gate.
+;;
+;; The rest of the file is gate-signal.epddl unchanged.
+;;
+;; THE GATE SIGNAL. Two carriers, two bays, and an order only one of them reads.
+;;
+;; r1 reads an order naming bay X or bay Y and must deliver there; r2 must
+;; deliver to the other bay, and may enter a bay only knowing that r1 will not
+;; use it. There is no radio. r1 can reach its bay by a back route nobody sees,
+;; or through a gate in view of r2's station, where it stops. r2 can watch the
+;; gates. Nothing in the goal asks anyone to know anything: the knowledge is in
+;; the precondition of r2's delivery, and the planner has to work out that the
+;; longer route is the one that gives it.
+
+(define (domain gate-signal)
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate gate)
+
+  (:predicates
+    (dest-x)                    ; r1's order names bay X; otherwise bay Y
+    (carrier ?i - agent)        ; ?i holds the order
+    (at-start ?i - agent)
+    (at-gate-x ?i - agent)      ; ?i stands in gate X, in view of the station
+    (at-gate-y ?i - agent)
+    (in-x ?i - agent)           ; ?i is in bay X
+    (in-y ?i - agent)
+    (at-station ?i - agent)
+    (delivered ?i - agent)
+  )
+
+  (:event nil)
+
+  ;; The carrier reads its order. The other robot sees it read, not what.
+  (:event e-order-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (dest-x)))
+  (:event e-order-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (not (dest-x))))
+  (:action read-order
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-order-x ?i) (e-order-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;; To its gate: the carrier goes to the gate of the bay its order names. The
+  ;; other robot knows it has gone to a gate, not which.
+  (:event e-gate-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (dest-x) ([Kw. ?i] (dest-x)))
+    :effects (:and (at-gate-x ?i) (not (at-start ?i))))
+  (:event e-gate-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (not (dest-x)) ([Kw. ?i] (dest-x)))
+    :effects (:and (at-gate-y ?i) (not (at-start ?i))))
+  (:action to-gate
+    :parameters (?i - agent)
+    :action-type (semi-private-ontic (e-gate-x ?i) (e-gate-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;; The back route: straight to the bay, seen by nobody.
+  (:event e-back-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (dest-x) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-x ?i) (not (at-start ?i))))
+  (:event e-back-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (not (dest-x)) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-y ?i) (not (at-start ?i))))
+  (:action back-route
+    :parameters (?i - agent)
+    :action-type (semi-private-ontic (e-back-x ?i) (e-back-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;; From its gate into its bay. Inside the bays nobody else can see: the other
+  ;; robot knows the carrier went in, not into which.
+  (:event e-enter-x
+    :parameters (?i - agent)
+    :precondition (at-gate-x ?i)
+    :effects (:and (in-x ?i) (not (at-gate-x ?i))))
+  (:event e-enter-y
+    :parameters (?i - agent)
+    :precondition (at-gate-y ?i)
+    :effects (:and (in-y ?i) (not (at-gate-y ?i))))
+  (:action enter-bay
+    :parameters (?i - agent)
+    :action-type (semi-private-ontic (e-enter-x ?i) (e-enter-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;; Watching the gates from the station: which gate, if any, has someone in it.
+  (:event e-seen-x
+    :parameters (?i ?j - agent)
+    :precondition (and (at-station ?i) (at-gate-x ?j)))
+  (:event e-seen-y
+    :parameters (?i ?j - agent)
+    :precondition (and (at-station ?i) (at-gate-y ?j)))
+  (:action watch
+    :parameters (?i ?j - agent)
+    :action-type (semi-private-sensing (e-seen-x ?i ?j) (e-seen-y ?i ?j))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;; The other robot's drive to a bay, and a delivery made only into a bay the
+  ;; robot knows the carrier will not use. Its own moves are public: the
+  ;; carrier does not need to know them, and nothing turns on it.
+  (:event e-go-x
+    :parameters (?i - agent)
+    :precondition (and (at-station ?i) (not (carrier ?i)))
+    :effects (:and (in-x ?i) (not (at-station ?i))))
+  (:action go-x
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-go-x ?i))
+    :observability-conditions (default Fully))
+  (:event e-go-y
+    :parameters (?i - agent)
+    :precondition (and (at-station ?i) (not (carrier ?i)))
+    :effects (:and (in-y ?i) (not (at-station ?i))))
+  (:action go-y
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-go-y ?i))
+    :observability-conditions (default Fully))
+
+  (:event e-drop-carrier-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (in-x ?i) (dest-x) (not (delivered ?i)))
+    :effects (delivered ?i))
+  (:event e-drop-carrier-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (in-y ?i) (not (dest-x)) (not (delivered ?i)))
+    :effects (delivered ?i))
+  (:action drop-carrier
+    :parameters (?i - agent)
+    :action-type (semi-private-ontic (e-drop-carrier-x ?i) (e-drop-carrier-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  (:event e-drop-other-x
+    :parameters (?i - agent)
+    :precondition (and (not (carrier ?i)) (in-x ?i) ([?i] (not (dest-x))) (not (delivered ?i)))
+    :effects (delivered ?i))
+  (:action drop-other-x
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-drop-other-x ?i))
+    :observability-conditions (default Fully))
+  (:event e-drop-other-y
+    :parameters (?i - agent)
+    :precondition (and (not (carrier ?i)) (in-y ?i) ([?i] (dest-x)) (not (delivered ?i)))
+    :effects (delivered ?i))
+  (:action drop-other-y
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-drop-other-y ?i))
+    :observability-conditions (default Fully))
+
+  ;; The variant's two actions: r2 looks over bay X from inside it, and crosses
+  ;; from bay X to bay Y through the booth.
+  (:event e-occ-x
+    :parameters (?i ?j - agent)
+    :precondition (and (not (carrier ?i)) (in-x ?i) (in-x ?j)))
+  (:event e-free-x
+    :parameters (?i ?j - agent)
+    :precondition (and (not (carrier ?i)) (in-x ?i) (not (in-x ?j))))
+  (:action look-x
+    :parameters (?i ?j - agent)
+    :action-type (semi-private-sensing (e-occ-x ?i ?j) (e-free-x ?i ?j))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+  (:event e-cross
+    :parameters (?i - agent)
+    :precondition (and (in-x ?i) (not (carrier ?i)))
+    :effects (:and (in-y ?i) (not (in-x ?i))))
+  (:action cross
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-cross ?i))
+    :observability-conditions (default Fully))
+)
