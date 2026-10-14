@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The twenty-two domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The twenty-three domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -574,6 +574,13 @@ sup.cite a:hover{text-decoration:underline}
           <a href="two_lookouts.html">&#183; Where to look from<span class="sub">Knowing whether: two lookouts, a screen, and success the map backs</span></a>
             </div>
           </details>
+          <details class="nav-folder">
+            <summary>lookout-board</summary>
+            <div class="nav-sub">
+          <a href="demos.html#lookout-board">All lookout-board demos</a>
+          <a href="lookout_board.html">&#183; The lookout board<span class="sub">Epistemic against classical: a board only a planner over knowledge reads</span></a>
+            </div>
+          </details>
             </div>
           </details>
           <a href="execution.html">Execution</a>
@@ -598,6 +605,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
           <a href="two_lookouts.pdf">Where to Look From<span class="sub">Knowing whether, a look with a modal precondition, and no conformant plan</span></a>
+          <a href="lookout_board.pdf">The Lookout Board<span class="sub">Information gathering an epistemic planner chooses and no classical planner can</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -1192,6 +1200,39 @@ sup.cite a:hover{text-decoration:underline}
             <span>S5 &#183; Kw goal</span><span>modal precondition</span>
             <span>30/30 backed, against 20/30</span>
             <span>McNemar p = 0.002</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── lookout-board -->
+    <div class="dgroup" id="lookout-board">
+      <p class="sec-label">Domain</p>
+      <h3>lookout-board &#183; one robot, four windows, and a board that says which is open</h3>
+      <p class="about">
+        A robot must know whether a zone is blocked, \(\mathit{Kw}_{r1}\,\mathit{blocked}\text{-}z\).
+        It can see the zone through four windows, one from each of four lookouts, and screens close all
+        but one; a status board beside its start shows which. Looking needs the robot to know its view is
+        clear, and it can learn that at a lookout or, for every lookout at once, at the board. The epistemic
+        policy against the strongest classical planners: replanning from the nearest lookout, and the
+        shortest conformant tour.
+      </p>
+
+      <div class="dcard">
+        <div class="shot"><img src="media/thumbs/lookout_board.jpg"
+          alt="Gazebo over the robot&#8217;s shoulder at the board as slot 1 reads lit" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="lookout_board.html">The lookout board</a></h5>
+          <p>
+            Nothing in the goal mentions the board, and the policy's first move is to read it, for what the
+            robot will know afterwards; it then drives to the open lookout and nowhere else. No classical
+            planner reads it, over the classical model, under any determinization or under hindsight, and
+            the strongest one tours the room until it finds the open window.
+          </p>
+          <div class="facts">
+            <span>S5 &#183; Kw goal</span><span>information gathering</span>
+            <span>no conformant plan</span>
+            <span>board read 32/32, by classical 0/64</span>
           </div>
         </div>
       </div>

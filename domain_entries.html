@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The twenty-two domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The twenty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The twenty-three domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The twenty-three planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The twenty-two domains">
-<meta property="og:description" content="The twenty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The twenty-three domains">
+<meta property="og:description" content="The twenty-three planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The twenty-two domains">
-<meta name="twitter:description" content="The twenty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The twenty-three domains">
+<meta name="twitter:description" content="The twenty-three planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The twenty-two domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The twenty-three domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -631,6 +631,13 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="two_lookouts.html">&#183; Where to look from<span class="sub">Knowing whether: two lookouts, a screen, and success the map backs</span></a>
             </div>
           </details>
+          <details class="nav-folder">
+            <summary>lookout-board</summary>
+            <div class="nav-sub">
+          <a href="demos.html#lookout-board">All lookout-board demos</a>
+          <a href="lookout_board.html">&#183; The lookout board<span class="sub">Epistemic against classical: a board only a planner over knowledge reads</span></a>
+            </div>
+          </details>
             </div>
           </details>
           <a href="execution.html">Execution</a>
@@ -655,6 +662,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
           <a href="two_lookouts.pdf">Where to Look From<span class="sub">Knowing whether, a look with a modal precondition, and no conformant plan</span></a>
+          <a href="lookout_board.pdf">The Lookout Board<span class="sub">Information gathering an epistemic planner chooses and no classical planner can</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -670,8 +678,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 22 domains</p>
-    <h2>The twenty-two domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 23 domains</p>
+    <h2>The twenty-three domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -782,6 +790,29 @@ at-m1(r1), at-m2(r1) where the robot stands
 
 common:  C &#172;(tapado-1 &#8743; tapado-2)
 goal:    Kw_r1 blocked-z</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-lookout-board">
+      <div class="dom-h">
+        <h4>lookout-board</h4>
+        <span class="dom-f">S5 &#183; 1 agent</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>r1</i></dd>
+        <dt>Objects</dt><dd><code>&#8211;</code>; one atom and one action per lookout, written for any number of them</dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 8\), \(|W_d| = 8\) &#183; declared frame S5; that exactly one of the four views is clear is common knowledge</dd>
+        <dt>Grounded</dt><dd>10 atoms, 17 ground actions, goal of modal depth 1; the precondition of a look from lookout \(k\) is \(\mathit{at}\text{-}l_k \wedge K_{r1}\,\mathit{clear}\text{-}k\), and nothing in it or in the goal mentions the board</dd>
+        <dt>Solved</dt><dd>depth 6, 20&#8239;050 expansions, 8 leaves, by AO* in the Aletheia build installed with ePlanSys; the policy reads the board first. GBFS, which returns sequences, finds none, and none exists</dd>
+        <dt>Stated in</dt><dd><a href="lookout_board.html">The lookout board</a> &#183; <a href="lookout_board.pdf">the report</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Atoms and goal, as written by tools/make_domain.py</summary>
+<pre class="code">(blocked-z)                ; the zone is blocked
+(clear-1) ... (clear-4)    ; the view from lookout k is clear
+(at-board ?i - agent)      ; ?i stands at the status board
+(at-l1 ?i - agent) ...     ; ?i stands at lookout k
+
+(:goal ([Kw. r1] (blocked-z)))</pre>
       </details>
     </article>
     </div>
