@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>lookout_board_demo</name>
+  <version>0.1.0</version>
+  <description>
+    One robot must know whether a zone is blocked; it can see the zone from
+    four lookouts, all but one of them screened, and a status board near its
+    start says which is open. The epistemic policy reads the board; the
+    strongest classical planners, replanning and conformant, never do.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Ulises</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_epistemic_executor</depend>
+  <depend>plansys2_msgs</depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>turtlebot3_description</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

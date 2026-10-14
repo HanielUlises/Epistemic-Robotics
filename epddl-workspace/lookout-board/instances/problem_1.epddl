@@ -1,0 +1,37 @@
+;; 4 lookouts, exactly one of them with a clear view; the robot at its start.
+(define (problem lookout-board-1)
+
+  (:domain lookout-board)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents r1)
+
+  (:init
+    (:and
+      ([C. All] (not (at-board r1)))
+      ([C. All] (not (at-l1 r1)))
+      ([C. All] (not (at-l2 r1)))
+      ([C. All] (not (at-l3 r1)))
+      ([C. All] (not (at-l4 r1)))
+      ([C. All] (or (clear-1) (clear-2) (clear-3) (clear-4)))
+      ([C. All] (not (and (clear-1) (clear-2))))
+      ([C. All] (not (and (clear-1) (clear-3))))
+      ([C. All] (not (and (clear-1) (clear-4))))
+      ([C. All] (not (and (clear-2) (clear-3))))
+      ([C. All] (not (and (clear-2) (clear-4))))
+      ([C. All] (not (and (clear-3) (clear-4))))
+      ([C. All] (<Kw. r1> (blocked-z)))
+      ([C. All] (<Kw. r1> (clear-1)))
+      ([C. All] (<Kw. r1> (clear-2)))
+      ([C. All] (<Kw. r1> (clear-3)))
+      ([C. All] (<Kw. r1> (clear-4)))
+    )
+  )
+
+  (:goal ([Kw. r1] (blocked-z)))
+)

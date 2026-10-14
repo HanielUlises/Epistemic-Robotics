@@ -1,0 +1,278 @@
+;; THE LOOKOUT BOARD, 4 LOOKOUTS. Written by tools/make_domain.py.
+;;
+;; One robot must know whether a zone is blocked. It can see the zone from any
+;; of 4 lookouts, but a screen hides the zone from every lookout except one,
+;; and which one is open is not known. The robot can learn it at a lookout, by
+;; checking the view from there, or at a status board near its start, whose
+;; slot k is lit when the view from lookout k is clear. Looking at the zone from
+;; lookout k requires knowing that the view from k is clear.
+;;
+;; Nothing in the goal mentions the board. Whether reading it pays is for the
+;; planner to find out from what the robot would know after reading it.
+
+(define (domain lookout-board)
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:predicates
+    (blocked-z)                ; the zone is blocked
+    (clear-1)                  ; the view from lookout 1 is clear
+    (clear-2)                  ; the view from lookout 2 is clear
+    (clear-3)                  ; the view from lookout 3 is clear
+    (clear-4)                  ; the view from lookout 4 is clear
+    (at-board ?i - agent)      ; ?i stands at the status board
+    (at-l1 ?i - agent)         ; ?i stands at lookout 1
+    (at-l2 ?i - agent)         ; ?i stands at lookout 2
+    (at-l3 ?i - agent)         ; ?i stands at lookout 3
+    (at-l4 ?i - agent)         ; ?i stands at lookout 4
+  )
+
+  (:event nil)
+
+  ;; Driving to the board: public, and the robot is in one place at a time.
+  (:event e-goto-board
+    :parameters (?i - agent)
+    :precondition (not (at-board ?i))
+    :effects (:and (at-board ?i) (not (at-l1 ?i)) (not (at-l2 ?i)) (not (at-l3 ?i)) (not (at-l4 ?i)))
+  )
+  (:action goto-board
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-board ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;; Driving to lookout 1: public, and the robot is in one place at a time.
+  (:event e-goto-l1
+    :parameters (?i - agent)
+    :precondition (not (at-l1 ?i))
+    :effects (:and (at-l1 ?i) (not (at-board ?i)) (not (at-l2 ?i)) (not (at-l3 ?i)) (not (at-l4 ?i)))
+  )
+  (:action goto-l1
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-l1 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;; Driving to lookout 2: public, and the robot is in one place at a time.
+  (:event e-goto-l2
+    :parameters (?i - agent)
+    :precondition (not (at-l2 ?i))
+    :effects (:and (at-l2 ?i) (not (at-board ?i)) (not (at-l1 ?i)) (not (at-l3 ?i)) (not (at-l4 ?i)))
+  )
+  (:action goto-l2
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-l2 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;; Driving to lookout 3: public, and the robot is in one place at a time.
+  (:event e-goto-l3
+    :parameters (?i - agent)
+    :precondition (not (at-l3 ?i))
+    :effects (:and (at-l3 ?i) (not (at-board ?i)) (not (at-l1 ?i)) (not (at-l2 ?i)) (not (at-l4 ?i)))
+  )
+  (:action goto-l3
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-l3 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;; Driving to lookout 4: public, and the robot is in one place at a time.
+  (:event e-goto-l4
+    :parameters (?i - agent)
+    :precondition (not (at-l4 ?i))
+    :effects (:and (at-l4 ?i) (not (at-board ?i)) (not (at-l1 ?i)) (not (at-l2 ?i)) (not (at-l3 ?i)))
+  )
+  (:action goto-l4
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-l4 ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;; Slot 1 of the board: lit when the view from lookout 1 is clear.
+  (:event e-read1-lit
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (clear-1) )
+  )
+  (:event e-read1-dark
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (not (clear-1)) )
+  )
+  (:action read-1
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-read1-lit ?i) (e-read1-dark ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; At lookout 1: is the view screened?
+  (:event e-check1-clear
+    :parameters (?i - agent)
+    :precondition (and (at-l1 ?i) (clear-1) )
+  )
+  (:event e-check1-screened
+    :parameters (?i - agent)
+    :precondition (and (at-l1 ?i) (not (clear-1)) )
+  )
+  (:action check-1
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-check1-clear ?i) (e-check1-screened ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; Looking at the zone from lookout 1 requires knowing the view is clear.
+  (:event e-look1-blocked
+    :parameters (?i - agent)
+    :precondition (and (at-l1 ?i) ([?i] (clear-1)) (blocked-z) )
+  )
+  (:event e-look1-free
+    :parameters (?i - agent)
+    :precondition (and (at-l1 ?i) ([?i] (clear-1)) (not (blocked-z)) )
+  )
+  (:action look-1
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-look1-blocked ?i) (e-look1-free ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; Slot 2 of the board: lit when the view from lookout 2 is clear.
+  (:event e-read2-lit
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (clear-2) )
+  )
+  (:event e-read2-dark
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (not (clear-2)) )
+  )
+  (:action read-2
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-read2-lit ?i) (e-read2-dark ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; At lookout 2: is the view screened?
+  (:event e-check2-clear
+    :parameters (?i - agent)
+    :precondition (and (at-l2 ?i) (clear-2) )
+  )
+  (:event e-check2-screened
+    :parameters (?i - agent)
+    :precondition (and (at-l2 ?i) (not (clear-2)) )
+  )
+  (:action check-2
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-check2-clear ?i) (e-check2-screened ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; Looking at the zone from lookout 2 requires knowing the view is clear.
+  (:event e-look2-blocked
+    :parameters (?i - agent)
+    :precondition (and (at-l2 ?i) ([?i] (clear-2)) (blocked-z) )
+  )
+  (:event e-look2-free
+    :parameters (?i - agent)
+    :precondition (and (at-l2 ?i) ([?i] (clear-2)) (not (blocked-z)) )
+  )
+  (:action look-2
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-look2-blocked ?i) (e-look2-free ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; Slot 3 of the board: lit when the view from lookout 3 is clear.
+  (:event e-read3-lit
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (clear-3) )
+  )
+  (:event e-read3-dark
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (not (clear-3)) )
+  )
+  (:action read-3
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-read3-lit ?i) (e-read3-dark ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; At lookout 3: is the view screened?
+  (:event e-check3-clear
+    :parameters (?i - agent)
+    :precondition (and (at-l3 ?i) (clear-3) )
+  )
+  (:event e-check3-screened
+    :parameters (?i - agent)
+    :precondition (and (at-l3 ?i) (not (clear-3)) )
+  )
+  (:action check-3
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-check3-clear ?i) (e-check3-screened ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; Looking at the zone from lookout 3 requires knowing the view is clear.
+  (:event e-look3-blocked
+    :parameters (?i - agent)
+    :precondition (and (at-l3 ?i) ([?i] (clear-3)) (blocked-z) )
+  )
+  (:event e-look3-free
+    :parameters (?i - agent)
+    :precondition (and (at-l3 ?i) ([?i] (clear-3)) (not (blocked-z)) )
+  )
+  (:action look-3
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-look3-blocked ?i) (e-look3-free ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; Slot 4 of the board: lit when the view from lookout 4 is clear.
+  (:event e-read4-lit
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (clear-4) )
+  )
+  (:event e-read4-dark
+    :parameters (?i - agent)
+    :precondition (and (at-board ?i) (not (clear-4)) )
+  )
+  (:action read-4
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-read4-lit ?i) (e-read4-dark ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; At lookout 4: is the view screened?
+  (:event e-check4-clear
+    :parameters (?i - agent)
+    :precondition (and (at-l4 ?i) (clear-4) )
+  )
+  (:event e-check4-screened
+    :parameters (?i - agent)
+    :precondition (and (at-l4 ?i) (not (clear-4)) )
+  )
+  (:action check-4
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-check4-clear ?i) (e-check4-screened ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;; Looking at the zone from lookout 4 requires knowing the view is clear.
+  (:event e-look4-blocked
+    :parameters (?i - agent)
+    :precondition (and (at-l4 ?i) ([?i] (clear-4)) (blocked-z) )
+  )
+  (:event e-look4-free
+    :parameters (?i - agent)
+    :precondition (and (at-l4 ?i) ([?i] (clear-4)) (not (blocked-z)) )
+  )
+  (:action look-4
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-look4-blocked ?i) (e-look4-free ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+)
