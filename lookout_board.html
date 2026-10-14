@@ -652,7 +652,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
             <summary>lookout-board</summary>
             <div class="nav-sub">
           <a href="demos.html#lookout-board">All lookout-board demos</a>
-          <a href="lookout_board.html">&#183; The lookout board<span class="sub">Epistemic against classical: a board only a planner over knowledge reads</span></a>
+          <a href="lookout_board.html">&#183; The lookout board<span class="sub">Information gathering under epistemic and classical planning</span></a>
             </div>
           </details>
             </div>
@@ -679,7 +679,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
           <a href="two_lookouts.pdf">Where to Look From<span class="sub">Knowing whether, a look with a modal precondition, and no conformant plan</span></a>
-          <a href="lookout_board.pdf">The Lookout Board<span class="sub">Information gathering an epistemic planner chooses and no classical planner can</span></a>
+          <a href="lookout_board.pdf">The Lookout Board<span class="sub">Information gathering under epistemic and classical planning, one robot and four lookouts</span></a>
           <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
             </div>
           </details>
@@ -741,7 +741,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section>
   <div class="container">
     <p class="sec-label">The runs</p>
-    <h3>Read the board, or tour the room</h3>
+    <h3>Recorded runs</h3>
 
     <figure class="demo-figure">
       <video controls preload="metadata" playsinline width="100%"
@@ -774,7 +774,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       </tbody>
     </table>
 
-    <h4>The policy, seed 1</h4>
+    <h4>Epistemic policy, seed 1</h4>
     <table class="data pt-run">
       <thead><tr><th>action</th><th>what the run reported</th><th>model after</th></tr></thead>
       <tbody>
@@ -813,38 +813,38 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <div class="pt-findings">
   <div class="pt-findings-inner">
     <p class="sec-label">What the runs show</p>
-    <h3 class="pt-findings-title">Three findings about a board nobody asked for</h3>
+    <h3 class="pt-findings-title">Principal findings</h3>
     <div class="pt-cards">
       <a class="pt-card" href="#lb-policy-sec">
         <span class="pt-card-img"><img src="media/thumbs/lookout_board_card_board.jpg" alt="Gazebo over the robot&#8217;s shoulder at the board, slot 1 lit" loading="lazy"></span>
         <span class="pt-card-k">The policy</span>
-        <span class="pt-card-h">Read for what it tells</span>
+        <span class="pt-card-h">Information gathering selected by the planner</span>
         <span class="pt-card-p">The goal is to know whether the zone is blocked. The planner's first move is to a board that cannot tell it, because of what the robot will know after reading it: which lookout to drive to.</span>
         <span class="pt-card-go">See the policy <span>&#8594;</span></span>
       </a>
       <a class="pt-card" href="#lb-classical-sec">
         <span class="pt-card-img"><img src="media/thumbs/lookout_board_card_tour.jpg" alt="RViz at the end of the replanning run: the robot&#8217;s trail round all four lookouts" loading="lazy"></span>
-        <span class="pt-card-k">The classical side</span>
-        <span class="pt-card-h">Never read, provably</span>
+        <span class="pt-card-k">Classical planning</span>
+        <span class="pt-card-h">The board is not read under classical planning</span>
         <span class="pt-card-p">Over the classical model, under any determinization of the outcomes, and under hindsight sampling, reading the board is worth nothing. The strongest replanner tours the room.</span>
         <span class="pt-card-go">See the propositions <span>&#8594;</span></span>
       </a>
       <a class="pt-card" href="#lb-batch-sec">
         <span class="pt-card-img"><img src="media/thumbs/lookout_board_card_race.jpg" alt="The race at the end of the film: the policy done, the replanner still driving" loading="lazy"></span>
-        <span class="pt-card-k">32 seeds</span>
-        <span class="pt-card-h">Half the worst case</span>
+        <span class="pt-card-k">Evaluation</span>
+        <span class="pt-card-h">Worst-case mission time halved</span>
         <span class="pt-card-p">Every run of every formulation knew the zone in the end. The policy averaged 48&#8202;s against 77&#8202;s for replanning, and 67&#8202;s at worst against 137&#8202;s.</span>
-        <span class="pt-card-go">See the batch <span>&#8594;</span></span>
+        <span class="pt-card-go">See the evaluation <span>&#8594;</span></span>
       </a>
     </div>
     <nav class="pt-toc" aria-label="On this page">
-      <a href="#lb-hall-sec">The hall</a>
+      <a href="#lb-hall-sec">Environment</a>
       <a href="#lb-domain-sec">The domain</a>
       <a href="#lb-policy-sec">The policy</a>
       <a href="#lb-classical-sec">Classical planning</a>
-      <a href="#lb-cost-sec">Distances</a>
-      <a href="#lb-scale-sec">More lookouts</a>
-      <a href="#lb-batch-sec">The batch</a>
+      <a href="#lb-cost-sec">Route lengths</a>
+      <a href="#lb-scale-sec">Planning cost</a>
+      <a href="#lb-batch-sec">Evaluation</a>
       <a href="#lb-defects-sec">Defects</a>
       <a href="#lb-refs-sec">References</a>
     </nav>
@@ -854,8 +854,8 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <!-- ═══════════════════════════════════════════════ THE HALL -->
 <section id="lb-hall-sec">
   <div class="container">
-    <p class="sec-label">The hall</p>
-    <h3>A room with four windows, four screens but one, and a board</h3>
+    <p class="sec-label">Environment</p>
+    <h3>Environment</h3>
     <p>
       The hall is 9.2 by 9.2&#8202;m. The zone, a 0.8&#8202;m square, stands in
       the middle of a walled room with a window in each wall. Each window opens
@@ -893,7 +893,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="lb-domain-sec">
   <div class="container">
     <p class="sec-label">The domain</p>
-    <h3>Two ways to learn which view is open</h3>
+    <h3>Actions, initial model and goal</h3>
     <table class="data ca-left">
       <thead><tr><th>action</th><th>kind</th><th>precondition</th><th>outcomes</th></tr></thead>
       <tbody>
@@ -927,7 +927,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="lb-policy-sec">
   <div class="container">
     <p class="sec-label">The policy</p>
-    <h3>Twelve nodes, and no sequence at all</h3>
+    <h3>The policy and the absence of a conformant plan</h3>
 <pre class="code">goto-board
 read-1   lit  &#8594; goto-l1, look-1
          dark &#8594; read-2   lit  &#8594; goto-l2, look-2
@@ -956,7 +956,7 @@ read-1   lit  &#8594; goto-l1, look-1
 <section id="lb-classical-sec">
   <div class="container">
     <p class="sec-label">Classical planning</p>
-    <h3>Why no classical planner reads the board</h3>
+    <h3>Classical planning and the value of information</h3>
     <p>
       <b>Over the classical model.</b> In the model the classical planner is
       given, reading a slot achieves nothing any precondition or goal uses, so
@@ -993,8 +993,8 @@ read-1   lit  &#8594; goto-l1, look-1
 <!-- ═══════════════════════════════════════════════ DISTANCES -->
 <section id="lb-cost-sec">
   <div class="container">
-    <p class="sec-label">Distances</p>
-    <h3>A short detour against a tour of the room</h3>
+    <p class="sec-label">Route lengths</p>
+    <h3>Route lengths per formulation</h3>
     <p>
       The roadmap's shortest routes give each formulation's drive in each world
       before any robot moves, in metres:
@@ -1021,8 +1021,8 @@ read-1   lit  &#8594; goto-l1, look-1
 <!-- ═══════════════════════════════════════════════ SCALE -->
 <section id="lb-scale-sec">
   <div class="container">
-    <p class="sec-label">More lookouts</p>
-    <h3>What planning costs as the lookouts grow</h3>
+    <p class="sec-label">Planning cost</p>
+    <h3>Planning cost as a function of the number of lookouts</h3>
     <table class="data">
       <thead><tr><th>lookouts</th><th>worlds</th><th>actions</th><th>strategy</th><th>depth (board / in turn)</th><th>first move</th><th>expansions</th><th>seconds</th></tr></thead>
       <tbody>
@@ -1055,8 +1055,8 @@ read-1   lit  &#8594; goto-l1, look-1
 <!-- ═══════════════════════════════════════════════ BATCH -->
 <section id="lb-batch-sec">
   <div class="container">
-    <p class="sec-label">The batch</p>
-    <h3>32 seeds, each under all three formulations</h3>
+    <p class="sec-label">Evaluation</p>
+    <h3>Paired evaluation over 32 seeds</h3>
     <p>
       Each seed fixes the world and the start, perturbed by up to
       0.1&#8202;m and 10&#176;, and is run under the three formulations side by
@@ -1094,9 +1094,9 @@ read-1   lit  &#8594; goto-l1, look-1
 <section id="lb-defects-sec">
   <div class="container">
     <p class="sec-label">Found on the way</p>
-    <h3>Four defects, and what each changed</h3>
+    <h3>Changes on four defects</h3>
     <ul style="margin:0 0 0 1.2rem">
-      <li><b>A guard that stopped the policy.</b> The first domain made each
+      <li><b>Knowledge guard on sensing events.</b> The first domain made each
       sensing event require that the robot not yet know its answer. On the
       robot all four slots resolve at once and the epistemic state applies each
       as soon as it can; dark slots applied first would make the lit one known
@@ -1107,14 +1107,14 @@ read-1   lit  &#8594; goto-l1, look-1
       requiring <span class="mono-inline">(not (screened ?l))</span>, POPF
       dumped core building its lookup tables. The classical domain writes it
       positively, as a view not yet found screened.</li>
-      <li><b>A scratch file shared between runs.</b> PlanSys2's domain expert
+      <li><b>Shared scratch directory in domain validation.</b> PlanSys2's domain expert
       checks the domain with a POPF of its own whose scratch directory defaults
       to <span class="mono-inline">/tmp</span>; runs started side by side read
       each other's half-written files, and two runs failed to start with
       &#8220;PDDL syntax error&#8221;. The launch gives the domain expert the
       run's own directory, the batch starts runs a few seconds apart, and the
       failed runs were run again.</li>
-      <li><b>A parameter outlived.</b> Both action nodes first looped over a
+      <li><b>Dangling parameter reference in the action nodes.</b> Both action nodes first looped over a
       reference into a temporary parameter and aborted at start; they copy the
       list first.</li>
     </ul>
@@ -1124,7 +1124,7 @@ read-1   lit  &#8594; goto-l1, look-1
 <section>
   <div class="container">
     <p class="sec-label">Limits</p>
-    <h3>What this does not show</h3>
+    <h3>Limitations</h3>
     <ul style="margin:0 0 0 1.2rem">
       <li>Cost-aware epistemic planning. Aletheia minimises the policy's depth,
       the actions on its longest branch, and not distance. On this hall the two
@@ -1162,7 +1162,7 @@ read-1   lit  &#8594; goto-l1, look-1
 <section>
   <div class="container">
     <p class="sec-label">Reproduction</p>
-    <h3>Running it</h3>
+    <h3>Commands</h3>
     <pre class="code">bash tools/validate.sh                                       <span class="c"># views, policy, no sequence, POPF; no simulator</span>
 python3 tools/make_world.py --seed 1 --out RUN
 ros2 launch lookout_board_demo lookout_board_launch.py dir:=RUN formulation:=epistemic   <span class="c"># or replan, conformant</span>

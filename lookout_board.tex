@@ -120,8 +120,8 @@
 {\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[0.9cm]
 {\LARGE\bfseries The Lookout Board\par}
 \vspace{0.5cm}
-{\large\color{slate} Information Gathering an Epistemic Planner Chooses\\
-and No Classical Planner Can\par}
+{\large\color{slate} Information Gathering under Epistemic and Classical Planning,\\
+with One Robot, Four Lookouts and a Status Board\par}
 \vspace{0.7cm}
 {\color{rulegrey}\rule{\textwidth}{0.8pt}}\\[1.4cm]
 
@@ -180,7 +180,7 @@ the propositions of Section~\ref{sec:classical} show that no determinization
 of the sensing outcomes, and no sampling of worlds, makes it see it.
 
 %  ======================================================================
-\section{The hall}
+\section{Environment}
 
 \begin{figure}[H]
 \centering
@@ -214,7 +214,7 @@ the lit slot reads blocked and the other three clear; and no route the robot
 drives between two places decides the zone in passing.
 
 %  ======================================================================
-\section{The domain}
+\section{Domain}
 
 One agent, $r1$. Atoms: $\bz$; $\cl{1}, \ldots, \cl{4}$, the view from lookout
 $k$ is clear; and where the robot stands, $\at{board}$ and $\at{l_k}$. Actions,
@@ -251,7 +251,7 @@ runs next. Without it, reading what is already known changes nothing, and the
 planner still never does it.
 
 %  ======================================================================
-\section{The policy}
+\section{The policy and the absence of a conformant plan}
 
 \begin{proposition}[No conformant plan]
 No sequence of the domain's actions is applicable in all eight worlds and
@@ -305,7 +305,7 @@ minimises depth, the number of actions on the longest branch, and not distance;
 on this hall the two agree, and Section~\ref{sec:cost} gives the distances.
 
 %  ======================================================================
-\section{No classical planner reads the board}
+\section{Classical planning and the value of information}
 \label{sec:classical}
 
 \begin{proposition}[The classical model]
@@ -368,7 +368,7 @@ know after reading it, in each of the worlds it cannot yet tell apart. That is
 a planner over states of knowledge, which is what an epistemic planner is.
 
 %  ======================================================================
-\section{What it costs to drive}
+\section{Route lengths per formulation}
 \label{sec:cost}
 
 The roadmap's shortest routes, in metres, give each formulation's drive in
@@ -398,7 +398,7 @@ given the shorter. The policy pays 1.44\,m for the board in every world and
 saves a tour of the room in three of four.
 
 %  ======================================================================
-\section{Planning as the lookouts grow}
+\section{Planning cost as a function of the number of lookouts}
 
 \begin{table}[H]
 \centering
@@ -427,7 +427,7 @@ lookouts in turn, and the wall-clock time.}
 With three to five lookouts, AO$^*$, which Aletheia's selection policy picks, returns the policy that reads the board, of depth $n + 2$, against $2n$ for checking the lookouts in turn; with two the depths tie and it checks. Its search grows by an order of magnitude per lookout. From six lookouts the selection policy gives AO$^*$ a few seconds and then falls back on replanning, which determinizes the sensing outcomes and returns the policy that checks the lookouts in turn, of depth $2n$: the classical planner's policy, and it does not read the board, as a determinizing planner never does. Given the whole budget alone, AO$^*$ finds the board-first policy for six lookouts in 47\,s and 5.8 million expansions, and for seven does not finish in 900\,s. Reading the board is what a planner over states of knowledge finds; finding it is what such a planner pays for.
 
 %  ======================================================================
-\section{32 seeds in Gazebo}
+\section{Paired evaluation over 32 seeds}
 
 Each seed fixes the world and the start, and is run under all three
 formulations side by side, so the comparison is paired. Times are simulated
@@ -472,7 +472,7 @@ lookout 4, zone blocked & 30.8\,s, 4.3\,m & 18.4\,s, 3.4\,m & 131.0\,s, 24.6\,m 
 Every run of every formulation ended knowing the zone, and the map backed it in all 96. The policy read the board in all 32 of its runs, and neither classical formulation read it once. Paired by seed against replanning, the policy was faster in 24 seeds and slower in 8 (exact sign test, $p = 0.007$); the Hodges--Lehmann estimate of what it saves is 29.6\,s and 5.6\,m. It was slower only in the worlds where the open lookout is the replanner's first, by at most 12.7\,s, the price of the board. Against the conformant tour it was faster in 32 of 32 seeds, by 86.0\,s.
 
 %  ======================================================================
-\section{The film}
+\section{Recorded runs}
 
 Four takes, recorded one at a time with the launch unchanged and headless: a Gazebo client and RViz on a virtual display, the world held paused until both had drawn, and the Gazebo camera cut on the executor's own actions. Seed 1, where the open view is lookout 1's, the farthest from the start and the replanner's last, under all three formulations; and the policy on seed 8, where lookout 4 is open and the zone blocked, and the policy goes to lookout 4 with slot 4 unread. The film ends with seed 1's policy and replanner side by side by simulated time since the order.
 
@@ -489,9 +489,9 @@ other three by elimination.}
 \end{figure}
 
 %  ======================================================================
-\section{Found on the way}
+\section{Changes on four defects}
 
-\paragraph{The guard on sensing}
+\paragraph{Knowledge guard on sensing events}
 The first domain had each sensing event require that the robot not yet know
 its answer. It planned the same policy, but on the robot it could not run, as
 the domain section explains, and the condition was removed. The planner's
@@ -503,7 +503,7 @@ core while building its lookup tables. The classical domain writes it
 positively, \textit{open\_view}, which the problem asserts for every lookout not
 yet found screened.
 
-\paragraph{A shared scratch file}
+\paragraph{Shared scratch directory in domain validation}
 PlanSys2's domain expert checks the domain with a POPF instance of its own,
 whose scratch directory defaults to \code{/tmp}. Runs started side by side
 read each other's half-written \code{check\_domain.pddl}, and two runs of
@@ -511,13 +511,13 @@ the batch failed to start with ``PDDL syntax error''. The launch now gives the
 domain expert the run's own directory, the batch starts each run a few seconds
 apart, and the failed runs were run again; their first attempts are kept.
 
-\paragraph{A parameter outlived}
+\paragraph{Dangling parameter reference in the action nodes}
 Both action nodes first iterated directly over the string array of a
 parameter, a reference into a temporary that the loop outlived, and aborted with
 \code{std::length\_error} at start. They copy the list first.
 
 %  ======================================================================
-\section{What this does not show}
+\section{Limitations}
 
 \begin{itemize}[leftmargin=1.4em]
 \item Cost-aware epistemic planning. Aletheia minimises the policy's depth.
