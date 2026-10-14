@@ -987,10 +987,17 @@ on order Y, watcher east:  to-win-w(r1) · say-w(r1, r2, r3) · back(r1)</pre>
       west, the world of bay X shows it the drive to the east window, declared
       public, and the world of bay Y does not. Those declarations are more than
       the watcher sees. Declared by the sightlines instead
-      (<span class="mono-inline">watcher-sightlines.epddl</span>), Aletheia
-      returns the same policy in the same 68 expansions, and the
-      watcher observes nothing in any of the four worlds: opaque, as long as
-      the watcher stays at its post.
+      (<span class="mono-inline">watcher-sightlines.epddl</span>: what the
+      boards say seen only by the carrier, the back route by nobody, a window
+      only from its side), Aletheia returns the same policy in the same
+      68 expansions, with no agent's beliefs collapsing on the way,
+      and in all four worlds the watcher observes only that the carrier read
+      the boards: opaque, as long as the watcher stays at its post. A first
+      version of that file declared the boards' reading unseen by the ally as
+      well; the ally then held the lamp impossible, its beliefs collapsed, and
+      its knowledge held only vacuously. Planning with
+      <span class="mono-inline">--consistent-beliefs</span> catches it, and
+      every check here now does.
     </p>
   </div>
 </section>
