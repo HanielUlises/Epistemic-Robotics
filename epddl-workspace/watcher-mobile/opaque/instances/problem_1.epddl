@@ -1,0 +1,61 @@
+(define (problem watcher-mobile-1)
+
+  ;; Four worlds, one per order and post. The watcher has 1 change of post,
+  ;; which is common knowledge; where it is, only it knows.
+
+  (:domain watcher-mobile)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions :negative-goals
+  )
+
+  (:agents r1 r2 r3)
+
+  (:init
+    (:and
+      ([C. All] (carrier r1))
+      ([C. All] (not (carrier r2)))
+      ([C. All] (not (carrier r3)))
+      ([C. All] (not (ally r1)))
+      ([C. All] (ally r2))
+      ([C. All] (not (ally r3)))
+      ([C. All] (not (watcher r1)))
+      ([C. All] (not (watcher r2)))
+      ([C. All] (watcher r3))
+      ([C. All] (at-start r1))
+      ([C. All] (not (at-start r2)))
+      ([C. All] (not (at-start r3)))
+      ([C. All] (not (at-win-w r1)))
+      ([C. All] (not (at-win-w r2)))
+      ([C. All] (not (at-win-w r3)))
+      ([C. All] (not (at-win-e r1)))
+      ([C. All] (not (at-win-e r2)))
+      ([C. All] (not (at-win-e r3)))
+      ([C. All] (not (in-x r1)))
+      ([C. All] (not (in-x r2)))
+      ([C. All] (not (in-x r3)))
+      ([C. All] (not (in-y r1)))
+      ([C. All] (not (in-y r2)))
+      ([C. All] (not (in-y r3)))
+      ([C. All] (not (west r1)))
+      ([C. All] (not (west r2)))
+      ([C. All] (m1 r3))
+      ([C. All] (not (m1 r1)))
+      ([C. All] (not (m1 r2)))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (dest-x))))
+      ([C. All] (<Kw. r1> (west r3)))
+      ([C. All] (<Kw. r2> (west r3)))
+      ([C. All] ([Kw. r3] (west r3)))
+    )
+  )
+
+  (:goal
+    (and
+      (or (in-x r1) (in-y r1))
+      ([Kw. r2] (dest-x))
+      (not ([Kw. r3] (dest-x)))
+    )
+  )
+)

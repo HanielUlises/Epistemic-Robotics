@@ -1,0 +1,41 @@
+(define (action-type-library sightlines-mobile)
+
+  ;; The types of watcher.epddl's sightlines library, and a drive with 3
+  ;; designated events, one per thing the watcher may do while it lasts: the
+  ;; mover cannot tell them apart (Partially), the watcher can. Written by
+  ;; make_domain.py; plank substitutes relation variables as text, so they are
+  ;; ?x and ?y.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+    :negative-list-formulas
+  )
+
+  (:action-type quasi-private-ontic
+    :events     (?pos ?neg ?nil)
+    :observability-types (Fully Partially Oblivious)
+    :relations  (Fully     (:forall (?x - event) (?x ?x))
+                 Partially (:forall (?x ?y - event |
+                    (imply
+                        (/= ?x ?y)
+                        (and (/= ?x ?nil) (/= ?y ?nil)) ))
+                    (?x ?y) )
+                 Oblivious (:forall (?x - event) (?x ?nil)) )
+    :designated (?pos ?neg)
+    :conditions (?pos (:non-trivial-postconditions)
+                 ?neg (:non-trivial-postconditions)
+                 ?nil (:trivial-event) )
+  )
+
+  (:action-type drive-while-watched-3
+    :events     (?e0 ?e1 ?e2)
+    :observability-types (Fully Partially)
+    :relations  (Fully     (:forall (?x - event) (?x ?x))
+                 Partially (:forall (?x ?y - event) (?x ?y)) )
+    :designated (?e0 ?e1 ?e2)
+    :conditions (?e0 (:non-trivial-postconditions)
+                 ?e1 (:non-trivial-postconditions)
+                 ?e2 (:non-trivial-postconditions))
+  )
+)
