@@ -1055,32 +1055,40 @@ on order Y, watcher east:  to-win-w(r1) · say-w(r1, r2, r3) · back(r1)</pre>
 <!-- ═══════════════════════════════════════════════ DEFECTS -->
 <section id="wt-defects-sec">
   <div class="container">
-    <p class="sec-label">Found on the way</p>
-    <h3>Defects found, and a batch discarded</h3>
-    <ul>
-      <li><b>The executor's knowledge requirements.</b> ePlanSys's executor
-      checks the modal conjuncts of all of an action's designated events
-      together, as one conjunction. An action whose events need
-      \(K_{r1}\,\mathit{dest}\text{-}x\) in one and
-      \(K_{r1}\,\neg\mathit{dest}\text{-}x\) in the other can never be
-      dispatched, and the first runs failed at the lamp. Every such event
-      now asks \(\mathit{Kw}_{r1}\,\mathit{dest}\text{-}x\) beside its own
-      fact, which says the same, as the gate signal's domain does. The check
-      should be the disjunction over events.</li>
-      <li><b>A library named like its domain.</b> plank stops with an unknown
+    <p class="sec-label">Implementation</p>
+    <h3>Implementation defects</h3>
+    <p>
+      Four defects were found while the demonstration was built. Three were
+      circumvented in the domain or in the configuration; the fourth, in the
+      drive node, was corrected and invalidated the first batch. The first
+      concerns ePlanSys's executor, which checks the modal conjuncts of all of
+      an action's designated events together, as a single conjunction. An
+      action whose events require \(K_{r1}\,\mathit{dest}\text{-}x\) in one
+      and \(K_{r1}\,\neg\mathit{dest}\text{-}x\) in the other can therefore
+      never be dispatched, and the first runs failed at the lamp for this
+      reason. Each such event now requires
+      \(\mathit{Kw}_{r1}\,\mathit{dest}\text{-}x\) together with its own
+      fact, which is equivalent, as in the domain of the gate signal. The
+      correct check is the disjunction over the events.
+    </p>
+    <p>
+      The second and third defects are minor. plank terminates with an unknown
       exception when a domain and one of its action-type libraries share a
-      name; the library is called <span class="mono-inline">sightlines</span>.</li>
-      <li><b>A label YAML reads as true.</b> A sensing node's label
-      <span class="mono-inline">y</span>, written to a parameter file, came
-      back a boolean and the node aborted.</li>
-      <li><b>A dangling reference, and a batch discarded.</b> The drive node
-      iterated over the string array of a parameter object already destroyed.
-      In a first batch of 120 runs it crashed the carrier's drive in
-      17, 17 of them in the policy's gate branch; the
-      carrier, its last velocity still applied, then wandered until the time
-      limit. That batch is kept apart as discarded, and every figure on this
-      page is from the second, run on the fixed node.</li>
-    </ul>
+      name, so the library is named
+      <span class="mono-inline">sightlines</span>. A sensing node's label
+      <span class="mono-inline">y</span>, written to a parameter file, was read
+      back by YAML as a boolean, and the node aborted.
+    </p>
+    <p>
+      The fourth defect affected the data. The drive node iterated over the
+      string array of a parameter object that had already been destroyed. In a
+      first batch of 120 runs this crashed the carrier's drive in
+      17 runs, 17 of them in the gate branch of the
+      policy; the carrier, with its last velocity command still applied, then
+      moved until the time limit. That batch was discarded and is kept apart.
+      Every figure on this page comes from the second batch, run with the
+      corrected node.
+    </p>
   </div>
 </section>
 
@@ -1088,30 +1096,31 @@ on order Y, watcher east:  to-win-w(r1) · say-w(r1, r2, r3) · back(r1)</pre>
   <div class="container">
     <p class="sec-label">Limits</p>
     <h3>Limitations</h3>
-    <ul>
-      <li>A watcher at its post. Against a watcher that knows the policy and
-      stays where it is, the policy is opaque under the sightlines. A watcher
-      that moves, choosing where to look from what it has seen, is not
-      modelled.</li>
-      <li>A narrow pocket. 7 of the 120 runs ended at the time
-      limit with the carrier stalled at the east baffle, in or just past the
-      pocket between it and the corridor wall, 0.6&#8202;m tall: 1 of the policy's,
-      0 of the direct carrier's and 6 of the discreet
-      carrier's, which takes that route every time. They count against the
-      goal, and they are the controller's, not the planner's.</li>
-      <li>The duty board. The carrier learns the watcher's post by reading a
-      duty board, a sensing action like the order board, whose outcome its
-      laser decides. Where the watcher stands is given to the carrier by the
-      hall.</li>
-      <li>Timing. A watcher that timed the mission could tell the window
-      branch, which is longer, from the gate branch; the domain has no
-      durations.</li>
-      <li>The classical side is a classical planner given the task's facts.
-      Compilations of multi-agent epistemic planning into classical
-      planning<sup class="cite"><a href="#ref-kg">[3]</a></sup> represent what
-      each agent believes as facts of their own, and could state the goal; they
-      are epistemic planning in another form, and are not compared here.</li>
-    </ul>
+    <p>
+      The results hold under four restrictions. The watcher is stationary:
+      against a watcher that knows the policy and remains at its post, the
+      policy is opaque under the sightlines, and a watcher that moves, choosing
+      where to look from what it has already seen, is not modelled. The carrier
+      learns the watcher's post by reading a duty board, a sensing action
+      analogous to the order board whose outcome its laser determines; the
+      watcher's position is thus supplied to the carrier by the hall. The
+      domain has no durations, so a watcher that timed the mission could
+      distinguish the window branch, which is longer, from the gate branch.
+      Finally, the classical baseline is a classical planner given the facts of
+      the task. Compilations of multi-agent epistemic planning into classical
+      planning<sup class="cite"><a href="#ref-kg">[3]</a></sup> represent the
+      beliefs of each agent as facts and could express the goal; they
+      constitute epistemic planning in another form and are not compared here.
+    </p>
+    <p>
+      The runs are also limited by the controller. 7 of the 120
+      runs ended at the time limit with the carrier stalled at the east baffle,
+      in or just past the pocket, 0.6&#8202;m wide, between the baffle and the
+      corridor wall: 1 of the policy's runs, 0 of the
+      direct carrier's and 6 of the discreet carrier's, which takes
+      that route in every run. These runs count against the goal; the failure
+      lies in the controller and not in the planner.
+    </p>
   </div>
 </section>
 
