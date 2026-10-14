@@ -1,0 +1,34 @@
+(define (action-type-library sightlines)
+
+  ;; A move whose destination its observers may or may not see. Two designated
+  ;; events, one per destination, each with its own effects, and a null event
+  ;; for whoever is not watching. Fully tells the two apart; Partially knows the
+  ;; move happened and not where it went; Oblivious believes nothing happened.
+  ;; Which of the three an agent gets is decided per world by the action's
+  ;; observability conditions, so a watcher posted where the move can be seen
+  ;; is Fully and one posted elsewhere is Oblivious.
+  ;; Variables are ?x and ?y, as in gate.epddl: plank substitutes a library's
+  ;; relation variables as text.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+    :negative-list-formulas
+  )
+
+  (:action-type quasi-private-ontic
+    :events     (?pos ?neg ?nil)
+    :observability-types (Fully Partially Oblivious)
+    :relations  (Fully     (:forall (?x - event) (?x ?x))
+                 Partially (:forall (?x ?y - event |
+                    (imply
+                        (/= ?x ?y)
+                        (and (/= ?x ?nil) (/= ?y ?nil)) ))
+                    (?x ?y) )
+                 Oblivious (:forall (?x - event) (?x ?nil)) )
+    :designated (?pos ?neg)
+    :conditions (?pos (:non-trivial-postconditions)
+                 ?neg (:non-trivial-postconditions)
+                 ?nil (:trivial-event) )
+  )
+)
