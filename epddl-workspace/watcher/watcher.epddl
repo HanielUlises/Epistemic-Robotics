@@ -1,0 +1,172 @@
+;; THE WATCHER. A carrier, an ally that must learn where the load goes, and a
+;; watcher that must not.
+;;
+;; The carrier ?i reads an order naming bay X (west) or bay Y (east). The ally
+;; ?a, in a booth between the bays, has to come to know which. The watcher ?w is
+;; posted on one side of the hall, west or east; it knows which, and nobody else
+;; does. It sees what happens on its own side and nothing on the other.
+;;
+;; There are two ways to tell the ally. Driving into the bay through its gate,
+;; which the booth sees, is the short one; it is on the bay's side. Stopping at
+;; one of the booth's two windows and saying the bay is the other; each window is
+;; on its side. A back route into either bay is seen by nobody. Every way of
+;; telling is on a side, and the watcher may be on it: no sequence of these
+;; actions both informs the ally and keeps the watcher ignorant in all four
+;; worlds. The carrier can peek down the hall and see where the watcher stands.
+;; Nothing in the goal mentions peeking.
+;;
+;; Every event that uses the order asks that the carrier know whether it names
+;; bay X, [Kw. ?i] (dest-x), beside the fact itself: with the fact, that is the
+;; carrier knowing it. It is written so, and not as [?i] (dest-x) in one event
+;; and [?i] (not (dest-x)) in the other, because ePlanSys's executor checks the
+;; modal conjuncts of all of an action's designated events together, as
+;; gate-signal.epddl does the same for the same reason.
+
+(define (domain watcher)
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :negative-preconditions :modal-preconditions :knowing-whether
+    :negative-obs-conditions
+  )
+
+  (:action-type-libraries intermediate sightlines)
+
+  (:predicates
+    (dest-x)                    ; the order names bay X (west); otherwise bay Y (east)
+    (west ?w - agent)           ; the watcher ?w is posted on the west side
+    (carrier ?i - agent)
+    (ally ?a - agent)
+    (watcher ?w - agent)
+    (at-start ?i - agent)
+    (at-win-w ?i - agent)       ; at the booth's west window
+    (at-win-e ?i - agent)
+    (in-x ?i - agent)           ; in bay X, load delivered
+    (in-y ?i - agent)
+  )
+
+  (:event nil)
+
+  ;;--------------------THE CARRIER READS ITS ORDER------------------
+  ;; Everyone sees it read; only the carrier sees what.
+
+  (:event e-order-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (dest-x)))
+  (:event e-order-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (not (dest-x))))
+  (:action read-order
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-order-x ?i) (e-order-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;;--------------------THE CARRIER PEEKS DOWN THE HALL------------------
+  ;; It sees on which side the watcher stands. Everyone sees it peek.
+
+  (:event e-peek-west
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-start ?i) (west ?w)))
+  (:event e-peek-east
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-start ?i) (not (west ?w))))
+  (:action peek
+    :parameters (?i ?w - agent | (/= ?i ?w))
+    :action-type (semi-private-sensing (e-peek-west ?i ?w) (e-peek-east ?i ?w))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;;--------------------THROUGH THE GATE OF ITS BAY------------------
+  ;; The booth sees both gates. The watcher sees the gate on its own side and
+  ;; believes nothing happened when the carrier uses the other.
+
+  (:event e-gate-x
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-start ?i) (dest-x) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-x ?i) (not (at-start ?i))))
+  (:event e-gate-y
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-start ?i) (not (dest-x)) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-y ?i) (not (at-start ?i))))
+  (:action gate
+    :parameters (?i ?a ?w - agent | (and (/= ?i ?a) (/= ?i ?w) (/= ?a ?w)))
+    :action-type (quasi-private-ontic (e-gate-x ?i ?a ?w) (e-gate-y ?i ?a ?w) (nil))
+    :observability-conditions
+      (:and (?i Fully)
+            (?a Fully)
+            (?w (if (or (and (dest-x) (west ?w)) (and (not (dest-x)) (not (west ?w))))
+                    Fully
+                 else Oblivious))
+            (default Oblivious)))
+
+  ;;--------------------TO A WINDOW OF THE BOOTH------------------
+  ;; A short drive in the open. Standing at a window says nothing about the bay.
+
+  (:event e-to-win-w
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i))
+    :effects (:and (at-win-w ?i) (not (at-start ?i))))
+  (:action to-win-w
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-to-win-w ?i))
+    :observability-conditions (default Fully))
+
+  (:event e-to-win-e
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i))
+    :effects (:and (at-win-e ?i) (not (at-start ?i))))
+  (:action to-win-e
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-to-win-e ?i))
+    :observability-conditions (default Fully))
+
+  ;;--------------------TELLING THE ALLY AT A WINDOW------------------
+  ;; The ally hears it. The watcher hears it only from its own side.
+
+  (:event e-say-x-w
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-w ?i) (dest-x) ([Kw. ?i] (dest-x))))
+  (:event e-say-y-w
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-w ?i) (not (dest-x)) ([Kw. ?i] (dest-x))))
+  (:event e-say-x-e
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-e ?i) (dest-x) ([Kw. ?i] (dest-x))))
+  (:event e-say-y-e
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-e ?i) (not (dest-x)) ([Kw. ?i] (dest-x))))
+
+  (:action say-w
+    :parameters (?i ?a ?w - agent | (and (/= ?i ?a) (/= ?i ?w) (/= ?a ?w)))
+    :action-type (quasi-private-sensing (e-say-x-w ?i ?a ?w) (e-say-y-w ?i ?a ?w) (nil))
+    :observability-conditions
+      (:and (?i Fully)
+            (?a Fully)
+            (?w (if (west ?w) Fully else Oblivious))
+            (default Oblivious)))
+
+  (:action say-e
+    :parameters (?i ?a ?w - agent | (and (/= ?i ?a) (/= ?i ?w) (/= ?a ?w)))
+    :action-type (quasi-private-sensing (e-say-x-e ?i ?a ?w) (e-say-y-e ?i ?a ?w) (nil))
+    :observability-conditions
+      (:and (?i Fully)
+            (?a Fully)
+            (?w (if (not (west ?w)) Fully else Oblivious))
+            (default Oblivious)))
+
+  ;;--------------------THE BACK ROUTE------------------
+  ;; From a window into the bay of the order, seen by nobody. The others know
+  ;; the carrier has gone, not where.
+
+  (:event e-back-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (or (at-win-w ?i) (at-win-e ?i)) (dest-x) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-x ?i) (not (at-win-w ?i)) (not (at-win-e ?i))))
+  (:event e-back-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (or (at-win-w ?i) (at-win-e ?i)) (not (dest-x)) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-y ?i) (not (at-win-w ?i)) (not (at-win-e ?i))))
+  (:action back
+    :parameters (?i - agent)
+    :action-type (quasi-private-ontic (e-back-x ?i) (e-back-y ?i) (nil))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+)
