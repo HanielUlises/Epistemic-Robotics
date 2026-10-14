@@ -1,0 +1,54 @@
+{
+ "read-order_r1": {
+  "action": "(read_order r1)",
+  "duration": 10.0
+ },
+ "peek_r1_r3": {
+  "action": "(read_post r1)",
+  "duration": 10.0
+ },
+ "look-w_r1_r3": {
+  "action": "(look r1)",
+  "duration": 10.0
+ },
+ "look-e_r1_r3": {
+  "action": "(look r1)",
+  "duration": 10.0
+ },
+ "say-w_r1_r2_r3": {
+  "action": "(signal r1)",
+  "duration": 10.0
+ },
+ "say-e_r1_r2_r3": {
+  "action": "(signal r1)",
+  "duration": 10.0
+ },
+ "gate-x_r1_r2_r3": {
+  "action": "(gate_in r1)",
+  "duration": 10.0
+ },
+ "gate-y_r1_r2_r3": {
+  "action": "(gate_in r1)",
+  "duration": 10.0
+ },
+ "back_r1": {
+  "action": "(back_route r1)",
+  "duration": 10.0
+ },
+ "to-win-w_r1_r3": {
+  "action": "(drive_win_w r1)",
+  "duration": 10.0
+ },
+ "to-win-e_r1_r3": {
+  "action": "(drive_win_e r1)",
+  "duration": 10.0
+ },
+ "to-ga-w_r1_r3": {
+  "action": "(drive_ga_w r1)",
+  "duration": 10.0
+ },
+ "to-ga-e_r1_r3": {
+  "action": "(drive_ga_e r1)",
+  "duration": 10.0
+ }
+}

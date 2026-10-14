@@ -1,0 +1,154 @@
+;; THE WATCHER THAT MOVES, with 1 change of post. Written by make_domain.py.
+;; See the docstring there for the hall, the actions and what each agent observes.
+
+(define (domain watcher-mobile)
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :negative-preconditions :modal-preconditions :knowing-whether
+    :negative-obs-conditions
+  )
+
+  (:action-type-libraries intermediate sightlines-mobile)
+
+  (:predicates
+    (dest-x)
+    (west ?w - agent)
+    (m1 ?w - agent)
+    (carrier ?i - agent)
+    (ally ?a - agent)
+    (watcher ?w - agent)
+    (at-start ?i - agent)
+    (at-win-w ?i - agent)
+    (at-win-e ?i - agent)
+    (in-x ?i - agent)
+    (in-y ?i - agent)
+  )
+
+  (:event nil)
+
+  ;;--------------------THE BOARDS: THE OTHERS KNOW THEY WERE READ, NOT WHAT------------------
+
+  (:event e-order-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (dest-x)))
+  (:event e-order-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (at-start ?i) (not (dest-x))))
+  (:action read-order
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-order-x ?i) (e-order-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  (:event e-peek-west
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-start ?i) (west ?w)))
+  (:event e-peek-east
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-start ?i) (not (west ?w))))
+  (:action peek
+    :parameters (?i ?w - agent | (/= ?i ?w))
+    :action-type (semi-private-sensing (e-peek-west ?i ?w) (e-peek-east ?i ?w))
+    :observability-conditions (:and (?i Fully) (default Partially)))
+
+  ;;--------------------DRIVE TO WIN-W------------------
+  (:event e-to-win-w-stay
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (or (at-start ?i) (at-win-e ?i)))
+    :effects (:and (at-win-w ?i) (not (at-start ?i)) (not (at-win-e ?i))))
+  (:event e-to-win-w-go-w-1
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (or (at-start ?i) (at-win-e ?i)) (m1 ?w) (not (west ?w)))
+    :effects (:and (at-win-w ?i) (not (at-start ?i)) (not (at-win-e ?i)) (west ?w) (not (m1 ?w))))
+  (:event e-to-win-w-go-e-1
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (or (at-start ?i) (at-win-e ?i)) (m1 ?w) (west ?w))
+    :effects (:and (at-win-w ?i) (not (at-start ?i)) (not (at-win-e ?i)) (not (west ?w)) (not (m1 ?w))))
+  (:action to-win-w
+    :parameters (?i ?w - agent | (/= ?i ?w))
+    :action-type (drive-while-watched-3 (e-to-win-w-stay ?i ?w) (e-to-win-w-go-w-1 ?i ?w) (e-to-win-w-go-e-1 ?i ?w))
+    :observability-conditions (:and (?w Fully) (default Partially)))
+
+  ;;--------------------DRIVE TO WIN-E------------------
+  (:event e-to-win-e-stay
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (or (at-start ?i) (at-win-w ?i)))
+    :effects (:and (at-win-e ?i) (not (at-start ?i)) (not (at-win-w ?i))))
+  (:event e-to-win-e-go-w-1
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (or (at-start ?i) (at-win-w ?i)) (m1 ?w) (not (west ?w)))
+    :effects (:and (at-win-e ?i) (not (at-start ?i)) (not (at-win-w ?i)) (west ?w) (not (m1 ?w))))
+  (:event e-to-win-e-go-e-1
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (or (at-start ?i) (at-win-w ?i)) (m1 ?w) (west ?w))
+    :effects (:and (at-win-e ?i) (not (at-start ?i)) (not (at-win-w ?i)) (not (west ?w)) (not (m1 ?w))))
+  (:action to-win-e
+    :parameters (?i ?w - agent | (/= ?i ?w))
+    :action-type (drive-while-watched-3 (e-to-win-e-stay ?i ?w) (e-to-win-e-go-w-1 ?i ?w) (e-to-win-e-go-e-1 ?i ?w))
+    :observability-conditions (:and (?w Fully) (default Partially)))
+
+  ;;--------------------LOOKING DOWN THE WEST HALL------------------
+
+  (:event e-look-w-here
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-win-w ?i) (west ?w)))
+  (:event e-look-w-clear
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-win-w ?i) (not (west ?w))))
+  (:action look-w
+    :parameters (?i ?w - agent | (/= ?i ?w))
+    :action-type (private-sensing (e-look-w-here ?i ?w) (e-look-w-clear ?i ?w) (nil))
+    :observability-conditions (:and (?i Fully) (default Oblivious)))
+
+  ;;--------------------LOOKING DOWN THE EAST HALL------------------
+
+  (:event e-look-e-here
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-win-e ?i) (not (west ?w))))
+  (:event e-look-e-clear
+    :parameters (?i ?w - agent)
+    :precondition (and (carrier ?i) (watcher ?w) (at-win-e ?i) (west ?w)))
+  (:action look-e
+    :parameters (?i ?w - agent | (/= ?i ?w))
+    :action-type (private-sensing (e-look-e-here ?i ?w) (e-look-e-clear ?i ?w) (nil))
+    :observability-conditions (:and (?i Fully) (default Oblivious)))
+
+  (:event e-say-x-w
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-w ?i) (dest-x) ([Kw. ?i] (dest-x))))
+  (:event e-say-y-w
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-w ?i) (not (dest-x)) ([Kw. ?i] (dest-x))))
+  (:action say-w
+    :parameters (?i ?a ?w - agent | (and (/= ?i ?a) (/= ?i ?w) (/= ?a ?w)))
+    :action-type (quasi-private-sensing (e-say-x-w ?i ?a ?w) (e-say-y-w ?i ?a ?w) (nil))
+    :observability-conditions
+      (:and (?i Fully) (?a Fully) (?w (if (west ?w) Fully else Oblivious)) (default Oblivious)))
+
+  (:event e-say-x-e
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-e ?i) (dest-x) ([Kw. ?i] (dest-x))))
+  (:event e-say-y-e
+    :parameters (?i ?a ?w - agent)
+    :precondition (and (carrier ?i) (ally ?a) (watcher ?w) (at-win-e ?i) (not (dest-x)) ([Kw. ?i] (dest-x))))
+  (:action say-e
+    :parameters (?i ?a ?w - agent | (and (/= ?i ?a) (/= ?i ?w) (/= ?a ?w)))
+    :action-type (quasi-private-sensing (e-say-x-e ?i ?a ?w) (e-say-y-e ?i ?a ?w) (nil))
+    :observability-conditions
+      (:and (?i Fully) (?a Fully) (?w (if (not (west ?w)) Fully else Oblivious)) (default Oblivious)))
+
+  ;;--------------------THE BACK ROUTE, SEEN BY NOBODY------------------
+
+  (:event e-back-x
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (or (at-win-w ?i) (at-win-e ?i)) (dest-x) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-x ?i) (not (at-win-w ?i)) (not (at-win-e ?i))))
+  (:event e-back-y
+    :parameters (?i - agent)
+    :precondition (and (carrier ?i) (or (at-win-w ?i) (at-win-e ?i)) (not (dest-x)) ([Kw. ?i] (dest-x)))
+    :effects (:and (in-y ?i) (not (at-win-w ?i)) (not (at-win-e ?i))))
+  (:action back
+    :parameters (?i - agent)
+    :action-type (quasi-private-ontic (e-back-x ?i) (e-back-y ?i) (nil))
+    :observability-conditions (:and (?i Fully) (default Oblivious)))
+)
