@@ -1,0 +1,33 @@
+;; r1 holds an order for bay X or bay Y; r2 waits at its station.
+(define (problem gate-signal-1)
+  (:domain gate-signal)
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+  (:agents r1 r2)
+  (:init
+    (:and
+      ([C. All] (carrier r1))
+      ([C. All] (not (carrier r2)))
+      ([C. All] (at-start r1))
+      ([C. All] (at-station r2))
+      ([C. All] (not (at-start r2)))
+      ([C. All] (not (at-station r1)))
+      ([C. All] (not (at-gate-x r1)))
+      ([C. All] (not (at-gate-y r1)))
+      ([C. All] (not (at-gate-x r2)))
+      ([C. All] (not (at-gate-y r2)))
+      ([C. All] (not (in-x r1)))
+      ([C. All] (not (in-y r1)))
+      ([C. All] (not (in-x r2)))
+      ([C. All] (not (in-y r2)))
+      ([C. All] (not (delivered r1)))
+      ([C. All] (not (delivered r2)))
+      ([C. All] (<Kw. r1> (dest-x)))
+      ([C. All] (<Kw. r2> (dest-x)))
+    )
+  )
+  (:goal (and (delivered r1) (delivered r2)))
+)

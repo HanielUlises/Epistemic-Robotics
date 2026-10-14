@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>gate_signal_demo</name>
+  <version>0.1.0</version>
+  <description>
+    Two robots without a radio. r1 is told privately which of two bays its
+    load goes to; r2 must take its own load to the other bay, and from its
+    booth it sees only two gates. The epistemic policy sends r1 through its
+    bay's gate, a longer route, so that r2 learns the order by watching; the
+    classical plans of each robot, made alone, never do.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Ulises</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_epistemic_executor</depend>
+  <depend>plansys2_msgs</depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>turtlebot3_description</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
