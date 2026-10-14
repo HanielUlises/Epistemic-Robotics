@@ -1,7 +1,15 @@
 ;; THE WATCHER, DECLARED BY THE SIGHTLINES. watcher.epddl with every
-;; observability condition set to what tools/check_views.py finds: the boards
-;; and the back route are seen by nobody, the drive to a window only from that
-;; side. Used to check opacity against a watcher that knows the policy.
+;; observability condition set to what tools/check_views.py finds: what the
+;; boards say is seen by nobody but the carrier, the back route by nobody, the
+;; drive to a window only from that side. Used to check opacity against a
+;; watcher that knows the policy.
+;;
+;; The reading of the boards stays semi-private, as in watcher.epddl: the others
+;; know the carrier read them, not what. Declared oblivious, the ally would
+;; believe the carrier had read nothing, and the lamp, whose events ask that the
+;; carrier know the order, would be an event the ally held impossible: its
+;; beliefs would collapse, and Kw r2 dest-x would hold only vacuously. Planned
+;; with --consistent-beliefs, which refuses such states, that is caught.
 
 ;; THE WATCHER. A carrier, an ally that must learn where the load goes, and a
 ;; watcher that must not.
@@ -63,8 +71,8 @@
     :precondition (and (carrier ?i) (at-start ?i) (not (dest-x))))
   (:action read-order
     :parameters (?i - agent)
-    :action-type (private-sensing (e-order-x ?i) (e-order-y ?i) (nil))
-    :observability-conditions (:and (?i Fully) (default Oblivious)))
+    :action-type (semi-private-sensing (e-order-x ?i) (e-order-y ?i))
+    :observability-conditions (:and (?i Fully) (default Partially)))
 
   ;;--------------------THE CARRIER PEEKS DOWN THE HALL------------------
   ;; It sees on which side the watcher stands. Everyone sees it peek.
@@ -77,8 +85,8 @@
     :precondition (and (carrier ?i) (watcher ?w) (at-start ?i) (not (west ?w))))
   (:action peek
     :parameters (?i ?w - agent | (/= ?i ?w))
-    :action-type (private-sensing (e-peek-west ?i ?w) (e-peek-east ?i ?w) (nil))
-    :observability-conditions (:and (?i Fully) (default Oblivious)))
+    :action-type (semi-private-sensing (e-peek-west ?i ?w) (e-peek-east ?i ?w))
+    :observability-conditions (:and (?i Fully) (default Partially)))
 
   ;;--------------------THROUGH THE GATE OF ITS BAY------------------
   ;; The booth sees both gates. The watcher sees the gate on its own side and

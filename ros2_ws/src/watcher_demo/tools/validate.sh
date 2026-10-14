@@ -41,7 +41,7 @@ python3 "$HERE/check_views.py" | tail -1
 echo "== 2. the policy"
 "$PLANK" export -d "$EPDDL/watcher.epddl" -p "$EPDDL/instances/problem_1.epddl" -l "$LIB" "$EPDDL/sightlines.epddl" \
   -o "$OUT" > /dev/null
-"$PLANNER" --task "$OUT/problem_1.json" --plan "$OUT/plan.json" --conditional --timeout 60 2>&1 \
+"$PLANNER" --task "$OUT/problem_1.json" --plan "$OUT/plan.json" --conditional --consistent-beliefs --timeout 60 2>&1 \
   | grep -E 'Loaded|Solution|leaves'
 
 echo "== 3. one sequence for all four worlds"
@@ -96,7 +96,7 @@ echo "  -- as declared"
 python3 "$HERE/opacity.py" "$OUT/problem_1.json" "$OUT/plan.json" --agent r3 --secret dest-x | tail -2 || true
 "$PLANK" export -d "$EPDDL/watcher-sightlines.epddl" -p "$EPDDL/instances/problem_sightlines.epddl" -l "$LIB" \
   "$EPDDL/sightlines.epddl" -o "$OUT/sl" > /dev/null
-"$PLANNER" --task "$OUT/sl/problem_sightlines.json" --plan "$OUT/sl/plan.json" --conditional --timeout 60 2>&1 \
+"$PLANNER" --task "$OUT/sl/problem_sightlines.json" --plan "$OUT/sl/plan.json" --conditional --consistent-beliefs --timeout 60 2>&1 \
   | grep -E 'Solution'
 echo "  -- declared by the sightlines"
 python3 "$HERE/opacity.py" "$OUT/sl/problem_sightlines.json" "$OUT/sl/plan.json" --agent r3 --secret dest-x | tail -1
