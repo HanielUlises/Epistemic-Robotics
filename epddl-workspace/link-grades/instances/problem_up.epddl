@@ -1,0 +1,31 @@
+(define (problem link-grades-up)
+
+  ;; Two robots at the dock. It is common knowledge that neither is at the
+  ;; junction and that neither knows whether the corridor is blocked. Both
+  ;; must come to know whether it is.
+
+  (:domain link-grades)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models
+  )
+
+  (:agents r1 r2)
+
+  (:init
+    (:and
+      (:forall (?i - agent) ([C. All] (not (at-junction ?i))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (blocked))))
+      ([C. All] (link-up))
+    )
+  )
+
+  (:goal
+    (and
+      ([Kw. r1] (blocked))
+      ([Kw. r2] (blocked))
+    )
+  )
+)
