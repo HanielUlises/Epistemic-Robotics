@@ -1,0 +1,54 @@
+{
+ "goto-e_s1": {
+  "action": "(goto_e s1)",
+  "duration": 48.0
+ },
+ "inspect-e_s1": {
+  "action": "(inspect_e s1)",
+  "duration": 5.0
+ },
+ "goto-w_s2": {
+  "action": "(goto_w s2)",
+  "duration": 48.0
+ },
+ "inspect-w_s2": {
+  "action": "(inspect_w s2)",
+  "duration": 5.0
+ },
+ "tell-w_s1": {
+  "action": "(tell_w s1)",
+  "duration": 2.0
+ },
+ "tell-w_s2": {
+  "action": "(tell_w s2)",
+  "duration": 2.0
+ },
+ "cross-w_m": {
+  "action": "(cross_w m)",
+  "duration": 144.0
+ },
+ "tell-m_s1": {
+  "action": "(tell_m s1)",
+  "duration": 2.0
+ },
+ "tell-m_s2": {
+  "action": "(tell_m s2)",
+  "duration": 2.0
+ },
+ "cross-m_m": {
+  "action": "(cross_m m)",
+  "duration": 197.0
+ },
+ "tell-e_s1": {
+  "action": "(tell_e s1)",
+  "duration": 2.0
+ },
+ "tell-e_s2": {
+  "action": "(tell_e s2)",
+  "duration": 2.0
+ },
+ "cross-e_m": {
+  "action": "(cross_e m)",
+  "duration": 144.0
+ }
+}

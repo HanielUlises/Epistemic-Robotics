@@ -1,0 +1,43 @@
+(define (problem collapsed-wing-1)
+
+  ;; The medic in the entrance hall, s1 at the east entrance, s2 at the west.
+  ;; Each way into the north wing is clear or blocked, at least one is clear,
+  ;; and nobody knows which: seven worlds, all designated. Every robot knows
+  ;; the others' roles and positions.
+
+  (:domain collapsed-wing)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models
+  )
+
+  (:agents s1 s2 m)
+
+  (:init
+    (:and
+      ([C. All] (scout s1))
+      ([C. All] (scout s2))
+      ([C. All] (not (scout m)))
+      ([C. All] (medic m))
+      ([C. All] (east-side s1))
+      ([C. All] (not (west-side s1)))
+      ([C. All] (west-side s2))
+      ([C. All] (not (east-side s2)))
+      ([C. All] (not (east-side m)))
+      ([C. All] (not (west-side m)))
+      ([C. All] (not (medic s1)))
+      ([C. All] (not (medic s2)))
+      (:forall (?i - agent) ([C. All] (not (with-victim ?i))))
+      (:forall (?i - agent) ([C. All] (not (at-w ?i))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (clear-w))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (clear-m))))
+      (:forall (?i - agent) ([C. All] (not (at-e ?i))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (clear-e))))
+      ([C. All] (or (clear-w) (clear-m) (clear-e)))
+    )
+  )
+
+  (:goal (with-victim m))
+)
