@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The twenty-seven domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The twenty-eight domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -547,6 +547,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="watcher.html">&#183; The watcher<span class="sub">Knowledge that must not spread: told to one robot, hidden from another</span></a>
           <a href="watcher_moves.html">&#183; The watcher that moves<span class="sub">Subjective branching, and a secret from a watcher that knows the plan</span></a>
           <a href="link_grades.html">&#183; Link grades<span class="sub">Epistemic and classical planning over a link that is never, partly or always down</span></a>
+          <a href="collapsed_wing.html">&#183; The collapsed wing<span class="sub">SLAM, knowledge preconditions, and a way known clear by elimination</span></a>
             </div>
           </details>
             </div>
@@ -598,6 +599,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="watcher.pdf">The Watcher<span class="sub">A negative knowledge goal, conditional observability, and no conformant plan</span></a>
           <a href="watcher_moves.pdf">The Watcher That Moves<span class="sub">Policies a robot can follow, and opacity against a policy-aware watcher</span></a>
           <a href="link_grades.pdf">Link Grades<span class="sub">Worst-case conditional planning, lossy messages, and success measured on the maps</span></a>
+          <a href="collapsed_wing.pdf">The Collapsed Wing<span class="sub">Knowledge preconditions over SLAM maps, and knowledge by elimination</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -1158,6 +1160,21 @@ sup.cite a:hover{text-decoration:underline}
           <div class="facts">
             <span>domain: <a href="domain_entries.html#d-link-grades">link-grades</a></span><span>lossy message</span>
             <span>60 of 60 backed with the link unknown &#183; 40 reports unbacked</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard" id="collapsed-wing">
+        <div class="shot"><img src="media/thumbs/collapsed_wing.jpg"
+          alt="Gazebo over the collapsed building as the medic crosses into the north wing" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="collapsed_wing.html">The collapsed wing</a></h5>
+          <p>
+            Three robots in a building nobody has mapped, each building its own map with SLAM. The medic crosses into the north wing only by a way it knows to be clear; when both doorways prove blocked, a scout announces the middle passage clear without anyone having seen it. The policy reached the victim in all 21 runs with no dead end; a classical medic assuming every way clear entered 12 blocked ways, and a classical plan gating the crossing on a check had no plan in 3.
+          </p>
+          <div class="facts">
+            <span>domain: <a href="domain_entries.html#d-collapsed-wing">collapsed-wing</a></span><span>knowledge preconditions &#183; SLAM</span>
+            <span>21 of 21 reached, no dead end &#183; the passage known by elimination</span>
           </div>
         </div>
       </div>

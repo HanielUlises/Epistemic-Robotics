@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The twenty-seven domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The twenty-seven planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The twenty-eight domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The twenty-eight planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The twenty-seven domains">
-<meta property="og:description" content="The twenty-seven planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The twenty-eight domains">
+<meta property="og:description" content="The twenty-eight planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The twenty-seven domains">
-<meta name="twitter:description" content="The twenty-seven planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The twenty-eight domains">
+<meta name="twitter:description" content="The twenty-eight planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The twenty-seven domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The twenty-eight domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -604,6 +604,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="watcher.html">&#183; The watcher<span class="sub">Knowledge that must not spread: told to one robot, hidden from another</span></a>
           <a href="watcher_moves.html">&#183; The watcher that moves<span class="sub">Subjective branching, and a secret from a watcher that knows the plan</span></a>
           <a href="link_grades.html">&#183; Link grades<span class="sub">Epistemic and classical planning over a link that is never, partly or always down</span></a>
+          <a href="collapsed_wing.html">&#183; The collapsed wing<span class="sub">SLAM, knowledge preconditions, and a way known clear by elimination</span></a>
             </div>
           </details>
             </div>
@@ -655,6 +656,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="watcher.pdf">The Watcher<span class="sub">A negative knowledge goal, conditional observability, and no conformant plan</span></a>
           <a href="watcher_moves.pdf">The Watcher That Moves<span class="sub">Policies a robot can follow, and opacity against a policy-aware watcher</span></a>
           <a href="link_grades.pdf">Link Grades<span class="sub">Worst-case conditional planning, lossy messages, and success measured on the maps</span></a>
+          <a href="collapsed_wing.pdf">The Collapsed Wing<span class="sub">Knowledge preconditions over SLAM maps, and knowledge by elimination</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -680,8 +682,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 27 domains</p>
-    <h2>The twenty-seven domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 28 domains</p>
+    <h2>The twenty-eight domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1192,6 +1194,34 @@ goal:    Kw_r1 blocked-z</pre>
 
 (:goal (and ([Kw. r1] (blocked))
             ([Kw. r2] (blocked))))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-collapsed-wing">
+      <div class="dom-h">
+        <h4>collapsed-wing</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>s1</i> and <i>s2</i>, the scouts, and <i>m</i>, the medic</dd>
+        <dt>Objects</dt><dd><code>&#8211;</code>; whether each of the three ways is clear is an atom</dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 7\), \(|W_d| = 7\) &#183; declared frame S5; each way clear or blocked, at least one clear as common knowledge, nobody knowing which</dd>
+        <dt>Grounded</dt><dd>24 atoms, 30 ground actions; the goal \(\mathit{with\text{-}victim}(m)\) is a fact, and every crossing requires \(K_m\,\mathit{clear}\) of its way</dd>
+        <dt>Solved</dt><dd>depth 7, 424 expansions, 3 leaves, by AO*: both scouts out at once, the east doorway looked at first, the west next, and the middle passage, which no action looks at, announced clear by elimination</dd>
+        <dt>Stated in</dt><dd><a href="collapsed_wing.html">The collapsed wing</a> &#183; <a href="collapsed_wing.pdf">the report</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (clear-w) (clear-m) (clear-e)  ; each way into the north wing is free of rubble
+    (at-w ?i - agent)               ; ?i stands where the west doorway can be seen
+    (at-e ?i - agent)
+    (scout ?i - agent) (medic ?i - agent)
+    (east-side ?i - agent) (west-side ?i - agent)
+    (with-victim ?i - agent)
+  )
+
+(:goal (with-victim m))
+;; and every crossing, e.g. cross-m: ([?i] (clear-m))</pre>
       </details>
     </article>
     </div>
