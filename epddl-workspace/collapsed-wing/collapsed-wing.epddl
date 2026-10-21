@@ -1,0 +1,193 @@
+;; THE COLLAPSED WING. Three robots enter a building nobody has mapped: two
+;; scouts and a medic. A victim lies in the north wing, which the south half of
+;; the building reaches through three doorways, west, middle and east. Rubble
+;; may block any of them, and at least one is clear. Nobody knows which.
+;;
+;; A scout standing at a doorway can decide it with its own laser, on its own
+;; map; the other robots see it look and not what it saw. A scout can then say
+;; over the radio what it found, which every robot hears. The medic crosses
+;; into the north wing only through a doorway it knows to be clear: the
+;; precondition of each crossing is the medic's knowledge, not the doorway's
+;; state. So the medic cannot move until a scout has looked and spoken, and
+;; the plan must decide which doorway to look at first and what to do if it
+;; is blocked.
+;;
+;; The radio message has two events, one per answer, and each asks that the
+;; speaker know whether the doorway is clear beside its own fact: ePlanSys's
+;; executor checks the modal conjuncts of all of an action's events together
+;; (see the watcher's page), and the shared [Kw.] part satisfies it in both.
+
+(define (domain collapsed-wing)
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:predicates
+    (clear-w)                ; the west doorway is free of rubble
+    (clear-m)                ; the middle passage is free of rubble
+    (clear-e)                ; the east doorway is free of rubble
+    (at-w ?i - agent)        ; ?i stands where the west doorway can be seen
+    (at-e ?i - agent)        ; ?i stands where the east doorway can be seen
+    (scout ?i - agent)
+    (east-side ?i - agent)     ; ?i came in by the east entrance: it reaches the east doorway
+    (west-side ?i - agent)     ; ?i came in by the west entrance: it reaches the west doorway
+    (medic ?i - agent)
+    (with-victim ?i - agent)   ; ?i has reached the victim
+  )
+
+  (:event nil)
+
+  ;;--------------------THE WEST DOORWAY------------------
+
+  (:event e-goto-w
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (west-side ?i) (not (at-w ?i)))
+    :effects (:and (at-w ?i) (not (at-e ?i)))
+  )
+
+  (:action goto-w
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-w ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-inspect-w-clear
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (at-w ?i) (clear-w))
+  )
+
+  (:event e-inspect-w-blocked
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (at-w ?i) (not (clear-w)))
+  )
+
+  (:action inspect-w
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-inspect-w-clear ?i) (e-inspect-w-blocked ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  (:event e-tell-w-clear
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (clear-w) ([Kw. ?i] (clear-w)))
+  )
+
+  (:event e-tell-w-blocked
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (not (clear-w)) ([Kw. ?i] (clear-w)))
+  )
+
+  (:action tell-w
+    :parameters (?i - agent)
+    :action-type (public-sensing (e-tell-w-clear ?i) (e-tell-w-blocked ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-w
+    :parameters (?i - agent)
+    :precondition (and (medic ?i) (not (with-victim ?i)) ([?i] (clear-w)))
+    :effects (with-victim ?i)
+  )
+
+  (:action cross-w
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-cross-w ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;;--------------------THE MIDDLE PASSAGE------------------
+  ;;
+  ;; It winds, so no spot sees the whole of it, and no scout is sent to look:
+  ;; whether it is clear can only be known by elimination, from the other two.
+
+  (:event e-tell-m-clear
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (clear-m) ([Kw. ?i] (clear-m)))
+  )
+
+  (:event e-tell-m-blocked
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (not (clear-m)) ([Kw. ?i] (clear-m)))
+  )
+
+  (:action tell-m
+    :parameters (?i - agent)
+    :action-type (public-sensing (e-tell-m-clear ?i) (e-tell-m-blocked ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-m
+    :parameters (?i - agent)
+    :precondition (and (medic ?i) (not (with-victim ?i)) ([?i] (clear-m)))
+    :effects (with-victim ?i)
+  )
+
+  (:action cross-m
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-cross-m ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;;--------------------THE EAST DOORWAY------------------
+
+  (:event e-goto-e
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (east-side ?i) (not (at-e ?i)))
+    :effects (:and (at-e ?i) (not (at-w ?i)))
+  )
+
+  (:action goto-e
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-e ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-inspect-e-clear
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (at-e ?i) (clear-e))
+  )
+
+  (:event e-inspect-e-blocked
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (at-e ?i) (not (clear-e)))
+  )
+
+  (:action inspect-e
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-inspect-e-clear ?i) (e-inspect-e-blocked ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  (:event e-tell-e-clear
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (clear-e) ([Kw. ?i] (clear-e)))
+  )
+
+  (:event e-tell-e-blocked
+    :parameters (?i - agent)
+    :precondition (and (scout ?i) (not (clear-e)) ([Kw. ?i] (clear-e)))
+  )
+
+  (:action tell-e
+    :parameters (?i - agent)
+    :action-type (public-sensing (e-tell-e-clear ?i) (e-tell-e-blocked ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-e
+    :parameters (?i - agent)
+    :precondition (and (medic ?i) (not (with-victim ?i)) ([?i] (clear-e)))
+    :effects (with-victim ?i)
+  )
+
+  (:action cross-e
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-cross-e ?i))
+    :observability-conditions (default Fully)
+  )
+)
