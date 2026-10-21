@@ -1,0 +1,23 @@
+(define (action-type-library link)
+
+  ;; A message over a link that may be down, with an acknowledgement that
+  ;; travels the same link: delivered with one value, delivered with the
+  ;; other, or lost. Sender and receiver both observe which (Fully): the
+  ;; receiver because the message arrives or not, the sender because the
+  ;; acknowledgement does. The link drops both directions together.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+  )
+
+  (:action-type lossy-message
+    :events     (?pos ?neg ?lost)
+    :observability-types (Fully)
+    :relations  (Fully (:forall (?x - event) (?x ?x)))
+    :designated (?pos ?neg ?lost)
+    :conditions (?pos (:trivial-postconditions)
+                 ?neg (:trivial-postconditions)
+                 ?lost (:trivial-postconditions))
+  )
+)

@@ -1,0 +1,32 @@
+(define (problem link-grades-open)
+
+  ;; Two robots at their starts. It is common knowledge that neither is at
+  ;; the junction, that neither knows whether the corridor is blocked, and
+  ;; that neither knows whether the link is up. Both must come to know whether
+  ;; the corridor is blocked.
+
+  (:domain link-grades)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models
+  )
+
+  (:agents r1 r2)
+
+  (:init
+    (:and
+      (:forall (?i - agent) ([C. All] (not (at-junction ?i))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (blocked))))
+      (:forall (?i - agent) ([C. All] (<Kw. ?i> (link-up))))
+    )
+  )
+
+  (:goal
+    (and
+      ([Kw. r1] (blocked))
+      ([Kw. r2] (blocked))
+    )
+  )
+)

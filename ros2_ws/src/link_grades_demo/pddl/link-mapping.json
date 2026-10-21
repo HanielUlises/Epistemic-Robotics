@@ -1,0 +1,26 @@
+{
+ "goto-junction_r1": {
+  "action": "(drive_dock r1)",
+  "duration": 39.0
+ },
+ "goto-junction_r2": {
+  "action": "(drive_station r2)",
+  "duration": 82.0
+ },
+ "inspect_r1": {
+  "action": "(inspect r1)",
+  "duration": 5.0
+ },
+ "inspect_r2": {
+  "action": "(inspect r2)",
+  "duration": 5.0
+ },
+ "share_r1_r2": {
+  "action": "(share r1 r2)",
+  "duration": 5.0
+ },
+ "share_r2_r1": {
+  "action": "(share r2 r1)",
+  "duration": 5.0
+ }
+}

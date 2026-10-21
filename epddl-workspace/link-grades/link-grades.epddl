@@ -1,0 +1,91 @@
+(define (domain link-grades)
+
+  ;; The corridor of the thesis's link-grade comparison, on a link that may
+  ;; fall. Two robots at a dock; a corridor that may be blocked, which only a
+  ;; robot at the junction can decide with its laser; both must come to know
+  ;; whether it is. What one robot's map holds reaches the other only over the
+  ;; link, and a message sent over it is delivered or lost.
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :group-modalities
+    :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate link)
+
+  (:predicates
+    (blocked)
+    (at-junction ?i - agent)
+    (link-up)                    ; the link between the robots carries messages
+  )
+
+  (:event nil)
+
+  (:event e-goto-junction
+    :parameters (?i - agent)
+    :precondition (not (at-junction ?i))
+    :effects (at-junction ?i)
+  )
+
+  (:action goto-junction
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-junction ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;; The robot at the junction decides the corridor with its own laser. The
+  ;; other sees it look and not what it saw.
+  (:event e-inspect-blocked
+    :parameters (?i - agent)
+    :precondition (and (at-junction ?i) (blocked) (<Kw. ?i> (blocked)))
+  )
+
+  (:event e-inspect-clear
+    :parameters (?i - agent)
+    :precondition (and (at-junction ?i) (not (blocked)) (<Kw. ?i> (blocked)))
+  )
+
+  (:action inspect
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing
+      (e-inspect-blocked ?i)
+      (e-inspect-clear ?i) )
+    :observability-conditions
+      (:and
+        (?i Fully)
+        (default Partially) )
+  )
+
+  ;; ?i sends what its map decides to ?j. Delivered, ?j learns the value;
+  ;; lost, neither learns more than that it was lost.
+  ;;
+  ;; Each delivered event asks that ?i know whether, beside its own fact,
+  ;; which says the same as ?i knowing the fact. ePlanSys's executor checks
+  ;; the modal conjuncts of all of an action's events together, so that an
+  ;; event asking K blocked and another asking K not blocked could never be
+  ;; dispatched (the watcher's page records the defect).
+  (:event e-share-blocked
+    :parameters (?i ?j - agent)
+    :precondition (and (link-up) (blocked) ([Kw. ?i] (blocked)) (<Kw. ?j> (blocked)))
+  )
+
+  (:event e-share-clear
+    :parameters (?i ?j - agent)
+    :precondition (and (link-up) (not (blocked)) ([Kw. ?i] (blocked)) (<Kw. ?j> (blocked)))
+  )
+
+  (:event e-share-lost
+    :parameters (?i ?j - agent)
+    :precondition (and (not (link-up)) ([Kw. ?i] (blocked)) (<Kw. ?j> (blocked)))
+  )
+
+  (:action share
+    :parameters (?i ?j - agent)
+    :action-type (lossy-message
+      (e-share-blocked ?i ?j)
+      (e-share-clear ?i ?j)
+      (e-share-lost ?i ?j) )
+    :observability-conditions (default Fully)
+  )
+)
