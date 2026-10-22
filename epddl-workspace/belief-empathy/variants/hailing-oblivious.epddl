@@ -1,0 +1,38 @@
+(define (action-type-library hailing)
+
+  ;; The hailing library with the observer out of contact made oblivious: from
+  ;; every event it considers only the null one possible, so it believes that
+  ;; nothing happened. This is the reading of Bramblett and Bezzo's update
+  ;; rules, under which "the knowledge of disconnected robots is not
+  ;; affected". It is kept to show what that reading does: a ground vehicle
+  ;; that believes the aerial one never left cannot then hear its hail without
+  ;; believing a contradiction (see the README). It has the library's name so
+  ;; that the domain loads it unchanged.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+    :negative-list-formulas
+  )
+
+  (:action-type unseen-ontic
+    :events     (?pos ?nil)
+    :observability-types (Fully Unsure)
+    :relations  (Fully  (:forall (?x - event) (?x ?x))
+                 Unsure (:forall (?x - event) (?x ?nil)) )
+    :designated (?pos)
+    :conditions (?pos (:non-trivial-postconditions)
+                 ?nil (:trivial-event) )
+  )
+
+  (:action-type hail
+    :events     (?pos ?neg ?nil)
+    :observability-types (Fully Unsure)
+    :relations  (Fully  (:forall (?x - event) (?x ?x))
+                 Unsure (:forall (?x - event) (?x ?nil)) )
+    :designated (?pos ?neg)
+    :conditions (?pos (:non-trivial-postconditions)
+                 ?neg (:non-trivial-postconditions)
+                 ?nil (:trivial-event) )
+  )
+)

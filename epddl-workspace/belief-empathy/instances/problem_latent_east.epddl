@@ -1,0 +1,102 @@
+;; The variant with latent tool faults. The forbidden combinations at the end of the
+;; initial state are every assignment of the four fault variables with more than
+;; two faults or with both tools failed; the twelve left are tools/estimate.py's PATTERNS.
+(define (problem belief-empathy-latent-east)
+
+  ;; The aerial vehicle u has found a task in the east half. Each ground
+  ;; vehicle has had zero, one or two drive faults, and so holds its first,
+  ;; second or third particle, and its tool works or not; at most two faults
+  ;; of either kind, and at least one vehicle's tool works: twelve patterns,
+  ;; all designated. Each ground vehicle knows its own particle; nobody knows
+  ;; whether a tool works, the vehicle included.
+
+  (:domain belief-empathy-latent)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents u g1 g2)
+
+  (:init
+    (:and
+      ([C. All] (uav u))
+      ([C. All] (not (uav g1)))
+      ([C. All] (not (uav g2)))
+      ([C. All] (not (ugv u)))
+      ([C. All] (ugv g1))
+      ([C. All] (ugv g2))
+      ([C. All] (not (west u)))
+      ([C. All] (west g1))
+      ([C. All] (not (west g2)))
+      ([C. All] (free u))
+      ([C. All] (not (free g1)))
+      ([C. All] (not (free g2)))
+      (task)
+      ([C. All] ([Kw. u] (task)))
+      ([C. All] (<Kw. g1> (task)))
+      ([C. All] (<Kw. g2> (task)))
+      ([C. All] (not (done)))
+      (:forall (?i - agent) ([C. All] (not (at-site ?i))))
+      (:forall (?i - agent) ([C. All] (not (by1 ?i))))
+      (:forall (?i - agent) ([C. All] (not (by2 ?i))))
+      (:forall (?i - agent) ([C. All] (not (by3 ?i))))
+      (:forall (?i - agent) ([C. All] (not (passed1 ?i))))
+      (:forall (?i - agent) ([C. All] (not (passed2 ?i))))
+      (:forall (?i - agent) ([C. All] (not (tried ?i))))
+      ([C. All] (not (p1 u)))
+      ([C. All] (not (p2 u)))
+      ([C. All] (not (p3 u)))
+      ([C. All] (tool u))
+      ([C. All] (or (p1 g1) (p2 g1) (p3 g1)))
+      ([C. All] (not (and (p1 g1) (p2 g1))))
+      ([C. All] (not (and (p1 g1) (p3 g1))))
+      ([C. All] (not (and (p2 g1) (p3 g1))))
+      ([C. All] ([Kw. g1] (p1 g1)))
+      ([C. All] ([Kw. g1] (p2 g1)))
+      ([C. All] ([Kw. g1] (p3 g1)))
+      ([C. All] (<Kw. u> (tool g1)))
+      ([C. All] (<Kw. g1> (tool g1)))
+      ([C. All] (<Kw. g2> (tool g1)))
+      ([C. All] (or (p1 g2) (p2 g2) (p3 g2)))
+      ([C. All] (not (and (p1 g2) (p2 g2))))
+      ([C. All] (not (and (p1 g2) (p3 g2))))
+      ([C. All] (not (and (p2 g2) (p3 g2))))
+      ([C. All] ([Kw. g2] (p1 g2)))
+      ([C. All] ([Kw. g2] (p2 g2)))
+      ([C. All] ([Kw. g2] (p3 g2)))
+      ([C. All] (<Kw. u> (tool g2)))
+      ([C. All] (<Kw. g1> (tool g2)))
+      ([C. All] (<Kw. g2> (tool g2)))
+      ;; at most two faults of either kind, and at least one vehicle with a working tool
+      ([C. All] (not (and (p1 g1) (tool g1) (p3 g2) (not (tool g2)))))
+      ([C. All] (not (and (p1 g1) (not (tool g1)) (p1 g2) (not (tool g2)))))
+      ([C. All] (not (and (p1 g1) (not (tool g1)) (p2 g2) (not (tool g2)))))
+      ([C. All] (not (and (p1 g1) (not (tool g1)) (p3 g2) (tool g2))))
+      ([C. All] (not (and (p1 g1) (not (tool g1)) (p3 g2) (not (tool g2)))))
+      ([C. All] (not (and (p2 g1) (tool g1) (p2 g2) (not (tool g2)))))
+      ([C. All] (not (and (p2 g1) (tool g1) (p3 g2) (tool g2))))
+      ([C. All] (not (and (p2 g1) (tool g1) (p3 g2) (not (tool g2)))))
+      ([C. All] (not (and (p2 g1) (not (tool g1)) (p1 g2) (not (tool g2)))))
+      ([C. All] (not (and (p2 g1) (not (tool g1)) (p2 g2) (tool g2))))
+      ([C. All] (not (and (p2 g1) (not (tool g1)) (p2 g2) (not (tool g2)))))
+      ([C. All] (not (and (p2 g1) (not (tool g1)) (p3 g2) (tool g2))))
+      ([C. All] (not (and (p2 g1) (not (tool g1)) (p3 g2) (not (tool g2)))))
+      ([C. All] (not (and (p3 g1) (tool g1) (p1 g2) (not (tool g2)))))
+      ([C. All] (not (and (p3 g1) (tool g1) (p2 g2) (tool g2))))
+      ([C. All] (not (and (p3 g1) (tool g1) (p2 g2) (not (tool g2)))))
+      ([C. All] (not (and (p3 g1) (tool g1) (p3 g2) (tool g2))))
+      ([C. All] (not (and (p3 g1) (tool g1) (p3 g2) (not (tool g2)))))
+      ([C. All] (not (and (p3 g1) (not (tool g1)) (p1 g2) (tool g2))))
+      ([C. All] (not (and (p3 g1) (not (tool g1)) (p1 g2) (not (tool g2)))))
+      ([C. All] (not (and (p3 g1) (not (tool g1)) (p2 g2) (tool g2))))
+      ([C. All] (not (and (p3 g1) (not (tool g1)) (p2 g2) (not (tool g2)))))
+      ([C. All] (not (and (p3 g1) (not (tool g1)) (p3 g2) (tool g2))))
+      ([C. All] (not (and (p3 g1) (not (tool g1)) (p3 g2) (not (tool g2)))))
+    )
+  )
+
+  (:goal (done))
+)

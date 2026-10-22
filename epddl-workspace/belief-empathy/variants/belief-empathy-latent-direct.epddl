@@ -1,0 +1,256 @@
+;; BELIEF AND EMPATHY PARTICLES, WITH LATENT TOOL FAULTS. A variant of
+;; belief-empathy.epddl that the paper's particles cannot represent.
+;;
+;; Everything is as in belief-empathy.epddl but the faults. A drive fault slows
+;; a ground vehicle, which tracks its next particle as before, and no longer
+;; costs it the task: a vehicle on its third particle is slow but able. A tool
+;; fault (a gripper, a sampling probe) leaves speed and particle unchanged and
+;; is known to nobody, the vehicle included, until the vehicle attempts the
+;; task with the aerial vehicle at the site; the attempt then fails. At most
+;; two faults of either kind happen in the team, and at least one ground
+;; vehicle can do the task: twelve fault patterns. Where a vehicle is says
+;; nothing of whether it can do the task, and a hail cannot tell either.
+;;
+;; In this copy the aerial vehicle flies to a vehicle's second or third
+;; particle from wherever it is, the site included, once it has found the
+;; particles before it empty or knows they are, as the kinematic model and
+;; the simulated aerial vehicle do.
+;; The attempt is an action of its own with two outcomes, which the aerial
+;; vehicle and the vehicle observe: done, or failed, after which the vehicle
+;; is known to be unable and the task needs the other.
+
+(define (domain belief-empathy-latent)
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :negative-preconditions :modal-preconditions :knowing-whether
+    :negative-obs-conditions
+  )
+
+  (:action-type-libraries intermediate hailing)
+
+  (:predicates
+    (uav ?i - agent)
+    (ugv ?i - agent)
+    (west ?i - agent)        ; a ground vehicle: it covers the west half; the aerial one: it is there now
+    (task)                   ; a task has been found that needs an aerial and a capable ground vehicle
+    (p1 ?g - agent)          ; ?g has had no fault and tracks its first particle
+    (p2 ?g - agent)          ; one fault: it tracks its second, slower particle
+    (p3 ?g - agent)          ; two drive faults: its third
+    (tool ?g - agent)        ; ?g's tool works; nobody knows whether until it is tried
+    (tried ?g - agent)       ; ?g has attempted the task
+    (free ?u - agent)        ; the aerial vehicle is not holding at a particle
+    (by1 ?g - agent)         ; the aerial vehicle holds at ?g's first particle
+    (by2 ?g - agent)
+    (by3 ?g - agent)
+    (passed1 ?g - agent)     ; the aerial vehicle has hailed at ?g's first particle and found nobody
+    (passed2 ?g - agent)
+    (at-site ?i - agent)     ; ?i is at the task's site
+    (done)                   ; the task has been done
+  )
+
+  (:event nil)
+
+  ;;--------------------THE AERIAL VEHICLE CROSSES------------------
+  ;; Nobody out of contact sees it.
+
+  (:event e-cross-west
+    :parameters (?u - agent)
+    :precondition (and (uav ?u) (free ?u) (not (west ?u)))
+    :effects (:and (west ?u) (not (at-site ?u)))
+  )
+
+  (:action cross-west
+    :parameters (?u - agent)
+    :action-type (unseen-ontic (e-cross-west ?u) (nil))
+    :observability-conditions (:and (?u Fully) (default Unsure))
+  )
+
+  (:event e-cross-east
+    :parameters (?u - agent)
+    :precondition (and (uav ?u) (free ?u) (west ?u))
+    :effects (:and (not (west ?u)) (not (at-site ?u)))
+  )
+
+  (:action cross-east
+    :parameters (?u - agent)
+    :action-type (unseen-ontic (e-cross-east ?u) (nil))
+    :observability-conditions (:and (?u Fully) (default Unsure))
+  )
+
+  ;;--------------------TO A PARTICLE------------------
+  ;; The particles lie in order along the ground vehicle's route, the first
+  ;; furthest along it, and the aerial vehicle comes from ahead of them: it
+  ;; reaches the first directly, in the half the vehicle covers, and the second
+  ;; and third only by following the route back from the one before, where it
+  ;; has hailed and found nobody. Nobody out of contact sees it.
+
+  (:event e-fly-p1
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (ugv ?g) (free ?u)
+                       (or (and (west ?u) (west ?g)) (and (not (west ?u)) (not (west ?g)))))
+    :effects (:and (by1 ?g) (not (free ?u)) (not (at-site ?u)))
+  )
+
+  (:action fly-p1
+    :parameters (?u ?g - agent | (/= ?u ?g))
+    :action-type (unseen-ontic (e-fly-p1 ?u ?g) (nil))
+    :observability-conditions (:and (?u Fully) (default Unsure))
+  )
+
+  (:event e-back-p2
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (ugv ?g) (free ?u)
+                       (or (passed1 ?g) ([?u] (not (p1 ?g))))
+                       (or (and (west ?u) (west ?g)) (and (not (west ?u)) (not (west ?g)))))
+    :effects (:and (by2 ?g) (not (passed1 ?g)) (not (free ?u)) (not (at-site ?u)))
+  )
+
+  (:action back-p2
+    :parameters (?u ?g - agent | (/= ?u ?g))
+    :action-type (unseen-ontic (e-back-p2 ?u ?g) (nil))
+    :observability-conditions (:and (?u Fully) (default Unsure))
+  )
+
+  (:event e-back-p3
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (ugv ?g) (free ?u)
+                       (or (passed2 ?g)
+                           (and (or (passed1 ?g) ([?u] (not (p1 ?g)))) ([?u] (not (p2 ?g)))))
+                       (or (and (west ?u) (west ?g)) (and (not (west ?u)) (not (west ?g)))))
+    :effects (:and (by3 ?g) (not (passed1 ?g)) (not (passed2 ?g)) (not (free ?u)) (not (at-site ?u)))
+  )
+
+  (:action back-p3
+    :parameters (?u ?g - agent | (/= ?u ?g))
+    :action-type (unseen-ontic (e-back-p3 ?u ?g) (nil))
+    :observability-conditions (:and (?u Fully) (default Unsure))
+  )
+
+  ;;--------------------THE HAIL------------------
+  ;; The ground vehicle is there and answers, or it is not. The answer carries
+  ;; the task: the met event requires (task), and a vehicle that observes the
+  ;; event learns it. It is heard by the vehicle hailed only where the vehicle
+  ;; stands at that particle; the other vehicle cannot tell whether anything
+  ;; was said. Found absent, the aerial vehicle may follow the route back to
+  ;; the next particle.
+
+  (:event e-met-1
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (by1 ?g) (p1 ?g) (task))
+    :effects (:and (free ?u) (not (by1 ?g)))
+  )
+
+  (:event e-absent-1
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (by1 ?g) (not (p1 ?g)))
+    :effects (:and (free ?u) (not (by1 ?g)) (passed1 ?g))
+  )
+
+  (:action hail-p1
+    :parameters (?u ?g - agent | (/= ?u ?g))
+    :action-type (hail (e-met-1 ?u ?g) (e-absent-1 ?u ?g) (nil))
+    :observability-conditions
+      (:and (?u Fully)
+            (?g (if (p1 ?g) Fully else Unsure))
+            (default Unsure))
+  )
+
+  (:event e-met-2
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (by2 ?g) (p2 ?g) (task))
+    :effects (:and (free ?u) (not (by2 ?g)))
+  )
+
+  (:event e-absent-2
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (by2 ?g) (not (p2 ?g)))
+    :effects (:and (free ?u) (not (by2 ?g)) (passed2 ?g))
+  )
+
+  (:action hail-p2
+    :parameters (?u ?g - agent | (/= ?u ?g))
+    :action-type (hail (e-met-2 ?u ?g) (e-absent-2 ?u ?g) (nil))
+    :observability-conditions
+      (:and (?u Fully)
+            (?g (if (p2 ?g) Fully else Unsure))
+            (default Unsure))
+  )
+
+  (:event e-met-3
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (by3 ?g) (p3 ?g) (task))
+    :effects (:and (free ?u) (not (by3 ?g)))
+  )
+
+  (:event e-absent-3
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (by3 ?g) (not (p3 ?g)))
+    :effects (:and (free ?u) (not (by3 ?g)))
+  )
+
+  (:action hail-p3
+    :parameters (?u ?g - agent | (/= ?u ?g))
+    :action-type (hail (e-met-3 ?u ?g) (e-absent-3 ?u ?g) (nil))
+    :observability-conditions
+      (:and (?u Fully)
+            (?g (if (p3 ?g) Fully else Unsure))
+            (default Unsure))
+  )
+
+  ;;--------------------TO THE SITE------------------
+  ;; The ground vehicle goes only when it knows there is a task. Whether it can
+  ;; do it is not known to it either. Nobody else sees it go.
+  ;; The action names the vehicle alone: ePlanSys's executor dispatches
+  ;; together consecutive actions whose agents are disjoint, so that the
+  ;; aerial vehicle's flight to the site and this drive run at once.
+
+  (:event e-go-site
+    :parameters (?g - agent)
+    :precondition (and (ugv ?g) (not (at-site ?g)) ([?g] (task)))
+    :effects (at-site ?g)
+  )
+
+  (:action go-site
+    :parameters (?g - agent)
+    :action-type (unseen-ontic (e-go-site ?g) (nil))
+    :observability-conditions (:and (?g Fully) (default Unsure))
+  )
+
+  (:event e-fly-site
+    :parameters (?u - agent)
+    :precondition (and (uav ?u) (free ?u) (not (at-site ?u)))
+    :effects (at-site ?u)
+  )
+
+  (:action fly-site
+    :parameters (?u - agent)
+    :action-type (unseen-ontic (e-fly-site ?u) (nil))
+    :observability-conditions (:and (?u Fully) (default Unsure))
+  )
+
+  ;;--------------------THE ATTEMPT------------------
+  ;; Both at the site, the vehicle not yet tried. The tool works and the task is
+  ;; done, or it does not and the attempt fails. The two observe which; the
+  ;; other ground vehicle cannot tell whether anything happened.
+
+  (:event e-done
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (ugv ?g) (at-site ?u) (at-site ?g) (task) (not (tried ?g)) (not (done))
+                       (tool ?g))
+    :effects (:and (done) (tried ?g))
+  )
+
+  (:event e-fail
+    :parameters (?u ?g - agent)
+    :precondition (and (uav ?u) (ugv ?g) (at-site ?u) (at-site ?g) (task) (not (tried ?g)) (not (done))
+                       (not (tool ?g)))
+    :effects (tried ?g)
+  )
+
+  (:action perform
+    :parameters (?u ?g - agent | (/= ?u ?g))
+    :action-type (hail (e-done ?u ?g) (e-fail ?u ?g) (nil))
+    :observability-conditions (:and (?u Fully) (?g Fully) (default Unsure))
+  )
+)
