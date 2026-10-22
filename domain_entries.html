@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The twenty-eight domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The twenty-eight planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The twenty-nine domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The twenty-nine planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The twenty-eight domains">
-<meta property="og:description" content="The twenty-eight planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The twenty-nine domains">
+<meta property="og:description" content="The twenty-nine planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The twenty-eight domains">
-<meta name="twitter:description" content="The twenty-eight planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The twenty-nine domains">
+<meta name="twitter:description" content="The twenty-nine planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The twenty-eight domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The twenty-nine domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -605,6 +605,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="watcher_moves.html">&#183; The watcher that moves<span class="sub">Subjective branching, and a secret from a watcher that knows the plan</span></a>
           <a href="link_grades.html">&#183; Link grades<span class="sub">Epistemic and classical planning over a link that is never, partly or always down</span></a>
           <a href="collapsed_wing.html">&#183; The collapsed wing<span class="sub">SLAM, knowledge preconditions, and a way known clear by elimination</span></a>
+          <a href="belief_empathy.html">&#183; Belief and empathy particles<span class="sub">Bramblett and Bezzo's heterogeneous team out of contact, recreated on ePlanSys</span></a>
             </div>
           </details>
             </div>
@@ -657,6 +658,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="watcher_moves.pdf">The Watcher That Moves<span class="sub">Policies a robot can follow, and opacity against a policy-aware watcher</span></a>
           <a href="link_grades.pdf">Link Grades<span class="sub">Worst-case conditional planning, lossy messages, and success measured on the maps</span></a>
           <a href="collapsed_wing.pdf">The Collapsed Wing<span class="sub">Knowledge preconditions over SLAM maps, and knowledge by elimination</span></a>
+          <a href="belief_empathy.pdf">Belief and Empathy Particles<span class="sub">A heterogeneous team out of contact as an epistemic planning task, against the paper's methods</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -682,8 +684,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 28 domains</p>
-    <h2>The twenty-eight domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 29 domains</p>
+    <h2>The twenty-nine domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1222,6 +1224,35 @@ goal:    Kw_r1 blocked-z</pre>
 
 (:goal (with-victim m))
 ;; and every crossing, e.g. cross-m: ([?i] (clear-m))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-belief-empathy">
+      <div class="dom-h">
+        <h4>belief-empathy</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd><i>u</i>, the aerial vehicle, and <i>g1</i> and <i>g2</i>, the ground vehicles</dd>
+        <dt>Objects</dt><dd><code>&#8211;</code>; which belief particle each ground vehicle holds is an atom, <code>(p1 ?g)</code> to <code>(p3 ?g)</code></dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">unseen-ontic</span><span class="ty">hail</span>, from a library of its own, whose observers out of contact are unsure of what they do not see</dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 12\), \(|W_d| = 6\) &#183; declared frame S5; the six fault patterns of at most two faults, each with the task present or not; <i>u</i> knows of the task, each ground vehicle only its own particle</dd>
+        <dt>Grounded</dt><dd>41 atoms, 54 ground actions; the goal \(\mathit{done}\) is a fact, the drive to the site requires \(K_g\,\mathit{task}\), and the task a ground vehicle with fewer than two faults</dd>
+        <dt>Solved</dt><dd>depth 10, 5&#8239;848 expansions, by AO* with consistent beliefs: the nearer vehicle hailed at its first and second particles, its third known by elimination and never visited, the other vehicle's soundness known from the fault budget. With observers out of contact oblivious, no policy. With durations, by the page's timed search over the same task: the least expected time over the six patterns, from a skeleton of 234 contracted models, in 0.05&#8202;s</dd>
+        <dt>Stated in</dt><dd><a href="belief_empathy.html">Belief and empathy particles</a> &#183; <a href="belief_empathy.pdf">the report</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (uav ?i - agent) (ugv ?i - agent)
+    (west ?i - agent)                 ; the half a ground vehicle covers, or the aerial vehicle is in
+    (task)                            ; a task found, needing u and a capable ground vehicle
+    (p1 ?g - agent) (p2 ?g - agent) (p3 ?g - agent)   ; the particle ?g holds: 0, 1 or 2 faults
+    (free ?u - agent) (by1 ?g - agent) (by2 ?g - agent) (by3 ?g - agent)
+    (passed1 ?g - agent) (passed2 ?g - agent)
+    (at-site ?i - agent) (done)
+  )
+
+(:goal (done))
+;; and the drive to the site, go-site: ([?g] (task))</pre>
       </details>
     </article>
     </div>
