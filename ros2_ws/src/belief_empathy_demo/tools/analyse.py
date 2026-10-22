@@ -201,7 +201,8 @@ def main():
     by_seed = {(r['formulation'], r['seed']): r for r in runs}
     pairs = ([('epistemic', 'strong'), ('timed', 'strong'), ('timed', 'epistemic'), ('published', 'strong'),
               ('epistemic', 'published'), ('timed', 'ideal')]
-             if latent else [('epistemic', f) for f in forms if f != 'epistemic'])
+             if latent else [('epistemic', f) for f in forms if f != 'epistemic']
+             + [('timed', f) for f in ('particles', 'ideal', 'flock')])
     for a_, b_ in pairs:
         if a_ not in forms or b_ not in forms:
             continue

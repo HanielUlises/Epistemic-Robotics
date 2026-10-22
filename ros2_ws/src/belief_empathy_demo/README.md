@@ -20,6 +20,7 @@ tell a ground vehicle of it.
 | formulation | what decides | radio |
 | --- | --- | --- |
 | `epistemic` | Aletheia's policy over `belief-empathy.epddl`, computed when the task is found, run by ePlanSys's epistemic executor | 2.5 m |
+| `timed` | the timed search of `tools/timed_policy.py` over the same task, called by the same planner plugin when the task is found, run by the same executor | 2.5 m |
 | `particles` | the paper's procedure: least estimated makespan over the particles still held possible, estimated again after every hail | 2.5 m |
 | `ideal` | the paper's ideal method: every robot hears every other, so the vehicle of least makespan is told at once | unlimited |
 | `flock` | the paper's flock method: the team sweeps the area together in contact, at the speed of its slowest member | 2.5 m |
@@ -38,7 +39,7 @@ faults of either kind, and at least one tool works: twelve patterns
 | formulation | what decides |
 | --- | --- |
 | `epistemic` | Aletheia's policy, least in worst-case steps, no durations |
-| `timed` | a policy from `tools/timed_policy.py`, a timed AND-OR search over the same grounded task that minimises expected time; computed beforehand, one per site, in `policies/`, and run through the same plugin and executor by `tools/fixed_policy.sh` |
+| `timed` | `tools/timed_policy.py`, a timed AND-OR search over the same grounded task that minimises expected time, called by the same planner plugin with the site and run by the same executor (`TIMED_FIXED=1` runs instead the per-site policies of the first latent batch, kept in `policies/`, through `tools/fixed_policy.sh`) |
 | `published` | the paper's procedure: each vehicle's particles alone, no joint budget, a vehicle whose attempt fails dropped |
 | `strong` | the procedure at its strongest: every pattern consistent with what u learned, the budget and the assumption that some tool works; one vehicle or both, by least mean makespan |
 | `ideal` | the strong procedure knowing every vehicle's drive faults |
@@ -47,6 +48,31 @@ faults of either kind, and at least one tool works: twelve patterns
 `tools/precheck.py` times every formulation in it before any run, and takes
 apart the gap between Aletheia's policy and the strong procedure;
 `tools/compare.py` does the same for the timed policy.
+
+## The timed search
+
+`tools/timed_policy.py` is an AND-OR search over the grounded EPDDL task whose
+states are the task's pointed models under the product update, contracted to
+their bisimulation quotient, and whose nodes also carry a clock: where the
+aerial vehicle is, the time, and when each vehicle sent reaches the site, with
+the durations of `tools/estimate.py`. It minimises the expected time to the task
+over the fault patterns, the worst case and then the number of actions breaking
+ties (`--objective worst` puts the worst case first). The reachable models and
+their transitions do not depend on the site, so they are computed once per task
+and kept in `policies/skeletons/`, named by the hash of the grounded task
+(about 156 s for the variant, 20 s for the replica); a task without a skeleton
+there gets one built and saved on its first call. It takes the plugin's
+arguments:
+
+```sh
+python3 tools/timed_policy.py --task TASK.json --plan POLICY.json --site 4 2
+```
+
+`tools/timed_bound.py` uses its value at the root, the least expected time of any
+policy built from its moves over what the aerial vehicle knows, as a bound:
+it times every formulation in every fault pattern at every site, in both the
+replica and the variant (with the direct-movement domain), and checks that no
+procedure is below it.
 
 Page: <https://hanielulises.github.io/Epistemic-Robotics/belief_empathy.html>.
 

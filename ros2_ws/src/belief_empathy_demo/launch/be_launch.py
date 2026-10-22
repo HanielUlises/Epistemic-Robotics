@@ -114,14 +114,20 @@ def build(context):
                         os.path.join(epddl, 'hailing.epddl'), '-o', os.path.join(run, 'task')],
                        check=True, capture_output=True)
         task = os.path.join(run, 'task', f'{instance}.json')
-        # The timed formulation runs a policy computed beforehand by the timed
-        # AND-OR search, through the same plugin, which validates it.
+        # The timed formulation plans through the same plugin with the timed
+        # AND-OR search in place of Aletheia: it is told the site, since it
+        # times every move to it, and reads the task's skeleton, computed
+        # beforehand, from the package. The plugin validates its policy as it
+        # does Aletheia's. TIMED_FIXED=1 runs instead the policies the first
+        # latent batch ran, kept in policies/.
         if formulation == 'timed':
-            command = os.path.join(SHARE, 'tools', 'fixed_policy.sh')
-            policies = os.environ.get('TIMED_POLICY_DIR', os.path.join(SHARE, 'policies'))
-            # one policy per site: the timed search times every move to it
             x, y = world['site']
-            arguments = '--fixed ' + os.path.join(policies, f'policy_latent_site{x:+.0f}_{y:.0f}.json')
+            if os.environ.get('TIMED_FIXED') == '1':
+                command = os.path.join(SHARE, 'tools', 'fixed_policy.sh')
+                arguments = '--fixed ' + os.path.join(SHARE, 'policies', f'policy_latent_site{x:+.0f}_{y:.0f}.json')
+            else:
+                command = os.path.join(SHARE, 'tools', 'timed_policy.py')
+                arguments = f"--site {x} {y} --skeletons {os.path.join(SHARE, 'policies', 'skeletons')}"
         else:
             command, arguments = PLANNER, '--conditional --consistent-beliefs'
         bringup = os.path.join(get_package_share_directory('plansys2_bringup'), 'launch',

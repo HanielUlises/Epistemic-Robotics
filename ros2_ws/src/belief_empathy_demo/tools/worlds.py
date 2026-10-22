@@ -51,7 +51,7 @@ import estimate as E
 import layout as L
 
 WORLDS = [(1, 1), (2, 1), (1, 2), (3, 1), (1, 3), (2, 2)]
-FORMULATIONS = ('epistemic', 'particles', 'ideal', 'flock')
+FORMULATIONS = ('epistemic', 'timed', 'particles', 'ideal', 'flock')
 START_AT = 20.0
 SEEDS = 24
 

@@ -16,7 +16,7 @@ mkdir -p "$OUT"
 jobs=()
 for s in $(seq "$FIRST" "$LAST"); do
   if [ "${VARIANT:-replica}" = latent ]; then default="epistemic timed published strong ideal"
-  else default="epistemic particles ideal flock"; fi
+  else default="epistemic timed particles ideal flock"; fi
   for f in ${FORMS:-$default}; do
     jobs+=("$s $f")
   done

@@ -69,6 +69,18 @@ lets the aerial vehicle fly to a second or third particle from anywhere once it
 knows the particles before it empty; it was compared in the kinematic model
 only.
 
+## With durations
+
+Aletheia's AO* counts steps. `ros2_ws/src/belief_empathy_demo/tools/timed_policy.py`
+searches the same grounded tasks, the replica's and the variant's, with the
+product update and the knowledge preconditions unchanged, and adds a clock to
+each node with the durations of the demo's kinematic model; it minimises the
+expected time to `(done)` over the designated patterns and writes a policy in
+Aletheia's format, which ePlanSys's planner plugin calls in Aletheia's place.
+Its value at the root is the least expected time of any policy built from its
+moves over what the aerial vehicle knows, which `tools/timed_bound.py` uses as a
+bound on every formulation of the demo.
+
 ## Files
 
 - `belief-empathy.epddl`: the domain.

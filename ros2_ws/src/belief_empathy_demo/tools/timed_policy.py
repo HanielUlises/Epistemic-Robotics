@@ -1,7 +1,23 @@
-"""
-A policy for the latent-tool-fault variant that minimises time, not steps.
+#!/usr/bin/env python3
+# Copyright 2026 Haniel Vásquez Morales
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-    timed_policy.py TASK.json --site X Y [--start X Y T] [--out POLICY.json]
+"""
+A policy for belief-empathy that minimises time, not steps.
+
+    timed_policy.py --task TASK.json --plan POLICY.json --site X Y [--start X Y T]
+                    [--skeletons DIR] [--objective mean|worst]
 
 The search is an AND-OR search over the grounded EPDDL task. Its states are the
 task's own pointed models, advanced by the product update of the repository's
@@ -47,8 +63,9 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DEMO_TOOLS = os.environ.get('BE_TOOLS', os.path.expanduser(
-    '~/Projects/Epistemic-Robotics-empathy/ros2_ws/src/belief_empathy_demo/tools'))
+DEMO_TOOLS = os.environ.get('BE_TOOLS', HERE if os.path.exists(os.path.join(HERE, 'estimate.py')) else
+                            os.path.expanduser('~/Projects/Epistemic-Robotics-empathy/ros2_ws/src/'
+                                               'belief_empathy_demo/tools'))
 REPO_TOOLS = os.environ.get('ER_TOOLS', os.path.expanduser('~/Projects/Epistemic-Robotics-empathy/tools'))
 sys.path.insert(0, DEMO_TOOLS)
 sys.path.insert(0, REPO_TOOLS)
@@ -118,9 +135,16 @@ def canonical(model):
 
 
 def pattern_of(labels):
+    """A designated world as estimate.py's fault pattern: each vehicle's drive
+    faults and whether its tool has failed. A task without tools (the replica)
+    has no tool faults."""
     def drive(g):
         return next(k for k in (1, 2, 3) if f'p{k}_{g}' in labels) - 1
-    return (drive('g1'), int('tool_g1' not in labels), drive('g2'), int('tool_g2' not in labels))
+    tools = any(a.startswith('tool_') for a in labels)
+
+    def broken(g):
+        return int(tools and f'tool_{g}' not in labels)
+    return (drive('g1'), broken('g1'), drive('g2'), broken('g2'))
 
 
 class Skeleton:
@@ -221,8 +245,9 @@ class Node:
 
 
 class Planner:
-    def __init__(self, skeleton, site):
+    def __init__(self, skeleton, site, objective='mean'):
         self.sk, self.site = skeleton, tuple(site)
+        self.objective = objective
         self.task = skeleton.task
         self.memo = {}
         self.expanded = 0
@@ -266,19 +291,29 @@ class Planner:
                 yield 'try', g, None
 
     def value(self, node):
-        """(expected time, worst time, policy subtree) from a node, the
-        expectation over the patterns it holds possible."""
+        """(expected time, worst time, policy subtree, expected number of
+        actions) from a node, the expectations over the patterns it holds
+        possible."""
         key = node.key()
         if key in self.memo:
             return self.memo[key]
         self.expanded += 1
-        best = (math.inf, math.inf, None)
+        best = (math.inf, math.inf, None, math.inf)
         for kind, g, extra in self.choices(node):
             got = self.seek(node, g, extra) if kind == 'seek' else self.attempt(node, g)
-            if got is not None and (round(got[0], 6), got[1]) < (round(best[0], 6), best[1]):
+            if got is not None and self.rank(got) < self.rank(best):
                 best = got
         self.memo[key] = best
         return best
+
+    def rank(self, v):
+        """The order choices are compared in: the expected time, then the
+        worst; or with objective 'worst', the worst, then the expected. Last,
+        fewer actions: where the aerial vehicle has time to spare, a hail
+        that changes nothing in the model is not made, since a run late on
+        the model would pay for it."""
+        e, w = round(v[0], 6), round(v[1], 6)
+        return ((e, w) if self.objective == 'mean' else (w, e)) + (round(v[3], 6),)
 
     @staticmethod
     def chain(prefix, last):
@@ -305,29 +340,34 @@ class Planner:
             return None
         events = self.task['actions'][hail]['designated']
         total = sum(self.weight(sid) for sid in br.values())
-        exp, worst, kids = 0.0, 0.0, []
+        exp, worst, steps, kids = 0.0, 0.0, len(prefix) + 1.0, []
         for i, sid in sorted(br.items()):
             met = events[i].startswith('e-met-')
             t = cur.t + (E.HAIL_MET if met else L.HAIL_WINDOW)
             child = Node(sid, cur.u, t, cur.arrive, cur.met, cur.tried)
             send = None
             if met:
+                # sent at once where the task lets it go; a vehicle that cannot
+                # do the task (the replica's third particle) is not
                 got = self.quiet(child, f'go-site_{g}')
                 if got is None:
-                    return None
-                gi, child = got
-                arrive = {**child.arrive, g: t + E.drive_to_site(L.particle(g, k, t), self.site, k - 1)}
-                child = Node(child.sid, child.u, child.t, arrive, {**child.met, g: k}, child.tried)
-                send = (f'go-site_{g}', gi)
-            ce, cw, sub = self.value(child)
+                    child = Node(child.sid, child.u, child.t, child.arrive, {**child.met, g: k}, child.tried)
+                else:
+                    gi, child = got
+                    arrive = {**child.arrive, g: t + E.drive_to_site(L.particle(g, k, t), self.site, k - 1)}
+                    child = Node(child.sid, child.u, child.t, arrive, {**child.met, g: k}, child.tried)
+                    send = (f'go-site_{g}', gi)
+            ce, cw, sub, cs = self.value(child)
             if not math.isfinite(ce):
                 return None
             if send:
                 sub = {'action': send[0], 'branches': [{'event': send[1], 'subtree': sub}]}
+                cs += 1
             exp += ce * self.weight(sid) / total
+            steps += cs * self.weight(sid) / total
             worst = max(worst, cw)
             kids.append({'event': i, 'subtree': sub})
-        return exp, worst, self.chain(prefix, {'action': hail, 'branches': kids})
+        return exp, worst, self.chain(prefix, {'action': hail, 'branches': kids}), steps
 
     def attempt(self, node, g):
         prefix, cur = [], node
@@ -345,18 +385,19 @@ class Planner:
         events = self.task['actions'][name]['designated']
         t = max(cur.t, cur.arrive[g]) + L.DELTA
         total = sum(self.weight(sid) for sid in br.values())
-        exp, worst, kids = 0.0, 0.0, []
+        exp, worst, steps, kids = 0.0, 0.0, len(prefix) + 1.0, []
         for i, sid in sorted(br.items()):
-            if events[i] == 'e-done':
-                ce, cw, sub = t, t, None
+            if events[i] != 'e-fail':
+                ce, cw, sub, cs = t, t, None, 0.0
             else:
-                ce, cw, sub = self.value(Node(sid, cur.u, t, cur.arrive, cur.met, cur.tried | {g}))
+                ce, cw, sub, cs = self.value(Node(sid, cur.u, t, cur.arrive, cur.met, cur.tried | {g}))
                 if not math.isfinite(ce):
                     return None
             exp += ce * self.weight(sid) / total
+            steps += cs * self.weight(sid) / total
             worst = max(worst, cw)
             kids.append({'event': i, 'subtree': sub})
-        return exp, worst, self.chain(prefix, {'action': name, 'branches': kids})
+        return exp, worst, self.chain(prefix, {'action': name, 'branches': kids}), steps
 
 
 def skeleton(task, site, u, t, cache=None):
@@ -380,36 +421,48 @@ def task_hash(task):
     return hashlib.sha256(json.dumps(task, sort_keys=True).encode()).hexdigest()
 
 
-def plan(sk, site, u, t):
-    p = Planner(sk, site)
+def plan(sk, site, u, t, objective='mean'):
+    p = Planner(sk, site, objective)
     start = time.time()
-    exp, worst, policy = p.value(Node(sk.root, tuple(u), t, {}, {}, frozenset()))
-    return {'expected': exp, 'worst': worst, 'policy': policy, 'expanded': p.expanded,
+    exp, worst, policy, steps = p.value(Node(sk.root, tuple(u), t, {}, {}, frozenset()))
+    return {'expected': exp, 'worst': worst, 'policy': policy, 'steps': steps, 'expanded': p.expanded,
             'seconds': time.time() - start}
 
 
 def main():
+    """As the planner command of ePlanSys's Aletheia plugin: the plugin passes
+    --task and --plan (and --timeout, --consistent-beliefs, which do not
+    apply); the launch adds the site and where the skeletons are kept."""
     ap = argparse.ArgumentParser()
-    ap.add_argument('task')
+    ap.add_argument('--task', required=True)
+    ap.add_argument('--plan', required=True)
     ap.add_argument('--site', nargs=2, type=float, required=True)
-    ap.add_argument('--start', nargs=3, type=float, help='the aerial vehicle at X Y at time T')
-    ap.add_argument('--cache', help='where the task\'s skeleton is kept')
-    ap.add_argument('--out')
-    a = ap.parse_args()
+    ap.add_argument('--start', nargs=3, type=float, help='the aerial vehicle at X Y at time T; by default '
+                    'where and when its coverage route first sees the site')
+    ap.add_argument('--skeletons', default=os.path.join(HERE, '..', 'policies', 'skeletons'),
+                    help='a directory of skeletons, one per task, named by its hash')
+    ap.add_argument('--objective', choices=('mean', 'worst'), default='mean')
+    a, _ = ap.parse_known_args()
     task = json.load(open(a.task))
+    site = tuple(a.site)
     if a.start:
         u, t = (a.start[0], a.start[1]), a.start[2]
     else:
         import precheck
-        u, t = precheck.found(tuple(a.site))
+        u, t = precheck.found(site)
+    os.makedirs(a.skeletons, exist_ok=True)
+    cache = os.path.join(a.skeletons, task_hash(task)[:16] + '.skel')
     t0 = time.time()
-    sk = skeleton(task, a.site, u, t, a.cache)
+    sk = skeleton(task, site, u, t, cache)
     built = time.time() - t0
-    r = plan(sk, a.site, u, t)
-    print(f"skeleton {len(sk.info)} states, {built:.1f} s; expected {r['expected']:.1f} s, "
-          f"worst {r['worst']:.1f} s, {r['expanded']} nodes, {r['seconds']:.2f} s")
-    if a.out:
-        json.dump(r['policy'], open(a.out, 'w'))
+    r = plan(sk, site, u, t, a.objective)
+    if r['policy'] is None:
+        print(f'No solution: no policy reaches the goal from {a.task}')
+        sys.exit(1)
+    json.dump(r['policy'], open(a.plan, 'w'))
+    print(f"Solution found: expected {r['expected']:.1f} s, worst {r['worst']:.1f} s at site {site}, "
+          f"{r['expanded']} nodes in {r['seconds']:.2f} s; skeleton of {len(sk.info)} states "
+          f"({'loaded' if built < 5 else 'built'} in {built:.1f} s)")
 
 
 if __name__ == '__main__':
