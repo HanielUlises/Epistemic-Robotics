@@ -228,26 +228,35 @@ class Skeleton:
 class Node:
     """A state of the skeleton and the clock: where the aerial vehicle is, the
     time, when each vehicle sent reaches the site, the particle each vehicle
-    met was found at, and the vehicles tried."""
-    __slots__ = ('sid', 'u', 't', 'arrive', 'met', 'tried')
+    met was found at, and the vehicles tried. `hold` is the time a drive just
+    sent holds the policy until, where the drive answers on arrival."""
+    __slots__ = ('sid', 'u', 't', 'arrive', 'met', 'tried', 'hold')
 
-    def __init__(self, sid, u, t, arrive, met, tried):
+    def __init__(self, sid, u, t, arrive, met, tried, hold=None):
         self.sid, self.u, self.t = sid, u, t
         self.arrive, self.met, self.tried = arrive, met, tried
+        self.hold = hold
 
     def at(self, sid):
-        return Node(sid, self.u, self.t, self.arrive, self.met, self.tried)
+        return Node(sid, self.u, self.t, self.arrive, self.met, self.tried, self.hold)
 
     def key(self):
         return (self.sid, round(self.u[0], 3), round(self.u[1], 3), round(self.t, 3),
                 tuple(sorted((g, round(a, 3)) for g, a in self.arrive.items())),
-                tuple(sorted(self.met.items())), tuple(sorted(self.tried)))
+                tuple(sorted(self.met.items())), tuple(sorted(self.tried)),
+                None if self.hold is None else round(self.hold, 3))
 
 
 class Planner:
-    def __init__(self, skeleton, site, objective='mean'):
+    def __init__(self, skeleton, site, objective='mean', drive_blocks=False):
         self.sk, self.site = skeleton, tuple(site)
         self.objective = objective
+        # ePlanSys's executor dispatches consecutive actions that name disjoint
+        # agents as one group and waits for the whole group. Where a drive to
+        # the site answers only on arrival (the replica's ground vehicles), the
+        # aerial vehicle's next action runs beside the drive and the one after
+        # it waits for the vehicle to arrive.
+        self.drive_blocks = drive_blocks
         self.task = skeleton.task
         self.memo = {}
         self.expanded = 0
@@ -325,15 +334,18 @@ class Planner:
     def seek(self, node, g, extra):
         acts, k = extra
         prefix, cur = [], node
-        for name in acts[:-1]:
+        hold = node.hold or 0.0
+        for n_, name in enumerate(acts[:-1]):
             got = self.quiet(cur, name)
             if got is None:
                 return None
             i, cur = got
             prefix.append((name, i))
             if not name.startswith('cross'):
-                u, t = L.intercept(cur.u, cur.t, g, k)
+                start = cur.t if n_ == 0 else max(cur.t, hold)
+                u, t = L.intercept(cur.u, start, g, k)
                 cur = Node(cur.sid, u, t, cur.arrive, cur.met, cur.tried)
+        cur = Node(cur.sid, cur.u, max(cur.t, hold), cur.arrive, cur.met, cur.tried)
         hail = acts[-1]
         br = self.sk.branches(cur.sid, hail)
         if br is None:
@@ -355,7 +367,8 @@ class Planner:
                 else:
                     gi, child = got
                     arrive = {**child.arrive, g: t + E.drive_to_site(L.particle(g, k, t), self.site, k - 1)}
-                    child = Node(child.sid, child.u, child.t, arrive, {**child.met, g: k}, child.tried)
+                    child = Node(child.sid, child.u, child.t, arrive, {**child.met, g: k}, child.tried,
+                                 arrive[g] if self.drive_blocks else None)
                     send = (f'go-site_{g}', gi)
             ce, cw, sub, cs = self.value(child)
             if not math.isfinite(ce):
@@ -371,6 +384,7 @@ class Planner:
 
     def attempt(self, node, g):
         prefix, cur = [], node
+        hold = node.hold or 0.0
         if 'at-site_u' not in self.facts(cur.sid):
             got = self.quiet(cur, 'fly-site_u')
             if got is None:
@@ -383,7 +397,7 @@ class Planner:
         if br is None:
             return None
         events = self.task['actions'][name]['designated']
-        t = max(cur.t, cur.arrive[g]) + L.DELTA
+        t = max(cur.t, cur.arrive[g], hold) + L.DELTA
         total = sum(self.weight(sid) for sid in br.values())
         exp, worst, steps, kids = 0.0, 0.0, len(prefix) + 1.0, []
         for i, sid in sorted(br.items()):
@@ -421,8 +435,8 @@ def task_hash(task):
     return hashlib.sha256(json.dumps(task, sort_keys=True).encode()).hexdigest()
 
 
-def plan(sk, site, u, t, objective='mean'):
-    p = Planner(sk, site, objective)
+def plan(sk, site, u, t, objective='mean', drive_blocks=False):
+    p = Planner(sk, site, objective, drive_blocks)
     start = time.time()
     exp, worst, policy, steps = p.value(Node(sk.root, tuple(u), t, {}, {}, frozenset()))
     return {'expected': exp, 'worst': worst, 'policy': policy, 'steps': steps, 'expanded': p.expanded,
@@ -442,6 +456,8 @@ def main():
     ap.add_argument('--skeletons', default=os.path.join(HERE, '..', 'policies', 'skeletons'),
                     help='a directory of skeletons, one per task, named by its hash')
     ap.add_argument('--objective', choices=('mean', 'worst'), default='mean')
+    ap.add_argument('--drive-blocks', action='store_true',
+                    help='a drive to the site answers on arrival and holds the executor\'s next group')
     a, _ = ap.parse_known_args()
     task = json.load(open(a.task))
     site = tuple(a.site)
@@ -455,7 +471,7 @@ def main():
     t0 = time.time()
     sk = skeleton(task, site, u, t, cache)
     built = time.time() - t0
-    r = plan(sk, site, u, t, a.objective)
+    r = plan(sk, site, u, t, a.objective, a.drive_blocks)
     if r['policy'] is None:
         print(f'No solution: no policy reaches the goal from {a.task}')
         sys.exit(1)

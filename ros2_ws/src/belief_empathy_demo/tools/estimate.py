@@ -106,7 +106,7 @@ class World:
 
 # ──────────────────────────────────────────────────────────── the policy ──
 
-def run_policy(task, policy, pattern, site, u, t, arrival_order=False, spare_slow=False):
+def run_policy(task, policy, pattern, site, u, t, arrival_order=False, spare_slow=False, drive_blocks=False):
     """Follow an epistemic policy in a pattern from the aerial vehicle at u at
     time t; the time the task is done, and the steps taken.
 
@@ -115,8 +115,15 @@ def run_policy(task, policy, pattern, site, u, t, arrival_order=False, spare_slo
     sent in the order they reach the site, and not in the policy's; with
     spare_slow, where the policy would fly to a vehicle's third particle to
     send it, the aerial vehicle fetches the other vehicle, which the fault
-    budget then says is sound."""
+    budget then says is sound.
+
+    With drive_blocks, a drive to the site answers on arrival, as the
+    replica's ground vehicles do, and ePlanSys's executor, which runs
+    consecutive actions on disjoint agents as one group and waits for the
+    group, holds the aerial vehicle's second action after the drive until the
+    vehicle arrives."""
     w = World(pattern, site)
+    hold, first = None, False
     labels = task['initial-state']['labels']
     arrive, steps, node = {}, [], policy
     events = {a: v['designated'] for a, v in task['actions'].items()}
@@ -154,6 +161,11 @@ def run_policy(task, policy, pattern, site, u, t, arrival_order=False, spare_slo
                     return t, steps
                 steps.append(f'attempt {g} first: failed')
             return None, steps
+        if hold is not None and act != 'go-site':
+            if first:
+                first = False           # in the drive's group: runs beside it
+            else:
+                t, hold = max(t, hold), None
         if act in ('fly-p1', 'back-p2', 'back-p3'):
             u, t = L.intercept(u, t, args[1], int(act[-1]))
         elif act.startswith('hail-p'):
@@ -161,6 +173,8 @@ def run_policy(task, policy, pattern, site, u, t, arrival_order=False, spare_slo
             t += HAIL_MET if faults(pattern, g) + 1 == k else L.HAIL_WINDOW
         elif act == 'go-site':
             arrive[args[0]] = w.send(args[0], t)
+            if drive_blocks:
+                hold, first = arrive[args[0]], True
         elif act == 'fly-site':
             t, u = t + fly(u, site), site
         elif act == 'perform':

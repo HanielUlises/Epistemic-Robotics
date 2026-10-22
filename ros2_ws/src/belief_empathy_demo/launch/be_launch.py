@@ -128,6 +128,9 @@ def build(context):
             else:
                 command = os.path.join(SHARE, 'tools', 'timed_policy.py')
                 arguments = f"--site {x} {y} --skeletons {os.path.join(SHARE, 'policies', 'skeletons')}"
+                if not latent:
+                    # the replica's ground vehicles answer a drive on arrival
+                    arguments += ' --drive-blocks'
         else:
             command, arguments = PLANNER, '--conditional --consistent-beliefs'
         bringup = os.path.join(get_package_share_directory('plansys2_bringup'), 'launch',

@@ -52,10 +52,10 @@ SKELETONS = os.path.join(HERE, '..', 'policies', 'skeletons')
 HAIL_EST = 2.0          # the paper's procedure's allowance for a hail answered, as in mission.py
 
 
-def timed(task, skeletons, site):
+def timed(task, skeletons, site, drive_blocks=False):
     sk = TP.Skeleton.load(task, os.path.join(skeletons, TP.task_hash(task)[:16] + '.skel'))
     u, t = precheck.found(site)
-    return TP.plan(sk, site, u, t)
+    return TP.plan(sk, site, u, t, drive_blocks=drive_blocks)
 
 
 def summary(ts):
@@ -153,13 +153,14 @@ def replica(batch, skeletons):
         task = json.load(open(os.path.join(batch, f'epistemic-s{seed}', 'task', f'problem_{side}.json')))
         for site in ss:
             u, t = precheck.found(site)
-            mine = timed(task, skeletons, site)
+            # the replica's ground vehicles answer a drive on arrival
+            mine = timed(task, skeletons, site, drive_blocks=True)
             here = {k: [] for k in rows}
             for p1, p2 in W.WORLDS:
                 world = {'g1': p1, 'g2': p2}
                 p = (p1 - 1, 0, p2 - 1, 0)
-                here['aletheia'].append(E.run_policy(task, aletheia, p, site, u, t)[0])
-                here['timed'].append(E.run_policy(task, mine['policy'], p, site, u, t)[0])
+                here['aletheia'].append(E.run_policy(task, aletheia, p, site, u, t, drive_blocks=True)[0])
+                here['timed'].append(E.run_policy(task, mine['policy'], p, site, u, t, drive_blocks=True)[0])
                 here['particles'].append(run_particles(world, site, u, t))
                 here['ideal'].append(run_ideal(world, site, u, t))
             assert abs(statistics.mean(here['timed']) - mine['expected']) < 0.05, site
