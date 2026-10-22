@@ -1,0 +1,72 @@
+(define (problem belief-empathy-east)
+
+  ;; The aerial vehicle u has found a task in the east half. The ground
+  ;; vehicle g1 covers the west half and g2 the east. Each ground vehicle has
+  ;; had no fault, one or two, and so tracks its first, second or third
+  ;; particle; at most two faults happen in the team: six worlds, all
+  ;; designated. Each ground vehicle knows its own particle and nobody knows
+  ;; another's. u knows of the task; neither ground vehicle does.
+
+  (:domain belief-empathy)
+
+  (:requirements
+    :equality :list-comprehensions
+    :finitary-S5-theories :modal-goals :knowing-whether
+    :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents u g1 g2)
+
+  (:init
+    (:and
+      ([C. All] (uav u))
+      ([C. All] (not (uav g1)))
+      ([C. All] (not (uav g2)))
+      ([C. All] (not (ugv u)))
+      ([C. All] (ugv g1))
+      ([C. All] (ugv g2))
+      ([C. All] (not (west u)))
+      ([C. All] (west g1))
+      ([C. All] (not (west g2)))
+      ([C. All] (free u))
+      ([C. All] (not (free g1)))
+      ([C. All] (not (free g2)))
+      (task)
+      ([C. All] ([Kw. u] (task)))
+      ([C. All] (<Kw. g1> (task)))
+      ([C. All] (<Kw. g2> (task)))
+      ([C. All] (not (done)))
+      (:forall (?i - agent) ([C. All] (not (at-site ?i))))
+      (:forall (?i - agent) ([C. All] (not (by1 ?i))))
+      (:forall (?i - agent) ([C. All] (not (by2 ?i))))
+      (:forall (?i - agent) ([C. All] (not (by3 ?i))))
+      (:forall (?i - agent) ([C. All] (not (passed1 ?i))))
+      (:forall (?i - agent) ([C. All] (not (passed2 ?i))))
+      ([C. All] (not (p1 u)))
+      ([C. All] (not (p2 u)))
+      ([C. All] (not (p3 u)))
+      ;; each ground vehicle tracks exactly one particle
+      ([C. All] (or (p1 g1) (p2 g1) (p3 g1)))
+      ([C. All] (not (and (p1 g1) (p2 g1))))
+      ([C. All] (not (and (p1 g1) (p3 g1))))
+      ([C. All] (not (and (p2 g1) (p3 g1))))
+      ([C. All] (or (p1 g2) (p2 g2) (p3 g2)))
+      ([C. All] (not (and (p1 g2) (p2 g2))))
+      ([C. All] (not (and (p1 g2) (p3 g2))))
+      ([C. All] (not (and (p2 g2) (p3 g2))))
+      ;; at most two faults in the team
+      ([C. All] (not (and (p3 g1) (p2 g2))))
+      ([C. All] (not (and (p2 g1) (p3 g2))))
+      ([C. All] (not (and (p3 g1) (p3 g2))))
+      ;; each knows its own particle, and only its own
+      ([C. All] ([Kw. g1] (p1 g1)))
+      ([C. All] ([Kw. g1] (p2 g1)))
+      ([C. All] ([Kw. g1] (p3 g1)))
+      ([C. All] ([Kw. g2] (p1 g2)))
+      ([C. All] ([Kw. g2] (p2 g2)))
+      ([C. All] ([Kw. g2] (p3 g2)))
+    )
+  )
+
+  (:goal (done))
+)

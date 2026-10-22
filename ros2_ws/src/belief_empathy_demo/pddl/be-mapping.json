@@ -1,0 +1,78 @@
+{
+ "hail-p1_u_g1": {
+  "action": "(hail_p1 u g1)",
+  "duration": 8.0
+ },
+ "hail-p2_u_g1": {
+  "action": "(hail_p2 u g1)",
+  "duration": 8.0
+ },
+ "hail-p3_u_g1": {
+  "action": "(hail_p3 u g1)",
+  "duration": 8.0
+ },
+ "fly-p1_u_g1": {
+  "action": "(fly_p1 u g1)",
+  "duration": 40.0
+ },
+ "back-p2_u_g1": {
+  "action": "(back_p2 u g1)",
+  "duration": 15.0
+ },
+ "back-p3_u_g1": {
+  "action": "(back_p3 u g1)",
+  "duration": 15.0
+ },
+ "go-site_g1": {
+  "action": "(go_site g1)",
+  "duration": 120.0
+ },
+ "perform_u_g1": {
+  "action": "(perform u g1)",
+  "duration": 10.0
+ },
+ "hail-p1_u_g2": {
+  "action": "(hail_p1 u g2)",
+  "duration": 8.0
+ },
+ "hail-p2_u_g2": {
+  "action": "(hail_p2 u g2)",
+  "duration": 8.0
+ },
+ "hail-p3_u_g2": {
+  "action": "(hail_p3 u g2)",
+  "duration": 8.0
+ },
+ "fly-p1_u_g2": {
+  "action": "(fly_p1 u g2)",
+  "duration": 40.0
+ },
+ "back-p2_u_g2": {
+  "action": "(back_p2 u g2)",
+  "duration": 15.0
+ },
+ "back-p3_u_g2": {
+  "action": "(back_p3 u g2)",
+  "duration": 15.0
+ },
+ "go-site_g2": {
+  "action": "(go_site g2)",
+  "duration": 120.0
+ },
+ "perform_u_g2": {
+  "action": "(perform u g2)",
+  "duration": 10.0
+ },
+ "cross-west_u": {
+  "action": "(cross_west u)",
+  "duration": 1.0
+ },
+ "cross-east_u": {
+  "action": "(cross_east u)",
+  "duration": 1.0
+ },
+ "fly-site_u": {
+  "action": "(fly_site u)",
+  "duration": 40.0
+ }
+}
