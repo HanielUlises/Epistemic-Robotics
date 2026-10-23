@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>gossip_coverage_demo</name>
+  <version>0.1.0</version>
+  <description>
+    Bramblett and Bezzo's coverage and task allocation out of contact (Frontiers in
+    Robotics and AI, 2023), recreated: the paper's simulation study in a kinematic
+    simulator, its epistemic model as EPDDL planned by Aletheia, and its laboratory
+    experiments in Gazebo with ePlanSys executing the policies.
+  </description>
+  <maintainer email="hanielulises2003@gmail.com">Haniel Ulises</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>plansys2_executor</depend>
+  <depend>plansys2_msgs</depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>plansys2_bringup</exec_depend>
+  <exec_depend>plansys2_epistemic_executor</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
