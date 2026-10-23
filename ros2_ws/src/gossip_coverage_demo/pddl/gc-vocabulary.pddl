@@ -31,43 +31,43 @@
 (:durative-action go_site_1
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)))
+  :condition (and (at start (ok ?r)) (at start (count_1)))
   :effect (and (at end (ok ?r)) (at end (count_2))))
 
 (:durative-action go_site_2
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)))
+  :condition (and (at start (ok ?r)) (at start (count_2)))
   :effect (and (at end (ok ?r)) (at end (count_3))))
 
 (:durative-action go_site_3
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)))
+  :condition (and (at start (ok ?r)) (at start (count_3)))
   :effect (and (at end (ok ?r)) (at end (count_4))))
 
 (:durative-action go_site_4
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)))
+  :condition (and (at start (ok ?r)) (at start (count_4)))
   :effect (and (at end (ok ?r)) (at end (count_5))))
 
 (:durative-action go_site_5
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)))
+  :condition (and (at start (ok ?r)) (at start (count_5)))
   :effect (and (at end (ok ?r)) (at end (count_6))))
 
 (:durative-action go_site_6
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)))
+  :condition (and (at start (ok ?r)) (at start (count_6)))
   :effect (and (at end (ok ?r)) (at end (count_7))))
 
 (:durative-action go_site_7
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)))
+  :condition (and (at start (ok ?r)) (at start (count_7)))
   :effect (and (at end (ok ?r)) (at end (count_8))))
 
 (:durative-action do_task_1
@@ -85,36 +85,36 @@
 (:durative-action do_task_3
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)) (at start (count_1)) (at start (count_2)))
+  :condition (and (at start (ok ?r)) (at start (count_2)))
   :effect (and (at end (ok ?r))))
 
 (:durative-action do_task_4
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)) (at start (count_1)) (at start (count_2)) (at start (count_3)))
+  :condition (and (at start (ok ?r)) (at start (count_3)))
   :effect (and (at end (ok ?r))))
 
 (:durative-action do_task_5
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)) (at start (count_1)) (at start (count_2)) (at start (count_3)) (at start (count_4)))
+  :condition (and (at start (ok ?r)) (at start (count_4)))
   :effect (and (at end (ok ?r))))
 
 (:durative-action do_task_6
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)) (at start (count_1)) (at start (count_2)) (at start (count_3)) (at start (count_4)) (at start (count_5)))
+  :condition (and (at start (ok ?r)) (at start (count_5)))
   :effect (and (at end (ok ?r))))
 
 (:durative-action do_task_7
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)) (at start (count_1)) (at start (count_2)) (at start (count_3)) (at start (count_4)) (at start (count_5)) (at start (count_6)))
+  :condition (and (at start (ok ?r)) (at start (count_6)))
   :effect (and (at end (ok ?r))))
 
 (:durative-action do_task_8
   :parameters (?r - robot)
   :duration (= ?duration 10)
-  :condition (and (at start (ok ?r)) (at start (count_1)) (at start (count_2)) (at start (count_3)) (at start (count_4)) (at start (count_5)) (at start (count_6)) (at start (count_7)))
+  :condition (and (at start (ok ?r)) (at start (count_7)))
   :effect (and (at end (ok ?r))))
 )

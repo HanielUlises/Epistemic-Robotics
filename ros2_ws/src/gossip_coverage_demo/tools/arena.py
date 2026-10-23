@@ -53,7 +53,7 @@ SPEC = dataclasses.replace(
     E.SIM, width=8.0, height=11.0, cell=0.25, sense=2.0, radio=2.0, v_max=0.20, v_particle=0.13,
     noise=0.0, r_task=0.7, work=6.0, home=(4.0, 0.9), home_radius=1.2, dt=0.1,
     penalty=E.SIM.penalty * LAMBDA, heading=E.SIM.heading * LAMBDA, gain=E.SIM.gain / LAMBDA,
-    rho_o=0.4, meet=0.45, resync=10.0, limit=900.0, slot=0.35)
+    rho_o=0.4, meet=0.45, resync=10.0, limit=900.0, slot=0.35, inside=1.0)
 
 ROBOTS = ('r1', 'r2', 'r3')
 CAP = {'r1': (0.12, 0.38, 0.80), 'r2': (0.90, 0.42, 0.08), 'r3': (0.20, 0.62, 0.30)}

@@ -282,6 +282,9 @@ class Run:
         x = s.tasks[self.tid]
         j.k.tasks.setdefault(self.tid, {'pos': x['pos'], 'k': x['k'], 'found_t': x['found_t'],
                                         'found_by': x['found_by'], 'done': x['done']})
+        for g in (by, j):
+            if self.tid in g.k.tasks:
+                g.k.tasks[self.tid]['knowers'] = set(g.k.tasks[self.tid].get('knowers', ())) | {by.id, j.id}
         # told of the task, a robot is told of the policy too: it knows the
         # task is handled, by whom, and what is left for it to do
         j.k.tasks[self.tid]['handled'] = True
@@ -328,10 +331,11 @@ class Planner:
     # ─────────────────────────────────────────────────────────── queries ──
 
     def free(self, j):
-        """j is at its particle and works for no policy and on no task."""
+        """j works for no policy and on no task: it is at its particle, on its
+        way home, or home."""
         if j.id in self.member:
             return False
-        return j.status in ('explore', 'parked') and j.job is None
+        return j.status in ('explore', 'home', 'parked') and (j.job is None or j.job[0] == 'home')
 
     def handling(self, tid, comp=None):
         """A policy for the task that a robot in `comp` belongs to, which the
@@ -394,10 +398,18 @@ class Planner:
         comp = [g for g in comp if not (g in self.member) and s.robots[g].status in ('explore', 'home', 'parked')
                 or g == r.id]
         k = x['k']
+        # in Case I a robot told of the task with nothing to do goes home: the
+        # finder leaves out those it knows to have been told and that are out
+        # of contact, unless the task needs them
+        skip = set()
+        if s.case == 1:
+            told = set(r.k.tasks[tid].get('knowers', ())) - set(comp)
+            if len(s.ids) - len(told) >= k:
+                skip = told
         travel = alloc.Travel(s.area, r.known, s.spec.v_max)
         rank = {}
         for g in s.ids:
-            if g == r.id:
+            if g == r.id or g in skip:
                 continue
             if g in comp:
                 rank[g] = travel.time(s.robots[g].pos, x['pos'])

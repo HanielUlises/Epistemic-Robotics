@@ -30,6 +30,7 @@ import csv
 import glob
 import json
 import os
+import re
 import statistics as st
 import sys
 
@@ -53,6 +54,23 @@ def paired(a, b):
             'min': round(min(d), 1), 'max': round(max(d), 1)}
 
 
+def en_route(d, text):
+    """Whether, when the first policy of a run was ended by global contact,
+    every robot was already on its way to the task's site: the frame nearest
+    the executor's cancellation, by wall time."""
+    m = re.search(r'\[(\d+\.\d+)\] \[[^]]*\]: Received request to cancel goal', text)
+    p = os.path.join(d, 'frames.jsonl')
+    if not m or not os.path.exists(p):
+        return None
+    w = float(m.group(1))
+    best = None
+    for line in open(p):
+        f = json.loads(line)
+        if best is None or abs(f['wall'] - w) < abs(best['wall'] - w):
+            best = f
+    return all(v[2] == 'task' for v in best['robots'].values())
+
+
 def gazebo(batch):
     rows = []
     for d in sorted(glob.glob(os.path.join(batch, 'c*-*-s*'))):
@@ -65,12 +83,20 @@ def gazebo(batch):
         case, form, seed = int(name[1]), name.split('-')[1], int(name.split('-s')[-1])
         tasks = m.get('tasks') or {}
         pol = m.get('policies') or []
+        log = os.path.join(d, 'launch.log')
+        text = open(log, errors='ignore').read() if os.path.exists(log) else ''
+        # a policy still running when all robots come into contact is ended
+        # there by the mission (the global allocation takes over)
+        cancelled = text.count('Received request to cancel goal')
+        succeeded = sum(p.get('result') == 'SUCCESS' for p in pol)
         rows.append({'case': case, 'formulation': form, 'seed': seed, 'result': m.get('result'),
                      'mission': m.get('mission'),
                      'tasks_done': max((t['done_t'] or 0) for t in tasks.values()) if tasks else None,
                      'found': ';'.join(f"{k}:{t['k']}:{t['found_t']}:{t['found_by']}:{t['done_t']}" for k, t in tasks.items()),
                      'policies': len(pol), 'plan_seconds': round(sum(p.get('seconds', 0) for p in pol), 3),
                      'policy_results': ';'.join(p.get('result', '') for p in pol),
+                     'policies_completed': succeeded, 'policies_handed_over': cancelled,
+                     'handed_over_en_route': int(bool(cancelled and en_route(d, text))),
                      'absent': (m.get('counts') or {}).get('absent', 0),
                      'met': (m.get('counts') or {}).get('met', 0),
                      'travelled': round(sum((m.get('travelled') or {}).values()), 1),
@@ -88,7 +114,7 @@ def gazebo(batch):
         get = {(r['formulation'], r['seed']): r for r in rows if r['case'] == case}
         for form in FORMS:
             v = [get[(form, s)]['mission'] for s in seeds if (form, s) in get]
-            c['by_formulation'][form] = dict(describe(v) or {}, success=sum(
+            c['by_formulation'][form] = dict(describe(v) or {}, runs=sum((form, s) in get for s in seeds), success=sum(
                 get[(form, s)]['result'] == 'SUCCESS' for s in seeds if (form, s) in get),
                 tasks_done=describe([get[(form, s)]['tasks_done'] for s in seeds if (form, s) in get]))
         for other in ('proposed', 'ideal', 'flock'):
@@ -98,6 +124,12 @@ def gazebo(batch):
         pl = [r['plan_seconds'] for r in rows if r['case'] == case and r['formulation'] == 'epistemic' and r['policies']]
         c['planning'] = describe(pl)
         c['policies'] = sum(r['policies'] for r in rows if r['case'] == case and r['formulation'] == 'epistemic')
+        c['policies_completed'] = sum(r['policies_completed'] for r in rows
+                                      if r['case'] == case and r['formulation'] == 'epistemic')
+        c['policies_handed_over'] = sum(r['policies_handed_over'] for r in rows
+                                        if r['case'] == case and r['formulation'] == 'epistemic')
+        c['handed_over_en_route'] = sum(r['handed_over_en_route'] for r in rows
+                                        if r['case'] == case and r['formulation'] == 'epistemic')
         out['cases'][case] = c
     json.dump(out, open(os.path.join(batch, 'analysis.json'), 'w'), indent=1)
     return out
@@ -130,8 +162,10 @@ def study(path):
             counts[r['method']][k] += v
     out['counts'] = counts
     pl = [p for r in rows if r['method'] == 'epistemic' and r.get('planning') for p in r['planning']]
+    secs = [p['seconds'] for p in pl]
     out['planning'] = {'policies': len(pl), 'solved': sum(p['solved'] for p in pl),
-                       'seconds': describe([p['seconds'] for p in pl]),
+                       'seconds': {'mean': round(st.mean(secs), 4), 'median': round(st.median(secs), 4),
+                                   'max': round(max(secs), 3)} if secs else None,
                        'agents': describe([p['agents'] for p in pl])}
     json.dump(out, open(os.path.join(path, 'analysis.json'), 'w'), indent=1)
     return out

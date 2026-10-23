@@ -60,8 +60,10 @@ ePlanSys's epistemic state (`LoadTask`), planned by its planner through
 `plansys2/AletheiaPlanSolver`, and run by its epistemic executor with parallel
 dispatch; `src/relay_node.cpp` hands each action to the mission, which answers
 with the event that occurred. The executor's vocabulary (`tools/make_pddl.py`,
-`pddl/`) gives every action `(ok ?r)` of the robots it names, an arrival
-`go_site_n` writes `(count_{n+1})`, and `do_task_k` reads every count below `k`.
+`pddl/`) gives every action `(ok ?r)` of the robots it names; an arrival
+`go_site_n` reads `(count_n)` and writes `(count_{n+1})`, and `do_task_k` reads
+`(count_{k-1})`, so arrivals are dispatched in the order the epistemic state
+requires.
 
 Runs use ROS domain 90 + lane and Gazebo port 11490 + lane.
 
@@ -96,7 +98,22 @@ Page: <https://hanielulises.github.io/Epistemic-Robotics/gossip_coverage.html>.
 
 - An arrival that did the task read only its own robot in the executor's
   vocabulary, so ePlanSys's scheduler moved it above the other arrivals, and its
-  group waited forever; it now reads every count below its need.
+  group waited forever. With the task reading every count below its need, the
+  arrivals before it could still change places, and the epistemic state refused
+  a second arrival dispatched before the first. Each arrival now reads the count
+  of the one before it.
+- A robot that had turned for home was not counted as free, so a call that
+  reached it came back absent, which the finder's instance did not allow. A
+  robot heading home, or at home, is free.
+- In Case I a robot told of the task with nothing to do goes home; a finder
+  planning again after a failed policy called such robots at the particles they
+  had left. A robot keeps, for each task, the robots it knows to know of it,
+  and in Case I the finder leaves those out of contact out of its instance,
+  unless the task needs them.
+- A robot counted as home only near its own place at the base, and robots
+  coming home in single file stopped one another short of their places. A
+  robot is home once it is within `inside` (1 m) of the base's centre, and goes
+  on to its place from there.
 - ePlanSys starts the next group of actions when all of the current one have
   finished, so an arrival answered at the site held the next calls for a drive;
   an arrival is answered when the robot sets out, and the task waits at the site.

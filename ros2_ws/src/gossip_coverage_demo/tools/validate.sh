@@ -30,8 +30,9 @@
 #   4. the executor's vocabulary and mapping cover every action of the
 #      canonical policies;
 #   5. the port of ePlanSys's scheduler (gossip/schedule.py) groups the
-#      canonical policies so that no task is started before an arrival it
-#      needs;
+#      canonical policies so that no arrival, and no task, is started before
+#      the arrival whose count it needs (which ePlanSys's epistemic state
+#      would refuse);
 #   6. one kinematic run of every method in each case.
 set -e
 HERE=$(dirname "$(realpath "$0")")
@@ -75,12 +76,12 @@ for i in hardware_case1 hardware_case2 sim_case1 sim_case2; do
   esac
 done
 
-for i in sim_case1 hardware_case2; do
+for i in hardware_case1 hardware_case2 sim_case1 sim_case2; do
   echo "== 3. the oblivious reading, $i"
   "$PLANK" export -d "$EPDDL/gossip-coverage.epddl" -p "$EPDDL/instances/$i.epddl" -l "$LIB" \
       "$EPDDL/variants/gossip-oblivious.epddl" -o "$OUT/obl-$i" > /dev/null 2>&1
   if "$PLANNER" --task "$OUT/obl-$i/$i.json" --plan "$OUT/obl-$i/policy.json" --strategy replan --subjective auto \
-      --consistent-beliefs --timeout 60 2>&1 | grep -q 'No solution exists'; then
+      --consistent-beliefs --timeout 300 2>&1 | grep -q 'No solution exists'; then
     echo "  no policy with consistent beliefs exists"
   else
     echo "  UNEXPECTED: a policy with consistent beliefs"; exit 1
@@ -119,9 +120,17 @@ import json, os, sys
 sys.path.insert(0, sys.argv[1])
 from gossip import schedule as SCH
 from gossip.epistemic import DURATION, kind, requires
+from gossip import epddl as P
+cases = {}
 for i in ('hardware_case1', 'hardware_case2', 'sim_case1', 'sim_case2'):
     d = os.path.join(sys.argv[2], i)
-    task, pol = json.load(open(os.path.join(d, f'{i}.json'))), json.load(open(os.path.join(d, 'policy.json')))
+    cases[i] = (json.load(open(os.path.join(d, f'{i}.json'))), json.load(open(os.path.join(d, 'policy.json'))))
+# and the situation of a Gazebo run in which two robots were in contact when
+# the task was found: the second's arrival must wait for the first's
+inst = P.Instance(['r2', 'r1', 'r3'], 'r2', 3, 1, knowers=['r2', 'r1'], name='two_in_contact')
+pol, _, _, path = P.solve(inst, extra=['--strategy', 'replan', '--subjective', 'auto'])
+cases['two_in_contact'] = (json.load(open(path)), pol)
+for i, (task, pol) in cases.items():
     root, items = SCH.schedule(pol, task, lambda a: DURATION.get(kind(a), 10.0), requires)
     # walk every branch; a do-task must come after every arrival before it on its branch
     bad, groups = 0, 0
@@ -138,17 +147,25 @@ for i in ('hardware_case1', 'hardware_case2', 'sim_case1', 'sim_case2'):
                 n = nxt
         if len(chain) > 1:
             groups += 1
+        done = list(seen)
         for a in chain:
+            # every arrival needs the count the one before it set: within a
+            # group the members start together, so the arrival before must be
+            # in an earlier group
+            arrived = sum(1 for x in done if x.startswith('go-site-'))
             if a.startswith('do-task-'):
                 k = int(a.split('_')[0].rsplit('-', 1)[1])
-                arrived = sum(1 for x in seen if x.startswith('go-site-'))
                 if arrived < k - 1:
+                    bad += 1
+            if a.startswith('go-site-'):
+                c = int(a.split('_')[0].rsplit('-', 1)[1])
+                if arrived < c:
                     bad += 1
         last = n
         for nx in last.next:
             walk(nx, seen + chain)
     walk(root, [])
-    print(f'  {i}: {groups} groups of more than one action, {bad} tasks started early')
+    print(f'  {i}: {groups} groups of more than one action, {bad} arrivals or tasks started before the count they need')
     if bad:
         sys.exit(1)
 PY

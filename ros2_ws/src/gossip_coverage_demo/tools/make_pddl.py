@@ -20,9 +20,11 @@ mapping into it.
     make_pddl.py --out pddl/
 
 gc-vocabulary.pddl  one action per thing a robot does, over (ok ?r), which an
-                    action of robot ?r reads and writes, and (count-n), which
-                    the arrival go_site_n writes and the arrival do_task_k
-                    reads for every n below k. ePlanSys's executor runs
+                    action of robot ?r reads and writes, and (count_n): the
+                    arrival go_site_n reads (count_n) and writes
+                    (count_n+1), and the arrival do_task_k reads (count_k-1),
+                    so that arrivals are dispatched in the counter's order, as
+                    the epistemic state requires. ePlanSys's executor runs
                     together the actions of a policy of which neither writes
                     what the other reads (schedule.py is its port): the task is
                     never started before every arrival before it, and arrivals
@@ -58,9 +60,9 @@ def vocabulary():
     for name in ('call', 'await', 'leave'):
         action(name, ['?a', '?b'], ['(ok ?a)', '(ok ?b)'], ['(ok ?a)', '(ok ?b)'])
     for n in range(N_SITE):
-        action(f'go_site_{n}', ['?r'], ['(ok ?r)'], ['(ok ?r)', f'(count_{n + 1})'])
+        action(f'go_site_{n}', ['?r'], ['(ok ?r)'] + ([f'(count_{n})'] if n else []), ['(ok ?r)', f'(count_{n + 1})'])
     for k in range(1, N_SITE + 1):
-        action(f'do_task_{k}', ['?r'], ['(ok ?r)'] + [f'(count_{i})' for i in range(1, k)], ['(ok ?r)'])
+        action(f'do_task_{k}', ['?r'], ['(ok ?r)'] + ([f'(count_{k - 1})'] if k > 1 else []), ['(ok ?r)'])
     preds = ' '.join(f'(count_{i})' for i in range(1, N_SITE + 1))
     return (';; GOSSIP OUT OF CONTACT: the executor\'s vocabulary under an epistemic policy.\n'
             ';; Written by tools/make_pddl.py. What decides the policy is in the EPDDL.\n'

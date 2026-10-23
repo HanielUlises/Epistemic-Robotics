@@ -60,6 +60,7 @@ class Spec:
     resync: float = 10.0        # s, while all are in contact the common belief is reset at least this often
     limit: float = 900.0        # s, a run that has not ended by then is cut
     slot: float = 0.0           # m, robots stand this far from a task or the base, each at its own bearing
+    inside: float = 0.0         # m, if set: a robot is home once this near the base, and goes on to its slot
 
 
 SIM = Spec()

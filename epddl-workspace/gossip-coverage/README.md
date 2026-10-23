@@ -71,9 +71,12 @@ knowledge is not impacted", which read literally is the oblivious observer of
 `variants/gossip-oblivious.epddl`. Under it a robot out of contact drops the
 actual world from what it considers possible at the first call it does not
 see, "knows" that the robot called does not know of the task, and believes a
-contradiction once the news reaches it from a robot it believed ignorant; no
-policy with consistent beliefs exists. `tools/oblivious.py` and
-`tools/validate.sh` show both.
+contradiction once the news reaches it from a robot it believed ignorant, or
+once it is waited for after an absence it did not see. None of the four
+canonical instances has a policy with consistent beliefs under that reading
+(the arrival that does the task is a third cause: its robot believes the others
+never arrived, since in this domain a robot at the site does not watch the
+others arrive). `tools/oblivious.py` and `tools/validate.sh` show both.
 
 ## Files
 

@@ -67,7 +67,7 @@ class Knowledge:
     heard from each robot (the timestamps q of Section 5.3.1)."""
 
     def __init__(self, ids):
-        self.tasks = {}          # tid -> {'pos', 'k', 'found_t', 'found_by', 'done'}
+        self.tasks = {}          # tid -> {'pos', 'k', 'found_t', 'found_by', 'done', 'knowers'}
         self.plan = None         # {'version', 'bundles', 'gb', 'told', 'fixed', 'expect'}
         self.excluded = {}       # robot -> time
         self.heard = {r: 0.0 for r in ids}
@@ -77,8 +77,9 @@ class Knowledge:
         for tid, t in other.tasks.items():
             mine = self.tasks.get(tid)
             if mine is None:
-                self.tasks[tid] = dict(t)
+                self.tasks[tid] = dict(t, knowers=set(t.get('knowers', ())))
             else:
+                mine['knowers'] = set(mine.get('knowers', ())) | set(t.get('knowers', ()))
                 mine['done'] = mine['done'] or t['done']
                 mine['handled'] = mine.get('handled', False) or t.get('handled', False)
                 if t['found_t'] < mine['found_t']:
@@ -189,6 +190,26 @@ class Sim:
     def home_point(self, r):
         return self.slot_of(r, self.spec.home)
 
+    def at_home(self, r, flock=False):
+        """Whether r has come home: near its place at the base, or, if
+        spec.inside is set, within spec.inside of the base's centre, from
+        where it goes on to its place (settle) without holding up those
+        behind it."""
+        s = self.spec
+        if s.inside:
+            return math.dist(r.pos, s.home) <= s.inside
+        d = math.dist(r.pos, self.home_point(r))
+        if flock:
+            return d <= max(0.3, 0.6 * s.home_radius - s.slot)
+        return d <= 0.6 * s.home_radius and d <= max(0.3, 0.6 * s.home_radius - s.slot)
+
+    def settle(self, r):
+        """A robot home goes on to its place at the base, if spec.inside is set."""
+        if self.spec.inside:
+            q = self.home_point(r)
+            if math.dist(r.pos, q) > 0.15:
+                self.drive(r, q, self.spec.v_max)
+
     def slot_of(self, r, q):
         if not self.spec.slot:
             return tuple(q)
@@ -249,6 +270,9 @@ class Sim:
         merged = Knowledge(self.ids)
         for r in rs:
             merged.merge(r.k, self.t)
+        # robots in contact know of the same tasks, and know that they do
+        for x in merged.tasks.values():
+            x['knowers'] |= set(comp)
         for r in comp:
             merged.heard[r] = self.t
             merged.excluded.pop(r, None)
@@ -423,7 +447,7 @@ class Sim:
         for g in comp:
             other = self.robots[g].k
             for tid, x in k.tasks.items():
-                other.tasks.setdefault(tid, dict(x))
+                other.tasks.setdefault(tid, dict(x, knowers=set(x.get('knowers', ()))))
             other.plan = plan
         self.counts['allocations'] += 1
         if not quiet:
@@ -520,7 +544,8 @@ class Sim:
             first = x['found_t'] is None
             if first:
                 x['found_t'], x['found_by'] = self.t, r.id
-            r.k.tasks[tid] = {'pos': x['pos'], 'k': x['k'], 'found_t': self.t, 'found_by': r.id, 'done': False}
+            r.k.tasks[tid] = {'pos': x['pos'], 'k': x['k'], 'found_t': self.t, 'found_by': r.id, 'done': False,
+                              'knowers': {r.id}}
             self.log('found', robot=r.id, task=tid, k=x['k'], first=first)
             self.sync_due = True
             if self.method in ('ideal', 'flock'):
@@ -600,14 +625,14 @@ class Sim:
                 return
         if r.status == 'home':
             q = self.home_point(r)
-            if math.dist(r.pos, q) <= 0.6 * s.home_radius and math.dist(r.pos, q) <= max(0.3, 0.6 * s.home_radius
-                                                                                             - s.slot):
+            if self.at_home(r):
                 r.status = 'parked'
                 self.log('home', robot=r.id)
                 return
             self.drive(r, q, s.v_max)
             return
         if r.status == 'parked':
+            self.settle(r)
             return
         if r.status == 'seek':
             g = r.job[1]
@@ -762,12 +787,13 @@ class Sim:
                 r.status = 'flock'
                 if target_task not in r.k.tasks:
                     r.k.tasks[target_task] = {'pos': x['pos'], 'k': x['k'], 'found_t': self.t,
-                                              'found_by': r.id, 'done': False}
+                                              'found_by': r.id, 'done': False, 'knowers': {r.id}}
         for r, q in zip(rs, slots):
-            if f['mode'] == 'home' and math.dist(r.pos, self.home_point(r)) <= max(0.3, 0.6 * s.home_radius - s.slot):
+            if f['mode'] == 'home' and (r.status == 'parked' or self.at_home(r, flock=True)):
                 if r.status != 'parked':
                     r.status = 'parked'
                     self.log('home', robot=r.id)
+                self.settle(r)
                 continue
             r.status = 'flock' if f['mode'] != 'home' else 'home'
             self.drive(r, q, s.v_max)

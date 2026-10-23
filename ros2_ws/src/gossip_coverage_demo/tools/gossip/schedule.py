@@ -30,9 +30,10 @@ epistemic half), and when neither's effects disturb what the other requires in
 the executor's vocabulary (the classical half). The vocabulary of this
 demonstration (vocabulary() below, and the PDDL that make_pddl.py writes from
 it) gives every action (ok ?r) of the robots it names to read and write; an
-arrival at the site, go-site-n, also writes (count n+1), and the arrival that
-does the task, do-task-k, reads (count 1) to (count k-1): the task is not
-started before every arrival before it, in whatever order they come.
+arrival at the site, go-site-n, also reads (count n) and writes (count n+1),
+and the arrival that does the task, do-task-k, reads (count k-1): arrivals are
+dispatched in the order of the counter, which the epistemic state requires,
+since each arrival's event needs the count the one before it set.
 """
 
 import re
@@ -47,10 +48,10 @@ def vocabulary(action):
     ok = {f'ok_{a}' for a in args}
     if head.startswith('go-site-'):
         n = int(head.rsplit('-', 1)[1])
-        return ok, ok | {f'count_{n + 1}'}
+        return ok | ({f'count_{n}'} if n else set()), ok | {f'count_{n + 1}'}
     if head.startswith('do-task-'):
         k = int(head.rsplit('-', 1)[1])
-        return ok | {f'count_{i}' for i in range(1, k)}, ok
+        return ok | ({f'count_{k - 1}'} if k > 1 else set()), ok
     return ok, ok
 
 
