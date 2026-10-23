@@ -1,0 +1,62 @@
+(define (problem hardware_case1)
+
+  ;; Written by tools/gossip/epddl.py. r3 has found a task that needs 2 of 3 robots; r3 know of it; no robot is busy.
+
+  (:domain gossip-coverage)
+
+  (:requirements
+    :facts :equality :list-comprehensions :finitary-S5-theories :modal-goals
+    :knowing-whether :multi-pointed-models :negative-preconditions
+  )
+
+  (:agents r3 r1 r2)
+
+  (:facts-init
+    (need2)
+    (near r1 r2) (near r1 r3) (near r2 r1) (near r2 r3) (near r3 r1) (near r3 r2)
+  )
+
+  (:init
+    (:and
+      (task)
+      ([C. All] (not (done)))
+      ([C. All] (c0))
+      ([C. All] (not (c1))) ([C. All] (not (c2))) ([C. All] (not (c3))) ([C. All] (not (c4))) ([C. All] (not (c5))) ([C. All] (not (c6))) ([C. All] (not (c7))) ([C. All] (not (c8)))
+      ([C. All] (not (need1))) ([C. All] (not (need3))) ([C. All] (not (need4))) ([C. All] (not (need5))) ([C. All] (not (need6))) ([C. All] (not (need7))) ([C. All] (not (need8)))
+      ([C. All] (not (out r3)))
+      ([C. All] (not (sited r3)))
+      ([C. All] (not (out r1)))
+      ([C. All] (not (sited r1)))
+      ([C. All] (not (out r2)))
+      ([C. All] (not (sited r2)))
+      ([C. All] (not (by r3 r3)))
+      ([C. All] (not (called r3 r3)))
+      ([C. All] (not (by r3 r1)))
+      ([C. All] (not (called r3 r1)))
+      ([C. All] (not (by r3 r2)))
+      ([C. All] (not (called r3 r2)))
+      ([C. All] (not (by r1 r3)))
+      ([C. All] (not (called r1 r3)))
+      ([C. All] (not (by r1 r1)))
+      ([C. All] (not (called r1 r1)))
+      ([C. All] (not (by r1 r2)))
+      ([C. All] (not (called r1 r2)))
+      ([C. All] (not (by r2 r3)))
+      ([C. All] (not (called r2 r3)))
+      ([C. All] (not (by r2 r1)))
+      ([C. All] (not (called r2 r1)))
+      ([C. All] (not (by r2 r2)))
+      ([C. All] (not (called r2 r2)))
+      ;; who knows of the task
+      ([C. All] ([Kw. r3] (task)))
+      ([C. All] (<Kw. r1> (task)))
+      ([C. All] (<Kw. r2> (task)))
+      ;; who may be busy, and that each knows whether it is
+      ([C. All] (not (busy r3)))
+      ([C. All] (not (busy r1)))
+      ([C. All] (not (busy r2)))
+    )
+  )
+
+  (:goal (and (done) ([r3] (task)) ([r1] (task)) ([r2] (task))))
+)

@@ -1,0 +1,47 @@
+(define (action-type-library gossip)
+
+  ;; Action types for a team out of radio contact (as belief-empathy's
+  ;; hailing library, of which this is a copy under its own name).
+  ;;
+  ;; A teammate out of contact does not see what another robot does, and does
+  ;; not believe that nothing happened either: it cannot tell. Unsure is that
+  ;; observer: from every event it considers every event of the action
+  ;; possible, the null one included. Oblivious would give it the false belief
+  ;; that nothing happened, and a later meeting that contradicts the belief
+  ;; would leave it believing a contradiction (see the README).
+  ;;
+  ;; unseen-ontic  a move: one designated event with effects and a null event.
+  ;; hail          a call at a teammate's particle: the teammate is there and
+  ;;               answers, or it is busy elsewhere; two designated events, and
+  ;;               a null event for whoever hears nothing.
+  ;;
+  ;; Variables are ?x and ?y: plank substitutes a library's relation variables
+  ;; as text.
+
+  (:requirements
+    :lists :list-comprehensions :equality
+    :partial-observability :multi-pointed-models :events-conditions
+    :negative-list-formulas
+  )
+
+  (:action-type unseen-ontic
+    :events     (?pos ?nil)
+    :observability-types (Fully Unsure)
+    :relations  (Fully  (:forall (?x - event) (?x ?x))
+                 Unsure (:forall (?x ?y - event) (?x ?y)) )
+    :designated (?pos)
+    :conditions (?pos (:non-trivial-postconditions)
+                 ?nil (:trivial-event) )
+  )
+
+  (:action-type hail
+    :events     (?pos ?neg ?nil)
+    :observability-types (Fully Unsure)
+    :relations  (Fully  (:forall (?x - event) (?x ?x))
+                 Unsure (:forall (?x ?y - event) (?x ?y)) )
+    :designated (?pos ?neg)
+    :conditions (?pos (:non-trivial-postconditions)
+                 ?neg (:non-trivial-postconditions)
+                 ?nil (:trivial-event) )
+  )
+)

@@ -1,0 +1,329 @@
+;; GOSSIP OUT OF CONTACT. A team that covers an area out of radio contact
+;; and a task, found by one robot, that needs several. After Bramblett and
+;; Bezzo, "Epistemic planning for multi-robot systems in communication-
+;; restricted environments", Frontiers in Robotics and AI 10:1149439 (2023).
+;;
+;; Every robot tracks its particle of the common belief: it stays where every
+;; other robot believes it to be, so that a teammate who needs it can find it
+;; there (the paper's empathy). A robot leaves its particle only for work it
+;; has been given: a task, or telling another robot of one. While away it is
+;; busy, and when its work is done it goes back to its particle. Whether a
+;; teammate is busy is known to that teammate alone.
+;;
+;; A robot has found a task, (task), at a site; it needs (need k) robots there
+;; together. Only a robot that knows of the task goes to it, ([?r] (task)),
+;; and only one that knows of it tells another. Telling takes being where the
+;; other is: a robot goes to a teammate's particle and calls (call). If the
+;; teammate is there it hears the call and, since the met event requires
+;; (task), learns of the task; if it is busy the caller learns that, and
+;; stays. A robot calls the teammates whose cells of the common belief's
+;; partition, eq. (9) of the paper, border its own, (near ?i ?j); news for a
+;; robot further away goes from neighbour to neighbour. A robot that knows a teammate busy may wait at its particle for it
+;; to come back (await), which it does when its own work is done, since it
+;; knows where the others believe it to be; or it may leave. The paper's
+;; ruleset excludes such a teammate instead.
+;;
+;; The paper's statuses are facts here: exploring, a robot at its particle
+;; and neither out nor sited; gossiping, (out ?r) and (by ?r ?j); completing
+;; a goal, (sited ?r); busy on work this plan does not know, (busy ?r). Its
+;; action library, perceive and announce, is the call: the met event is the
+;; announcement between the two in contact, and the absent event a perception
+;; of the empty particle. The counter (c0) to (c8) is how many robots have
+;; gone to the site; the robot that brings it to the task's need does the
+;; task. Written for teams of up to eight.
+
+(define (domain gossip-coverage)
+
+  (:requirements
+    :facts :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :negative-preconditions :modal-preconditions :knowing-whether
+    :negative-obs-conditions
+  )
+
+  (:action-type-libraries intermediate gossip)
+
+  (:predicates
+    (task)                   ; a task has been found at the site
+    (busy ?r - agent)        ; ?r is away from its particle on other work
+    (out ?r - agent)         ; ?r has left its particle to tell a teammate
+    (by ?i ?j - agent)       ; ?i stands at ?j's particle, which it found empty
+    (called ?i ?j - agent)   ; ?i has called ?j and been heard
+    (:fact near ?i ?j - agent)  ; the cells of ?i and ?j in the partition of the common belief share a border
+    (sited ?r - agent)       ; ?r has gone to the site and waits there
+    (c0)
+    (c1)
+    (c2)
+    (c3)
+    (c4)
+    (c5)
+    (c6)
+    (c7)
+    (c8)
+    (:fact need1)
+    (:fact need2)
+    (:fact need3)
+    (:fact need4)
+    (:fact need5)
+    (:fact need6)
+    (:fact need7)
+    (:fact need8)
+    (done)                   ; the task has been done
+  )
+
+  (:event nil)
+
+  ;;--------------------THE CALL------------------
+  ;; A robot that knows of the task goes to a teammate's particle and calls.
+  ;; The teammate is there and hears it, or it is busy elsewhere. Met, it
+  ;; learns of the task, since the met event requires it, and the caller is
+  ;; free to go on. Absent, the caller learns that it is busy and stays at its
+  ;; particle. Nobody else out of contact sees either.
+
+  (:event e-met
+    :parameters (?i ?j - agent)
+    :precondition (and (near ?i ?j) (not (out ?i)) (not (sited ?i)) (not (busy ?i)) ([?i] (task))
+                       (not (busy ?j)) (not (out ?j)) (not (sited ?j)) (task))
+    :effects (:and (called ?i ?j))
+  )
+
+  (:event e-absent
+    :parameters (?i ?j - agent)
+    :precondition (and (near ?i ?j) (not (out ?i)) (not (sited ?i)) (not (busy ?i)) ([?i] (task))
+                       (busy ?j))
+    :effects (:and (out ?i) (by ?i ?j))
+  )
+
+  (:action call
+    :parameters (?i ?j - agent | (/= ?i ?j))
+    :action-type (hail (e-met ?i ?j) (e-absent ?i ?j) (nil))
+    :observability-conditions
+      (:and (?i Fully)
+            (?j (if (busy ?j) Unsure else Fully))
+            (default Unsure))
+  )
+
+  ;; A busy teammate goes back to its particle when its work is done; a
+  ;; robot that knows it busy and waits there meets it then. Or the robot
+  ;; leaves.
+
+  (:event e-await
+    :parameters (?i ?j - agent)
+    :precondition (and (by ?i ?j) (busy ?j) (task) ([?i] (busy ?j)))
+    :effects (:and (not (busy ?j)) (not (by ?i ?j)) (not (out ?i)) (called ?i ?j))
+  )
+
+  (:action await
+    :parameters (?i ?j - agent | (/= ?i ?j))
+    :action-type (unseen-ontic (e-await ?i ?j) (nil))
+    :observability-conditions (:and (?i Fully) (?j Fully) (default Unsure))
+  )
+
+  (:event e-leave
+    :parameters (?i ?j - agent)
+    :precondition (and (by ?i ?j))
+    :effects (:and (not (by ?i ?j)) (not (out ?i)))
+  )
+
+  (:action leave
+    :parameters (?i ?j - agent | (/= ?i ?j))
+    :action-type (unseen-ontic (e-leave ?i ?j) (nil))
+    :observability-conditions (:and (?i Fully) (default Unsure))
+  )
+
+  ;;--------------------TO THE SITE------------------
+  ;; A robot that knows of the task and has nobody left to tell goes to the
+  ;; site; the counter says how many are there, and the robot whose arrival
+  ;; makes as many as the task needs does it. Nobody out of contact sees it.
+
+  (:event e-site-0
+    :parameters (?r - agent)
+    :precondition (and (c0) (not (need1)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c1) (not (c0)))
+  )
+
+  (:action go-site-0
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-0 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-0
+    :parameters (?r - agent)
+    :precondition (and (c0) (need1) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c1) (not (c0)) (done))
+  )
+
+  (:action do-task-1
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-0 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-site-1
+    :parameters (?r - agent)
+    :precondition (and (c1) (not (need2)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c2) (not (c1)))
+  )
+
+  (:action go-site-1
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-1 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-1
+    :parameters (?r - agent)
+    :precondition (and (c1) (need2) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c2) (not (c1)) (done))
+  )
+
+  (:action do-task-2
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-1 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-site-2
+    :parameters (?r - agent)
+    :precondition (and (c2) (not (need3)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c3) (not (c2)))
+  )
+
+  (:action go-site-2
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-2 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-2
+    :parameters (?r - agent)
+    :precondition (and (c2) (need3) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c3) (not (c2)) (done))
+  )
+
+  (:action do-task-3
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-2 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-site-3
+    :parameters (?r - agent)
+    :precondition (and (c3) (not (need4)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c4) (not (c3)))
+  )
+
+  (:action go-site-3
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-3 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-3
+    :parameters (?r - agent)
+    :precondition (and (c3) (need4) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c4) (not (c3)) (done))
+  )
+
+  (:action do-task-4
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-3 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-site-4
+    :parameters (?r - agent)
+    :precondition (and (c4) (not (need5)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c5) (not (c4)))
+  )
+
+  (:action go-site-4
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-4 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-4
+    :parameters (?r - agent)
+    :precondition (and (c4) (need5) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c5) (not (c4)) (done))
+  )
+
+  (:action do-task-5
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-4 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-site-5
+    :parameters (?r - agent)
+    :precondition (and (c5) (not (need6)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c6) (not (c5)))
+  )
+
+  (:action go-site-5
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-5 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-5
+    :parameters (?r - agent)
+    :precondition (and (c5) (need6) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c6) (not (c5)) (done))
+  )
+
+  (:action do-task-6
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-5 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-site-6
+    :parameters (?r - agent)
+    :precondition (and (c6) (not (need7)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c7) (not (c6)))
+  )
+
+  (:action go-site-6
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-6 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-6
+    :parameters (?r - agent)
+    :precondition (and (c6) (need7) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c7) (not (c6)) (done))
+  )
+
+  (:action do-task-7
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-6 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-site-7
+    :parameters (?r - agent)
+    :precondition (and (c7) (not (need8)) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)))
+    :effects (:and (sited ?r) (c8) (not (c7)))
+  )
+
+  (:action go-site-7
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-site-7 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+
+  (:event e-last-7
+    :parameters (?r - agent)
+    :precondition (and (c7) (need8) (not (sited ?r)) (not (out ?r)) (not (busy ?r)) ([?r] (task)) (task))
+    :effects (:and (sited ?r) (c8) (not (c7)) (done))
+  )
+
+  (:action do-task-8
+    :parameters (?r - agent)
+    :action-type (unseen-ontic (e-last-7 ?r) (nil))
+    :observability-conditions (:and (?r Fully) (default Unsure))
+  )
+)
