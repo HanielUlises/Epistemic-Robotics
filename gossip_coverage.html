@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gossip out of contact &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="Bramblett and Bezzo's coverage and task allocation out of radio contact, recreated: their simulation study in a kinematic simulator, the decision at a task found as an EPDDL planning task that Aletheia plans and ePlanSys executes, and their laboratory experiments in Gazebo, with a formal analysis of the model.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="Gossip out of contact">
+<meta property="og:description" content="Bramblett and Bezzo's coverage and task allocation out of radio contact, recreated: their simulation study in a kinematic simulator, the decision at a task found as an EPDDL planning task that Aletheia plans and ePlanSys executes, and their laboratory experiments in Gazebo, with a formal analysis of the model.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/gossip_coverage.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/gossip_coverage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The film as a robot that has found a task calls a teammate at its particle: the plan view with every robot, its particle and who knows of the task, and Gazebo.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/gossip_coverage.jpg">
+<meta name="twitter:title" content="Gossip out of contact">
+<meta name="twitter:description" content="Bramblett and Bezzo's coverage and task allocation out of radio contact, recreated: their simulation study in a kinematic simulator, the decision at a task found as an EPDDL planning task that Aletheia plans and ePlanSys executes, and their laboratory experiments in Gazebo, with a formal analysis of the model.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="The film as a robot that has found a task calls a teammate at its particle: the plan view with every robot, its particle and who knows of the task, and Gazebo.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/gossip_coverage.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The thirty domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by what it demonstrates</span></a>
+          <details class="nav-folder">
+            <summary>Single-agent sensing</summary>
+            <div class="nav-sub">
+          <a href="demos.html#single-agent">All single-agent sensing demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+          <a href="two_lookouts.html">&#183; Where to look from<span class="sub">Knowing whether: two lookouts, a screen, and success the map backs</span></a>
+          <a href="lookout_board.html">&#183; The lookout board<span class="sub">Information gathering under epistemic and classical planning</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Fleet missions at scale</summary>
+            <div class="nav-sub">
+          <a href="demos.html#fleet-missions">All fleet missions at scale demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Higher-order and group knowledge</summary>
+            <div class="nav-sub">
+          <a href="demos.html#group-knowledge">All higher-order and group knowledge demos</a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+          <a href="coordinated_attack_scale.html">&#183; The coordinated attack among many robots<span class="sub">Bystanders, the cost of a level, four robots</span></a>
+          <a href="muddy_robots.html">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+          <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Belief and belief change</summary>
+            <div class="nav-sub">
+          <a href="demos.html#belief">All belief and belief change demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+          <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Communication and coordination</summary>
+            <div class="nav-sub">
+          <a href="demos.html#communication">All communication and coordination demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+          <a href="when_planning_pays.html">&#183; When planning pays<span class="sub">The plan against flooding, pulling and gossip: when sharing is enough, and when not</span></a>
+          <a href="gate_signal.html">&#183; The gate signal<span class="sub">Implicit coordination: a route chosen to be seen, against classical teams</span></a>
+          <a href="watcher.html">&#183; The watcher<span class="sub">Knowledge that must not spread: told to one robot, hidden from another</span></a>
+          <a href="watcher_moves.html">&#183; The watcher that moves<span class="sub">Subjective branching, and a secret from a watcher that knows the plan</span></a>
+          <a href="link_grades.html">&#183; Link grades<span class="sub">Epistemic and classical planning over a link that is never, partly or always down</span></a>
+          <a href="collapsed_wing.html">&#183; The collapsed wing<span class="sub">SLAM, knowledge preconditions, and a way known clear by elimination</span></a>
+          <a href="belief_empathy.html">&#183; Belief and empathy particles<span class="sub">Bramblett and Bezzo's heterogeneous team out of contact, recreated on ePlanSys</span></a>
+          <a href="gossip_coverage.html" aria-current="page">&#183; Gossip out of contact<span class="sub">Bramblett and Bezzo's coverage and task allocation out of contact, recreated on ePlanSys</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <details class="nav-folder">
+            <summary>Single-agent sensing</summary>
+            <div class="nav-sub">
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="two_lookouts.pdf">Where to Look From<span class="sub">Knowing whether, a look with a modal precondition, and no conformant plan</span></a>
+          <a href="lookout_board.pdf">The Lookout Board<span class="sub">Information gathering under epistemic and classical planning, one robot and four lookouts</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Fleet missions at scale</summary>
+            <div class="nav-sub">
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Higher-order and group knowledge</summary>
+            <div class="nav-sub">
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Belief and belief change</summary>
+            <div class="nav-sub">
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Communication and coordination</summary>
+            <div class="nav-sub">
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
+          <a href="gate_signal.pdf">The Gate Signal<span class="sub">Implicit coordination by an observable route, against classical teams</span></a>
+          <a href="watcher.pdf">The Watcher<span class="sub">A negative knowledge goal, conditional observability, and no conformant plan</span></a>
+          <a href="watcher_moves.pdf">The Watcher That Moves<span class="sub">Policies a robot can follow, and opacity against a policy-aware watcher</span></a>
+          <a href="link_grades.pdf">Link Grades<span class="sub">Worst-case conditional planning, lossy messages, and success measured on the maps</span></a>
+          <a href="collapsed_wing.pdf">The Collapsed Wing<span class="sub">Knowledge preconditions over SLAM maps, and knowledge by elimination</span></a>
+          <a href="belief_empathy.pdf">Belief and Empathy Particles<span class="sub">A heterogeneous team out of contact as an epistemic planning task, against the paper's methods</span></a>
+          <a href="gossip_coverage.pdf">Gossip Out of Contact<span class="sub">Coverage and task allocation out of contact, recreated, with the gossip as an epistemic planning task</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Methods and general reports</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>/* gc-narrow: on a phone a wide table scrolls within its own width */
+@media(max-width:720px){table.data{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+table.data td.gc-l{text-align:left}
+.gc-map td:first-child{white-space:nowrap}
+table.gc-text th,table.gc-text td{text-align:left}
+.gc-prop{border-left:3px solid #2f4866;padding:.2rem 0 .2rem 1rem;margin:1.1rem 0}
+.gc-prop b{color:#2f4866}</style>
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">After Bramblett and Bezzo (2023) &#183; coverage out of contact &#183; common belief &#183; empathy &#183; gossip &#183; knowledge preconditions &#183; joint policies &#183; ROS 2</p>
+    <h2>Gossip out of contact</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      Bramblett and Bezzo<sup class="cite"><a href="#ref-bb23">[1]</a></sup>
+      let a team of robots break radio contact to cover an unknown area faster.
+      While in contact the robots share what they know; from then on each
+      robot propagates, alike, one particle per robot, the <i>common belief</i>,
+      and tracks its own, so that it stays where the others believe it to be
+      (the paper's <i>empathy</i>). A robot that finds a task needing several
+      robots allocates it by auctions, bidding for the robots out of contact
+      from its belief about them, and tells the robots it needs by going to
+      their particles (the paper's <i>gossip</i>). The paper writes the state in
+      dynamic epistemic logic and compares its method with a team that never
+      leaves radio range and one with unlimited radio, in simulation and on
+      ROSbots in its laboratory.
+    </p>
+    <p class="hero-p">
+      This page recreates the paper in three parts. Its simulation study, in a
+      kinematic simulator: fifteen areas, teams of two to eight, its two cases
+      and its three methods, 720 runs. The decision a robot makes when it
+      finds a task, written as an EPDDL planning task: Aletheia plans it, and
+      ePlanSys executes the policy. And its laboratory experiments, with three
+      TurtleBot3 robots in Gazebo, ePlanSys's planner and executor in the loop,
+      96 runs. A formal analysis states the model and proves what holds of
+      it: the paper's update rules, what its rule for disconnected robots does
+      when read literally, when the planning task is solvable, and where two
+      policies can wait for each other forever.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      In the kinematic study the paper's ordering reappears, with gaps of 8.1 and 34.4&#8202;s in Case II against its 16 and 35; the policies, all 320 found in at most 0.31&#8202;s, are at parity with the procedure where tasks compete and slower where everyone must be told. In Gazebo 96 of 96 runs ended with every task done. Every canonical policy satisfies the paper's update rules in every world and can be followed by every robot on what it observes; under the literal reading of the paper's rule for disconnected robots, a task that needs news to pass through a robot, or a wait for a busy one, has no policy with consistent beliefs at all.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">gossip_coverage_demo</span>; domain
+      <span class="mono-inline">gossip-coverage</span>; policies from
+      <a href="https://github.com/ePlanSys/eplansys">eplansys</a>, search by
+      Aletheia. Full account, with the proofs, in
+      <a href="gossip_coverage.pdf">Gossip Out of Contact</a> (PDF).
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Recorded runs</h3>
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/gossip_coverage_poster.jpg">
+        <source src="media/gossip_coverage.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Left: the arena from above, drawn from the mission's frames: each robot, its particle of the common belief and the line to it, grey lines between robots in radio contact, a thick line from a robot to the teammate it is telling, and the tasks, filled once found. Right: Gazebo. Below it: the events of the run and who knows of each task. Stretches in which nothing is being decided play at four times their speed, and the corner says so. The takes are runs of their own, recorded after the batch: Gazebo runs of the same seed differ in their timing, so their times are not the table's.
+      </figcaption>
+    </figure>
+    <table class="data">
+      <thead><tr><th>take</th><th>world</th><th>what happened when the task was found</th><th>mission</th></tr></thead>
+      <tbody>
+<tr><td>epistemic</td><td>case 1, seed 3</td><td class='gc-l'>r2 finds t1 (needs 2); r2 plans with ePlanSys; r2 tells r1; r1 tells r3; t1 done at 175 s</td><td>213.3 s</td></tr>
+<tr><td>proposed</td><td>case 1, seed 3</td><td class='gc-l'>r2 finds t1 (needs 2); r2 allocates; r2 tells r3; r2 tells r1; r3 allocates; t1 done at 121 s</td><td>157.3 s</td></tr>
+<tr><td>epistemic</td><td>case 2, seed 2</td><td class='gc-l'>r3 finds t2 (needs 3); r3 plans with ePlanSys; r3 tells r2; t2 done at 94 s; r2 finds t1 (needs 2); r2 plans with ePlanSys; t1 done at 166 s</td><td>264.4 s</td></tr>
+<tr><td>flock</td><td>case 1, seed 3</td><td class='gc-l'>r3 finds t1 (needs 2); t1 done at 69 s</td><td>107.7 s</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the recreation shows</p>
+    <h3 class="pt-findings-title">Principal findings</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#gc-study-sec">
+        <span class="pt-card-img"><img src="media/thumbs/gossip_coverage_card_study.jpg" alt="Mission time by team size in Case II for the four formulations" loading="lazy"></span>
+        <span class="pt-card-k">The simulation study</span>
+        <span class="pt-card-h">The paper's comparison reproduced</span>
+        <span class="pt-card-p">Over 720 runs the procedure lies between the ideal method and the flock as the paper reports: in Case II 8.1&#8202;s slower than the ideal method and 34.4&#8202;s faster than the flock, against the paper's 16 and 35. The ePlanSys policy is at parity with the procedure where tasks compete, and slower where everyone must be told.</span>
+        <span class="pt-card-go">See the study <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#gc-analysis-sec">
+        <span class="pt-card-img"><img src="media/thumbs/gossip_coverage_card_model.jpg" alt="The policy for three robots, two of which may be busy" loading="lazy"></span>
+        <span class="pt-card-k">Formal analysis</span>
+        <span class="pt-card-h">The rules as theorems, and where they fail</span>
+        <span class="pt-card-p">The paper's update rules hold as properties of the product update. Read literally, its rule for disconnected robots breaks the equivalence of knowledge and belief it assumes, and no policy keeps beliefs consistent. Waiting for a busy robot is sound only if that robot comes back, which two policies at once can prevent.</span>
+        <span class="pt-card-go">See the analysis <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#gc-gazebo-sec">
+        <span class="pt-card-img"><img src="media/thumbs/gossip_coverage_card_gazebo.jpg" alt="Gazebo as three Burgers meet at a task" loading="lazy"></span>
+        <span class="pt-card-k">The laboratory experiments</span>
+        <span class="pt-card-h">ePlanSys plans and executes the gossip</span>
+        <span class="pt-card-p">96 of 96 Gazebo runs ended with every task done. The policies, planned when a task is found and run by ePlanSys's executor, end their missions a median of 0.6&#8202;s later than the paper's procedure in Case I and a median of 0.4&#8202;s earlier than it in Case II.</span>
+        <span class="pt-card-go">See the runs <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#gc-paper-sec">The paper</a>
+      <a href="#gc-map-sec">Correspondence</a>
+      <a href="#gc-domain-sec">The planning task</a>
+      <a href="#gc-policy-sec">A policy</a>
+      <a href="#gc-analysis-sec">Formal analysis</a>
+      <a href="#gc-study-sec">The simulation study</a>
+      <a href="#gc-gazebo-sec">Gazebo</a>
+      <a href="#gc-scale-sec">Scaling</a>
+      <a href="#gc-defects-sec">Defects</a>
+      <a href="#gc-limits-sec">Limitations</a>
+      <a href="#gc-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE PAPER -->
+<section id="gc-paper-sec">
+  <div class="container">
+    <p class="sec-label">The paper</p>
+    <h3>Epistemic planning for multi-robot systems in communication-restricted environments</h3>
+    <p>
+      The paper poses two problems: a distributed policy by which \(N_r\) robots
+      cover a partly unknown area with intermittent communication, and a
+      distributed policy that allocates the tasks they find when an allocation
+      may need robots out of contact. A task has a place, the number
+      \(N_\tau\) of robots it needs at once, and a reward. Robot \(i\) keeps
+      particles \(p^i_{j,k}\), its belief about robot \(j\)'s belief about robot
+      \(k\); its empathy particles \(p^i_{j,i}\) are what the others believe of
+      it. When all are in contact they share their states, maps and tasks, and
+      each robot then propagates the same common belief set \(C^i\) by the same
+      coverage: every particle claims the frontier points of its Voronoi cell,
+      eq. (9), and goes to the point of least utility, with a penalty
+      \(\Delta\) outside its cell, eqs. (10) to (12). A robot out of contact tracks
+      its own particle.
+    </p>
+    <p>
+      The action library is \(\{\mathit{perceive}(\varphi),
+      \mathit{announce}(\varphi)\}\); \(K_i\,\mathit{present}(\tau)\) reads
+      "\(i\) knows the place, need and value of \(\tau\)". An announcement reaches
+      the robots in contact, and "disconnected robots' knowledge is not
+      impacted", eq. (18). Two rulesets: a robot sought at its particle and not
+      found is excluded, as busy; and a robot that finds a task it believes a
+      teammate found first leaves it to that teammate. The policy is joint:
+      "robots need to map indistinguishable epistemic states to the same
+      actions". A task found is allocated by a sequential single-item auction
+      (Algorithm 1), reordered for makespan (Algorithm 2), and told by a gossip
+      auction in which a robot told joins the tellers (Algorithm 3).
+    </p>
+    <p>
+      Its simulations use fifteen random 50 by 50&#8202;m areas with 10 to 20
+      unknown obstacles of 1&#8202;m, teams of 2, 3, 5 and 8, robots of
+      3&#8202;m/s with a 5&#8202;m lidar. Case I has one task, known to exist;
+      Case II an unknown number. Against a <i>flock</i> that keeps every robot
+      within 10&#8202;m and an <i>ideal</i> method with unlimited radio, it
+      reports in Case I that its method is 11&#8202;s slower than the ideal one and
+      13&#8202;s faster than the flock on average, with standard deviations of 11,
+      14 and 48&#8202;s, the flock being better with two robots; in Case II, 16&#8202;s
+      slower than the ideal method and 35&#8202;s faster than the flock. Its
+      experiments run two or three ROSbots in a 4 by 5.5&#8202;m laboratory with a
+      sensing and communication range of 1&#8202;m.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ CORRESPONDENCE -->
+<section id="gc-map-sec">
+  <div class="container">
+    <p class="sec-label">Correspondence</p>
+    <h3>The paper's constructs, and what they are here</h3>
+    <p>
+      ePlanSys plans in dynamic epistemic logic<sup class="cite"><a href="#ref-del">[3]</a></sup>
+      itself: the state is a pointed Kripke model, the actions are event models
+      applied by the product update<sup class="cite"><a href="#ref-bms">[4]</a></sup>,
+      and a policy is searched for over the models they reach<sup class="cite"><a href="#ref-ba">[5]</a></sup>.
+    </p>
+    <table class="data gc-map gc-text">
+      <thead><tr><th>in the paper</th><th>here</th></tr></thead>
+      <tbody>
+        <tr><td class="gc-l">common belief set \(C^i\), propagated by the coverage</td><td class="gc-l">one particle per robot, propagated from the state all last shared, reset when all are in contact and new knowledge is shared; every robot tracks its own</td></tr>
+        <tr><td class="gc-l">world \(w = \{\sigma_i\}\): every robot's status</td><td class="gc-l">at its particle; gossiping, \(\mathit{out}\) and \(\mathit{by}\); completing a goal, \(\mathit{sited}\); away on other work, \(\mathit{busy}\), known to that robot alone</td></tr>
+        <tr><td class="gc-l">\(\mathit{announce}\), \(\mathit{perceive}\)</td><td class="gc-l">the event model <span class="mono-inline">call</span>: met, the announcement between the two in contact, which carries the task; absent, the perception of an empty particle</td></tr>
+        <tr><td class="gc-l">\(K_i\,\mathit{present}(\tau)\)</td><td class="gc-l">\(K_i\,\mathit{task}\), a precondition of telling and of going to the site</td></tr>
+        <tr><td class="gc-l">ruleset 1: not found, excluded</td><td class="gc-l">the absent event gives \(K_i\,\mathit{busy}_j\); the robot may wait at the particle (<span class="mono-inline">await</span>) or leave</td></tr>
+        <tr><td class="gc-l">ruleset 2: believed found by a teammate</td><td class="gc-l">not applied: it rests on a belief about a teammate's knowledge that no event out of contact can make knowledge (below)</td></tr>
+        <tr><td class="gc-l">gossip auction, a robot told joins the tellers</td><td class="gc-l">a robot calls only teammates whose Voronoi cells border its own, eq. (9); news for a robot further away goes from neighbour to neighbour</td></tr>
+        <tr><td class="gc-l">joint policy</td><td class="gc-l">every action branches on what its actor observes (Aletheia's <span class="mono-inline">--subjective auto</span>), checked for every policy</td></tr>
+        <tr><td class="gc-l">planning task \(\Pi = (s^i_t, A, \gamma)\)</td><td class="gc-l">the EPDDL problem the finder writes from what it knows, when it finds the task</td></tr>
+        <tr><td class="gc-l">MATLAB simulations; ROSbots</td><td class="gc-l">a kinematic simulator; three Burgers in Gazebo, with ePlanSys's planner and executor</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Four formulations run on the same robots. The <i>procedure</i> is the
+      paper's framework, with the first ruleset strengthened so that a robot
+      excluded is admitted again after 60&#8202;s and a task that cannot be
+      allocated is tried again every 5&#8202;s. The <i>ideal</i> method is the
+      procedure with unlimited radio; the <i>flock</i> keeps every robot within
+      range of every other. The <i>epistemic</i> formulation is the procedure
+      with the decision at a task found made by a policy of the planning task
+      below.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE PLANNING TASK -->
+<section id="gc-domain-sec">
+  <div class="container">
+    <p class="sec-label">The planning task</p>
+    <h3>Calls, absences and arrivals</h3>
+    <p>
+      The finder writes an instance from what it knows: the robots, itself
+      first and the others in the order of the paper's own bid for them; the
+      robots in contact with it, which know of the task; the robots out of
+      contact that may be busy, at most two of them, in Case II (in Case I, with
+      one task known to exist, nobody else can be); the neighbour relation of
+      the Voronoi partition of where it believes the particles are; and the
+      need \(k\). The initial model has a world for every set of busy robots
+      within the bound, with the task present or not; each robot knows whether
+      it is busy, the finder and the robots in contact know of the task, and
+      nobody else does.
+    </p>
+    <table class="data gc-text">
+      <thead><tr><th>action</th><th>events</th><th>the actor</th><th>the robot named</th><th>everyone else</th></tr></thead>
+      <tbody>
+        <tr><td>call(i, j)</td><td>met, absent</td><td>observes which</td><td>fully where it is free; unsure where busy</td><td>unsure whether anything happened</td></tr>
+        <tr><td>await(i, j)</td><td>j comes back</td><td>fully</td><td>fully</td><td>unsure</td></tr>
+        <tr><td>leave(i, j)</td><td>one</td><td>fully</td><td colspan="2">unsure</td></tr>
+        <tr><td>go-site-n(r), do-task-k(r)</td><td>one</td><td>fully</td><td colspan="2">unsure</td></tr>
+      </tbody>
+    </table>
+    <pre class="code">(:event e-met :parameters (?i ?j - agent)
+  :precondition (and (near ?i ?j) (not (out ?i)) (not (sited ?i)) (not (busy ?i)) ([?i] (task))
+                     (not (busy ?j)) (not (out ?j)) (not (sited ?j)) (task))   <span class="c">; the call carries the task</span>
+  :effects (:and (called ?i ?j)))
+(:event e-absent :parameters (?i ?j - agent)
+  :precondition (and (near ?i ?j) (not (out ?i)) (not (sited ?i)) (not (busy ?i)) ([?i] (task)) (busy ?j))
+  :effects (:and (out ?i) (by ?i ?j)))                                          <span class="c">; i stays at j's particle</span>
+(:action call :parameters (?i ?j - agent | (/= ?i ?j))
+  :action-type (hail (e-met ?i ?j) (e-absent ?i ?j) (nil))
+  :observability-conditions (:and (?i Fully) (?j (if (busy ?j) Unsure else Fully)) (default Unsure)))
+(:event e-await :parameters (?i ?j - agent)
+  :precondition (and (by ?i ?j) (busy ?j) (task) ([?i] (busy ?j)))            <span class="c">; it comes back, and hears</span>
+  :effects (:and (not (busy ?j)) (not (by ?i ?j)) (not (out ?i)) (called ?i ?j)))</pre>
+    <p>
+      A robot goes to the site only when it knows of the task; the counter
+      \(c_0, \ldots, c_8\) says how many have gone, and the arrival that makes
+      as many as the task needs does it. The goal is \(\mathit{done}\), and in
+      Case I also \(K_a\,\mathit{task}\) for every robot \(a\): every robot must
+      learn that the one task has been found, and those it does not need go home.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ A POLICY -->
+<section id="gc-policy-sec">
+  <div class="container">
+    <p class="sec-label">A policy</p>
+    <h3>The laboratory's second task: three robots, two of which may be busy</h3>
+    <p>
+      The instance <span class="mono-inline">hardware_case2</span> is the paper's
+      Fig. 11 at the moment its second task is found: robot \(r_1\) finds a task
+      that needs all three robots, and the other two may be away on the first.
+      Aletheia, with its replanning strategy, subjective branching and
+      consistent beliefs required, returns in 0.01&#8202;s:
+    </p>
+    <figure class="demo-figure">
+      <img src="media/gossip_coverage_policy.png" alt="The policy as a tree: r1 calls r2; met or absent; r2 calls r3; met or absent; waits where a call finds nobody; arrivals and the task" style="width:100%;max-width:860px">
+      <figcaption>The policy as a tree. Each box is coloured by the robot that acts; a branch is chosen by what that robot observes, so every robot can follow the policy on its own observations.</figcaption>
+    </figure>
+    <pre class="code">call_r1_r2
+[e-met]
+  go-site-0_r1
+  call_r2_r3
+  [e-met]
+    go-site-1_r2
+    do-task-3_r3
+  [e-absent]
+    await_r2_r3
+    go-site-1_r2
+    do-task-3_r3
+[e-absent]
+  await_r1_r2
+  go-site-0_r1
+  call_r2_r3
+  [e-met]
+    go-site-1_r2
+    do-task-3_r3
+  [e-absent]
+    await_r2_r3
+    go-site-1_r2
+    do-task-3_r3</pre>
+    <p>
+      In each of the four designated worlds, <span class="mono-inline">tools/check_policy.py</span>
+      replays the policy through the product update and evaluates the paper's
+      rules at the actual world after every step. In the world where both
+      teammates are busy:
+    </p>
+    <table class="data gc-text">
+    <thead><tr><th>step</th><th>event</th><th>who knows of the task</th><th>worlds r1 / r2 / r3 consider</th></tr></thead><tbody>
+    <tr><td>start</td><td></td><td>r1</td><td>4 / 4 / 4</td></tr>
+    <tr><td>call_r1_r2</td><td>e-absent</td><td>r1</td><td>2 / 6 / 6</td></tr>
+    <tr><td>await_r1_r2</td><td>e-await</td><td>r1, r2</td><td>2 / 2 / 7</td></tr>
+    <tr><td>go-site-0_r1</td><td>e-site-0</td><td>r1, r2</td><td>2 / 4 / 11</td></tr>
+    <tr><td>call_r2_r3</td><td>e-absent</td><td>r1, r2</td><td>4 / 2 / 15</td></tr>
+    <tr><td>await_r2_r3</td><td>e-await</td><td>r1, r2, r3</td><td>5 / 2 / 4</td></tr>
+    <tr><td>go-site-1_r2</td><td>e-site-1</td><td>r1, r2, r3</td><td>9 / 1 / 6</td></tr>
+    <tr><td>do-task-3_r3</td><td>e-last-2</td><td>r1, r2, r3</td><td>11 / 2 / 2</td></tr>
+    </tbody></table>
+    <p>
+      An unanswered call tells \(r_1\), and nobody else, that \(r_2\) is busy;
+      \(r_1\) waits at \(r_2\)'s particle, because a robot away on other work
+      comes back to where the others believe it to be; once told, \(r_2\) carries
+      the task to \(r_3\). AO* finds a policy of the same depth, 7.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FORMAL ANALYSIS -->
+<section id="gc-analysis-sec">
+  <div class="container">
+    <p class="sec-label">Formal analysis</p>
+    <h3>What holds of the model, and what does not</h3>
+    <p>
+      The report states the model and proves each claim; here are the
+      statements. \(\mathcal{M}\otimes\mathcal{E}\) is the product of a model and
+      an event model; a <i>Fully</i> observer tells the events apart, an
+      <i>Unsure</i> one considers every event of the action possible, the null
+      one included, and an <i>oblivious</i> one believes the null event
+      happened.
+    </p>
+    <div class="gc-prop"><b>Lemma (size).</b> The initial model has
+      \(|W_d| = \sum_{j \le b} \binom{|B|}{j}\) designated worlds and twice as many
+      worlds, for \(|B|\) robots that may be busy, at most \(b\) of them: 4 and 8
+      for the laboratory's second task, 29 and 58 for eight robots with at most
+      two busy, as plank reports.</div>
+    <div class="gc-prop"><b>Proposition 1 (announcement in contact, eq. (18)).</b>
+      After a met call \(i{:}j\), \(K_j\,\mathit{task} \wedge K_iK_j\,\mathit{task}
+      \wedge K_jK_i\,\mathit{task}\). The met event requires the task, and the two
+      robots observe it fully.</div>
+    <div class="gc-prop"><b>Proposition 2 (robots out of contact are not
+      affected).</b> For a robot \(k\) out of contact, Unsure: what \(k\) knows of
+      the task is unchanged, \(k\) does not come to know that \(j\) knows of it,
+      nor whether \(j\) is busy, and the actual world stays among those it
+      considers possible. This is the paper's eq. (18), read without false
+      beliefs.</div>
+    <div class="gc-prop"><b>Proposition 3 (absence is informative).</b> After an
+      absent call, \(K_i\,\mathit{busy}_j\), and no robot out of contact learns
+      whether \(j\) is busy. The paper turns this into exclusion; the model keeps
+      it as the precondition of waiting.</div>
+    <div class="gc-prop"><b>Proposition 4 (empathy).</b> With \(b \ge 2\), or \(i\)
+      never busy, every robot \(j\) that may be busy knows, from the start, that
+      nobody else knows whether it is: \(K_j\,\neg\mathit{Kw}_i\,\mathit{busy}_j\).
+      With \(b = 1\) a busy robot knows that the others are not, from the
+      bound.</div>
+    <div class="gc-prop"><b>Proposition 5 (the literal reading).</b> With
+      oblivious observers, after any call every robot out of contact drops the
+      actual world from what it considers possible and "knows" a falsehood,
+      \(K_k\neg K_j\,\mathit{task}\) while \(K_j\,\mathit{task}\): the equivalence of
+      knowledge and belief of the paper's eq. (17) fails for it. A robot then
+      called by one it believed ignorant, or waited for after an absence it
+      did not see, believes a contradiction. <b>Corollary:</b> none of the four
+      canonical instances has a policy with consistent beliefs under this
+      reading, which Aletheia proves for each: news passed on through a robot
+      and a wait for a busy one are two causes, and the third is the arrival that
+      does the task, whose robot believes the others never arrived (in this
+      model a robot at the site does not watch the others arrive, so the third
+      cause is the model's; the first two are not).</div>
+    <div class="gc-prop"><b>Definition and check (joint policy).</b> A policy is
+      implementable when every robot, wherever what it has observed is the
+      same, does the same next action. Every policy of the four canonical
+      instances is (2&#8239;092 checks).</div>
+    <div class="gc-prop"><b>Theorem (solvability).</b> If the neighbour relation
+      is connected, and (A) a busy robot comes back to its particle and stays
+      there until called, the planning task has an implementable solution of
+      depth at most \((|\mathcal{A}| - 1) + b + k\): calls along a spanning tree,
+      a wait wherever a call finds nobody, and \(k\) arrivals.</div>
+    <div class="gc-prop"><b>Proposition 6 (least depth).</b> With only the finder
+      knowing and every other robot possibly busy, every solution needs, in its
+      worst designated world, \((|\mathcal{A}| - 1) + k\) actions in Case I,
+      \((k-1) + \min(b, k-1) + k\) in Case II, and \((|\mathcal{A}| - 1) + b + k\)
+      when the task needs the whole team: a call or a wait tells one robot at
+      most, every robot arrives by its own action, and in the worst world the
+      first robots called are busy. In all 159 instances of the scaling study the
+      policies found attain these bounds exactly, so they are of least
+      worst-case depth.</div>
+    <div class="gc-prop"><b>Proposition 7 (wait-for cycles).</b> Without (A), two
+      policies can wait for each other forever: each robot comes back only when
+      its own policy ends. Before the conventions below, the kinematic study
+      produced it with the paper's own task mix, a two-robot and a three-robot
+      task for three robots. The paper's
+      exclusion cannot deadlock, and is incomplete instead: a task that needs a
+      robot excluded is not allocated until that robot is met again. The
+      implementation settles conflicts by conventions both robots can apply on
+      what they know: in contact, the task found first keeps its robots; and a
+      wait is bounded, after which everyone returns to its particle and the
+      finder plans again after a random back-off.</div>
+    <div class="gc-prop"><b>Proposition 8 (the second ruleset rests on
+      belief).</b> Out of contact with \(j\), robot \(i\) never comes to know that
+      \(j\) knows of a task. "\(j\)'s particle passed it first" gives at most
+      \(B_iK_j\,\mathit{present}(\tau)\); the procedure applied the rule
+      5 times in the study, and the epistemic formulation does not.</div>
+    <div class="gc-prop"><b>Proposition 9 (when exclusion happens).</b> If every
+      robot not busy stays within \(\varepsilon\) of its particle and the radio
+      reaches further than \(\varepsilon\) plus the distance at which a seeker
+      calls a particle empty, a robot sought is found unless it is busy. In the
+      study the first ruleset fired 24 times in 180 runs of the
+      procedure, and left 3 allocations short of robots for a while.</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE STUDY -->
+<section id="gc-study-sec">
+  <div class="container">
+    <p class="sec-label">The simulation study</p>
+    <h3>Fifteen areas, four team sizes, three cases</h3>
+    <p>
+      The kinematic simulator runs the paper's setting: fifteen areas with 10 to
+      20 unknown obstacles of 1&#8202;m, the same for every team, case and
+      formulation; robots of 3&#8202;m/s with a 5&#8202;m range sensor and process
+      noise of 0.2&#8202;m/s; particles of 2.7&#8202;m/s, so that a robot that
+      detours can catch its own; a 10&#8202;m radio. A mission ends when every task
+      is done and every robot is home, and in Cases II and III when the whole
+      area has been seen. Case III, which is not in the paper's simulations, has
+      tasks that need more robots in all than the team has, as in its laboratory
+      experiment of Fig. 11.
+    </p>
+    <figure class="demo-figure">
+      <img src="media/gossip_coverage_study_case1.png" alt="Case I: mission time by team size for the four formulations" style="width:100%;max-width:820px">
+      <img src="media/gossip_coverage_study_case2.png" alt="Case II: mission time by team size for the four formulations" style="width:100%;max-width:820px">
+      <figcaption>The paper's Figures 6 (Case I) and 8 (Case II), recreated: mission time by team size, fifteen areas per box, with the epistemic formulation as a fourth box.</figcaption>
+    </figure>
+    <table class="data">
+      <thead><tr><th></th><th>Case I, paper</th><th>Case I, here</th><th>Case II, paper</th><th>Case II, here</th></tr></thead>
+      <tbody>
+        <tr><td class="gc-l">procedure minus ideal, mean</td><td>11&#8202;s</td><td>7.4&#8202;s</td><td>16&#8202;s</td><td>8.1&#8202;s</td></tr>
+        <tr><td class="gc-l">flock minus procedure, mean</td><td>13&#8202;s</td><td>0.1&#8202;s</td><td>35&#8202;s</td><td>34.4&#8202;s</td></tr>
+        <tr><td class="gc-l">standard deviation, ideal / procedure / flock</td><td>14 / 11 / 48&#8202;s</td><td>16 / 16 / 27</td><td></td><td>7 / 12 / 9</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The paper's ordering reappears. In Case II the procedure lies between the ideal method and the flock at every team size and approaches the ideal method as the team grows, while the flock does not improve with the team; in Case I the flock is better than the procedure with two robots (mean 53.1 against 62.7&#8202;s) and worse with eight (53.1 against 44.6&#8202;s), though with eight its median is the lower (42.2 against 47.8&#8202;s): its spread is the largest, a standard deviation of 27&#8202;s against 16, which is the paper's own observation about the flock. The two gaps of Case II are 8.1&#8202;s and 34.4&#8202;s against the paper's 16 and 35. Absolute times are higher than the paper's (the ideal method averages 46&#8202;s in Case I and 82&#8202;s in Case II over the four team sizes, where the paper's figures show about 32 and 40&#8202;s): the frontier coverage here leaves more ground to come back for than the paper's MATLAB code, which is not published. Means in seconds, fifteen areas per cell:
+    </p>
+    <figure class="demo-figure">
+      <img src="media/gossip_coverage_study_paired.png" alt="The epistemic formulation's mission time minus the procedure's, area by area, per case and team size" style="width:100%;max-width:880px">
+      <figcaption>The epistemic formulation minus the procedure, area by area; the bar is the median.</figcaption>
+    </figure>
+    <p>
+      Over the 12 cells of case and team size, the median difference lies between &minus;0.9 and +6.5&#8202;s. In Cases II and III the two are at parity: the mean difference per cell lies between &minus;4.9 and +5.2&#8202;s, with 47 areas where the policy is faster by more than half a second, 22 ties and 51 where it is slower. In Case I, where every robot must be told, the policy is slower as the team grows (median +1.4&#8202;s with five robots and +6.5&#8202;s with eight): Aletheia minimises the number of steps, and its cascades follow the neighbour relation, where the paper's gossip auction weighs travel times. Every one of the 320 policies the study asked for was found, in 0.032&#8202;s on average and 0.31&#8202;s at most.
+    </p>
+    <table class="data">
+    <thead><tr><th>case</th><th>robots</th><th>ideal</th><th>procedure</th><th>flock</th><th>epistemic</th><th>epistemic minus procedure, median</th><th>faster / tie / slower</th></tr></thead><tbody>
+    <tr><td>I</td><td>2</td><td>55.9</td><td>62.7</td><td>53.1</td><td>62.7</td><td>+0.0</td><td>0 / 15 / 0</td></tr>
+    <tr><td>I</td><td>3</td><td>53.3</td><td>55.1</td><td>57.6</td><td>55.7</td><td>+0.0</td><td>2 / 10 / 3</td></tr>
+    <tr><td>I</td><td>5</td><td>38.0</td><td>50.9</td><td>50.0</td><td>52.8</td><td>+1.4</td><td>2 / 2 / 11</td></tr>
+    <tr><td>I</td><td>8</td><td>36.3</td><td>44.6</td><td>53.1</td><td>52.8</td><td>+6.5</td><td>1 / 2 / 12</td></tr>
+    <tr><td>II</td><td>2</td><td>121.0</td><td>117.8</td><td>126.3</td><td>119.1</td><td>+0.3</td><td>3 / 5 / 7</td></tr>
+    <tr><td>II</td><td>3</td><td>89.0</td><td>99.0</td><td>121.9</td><td>99.4</td><td>+0.1</td><td>6 / 3 / 6</td></tr>
+    <tr><td>II</td><td>5</td><td>67.4</td><td>76.5</td><td>130.0</td><td>74.4</td><td>-0.8</td><td>8 / 5 / 2</td></tr>
+    <tr><td>II</td><td>8</td><td>52.5</td><td>69.1</td><td>121.7</td><td>67.7</td><td>+0.1</td><td>6 / 3 / 6</td></tr>
+    <tr><td>III</td><td>2</td><td>127.3</td><td>123.1</td><td>126.0</td><td>124.8</td><td>-0.1</td><td>5 / 4 / 6</td></tr>
+    <tr><td>III</td><td>3</td><td>100.9</td><td>103.9</td><td>124.0</td><td>109.0</td><td>+4.9</td><td>4 / 1 / 10</td></tr>
+    <tr><td>III</td><td>5</td><td>72.0</td><td>95.6</td><td>131.3</td><td>90.8</td><td>-0.9</td><td>8 / 1 / 6</td></tr>
+    <tr><td>III</td><td>8</td><td>56.6</td><td>79.7</td><td>128.6</td><td>82.5</td><td>+1.1</td><td>7 / 0 / 8</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ GAZEBO -->
+<section id="gc-gazebo-sec">
+  <div class="container">
+    <p class="sec-label">The laboratory experiments</p>
+    <h3>Three Burgers, ePlanSys in the loop</h3>
+    <p>
+      The arena is the paper's laboratory at twice its size: 8 by 11&#8202;m, with
+      five crates of 0.5&#8202;m that the robots do not know of, standing a metre or
+      more from every wall, and the base at the south wall; a robot is home
+      once it is within a metre of the base's centre, and goes on to its own
+      place there. Sensing and radio
+      reach 2&#8202;m, and the particles move at 0.13&#8202;m/s; every length of the
+      coverage is the study's scaled by the ratio of the sensing ranges. Case I
+      is the paper's Fig. 10, one task for two robots or all three; Case II its
+      Fig. 11, a task for two robots that takes 40&#8202;s at the site and a task for
+      three, the seed's placements screened in the kinematic simulator until the
+      three-robot task is found while the two-robot task is being done.
+    </p>
+    <figure class="demo-figure">
+      <img src="media/gossip_coverage_arena.svg" alt="The arena of one seed: crates, the base, the two tasks and the robots' tracks" style="width:100%;max-width:560px">
+      <figcaption>Case II, seed 1, under the epistemic formulation: the crates, the base, the two tasks with the number of robots each needs, and the robots' tracks.</figcaption>
+    </figure>
+    <p>
+      Under the epistemic formulation the finder's instance is grounded by
+      plank, loaded into ePlanSys's epistemic state, planned by its planner
+      through the Aletheia plugin, and run by its epistemic executor with
+      parallel dispatch, as its scheduler arranges the policy. Every action
+      reaches the mission through a relay and is answered with the event that
+      occurred, by which the executor takes the branch and updates its model.
+      When all three robots come into contact, the common belief is reset and the
+      allocation is made with everything known, under every formulation; a policy
+      still running is ended there and its task finished under that allocation.
+      One executor runs one policy at a time, so a task found while a policy runs
+      waits for it.
+    </p>
+    <table class="data">
+    <thead><tr><th>case</th><th>formulation</th><th>runs ended</th><th>mean</th><th>median</th><th>max</th><th>tasks done by, mean</th></tr></thead><tbody>
+    <tr><td>I</td><td class='gc-l'>epistemic</td><td>12 / 12</td><td>149.7</td><td>147.8</td><td>261.4</td><td>113.3</td></tr>
+    <tr><td>I</td><td class='gc-l'>proposed</td><td>12 / 12</td><td>137.1</td><td>144.0</td><td>218.5</td><td>101.6</td></tr>
+    <tr><td>I</td><td class='gc-l'>ideal</td><td>12 / 12</td><td>120.2</td><td>121.2</td><td>180.1</td><td>84.0</td></tr>
+    <tr><td>I</td><td class='gc-l'>flock</td><td>12 / 12</td><td>131.3</td><td>120.4</td><td>298.0</td><td>94.7</td></tr>
+    <tr><td>II</td><td class='gc-l'>epistemic</td><td>12 / 12</td><td>301.0</td><td>309.9</td><td>391.4</td><td>160.8</td></tr>
+    <tr><td>II</td><td class='gc-l'>proposed</td><td>12 / 12</td><td>318.8</td><td>324.6</td><td>450.3</td><td>163.8</td></tr>
+    <tr><td>II</td><td class='gc-l'>ideal</td><td>12 / 12</td><td>294.1</td><td>279.9</td><td>389.4</td><td>135.2</td></tr>
+    <tr><td>II</td><td class='gc-l'>flock</td><td>12 / 12</td><td>383.4</td><td>372.4</td><td>447.6</td><td>174.2</td></tr>
+    </tbody></table>
+    <p>
+      96 of 96 runs ended with every task done and every robot home. Against the procedure, the epistemic formulation's mission time differs by a median of +0.6&#8202;s in Case I and &minus;0.4&#8202;s in Case II (faster, tied and slower in 3, 3 and 6 seeds, and in 6, 1 and 5); the mean differences, +12.6 and &minus;17.8&#8202;s, are carried by a few seeds each, and a sign test separates neither case (p = 0.51 and 1.00). ePlanSys planned 23 policies, each loaded, planned and handed to the executor in 0.40&#8202;s at most, and every call was answered with the event that occurred. Of them, 6 ran to their end and 16 were ended when all three robots came into contact, and the allocation made with everything known took their remaining steps: in 11 of them the policy had already told and sent all three robots, which met on their way to the site, and in the others contact came during a call. One policy failed, in Case I with seed 10: a robot that was not busy had fallen 2.5&#8202;m behind its particle among the crates, so the call found nobody where the finder's model allowed no absence (the hypothesis of Proposition 9 failed). ePlanSys's epistemic state refused the outcome, the finder planned again with the robot it had told left out, and the new policy did the task. In Case II the flock, which never leaves radio range, is the slowest by 48&#8202;s in median, since the whole arena must be seen; in Case I, where the one task is near, the medians run the flock 120, the ideal method 121, the procedure 144, the ePlanSys policy 148&#8202;s. 
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ SCALING -->
+<section id="gc-scale-sec">
+  <div class="container">
+    <p class="sec-label">Scaling</p>
+    <h3>Planning the gossip for teams of two to eight</h3>
+    <p>
+      Every instance of 159, for teams of two to eight, needs of two, three and the whole team, and up to two robots possibly busy, was solved; the slowest, 8 robots with a task for 8 and at most 2 busy, in 2.8&#8202;s, over 58 worlds and 296 ground actions. For teams of up to four, AO* found policies of the same depth in 47 of 51 instances, so the replanning strategy's policies there are of least depth. Every policy attains the least worst-case depth of the analysis exactly: \((|\mathcal{A}| - 1) + k\) in Case I, \((k-1) + \min(b, k-1) + k\) in Case II, \((|\mathcal{A}| - 1) + b + k\) when the task needs the whole team.
+    </p>
+    <figure class="demo-figure">
+      <img src="media/gossip_coverage_scaling.png" alt="Worst planning time by team size, for Case I and for Case II with one or two robots possibly busy" style="width:100%;max-width:620px">
+      <figcaption>Worst planning time over three random geometries, by team size, every need pooled.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DEFECTS -->
+<section id="gc-defects-sec">
+  <div class="container">
+    <p class="sec-label">Implementation defects</p>
+    <h3>Defects found on the way</h3>
+    <ul>
+      <li><b>Arrivals out of order.</b> In an executor vocabulary in which an arrival read and wrote only its own robot, ePlanSys's scheduler moved the arrival that does the task above the others, which nothing said it depended on, and its group waited forever. With the task reading every count below its need, the arrivals before it could still change places: in one Gazebo run the second arrival was dispatched before the first, and ePlanSys's epistemic state refused it, since its event requires the count the first sets. Each arrival now reads the count of the one before it.</li>
+      <li><b>A robot on its way home taken for busy.</b> A robot heads home when it has nothing left to do: in Case I once it knows of the task, and in either case once the area has been covered. A robot that had turned for home was not counted as free, so a call that reached it came back absent, an outcome the finder's instance did not allow. A robot heading home, or at home, is free.</li>
+      <li><b>A teammate told and gone home.</b> In Case I a robot that knows of the task and has nothing to do goes home. When a policy failed and its finder planned again, the new instance counted the robots told under the old one as still at their particles, and its calls went to particles they had left. A robot now keeps, for each task, the robots it knows to know of it, and in Case I the finder leaves out of its instance those out of contact, unless the task needs them.</li>
+      <li><b>Robots held up at the base.</b> A robot counted as home only near its own place at the base, and robots coming home in single file stopped one another short of their places: one run never ended, and in others a robot waited behind another for up to a minute, which went into the mission time. A robot is now home once it is within a metre of the base's centre, and goes on to its place from there. Every Gazebo run reported here was made after these four corrections, and the kinematic study's epistemic runs after the first three.</li>
+      <li><b>Groups that wait for a drive.</b> ePlanSys starts a group of independent actions together and the next group when all have finished; an arrival answered at the site held the next calls for the length of a drive. An arrival is answered when the robot sets out, and the task waits at the site for everyone.</li>
+      <li><b>Relay nodes that shared a name.</b> A launch <span class="mono-inline">name=</span> renames every node of a process, and the relay process hosts one action client per action. The relays are launched without it.</li>
+      <li><b>A common belief reset every second.</b> Reset whenever all were in contact, the particles started again facing north, and three robots in contact never left one another. The paper resets it when new knowledge is shared; the reset now keeps each particle's heading and goal and happens on new tasks, allocations or obstacles, or every 10&#8202;s.</li>
+      <li><b>Coverage the belief claimed through an unseen obstacle.</b> A particle sees through obstacles nobody has seen, and could call covered a pocket its robot could not see; the team went home, found it open, and went out again, for minutes. A cell at the edge of what the robots have really seen counts as seen in the belief only from beside it.</li>
+      <li><b>Two policies waiting for each other</b>, Proposition 7.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ LIMITATIONS -->
+<section id="gc-limits-sec">
+  <div class="container">
+    <p class="sec-label">Limitations</p>
+    <h3>Limitations</h3>
+    <p>
+      The kinematic simulator is not the paper's code. Its coverage leaves more
+      ground to come back for, so its times are longer; its cases are drawn by
+      its own rules; and its procedure strengthens the first ruleset. Aletheia
+      minimises steps in the worst case, not time: it prefers waiting for a busy
+      robot, one step, to calling another, and its cascades follow the
+      neighbour relation, not travel times, which is the likeliest reason the
+      epistemic formulation is slower in Case I with eight robots. Gazebo runs
+      differ in their timing from one run to the next; with twelve seeds per
+      case the mission times set the flock apart in Case II, but do not
+      separate the procedure from the epistemic formulation. In Gazebo one executor
+      runs one policy at a time, so a task found while a policy runs waits for
+      it. The arena is the paper's laboratory scaled, its sensing is simulated
+      over the arena's map, and the laser only stops a robot short of what is
+      ahead. The analysis is of the planning task at a task found; the
+      coverage, the allocation of several tasks at once and the conventions of
+      Proposition 7 are outside the model.
+    </p>
+  </div>
+</section>
+
+<section id="gc-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-bb23">L. Bramblett and N. Bezzo. Epistemic planning for multi-robot systems in communication-restricted environments. <i>Frontiers in Robotics and AI</i> 10:1149439, 2023.</li>
+      <li id="ref-bb">L. Bramblett and N. Bezzo. Epistemic planning for heterogeneous robotic systems. <i>arXiv:2308.00579</i>, 2023. Recreated on this site as <a href="belief_empathy.html">Belief and empathy particles</a>.</li>
+      <li id="ref-del">H. van Ditmarsch, W. van der Hoek and B. Kooi. <i>Dynamic Epistemic Logic</i>. Springer, 2007.</li>
+      <li id="ref-bms">A. Baltag, L. S. Moss and S. Solecki. The logic of public announcements, common knowledge, and private suspicions. <i>Proceedings of TARK VII</i>, 43&#8211;56, 1998.</li>
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-impl">T. Engesser, T. Bolander, R. Mattm&#252;ller and B. Nebel. Cooperative epistemic multi-agent planning for implicit coordination. <i>Proceedings of the Ninth Workshop on Methods for Modalities</i>, EPTCS 243, 75&#8211;90, 2017.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Commands</h3>
+    <pre class="code">bash tools/validate.sh                              <span class="c"># the arena, the canonical policies, the update rules, the oblivious reading, the scheduler</span>
+python3 tools/study.py --out STUDY --cases 1 2 3 --methods ideal proposed flock epistemic   <span class="c"># the kinematic study</span>
+python3 tools/study.py --one 3 5 2 epistemic         <span class="c"># one kinematic run, with its events</span>
+python3 tools/check_policy.py TASK.json POLICY.json  <span class="c"># the update rules and implementability, world by world</span>
+python3 tools/oblivious.py INSTANCE.epddl POLICY.json   <span class="c"># the literal reading of eq. (18)</span>
+python3 tools/scaling.py --out SCALE                 <span class="c"># teams of two to eight</span>
+bash tools/run_one.sh 3 2 epistemic RUN 1            <span class="c"># one Gazebo run in its own lane</span>
+bash tools/batch.sh 1 12 BATCH 5                     <span class="c"># every seed, both cases, four formulations</span>
+python3 tools/analyse.py gazebo BATCH                <span class="c"># runs.csv and analysis.json</span></pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">gossip out of contact &#183; two to eight robots &#183; after Bramblett and Bezzo</span>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>
+</html>

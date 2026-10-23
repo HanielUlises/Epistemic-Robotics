@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The twenty-nine domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The twenty-nine planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The thirty domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The thirty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The twenty-nine domains">
-<meta property="og:description" content="The twenty-nine planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The thirty domains">
+<meta property="og:description" content="The thirty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The twenty-nine domains">
-<meta name="twitter:description" content="The twenty-nine planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The thirty domains">
+<meta name="twitter:description" content="The thirty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The twenty-nine domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The thirty domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -606,6 +606,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="link_grades.html">&#183; Link grades<span class="sub">Epistemic and classical planning over a link that is never, partly or always down</span></a>
           <a href="collapsed_wing.html">&#183; The collapsed wing<span class="sub">SLAM, knowledge preconditions, and a way known clear by elimination</span></a>
           <a href="belief_empathy.html">&#183; Belief and empathy particles<span class="sub">Bramblett and Bezzo's heterogeneous team out of contact, recreated on ePlanSys</span></a>
+          <a href="gossip_coverage.html">&#183; Gossip out of contact<span class="sub">Bramblett and Bezzo's coverage and task allocation out of contact, recreated on ePlanSys</span></a>
             </div>
           </details>
             </div>
@@ -659,6 +660,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="link_grades.pdf">Link Grades<span class="sub">Worst-case conditional planning, lossy messages, and success measured on the maps</span></a>
           <a href="collapsed_wing.pdf">The Collapsed Wing<span class="sub">Knowledge preconditions over SLAM maps, and knowledge by elimination</span></a>
           <a href="belief_empathy.pdf">Belief and Empathy Particles<span class="sub">A heterogeneous team out of contact as an epistemic planning task, against the paper's methods</span></a>
+          <a href="gossip_coverage.pdf">Gossip Out of Contact<span class="sub">Coverage and task allocation out of contact, recreated, with the gossip as an epistemic planning task</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -684,8 +686,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 29 domains</p>
-    <h2>The twenty-nine domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 30 domains</p>
+    <h2>The thirty domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1253,6 +1255,35 @@ goal:    Kw_r1 blocked-z</pre>
 
 (:goal (done))
 ;; and the drive to the site, go-site: ([?g] (task))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-gossip-coverage">
+      <div class="dom-h">
+        <h4>gossip-coverage</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 2 to 8 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd>the robots of a team out of contact, the finder of a task first; the instance <i>hardware_case2</i> has three</dd>
+        <dt>Objects</dt><dd><code>&#8211;</code>; who may call whom is a rigid fact, <code>(near ?i ?j)</code>, the neighbours of the Voronoi partition of the common belief</dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">unseen-ontic</span><span class="ty">hail</span>, from a library of their own, whose observers out of contact are unsure of what they do not see</dd>
+        <dt>Initial model</dt><dd>\(|W_0| = 8\), \(|W_d| = 4\) for three robots, two of which may be busy; in general twice the number of busy sets within the bound. Each robot knows whether it is busy; the finder knows of the task</dd>
+        <dt>Grounded</dt><dd>55 atoms, 66 ground actions for three robots, 296 for eight; telling and going to the site require \(K_r\,\mathit{task}\), waiting at a particle \(K_i\,\mathit{busy}_j\)</dd>
+        <dt>Solved</dt><dd>depth 7, 2&#8239;959 expansions, by AO* with subjective branching and consistent beliefs; the replanning strategy finds the same depth in 0.01&#8239;s and plans every instance up to eight robots. With observers out of contact oblivious, no policy</dd>
+        <dt>Stated in</dt><dd><a href="gossip_coverage.html">Gossip out of contact</a> &#183; <a href="gossip_coverage.pdf">the report</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (task)                       ; a task found at the site
+    (busy ?r - agent)            ; away from its particle on other work
+    (out ?r - agent) (by ?i ?j - agent)    ; gossiping: at ?j's particle, found empty
+    (called ?i ?j - agent) (sited ?r - agent)
+    (c0) ... (c8)                ; how many robots have gone to the site
+    (:fact need1) ... (:fact need8)
+    (:fact near ?i ?j - agent)   ; Voronoi neighbours
+    (done)
+  )
+
+(:goal (done))                    ; Case I: and every robot knows of the task</pre>
       </details>
     </article>
     </div>
