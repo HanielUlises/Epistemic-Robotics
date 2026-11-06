@@ -1,0 +1,254 @@
+;; REPLANNING ON NEWS. A courier robot must bring a resident's medicine from
+;; the nurses' station, in the south half of a residence, to the resident's
+;; room in the north half. A wall of fire doors divides the two halves, with
+;; three doors in it, west, middle and east, each at the end of a short
+;; passage. At night any of them may be shut; at least one is open, and nobody
+;; knows which.
+;;
+;; A robot standing at the mouth of the west or the east door's passage sees
+;; the door with its own laser; the others see it look, and not what it saw.
+;; The middle door's passage turns a corner, so its door cannot be seen from
+;; its mouth: only from the kitchen's serving hatch, where the scout waits and
+;; where the courier, with its trolley, does not fit. A robot that knows
+;; whether a door is open can say so over the radio, which every robot hears.
+;; The courier crosses only a door it knows to be open: the precondition of
+;; each crossing is the courier's knowledge, not the door's state.
+;;
+;; The team grows across the three problems: the courier alone, then a scout
+;; that starts in the kitchen beside the east door, then the cleaning robot on
+;; its night round in the north half, which has a radio and does not drive.
+;;
+;; What the problems are about is not in this file. During each mission a
+;; piece of news arrives from outside the plan, as a public announcement into
+;; the executor's epistemic state, and the mission plans again from the model
+;; the announcement leaves (tools/news.py in replanning_news_demo).
+;;
+;; Every radio message has one event per answer, and each asks that the
+;; speaker know whether the door is open beside its own fact: ePlanSys's
+;; executor checks the modal conjuncts of all of an action's events together,
+;; and the shared [Kw.] part satisfies it in both.
+
+(define (domain replanning-news)
+
+  (:requirements
+    :equality :partial-observability :list-comprehensions :lists
+    :ontic-actions :negative-preconditions :modal-preconditions :knowing-whether
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:predicates
+    (open-w)                 ; the west door is open
+    (open-m)                 ; the middle door is open
+    (open-e)                 ; the east door is open
+    (at-st ?i - agent)       ; at the nurses' station
+    (at-ks ?i - agent)       ; at the kitchen's serving hatch, which looks onto the middle door
+    (at-vw ?i - agent)       ; at the mouth of the west door's passage
+    (at-vm ?i - agent)       ; at the mouth of the middle door's passage
+    (at-ve ?i - agent)       ; at the mouth of the east door's passage
+    (at-n ?i - agent)        ; in the north corridor, through a door
+    (at-r ?i - agent)        ; in the resident's room
+    (courier ?i - agent)
+    (scout ?i - agent)
+    (cleaner ?i - agent)
+  )
+
+  (:event nil)
+
+  ;;--------------------DRIVING------------------
+  ;;
+  ;; The courier and the scout drive in the south half to the mouth of any
+  ;; door's passage. The cleaner keeps to the north half and does not drive.
+
+  (:event e-goto-vw
+    :parameters (?i - agent)
+    :precondition (and (or (courier ?i) (scout ?i)) (not (at-vw ?i)) (not (at-n ?i)) (not (at-r ?i)))
+    :effects (:and (at-vw ?i) (not (at-st ?i)) (not (at-ks ?i)) (not (at-vm ?i)) (not (at-ve ?i)))
+  )
+
+  (:action goto-vw
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-vw ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-goto-vm
+    :parameters (?i - agent)
+    :precondition (and (or (courier ?i) (scout ?i)) (not (at-vm ?i)) (not (at-n ?i)) (not (at-r ?i)))
+    :effects (:and (at-vm ?i) (not (at-st ?i)) (not (at-ks ?i)) (not (at-vw ?i)) (not (at-ve ?i)))
+  )
+
+  (:action goto-vm
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-vm ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-goto-ve
+    :parameters (?i - agent)
+    :precondition (and (or (courier ?i) (scout ?i)) (not (at-ve ?i)) (not (at-n ?i)) (not (at-r ?i)))
+    :effects (:and (at-ve ?i) (not (at-st ?i)) (not (at-ks ?i)) (not (at-vw ?i)) (not (at-vm ?i)))
+  )
+
+  (:action goto-ve
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-goto-ve ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;;--------------------LOOKING------------------
+;;
+;; The west and east doors from the mouths of their passages, the middle door
+;; from the serving hatch.
+
+  (:event e-look-w-open
+    :parameters (?i - agent)
+    :precondition (and (at-vw ?i) (open-w))
+  )
+
+  (:event e-look-w-shut
+    :parameters (?i - agent)
+    :precondition (and (at-vw ?i) (not (open-w)))
+  )
+
+  (:action look-w
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-look-w-open ?i) (e-look-w-shut ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  (:event e-look-m-open
+    :parameters (?i - agent)
+    :precondition (and (at-ks ?i) (open-m))
+  )
+
+  (:event e-look-m-shut
+    :parameters (?i - agent)
+    :precondition (and (at-ks ?i) (not (open-m)))
+  )
+
+  (:action look-m
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-look-m-open ?i) (e-look-m-shut ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  (:event e-look-e-open
+    :parameters (?i - agent)
+    :precondition (and (at-ve ?i) (open-e))
+  )
+
+  (:event e-look-e-shut
+    :parameters (?i - agent)
+    :precondition (and (at-ve ?i) (not (open-e)))
+  )
+
+  (:action look-e
+    :parameters (?i - agent)
+    :action-type (semi-private-sensing (e-look-e-open ?i) (e-look-e-shut ?i))
+    :observability-conditions (:and (?i Fully) (default Partially))
+  )
+
+  ;;--------------------THE RADIO------------------
+
+  (:event e-tell-w-open
+    :parameters (?i - agent)
+    :precondition (and (not (courier ?i)) (open-w) ([Kw. ?i] (open-w)))
+  )
+
+  (:event e-tell-w-shut
+    :parameters (?i - agent)
+    :precondition (and (not (courier ?i)) (not (open-w)) ([Kw. ?i] (open-w)))
+  )
+
+  (:action tell-w
+    :parameters (?i - agent)
+    :action-type (public-sensing (e-tell-w-open ?i) (e-tell-w-shut ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-tell-m-open
+    :parameters (?i - agent)
+    :precondition (and (not (courier ?i)) (open-m) ([Kw. ?i] (open-m)))
+  )
+
+  (:event e-tell-m-shut
+    :parameters (?i - agent)
+    :precondition (and (not (courier ?i)) (not (open-m)) ([Kw. ?i] (open-m)))
+  )
+
+  (:action tell-m
+    :parameters (?i - agent)
+    :action-type (public-sensing (e-tell-m-open ?i) (e-tell-m-shut ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-tell-e-open
+    :parameters (?i - agent)
+    :precondition (and (not (courier ?i)) (open-e) ([Kw. ?i] (open-e)))
+  )
+
+  (:event e-tell-e-shut
+    :parameters (?i - agent)
+    :precondition (and (not (courier ?i)) (not (open-e)) ([Kw. ?i] (open-e)))
+  )
+
+  (:action tell-e
+    :parameters (?i - agent)
+    :action-type (public-sensing (e-tell-e-open ?i) (e-tell-e-shut ?i))
+    :observability-conditions (default Fully)
+  )
+
+  ;;--------------------CROSSING------------------
+  ;;
+  ;; Through a door the courier knows to be open, into the north corridor, and
+  ;; along it to the resident's room.
+
+  (:event e-cross-w
+    :parameters (?i - agent)
+    :precondition (and (courier ?i) (at-vw ?i) ([?i] (open-w)))
+    :effects (:and (at-n ?i) (not (at-vw ?i)))
+  )
+
+  (:action cross-w
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-cross-w ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-m
+    :parameters (?i - agent)
+    :precondition (and (courier ?i) (at-vm ?i) ([?i] (open-m)))
+    :effects (:and (at-n ?i) (not (at-vm ?i)))
+  )
+
+  (:action cross-m
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-cross-m ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-e
+    :parameters (?i - agent)
+    :precondition (and (courier ?i) (at-ve ?i) ([?i] (open-e)))
+    :effects (:and (at-n ?i) (not (at-ve ?i)))
+  )
+
+  (:action cross-e
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-cross-e ?i))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-deliver
+    :parameters (?i - agent)
+    :precondition (and (courier ?i) (at-n ?i))
+    :effects (:and (at-r ?i) (not (at-n ?i)))
+  )
+
+  (:action deliver
+    :parameters (?i - agent)
+    :action-type (public-ontic (e-deliver ?i))
+    :observability-conditions (default Fully)
+  )
+)

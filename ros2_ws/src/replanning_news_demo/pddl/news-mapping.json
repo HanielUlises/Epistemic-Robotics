@@ -1,0 +1,90 @@
+{
+ "goto-vw_c": {
+  "action": "(goto_vw c)",
+  "duration": 60.0
+ },
+ "goto-vm_c": {
+  "action": "(goto_vm c)",
+  "duration": 60.0
+ },
+ "goto-ve_c": {
+  "action": "(goto_ve c)",
+  "duration": 60.0
+ },
+ "goto-vw_s": {
+  "action": "(goto_vw s)",
+  "duration": 60.0
+ },
+ "goto-vm_s": {
+  "action": "(goto_vm s)",
+  "duration": 60.0
+ },
+ "goto-ve_s": {
+  "action": "(goto_ve s)",
+  "duration": 60.0
+ },
+ "look-w_c": {
+  "action": "(look_w c)",
+  "duration": 4.0
+ },
+ "look-m_c": {
+  "action": "(look_m c)",
+  "duration": 4.0
+ },
+ "look-e_c": {
+  "action": "(look_e c)",
+  "duration": 4.0
+ },
+ "look-w_s": {
+  "action": "(look_w s)",
+  "duration": 4.0
+ },
+ "look-m_s": {
+  "action": "(look_m s)",
+  "duration": 4.0
+ },
+ "look-e_s": {
+  "action": "(look_e s)",
+  "duration": 4.0
+ },
+ "tell-w_s": {
+  "action": "(tell_w s)",
+  "duration": 3.0
+ },
+ "tell-m_s": {
+  "action": "(tell_m s)",
+  "duration": 3.0
+ },
+ "tell-e_s": {
+  "action": "(tell_e s)",
+  "duration": 3.0
+ },
+ "tell-w_k": {
+  "action": "(tell_w k)",
+  "duration": 3.0
+ },
+ "tell-m_k": {
+  "action": "(tell_m k)",
+  "duration": 3.0
+ },
+ "tell-e_k": {
+  "action": "(tell_e k)",
+  "duration": 3.0
+ },
+ "cross-w_c": {
+  "action": "(cross_w c)",
+  "duration": 24.0
+ },
+ "cross-m_c": {
+  "action": "(cross_m c)",
+  "duration": 34.0
+ },
+ "cross-e_c": {
+  "action": "(cross_e c)",
+  "duration": 24.0
+ },
+ "deliver_c": {
+  "action": "(deliver c)",
+  "duration": 108.0
+ }
+}

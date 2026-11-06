@@ -1,0 +1,25 @@
+;; REPLANNING ON NEWS, act 1: c. Written by tools/model.py.
+;; Restricted by the news: The door panel: the east fire door is shut.
+;; Upper case is an open door.
+;;   w0: WMe
+;;   w1: Wme
+;;   w2: wMe
+
+(define (problem act1-news)
+  (:domain replanning-news)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents c)
+  (:init
+    :worlds (w0 w1 w2)
+    :relations (
+      c (:and (w0 w0) (w0 w1) (w0 w2) (w1 w0) (w1 w1) (w1 w2) (w2 w0) (w2 w1) (w2 w2))
+    )
+    :labels (
+      w0 (:and (open-w) (open-m) (courier c) (at-st c))
+      w1 (:and (open-w) (courier c) (at-st c))
+      w2 (:and (open-m) (courier c) (at-st c))
+    )
+    :designated (w0 w1 w2)
+  )
+  (:goal (at-r c))
+)
