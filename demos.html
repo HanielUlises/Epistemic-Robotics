@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The thirty domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The thirty-one domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -534,6 +534,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
           <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
           <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+          <a href="replanning_news.html">&#183; Replanning on news<span class="sub">Public announcements mid-drive, with one, two and three robots</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -589,6 +590,7 @@ sup.cite a:hover{text-decoration:underline}
             <div class="nav-sub">
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+          <a href="replanning_news.pdf">Replanning on News<span class="sub">Public announcements during execution, persistence, and news invisible to planning over facts</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -1029,6 +1031,21 @@ sup.cite a:hover{text-decoration:underline}
             <span>domain: <a href="domain_entries.html#d-stale-maps">stale-maps</a></span><span>KD45</span><span>update, not revision</span>
             <span>3 maps against 168</span>
             <span>model and maps agree, 24 of 24</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard" id="replanning-news">
+        <div class="shot"><img src="media/thumbs/replanning_news.jpg"
+          alt="The plan view of the residence as the news arrives and the courier turns" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="replanning_news.html">Replanning on news</a></h5>
+          <p>
+            A courier crosses a residence at night by one of three fire doors, any of which may be shut, and crosses only a door it knows to be open. Mid-drive, news arrives as a public announcement into ePlanSys's epistemic state, and the policy is planned again from the model it leaves: a fact for the courier alone, a relation between doors once a scout joins, and a broken message from the cleaning robot that tells only what it knows, which no planner over facts can use. Persistence is proved under a condition on messages, with a counterexample without it.
+          </p>
+          <div class="facts">
+            <span>domain: <a href="domain_entries.html#d-replanning-news">replanning-news</a></span><span>S5<sub>n</sub> &#183; public announcement &#183; one to three robots</span>
+            <span>the news saved 27.4 and 15.6&#8202;s against the policy kept, in every pair; 2.2&#8202;s with the cleaner's</span>
           </div>
         </div>
       </div>

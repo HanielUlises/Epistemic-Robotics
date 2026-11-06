@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The thirty domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The thirty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The thirty-one domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The thirty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The thirty domains">
-<meta property="og:description" content="The thirty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The thirty-one domains">
+<meta property="og:description" content="The thirty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The thirty domains">
-<meta name="twitter:description" content="The thirty planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The thirty-one domains">
+<meta name="twitter:description" content="The thirty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The thirty domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The thirty-one domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -591,6 +591,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
           <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
           <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+          <a href="replanning_news.html">&#183; Replanning on news<span class="sub">Public announcements mid-drive, with one, two and three robots</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -646,6 +647,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <div class="nav-sub">
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+          <a href="replanning_news.pdf">Replanning on News<span class="sub">Public announcements during execution, persistence, and news invisible to planning over facts</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -686,8 +688,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 30 domains</p>
-    <h2>The thirty domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 31 domains</p>
+    <h2>The thirty-one domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1284,6 +1286,32 @@ goal:    Kw_r1 blocked-z</pre>
   )
 
 (:goal (done))                    ; Case I: and every robot knows of the task</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-replanning-news">
+      <div class="dom-h">
+        <h4>replanning-news</h4>
+        <span class="dom-f">S5<sub>n</sub> &#183; 1 to 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd>the courier <i>c</i>; the scout <i>s</i> from the second instance; the cleaner <i>k</i>, which only speaks, in the third</dd>
+        <dt>Objects</dt><dd><code>&#8211;</code>; the three doors and the places are atoms of their own</dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span><span class="ty">public-sensing</span></dd>
+        <dt>Initial model</dt><dd>given explicitly: \(|W_0| = |W_d| = 7\), each valuation of the doors with at least one open, for one and two agents; 14 for three, each valuation twice, the cleaner having seen the east door in one copy and not the other, with no atom for the difference</dd>
+        <dt>Grounded</dt><dd>33 atoms, 39 ground actions for three agents; a crossing requires \(K_c\,\mathit{open}\), a message \(\mathit{Kw}_r\,\mathit{open}\)</dd>
+        <dt>Solved</dt><dd>depth 7 for each instance, 507, 63&#8239;250 and 66&#8239;646 expansions by AO*; after each instance's news, announced into the model, depth 5, 5 and 6</dd>
+        <dt>Stated in</dt><dd><a href="replanning_news.html">Replanning on news</a> &#183; <a href="replanning_news.pdf">the report</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (open-w) (open-m) (open-e)   ; the fire doors
+    (at-st ?i - agent) (at-ks ?i - agent)                     ; the station, the hatch
+    (at-vw ?i - agent) (at-vm ?i - agent) (at-ve ?i - agent)  ; the passages' mouths
+    (at-n ?i - agent) (at-r ?i - agent)                       ; the corridor, the resident
+    (courier ?i - agent) (scout ?i - agent) (cleaner ?i - agent)
+  )
+
+(:goal (at-r c))</pre>
       </details>
     </article>
     </div>
