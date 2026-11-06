@@ -1,0 +1,49 @@
+;; REPLANNING ON NEWS, act 3: c, s, k. Written by tools/model.py.
+;; Before the news: at least one door open, nobody knows which.
+;; Upper case is an open door.
+;;   w0: WME cleaner saw the east door
+;;   w1: WMe cleaner saw the east door
+;;   w2: WmE cleaner saw the east door
+;;   w3: Wme cleaner saw the east door
+;;   w4: wME cleaner saw the east door
+;;   w5: wMe cleaner saw the east door
+;;   w6: wmE cleaner saw the east door
+;;   w7: WME
+;;   w8: WMe
+;;   w9: WmE
+;;   w10: Wme
+;;   w11: wME
+;;   w12: wMe
+;;   w13: wmE
+
+(define (problem act3)
+  (:domain replanning-news)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents c s k)
+  (:init
+    :worlds (w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13)
+    :relations (
+      c (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w0 w7) (w0 w8) (w0 w9) (w0 w10) (w0 w11) (w0 w12) (w0 w13) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w1 w7) (w1 w8) (w1 w9) (w1 w10) (w1 w11) (w1 w12) (w1 w13) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w2 w7) (w2 w8) (w2 w9) (w2 w10) (w2 w11) (w2 w12) (w2 w13) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w3 w7) (w3 w8) (w3 w9) (w3 w10) (w3 w11) (w3 w12) (w3 w13) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w4 w7) (w4 w8) (w4 w9) (w4 w10) (w4 w11) (w4 w12) (w4 w13) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w5 w7) (w5 w8) (w5 w9) (w5 w10) (w5 w11) (w5 w12) (w5 w13) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6) (w6 w7) (w6 w8) (w6 w9) (w6 w10) (w6 w11) (w6 w12) (w6 w13) (w7 w0) (w7 w1) (w7 w2) (w7 w3) (w7 w4) (w7 w5) (w7 w6) (w7 w7) (w7 w8) (w7 w9) (w7 w10) (w7 w11) (w7 w12) (w7 w13) (w8 w0) (w8 w1) (w8 w2) (w8 w3) (w8 w4) (w8 w5) (w8 w6) (w8 w7) (w8 w8) (w8 w9) (w8 w10) (w8 w11) (w8 w12) (w8 w13) (w9 w0) (w9 w1) (w9 w2) (w9 w3) (w9 w4) (w9 w5) (w9 w6) (w9 w7) (w9 w8) (w9 w9) (w9 w10) (w9 w11) (w9 w12) (w9 w13) (w10 w0) (w10 w1) (w10 w2) (w10 w3) (w10 w4) (w10 w5) (w10 w6) (w10 w7) (w10 w8) (w10 w9) (w10 w10) (w10 w11) (w10 w12) (w10 w13) (w11 w0) (w11 w1) (w11 w2) (w11 w3) (w11 w4) (w11 w5) (w11 w6) (w11 w7) (w11 w8) (w11 w9) (w11 w10) (w11 w11) (w11 w12) (w11 w13) (w12 w0) (w12 w1) (w12 w2) (w12 w3) (w12 w4) (w12 w5) (w12 w6) (w12 w7) (w12 w8) (w12 w9) (w12 w10) (w12 w11) (w12 w12) (w12 w13) (w13 w0) (w13 w1) (w13 w2) (w13 w3) (w13 w4) (w13 w5) (w13 w6) (w13 w7) (w13 w8) (w13 w9) (w13 w10) (w13 w11) (w13 w12) (w13 w13))
+      s (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w0 w7) (w0 w8) (w0 w9) (w0 w10) (w0 w11) (w0 w12) (w0 w13) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w1 w7) (w1 w8) (w1 w9) (w1 w10) (w1 w11) (w1 w12) (w1 w13) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w2 w7) (w2 w8) (w2 w9) (w2 w10) (w2 w11) (w2 w12) (w2 w13) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w3 w7) (w3 w8) (w3 w9) (w3 w10) (w3 w11) (w3 w12) (w3 w13) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w4 w7) (w4 w8) (w4 w9) (w4 w10) (w4 w11) (w4 w12) (w4 w13) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w5 w7) (w5 w8) (w5 w9) (w5 w10) (w5 w11) (w5 w12) (w5 w13) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6) (w6 w7) (w6 w8) (w6 w9) (w6 w10) (w6 w11) (w6 w12) (w6 w13) (w7 w0) (w7 w1) (w7 w2) (w7 w3) (w7 w4) (w7 w5) (w7 w6) (w7 w7) (w7 w8) (w7 w9) (w7 w10) (w7 w11) (w7 w12) (w7 w13) (w8 w0) (w8 w1) (w8 w2) (w8 w3) (w8 w4) (w8 w5) (w8 w6) (w8 w7) (w8 w8) (w8 w9) (w8 w10) (w8 w11) (w8 w12) (w8 w13) (w9 w0) (w9 w1) (w9 w2) (w9 w3) (w9 w4) (w9 w5) (w9 w6) (w9 w7) (w9 w8) (w9 w9) (w9 w10) (w9 w11) (w9 w12) (w9 w13) (w10 w0) (w10 w1) (w10 w2) (w10 w3) (w10 w4) (w10 w5) (w10 w6) (w10 w7) (w10 w8) (w10 w9) (w10 w10) (w10 w11) (w10 w12) (w10 w13) (w11 w0) (w11 w1) (w11 w2) (w11 w3) (w11 w4) (w11 w5) (w11 w6) (w11 w7) (w11 w8) (w11 w9) (w11 w10) (w11 w11) (w11 w12) (w11 w13) (w12 w0) (w12 w1) (w12 w2) (w12 w3) (w12 w4) (w12 w5) (w12 w6) (w12 w7) (w12 w8) (w12 w9) (w12 w10) (w12 w11) (w12 w12) (w12 w13) (w13 w0) (w13 w1) (w13 w2) (w13 w3) (w13 w4) (w13 w5) (w13 w6) (w13 w7) (w13 w8) (w13 w9) (w13 w10) (w13 w11) (w13 w12) (w13 w13))
+      k (:and (w0 w0) (w0 w2) (w0 w4) (w0 w6) (w1 w1) (w1 w3) (w1 w5) (w2 w0) (w2 w2) (w2 w4) (w2 w6) (w3 w1) (w3 w3) (w3 w5) (w4 w0) (w4 w2) (w4 w4) (w4 w6) (w5 w1) (w5 w3) (w5 w5) (w6 w0) (w6 w2) (w6 w4) (w6 w6) (w7 w7) (w7 w8) (w7 w9) (w7 w10) (w7 w11) (w7 w12) (w7 w13) (w8 w7) (w8 w8) (w8 w9) (w8 w10) (w8 w11) (w8 w12) (w8 w13) (w9 w7) (w9 w8) (w9 w9) (w9 w10) (w9 w11) (w9 w12) (w9 w13) (w10 w7) (w10 w8) (w10 w9) (w10 w10) (w10 w11) (w10 w12) (w10 w13) (w11 w7) (w11 w8) (w11 w9) (w11 w10) (w11 w11) (w11 w12) (w11 w13) (w12 w7) (w12 w8) (w12 w9) (w12 w10) (w12 w11) (w12 w12) (w12 w13) (w13 w7) (w13 w8) (w13 w9) (w13 w10) (w13 w11) (w13 w12) (w13 w13))
+    )
+    :labels (
+      w0 (:and (open-w) (open-m) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w1 (:and (open-w) (open-m) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w2 (:and (open-w) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w3 (:and (open-w) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w4 (:and (open-m) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w5 (:and (open-m) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w6 (:and (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w7 (:and (open-w) (open-m) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w8 (:and (open-w) (open-m) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w9 (:and (open-w) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w10 (:and (open-w) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w11 (:and (open-m) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w12 (:and (open-m) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w13 (:and (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+    )
+    :designated (w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13)
+  )
+  (:goal (at-r c))
+)

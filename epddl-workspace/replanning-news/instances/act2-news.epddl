@@ -1,0 +1,26 @@
+;; REPLANNING ON NEWS, act 2: c, s. Written by tools/model.py.
+;; Restricted by the news: Maintenance: the middle and east fire doors hang on one circuit, both open or both shut.
+;; Upper case is an open door.
+;;   w0: WME
+;;   w1: Wme
+;;   w2: wME
+
+(define (problem act2-news)
+  (:domain replanning-news)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents c s)
+  (:init
+    :worlds (w0 w1 w2)
+    :relations (
+      c (:and (w0 w0) (w0 w1) (w0 w2) (w1 w0) (w1 w1) (w1 w2) (w2 w0) (w2 w1) (w2 w2))
+      s (:and (w0 w0) (w0 w1) (w0 w2) (w1 w0) (w1 w1) (w1 w2) (w2 w0) (w2 w1) (w2 w2))
+    )
+    :labels (
+      w0 (:and (open-w) (open-m) (open-e) (courier c) (scout s) (at-st c) (at-ks s))
+      w1 (:and (open-w) (courier c) (scout s) (at-st c) (at-ks s))
+      w2 (:and (open-m) (open-e) (courier c) (scout s) (at-st c) (at-ks s))
+    )
+    :designated (w0 w1 w2)
+  )
+  (:goal (at-r c))
+)

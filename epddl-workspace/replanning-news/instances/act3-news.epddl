@@ -1,0 +1,35 @@
+;; REPLANNING ON NEWS, act 3: c, s, k. Written by tools/model.py.
+;; Restricted by the news: Cleaner k: I have checked the east door, it is ... [the message breaks off]
+;; Upper case is an open door.
+;;   w0: WME cleaner saw the east door
+;;   w1: WMe cleaner saw the east door
+;;   w2: WmE cleaner saw the east door
+;;   w3: Wme cleaner saw the east door
+;;   w4: wME cleaner saw the east door
+;;   w5: wMe cleaner saw the east door
+;;   w6: wmE cleaner saw the east door
+
+(define (problem act3-news)
+  (:domain replanning-news)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents c s k)
+  (:init
+    :worlds (w0 w1 w2 w3 w4 w5 w6)
+    :relations (
+      c (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6))
+      s (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6))
+      k (:and (w0 w0) (w0 w2) (w0 w4) (w0 w6) (w1 w1) (w1 w3) (w1 w5) (w2 w0) (w2 w2) (w2 w4) (w2 w6) (w3 w1) (w3 w3) (w3 w5) (w4 w0) (w4 w2) (w4 w4) (w4 w6) (w5 w1) (w5 w3) (w5 w5) (w6 w0) (w6 w2) (w6 w4) (w6 w6))
+    )
+    :labels (
+      w0 (:and (open-w) (open-m) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w1 (:and (open-w) (open-m) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w2 (:and (open-w) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w3 (:and (open-w) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w4 (:and (open-m) (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w5 (:and (open-m) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+      w6 (:and (open-e) (courier c) (scout s) (cleaner k) (at-st c) (at-ks s))
+    )
+    :designated (w0 w1 w2 w3 w4 w5 w6)
+  )
+  (:goal (at-r c))
+)
