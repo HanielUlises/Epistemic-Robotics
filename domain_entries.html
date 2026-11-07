@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The thirty-one domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The thirty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The thirty-two domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The thirty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The thirty-one domains">
-<meta property="og:description" content="The thirty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The thirty-two domains">
+<meta property="og:description" content="The thirty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The thirty-one domains">
-<meta name="twitter:description" content="The thirty-one planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The thirty-two domains">
+<meta name="twitter:description" content="The thirty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The thirty-one domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The thirty-two domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -592,6 +592,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
           <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
           <a href="replanning_news.html">&#183; Replanning on news<span class="sub">Public announcements mid-drive, with one, two and three robots</span></a>
+          <a href="belief_revision.html">&#183; Belief revision in a changing ward<span class="sub">Spohn ranks in the epistemic state, a porter nobody sees, one and two robots</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -648,6 +649,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="replanning_news.pdf">Replanning on News<span class="sub">Public announcements during execution, persistence, and news invisible to planning over facts</span></a>
+          <a href="belief_revision.pdf">Belief Revision in a Changing Ward<span class="sub">Ranks as atoms, revision as conditioning, and change no robot sees</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -688,8 +690,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 31 domains</p>
-    <h2>The thirty-one domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 32 domains</p>
+    <h2>The thirty-two domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1312,6 +1314,33 @@ goal:    Kw_r1 blocked-z</pre>
   )
 
 (:goal (at-r c))</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-belief-revision">
+      <div class="dom-h">
+        <h4>belief-revision</h4>
+        <span class="dom-f">S5<sub>n</sub> with ranks &#183; 1 to 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd>the courier <i>c</i>; the second courier <i>d</i> from the second instance; the porter <i>p</i>, who only walks, in the third</dd>
+        <dt>Objects</dt><dd><code>&#8211;</code>; the four doors, the places and the grades are atoms of their own</dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span><span class="ty">public-announcement</span></dd>
+        <dt>Initial model</dt><dd>given explicitly: \(|W_0| = |W_d| = 6\), the porter's six loops, for one and two couriers; 12 for the third instance, each loop with his reopening or being held up at two; every world labelled with its Spohn rank as a grade atom \(g_0, \dots, g_6\), under one of four rankings</dd>
+        <dt>Grounded</dt><dd>46, 79 and 112 atoms; 75, 150 and 225 ground actions; entering a lobby requires \(\neg B_r \neg\mathit{open}\), with \(B_r\) a formula over knowledge and the grades, a crossing \(K_r\,\mathit{open}\)</dd>
+        <dt>Solved</dt><dd>the first instance ranked by the porter's habits at depth 20, 1&#8239;057 expansions by AO*, and with no belief at depth 16; a KD45 control without ranks has no policy; the demonstration's policies minimise expected time with weights \(\varepsilon^{\mathrm{rank}}\)</dd>
+        <dt>Stated in</dt><dd><a href="belief_revision.html">Belief revision in a changing ward</a> &#183; <a href="belief_revision.pdf">the report</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (open-a) (open-b) (open-c) (open-d)          ; the fire doors
+    (g0) (g1) (g2) (g3) (g4) (g5) (g6)           ; the world's rank
+    (at-va ?r - agent) ... (at-ka ?r - agent) ...  ; places: mouths, bends, rooms
+    (courier ?r - agent) (porter ?r - agent)
+    (out ?r - agent) (back ?r - agent) (delivered ?r - agent) (home ?r - agent)
+    (round-done) (reopens)                       ; the porter at two
+  )
+
+(:goal (and (home c) (home d)))                   ; the third instance</pre>
       </details>
     </article>
     </div>

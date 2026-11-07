@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The thirty-one domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The thirty-two domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -535,6 +535,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
           <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
           <a href="replanning_news.html">&#183; Replanning on news<span class="sub">Public announcements mid-drive, with one, two and three robots</span></a>
+          <a href="belief_revision.html">&#183; Belief revision in a changing ward<span class="sub">Spohn ranks in the epistemic state, a porter nobody sees, one and two robots</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -591,6 +592,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="replanning_news.pdf">Replanning on News<span class="sub">Public announcements during execution, persistence, and news invisible to planning over facts</span></a>
+          <a href="belief_revision.pdf">Belief Revision in a Changing Ward<span class="sub">Ranks as atoms, revision as conditioning, and change no robot sees</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -1046,6 +1048,21 @@ sup.cite a:hover{text-decoration:underline}
           <div class="facts">
             <span>domain: <a href="domain_entries.html#d-replanning-news">replanning-news</a></span><span>S5<sub>n</sub> &#183; public announcement &#183; one to three robots</span>
             <span>the news saved 27.4 and 15.6&#8202;s against the policy kept, in every pair; 2.2&#8202;s with the cleaner's</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard" id="belief-revision">
+        <div class="shot"><img src="media/thumbs/belief_revision.jpg"
+          alt="Gazebo: a courier at the bend of a fire lobby, looking at the door the porter shut" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="belief_revision.html">Belief revision in a changing ward</a></h5>
+          <p>
+            A night porter shuts two of a hospital floor's four fire doors on a loop no robot sees him walk. Couriers rank the nights by his habits, as Spohn ranks carried in ePlanSys's epistemic state, so that a door that contradicts a belief revises it by conditioning, and with it the belief about doors nobody has seen. With one courier, two that report, and both there and back across his second walk, the ranking by his habits had the least expected time in every act against door-by-door, full-meet and knowledge-only revision; without ranks, KD45 control has no policy.
+          </p>
+          <div class="facts">
+            <span>domain: <a href="domain_entries.html#d-belief-revision">belief-revision</a></span><span>S5<sub>n</sub> with Spohn ranks &#183; revision by conditioning &#183; one and two robots</span>
+            <span>ranked by his habits, the least expected time in every act: 228.6, 238.9, 502.1&#8202;s</span><span>144 of 144 runs arrived</span>
           </div>
         </div>
       </div>
