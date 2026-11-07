@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The thirty-two domains &#183; The Epistemic Robotics Project</title>
-<meta name="description" content="The thirty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<title>The thirty-three domains &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="The thirty-three planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <!-- Link previews. og:image must be an absolute URL: the scrapers do not
      resolve relative paths against the page they found it on. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="The Epistemic Robotics Project">
-<meta property="og:title" content="The thirty-two domains">
-<meta property="og:description" content="The thirty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta property="og:title" content="The thirty-three domains">
+<meta property="og:description" content="The thirty-three planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 <meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/domain_entries.html">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Open-RMF hotel floorplan behind the demonstrations index.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/demos.jpg">
-<meta name="twitter:title" content="The thirty-two domains">
-<meta name="twitter:description" content="The thirty-two planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
+<meta name="twitter:title" content="The thirty-three domains">
+<meta name="twitter:description" content="The thirty-three planning domains one by one: signature, event types, initial model, grounded size and solution, measured.">
 
 
 <script>
@@ -532,7 +532,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html" aria-current="page">The thirty-two domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html" aria-current="page">The thirty-three domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -593,6 +593,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
           <a href="replanning_news.html">&#183; Replanning on news<span class="sub">Public announcements mid-drive, with one, two and three robots</span></a>
           <a href="belief_revision.html">&#183; Belief revision in a changing ward<span class="sub">Spohn ranks in the epistemic state, a porter nobody sees, one and two robots</span></a>
+          <a href="mixed_fleet.html">&#183; Belief revision in a mixed fleet<span class="sub">A ranking per robot, belief reports weighed by trust, three robots</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -650,6 +651,7 @@ table.cat a:hover{border-bottom-color:var(--black)}
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="replanning_news.pdf">Replanning on News<span class="sub">Public announcements during execution, persistence, and news invisible to planning over facts</span></a>
           <a href="belief_revision.pdf">Belief Revision in a Changing Ward<span class="sub">Ranks as atoms, revision as conditioning, and change no robot sees</span></a>
+          <a href="mixed_fleet.pdf">Belief Revision in a Mixed Fleet<span class="sub">A ranking per robot, belief reports as conditioning on evidence, and what to tell</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -690,8 +692,8 @@ table.cat a:hover{border-bottom-color:var(--black)}
 
 <div class="hero">
   <div class="container">
-    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 32 domains</p>
-    <h2>The thirty-two domains</h2>
+    <p class="eyebrow">EPDDL &#183; plank &#183; Aletheia &#183; 33 domains</p>
+    <h2>The thirty-three domains</h2>
     <div class="rule"></div>
     <p class="hero-p">
       Every planning domain of the project, stated in EPDDL over the
@@ -1341,6 +1343,32 @@ goal:    Kw_r1 blocked-z</pre>
   )
 
 (:goal (and (home c) (home d)))                   ; the third instance</pre>
+      </details>
+    </article>
+    <article class="dom" id="d-mixed-fleet">
+      <div class="dom-h">
+        <h4>mixed-fleet</h4>
+        <span class="dom-f">S5<sub>n</sub> with a ranking per agent &#183; 2 and 3 agents</span>
+      </div>
+      <dl class="dom-dl">
+        <dt>Agents</dt><dd>the courier <i>c</i>, the disinfection robot <i>d</i> and the linen robot <i>e</i>; two of them in the first and second instances, all three in the third</dd>
+        <dt>Objects</dt><dd><code>&#8211;</code>; the doors, the places and the grades are atoms of their own</dd>
+        <dt>Event types</dt><dd class="tys"><span class="ty">public-ontic</span><span class="ty">semi-private-sensing</span><span class="ty">public-announcement</span></dd>
+        <dt>Initial model</dt><dd>given explicitly: \(|W_0| = |W_d| = 6\), the porter's six loops; every world labelled, for every robot \(r\), with \(r\)'s Spohn rank of it as a grade atom \(\mathit{rank}_k(r)\), \(k \le 9\); the facts \(\mathit{takes}(l, s)\) for who takes whose word</dd>
+        <dt>Grounded</dt><dd>68, 68 and 103 atoms; 100, 100 and 174 ground actions; a report of belief requires \(B_s\varphi \wedge \neg K_s\varphi \wedge B_s \neg B_l \varphi\), a second-order formula over the grades, and assigns every grade atom of the listener with one <code>iff</code></dd>
+        <dt>Solved</dt><dd>Aletheia's own AO* search on the first instance reached depth 14 in 40 minutes without a policy; the demonstration's policies, of depth 26 (the first and second instances) and 35 (the third), are planned by <code>tools/plan.py</code> and validated by Aletheia's plugin against the grounded task before every run, and replayed through an independent product update at every node</dd>
+        <dt>Stated in</dt><dd><a href="mixed_fleet.html">Belief revision in a mixed fleet</a> &#183; <a href="mixed_fleet.pdf">the report</a></dd>
+      </dl>
+      <details class="dom-src"><summary>Predicates and goal, as written</summary>
+<pre class="code">(:predicates
+    (open-a) (open-b) (open-c) (open-d)              ; the fire doors
+    (rank0 ?r - agent) ... (rank9 ?r - agent)       ; each robot's grade of the world
+    (at-hd ?r - agent) ... (at-nd ?r - agent)       ; places: rooms, mouths, bends
+    (robot ?r - agent) (searching ?r - agent) (delivered ?r - agent)
+    (takes-word ?l - agent ?s - agent)              ; l takes s's word
+  )
+
+(:goal (and (delivered c) (delivered d) (delivered e)))   ; the third instance</pre>
       </details>
     </article>
     </div>

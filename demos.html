@@ -475,7 +475,7 @@ sup.cite a:hover{text-decoration:underline}
             <summary>Domains</summary>
             <div class="nav-sub">
           <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
-          <a href="domain_entries.html">The thirty-two domains<span class="sub">Each domain, stated and measured</span></a>
+          <a href="domain_entries.html">The thirty-three domains<span class="sub">Each domain, stated and measured</span></a>
           <details class="nav-folder">
             <summary>One agent</summary>
             <div class="nav-sub">
@@ -536,6 +536,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
           <a href="replanning_news.html">&#183; Replanning on news<span class="sub">Public announcements mid-drive, with one, two and three robots</span></a>
           <a href="belief_revision.html">&#183; Belief revision in a changing ward<span class="sub">Spohn ranks in the epistemic state, a porter nobody sees, one and two robots</span></a>
+          <a href="mixed_fleet.html">&#183; Belief revision in a mixed fleet<span class="sub">A ranking per robot, belief reports weighed by trust, three robots</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -593,6 +594,7 @@ sup.cite a:hover{text-decoration:underline}
           <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
           <a href="replanning_news.pdf">Replanning on News<span class="sub">Public announcements during execution, persistence, and news invisible to planning over facts</span></a>
           <a href="belief_revision.pdf">Belief Revision in a Changing Ward<span class="sub">Ranks as atoms, revision as conditioning, and change no robot sees</span></a>
+          <a href="mixed_fleet.pdf">Belief Revision in a Mixed Fleet<span class="sub">A ranking per robot, belief reports as conditioning on evidence, and what to tell</span></a>
             </div>
           </details>
           <details class="nav-folder">
@@ -1063,6 +1065,21 @@ sup.cite a:hover{text-decoration:underline}
           <div class="facts">
             <span>domain: <a href="domain_entries.html#d-belief-revision">belief-revision</a></span><span>S5<sub>n</sub> with Spohn ranks &#183; revision by conditioning &#183; one and two robots</span>
             <span>ranked by his habits, the least expected time in every act: 228.6, 238.9, 502.1&#8202;s</span><span>144 of 144 runs arrived</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard" id="mixed-fleet">
+        <div class="shot"><img src="media/thumbs/mixed_fleet.jpg"
+          alt="Gazebo: three robots of three makers in the hall of the ward" loading="lazy"></div>
+        <div class="body">
+          <h5><a href="mixed_fleet.html">Belief revision in a mixed fleet</a></h5>
+          <p>
+            Three robots of three makers rank a night porter's loops three ways, so one report of a shut fire door leaves them believing three different things, and each knows what the others believe. A Spohn ranking per robot in ePlanSys's epistemic state, and a report of belief that raises the ranks of a listener taking the speaker's word, guarded by a second-order belief the executor checks; the courier says nothing, every belief its listener lacks, or what it predicts will help, with a formal analysis.
+          </p>
+          <div class="facts">
+            <span>domain: <a href="domain_entries.html#d-mixed-fleet">mixed-fleet</a></span><span>S5<sub>n</sub> with a ranking per robot &#183; belief reports &#183; two and three robots</span>
+            <span>3 robots &#183; 108 runs in Gazebo, all arrived</span>
           </div>
         </div>
       </div>
