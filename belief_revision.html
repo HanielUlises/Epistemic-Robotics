@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belief revision in a changing ward &#183; The Epistemic Robotics Project</title>
+<meta name="description" content="A night porter shuts two of a hospital floor's four fire doors on a loop no robot sees him walk. Couriers rank the nights by his habits; when a door contradicts their belief they revise it, and with it their belief about doors nobody has seen. Spohn ranks carried as one atom a world make belief a formula and revision conditioning in ePlanSys's epistemic state, with the planner unchanged; one courier, two that report, and both there and back across his second walk, against door-by-door, full-meet and knowledge-only revision, with a formal analysis.">
+<!-- Link previews. og:image must be an absolute URL: the scrapers do not
+     resolve relative paths against the page they found it on. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Epistemic Robotics Project">
+<meta property="og:title" content="Belief revision in a changing ward">
+<meta property="og:description" content="A night porter shuts two of a hospital floor's four fire doors on a loop no robot sees him walk. Couriers rank the nights by his habits; when a door contradicts their belief they revise it, and with it their belief about doors nobody has seen. Spohn ranks carried as one atom a world make belief a formula and revision conditioning in ePlanSys's epistemic state, with the planner unchanged; one courier, two that report, and both there and back across his second walk, against door-by-door, full-meet and knowledge-only revision, with a formal analysis.">
+<meta property="og:url" content="https://hanielulises.github.io/Epistemic-Robotics/belief_revision.html">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/belief_revision.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The film as a courier finds a fire door shut: the plan view of the ward with the doors as they are, Gazebo, and the nights ranked, with what each courier now believes.">
+<meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/belief_revision.jpg">
+<meta name="twitter:title" content="Belief revision in a changing ward">
+<meta name="twitter:description" content="A night porter shuts two of a hospital floor's four fire doors on a loop no robot sees him walk. Couriers rank the nights by his habits; when a door contradicts their belief they revise it, and with it their belief about doors nobody has seen. Spohn ranks carried as one atom a world make belief a formula and revision conditioning in ePlanSys's epistemic state, with the planner unchanged; one courier, two that report, and both there and back across his second walk, against door-by-door, full-meet and knowledge-only revision, with a formal analysis.">
+
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+@view-transition{navigation:auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body{animation:pageIn .38s ease-out both}
+::view-transition-old(root){animation:fadeOut .22s ease-in both}
+::view-transition-new(root){animation:pageIn .32s ease-out both}
+@keyframes fadeOut{to{opacity:0}}
+:root{
+  --black:#111111; --red:#C8102E; --gray:#5A5A5A;
+  --border:#D6D6D6; --code-bg:#F4F4F4;
+  --steel:#1A52A0; --panel:#FAFAFA;
+  --sg:Arial,Helvetica,sans-serif;
+  --ss:Arial,Helvetica,sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+html{font-size:16px;scroll-behavior:smooth;overflow-x:hidden}
+body{background:#fff;color:var(--black);overflow-x:hidden;
+  font-family:var(--ss);
+  font-weight:400;line-height:1.6}
+/* One content width, for prose and for figures alike.
+   The site was built on two -- an 800px measure for text and a 1040px band for
+   anything that would not fit in it -- and the result reads as a column that
+   keeps widening and narrowing as you scroll past each diagram. Both selectors
+   now resolve to the same width, so every left and right edge on the page
+   lines up, and a figure is simply a block in the column instead of an
+   excursion out of it. */
+.container,.container-wide{max-width:1040px;margin:0 auto;padding:0 2.2rem}
+/* Running text takes the same width as everything else, and is justified so
+   that it does. Capped to a shorter measure it sat against the left edge of a
+   column the figures filled, which read as though the page had come loose;
+   flush on both edges it reads as one column. Hyphenation is what keeps
+   justification at this measure from opening rivers between the words. */
+.container p,.container .note,.container .pull,
+.container ul,.container ol{text-align:justify;
+  -webkit-hyphens:auto;hyphens:auto}
+/* Headings, captions and anything already set to a deliberate measure are
+   left alone: a justified two-line heading is a heading with a hole in it. */
+.container h3,.container h4,.container .fig-cap,
+.container figcaption,.hero-p{text-align:left;hyphens:manual}
+
+header{border-bottom:2px solid var(--black);padding:2.6rem 0 1.5rem}
+.hdr-inner{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap}
+.site-tag{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);white-space:nowrap}
+header h1{font-family:var(--sg);font-size:1.18rem;
+  font-weight:500;letter-spacing:-.01em}
+header h1 a{color:inherit;text-decoration:none}
+header h1 a:hover{color:var(--red)}
+.hdr-nav{margin-left:auto;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}
+.hdr-nav a{font-family:var(--sg);font-size:.76rem;font-weight:500;color:var(--gray);
+  text-decoration:none;padding:.24rem .6rem;border:1px solid transparent;border-radius:2px;
+  transition:color .18s,border-color .18s,background .18s;white-space:nowrap}
+.hdr-nav a:hover{color:var(--black);border-color:var(--border)}
+.hdr-nav a[aria-current="page"]{color:var(--black);border-color:var(--border);background:#FAFAFA}
+.hdr-nav a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+@media(max-width:560px){.hdr-nav{width:100%;margin:.6rem 0 0}}
+/* Contents menu: one control listing every page and report, instead of a row
+   of buttons that grows each time something is written. */
+.nav-menu{margin-left:auto;position:relative}
+.nav-menu>summary{list-style:none;cursor:pointer;font-family:var(--sg);font-size:.76rem;
+  font-weight:500;color:var(--gray);border:1px solid var(--border);border-radius:2px;
+  padding:.24rem .7rem;white-space:nowrap;user-select:none;
+  transition:color .18s,background .18s}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary::after{content:"\25BE";margin-left:.45rem;font-size:.72em;vertical-align:.06em}
+/* Hover opens the menu on a pointer, so the other pages are one gesture away.
+   Click still works, and touch devices, which have no hover, are unaffected. */
+@media (hover:hover) and (pointer:fine){
+  .nav-menu:hover>.nav-panel{display:block}
+  .nav-menu:hover>summary{color:var(--black);background:#FAFAFA}
+}
+.nav-menu>summary:hover,.nav-menu[open]>summary{color:var(--black);background:#FAFAFA}
+.nav-panel{position:absolute;right:0;top:calc(100% + .32rem);z-index:60;
+  min-width:20.5rem;background:#fff;border:1px solid var(--border);border-radius:2px;
+  padding:.45rem 0;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.nav-panel h6{font-family:var(--sg);font-size:.62rem;font-weight:500;color:var(--gray);
+  padding:.4rem .9rem .18rem}
+.nav-panel a{display:block;font-family:var(--sg);font-size:.75rem;line-height:1.35;
+  color:var(--black);text-decoration:none;padding:.28rem .9rem}
+.nav-panel a:hover{background:#F4F4F4}
+.nav-panel a[aria-current="page"]{font-weight:600}
+.nav-panel a[aria-current="page"]::before{content:"";display:inline-block;width:5px;height:5px;
+  border-radius:50%;background:var(--red);margin-right:.42rem;vertical-align:middle}
+/* The demonstrations sit under Execution: they are that layer running, not
+   separate destinations, so the menu keeps three ways in. */
+.nav-sub{margin:0 0 .1rem;border-left:1px solid var(--rule,#E2E2E2);margin-left:.72rem;padding-left:.1rem}
+.nav-sub a{padding-left:.62rem}
+.nav-panel .sub{display:block;color:var(--gray);font-size:.66rem;line-height:1.3}
+/* Folders in the contents menu. The list of demonstrations grows with every
+   run recorded, and a panel that shows all of them at once buries the four
+   top-level pages. Each group is a <details>, shut until it is asked for. */
+.nav-folder{margin:0}
+.nav-folder>summary{list-style:none;cursor:pointer;display:block;
+  font-family:var(--sg);font-size:.75rem;line-height:1.35;color:var(--black);
+  padding:.3rem .55rem;border-radius:2px;user-select:none;
+  transition:background .15s}
+.nav-folder>summary::-webkit-details-marker{display:none}
+.nav-folder>summary::before{content:"\25B8";display:inline-block;width:.8em;
+  margin-right:.3rem;font-size:.72em;color:var(--gray);
+  transition:transform .16s ease}
+.nav-folder[open]>summary::before{transform:rotate(90deg)}
+.nav-folder>summary:hover{background:#F4F4F4}
+.nav-folder .nav-sub{margin-left:.55rem;padding-left:.5rem;
+  border-left:1px solid var(--border)}
+.nav-folder .nav-folder>summary{color:var(--gray);font-size:.72rem}
+.nav-panel hr{border:0;border-top:1px solid var(--border);margin:.38rem 0}
+/* ── the small-screen drawer ────────────────────────────────────────────
+   On a phone the header keeps the title and nothing else; the contents move
+   behind a button and arrive as a panel from the right. The panel is the
+   same <details> the wide layout uses, so there is one menu in the markup
+   and two presentations of it. */
+.nav-burger{display:none;margin-left:auto;width:40px;height:34px;padding:0;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  cursor:pointer;position:relative;flex:0 0 auto;
+  transition:border-color .18s,background .18s}
+.nav-burger:hover{border-color:var(--black);background:#FAFAFA}
+.nav-burger span{position:absolute;left:9px;right:9px;height:1.5px;
+  background:var(--black);border-radius:2px;
+  transition:transform .28s cubic-bezier(.4,.01,.2,1),opacity .18s ease}
+.nav-burger span:nth-child(1){top:11px}
+.nav-burger span:nth-child(2){top:16px}
+.nav-burger span:nth-child(3){top:21px}
+body.drawer-open .nav-burger span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+body.drawer-open .nav-burger span:nth-child(2){opacity:0;transform:scaleX(.4)}
+body.drawer-open .nav-burger span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.nav-scrim{position:fixed;inset:0;background:rgba(17,17,17,.34);z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
+
+@media(max-width:720px){
+  .hdr-inner{flex-wrap:nowrap;align-items:center;gap:.7rem}
+  .site-tag{display:none}
+  header h1{font-size:1.02rem;line-height:1.25;margin:0}
+  .nav-burger{display:block}
+
+  /* The menu becomes the drawer. It is always "open" as a details element on
+     a phone, and the body class is what slides it in, so no script has to
+     keep two open-states agreeing. */
+  .nav-menu{position:fixed;top:0;right:0;bottom:0;left:auto;width:min(84vw,320px);
+    margin:0;z-index:80;background:#FFFFFF;border-left:1px solid var(--border);
+    box-shadow:-14px 0 34px rgba(17,17,17,.10);
+    transform:translateX(102%);transition:transform .34s cubic-bezier(.4,.01,.2,1);
+    display:flex;flex-direction:column;overflow:hidden}
+  body.drawer-open .nav-menu{transform:translateX(0)}
+  .nav-menu>summary{display:block;flex:0 0 auto;border:0;border-bottom:1px solid var(--border);
+    border-radius:0;padding:1rem 1.1rem;font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gray);background:#FAFAFA;cursor:default}
+  .nav-menu>summary::after{display:none}
+  .nav-panel{position:static;display:block;width:auto;min-width:0;border:0;
+    box-shadow:none;padding:.5rem .55rem 2rem;overflow-y:auto;flex:1 1 auto;
+    -webkit-overflow-scrolling:touch}
+  .nav-panel a{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel .sub{font-size:.72rem}
+  .nav-folder>summary{padding:.52rem .6rem;font-size:.86rem}
+  .nav-panel h6{padding:.5rem .6rem .2rem}
+
+  /* Each row eases in behind the panel, which reads as the drawer filling
+     rather than appearing all at once. */
+  body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
+  body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
+  body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
+  body.drawer-open .nav-panel>*:nth-child(4){animation-delay:.10s}
+  body.drawer-open .nav-panel>*:nth-child(5){animation-delay:.13s}
+  body.drawer-open .nav-panel>*:nth-child(6){animation-delay:.16s}
+  body.drawer-open{overflow:hidden}
+}
+@keyframes rowIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .nav-menu,.nav-burger span,.nav-scrim{transition:none}
+  body.drawer-open .nav-panel>*{animation:none}
+}
+
+.hero{padding:4.2rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:var(--mono);font-size:.67rem;color:var(--gray);
+  letter-spacing:.1em;margin-bottom:1.3rem}
+.hero h2{font-family:var(--sg);
+  font-size:clamp(2rem,4.5vw,2.7rem);font-weight:600;
+  line-height:1.15;letter-spacing:-.035em;max-width:660px}
+.hero h2 em{font-style:italic;font-weight:300;color:var(--gray)}
+.rule{width:2.2rem;height:2px;background:var(--red);margin:2rem 0}
+.hero-p{font-size:1.03rem;max-width:620px;color:#2C2C2C}
+
+section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-label{font-family:var(--mono);font-size:.66rem;
+  color:var(--red);margin-bottom:1.6rem}
+h3{font-family:var(--sg);font-size:1.2rem;font-weight:500;
+  letter-spacing:-.02em;margin-bottom:.9rem}
+h4{font-family:var(--sg);font-size:.95rem;font-weight:500;
+  letter-spacing:-.01em;margin:2rem 0 .7rem}
+p{margin-bottom:1.05rem}
+p:last-child{margin-bottom:0}
+em.term{font-style:italic;color:#333}
+
+.math-block{
+  background:var(--code-bg);
+  border-left:2.5px solid var(--red);
+  padding:1rem 1.3rem;margin:1.5rem 0;overflow-x:auto;line-height:2.2;
+}
+.pull{border-left:2.5px solid var(--black);padding:.3rem 0 .3rem 1.2rem;
+  margin:1.8rem 0;font-style:italic;font-size:1.03rem;color:#333}
+.note{font-size:.83rem;color:var(--gray);line-height:1.65}
+
+.ext-chip{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:var(--mono);font-size:.67rem;
+  border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;
+  text-decoration:none;color:var(--gray);transition:color .18s,border-color .18s;
+  margin-left:.4rem;white-space:nowrap;
+}
+.ext-chip:hover{color:var(--black);border-color:var(--black)}
+
+/* ── figure shells ─────────────────────────────────────────── */
+.fig{border:1px solid var(--border);background:var(--panel);
+  margin:1.8rem 0;border-radius:2px;overflow:hidden}
+.fig-head{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#fff}
+.fig-title{font-family:var(--sg);font-size:.82rem;font-weight:500}
+.fig-body{padding:1.1rem;overflow-x:auto}
+.fig-cap{padding:.75rem 1.1rem;border-top:1px solid var(--border);
+  font-size:.79rem;color:var(--gray);line-height:1.65;background:#fff}
+.fig-cap b{color:#333;font-weight:600}
+
+/* ── controls ──────────────────────────────────────────────── */
+.ctrls{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn{font-family:var(--sg);font-size:.74rem;font-weight:500;letter-spacing:.01em;
+  border:1px solid var(--border);background:#fff;color:#333;
+  padding:.32rem .7rem;border-radius:2px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:var(--black);color:var(--black)}
+.btn.primary{border-color:var(--red);color:var(--red)}
+.btn.primary:hover{background:var(--red);color:#fff}
+.btn[aria-pressed="true"]{background:var(--black);color:#fff;border-color:var(--black)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.seg .btn{border:none;border-right:1px solid var(--border);border-radius:0}
+.seg .btn:last-child{border-right:none}
+.ctrl-label{font-family:var(--sg);font-size:.7rem;color:var(--gray);
+  letter-spacing:.1em;margin-right:.15rem}
+
+/* ── theatre layout ───────────────────────────────────────── */
+.theatre{display:grid;grid-template-columns:1fr 268px;gap:1.1rem}
+@media(max-width:860px){.theatre{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);background:#fff;border-radius:2px;padding:.8rem .9rem}
+.panel h5{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);font-weight:400;margin-bottom:.6rem}
+.kw-row{display:flex;align-items:center;gap:.5rem;font-family:var(--sg);
+  font-size:.72rem;padding:.22rem 0;border-bottom:1px dotted var(--border)}
+.kw-row:last-child{border-bottom:none}
+.kw-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gray);
+  background:#fff;transition:background .3s,border-color .3s;flex-shrink:0}
+.kw-dot.on{background:var(--red);border-color:var(--red)}
+.kw-name{font-weight:500;color:#333;width:1.9rem}
+.kw-state{color:var(--gray);font-size:.68rem}
+.kw-row.ck{margin-top:.45rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.kw-row.ck .kw-dot.on{background:var(--black);border-color:var(--black)}
+
+.steplist{font-family:var(--sg);font-size:.72rem;line-height:1.55}
+.steplist div{padding:.22rem .4rem;color:#888;border-left:2px solid transparent;
+  transition:color .2s,border-color .2s,background .2s}
+.steplist div.done{color:#555}
+.steplist div.cur{color:var(--black);border-left-color:var(--red);background:#FFF4F5}
+.step-formal{font-family:var(--ss);font-style:italic;font-size:.75rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;min-height:2.6rem}
+
+/* ── map / model pair ─────────────────────────────────────── */
+.mm-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:760px){.mm-grid{grid-template-columns:1fr}}
+.mm-cap{font-family:var(--sg);font-size:.68rem;
+  color:var(--gray);margin-bottom:.5rem}
+.mm-read{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;
+  border-top:1px solid var(--border);padding-top:.8rem}
+@media(max-width:640px){.mm-read{grid-template-columns:1fr;gap:.35rem}}
+.mm-read>div{display:flex;flex-direction:column;gap:.15rem;font-family:var(--sg);font-size:.8rem;color:#333}
+.mm-k{font-size:.63rem;letter-spacing:.1em;color:var(--gray)}
+.mm-act{margin-top:.75rem;font-family:var(--ss);font-style:italic;font-size:.84rem;color:var(--gray);
+  border-left:2.5px solid var(--red);padding-left:.75rem}
+.bot{transition:transform .85s cubic-bezier(.42,.03,.28,1)}
+@media(prefers-reduced-motion:reduce){.bot{transition:none}}
+
+/* ── domain cards ─────────────────────────────────────────── */
+.dom-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:1.8rem 0}
+@media(max-width:640px){.dom-grid{grid-template-columns:1fr}}
+.dom-card{border:1px solid var(--border);border-top:2.5px solid var(--red);
+  padding:1rem 1.05rem .9rem;background:var(--panel)}
+.dom-card h4{font-family:var(--sg);font-size:.87rem;font-weight:600;margin:0 0 .3rem}
+.dom-card .sig{font-family:var(--sg);font-size:.73rem;color:#555;
+  margin-bottom:.5rem;line-height:1.55}
+.dom-card p{font-size:.83rem;color:#444;margin:0;line-height:1.62}
+
+pre.code{background:var(--code-bg);border-left:2.5px solid var(--border);
+  padding:.85rem 1.1rem;margin:1.3rem 0;overflow-x:auto;
+  font-family:var(--mono);font-size:.7rem;line-height:1.6;color:#333;font-weight:400}
+pre.code .k{color:var(--steel);font-weight:500}
+pre.code .c{color:var(--gray);font-style:italic}
+
+/* ── tables ───────────────────────────────────────────────── */
+table.data{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+table.data th{font-family:var(--sg);font-size:.7rem;letter-spacing:.04em;
+  color:var(--gray);font-weight:400;
+  text-align:right;padding:.45rem .55rem;border-bottom:1.5px solid var(--black)}
+table.data th:first-child{text-align:left}
+table.data td{padding:.42rem .55rem;text-align:right;border-bottom:1px solid var(--border);
+  font-family:var(--sg);font-size:.78rem;color:#333}
+table.data td:first-child{text-align:left;font-family:var(--ss);font-size:.85rem}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.sum td{border-top:1.5px solid var(--black);border-bottom:none;font-weight:500}
+
+.warn{border:1px solid var(--border);border-left:2.5px solid var(--red);
+  background:#FFF8F8;padding:1rem 1.2rem;margin:1.6rem 0}
+.warn h4{margin:0 0 .5rem;font-size:.88rem}
+.warn p{font-size:.87rem;margin-bottom:.7rem}
+
+footer{border-top:2px solid var(--black);padding:2.2rem 0}
+.ftr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.ftr-l{font-family:var(--sg);font-size:.8rem;font-weight:500}
+.ftr-r{font-family:var(--mono);font-size:.63rem;color:var(--gray);}
+footer a{color:var(--black);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--red)}
+
+/* ── svg animation primitives ─────────────────────────────── */
+.ugv{transition:transform .62s cubic-bezier(.45,.05,.3,1)}
+.wave{opacity:0}
+.wave.go{animation:pulse 1.15s ease-out}
+@keyframes pulse{
+  0%{opacity:.55;r:6}
+  100%{opacity:0;r:150}
+}
+.scanring{opacity:0}
+.scanring.go{animation:scanp .95s ease-out}
+@keyframes scanp{
+  0%{opacity:.85;r:10}
+  100%{opacity:0;r:40}
+}
+.wnode{transition:opacity .5s,fill .4s,stroke .4s}
+.wnode.dead{opacity:.16}
+.wedge{transition:opacity .5s,stroke .4s}
+.wedge.cut{opacity:.12}
+.bar{transition:width .9s cubic-bezier(.3,.8,.4,1)}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
+  .ugv{transition:none}
+  .wave.go,.scanring.go{animation:none}
+  .bar{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ── page-local: inline monospace, used for field and package names ── */
+.mono-inline{font-family:var(--mono);font-size:.82em;color:#333;
+  background:var(--code-bg);padding:.06em .3em;border-radius:2px}
+table.data td .mono-inline{font-size:.78em}
+.hero-p a,.note a,section p a{color:var(--steel);text-decoration:none;
+  border-bottom:1px solid var(--border)}
+.hero-p a:hover,.note a:hover,section p a:hover{border-bottom-color:var(--steel)}
+.ftr-l a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
+.ftr-l a:hover{border-bottom-color:var(--black)}
+footer{padding:2.2rem 0 3rem;border-top:2px solid var(--black)}
+
+/* ── stepped accessibility figure ──────────────────────────── */
+.kfig svg{display:block;width:100%;height:auto}
+.kpanel{fill:var(--panel,#FAFAFA);stroke:var(--border);stroke-width:1}
+.kagent{font-family:var(--sg);font-size:13px;font-weight:bold;fill:var(--black)}
+.kframe{font-family:var(--sg);font-size:11.5px;fill:var(--gray)}
+.kframe.wrong{fill:var(--red)}
+.kworld{transition:opacity .45s ease}
+.kworld.dead{opacity:.12}
+.kdot{fill:#FFFFFF;stroke:var(--gray);stroke-width:1.4;
+  transition:stroke .4s ease,stroke-width .4s ease}
+.kworld.des .kdot{stroke:var(--red);stroke-width:2.6}
+.kwid{font-family:var(--mono);font-size:11px;fill:var(--black)}
+.katom{font-family:var(--mono);font-size:9.5px;fill:var(--gray)}
+.kedge{stroke:var(--steel);stroke-width:1.3;fill:none;
+  transition:opacity .45s ease}
+.kedge.cut{opacity:0}
+.kbar{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.kbtn{font-family:var(--sg);font-size:.76rem;padding:.3rem .62rem;cursor:pointer;
+  background:#FFFFFF;border:1px solid var(--border);border-radius:3px;
+  color:var(--black);line-height:1.3}
+.kbtn:hover{border-color:var(--red);color:var(--red)}
+.kstep{font-family:var(--mono);font-size:.7rem;color:var(--gray);margin-left:.3rem}
+@media(prefers-reduced-motion:reduce){
+  .kworld,.kdot,.kedge{transition:none}
+}
+
+/* ── code blocks, and the button that copies them ──────────── */
+pre > code{display:block;background:var(--code-bg);
+  border-left:2.5px solid var(--border);padding:.85rem 1.1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.7rem;line-height:1.6;
+  color:#333;font-weight:400;white-space:pre}
+pre:has(> code){margin:1.3rem 0}
+.codewrap{position:relative}
+.codewrap > pre{margin-top:0}
+.copybtn{position:absolute;top:.5rem;right:.5rem;z-index:2;
+  font-family:var(--sg);font-size:.66rem;letter-spacing:.03em;
+  padding:.24rem .5rem;cursor:pointer;border-radius:3px;
+  background:#FFFFFF;border:1px solid var(--border);color:var(--gray);
+  opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.codewrap:hover .copybtn,.copybtn:focus{opacity:1}
+.copybtn:hover{color:var(--red);border-color:var(--red)}
+.copybtn.done{opacity:1;color:var(--steel);border-color:var(--steel)}
+@media(hover:none){.copybtn{opacity:1}}
+</style>
+
+<style>
+/* The warehouse run */
+.demo-figure{margin:2rem 0 2.4rem}
+.demo-figure video{display:block;width:100%;height:auto;border-radius:10px;
+  background:#0d0d0f;box-shadow:0 10px 40px rgba(0,0,0,.28)}
+.demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
+  line-height:1.5}
+/* The node graph is wider than the prose column and scrolls inside itself
+   rather than making the page scroll sideways. */
+.graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
+  border-radius:2px;background:#fff;padding:.6rem}
+.graph{display:block;min-width:820px}
+/* The log-timing table reads as prose, so its middle column is left-aligned;
+   the default right-alignment is for numbers. */
+table.logtab td:nth-child(2),table.logtab th:nth-child(2){text-align:left}
+table.logtab td:first-child,table.logtab th:first-child{
+  text-align:right;font-family:var(--sg);width:4.5rem;padding-right:1.1rem}
+
+/* References. A numbered list with a hanging indent, and superscript markers
+   that link both ways so a citation can be followed and come back. */
+.ref-list{list-style:none;counter-reset:ref;margin:1.4rem 0 0;padding:0;
+  max-width:none;text-align:left}
+.ref-list li{counter-increment:ref;position:relative;padding-left:2.6rem;
+  margin-bottom:.75rem;font-size:.88rem;line-height:1.6;color:#2C2C2C}
+.ref-list li::before{content:"[" counter(ref) "]";position:absolute;left:0;
+  font-family:var(--mono);font-size:.76rem;color:var(--gray);top:.15rem}
+.ref-list li:target{background:#F4F4F4;border-radius:2px;
+  box-shadow:0 0 0 .45rem #F4F4F4}
+sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
+sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
+sup.cite a:hover{text-decoration:underline}
+</style>
+  <meta name="twitter:image:alt" content="The film as a courier finds a fire door shut: the plan view of the ward with the doors as they are, Gazebo, and the nights ranked, with what each courier now believes.">
+  <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/belief_revision.html">
+
+<style>
+/* The pass-through page's components, reused by the coordinated-attack page. */
+/* Tables of prose are read left to right; the site default right-aligns for numbers. */
+table.ca-left th,table.ca-left td{text-align:left}
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.6rem 0}
+.ev-grid figure{border:1px solid var(--border);border-radius:2px;background:#fff}
+.ev-grid img{display:block;width:100%;height:auto}
+@media(max-width:700px){.ev-grid{grid-template-columns:1fr}}
+.pt-theatre{grid-template-columns:1.35fr 1fr}
+.pt-theatre svg{width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:2px}
+table.pt-k{margin:.2rem 0 0;font-size:.8rem}
+table.pt-k td,table.pt-k th{text-align:center}
+table.pt-k td:first-child{text-align:left;font-weight:600}
+.pt-cap{min-height:3.2rem}
+/* The findings band: wider than the column, and the first thing after the
+   film, so the page opens onto what it found. */
+.pt-findings{background:#F7F7F5;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.6rem 0 3rem}
+.pt-findings-inner{max-width:1280px;margin:0 auto;padding:0 2.2rem}
+.pt-findings-title{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.03em;margin-bottom:1.8rem}
+.pt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+@media(max-width:980px){.pt-cards{grid-template-columns:1fr}}
+.pt-card{display:flex;flex-direction:column;background:#fff;border:1px solid #DDDDDD;border-radius:3px;
+  text-decoration:none;color:inherit;overflow:hidden;transition:border-color .25s ease,box-shadow .25s ease}
+.pt-card:hover{border-color:#BBBBBB;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.pt-card .pt-card-img{display:block;height:230px;overflow:hidden;background:#FFFFFF;border-bottom:1px solid #EEEEEE}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  transition:transform .5s ease}
+.pt-card:hover img{transform:scale(1.025)}
+.pt-card-k{font-family:var(--mono);font-size:.62rem;color:var(--gray);letter-spacing:.08em;
+  text-transform:uppercase;padding:1.05rem 1.2rem 0}
+.pt-card-h{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;padding:.4rem 1.2rem 0;line-height:1.3}
+.pt-card-p{font-size:.86rem;color:#4A4A4A;padding:.55rem 1.2rem 0;line-height:1.58;flex:1}
+.pt-card-go{font-size:.8rem;font-weight:500;color:var(--black);padding:1rem 1.2rem 1.15rem}
+.pt-card-go span{display:inline-block;transition:transform .25s ease}
+.pt-card:hover .pt-card-go span{transform:translateX(4px)}
+.pt-toc{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:2rem}
+.pt-toc a{font-size:.76rem;color:#333;text-decoration:none;border:1px solid var(--border);
+  background:#fff;padding:.3rem .7rem;border-radius:2px;transition:border-color .18s,color .18s}
+.pt-toc a:hover{border-color:var(--red);color:var(--red)}
+.pt-hero-fig{max-width:1280px;margin:1.6rem auto 1.8rem;padding:0 2.2rem}
+.pt-hero-fig img{display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:2px;background:#fff}
+section[id^="pt-"]{scroll-margin-top:1rem}
+table.pt-run td:first-child{white-space:nowrap;font-family:var(--mono);font-size:.74rem;padding-right:1.2rem}
+table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
+@media(prefers-reduced-motion:reduce){.pt-card{transition:none}.pt-card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="hdr-inner">
+      <span class="site-tag">epistemic-robotics</span>
+      <h1><a href="index.html">The Epistemic Robotics Project</a></h1>
+      <button class="nav-burger" type="button" aria-label="Contents"
+              aria-expanded="false" aria-controls="site-contents">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-scrim"></div>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <div class="nav-panel" id="site-contents">
+          <h6>Pages</h6>
+          <a href="index.html">Overview</a>
+          <details class="nav-folder">
+            <summary>Domains</summary>
+            <div class="nav-sub">
+          <a href="domain_catalogue.html">All domains<span class="sub">One agent or several, knowledge or belief</span></a>
+          <a href="domain_entries.html">The thirty-two domains<span class="sub">Each domain, stated and measured</span></a>
+          <details class="nav-folder">
+            <summary>One agent</summary>
+            <div class="nav-sub">
+          <a href="single_agent_knows.html">&#183; One agent knows<span class="sub">S5 &#183; lone-inspector</span></a>
+          <a href="single_agent_believes.html">&#183; One agent believes<span class="sub">KD45 &#183; remote-door</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>A fleet</summary>
+            <div class="nav-sub">
+          <a href="domains.html">&#183; A fleet knows<span class="sub">S5n &#183; ugv-coordination</span></a>
+          <a href="fleet_believes.html">&#183; A fleet believes<span class="sub">KD45n &#183; five domains</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Demonstrations</summary>
+            <div class="nav-sub">
+          <a href="demos.html">All demonstrations<span class="sub">Every run, grouped by what it demonstrates</span></a>
+          <details class="nav-folder">
+            <summary>Single-agent sensing</summary>
+            <div class="nav-sub">
+          <a href="demos.html#single-agent">All single-agent sensing demos</a>
+          <a href="demo.html">&#183; The six-room run<span class="sub">Routing by a mu-calculus fixed point</span></a>
+          <a href="six_room_survey.html">&#183; The six-room survey<span class="sub">An EPDDL mission whose goal is knowledge</span></a>
+          <a href="two_lookouts.html">&#183; Where to look from<span class="sub">Knowing whether: two lookouts, a screen, and success the map backs</span></a>
+          <a href="lookout_board.html">&#183; The lookout board<span class="sub">Information gathering under epistemic and classical planning</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Fleet missions at scale</summary>
+            <div class="nav-sub">
+          <a href="demos.html#fleet-missions">All fleet missions at scale demos</a>
+          <a href="warehouse_run.html">&#183; The warehouse run<span class="sub">One robot, then two, then three</span></a>
+          <a href="warehouse_rmf.html">&#183; Over Open-RMF<span class="sub">A floor RMF was never given</span></a>
+          <a href="warehouse_xl.html">&#183; Epistemic planning on a warehouse floor at scale<span class="sub">The same survey domain on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.html">&#183; Knowing which, and knowing about a place nobody went<span class="sub">Three sites, two robots that look, one that is told</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Higher-order and group knowledge</summary>
+            <div class="nav-sub">
+          <a href="demos.html#group-knowledge">All higher-order and group knowledge demos</a>
+          <a href="nested_run.html">&#183; Nested epistemic goals<span class="sub">What modal depth costs</span></a>
+          <a href="coordinated_attack.html">&#183; The coordinated attack on a warehouse floor<span class="sub">Common knowledge: a lossy radio, and a beacon</span></a>
+          <a href="coordinated_attack_scale.html">&#183; The coordinated attack among many robots<span class="sub">Bystanders, the cost of a level, four robots</span></a>
+          <a href="muddy_robots.html">&#183; The muddy children at a muster point<span class="sub">An announcement every robot already knew</span></a>
+          <a href="hotel_distributed.html">&#183; Knowledge no robot holds alone<span class="sub">Distributed knowledge, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder" open>
+            <summary>Belief and belief change</summary>
+            <div class="nav-sub">
+          <a href="demos.html#belief">All belief and belief change demos</a>
+          <a href="false_belief.html">&#183; A false belief on a warehouse floor<span class="sub">A move one robot did not see, and where it will look</span></a>
+          <a href="hotel_run.html">&#183; The hotel incident<span class="sub">Belief measured during a fleet mission</span></a>
+          <a href="stale_maps.html">&#183; Maps that go stale<span class="sub">Epistemic SLAM: eight robots, a forklift, a map sent as an update</span></a>
+          <a href="replanning_news.html">&#183; Replanning on news<span class="sub">Public announcements mid-drive, with one, two and three robots</span></a>
+          <a href="belief_revision.html" aria-current="page">&#183; Belief revision in a changing ward<span class="sub">Spohn ranks in the epistemic state, a porter nobody sees, one and two robots</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Communication and coordination</summary>
+            <div class="nav-sub">
+          <a href="demos.html#communication">All communication and coordination demos</a>
+          <a href="pass_through.html">&#183; A route through a bay no map contains<span class="sub">Epistemic SLAM: two scouts, a carrier, knowledge by elimination</span></a>
+          <a href="link_outage.html">&#183; A link that actually falls<span class="sub">Epistemic SLAM: two robots, two maps, one radio cut</span></a>
+          <a href="when_planning_pays.html">&#183; When planning pays<span class="sub">The plan against flooding, pulling and gossip: when sharing is enough, and when not</span></a>
+          <a href="gate_signal.html">&#183; The gate signal<span class="sub">Implicit coordination: a route chosen to be seen, against classical teams</span></a>
+          <a href="watcher.html">&#183; The watcher<span class="sub">Knowledge that must not spread: told to one robot, hidden from another</span></a>
+          <a href="watcher_moves.html">&#183; The watcher that moves<span class="sub">Subjective branching, and a secret from a watcher that knows the plan</span></a>
+          <a href="link_grades.html">&#183; Link grades<span class="sub">Epistemic and classical planning over a link that is never, partly or always down</span></a>
+          <a href="collapsed_wing.html">&#183; The collapsed wing<span class="sub">SLAM, knowledge preconditions, and a way known clear by elimination</span></a>
+          <a href="belief_empathy.html">&#183; Belief and empathy particles<span class="sub">Bramblett and Bezzo's heterogeneous team out of contact, recreated on ePlanSys</span></a>
+          <a href="gossip_coverage.html">&#183; Gossip out of contact<span class="sub">Bramblett and Bezzo's coverage and task allocation out of contact, recreated on ePlanSys</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+          <a href="execution.html">Execution</a>
+          <hr>
+          <details class="nav-folder">
+            <summary>Reports (PDF)</summary>
+            <div class="nav-sub">
+          <details class="nav-folder">
+            <summary>Single-agent sensing</summary>
+            <div class="nav-sub">
+          <a href="six_room_survey.pdf">The Six-Room Survey<span class="sub">That layer executing a mission whose goal is knowledge</span></a>
+          <a href="two_lookouts.pdf">Where to Look From<span class="sub">Knowing whether, a look with a modal precondition, and no conformant plan</span></a>
+          <a href="lookout_board.pdf">The Lookout Board<span class="sub">Information gathering under epistemic and classical planning, one robot and four lookouts</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Fleet missions at scale</summary>
+            <div class="nav-sub">
+          <a href="warehouse_run.pdf">The Warehouse Run<span class="sub">The Amazon warehouse exercise, recast and executed</span></a>
+          <a href="warehouse_xl.pdf">Epistemic Planning on a Warehouse Floor at Scale<span class="sub">The survey domain executed on a derived 42 &#215; 63 m floor</span></a>
+          <a href="warehouse_xl_sites.pdf">Contamination with a Location<span class="sub">Three sites, two sensing robots, and a correction to the floor</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Higher-order and group knowledge</summary>
+            <div class="nav-sub">
+          <a href="coordinated_attack.pdf">The Coordinated Attack on a Warehouse Floor<span class="sub">Common knowledge as an action precondition</span></a>
+          <a href="coordinated_attack_scale.pdf">The Coordinated Attack among Many Robots<span class="sub">Bystanders to a lossy message, and the cost of each level</span></a>
+          <a href="muddy_robots.pdf">The Muddy Children at a Muster Point<span class="sub">Common knowledge from an announcement every robot already knew</span></a>
+          <a href="hotel_distributed.pdf">Knowledge No Robot Holds Alone<span class="sub">Distributed knowledge, meeting places, and an all-clear the guest could read</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Belief and belief change</summary>
+            <div class="nav-sub">
+          <a href="false_belief.pdf">A False Belief on a Warehouse Floor<span class="sub">A relocation one robot does not see, and the report that repairs it</span></a>
+          <a href="stale_maps.pdf">Maps That Go Stale<span class="sub">Stale maps as false beliefs, and a received map as an update</span></a>
+          <a href="replanning_news.pdf">Replanning on News<span class="sub">Public announcements during execution, persistence, and news invisible to planning over facts</span></a>
+          <a href="belief_revision.pdf">Belief Revision in a Changing Ward<span class="sub">Ranks as atoms, revision as conditioning, and change no robot sees</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Communication and coordination</summary>
+            <div class="nav-sub">
+          <a href="pass_through.pdf">The Pass-Through Problem<span class="sub">Multi-agent epistemic planning over maps the robots build</span></a>
+          <a href="link_outage.pdf">A Link That Actually Falls<span class="sub">Communication loss as an event, and two maps that stopped agreeing</span></a>
+          <a href="when_planning_pays.pdf">When Planning Pays<span class="sub">Epistemic planning against map-sharing protocols, condition by condition</span></a>
+          <a href="gate_signal.pdf">The Gate Signal<span class="sub">Implicit coordination by an observable route, against classical teams</span></a>
+          <a href="watcher.pdf">The Watcher<span class="sub">A negative knowledge goal, conditional observability, and no conformant plan</span></a>
+          <a href="watcher_moves.pdf">The Watcher That Moves<span class="sub">Policies a robot can follow, and opacity against a policy-aware watcher</span></a>
+          <a href="link_grades.pdf">Link Grades<span class="sub">Worst-case conditional planning, lossy messages, and success measured on the maps</span></a>
+          <a href="collapsed_wing.pdf">The Collapsed Wing<span class="sub">Knowledge preconditions over SLAM maps, and knowledge by elimination</span></a>
+          <a href="belief_empathy.pdf">Belief and Empathy Particles<span class="sub">A heterogeneous team out of contact as an epistemic planning task, against the paper's methods</span></a>
+          <a href="gossip_coverage.pdf">Gossip Out of Contact<span class="sub">Coverage and task allocation out of contact, recreated, with the gossip as an epistemic planning task</span></a>
+            </div>
+          </details>
+          <details class="nav-folder">
+            <summary>Methods and general reports</summary>
+            <div class="nav-sub">
+          <a href="fleet_scenarios.pdf">Three Fleet Scenarios for ePlanSys<span class="sub">EPDDL survey missions, grounded with plank and solved with Aletheia</span></a>
+          <a href="eplansys_execution.pdf">Executing Epistemic Policies on ROS 2<span class="sub">The execution layer: policies as behavior trees</span></a>
+          <a href="ugv_del_coordination.pdf">Coordinating UGV Fleets under Epistemic Uncertainty<span class="sub">Domain family, scaling study and results</span></a>
+          <a href="paper.pdf">ROS 2, PlanSys2 and Task Planning<span class="sub">Preliminary research for DEL-based multi-agent planning</span></a>
+            </div>
+          </details>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>/* br-narrow: on a phone a wide table scrolls within its own width */
+@media(max-width:720px){table.data{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+table.data td.br-l,table.data th.br-l{text-align:left}
+td.br-no{color:#a0202d;font-weight:600} td.br-yes{color:#1a8c46;font-weight:600}
+td.br-best{font-weight:700}
+.br-prop{border-left:3px solid #2f4866;padding:.2rem 0 .2rem 1rem;margin:1.1rem 0}
+.br-prop b{color:#2f4866}
+.br-def{border-left:3px solid #9a6a1c;padding:.2rem 0 .2rem 1rem;margin:1rem 0}
+.br-def b{color:#9a6a1c}</style>
+<div class="hero">
+  <div class="container">
+    <p class="eyebrow">Belief revision &#183; Spohn ranks in the epistemic state &#183; change no robot sees &#183; knowledge and belief preconditions &#183; one and two robots &#183; ROS 2</p>
+    <h2>Belief revision in a changing ward</h2>
+    <div class="rule"></div>
+    <p class="hero-p">
+      A hospital floor at night. Four fire doors, A to D from west to east,
+      close four lobbies through a band of linen rooms between the hall and the
+      corridor. Each lobby turns once, so its door can be seen only from a bend
+      inside it. At one in the morning the night porter walks a loop through
+      the band, north through one door and south through another, and shuts
+      both behind him. No robot sees him. Couriers must then cross the band to
+      the wards.
+    </p>
+    <p class="hero-p">
+      The couriers do not know which loop he walked. They know his habits: on
+      most nights the rostered loop through C and D, on some the west loop
+      through A and B, and on a few one of the other four. That is a belief, and on some nights
+      it is wrong. <a href="false_belief.html">A false belief on a warehouse
+      floor</a> listed as a limitation that an observation contradicting a
+      belief had no consistent outcome in the planner. Here every world of the
+      epistemic state carries its Spohn rank as an atom, belief is a formula
+      over knowledge and those ranks, and a look or a report that refutes a
+      belief removes worlds as any observation does: the least rank among the
+      worlds left is the new belief. Nothing in plank, Aletheia or ePlanSys was
+      changed for it.
+    </p>
+    <p class="hero-p">
+      In the first act one courier's first surprise is explained: door B shut
+      makes the west loop the likeliest night, so door A is believed shut as
+      well, and the courier turns back to C without looking at A. In the
+      second, a report of a shut door revises the listener as the sight of it
+      would, and it enters a lobby nobody has looked into. In the third both
+      couriers go there and back, and at two the porter walks again: what a
+      courier knew of a shut door it now only believes, while what it knew of
+      an open door it still knows, since on that walk he only opens.
+    </p>
+    <p class="note" style="margin-top:1.4rem">
+      <b>Every run arrived, 144 of 144. Ranked by the porter's habits, the couriers took the least time in expectation in every act: 228.6, 238.9 and 502.1&#8202;s against 232.9, 268.2 and 527.3&#8202;s ranked door by door, and 236.8, 331.7 and 557.2&#8202;s with no belief.</b> The difference is made on the nights a belief is refuted: on the west-loop night the explanation took 303.8&#8202;s in act I against 387.4 door by door, and 272.1 against 526.3 in act II, where the report sent the first courier into a lobby nobody had looked into. Knowledge only, which looks into lobby C on its way, was fastest on that night in act I, 211.4&#8202;s, and slowest on the rostered night, the likeliest. On the rare nights the porter's habits mislead, the explanation pays: those nights are in the tables. Without ranks, a KD45 belief admits no policy at all for the first act. <b>144 runs</b> in Gazebo, every night of every act under all four rankings.
+    </p>
+    <p class="note" style="margin-top:1rem">
+      Package <span class="mono-inline">belief_revision_demo</span>; policies
+      executed by <a href="https://github.com/ePlanSys/eplansys">eplansys</a>,
+      the problems grounded by plank and solved by Aletheia as a check, the ward
+      furnished with Open Robotics' hospital models from Gazebo
+      Fuel<sup class="cite"><a href="#ref-fuel">[13]</a></sup> and AWS
+      RoboMaker's residential models<sup class="cite"><a href="#ref-aws">[14]</a></sup>.
+      The runs used a small patch to PlanSys2's executor, unrelated to belief,
+      for a fault the first batch exposed: <a href="#br-findings-sec">a
+      stale request starves a performer</a>. Full account in
+      <a href="belief_revision.pdf">Belief Revision in a Changing Ward</a>
+      (PDF): the encoding, the propositions and their proofs, the policies, the
+      batch and the implementation findings.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE RUNS -->
+<section>
+  <div class="container">
+    <p class="sec-label">The runs</p>
+    <h3>Recorded runs</h3>
+
+    <figure class="demo-figure">
+      <video controls preload="metadata" playsinline width="100%"
+             poster="media/thumbs/belief_revision_poster.jpg">
+        <source src="media/belief_revision.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Four takes, all on a night the porter walked the west loop: act I
+        ranked by his habits and then door by door, act II, and act III on a
+        night he was also held up at two. Left: the ward from above, drawn
+        from the layout and the recorded poses, with the doors as they are at
+        each moment, the porter's doing, which no robot sees. Right: Gazebo.
+        Under both: the actions run; the step and the radio; and the nights,
+        each with its rank, marked for each courier as believed, still
+        possible or ruled out, replayed from the run's own events through the
+        grounded task's product update. Drives play four times faster than
+        they ran and the porter's walks twice, his walk at one six times once
+        the first take has shown it; the corner says so.
+      </figcaption>
+    </figure>
+
+    <table class="data">
+      <thead><tr><th class="br-l">take</th><th class="br-l">night</th><th>executor</th><th>arrived</th><th>time</th></tr></thead>
+      <tbody>
+        <tr><td class="br-l">act I, explanation</td><td class="br-l">AB: the porter walked A-B</td><td>SUCCESS</td><td class="br-yes">yes</td><td>302.8&#8202;s</td></tr>
+        <tr><td class="br-l">act I, door by door</td><td class="br-l">AB: the porter walked A-B</td><td>SUCCESS</td><td class="br-yes">yes</td><td>390.2&#8202;s</td></tr>
+        <tr><td class="br-l">act II, explanation</td><td class="br-l">AB: the porter walked A-B</td><td>SUCCESS</td><td class="br-yes">yes</td><td>279.2&#8202;s</td></tr>
+        <tr><td class="br-l">act III, explanation</td><td class="br-l">AB-: the porter walked A-B and was held up at two</td><td>SUCCESS</td><td class="br-yes">yes</td><td>577.5&#8202;s</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS BAND -->
+<div class="pt-findings">
+  <div class="pt-findings-inner">
+    <p class="sec-label">What the runs show</p>
+    <h3 class="pt-findings-title">Principal findings</h3>
+    <div class="pt-cards">
+      <a class="pt-card" href="#br-revision-sec">
+        <span class="pt-card-img"><img src="media/thumbs/belief_revision_card_surprise.jpg" alt="The plan view as the courier finds door B shut and its belief moves to the west loop" loading="lazy"></span>
+        <span class="pt-card-k">Revision by explanation</span>
+        <span class="pt-card-h">A surprise revises doors nobody has seen</span>
+        <span class="pt-card-p">Ranked by the porter's habits, door B shut makes the west loop the likeliest night and door A shut with it, so the courier never looks at A. Ranked door by door, the same evidence leaves A believed open, and the courier drives to it and finds it shut.</span>
+        <span class="pt-card-go">See the revision <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#br-batch-sec">
+        <span class="pt-card-img"><img src="media/thumbs/belief_revision_card_report.jpg" alt="The plan view as the second courier reports door B shut on the radio" loading="lazy"></span>
+        <span class="pt-card-k">Evaluation</span>
+        <span class="pt-card-h">Least expected time in every act</span>
+        <span class="pt-card-p">Ranked by the porter's habits: 228.6, 238.9 and 502.1&#8202;s in expectation, against 232.9, 268.2 and 527.3&#8202;s door by door. Every one of 144 runs arrived.</span>
+        <span class="pt-card-go">See the evaluation <span>&#8594;</span></span>
+      </a>
+      <a class="pt-card" href="#br-analysis-sec">
+        <span class="pt-card-img"><img src="media/thumbs/belief_revision_card_round.jpg" alt="The plan view as the second courier, on its way back after the porter's walk at two, finds door B shut again" loading="lazy"></span>
+        <span class="pt-card-k">Analysis</span>
+        <span class="pt-card-h">Without ranks there is no policy at all</span>
+        <span class="pt-card-p">A belief held as a KD45 relation has nowhere to go when it is contradicted: Aletheia exhausts the search for the first act and returns none. With one grade atom a world, belief revises by conditioning, every relation stays an equivalence, and the planner is unchanged.</span>
+        <span class="pt-card-go">See the analysis <span>&#8594;</span></span>
+      </a>
+    </div>
+    <nav class="pt-toc" aria-label="On this page">
+      <a href="#br-ward-sec">Environment</a>
+      <a href="#br-ranks-sec">Ranks and belief</a>
+      <a href="#br-revision-sec">Revision</a>
+      <a href="#br-acts-sec">The three acts</a>
+      <a href="#br-analysis-sec">Analysis</a>
+      <a href="#br-batch-sec">Evaluation</a>
+      <a href="#br-findings-sec">Findings</a>
+      <a href="#br-refs-sec">References</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ THE WARD -->
+<section id="br-ward-sec">
+  <div class="container">
+    <p class="sec-label">Environment</p>
+    <h3>Environment</h3>
+    <p>
+      The ward is a single storey of 28 by 16&#8202;m, built for this
+      demonstration in Gazebo. The south half holds the day room, the porters'
+      lodge, the treatment room, where the second courier starts, and the
+      pharmacy, where the first does, all opening onto a hall that runs the
+      width of the building. North of the hall a band of linen rooms and
+      sluices, 2.6&#8202;m deep, is crossed by four fire lobbies. Each runs
+      north from the hall, turns east along a jog of 3.2&#8202;m and north
+      again to the corridor, and its door stands across the middle of the jog.
+      North of the band a corridor runs the width of the building and four
+      ward bays open off it; the first courier's patient is in ward 1, in the
+      north-west, and the second's in ward 2, opposite lobby B. A door is a
+      kinematic leaf that a node swings about its hinge: shut across the jog,
+      open flat against the jog's south wall. The furniture is Open Robotics'
+      hospital set: trolley beds with patients, bed tables, drip stands,
+      storage racks, an X-ray unit, a mop cart in the lodge; the day room's
+      sofas are AWS's.
+    </p>
+    <figure class="demo-figure">
+      <img src="media/belief-revision-floor.png" alt="Floor plan of the ward: four rooms in the south half, the hall, the band with four Z-shaped lobbies tinted teal, amber, violet and coral with their doors, the corridor and four ward bays; the couriers in the pharmacy and the treatment room, their beds in wards 1 and 2, the porter's lodge, and the rostered loop through C and D and the west loop through A and B drawn in ochre" style="width:100%;max-width:960px">
+      <figcaption>
+        The ward from above, drawn from the layout and the furniture's
+        collision meshes cut at the laser's height. The lobbies are tinted, A
+        teal, B amber, C violet and D coral; a ring marks each bend a door is
+        seen from. The doors are as the west loop leaves them, A and B shut. In
+        ochre, the porter's two likeliest loops from his lodge: the rostered
+        one through C and D, and the west one through A and B. The couriers in
+        red and blue, their beds the rings of their colour.
+      </figcaption>
+    </figure>
+    <p>
+      What the domain assumes of the floor is tested on the floor plan before
+      anything runs, by casting rays over the occupied cells
+      (<span class="mono-inline">tools/check_views.py</span>), in all sixteen
+      states of the doors: from both bends of each lobby the rule a robot
+      decides a door by decides it, and decides it right; from every point of
+      the hall's and the corridor's driving lines, a quarter of a metre apart,
+      a laser gets at most four returns off any door, fewer than the five the
+      rule needs, so a door is decided only from inside its lobby; and every
+      route of the roadmap keeps 0.47&#8202;m from anything a robot
+      can hit.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ RANKS AND BELIEF -->
+<section id="br-ranks-sec">
+  <div class="container">
+    <p class="sec-label">Ranks and belief</p>
+    <h3>Plausibility as a grade on each world</h3>
+    <p>
+      A world is what happened tonight: the loop the porter walked at one, and
+      in the third act whether at two he walked it back and opened its doors or
+      was held up. The couriers know all of them are possible. A Spohn
+      ranking<sup class="cite"><a href="#ref-spohn">[1]</a></sup> assigns each
+      world a natural number, 0 for what is believed and higher for what
+      would surprise more, and a robot believes what holds at the least-ranked
+      worlds it cannot rule out. Four rankings are compared, on the same
+      knowledge and the same floor:
+    </p>
+    <table class="data">
+      <thead><tr><th class="br-l">ranking</th><th class="br-l">the loops at one</th><th class="br-l">at two</th><th class="br-l">what it is</th></tr></thead>
+      <tbody>
+        <tr><td class="br-l"><b>explanation</b></td><td class="br-l">C-D 0, A-B 1, any other 2</td><td class="br-l">reopens 0, held up 1</td><td class="br-l">the porter's habits; the rank of a night is the sum over his two walks</td></tr>
+        <tr><td class="br-l">door by door</td><td class="br-l">doors differing from C-D's: 0, 2, 4</td><td class="br-l">doors he changes: held up 0, reopens 2</td><td class="br-l">minimal change<sup class="cite"><a href="#ref-dalal">[4]</a></sup>, as a map of independent cells ranks a change</td></tr>
+        <tr><td class="br-l">full meet</td><td class="br-l">C-D 0, any other 1</td><td class="br-l">held up 0, reopens 1</td><td class="br-l">the rostered picture believed and nothing else ranked: a KD45 belief that, contradicted, falls back on knowledge</td></tr>
+        <tr><td class="br-l">knowledge only</td><td class="br-l">all 0</td><td class="br-l">all 0</td><td class="br-l">no belief beyond knowledge</td></tr>
+      </tbody>
+    </table>
+    <figure class="demo-figure">
+      <img src="media/belief-revision-orders.png" alt="Four panels, one per ranking, placing the six loops CD, AB, AC, AD, BC and BD at heights by their rank; the believed loops filled" style="width:100%;max-width:960px">
+      <figcaption>
+        The six loops of the first act by rank under each ranking; the loops
+        believed at dusk are filled. Every ranking believes the rostered loop
+        except knowledge only, which believes nothing beyond the six; they
+        differ in what each believes once that loop is ruled out.
+      </figcaption>
+    </figure>
+    <p>
+      Each world of the epistemic state is labelled with its rank as a grade
+      atom \(g_0, \dots, g_6\), fixed when the problem is written and changed by
+      no action, and every robot's relation stays an equivalence. With the
+      grades in the valuation, belief is a formula over knowledge:
+    </p>
+    <p style="text-align:center">\[
+      B_r\,\varphi \;=\; \bigvee_{k} \Big( K_r \textstyle\bigwedge_{j&lt;k} \neg g_j \;\wedge\; \hat K_r\, g_k \;\wedge\; K_r(g_k \rightarrow \varphi) \Big),
+      \qquad
+      \neg B_r \neg \varphi \;=\; \bigvee_{k} \Big( K_r \textstyle\bigwedge_{j&lt;k} \neg g_j \;\wedge\; \hat K_r (g_k \wedge \varphi) \Big)
+    \]</p>
+    <p>
+      The disjunct that holds is the one for the least grade among the worlds
+      \(r\) cannot rule out. The domain uses the second formula as a guard. A
+      courier enters a lobby only if it does not believe the door shut,
+      \(\neg B_r \neg\mathit{open}(x)\); it seeks along the hall or the corridor
+      only if it does not believe every door ahead of it shut; and it crosses
+      only a door it knows to be open, \(K_r\,\mathit{open}(x)\). The executor
+      checks each guard against the epistemic state before it dispatches the
+      action. A look is semi-private, the looker sees the door and the others
+      see that it looked; a report of a door found shut is a public
+      announcement whose precondition is \(K_r\,\neg\mathit{open}(x)\); a
+      crossing is public, so the others learn that the door is open.
+    </p>
+    <p>
+      The porter's walk at two is an action every courier sees happen and none
+      sees the content of. Its outcome is carried from dusk by an atom,
+      \(\mathit{reopens}\), that nothing observes, and the walk is a single
+      ontic event: if \(\mathit{reopens}\), every door opens. The grade of a
+      world is the sum of the two walks' grades, as for independent events in
+      Spohn's theory<sup class="cite"><a href="#ref-aucher">[8]</a></sup>.
+    </p>
+    <p>
+      Each courier plans for itself on what it knows. It minimises the time it
+      expects to take, each world of its cell weighted \(\varepsilon^{\,\mathrm{rank}}\)
+      with \(\varepsilon = 1/8\), reading a rank as an order of
+      magnitude<sup class="cite"><a href="#ref-gp">[9]</a></sup>; under knowledge
+      only, it minimises its worst time. A courier that finds a door shut
+      reports it at once while its teammate is still on its way. The team's
+      policy is composed in the order ePlanSys dispatches it and written in
+      Aletheia's format by <span class="mono-inline">tools/plan.py</span>,
+      which is the planner the AletheiaPlanSolver plugin calls; the plugin
+      validates the policy against the grounded task before the executor runs
+      it. Each courier's cell is read off the product update of the grounded
+      task, so a courier learns from what its teammate visibly does as well
+      as from what it sees and hears.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ REVISION -->
+<section id="br-revision-sec">
+  <div class="container">
+    <p class="sec-label">Revision</p>
+    <h3>What the first surprise does under each ranking</h3>
+    <p>
+      In the first act the courier leaves the pharmacy believing the rostered
+      loop, so believing A and B open and C and D shut. It drives west along
+      the hall past C, enters lobby B and finds door B shut. Three loops
+      remain possible, A-B, B-C and B-D, and each ranking now believes
+      something different:
+    </p>
+    <figure class="demo-figure">
+      <img src="media/belief-revision-revision.png" alt="Four panels after door B is found shut: under explanation the loop AB at rank 1 is believed and C and D are believed open; under door by door the loops BC and BD at rank 2 are believed and A is believed open; under full meet and knowledge only the three loops are equally plausible and no door is believed open" style="width:100%;max-width:960px">
+      <figcaption>
+        After door B is found shut. Ruled-out loops are struck through, the
+        believed ones filled. Under each panel, what the courier now believes
+        open and what it does next, by its own ranking's policy.
+      </figcaption>
+    </figure>
+    <ul style="margin-bottom:1.2rem">
+      <li><b>Explanation.</b> The least rank left is the west loop's, 1. The
+        courier believes A shut, a door nobody has looked at, and C and D
+        open. It backs out, drives east and enters C.</li>
+      <li><b>Door by door.</b> B-C and B-D differ from the rostered picture
+        in two doors each, A-B in four. Both believed loops leave A open, so
+        the courier drives west to A. In the west-loop night A is shut, and
+        only then does it go east to C, 83.6&#8202;s later than the
+        explanation.</li>
+      <li><b>Full meet.</b> Every loop left is ranked 1, so the courier
+        believes only what it knows, that some door other than B is open; the
+        expected time sends it on west to A.</li>
+      <li><b>Knowledge only.</b> It has no belief to lose. Its worst case
+        sends it into lobby C on the way west, from the start: quick when the
+        porter left C open, and slow on the rostered night, the likeliest.</li>
+    </ul>
+    <p>
+      The orders differ only on worlds that are not believed at dusk, and so
+      only on the nights where a belief is refuted. All four are AGM revision
+      operators<sup class="cite"><a href="#ref-agm">[2]</a></sup>: by Katsuno
+      and Mendelzon's representation<sup class="cite"><a href="#ref-km">[3]</a></sup>
+      a revision operator is a faithful order on worlds and nothing more. The
+      choice of order is a choice of what a surprise is evidence for.
+      Explanation ranks the night, and so the history that made the doors as
+      they are; door by door ranks only the doors' present state, and so
+      keeps beliefs whose sole support was the explanation the surprise
+      refuted.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ THE ACTS -->
+<section id="br-acts-sec">
+  <div class="container">
+    <p class="sec-label">The three acts</p>
+    <h3>One courier, then two, then there and back</h3>
+    <p>
+      <b>Act I, one courier.</b> From the pharmacy to ward 1, across the
+      building. The policies of the three rankings that believe the rostered
+      loop all head for B, the nearest door believed open; knowledge only
+      enters C on the way. They part at the surprise.
+    </p>
+    <p>
+      <b>Act II, two couriers.</b> The second courier starts in the treatment
+      room, between B and C, for ward 2 opposite lobby B, and sets out with
+      the first. It probes B first. When B is shut it reports it, and every
+      robot hears the report. Ranked by explanation, the first courier, still
+      in the hall, revises exactly as it would have on seeing B shut, believes
+      A shut too, and enters lobby C, into which no robot has looked. The
+      second courier then learns that C is open without looking, from seeing
+      the first cross it. Ranked door by door, the same report leaves both
+      believing A open, and both drive west to A.
+    </p>
+    <p>
+      <b>Act III, there and back.</b> Both couriers deliver and wait in the
+      wards while the porter walks at two; then they return to the pharmacy and
+      the treatment room. A door a courier saw shut on the way out it now only
+      believes shut, or believes reopened: ranked by explanation, he reopens,
+      and the second courier returns through B, which it saw shut. A door it saw
+      open it still knows open, since at two he only opens. When the porter was
+      held up, the courier finds B shut a second time, and revises again: the
+      porter was held up, so A is still shut too.
+    </p>
+    <table class="data">
+      <thead><tr><th class="br-l">act</th><th class="br-l">ranking</th><th class="br-l">night</th><th class="br-l">the doors looked at, in order</th><th>predicted</th></tr></thead>
+      <tbody>
+        <tr><td class="br-l">I</td><td class="br-l">explanation</td><td class="br-l">AB</td><td class="br-l">c: B shut; c: C open</td><td>361&#8202;s</td></tr>
+        <tr><td class="br-l">I</td><td class="br-l">door by door</td><td class="br-l">AB</td><td class="br-l">c: B shut; c: A shut</td><td>467&#8202;s</td></tr>
+        <tr><td class="br-l">I</td><td class="br-l">full meet</td><td class="br-l">AB</td><td class="br-l">c: B shut; c: A shut</td><td>467&#8202;s</td></tr>
+        <tr><td class="br-l">I</td><td class="br-l">knowledge only</td><td class="br-l">AB</td><td class="br-l">c: C open</td><td>248&#8202;s</td></tr>
+        <tr><td class="br-l">II</td><td class="br-l">explanation</td><td class="br-l">AB</td><td class="br-l">d: B shut; c: C open</td><td>321&#8202;s</td></tr>
+        <tr><td class="br-l">II</td><td class="br-l">door by door</td><td class="br-l">AB</td><td class="br-l">d: B shut; c: A shut</td><td>519&#8202;s</td></tr>
+        <tr><td class="br-l">II</td><td class="br-l">full meet</td><td class="br-l">AB</td><td class="br-l">d: B shut; c: C open</td><td>321&#8202;s</td></tr>
+        <tr><td class="br-l">II</td><td class="br-l">knowledge only</td><td class="br-l">AB</td><td class="br-l">d: C open</td><td>309&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">explanation</td><td class="br-l">AB+</td><td class="br-l">d: B shut; c: C open; d: B open (back)</td><td>571&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">explanation</td><td class="br-l">AB-</td><td class="br-l">d: B shut; c: C open; d: B shut (back)</td><td>625&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">door by door</td><td class="br-l">AB+</td><td class="br-l">d: B shut; c: A shut</td><td>785&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">door by door</td><td class="br-l">AB-</td><td class="br-l">d: B shut; c: A shut</td><td>785&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">full meet</td><td class="br-l">AB+</td><td class="br-l">d: B shut; c: C open</td><td>580&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">full meet</td><td class="br-l">AB-</td><td class="br-l">d: B shut; c: C open</td><td>580&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">knowledge only</td><td class="br-l">AB+</td><td class="br-l">c: C open; d: D open</td><td>530&#8202;s</td></tr>
+        <tr><td class="br-l">III</td><td class="br-l">knowledge only</td><td class="br-l">AB-</td><td class="br-l">c: C open; d: D open</td><td>530&#8202;s</td></tr>
+      </tbody>
+    </table>
+    <p class="note">The west-loop night under each ranking's policy: every look in order, by the courier (c) or the second courier (d), with what it found; on the way back in act III marked so. A look not made is a door the courier believed shut or crossed knowing it open.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ ANALYSIS -->
+<section id="br-analysis-sec">
+  <div class="container">
+    <p class="sec-label">Analysis</p>
+    <h3>Ranks in an epistemic model</h3>
+    <p>
+      A ranked model is an epistemic model \((W, \{\sim_r\}, V)\) with every
+      \(\sim_r\) an equivalence, designated worlds \(W_d\), and a ranking
+      \(\kappa: W \to \mathbb{N}\). Write \([w]_r\) for \(r\)'s cell at \(w\) and
+      \(\min_\kappa X\) for the worlds of \(X\) of least rank. Then
+      \(w \models B_r\varphi\) when \(\varphi\) holds throughout
+      \(\min_\kappa [w]_r\). The compiled model labels each world with the atom
+      \(g_{\kappa(w)}\). Proofs are in the report.
+    </p>
+    <div class="br-prop"><b>Proposition 1 (belief as a formula).</b> At every
+      world, \(B_r\varphi\) holds in the ranked model exactly when the formula
+      \(\beta_r(\varphi)\) above holds in the compiled one, and likewise for
+      \(\neg B_r\neg\varphi\). Belief so defined is consistent, introspective
+      and implies nothing about the actual world: KD45 holds of \(B_r\) and S5
+      of \(K_r\), with \(K_r\varphi \rightarrow B_r\varphi\).</div>
+    <div class="br-prop"><b>Proposition 2 (revision is conditioning).</b> Let
+      an event model change no grade atom. Then the product update of the
+      compiled model is the compilation of the product update, with
+      \(\kappa(w, e) = \kappa(w)\), and the belief it yields at each world is
+      Spohn conditioning on the new cell: \(\min_\kappa ([w]_r \cap E)\). For a
+      single robot and public information \(\psi\) consistent with its
+      knowledge, \(K * \psi\) so defined satisfies the AGM postulates. Looks,
+      reports and crossings are all such events.</div>
+    <div class="br-prop"><b>Proposition 3 (a change nobody sees, fixed at
+      dusk).</b> Let a change be an event model whose events \(e\) every robot
+      confuses, with ranks \(\rho(e)\), and let no event before it mention the
+      atoms that record which \(e\) will happen. Then extending each world
+      \(w\) at dusk by every \(e\), with grade \(\kappa(w) + \rho(e)\), and
+      later applying one ontic event that selects \(e\)'s effects by those
+      atoms gives a model bisimilar, grades included, to applying the change
+      with additive ranks when it happens.</div>
+    <div class="br-prop"><b>Proposition 4 (without ranks, no policy).</b> In
+      the first act, let the courier's relation point from every world to the
+      rostered night only, a KD45 belief, with the same guards. No policy
+      reaches the ward in every world in which the courier's beliefs stay
+      consistent. In the west-loop night every lobby it may enter has its door
+      shut, and the look that shows it leaves the courier's relation empty.
+      Aletheia, asked for a policy with consistent beliefs, exhausts the
+      search at depth 8.</div>
+    <div class="br-prop"><b>Proposition 5 (a report carries the belief).</b>
+      Two robots that share a ranking and whose cells coincide believe the
+      same. If a listener's only information beyond the prior is what is
+      public, a truthful report of the speaker's private evidence makes the
+      listener's cell, and so its belief, the speaker's. A belief cannot be
+      reported in its place: the speaker does not know it, and announcing it
+      as a fact would put a falsehood into the listener's knowledge on the
+      nights where the belief is wrong.</div>
+    <div class="br-prop"><b>Proposition 6 (open stays known, shut becomes
+      believed).</b> Since the walk at two only opens doors,
+      \(K_r\,\mathit{open}(x)\) before it implies \(K_r\,\mathit{open}(x)\)
+      after it. \(K_r\,\neg\mathit{open}(x)\) survives the walk only if
+      \(K_r\,\neg\mathit{reopens}\); otherwise it becomes
+      \(\neg K_r\,\neg\mathit{open}(x)\), and whether \(r\) still believes the
+      door shut is decided by the grades.</div>
+    <div class="br-prop"><b>Proposition 7 (orders of magnitude).</b> As
+      \(\varepsilon \rightarrow 0\), a policy minimising the expected time with
+      weights \(\varepsilon^{\,\kappa}\) minimises the times on the least-ranked
+      worlds first, lexicographically. That limit never pays for information
+      whose value lies only on higher ranks: a courier ranked by the porter's
+      habits then passes lobby C without looking, and on the floor first
+      built it lost to knowledge only. With \(\varepsilon = 1/8\), the weights
+      are the porter's stated frequencies, and for one robot the policy is
+      optimal in expectation under them.</div>
+    <p>
+      The ePlanSys state node has its own recovery for an observation the model
+      holds impossible: it re-designates every world in which the observed
+      event could fire, a full meet of the designated set, not of any robot's
+      belief. With the grades the model always holds the worlds an observation
+      leaves, and no run here triggered it.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ EVALUATION -->
+<section id="br-batch-sec">
+  <div class="container">
+    <p class="sec-label">Evaluation</p>
+    <h3>Evaluation over 144 runs</h3>
+    <p>
+      Every night of every act was run under all four rankings in Gazebo, with
+      the porter walking his loop and swinging the doors, from the same starts
+      perturbed by up to 5&#8202;cm and 5&#176;: in acts I and II each of the
+      six nights twice, in act III each of the twelve once. A run's time is
+      measured from the start of its first action to the end of its last, in
+      simulated seconds; the porter's walk at two is in act III's time, the
+      same for every ranking. The expected time weights each night by the
+      porter's frequencies, the rostered loop 0.842, the west loop
+      0.105 and each other loop 0.013; at two he reopens on
+      0.889 of nights.
+    </p>
+    <table class="data">
+      <thead><tr><th class="br-l">act</th><th class="br-l">ranking</th><th>expected</th><th>predicted</th><th>west loop</th><th>arrived</th></tr></thead>
+      <tbody>
+        <tr><td class="br-l" rowspan="4"><b>I</b></td><td class="br-l">explanation</td><td class="br-best">228.6&#8202;s</td><td>263.3&#8202;s</td><td>303.8&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">door by door</td><td class="">232.9&#8202;s</td><td>272.0&#8202;s</td><td>387.4&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">full meet</td><td class="">231.7&#8202;s</td><td>272.0&#8202;s</td><td>388.1&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">knowledge only</td><td class="">236.8&#8202;s</td><td>280.5&#8202;s</td><td>211.4&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l" rowspan="4"><b>II</b></td><td class="br-l">explanation</td><td class="br-best">238.9&#8202;s</td><td>267.2&#8202;s</td><td>272.1&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">door by door</td><td class="">268.2&#8202;s</td><td>287.3&#8202;s</td><td>526.3&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">full meet</td><td class="">242.3&#8202;s</td><td>267.2&#8202;s</td><td>270.6&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">knowledge only</td><td class="">331.7&#8202;s</td><td>364.5&#8202;s</td><td>273.7&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l" rowspan="4"><b>III</b></td><td class="br-l">explanation</td><td class="br-best">502.1&#8202;s</td><td>518.9&#8202;s</td><td>527.1&#8202;s / 540.2&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">door by door</td><td class="">527.3&#8202;s</td><td>540.9&#8202;s</td><td>793.2&#8202;s / 778.3&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">full meet</td><td class="">504.8&#8202;s</td><td>519.2&#8202;s</td><td>547.2&#8202;s / 536.6&#8202;s</td><td class="br-yes">12/12</td></tr>
+        <tr><td class="br-l">knowledge only</td><td class="">557.2&#8202;s</td><td>570.9&#8202;s</td><td>535.9&#8202;s / 532.4&#8202;s</td><td class="br-yes">12/12</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Expected: the mean time of each night's runs weighted by the porter's frequencies. Predicted: the same for the times <span class="mono-inline">tools/plan.py</span> predicts. West loop: the mean on the west-loop night, in act III when he reopened at two and when he was held up. In bold, the least expected time of each act.</p>
+    <figure class="demo-figure">
+      <img src="media/belief-revision-times.png" alt="Bar charts of mission time per night for each act, four bars per night, one per ranking, with the predicted time marked on each bar" style="width:100%;max-width:960px">
+      <figcaption>
+        Mission time per night and ranking, the mean of its runs; the black
+        tick is the time <span class="mono-inline">tools/plan.py</span>
+        predicted for the same policy and night. Under each night its
+        frequency.
+      </figcaption>
+    </figure>
+    <p>In act I the expected times were 228.6&#8202;s explanation, 231.7&#8202;s full meet, 232.9&#8202;s door by door, 236.8&#8202;s knowledge only. Where its policy differs from another ranking's, the explanation was slower by more than 10&#8202;s on AB, by 92&#8202;s against knowledge only (frequency 0.105); BC, by 86&#8202;s against door by door (frequency 0.013); BD, by 90&#8202;s against knowledge only (frequency 0.013).  In act II the expected times were 238.9&#8202;s explanation, 242.3&#8202;s full meet, 268.2&#8202;s door by door, 331.7&#8202;s knowledge only. Where its policy differs from another ranking's, the explanation was slower by more than 10&#8202;s on BC, by 50&#8202;s against knowledge only (frequency 0.013).  In act III the expected times were 502.1&#8202;s explanation, 504.8&#8202;s full meet, 527.3&#8202;s door by door, 557.2&#8202;s knowledge only. Where its policy differs from another ranking's, the explanation was slower by more than 10&#8202;s on BC-, by 32&#8202;s against door by door (frequency 0.001); BD-, by 21&#8202;s against full meet (frequency 0.001).  The predicted times were longer than the measured by 27.9&#8202;s on average: the planner's speed of 0.17&#8202;m/s is conservative, and the executor overlaps some actions the prediction runs apart.</p>
+    <figure class="demo-figure">
+      <img src="media/belief-revision-sensitivity.png" alt="Three panels of expected mission time against the share of nights the porter walks the west loop, one line per ranking; in act I the explanation line coincides with the optimum planned on the frequencies until a share of 0.2 and knowledge only becomes better at 0.25" style="width:100%;max-width:960px">
+      <figcaption>
+        Each ranking's policy, planned once from its ranks, charged its
+        predicted time under porter frequencies other than the stated ones:
+        the west loop on the share of nights on the axis, the four rare loops
+        on 5&#8202;% between them, the rostered loop on the rest. The grey band
+        is the stated share. In act I the dotted line is the policy planned on
+        the frequencies themselves, which for one robot is the optimum.
+      </figcaption>
+    </figure>
+    <p>In act I the explanation's policy had the least expected time for every share of west-loop nights from 0.025 to 0.20, and knowledge only from 0.25: when the "rare" loop is that common, its rank is wrong; it matched the policy planned on the frequencies themselves, the optimum for one robot, from 0.025 to 0.20. In act II the explanation's policy had the least expected time for every share of west-loop nights from 0.025 to 0.40. In act III the explanation's policy had the least expected time for every share of west-loop nights from 0.000 to 0.40.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FINDINGS -->
+<section id="br-findings-sec">
+  <div class="container">
+    <p class="sec-label">Implementation findings</p>
+    <h3>Implementation findings</h3>
+    <ul>
+      <li><b>A lexicographic believer never looks.</b> Minimising the time on
+        the believed worlds first, and on the next rank only to break ties,
+        made the courier pass lobby C without looking on the first floor
+        built, where a look on the way cost four seconds: that look is worth
+        nothing on the believed night and much on the others. Two changes
+        followed. The lobbies were given a turn, so that a look costs a
+        detour, as a door down a corridor does; and the objective became the
+        expected time with \(\varepsilon = 1/8\), the reading of ranks as
+        orders of magnitude and not their limit.</li>
+      <li><b>A visible action is a message.</b> The first team planner tracked
+        what each courier knew from its own looks and the reports it heard.
+        In the grounded task a courier also sees its teammate act, and learns
+        each action's precondition: a crossing tells it the door is open, an
+        entry that the teammate does not believe the door shut. The policies
+        were valid, since the guards were checked against the true update,
+        but held looks the courier did not need. The planner now reads each
+        courier's cell off the product update of the grounded task.</li>
+      <li><b>The executor's schedule is not the policy's order.</b> ePlanSys
+        0.3 moves a branching look ahead of an independent drive and copies
+        the drive into both branches, to dispatch more together. The policy
+        is unchanged and so is what each robot does; the time predicted with
+        plain parallel groups differs from the measured by
+        31.8&#8202;s (9&#8202;%) on average.</li>
+      <li><b>A stale request starves a performer.</b> PlanSys2's executor,
+        as ePlanSys 0.3 ships it, requests a performer every second from the
+        moment a behavior-tree node first ticks until one answers, and its
+        <span class="mono-inline">ExecuteAction::halt()</span> does nothing: a
+        node ticked once and then left keeps requesting for the rest of the
+        mission. A performer that answers it is either confirmed for an action
+        already done, a look waiting at the wrong lobby until its 30&#8202;s run
+        out, or rejected a moment after the request actually due has passed it
+        by; that request then times out and the policy fails. Under seven
+        lanes, 6 of 52 runs of a first batch failed so, and none of the tests
+        run one or two at a time. A patch distributed with the package,
+        <span class="mono-inline">patches/plansys2_executor-stale-requests.patch</span>,
+        makes an executor that has not been ticked for three seconds stop
+        asking; the batch reported here ran entirely with it, and no executor of it had to stop requesting.</li>
+      <li><b>Two couriers in one hall.</b> The policies keep two robots out
+        of one lobby, but not out of each other's way in the hall. On the
+        night the porter walked B-C, in act II, the courier backing out of
+        lobby C met the second courier driving past its mouth towards D; one
+        gave way and the other backed off, about 40&#8202;s under each ranking
+        that sent them there. Worse, two couriers driving the same way end
+        their drives together under the executor's groups, and the one behind
+        waited on a place the one ahead would not leave until the drive behind
+        had ended: one run of a first batch stood for over ten minutes and hit
+        the time limit. A drive to a place another robot stands on now ends
+        beside it, and acts II and III were run again with that drive. The
+        policy does not see these costs; the batch does.</li>
+      <li><b>A parameter array read in a range-for.</b> The drive nodes died
+        on start: the array of other robots' names belonged to a temporary
+        that dies before the loop body runs. It is copied first.</li>
+      <li><b>A start against a cart.</b> The second courier was placed beside
+        an instrument cart and stalled backing out of it; the layout's starts
+        are now checked against the furniture's footprints.</li>
+    </ul>
+    <h3 style="margin-top:2rem">Limitations</h3>
+    <ul>
+      <li>Only hard information is modelled. A report one does not fully
+        trust calls for an update that changes ranks, a radical or a
+        conservative upgrade<sup class="cite"><a href="#ref-vb">[7]</a></sup>;
+        here that would take actions that rewrite the grade atoms, and none
+        does.</li>
+      <li>The ranks are fixed at dusk; the couriers do not learn the porter's
+        habits from one night to the next.</li>
+      <li>Each courier plans as if alone and revises on what it learns; the
+        team's policy is not optimised jointly.</li>
+      <li>The porter walks at two when both couriers are in their wards, so
+        that no robot meets him; his walk is part of act III's time.</li>
+      <li>A laser passing a lobby's mouth gets a few returns off the door,
+        fewer than the rule needs; the domain treats the door as unseen there,
+        and the robots do too.</li>
+      <li>One floor, two couriers, simulation only.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="br-refs-sec">
+  <div class="container">
+    <p class="sec-label">References</p>
+    <ol class="ref-list">
+      <li id="ref-spohn">W. Spohn. Ordinal conditional functions: a dynamic theory of epistemic states. In W. L. Harper and B. Skyrms (eds.), <i>Causation in Decision, Belief Change, and Statistics</i>, vol. II, 105&#8211;134. Kluwer, 1988.</li>
+      <li id="ref-agm">C. E. Alchourr&#243;n, P. G&#228;rdenfors and D. Makinson. On the logic of theory change: partial meet contraction and revision functions. <i>Journal of Symbolic Logic</i> 50(2):510&#8211;530, 1985.</li>
+      <li id="ref-km">H. Katsuno and A. O. Mendelzon. Propositional knowledge base revision and minimal change. <i>Artificial Intelligence</i> 52(3):263&#8211;294, 1991.</li>
+      <li id="ref-dalal">M. Dalal. Investigations into a theory of knowledge base revision. <i>Proceedings of AAAI</i>, 475&#8211;479, 1988.</li>
+      <li id="ref-grove">A. Grove. Two modellings for theory change. <i>Journal of Philosophical Logic</i> 17(2):157&#8211;170, 1988.</li>
+      <li id="ref-bs">A. Baltag and S. Smets. A qualitative theory of dynamic interactive belief revision. In <i>Logic and the Foundations of Game and Decision Theory (LOFT 7)</i>, 11&#8211;58. Amsterdam University Press, 2008.</li>
+      <li id="ref-vb">J. van Benthem. Dynamic logic for belief revision. <i>Journal of Applied Non-Classical Logics</i> 17(2):129&#8211;155, 2007.</li>
+      <li id="ref-aucher">G. Aucher. A combined system for update logic and belief revision. In <i>Intelligent Agents and Multi-Agent Systems (PRIMA 2004)</i>, LNCS 3371, 1&#8211;17. Springer, 2005.</li>
+      <li id="ref-gp">M. Goldszmidt and J. Pearl. Qualitative probabilities for default reasoning, belief revision, and causal modeling. <i>Artificial Intelligence</i> 84(1&#8211;2):57&#8211;112, 1996.</li>
+      <li id="ref-hvd">H. van Ditmarsch. Prolegomena to dynamic logic for belief revision. <i>Synthese</i> 147(2):229&#8211;275, 2005.</li>
+      <li id="ref-ba">T. Bolander and M. B. Andersen. Epistemic planning for single- and multi-agent systems. <i>Journal of Applied Non-Classical Logics</i> 21(1):9&#8211;34, 2011.</li>
+      <li id="ref-ps2">F. Mart&#237;n, J. Gin&#233;s, F. J. Rodr&#237;guez-Lera and V. Matell&#225;n. PlanSys2: a planning system framework for ROS2. <i>Proceedings of IROS</i>, 9742&#8211;9749, 2021.</li>
+      <li id="ref-fuel">Open Robotics. Hospital models (TrolleyBed, IVStand, BedTable, MopCart3 and others). Gazebo Fuel, <a href="https://app.gazebosim.org/OpenRobotics/fuel/collections/Hospital">app.gazebosim.org/OpenRobotics</a>, CC BY 4.0.</li>
+      <li id="ref-aws">AWS RoboMaker. Small House World. <a href="https://github.com/aws-robotics/aws-robomaker-small-house-world">github.com/aws-robotics/aws-robomaker-small-house-world</a>, MIT-0.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p class="sec-label">Reproduction</p>
+    <h3>Commands</h3>
+    <pre class="code">bash tools/validate.sh                                  <span class="c"># the floor, twelve problems, every policy, Aletheia, KD45</span>
+python3 tools/make_world.py --act 2 --seed 2 --out RUN
+ros2 launch belief_revision_demo revision_launch.py dir:=RUN act:=2 formulation:=explanation
+bash tools/run_one.sh 2 2 explanation RUN 1             <span class="c"># one run in its own lane</span>
+SEEDS_1="$(seq -s ' ' 1 12)" bash tools/batch.sh BATCH 7  <span class="c"># nights under the four rankings</span>
+python3 tools/analyse.py BATCH                          <span class="c"># runs.csv and analysis.json</span>
+python3 tools/sensitivity.py                            <span class="c"># other porter frequencies</span></pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container-wide">
+    <div class="ftr">
+      <span class="ftr-l">
+        <a href="index.html">Overview</a>
+        &nbsp;&#183;&nbsp;
+        <a href="domains.html">Domains</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/ePlanSys/eplansys-rmf">eplansys-rmf</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/eplansys">eplansys</a>
+        &nbsp;&#183;&nbsp;
+        <a href="https://github.com/HanielUlises/Aletheia">ALETHEIA</a>
+      </span>
+      <span class="ftr-r">belief revision &#183; Spohn ranks in the epistemic state &#183; a porter nobody sees</span>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+/* Close the contents menu on Escape or on a click outside it. A <details>
+   stays open otherwise, which is wrong for a menu. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  /* On a phone the <details> is kept permanently open (see the drawer script
+     below) and visibility is driven by the body class alone. Without this
+     guard, a click on the burger bubbles to this listener right after it
+     opens the drawer and, seeing the click land outside .nav-menu, closes
+     the <details> again -- the panel then renders empty behind a slid-in
+     shell, since a shut <details> hides everything but its summary. */
+  var phone = window.matchMedia('(max-width:720px)');
+  document.addEventListener('click', function(e){
+    if(phone.matches) return;
+    if(menu.open && !menu.contains(e.target)) menu.open = false;
+  });
+  document.addEventListener('keydown', function(e){
+    if(phone.matches) return;
+    if(e.key === 'Escape' && menu.open){ menu.open = false; menu.querySelector('summary').focus(); }
+  });
+})();
+</script>
+<script>
+/* A copy button on every code block. The button is added here so the markup
+   stays free of it, and a page that fails to load this still shows the code. */
+(function(){
+  var blocks = document.querySelectorAll('pre.code, pre > code');
+  Array.prototype.forEach.call(blocks, function(node){
+    var pre = node.tagName === 'PRE' ? node : node.parentNode;
+    if (pre.parentNode.classList.contains('codewrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'codewrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copybtn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this code');
+    wrap.appendChild(btn);
+
+    btn.addEventListener('click', function(){
+      var text = pre.innerText.replace(/\s+$/, '');
+      var done = function(){
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function(){
+          btn.textContent = 'Copy';
+          btn.classList.remove('done');
+        }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+      } else {
+        fallback(text, done);
+      }
+    });
+  });
+
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+
+
+<script>
+/* The drawer. On a phone the panel is a fixed sheet and the body class slides
+   it in; on a wide screen none of this applies and the <details> behaves as
+   it always did. */
+(function(){
+  var menu = document.querySelector('.nav-menu');
+  if(!menu) return;
+  var burger = document.querySelector('.nav-burger');
+  var scrim  = document.querySelector('.nav-scrim');
+  if(!burger || !scrim) return;
+
+  var phone = window.matchMedia('(max-width:720px)');
+
+
+  /* Opening the drawer shows the top level only: Pages, Domains,
+     Demonstrations, Execution, Reports. Every folder, at every depth, starts
+     shut, so the panel reads as a short list of destinations rather than
+     the whole site poured out at once -- each one is a tap away. */
+  function levelOne(){
+    if(!phone.matches) return;
+    var all = menu.querySelectorAll('.nav-panel .nav-folder');
+    Array.prototype.forEach.call(all, function(f){ f.open = false; });
+  }
+
+  function open(state){
+    document.body.classList.toggle('drawer-open', state);
+    burger.setAttribute('aria-expanded', state ? 'true' : 'false');
+    if(phone.matches) menu.open = true;   // the sheet is its own container
+    if(state) levelOne();
+    if(state) menu.querySelector('.nav-panel a').focus({preventScroll:true});
+  }
+
+  burger.addEventListener('click', function(){
+    open(!document.body.classList.contains('drawer-open'));
+  });
+  scrim.addEventListener('click', function(){ open(false); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.body.classList.contains('drawer-open')){
+      open(false); burger.focus();
+    }
+  });
+  /* Following a link should leave the drawer shut behind you. */
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) open(false);
+  });
+  phone.addEventListener('change', function(){
+    open(false);
+    if(!phone.matches) menu.open = false;
+  });
+  if(phone.matches) menu.open = true;
+})();
+</script>
+</body>
+</html>
