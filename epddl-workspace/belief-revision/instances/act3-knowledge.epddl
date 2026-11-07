@@ -1,0 +1,44 @@
+;; BELIEF REVISION IN A CHANGING WARD, act 3, ranked by knowledge. Written by tools/model.py.
+;; Upper case is a door the porter shut at one; + he reopens them at two, - he is held up.
+;;   w0: CD+  rank 0
+;;   w1: CD-  rank 0
+;;   w2: AB+  rank 0
+;;   w3: AB-  rank 0
+;;   w4: AC+  rank 0
+;;   w5: AC-  rank 0
+;;   w6: AD+  rank 0
+;;   w7: AD-  rank 0
+;;   w8: BC+  rank 0
+;;   w9: BC-  rank 0
+;;   w10: BD+  rank 0
+;;   w11: BD-  rank 0
+
+(define (problem act3-knowledge)
+  (:domain belief-revision)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents c d p)
+  (:init
+    :worlds (w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11)
+    :relations (
+      c (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w0 w7) (w0 w8) (w0 w9) (w0 w10) (w0 w11) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w1 w7) (w1 w8) (w1 w9) (w1 w10) (w1 w11) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w2 w7) (w2 w8) (w2 w9) (w2 w10) (w2 w11) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w3 w7) (w3 w8) (w3 w9) (w3 w10) (w3 w11) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w4 w7) (w4 w8) (w4 w9) (w4 w10) (w4 w11) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w5 w7) (w5 w8) (w5 w9) (w5 w10) (w5 w11) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6) (w6 w7) (w6 w8) (w6 w9) (w6 w10) (w6 w11) (w7 w0) (w7 w1) (w7 w2) (w7 w3) (w7 w4) (w7 w5) (w7 w6) (w7 w7) (w7 w8) (w7 w9) (w7 w10) (w7 w11) (w8 w0) (w8 w1) (w8 w2) (w8 w3) (w8 w4) (w8 w5) (w8 w6) (w8 w7) (w8 w8) (w8 w9) (w8 w10) (w8 w11) (w9 w0) (w9 w1) (w9 w2) (w9 w3) (w9 w4) (w9 w5) (w9 w6) (w9 w7) (w9 w8) (w9 w9) (w9 w10) (w9 w11) (w10 w0) (w10 w1) (w10 w2) (w10 w3) (w10 w4) (w10 w5) (w10 w6) (w10 w7) (w10 w8) (w10 w9) (w10 w10) (w10 w11) (w11 w0) (w11 w1) (w11 w2) (w11 w3) (w11 w4) (w11 w5) (w11 w6) (w11 w7) (w11 w8) (w11 w9) (w11 w10) (w11 w11))
+      d (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w0 w7) (w0 w8) (w0 w9) (w0 w10) (w0 w11) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w1 w7) (w1 w8) (w1 w9) (w1 w10) (w1 w11) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w2 w7) (w2 w8) (w2 w9) (w2 w10) (w2 w11) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w3 w7) (w3 w8) (w3 w9) (w3 w10) (w3 w11) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w4 w7) (w4 w8) (w4 w9) (w4 w10) (w4 w11) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w5 w7) (w5 w8) (w5 w9) (w5 w10) (w5 w11) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6) (w6 w7) (w6 w8) (w6 w9) (w6 w10) (w6 w11) (w7 w0) (w7 w1) (w7 w2) (w7 w3) (w7 w4) (w7 w5) (w7 w6) (w7 w7) (w7 w8) (w7 w9) (w7 w10) (w7 w11) (w8 w0) (w8 w1) (w8 w2) (w8 w3) (w8 w4) (w8 w5) (w8 w6) (w8 w7) (w8 w8) (w8 w9) (w8 w10) (w8 w11) (w9 w0) (w9 w1) (w9 w2) (w9 w3) (w9 w4) (w9 w5) (w9 w6) (w9 w7) (w9 w8) (w9 w9) (w9 w10) (w9 w11) (w10 w0) (w10 w1) (w10 w2) (w10 w3) (w10 w4) (w10 w5) (w10 w6) (w10 w7) (w10 w8) (w10 w9) (w10 w10) (w10 w11) (w11 w0) (w11 w1) (w11 w2) (w11 w3) (w11 w4) (w11 w5) (w11 w6) (w11 w7) (w11 w8) (w11 w9) (w11 w10) (w11 w11))
+      p (:and (w0 w0) (w1 w1) (w2 w2) (w3 w3) (w4 w4) (w5 w5) (w6 w6) (w7 w7) (w8 w8) (w9 w9) (w10 w10) (w11 w11))
+    )
+    :labels (
+      w0 (:and (open-a) (open-b) (g0) (reopens) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w1 (:and (open-a) (open-b) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w2 (:and (open-c) (open-d) (g0) (reopens) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w3 (:and (open-c) (open-d) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w4 (:and (open-b) (open-d) (g0) (reopens) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w5 (:and (open-b) (open-d) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w6 (:and (open-b) (open-c) (g0) (reopens) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w7 (:and (open-b) (open-c) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w8 (:and (open-a) (open-d) (g0) (reopens) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w9 (:and (open-a) (open-d) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w10 (:and (open-a) (open-c) (g0) (reopens) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+      w11 (:and (open-a) (open-c) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d) (porter p))
+    )
+    :designated (w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11)
+  )
+  (:goal (and (home c) (home d)))
+)
