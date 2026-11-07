@@ -1,0 +1,31 @@
+;; BELIEF REVISION IN A CHANGING WARD, act 2, ranked by knowledge. Written by tools/model.py.
+;; Upper case is a door the porter shut at one; + he reopens them at two, - he is held up.
+;;   w0: CD   rank 0
+;;   w1: AB   rank 0
+;;   w2: AC   rank 0
+;;   w3: AD   rank 0
+;;   w4: BC   rank 0
+;;   w5: BD   rank 0
+
+(define (problem act2-knowledge)
+  (:domain belief-revision)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents c d)
+  (:init
+    :worlds (w0 w1 w2 w3 w4 w5)
+    :relations (
+      c (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5))
+      d (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5))
+    )
+    :labels (
+      w0 (:and (open-a) (open-b) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d))
+      w1 (:and (open-c) (open-d) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d))
+      w2 (:and (open-b) (open-d) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d))
+      w3 (:and (open-b) (open-c) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d))
+      w4 (:and (open-a) (open-d) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d))
+      w5 (:and (open-a) (open-c) (g0) (courier c) (out c) (at-hc c) (lives-hc c) (bed-rc c) (courier d) (out d) (at-ht d) (lives-ht d) (bed-rd d))
+    )
+    :designated (w0 w1 w2 w3 w4 w5)
+  )
+  (:goal (and (delivered c) (delivered d)))
+)

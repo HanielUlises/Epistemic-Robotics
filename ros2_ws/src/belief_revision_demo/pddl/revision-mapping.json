@@ -1,0 +1,614 @@
+{
+ "seek-va-vb_c": {
+  "action": "(drive c va vb)",
+  "duration": 38.0
+ },
+ "walk-va-vb_c": {
+  "action": "(drive c va vb)",
+  "duration": 38.0
+ },
+ "seek-vb-va_c": {
+  "action": "(drive c vb va)",
+  "duration": 38.0
+ },
+ "walk-vb-va_c": {
+  "action": "(drive c vb va)",
+  "duration": 38.0
+ },
+ "seek-vb-st_c": {
+  "action": "(drive c vb st)",
+  "duration": 23.0
+ },
+ "walk-vb-st_c": {
+  "action": "(drive c vb st)",
+  "duration": 23.0
+ },
+ "seek-st-vb_c": {
+  "action": "(drive c st vb)",
+  "duration": 23.0
+ },
+ "walk-st-vb_c": {
+  "action": "(drive c st vb)",
+  "duration": 23.0
+ },
+ "seek-st-vc_c": {
+  "action": "(drive c st vc)",
+  "duration": 15.0
+ },
+ "walk-st-vc_c": {
+  "action": "(drive c st vc)",
+  "duration": 15.0
+ },
+ "seek-vc-st_c": {
+  "action": "(drive c vc st)",
+  "duration": 15.0
+ },
+ "walk-vc-st_c": {
+  "action": "(drive c vc st)",
+  "duration": 15.0
+ },
+ "seek-vc-vd_c": {
+  "action": "(drive c vc vd)",
+  "duration": 35.0
+ },
+ "walk-vc-vd_c": {
+  "action": "(drive c vc vd)",
+  "duration": 35.0
+ },
+ "seek-vd-vc_c": {
+  "action": "(drive c vd vc)",
+  "duration": 35.0
+ },
+ "walk-vd-vc_c": {
+  "action": "(drive c vd vc)",
+  "duration": 35.0
+ },
+ "seek-vd-sp_c": {
+  "action": "(drive c vd sp)",
+  "duration": 21.0
+ },
+ "walk-vd-sp_c": {
+  "action": "(drive c vd sp)",
+  "duration": 21.0
+ },
+ "seek-sp-vd_c": {
+  "action": "(drive c sp vd)",
+  "duration": 21.0
+ },
+ "walk-sp-vd_c": {
+  "action": "(drive c sp vd)",
+  "duration": 21.0
+ },
+ "seek-nw-na_c": {
+  "action": "(drive c nw na)",
+  "duration": 22.0
+ },
+ "walk-nw-na_c": {
+  "action": "(drive c nw na)",
+  "duration": 22.0
+ },
+ "seek-na-nw_c": {
+  "action": "(drive c na nw)",
+  "duration": 22.0
+ },
+ "walk-na-nw_c": {
+  "action": "(drive c na nw)",
+  "duration": 22.0
+ },
+ "seek-na-nb_c": {
+  "action": "(drive c na nb)",
+  "duration": 38.0
+ },
+ "walk-na-nb_c": {
+  "action": "(drive c na nb)",
+  "duration": 38.0
+ },
+ "seek-nb-na_c": {
+  "action": "(drive c nb na)",
+  "duration": 38.0
+ },
+ "walk-nb-na_c": {
+  "action": "(drive c nb na)",
+  "duration": 38.0
+ },
+ "seek-nb-nc_c": {
+  "action": "(drive c nb nc)",
+  "duration": 38.0
+ },
+ "walk-nb-nc_c": {
+  "action": "(drive c nb nc)",
+  "duration": 38.0
+ },
+ "seek-nc-nb_c": {
+  "action": "(drive c nc nb)",
+  "duration": 38.0
+ },
+ "walk-nc-nb_c": {
+  "action": "(drive c nc nb)",
+  "duration": 38.0
+ },
+ "seek-nc-nd_c": {
+  "action": "(drive c nc nd)",
+  "duration": 35.0
+ },
+ "walk-nc-nd_c": {
+  "action": "(drive c nc nd)",
+  "duration": 35.0
+ },
+ "seek-nd-nc_c": {
+  "action": "(drive c nd nc)",
+  "duration": 35.0
+ },
+ "walk-nd-nc_c": {
+  "action": "(drive c nd nc)",
+  "duration": 35.0
+ },
+ "enter-a-s_c": {
+  "action": "(lobby c lobby_a va ja)",
+  "duration": 12.0
+ },
+ "back-a-s_c": {
+  "action": "(lobby c lobby_a ja va)",
+  "duration": 18.0
+ },
+ "look-a-s_c": {
+  "action": "(look c lobby_a view_as)",
+  "duration": 7.0
+ },
+ "cross-a-n_c": {
+  "action": "(lobby c lobby_a ja na)",
+  "duration": 35.0
+ },
+ "enter-a-n_c": {
+  "action": "(lobby c lobby_a na ka)",
+  "duration": 13.0
+ },
+ "back-a-n_c": {
+  "action": "(lobby c lobby_a ka na)",
+  "duration": 19.0
+ },
+ "look-a-n_c": {
+  "action": "(look c lobby_a view_an)",
+  "duration": 7.0
+ },
+ "cross-a-s_c": {
+  "action": "(lobby c lobby_a ka va)",
+  "duration": 34.0
+ },
+ "tell-a_c": {
+  "action": "(tell c lobby_a)",
+  "duration": 3.0
+ },
+ "enter-b-s_c": {
+  "action": "(lobby c lobby_b vb jb)",
+  "duration": 12.0
+ },
+ "back-b-s_c": {
+  "action": "(lobby c lobby_b jb vb)",
+  "duration": 18.0
+ },
+ "look-b-s_c": {
+  "action": "(look c lobby_b view_bs)",
+  "duration": 7.0
+ },
+ "cross-b-n_c": {
+  "action": "(lobby c lobby_b jb nb)",
+  "duration": 35.0
+ },
+ "enter-b-n_c": {
+  "action": "(lobby c lobby_b nb kb)",
+  "duration": 13.0
+ },
+ "back-b-n_c": {
+  "action": "(lobby c lobby_b kb nb)",
+  "duration": 19.0
+ },
+ "look-b-n_c": {
+  "action": "(look c lobby_b view_bn)",
+  "duration": 7.0
+ },
+ "cross-b-s_c": {
+  "action": "(lobby c lobby_b kb vb)",
+  "duration": 34.0
+ },
+ "tell-b_c": {
+  "action": "(tell c lobby_b)",
+  "duration": 3.0
+ },
+ "enter-c-s_c": {
+  "action": "(lobby c lobby_c vc jc)",
+  "duration": 12.0
+ },
+ "back-c-s_c": {
+  "action": "(lobby c lobby_c jc vc)",
+  "duration": 18.0
+ },
+ "look-c-s_c": {
+  "action": "(look c lobby_c view_cs)",
+  "duration": 7.0
+ },
+ "cross-c-n_c": {
+  "action": "(lobby c lobby_c jc nc)",
+  "duration": 35.0
+ },
+ "enter-c-n_c": {
+  "action": "(lobby c lobby_c nc kc)",
+  "duration": 13.0
+ },
+ "back-c-n_c": {
+  "action": "(lobby c lobby_c kc nc)",
+  "duration": 19.0
+ },
+ "look-c-n_c": {
+  "action": "(look c lobby_c view_cn)",
+  "duration": 7.0
+ },
+ "cross-c-s_c": {
+  "action": "(lobby c lobby_c kc vc)",
+  "duration": 34.0
+ },
+ "tell-c_c": {
+  "action": "(tell c lobby_c)",
+  "duration": 3.0
+ },
+ "enter-d-s_c": {
+  "action": "(lobby c lobby_d vd jd)",
+  "duration": 12.0
+ },
+ "back-d-s_c": {
+  "action": "(lobby c lobby_d jd vd)",
+  "duration": 18.0
+ },
+ "look-d-s_c": {
+  "action": "(look c lobby_d view_ds)",
+  "duration": 7.0
+ },
+ "cross-d-n_c": {
+  "action": "(lobby c lobby_d jd nd)",
+  "duration": 35.0
+ },
+ "enter-d-n_c": {
+  "action": "(lobby c lobby_d nd kd)",
+  "duration": 13.0
+ },
+ "back-d-n_c": {
+  "action": "(lobby c lobby_d kd nd)",
+  "duration": 19.0
+ },
+ "look-d-n_c": {
+  "action": "(look c lobby_d view_dn)",
+  "duration": 7.0
+ },
+ "cross-d-s_c": {
+  "action": "(lobby c lobby_d kd vd)",
+  "duration": 34.0
+ },
+ "tell-d_c": {
+  "action": "(tell c lobby_d)",
+  "duration": 3.0
+ },
+ "set-out_c": {
+  "action": "(drive c hc sp)",
+  "duration": 25.0
+ },
+ "arrive_c": {
+  "action": "(drive c sp hc)",
+  "duration": 25.0
+ },
+ "deliver_c": {
+  "action": "(drive c nw rc)",
+  "duration": 15.0
+ },
+ "leave_c": {
+  "action": "(drive c rc nw)",
+  "duration": 15.0
+ },
+ "seek-va-vb_d": {
+  "action": "(drive d va vb)",
+  "duration": 38.0
+ },
+ "walk-va-vb_d": {
+  "action": "(drive d va vb)",
+  "duration": 38.0
+ },
+ "seek-vb-va_d": {
+  "action": "(drive d vb va)",
+  "duration": 38.0
+ },
+ "walk-vb-va_d": {
+  "action": "(drive d vb va)",
+  "duration": 38.0
+ },
+ "seek-vb-st_d": {
+  "action": "(drive d vb st)",
+  "duration": 23.0
+ },
+ "walk-vb-st_d": {
+  "action": "(drive d vb st)",
+  "duration": 23.0
+ },
+ "seek-st-vb_d": {
+  "action": "(drive d st vb)",
+  "duration": 23.0
+ },
+ "walk-st-vb_d": {
+  "action": "(drive d st vb)",
+  "duration": 23.0
+ },
+ "seek-st-vc_d": {
+  "action": "(drive d st vc)",
+  "duration": 15.0
+ },
+ "walk-st-vc_d": {
+  "action": "(drive d st vc)",
+  "duration": 15.0
+ },
+ "seek-vc-st_d": {
+  "action": "(drive d vc st)",
+  "duration": 15.0
+ },
+ "walk-vc-st_d": {
+  "action": "(drive d vc st)",
+  "duration": 15.0
+ },
+ "seek-vc-vd_d": {
+  "action": "(drive d vc vd)",
+  "duration": 35.0
+ },
+ "walk-vc-vd_d": {
+  "action": "(drive d vc vd)",
+  "duration": 35.0
+ },
+ "seek-vd-vc_d": {
+  "action": "(drive d vd vc)",
+  "duration": 35.0
+ },
+ "walk-vd-vc_d": {
+  "action": "(drive d vd vc)",
+  "duration": 35.0
+ },
+ "seek-vd-sp_d": {
+  "action": "(drive d vd sp)",
+  "duration": 21.0
+ },
+ "walk-vd-sp_d": {
+  "action": "(drive d vd sp)",
+  "duration": 21.0
+ },
+ "seek-sp-vd_d": {
+  "action": "(drive d sp vd)",
+  "duration": 21.0
+ },
+ "walk-sp-vd_d": {
+  "action": "(drive d sp vd)",
+  "duration": 21.0
+ },
+ "seek-nw-na_d": {
+  "action": "(drive d nw na)",
+  "duration": 22.0
+ },
+ "walk-nw-na_d": {
+  "action": "(drive d nw na)",
+  "duration": 22.0
+ },
+ "seek-na-nw_d": {
+  "action": "(drive d na nw)",
+  "duration": 22.0
+ },
+ "walk-na-nw_d": {
+  "action": "(drive d na nw)",
+  "duration": 22.0
+ },
+ "seek-na-nb_d": {
+  "action": "(drive d na nb)",
+  "duration": 38.0
+ },
+ "walk-na-nb_d": {
+  "action": "(drive d na nb)",
+  "duration": 38.0
+ },
+ "seek-nb-na_d": {
+  "action": "(drive d nb na)",
+  "duration": 38.0
+ },
+ "walk-nb-na_d": {
+  "action": "(drive d nb na)",
+  "duration": 38.0
+ },
+ "seek-nb-nc_d": {
+  "action": "(drive d nb nc)",
+  "duration": 38.0
+ },
+ "walk-nb-nc_d": {
+  "action": "(drive d nb nc)",
+  "duration": 38.0
+ },
+ "seek-nc-nb_d": {
+  "action": "(drive d nc nb)",
+  "duration": 38.0
+ },
+ "walk-nc-nb_d": {
+  "action": "(drive d nc nb)",
+  "duration": 38.0
+ },
+ "seek-nc-nd_d": {
+  "action": "(drive d nc nd)",
+  "duration": 35.0
+ },
+ "walk-nc-nd_d": {
+  "action": "(drive d nc nd)",
+  "duration": 35.0
+ },
+ "seek-nd-nc_d": {
+  "action": "(drive d nd nc)",
+  "duration": 35.0
+ },
+ "walk-nd-nc_d": {
+  "action": "(drive d nd nc)",
+  "duration": 35.0
+ },
+ "enter-a-s_d": {
+  "action": "(lobby d lobby_a va ja)",
+  "duration": 12.0
+ },
+ "back-a-s_d": {
+  "action": "(lobby d lobby_a ja va)",
+  "duration": 18.0
+ },
+ "look-a-s_d": {
+  "action": "(look d lobby_a view_as)",
+  "duration": 7.0
+ },
+ "cross-a-n_d": {
+  "action": "(lobby d lobby_a ja na)",
+  "duration": 35.0
+ },
+ "enter-a-n_d": {
+  "action": "(lobby d lobby_a na ka)",
+  "duration": 13.0
+ },
+ "back-a-n_d": {
+  "action": "(lobby d lobby_a ka na)",
+  "duration": 19.0
+ },
+ "look-a-n_d": {
+  "action": "(look d lobby_a view_an)",
+  "duration": 7.0
+ },
+ "cross-a-s_d": {
+  "action": "(lobby d lobby_a ka va)",
+  "duration": 34.0
+ },
+ "tell-a_d": {
+  "action": "(tell d lobby_a)",
+  "duration": 3.0
+ },
+ "enter-b-s_d": {
+  "action": "(lobby d lobby_b vb jb)",
+  "duration": 12.0
+ },
+ "back-b-s_d": {
+  "action": "(lobby d lobby_b jb vb)",
+  "duration": 18.0
+ },
+ "look-b-s_d": {
+  "action": "(look d lobby_b view_bs)",
+  "duration": 7.0
+ },
+ "cross-b-n_d": {
+  "action": "(lobby d lobby_b jb nb)",
+  "duration": 35.0
+ },
+ "enter-b-n_d": {
+  "action": "(lobby d lobby_b nb kb)",
+  "duration": 13.0
+ },
+ "back-b-n_d": {
+  "action": "(lobby d lobby_b kb nb)",
+  "duration": 19.0
+ },
+ "look-b-n_d": {
+  "action": "(look d lobby_b view_bn)",
+  "duration": 7.0
+ },
+ "cross-b-s_d": {
+  "action": "(lobby d lobby_b kb vb)",
+  "duration": 34.0
+ },
+ "tell-b_d": {
+  "action": "(tell d lobby_b)",
+  "duration": 3.0
+ },
+ "enter-c-s_d": {
+  "action": "(lobby d lobby_c vc jc)",
+  "duration": 12.0
+ },
+ "back-c-s_d": {
+  "action": "(lobby d lobby_c jc vc)",
+  "duration": 18.0
+ },
+ "look-c-s_d": {
+  "action": "(look d lobby_c view_cs)",
+  "duration": 7.0
+ },
+ "cross-c-n_d": {
+  "action": "(lobby d lobby_c jc nc)",
+  "duration": 35.0
+ },
+ "enter-c-n_d": {
+  "action": "(lobby d lobby_c nc kc)",
+  "duration": 13.0
+ },
+ "back-c-n_d": {
+  "action": "(lobby d lobby_c kc nc)",
+  "duration": 19.0
+ },
+ "look-c-n_d": {
+  "action": "(look d lobby_c view_cn)",
+  "duration": 7.0
+ },
+ "cross-c-s_d": {
+  "action": "(lobby d lobby_c kc vc)",
+  "duration": 34.0
+ },
+ "tell-c_d": {
+  "action": "(tell d lobby_c)",
+  "duration": 3.0
+ },
+ "enter-d-s_d": {
+  "action": "(lobby d lobby_d vd jd)",
+  "duration": 12.0
+ },
+ "back-d-s_d": {
+  "action": "(lobby d lobby_d jd vd)",
+  "duration": 18.0
+ },
+ "look-d-s_d": {
+  "action": "(look d lobby_d view_ds)",
+  "duration": 7.0
+ },
+ "cross-d-n_d": {
+  "action": "(lobby d lobby_d jd nd)",
+  "duration": 35.0
+ },
+ "enter-d-n_d": {
+  "action": "(lobby d lobby_d nd kd)",
+  "duration": 13.0
+ },
+ "back-d-n_d": {
+  "action": "(lobby d lobby_d kd nd)",
+  "duration": 19.0
+ },
+ "look-d-n_d": {
+  "action": "(look d lobby_d view_dn)",
+  "duration": 7.0
+ },
+ "cross-d-s_d": {
+  "action": "(lobby d lobby_d kd vd)",
+  "duration": 34.0
+ },
+ "tell-d_d": {
+  "action": "(tell d lobby_d)",
+  "duration": 3.0
+ },
+ "set-out_d": {
+  "action": "(drive d ht st)",
+  "duration": 22.0
+ },
+ "arrive_d": {
+  "action": "(drive d st ht)",
+  "duration": 22.0
+ },
+ "deliver_d": {
+  "action": "(drive d nb rd)",
+  "duration": 15.0
+ },
+ "leave_d": {
+  "action": "(drive d rd nb)",
+  "duration": 15.0
+ },
+ "round_p": {
+  "action": "(round p)",
+  "duration": 60.0
+ }
+}
