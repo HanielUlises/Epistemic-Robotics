@@ -7,9 +7,9 @@ a door is seen only from a bend inside its lobby. At one in the morning the
 night porter walks a loop through the band, north through one door and south
 through another, and shuts both. No robot sees him.
 
-Three robots of three makers share the floor, and each ranks the six loops the
-porter may have walked its own way: a Spohn ranking, carried in every world of
-the epistemic state as that robot's grade atom.
+Three robots from different makers share the floor. Each ranks the six loops
+the porter may have walked with its own Spohn ranking, carried in every world of
+the epistemic state as that robot's grade atoms.
 
 | robot | maker | ranking | starts in | delivers to |
 | --- | --- | --- | --- | --- |
