@@ -1,0 +1,33 @@
+;; BELIEF REVISION IN A MIXED FLEET, act 1. Written by tools/model.py.
+;; Upper case is a door the porter shut at one; each world's ranks by robot.
+;; c ranks by explanation and starts in hd for ward 4, d ranks by door-by-door and starts in hp for ward 2
+;; takes the word of: d of c
+;;   w0: CD  c:0 d:0
+;;   w1: AB  c:1 d:4
+;;   w2: AC  c:2 d:2
+;;   w3: AD  c:2 d:2
+;;   w4: BC  c:2 d:2
+;;   w5: BD  c:2 d:2
+
+(define (problem act1)
+  (:domain mixed-fleet)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents c d)
+  (:init
+    :worlds (w0 w1 w2 w3 w4 w5)
+    :relations (
+      c (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5))
+      d (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5))
+    )
+    :labels (
+      w0 (:and (open-a) (open-b) (rank0 c) (robot c) (at-hd c) (rank0 d) (robot d) (at-hp d) (takes-word d c))
+      w1 (:and (open-c) (open-d) (rank1 c) (robot c) (at-hd c) (rank4 d) (robot d) (at-hp d) (takes-word d c))
+      w2 (:and (open-b) (open-d) (rank2 c) (robot c) (at-hd c) (rank2 d) (robot d) (at-hp d) (takes-word d c))
+      w3 (:and (open-b) (open-c) (rank2 c) (robot c) (at-hd c) (rank2 d) (robot d) (at-hp d) (takes-word d c))
+      w4 (:and (open-a) (open-d) (rank2 c) (robot c) (at-hd c) (rank2 d) (robot d) (at-hp d) (takes-word d c))
+      w5 (:and (open-a) (open-c) (rank2 c) (robot c) (at-hd c) (rank2 d) (robot d) (at-hp d) (takes-word d c))
+    )
+    :designated (w0 w1 w2 w3 w4 w5)
+  )
+  (:goal (and (delivered c) (delivered d)))
+)
