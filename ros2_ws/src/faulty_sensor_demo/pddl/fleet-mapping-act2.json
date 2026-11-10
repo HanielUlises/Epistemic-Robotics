@@ -1,0 +1,750 @@
+{
+ "set-out_b": {
+  "action": "(drive b ht_b st_b)",
+  "duration": 24.0
+ },
+ "hop-va-vb_b": {
+  "action": "(drive b va_b vb_b)",
+  "duration": 38.0
+ },
+ "hop-vb-va_b": {
+  "action": "(drive b vb_b va_b)",
+  "duration": 38.0
+ },
+ "hop-vb-sl_b": {
+  "action": "(drive b vb_b sl_b)",
+  "duration": 14.0
+ },
+ "hop-sl-vb_b": {
+  "action": "(drive b sl_b vb_b)",
+  "duration": 14.0
+ },
+ "hop-sl-st_b": {
+  "action": "(drive b sl_b st_b)",
+  "duration": 14.0
+ },
+ "hop-st-sl_b": {
+  "action": "(drive b st_b sl_b)",
+  "duration": 14.0
+ },
+ "hop-st-vc_b": {
+  "action": "(drive b st_b vc_b)",
+  "duration": 10.0
+ },
+ "hop-vc-st_b": {
+  "action": "(drive b vc_b st_b)",
+  "duration": 10.0
+ },
+ "hop-vc-vd_b": {
+  "action": "(drive b vc_b vd_b)",
+  "duration": 35.0
+ },
+ "hop-vd-vc_b": {
+  "action": "(drive b vd_b vc_b)",
+  "duration": 35.0
+ },
+ "hop-vd-sp_b": {
+  "action": "(drive b vd_b sp_b)",
+  "duration": 26.0
+ },
+ "hop-sp-vd_b": {
+  "action": "(drive b sp_b vd_b)",
+  "duration": 26.0
+ },
+ "check-a_b": {
+  "action": "(look b pass_a near_a)",
+  "duration": 4.0
+ },
+ "say-shut-a_b": {
+  "action": "(say b pass_a shut)",
+  "duration": 3.0
+ },
+ "say-sure-a_b": {
+  "action": "(say b pass_a sure)",
+  "duration": 3.0
+ },
+ "enter-believing-a_b": {
+  "action": "(passage b pass_a va_b ma_b)",
+  "duration": 33.0
+ },
+ "enter-firmly-a_b": {
+  "action": "(passage b pass_a va_b ma_b)",
+  "duration": 33.0
+ },
+ "enter-knowing-a_b": {
+  "action": "(passage b pass_a va_b ma_b)",
+  "duration": 33.0
+ },
+ "cross-a_b": {
+  "action": "(passage b pass_a ma_b na_b)",
+  "duration": 16.0
+ },
+ "reverse-a_b": {
+  "action": "(backout b pass_a ma_b ea_b)",
+  "duration": 46.0
+ },
+ "deliver-a_b": {
+  "action": "(drive b na_b bed2_b)",
+  "duration": 78.0
+ },
+ "check-b_b": {
+  "action": "(look b pass_b near_b)",
+  "duration": 4.0
+ },
+ "say-shut-b_b": {
+  "action": "(say b pass_b shut)",
+  "duration": 3.0
+ },
+ "say-sure-b_b": {
+  "action": "(say b pass_b sure)",
+  "duration": 3.0
+ },
+ "enter-believing-b_b": {
+  "action": "(passage b pass_b vb_b mb_b)",
+  "duration": 33.0
+ },
+ "enter-firmly-b_b": {
+  "action": "(passage b pass_b vb_b mb_b)",
+  "duration": 33.0
+ },
+ "enter-knowing-b_b": {
+  "action": "(passage b pass_b vb_b mb_b)",
+  "duration": 33.0
+ },
+ "cross-b_b": {
+  "action": "(passage b pass_b mb_b nb_b)",
+  "duration": 16.0
+ },
+ "reverse-b_b": {
+  "action": "(backout b pass_b mb_b eb_b)",
+  "duration": 46.0
+ },
+ "deliver-b_b": {
+  "action": "(drive b nb_b bed2_b)",
+  "duration": 40.0
+ },
+ "check-c_b": {
+  "action": "(look b pass_c near_c)",
+  "duration": 4.0
+ },
+ "say-shut-c_b": {
+  "action": "(say b pass_c shut)",
+  "duration": 3.0
+ },
+ "say-sure-c_b": {
+  "action": "(say b pass_c sure)",
+  "duration": 3.0
+ },
+ "enter-believing-c_b": {
+  "action": "(passage b pass_c vc_b mc_b)",
+  "duration": 33.0
+ },
+ "enter-firmly-c_b": {
+  "action": "(passage b pass_c vc_b mc_b)",
+  "duration": 33.0
+ },
+ "enter-knowing-c_b": {
+  "action": "(passage b pass_c vc_b mc_b)",
+  "duration": 33.0
+ },
+ "cross-c_b": {
+  "action": "(passage b pass_c mc_b nc_b)",
+  "duration": 16.0
+ },
+ "reverse-c_b": {
+  "action": "(backout b pass_c mc_b ec_b)",
+  "duration": 46.0
+ },
+ "deliver-c_b": {
+  "action": "(drive b nc_b bed2_b)",
+  "duration": 41.0
+ },
+ "check-d_b": {
+  "action": "(look b pass_d near_d)",
+  "duration": 4.0
+ },
+ "say-shut-d_b": {
+  "action": "(say b pass_d shut)",
+  "duration": 3.0
+ },
+ "say-sure-d_b": {
+  "action": "(say b pass_d sure)",
+  "duration": 3.0
+ },
+ "enter-believing-d_b": {
+  "action": "(passage b pass_d vd_b md_b)",
+  "duration": 33.0
+ },
+ "enter-firmly-d_b": {
+  "action": "(passage b pass_d vd_b md_b)",
+  "duration": 33.0
+ },
+ "enter-knowing-d_b": {
+  "action": "(passage b pass_d vd_b md_b)",
+  "duration": 33.0
+ },
+ "cross-d_b": {
+  "action": "(passage b pass_d md_b nd_b)",
+  "duration": 16.0
+ },
+ "reverse-d_b": {
+  "action": "(backout b pass_d md_b ed_b)",
+  "duration": 46.0
+ },
+ "deliver-d_b": {
+  "action": "(drive b nd_b bed2_b)",
+  "duration": 76.0
+ },
+ "set-out_s": {
+  "action": "(drive s ld_s sl_s)",
+  "duration": 23.0
+ },
+ "hop-va-vb_s": {
+  "action": "(drive s va_s vb_s)",
+  "duration": 38.0
+ },
+ "hop-vb-va_s": {
+  "action": "(drive s vb_s va_s)",
+  "duration": 38.0
+ },
+ "hop-vb-sl_s": {
+  "action": "(drive s vb_s sl_s)",
+  "duration": 11.0
+ },
+ "hop-sl-vb_s": {
+  "action": "(drive s sl_s vb_s)",
+  "duration": 11.0
+ },
+ "hop-sl-st_s": {
+  "action": "(drive s sl_s st_s)",
+  "duration": 14.0
+ },
+ "hop-st-sl_s": {
+  "action": "(drive s st_s sl_s)",
+  "duration": 14.0
+ },
+ "hop-st-vc_s": {
+  "action": "(drive s st_s vc_s)",
+  "duration": 14.0
+ },
+ "hop-vc-st_s": {
+  "action": "(drive s vc_s st_s)",
+  "duration": 14.0
+ },
+ "hop-vc-vd_s": {
+  "action": "(drive s vc_s vd_s)",
+  "duration": 35.0
+ },
+ "hop-vd-vc_s": {
+  "action": "(drive s vd_s vc_s)",
+  "duration": 35.0
+ },
+ "hop-vd-sp_s": {
+  "action": "(drive s vd_s sp_s)",
+  "duration": 22.0
+ },
+ "hop-sp-vd_s": {
+  "action": "(drive s sp_s vd_s)",
+  "duration": 22.0
+ },
+ "check-a_s": {
+  "action": "(look s pass_a near_a)",
+  "duration": 4.0
+ },
+ "say-shut-a_s": {
+  "action": "(say s pass_a shut)",
+  "duration": 3.0
+ },
+ "say-sure-a_s": {
+  "action": "(say s pass_a sure)",
+  "duration": 3.0
+ },
+ "look-a_s": {
+  "action": "(look s pass_a far_a)",
+  "duration": 7.0
+ },
+ "say-open-a_s": {
+  "action": "(say s pass_a open)",
+  "duration": 3.0
+ },
+ "say-read-shut-a_s": {
+  "action": "(say s pass_a readshut)",
+  "duration": 3.0
+ },
+ "look1-a_s": {
+  "action": "(look s pass_a far1_a)",
+  "duration": 7.0
+ },
+ "say-open1-a_s": {
+  "action": "(say s pass_a open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-a_s": {
+  "action": "(say s pass_a readshut1)",
+  "duration": 3.0
+ },
+ "look2-a_s": {
+  "action": "(look s pass_a far2_a)",
+  "duration": 7.0
+ },
+ "say-open2-a_s": {
+  "action": "(say s pass_a open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-a_s": {
+  "action": "(say s pass_a readshut2)",
+  "duration": 3.0
+ },
+ "advance-a_s": {
+  "action": "(passage s pass_a va_s ma_s)",
+  "duration": 29.0
+ },
+ "retire-a_s": {
+  "action": "(passage s pass_a ma_s va_s)",
+  "duration": 32.0
+ },
+ "check-b_s": {
+  "action": "(look s pass_b near_b)",
+  "duration": 4.0
+ },
+ "say-shut-b_s": {
+  "action": "(say s pass_b shut)",
+  "duration": 3.0
+ },
+ "say-sure-b_s": {
+  "action": "(say s pass_b sure)",
+  "duration": 3.0
+ },
+ "look-b_s": {
+  "action": "(look s pass_b far_b)",
+  "duration": 7.0
+ },
+ "say-open-b_s": {
+  "action": "(say s pass_b open)",
+  "duration": 3.0
+ },
+ "say-read-shut-b_s": {
+  "action": "(say s pass_b readshut)",
+  "duration": 3.0
+ },
+ "look1-b_s": {
+  "action": "(look s pass_b far1_b)",
+  "duration": 7.0
+ },
+ "say-open1-b_s": {
+  "action": "(say s pass_b open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-b_s": {
+  "action": "(say s pass_b readshut1)",
+  "duration": 3.0
+ },
+ "look2-b_s": {
+  "action": "(look s pass_b far2_b)",
+  "duration": 7.0
+ },
+ "say-open2-b_s": {
+  "action": "(say s pass_b open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-b_s": {
+  "action": "(say s pass_b readshut2)",
+  "duration": 3.0
+ },
+ "advance-b_s": {
+  "action": "(passage s pass_b vb_s mb_s)",
+  "duration": 29.0
+ },
+ "retire-b_s": {
+  "action": "(passage s pass_b mb_s vb_s)",
+  "duration": 32.0
+ },
+ "check-c_s": {
+  "action": "(look s pass_c near_c)",
+  "duration": 4.0
+ },
+ "say-shut-c_s": {
+  "action": "(say s pass_c shut)",
+  "duration": 3.0
+ },
+ "say-sure-c_s": {
+  "action": "(say s pass_c sure)",
+  "duration": 3.0
+ },
+ "look-c_s": {
+  "action": "(look s pass_c far_c)",
+  "duration": 7.0
+ },
+ "say-open-c_s": {
+  "action": "(say s pass_c open)",
+  "duration": 3.0
+ },
+ "say-read-shut-c_s": {
+  "action": "(say s pass_c readshut)",
+  "duration": 3.0
+ },
+ "look1-c_s": {
+  "action": "(look s pass_c far1_c)",
+  "duration": 7.0
+ },
+ "say-open1-c_s": {
+  "action": "(say s pass_c open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-c_s": {
+  "action": "(say s pass_c readshut1)",
+  "duration": 3.0
+ },
+ "look2-c_s": {
+  "action": "(look s pass_c far2_c)",
+  "duration": 7.0
+ },
+ "say-open2-c_s": {
+  "action": "(say s pass_c open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-c_s": {
+  "action": "(say s pass_c readshut2)",
+  "duration": 3.0
+ },
+ "advance-c_s": {
+  "action": "(passage s pass_c vc_s mc_s)",
+  "duration": 29.0
+ },
+ "retire-c_s": {
+  "action": "(passage s pass_c mc_s vc_s)",
+  "duration": 32.0
+ },
+ "check-d_s": {
+  "action": "(look s pass_d near_d)",
+  "duration": 4.0
+ },
+ "say-shut-d_s": {
+  "action": "(say s pass_d shut)",
+  "duration": 3.0
+ },
+ "say-sure-d_s": {
+  "action": "(say s pass_d sure)",
+  "duration": 3.0
+ },
+ "look-d_s": {
+  "action": "(look s pass_d far_d)",
+  "duration": 7.0
+ },
+ "say-open-d_s": {
+  "action": "(say s pass_d open)",
+  "duration": 3.0
+ },
+ "say-read-shut-d_s": {
+  "action": "(say s pass_d readshut)",
+  "duration": 3.0
+ },
+ "look1-d_s": {
+  "action": "(look s pass_d far1_d)",
+  "duration": 7.0
+ },
+ "say-open1-d_s": {
+  "action": "(say s pass_d open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-d_s": {
+  "action": "(say s pass_d readshut1)",
+  "duration": 3.0
+ },
+ "look2-d_s": {
+  "action": "(look s pass_d far2_d)",
+  "duration": 7.0
+ },
+ "say-open2-d_s": {
+  "action": "(say s pass_d open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-d_s": {
+  "action": "(say s pass_d readshut2)",
+  "duration": 3.0
+ },
+ "advance-d_s": {
+  "action": "(passage s pass_d vd_s md_s)",
+  "duration": 29.0
+ },
+ "retire-d_s": {
+  "action": "(passage s pass_d md_s vd_s)",
+  "duration": 32.0
+ },
+ "set-out_t": {
+  "action": "(drive t hd_t va_t)",
+  "duration": 23.0
+ },
+ "hop-va-vb_t": {
+  "action": "(drive t va_t vb_t)",
+  "duration": 38.0
+ },
+ "hop-vb-va_t": {
+  "action": "(drive t vb_t va_t)",
+  "duration": 38.0
+ },
+ "hop-vb-sl_t": {
+  "action": "(drive t vb_t sl_t)",
+  "duration": 7.0
+ },
+ "hop-sl-vb_t": {
+  "action": "(drive t sl_t vb_t)",
+  "duration": 7.0
+ },
+ "hop-sl-st_t": {
+  "action": "(drive t sl_t st_t)",
+  "duration": 14.0
+ },
+ "hop-st-sl_t": {
+  "action": "(drive t st_t sl_t)",
+  "duration": 14.0
+ },
+ "hop-st-vc_t": {
+  "action": "(drive t st_t vc_t)",
+  "duration": 17.0
+ },
+ "hop-vc-st_t": {
+  "action": "(drive t vc_t st_t)",
+  "duration": 17.0
+ },
+ "hop-vc-vd_t": {
+  "action": "(drive t vc_t vd_t)",
+  "duration": 35.0
+ },
+ "hop-vd-vc_t": {
+  "action": "(drive t vd_t vc_t)",
+  "duration": 35.0
+ },
+ "hop-vd-sp_t": {
+  "action": "(drive t vd_t sp_t)",
+  "duration": 19.0
+ },
+ "hop-sp-vd_t": {
+  "action": "(drive t sp_t vd_t)",
+  "duration": 19.0
+ },
+ "check-a_t": {
+  "action": "(look t pass_a near_a)",
+  "duration": 4.0
+ },
+ "say-shut-a_t": {
+  "action": "(say t pass_a shut)",
+  "duration": 3.0
+ },
+ "say-sure-a_t": {
+  "action": "(say t pass_a sure)",
+  "duration": 3.0
+ },
+ "look-a_t": {
+  "action": "(look t pass_a far_a)",
+  "duration": 7.0
+ },
+ "say-open-a_t": {
+  "action": "(say t pass_a open)",
+  "duration": 3.0
+ },
+ "say-read-shut-a_t": {
+  "action": "(say t pass_a readshut)",
+  "duration": 3.0
+ },
+ "look1-a_t": {
+  "action": "(look t pass_a far1_a)",
+  "duration": 7.0
+ },
+ "say-open1-a_t": {
+  "action": "(say t pass_a open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-a_t": {
+  "action": "(say t pass_a readshut1)",
+  "duration": 3.0
+ },
+ "look2-a_t": {
+  "action": "(look t pass_a far2_a)",
+  "duration": 7.0
+ },
+ "say-open2-a_t": {
+  "action": "(say t pass_a open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-a_t": {
+  "action": "(say t pass_a readshut2)",
+  "duration": 3.0
+ },
+ "advance-a_t": {
+  "action": "(passage t pass_a va_t ma_t)",
+  "duration": 32.0
+ },
+ "retire-a_t": {
+  "action": "(passage t pass_a ma_t va_t)",
+  "duration": 35.0
+ },
+ "check-b_t": {
+  "action": "(look t pass_b near_b)",
+  "duration": 4.0
+ },
+ "say-shut-b_t": {
+  "action": "(say t pass_b shut)",
+  "duration": 3.0
+ },
+ "say-sure-b_t": {
+  "action": "(say t pass_b sure)",
+  "duration": 3.0
+ },
+ "look-b_t": {
+  "action": "(look t pass_b far_b)",
+  "duration": 7.0
+ },
+ "say-open-b_t": {
+  "action": "(say t pass_b open)",
+  "duration": 3.0
+ },
+ "say-read-shut-b_t": {
+  "action": "(say t pass_b readshut)",
+  "duration": 3.0
+ },
+ "look1-b_t": {
+  "action": "(look t pass_b far1_b)",
+  "duration": 7.0
+ },
+ "say-open1-b_t": {
+  "action": "(say t pass_b open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-b_t": {
+  "action": "(say t pass_b readshut1)",
+  "duration": 3.0
+ },
+ "look2-b_t": {
+  "action": "(look t pass_b far2_b)",
+  "duration": 7.0
+ },
+ "say-open2-b_t": {
+  "action": "(say t pass_b open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-b_t": {
+  "action": "(say t pass_b readshut2)",
+  "duration": 3.0
+ },
+ "advance-b_t": {
+  "action": "(passage t pass_b vb_t mb_t)",
+  "duration": 32.0
+ },
+ "retire-b_t": {
+  "action": "(passage t pass_b mb_t vb_t)",
+  "duration": 35.0
+ },
+ "check-c_t": {
+  "action": "(look t pass_c near_c)",
+  "duration": 4.0
+ },
+ "say-shut-c_t": {
+  "action": "(say t pass_c shut)",
+  "duration": 3.0
+ },
+ "say-sure-c_t": {
+  "action": "(say t pass_c sure)",
+  "duration": 3.0
+ },
+ "look-c_t": {
+  "action": "(look t pass_c far_c)",
+  "duration": 7.0
+ },
+ "say-open-c_t": {
+  "action": "(say t pass_c open)",
+  "duration": 3.0
+ },
+ "say-read-shut-c_t": {
+  "action": "(say t pass_c readshut)",
+  "duration": 3.0
+ },
+ "look1-c_t": {
+  "action": "(look t pass_c far1_c)",
+  "duration": 7.0
+ },
+ "say-open1-c_t": {
+  "action": "(say t pass_c open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-c_t": {
+  "action": "(say t pass_c readshut1)",
+  "duration": 3.0
+ },
+ "look2-c_t": {
+  "action": "(look t pass_c far2_c)",
+  "duration": 7.0
+ },
+ "say-open2-c_t": {
+  "action": "(say t pass_c open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-c_t": {
+  "action": "(say t pass_c readshut2)",
+  "duration": 3.0
+ },
+ "advance-c_t": {
+  "action": "(passage t pass_c vc_t mc_t)",
+  "duration": 32.0
+ },
+ "retire-c_t": {
+  "action": "(passage t pass_c mc_t vc_t)",
+  "duration": 35.0
+ },
+ "check-d_t": {
+  "action": "(look t pass_d near_d)",
+  "duration": 4.0
+ },
+ "say-shut-d_t": {
+  "action": "(say t pass_d shut)",
+  "duration": 3.0
+ },
+ "say-sure-d_t": {
+  "action": "(say t pass_d sure)",
+  "duration": 3.0
+ },
+ "look-d_t": {
+  "action": "(look t pass_d far_d)",
+  "duration": 7.0
+ },
+ "say-open-d_t": {
+  "action": "(say t pass_d open)",
+  "duration": 3.0
+ },
+ "say-read-shut-d_t": {
+  "action": "(say t pass_d readshut)",
+  "duration": 3.0
+ },
+ "look1-d_t": {
+  "action": "(look t pass_d far1_d)",
+  "duration": 7.0
+ },
+ "say-open1-d_t": {
+  "action": "(say t pass_d open1)",
+  "duration": 3.0
+ },
+ "say-read-shut1-d_t": {
+  "action": "(say t pass_d readshut1)",
+  "duration": 3.0
+ },
+ "look2-d_t": {
+  "action": "(look t pass_d far2_d)",
+  "duration": 7.0
+ },
+ "say-open2-d_t": {
+  "action": "(say t pass_d open2)",
+  "duration": 3.0
+ },
+ "say-read-shut2-d_t": {
+  "action": "(say t pass_d readshut2)",
+  "duration": 3.0
+ },
+ "advance-d_t": {
+  "action": "(passage t pass_d vd_t md_t)",
+  "duration": 32.0
+ },
+ "retire-d_t": {
+  "action": "(passage t pass_d md_t vd_t)",
+  "duration": 35.0
+ }
+}

@@ -1,0 +1,44 @@
+;; A FAULTY SENSOR IN THE FLEET, act 1, an error belonging to a sensor. Written by tools/model.py.
+;; b: a bed-mover, starts in ht for ward 3; s: a scout of the old series, starts in ld, grade 1
+;; 12 worlds: the two doors shut, then what errs; then the rank.
+;;   w0: CD  0
+;;   w1: CD-s  1
+;;   w2: AB  0
+;;   w3: AB-s  1
+;;   w4: AC  0
+;;   w5: AC-s  1
+;;   w6: AD  0
+;;   w7: AD-s  1
+;;   w8: BC  0
+;;   w9: BC-s  1
+;;   w10: BD  0
+;;   w11: BD-s  1
+
+(define (problem act1-sensors)
+  (:domain faulty-sensor)
+  (:requirements :general-frames :multi-pointed-models :modal-goals :negative-preconditions)
+  (:agents b s)
+  (:init
+    :worlds (w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11)
+    :relations (
+      b (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w0 w7) (w0 w8) (w0 w9) (w0 w10) (w0 w11) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w1 w7) (w1 w8) (w1 w9) (w1 w10) (w1 w11) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w2 w7) (w2 w8) (w2 w9) (w2 w10) (w2 w11) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w3 w7) (w3 w8) (w3 w9) (w3 w10) (w3 w11) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w4 w7) (w4 w8) (w4 w9) (w4 w10) (w4 w11) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w5 w7) (w5 w8) (w5 w9) (w5 w10) (w5 w11) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6) (w6 w7) (w6 w8) (w6 w9) (w6 w10) (w6 w11) (w7 w0) (w7 w1) (w7 w2) (w7 w3) (w7 w4) (w7 w5) (w7 w6) (w7 w7) (w7 w8) (w7 w9) (w7 w10) (w7 w11) (w8 w0) (w8 w1) (w8 w2) (w8 w3) (w8 w4) (w8 w5) (w8 w6) (w8 w7) (w8 w8) (w8 w9) (w8 w10) (w8 w11) (w9 w0) (w9 w1) (w9 w2) (w9 w3) (w9 w4) (w9 w5) (w9 w6) (w9 w7) (w9 w8) (w9 w9) (w9 w10) (w9 w11) (w10 w0) (w10 w1) (w10 w2) (w10 w3) (w10 w4) (w10 w5) (w10 w6) (w10 w7) (w10 w8) (w10 w9) (w10 w10) (w10 w11) (w11 w0) (w11 w1) (w11 w2) (w11 w3) (w11 w4) (w11 w5) (w11 w6) (w11 w7) (w11 w8) (w11 w9) (w11 w10) (w11 w11))
+      s (:and (w0 w0) (w0 w1) (w0 w2) (w0 w3) (w0 w4) (w0 w5) (w0 w6) (w0 w7) (w0 w8) (w0 w9) (w0 w10) (w0 w11) (w1 w0) (w1 w1) (w1 w2) (w1 w3) (w1 w4) (w1 w5) (w1 w6) (w1 w7) (w1 w8) (w1 w9) (w1 w10) (w1 w11) (w2 w0) (w2 w1) (w2 w2) (w2 w3) (w2 w4) (w2 w5) (w2 w6) (w2 w7) (w2 w8) (w2 w9) (w2 w10) (w2 w11) (w3 w0) (w3 w1) (w3 w2) (w3 w3) (w3 w4) (w3 w5) (w3 w6) (w3 w7) (w3 w8) (w3 w9) (w3 w10) (w3 w11) (w4 w0) (w4 w1) (w4 w2) (w4 w3) (w4 w4) (w4 w5) (w4 w6) (w4 w7) (w4 w8) (w4 w9) (w4 w10) (w4 w11) (w5 w0) (w5 w1) (w5 w2) (w5 w3) (w5 w4) (w5 w5) (w5 w6) (w5 w7) (w5 w8) (w5 w9) (w5 w10) (w5 w11) (w6 w0) (w6 w1) (w6 w2) (w6 w3) (w6 w4) (w6 w5) (w6 w6) (w6 w7) (w6 w8) (w6 w9) (w6 w10) (w6 w11) (w7 w0) (w7 w1) (w7 w2) (w7 w3) (w7 w4) (w7 w5) (w7 w6) (w7 w7) (w7 w8) (w7 w9) (w7 w10) (w7 w11) (w8 w0) (w8 w1) (w8 w2) (w8 w3) (w8 w4) (w8 w5) (w8 w6) (w8 w7) (w8 w8) (w8 w9) (w8 w10) (w8 w11) (w9 w0) (w9 w1) (w9 w2) (w9 w3) (w9 w4) (w9 w5) (w9 w6) (w9 w7) (w9 w8) (w9 w9) (w9 w10) (w9 w11) (w10 w0) (w10 w1) (w10 w2) (w10 w3) (w10 w4) (w10 w5) (w10 w6) (w10 w7) (w10 w8) (w10 w9) (w10 w10) (w10 w11) (w11 w0) (w11 w1) (w11 w2) (w11 w3) (w11 w4) (w11 w5) (w11 w6) (w11 w7) (w11 w8) (w11 w9) (w11 w10) (w11 w11))
+    )
+    :labels (
+      w0 (:and (open-a) (open-b) (rank0) (mover b) (at-ht b) (scout s) (at-ld s))
+      w1 (:and (open-a) (open-b) (short s) (rank1) (mover b) (at-ht b) (scout s) (at-ld s))
+      w2 (:and (open-c) (open-d) (rank0) (mover b) (at-ht b) (scout s) (at-ld s))
+      w3 (:and (open-c) (open-d) (short s) (rank1) (mover b) (at-ht b) (scout s) (at-ld s))
+      w4 (:and (open-b) (open-d) (rank0) (mover b) (at-ht b) (scout s) (at-ld s))
+      w5 (:and (open-b) (open-d) (short s) (rank1) (mover b) (at-ht b) (scout s) (at-ld s))
+      w6 (:and (open-b) (open-c) (rank0) (mover b) (at-ht b) (scout s) (at-ld s))
+      w7 (:and (open-b) (open-c) (short s) (rank1) (mover b) (at-ht b) (scout s) (at-ld s))
+      w8 (:and (open-a) (open-d) (rank0) (mover b) (at-ht b) (scout s) (at-ld s))
+      w9 (:and (open-a) (open-d) (short s) (rank1) (mover b) (at-ht b) (scout s) (at-ld s))
+      w10 (:and (open-a) (open-c) (rank0) (mover b) (at-ht b) (scout s) (at-ld s))
+      w11 (:and (open-a) (open-c) (short s) (rank1) (mover b) (at-ht b) (scout s) (at-ld s))
+    )
+    :designated (w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11)
+  )
+  (:goal (and (delivered b)))
+)
