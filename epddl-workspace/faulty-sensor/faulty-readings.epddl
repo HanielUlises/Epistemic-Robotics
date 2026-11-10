@@ -1,0 +1,1221 @@
+;; A FAULTY SENSOR IN THE FLEET: an error belongs to a reading. Written by
+;; tools/model.py in faulty_sensor_demo; do not edit by hand.
+;;
+;; A hospital floor at night. Four fire doors, A to D from west to east, close
+;; four passages through a band of linen rooms between the hall and the corridor.
+;; On his round the night porter shut two of them. A scout reads a door from its
+;; passage's mouth, more than five metres off, or from the mark before it. A
+;; short-sighted laser gets no return from a leaf that far away, and reads every
+;; door open from a mouth; at the mark every laser reads right. A bed-mover
+;; cannot turn round in a passage, and drives in only when it is sure enough
+;; that the door is open.
+;;
+;; Every world carries its Spohn rank as a grade atom (rank0 .. rank5). Belief
+;; is a formula over knowledge and the grades: a reading removes worlds, and the
+;; least grade among those left says what is believed, and how firmly.
+;;
+;; Here a world is the porter's round and, for each shut door, which of the first
+;; and the second look at it from its mouth errs; its rank is the number of looks
+;; that err. No reading says anything of another, so two looks at one door by one
+;; scout make a firm belief.
+
+(define (domain faulty-readings)
+
+  (:requirements
+    :equality :partial-observability :ontic-actions :negative-preconditions
+    :modal-preconditions :conditional-effects :universal-preconditions :disjunctive-preconditions
+  )
+
+  (:action-type-libraries intermediate)
+
+  (:predicates
+    (open-a)
+    (open-b)
+    (open-c)
+    (open-d)
+    (err-a-1)
+    (err-a-2)
+    (err-b-1)
+    (err-b-2)
+    (err-c-1)
+    (err-c-2)
+    (err-d-1)
+    (err-d-2)
+    (rank0)
+    (rank1)
+    (rank2)
+    (rank3)
+    (rank4)
+    (rank5)
+    (at-hd ?r - agent)
+    (at-ld ?r - agent)
+    (at-ht ?r - agent)
+    (at-hp ?r - agent)
+    (at-va ?r - agent)
+    (at-vb ?r - agent)
+    (at-sl ?r - agent)
+    (at-st ?r - agent)
+    (at-vc ?r - agent)
+    (at-vd ?r - agent)
+    (at-sp ?r - agent)
+    (at-ma ?r - agent)
+    (at-mb ?r - agent)
+    (at-mc ?r - agent)
+    (at-md ?r - agent)
+    (at-na ?r - agent)
+    (at-nb ?r - agent)
+    (at-nc ?r - agent)
+    (at-nd ?r - agent)
+    (scout ?r - agent)
+    (mover ?r - agent)
+    (delivered ?r - agent)
+  )
+
+  (:event nil)
+
+  ;;--------------------THE HALL------------------
+  ;;
+  ;; Out of a room to the hall, and a hop along it. Every robot sees every drive.
+
+  (:event e-set-out
+    :parameters (?r - agent)
+    :precondition (or (at-hd ?r) (at-ld ?r) (at-ht ?r) (at-hp ?r))
+    :effects (:and (when (at-hd ?r) (:and (at-va ?r) (not (at-hd ?r)))) (when (at-ld ?r) (:and (at-sl ?r) (not (at-ld ?r)))) (when (at-ht ?r) (:and (at-st ?r) (not (at-ht ?r)))) (when (at-hp ?r) (:and (at-sp ?r) (not (at-hp ?r)))))
+  )
+
+  (:action set-out
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-set-out ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-va-vb
+    :parameters (?r - agent)
+    :precondition (at-va ?r)
+    :effects (:and (at-vb ?r) (not (at-va ?r)))
+  )
+
+  (:action hop-va-vb
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-va-vb ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-vb-va
+    :parameters (?r - agent)
+    :precondition (at-vb ?r)
+    :effects (:and (at-va ?r) (not (at-vb ?r)))
+  )
+
+  (:action hop-vb-va
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-vb-va ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-vb-sl
+    :parameters (?r - agent)
+    :precondition (at-vb ?r)
+    :effects (:and (at-sl ?r) (not (at-vb ?r)))
+  )
+
+  (:action hop-vb-sl
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-vb-sl ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-sl-vb
+    :parameters (?r - agent)
+    :precondition (at-sl ?r)
+    :effects (:and (at-vb ?r) (not (at-sl ?r)))
+  )
+
+  (:action hop-sl-vb
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-sl-vb ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-sl-st
+    :parameters (?r - agent)
+    :precondition (at-sl ?r)
+    :effects (:and (at-st ?r) (not (at-sl ?r)))
+  )
+
+  (:action hop-sl-st
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-sl-st ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-st-sl
+    :parameters (?r - agent)
+    :precondition (at-st ?r)
+    :effects (:and (at-sl ?r) (not (at-st ?r)))
+  )
+
+  (:action hop-st-sl
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-st-sl ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-st-vc
+    :parameters (?r - agent)
+    :precondition (at-st ?r)
+    :effects (:and (at-vc ?r) (not (at-st ?r)))
+  )
+
+  (:action hop-st-vc
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-st-vc ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-vc-st
+    :parameters (?r - agent)
+    :precondition (at-vc ?r)
+    :effects (:and (at-st ?r) (not (at-vc ?r)))
+  )
+
+  (:action hop-vc-st
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-vc-st ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-vc-vd
+    :parameters (?r - agent)
+    :precondition (at-vc ?r)
+    :effects (:and (at-vd ?r) (not (at-vc ?r)))
+  )
+
+  (:action hop-vc-vd
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-vc-vd ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-vd-vc
+    :parameters (?r - agent)
+    :precondition (at-vd ?r)
+    :effects (:and (at-vc ?r) (not (at-vd ?r)))
+  )
+
+  (:action hop-vd-vc
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-vd-vc ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-vd-sp
+    :parameters (?r - agent)
+    :precondition (at-vd ?r)
+    :effects (:and (at-sp ?r) (not (at-vd ?r)))
+  )
+
+  (:action hop-vd-sp
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-vd-sp ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-hop-sp-vd
+    :parameters (?r - agent)
+    :precondition (at-sp ?r)
+    :effects (:and (at-vd ?r) (not (at-sp ?r)))
+  )
+
+  (:action hop-sp-vd
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-hop-sp-vd ?r))
+    :observability-conditions (default Fully)
+  )
+
+  ;;--------------------READINGS FROM A MOUTH------------------
+  ;;
+  ;; A scout looks down a passage from its mouth. It reads the door shut only where
+  ;; the door is shut and the reading does not err. The scout sees what it read; the
+  ;; others see that it looked.
+
+  (:event e-look1-a-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-va ?r) (or (open-a) (err-a-1)))
+  )
+
+  (:event e-look1-a-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-va ?r) (not (open-a)) (not (err-a-1)))
+  )
+
+  (:action look1-a
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look1-a-open ?r) (e-look1-a-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-look2-a-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-va ?r) (or (open-a) (err-a-2)))
+  )
+
+  (:event e-look2-a-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-va ?r) (not (open-a)) (not (err-a-2)))
+  )
+
+  (:action look2-a
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look2-a-open ?r) (e-look2-a-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-look1-b-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vb ?r) (or (open-b) (err-b-1)))
+  )
+
+  (:event e-look1-b-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vb ?r) (not (open-b)) (not (err-b-1)))
+  )
+
+  (:action look1-b
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look1-b-open ?r) (e-look1-b-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-look2-b-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vb ?r) (or (open-b) (err-b-2)))
+  )
+
+  (:event e-look2-b-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vb ?r) (not (open-b)) (not (err-b-2)))
+  )
+
+  (:action look2-b
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look2-b-open ?r) (e-look2-b-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-look1-c-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vc ?r) (or (open-c) (err-c-1)))
+  )
+
+  (:event e-look1-c-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vc ?r) (not (open-c)) (not (err-c-1)))
+  )
+
+  (:action look1-c
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look1-c-open ?r) (e-look1-c-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-look2-c-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vc ?r) (or (open-c) (err-c-2)))
+  )
+
+  (:event e-look2-c-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vc ?r) (not (open-c)) (not (err-c-2)))
+  )
+
+  (:action look2-c
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look2-c-open ?r) (e-look2-c-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-look1-d-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vd ?r) (or (open-d) (err-d-1)))
+  )
+
+  (:event e-look1-d-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vd ?r) (not (open-d)) (not (err-d-1)))
+  )
+
+  (:action look1-d
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look1-d-open ?r) (e-look1-d-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-look2-d-open
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vd ?r) (or (open-d) (err-d-2)))
+  )
+
+  (:event e-look2-d-shut
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vd ?r) (not (open-d)) (not (err-d-2)))
+  )
+
+  (:action look2-d
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-look2-d-open ?r) (e-look2-d-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  ;;--------------------READINGS AT THE MARK------------------
+  ;;
+  ;; A scout drives in to the mark before the door, where every laser reads right,
+  ;; and out again. Any robot at a mark reads the door there.
+
+  (:event e-advance-a
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-va ?r))
+    :effects (:and (at-ma ?r) (not (at-va ?r)))
+  )
+
+  (:action advance-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-advance-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-check-a-open
+    :parameters (?r - agent)
+    :precondition (and (at-ma ?r) (open-a))
+  )
+
+  (:event e-check-a-shut
+    :parameters (?r - agent)
+    :precondition (and (at-ma ?r) (not (open-a)))
+  )
+
+  (:action check-a
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-check-a-open ?r) (e-check-a-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-retire-a
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-ma ?r))
+    :effects (:and (at-va ?r) (not (at-ma ?r)))
+  )
+
+  (:action retire-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-retire-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-advance-b
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vb ?r))
+    :effects (:and (at-mb ?r) (not (at-vb ?r)))
+  )
+
+  (:action advance-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-advance-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-check-b-open
+    :parameters (?r - agent)
+    :precondition (and (at-mb ?r) (open-b))
+  )
+
+  (:event e-check-b-shut
+    :parameters (?r - agent)
+    :precondition (and (at-mb ?r) (not (open-b)))
+  )
+
+  (:action check-b
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-check-b-open ?r) (e-check-b-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-retire-b
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-mb ?r))
+    :effects (:and (at-vb ?r) (not (at-mb ?r)))
+  )
+
+  (:action retire-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-retire-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-advance-c
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vc ?r))
+    :effects (:and (at-mc ?r) (not (at-vc ?r)))
+  )
+
+  (:action advance-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-advance-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-check-c-open
+    :parameters (?r - agent)
+    :precondition (and (at-mc ?r) (open-c))
+  )
+
+  (:event e-check-c-shut
+    :parameters (?r - agent)
+    :precondition (and (at-mc ?r) (not (open-c)))
+  )
+
+  (:action check-c
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-check-c-open ?r) (e-check-c-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-retire-c
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-mc ?r))
+    :effects (:and (at-vc ?r) (not (at-mc ?r)))
+  )
+
+  (:action retire-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-retire-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-advance-d
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-vd ?r))
+    :effects (:and (at-md ?r) (not (at-vd ?r)))
+  )
+
+  (:action advance-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-advance-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-check-d-open
+    :parameters (?r - agent)
+    :precondition (and (at-md ?r) (open-d))
+  )
+
+  (:event e-check-d-shut
+    :parameters (?r - agent)
+    :precondition (and (at-md ?r) (not (open-d)))
+  )
+
+  (:action check-d
+    :parameters (?r - agent)
+    :action-type (semi-private-sensing (e-check-d-open ?r) (e-check-d-shut ?r))
+    :observability-conditions (:and (?r Fully) (default Partially))
+  )
+
+  (:event e-retire-d
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (at-md ?r))
+    :effects (:and (at-vd ?r) (not (at-md ?r)))
+  )
+
+  (:action retire-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-retire-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+  ;;--------------------WHAT IS SAID------------------
+  ;;
+  ;; A robot says what it read, and every robot hears it: a door read open from a
+  ;; mouth (which is the door open, or the reading in error), a door read shut from
+  ;; a mouth (the door shut and the reading sound, which is more than the door shut:
+  ;; said of a door already known shut, it is news of the laser), a door known shut,
+  ;; a door known open.
+
+  (:event e-say-open1-a
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-a) (err-a-1)) ([?r] (or (open-a) (err-a-1))))
+  )
+
+  (:event e-say-open1-a-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-a) (err-a-1)) ([?r] (or (open-a) (err-a-1)))))
+  )
+
+  (:action say-open1-a
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open1-a ?r) (e-say-open1-a-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut1-a
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-a)) (not (err-a-1))) ([?r] (and (not (open-a)) (not (err-a-1)))))
+  )
+
+  (:event e-say-read-shut1-a-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-a)) (not (err-a-1))) ([?r] (and (not (open-a)) (not (err-a-1))))))
+  )
+
+  (:action say-read-shut1-a
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut1-a ?r) (e-say-read-shut1-a-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-open2-a
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-a) (err-a-2)) ([?r] (or (open-a) (err-a-2))))
+  )
+
+  (:event e-say-open2-a-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-a) (err-a-2)) ([?r] (or (open-a) (err-a-2)))))
+  )
+
+  (:action say-open2-a
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open2-a ?r) (e-say-open2-a-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut2-a
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-a)) (not (err-a-2))) ([?r] (and (not (open-a)) (not (err-a-2)))))
+  )
+
+  (:event e-say-read-shut2-a-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-a)) (not (err-a-2))) ([?r] (and (not (open-a)) (not (err-a-2))))))
+  )
+
+  (:action say-read-shut2-a
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut2-a ?r) (e-say-read-shut2-a-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-shut-a
+    :parameters (?r - agent)
+    :precondition (and (not (open-a)) ([?r] (not (open-a))))
+  )
+
+  (:event e-say-shut-a-else
+    :parameters (?r - agent)
+    :precondition (not (and (not (open-a)) ([?r] (not (open-a)))))
+  )
+
+  (:action say-shut-a
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-shut-a ?r) (e-say-shut-a-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-sure-a
+    :parameters (?r - agent)
+    :precondition (and (open-a) ([?r] (open-a)))
+  )
+
+  (:event e-say-sure-a-else
+    :parameters (?r - agent)
+    :precondition (not (and (open-a) ([?r] (open-a))))
+  )
+
+  (:action say-sure-a
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-sure-a ?r) (e-say-sure-a-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-open1-b
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-b) (err-b-1)) ([?r] (or (open-b) (err-b-1))))
+  )
+
+  (:event e-say-open1-b-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-b) (err-b-1)) ([?r] (or (open-b) (err-b-1)))))
+  )
+
+  (:action say-open1-b
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open1-b ?r) (e-say-open1-b-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut1-b
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-b)) (not (err-b-1))) ([?r] (and (not (open-b)) (not (err-b-1)))))
+  )
+
+  (:event e-say-read-shut1-b-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-b)) (not (err-b-1))) ([?r] (and (not (open-b)) (not (err-b-1))))))
+  )
+
+  (:action say-read-shut1-b
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut1-b ?r) (e-say-read-shut1-b-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-open2-b
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-b) (err-b-2)) ([?r] (or (open-b) (err-b-2))))
+  )
+
+  (:event e-say-open2-b-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-b) (err-b-2)) ([?r] (or (open-b) (err-b-2)))))
+  )
+
+  (:action say-open2-b
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open2-b ?r) (e-say-open2-b-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut2-b
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-b)) (not (err-b-2))) ([?r] (and (not (open-b)) (not (err-b-2)))))
+  )
+
+  (:event e-say-read-shut2-b-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-b)) (not (err-b-2))) ([?r] (and (not (open-b)) (not (err-b-2))))))
+  )
+
+  (:action say-read-shut2-b
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut2-b ?r) (e-say-read-shut2-b-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-shut-b
+    :parameters (?r - agent)
+    :precondition (and (not (open-b)) ([?r] (not (open-b))))
+  )
+
+  (:event e-say-shut-b-else
+    :parameters (?r - agent)
+    :precondition (not (and (not (open-b)) ([?r] (not (open-b)))))
+  )
+
+  (:action say-shut-b
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-shut-b ?r) (e-say-shut-b-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-sure-b
+    :parameters (?r - agent)
+    :precondition (and (open-b) ([?r] (open-b)))
+  )
+
+  (:event e-say-sure-b-else
+    :parameters (?r - agent)
+    :precondition (not (and (open-b) ([?r] (open-b))))
+  )
+
+  (:action say-sure-b
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-sure-b ?r) (e-say-sure-b-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-open1-c
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-c) (err-c-1)) ([?r] (or (open-c) (err-c-1))))
+  )
+
+  (:event e-say-open1-c-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-c) (err-c-1)) ([?r] (or (open-c) (err-c-1)))))
+  )
+
+  (:action say-open1-c
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open1-c ?r) (e-say-open1-c-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut1-c
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-c)) (not (err-c-1))) ([?r] (and (not (open-c)) (not (err-c-1)))))
+  )
+
+  (:event e-say-read-shut1-c-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-c)) (not (err-c-1))) ([?r] (and (not (open-c)) (not (err-c-1))))))
+  )
+
+  (:action say-read-shut1-c
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut1-c ?r) (e-say-read-shut1-c-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-open2-c
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-c) (err-c-2)) ([?r] (or (open-c) (err-c-2))))
+  )
+
+  (:event e-say-open2-c-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-c) (err-c-2)) ([?r] (or (open-c) (err-c-2)))))
+  )
+
+  (:action say-open2-c
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open2-c ?r) (e-say-open2-c-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut2-c
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-c)) (not (err-c-2))) ([?r] (and (not (open-c)) (not (err-c-2)))))
+  )
+
+  (:event e-say-read-shut2-c-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-c)) (not (err-c-2))) ([?r] (and (not (open-c)) (not (err-c-2))))))
+  )
+
+  (:action say-read-shut2-c
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut2-c ?r) (e-say-read-shut2-c-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-shut-c
+    :parameters (?r - agent)
+    :precondition (and (not (open-c)) ([?r] (not (open-c))))
+  )
+
+  (:event e-say-shut-c-else
+    :parameters (?r - agent)
+    :precondition (not (and (not (open-c)) ([?r] (not (open-c)))))
+  )
+
+  (:action say-shut-c
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-shut-c ?r) (e-say-shut-c-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-sure-c
+    :parameters (?r - agent)
+    :precondition (and (open-c) ([?r] (open-c)))
+  )
+
+  (:event e-say-sure-c-else
+    :parameters (?r - agent)
+    :precondition (not (and (open-c) ([?r] (open-c))))
+  )
+
+  (:action say-sure-c
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-sure-c ?r) (e-say-sure-c-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-open1-d
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-d) (err-d-1)) ([?r] (or (open-d) (err-d-1))))
+  )
+
+  (:event e-say-open1-d-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-d) (err-d-1)) ([?r] (or (open-d) (err-d-1)))))
+  )
+
+  (:action say-open1-d
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open1-d ?r) (e-say-open1-d-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut1-d
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-d)) (not (err-d-1))) ([?r] (and (not (open-d)) (not (err-d-1)))))
+  )
+
+  (:event e-say-read-shut1-d-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-d)) (not (err-d-1))) ([?r] (and (not (open-d)) (not (err-d-1))))))
+  )
+
+  (:action say-read-shut1-d
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut1-d ?r) (e-say-read-shut1-d-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-open2-d
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (or (open-d) (err-d-2)) ([?r] (or (open-d) (err-d-2))))
+  )
+
+  (:event e-say-open2-d-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (or (open-d) (err-d-2)) ([?r] (or (open-d) (err-d-2)))))
+  )
+
+  (:action say-open2-d
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-open2-d ?r) (e-say-open2-d-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-read-shut2-d
+    :parameters (?r - agent)
+    :precondition (and (scout ?r) (and (not (open-d)) (not (err-d-2))) ([?r] (and (not (open-d)) (not (err-d-2)))))
+  )
+
+  (:event e-say-read-shut2-d-else
+    :parameters (?r - agent)
+    :precondition (not (and (scout ?r) (and (not (open-d)) (not (err-d-2))) ([?r] (and (not (open-d)) (not (err-d-2))))))
+  )
+
+  (:action say-read-shut2-d
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-read-shut2-d ?r) (e-say-read-shut2-d-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-shut-d
+    :parameters (?r - agent)
+    :precondition (and (not (open-d)) ([?r] (not (open-d))))
+  )
+
+  (:event e-say-shut-d-else
+    :parameters (?r - agent)
+    :precondition (not (and (not (open-d)) ([?r] (not (open-d)))))
+  )
+
+  (:action say-shut-d
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-shut-d ?r) (e-say-shut-d-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-say-sure-d
+    :parameters (?r - agent)
+    :precondition (and (open-d) ([?r] (open-d)))
+  )
+
+  (:event e-say-sure-d-else
+    :parameters (?r - agent)
+    :precondition (not (and (open-d) ([?r] (open-d))))
+  )
+
+  (:action say-sure-d
+    :parameters (?r - agent)
+    :action-type (public-announcement (e-say-sure-d ?r) (e-say-sure-d-else ?r))
+    :observability-conditions (default Fully)
+  )
+
+  ;;--------------------THE BED-MOVERS------------------
+  ;;
+  ;; A bed-mover drives into a passage only when it is sure enough that the door is
+  ;; open: believing it, believing it firmly (to degree 2), or knowing it. It cannot
+  ;; turn round inside: it crosses a door it knows open, or backs out.
+
+  (:event e-enter-believing-a
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-va ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (rank0) (open-a)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (rank1) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (rank2) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (rank3) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (rank4) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-a))))))
+    :effects (:and (at-ma ?r) (not (at-va ?r)))
+  )
+
+  (:action enter-believing-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-believing-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-firmly-a
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-va ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (or (rank0) (rank1)) (open-a)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (or (rank1) (rank2)) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (or (rank2) (rank3)) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (or (rank3) (rank4)) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (or (rank4) (rank5)) (open-a)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-a))))))
+    :effects (:and (at-ma ?r) (not (at-va ?r)))
+  )
+
+  (:action enter-firmly-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-firmly-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-knowing-a
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-va ?r) ([?r] (open-a)))
+    :effects (:and (at-ma ?r) (not (at-va ?r)))
+  )
+
+  (:action enter-knowing-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-knowing-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-a
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-ma ?r) (open-a) ([?r] (open-a)))
+    :effects (:and (at-na ?r) (not (at-ma ?r)))
+  )
+
+  (:action cross-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-cross-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-reverse-a
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-ma ?r))
+    :effects (:and (at-va ?r) (not (at-ma ?r)))
+  )
+
+  (:action reverse-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-reverse-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-deliver-a
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-na ?r) (not (delivered ?r)))
+    :effects (:and (delivered ?r) (not (at-na ?r)))
+  )
+
+  (:action deliver-a
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-deliver-a ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-believing-b
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vb ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (rank0) (open-b)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (rank1) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (rank2) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (rank3) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (rank4) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-b))))))
+    :effects (:and (at-mb ?r) (not (at-vb ?r)))
+  )
+
+  (:action enter-believing-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-believing-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-firmly-b
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vb ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (or (rank0) (rank1)) (open-b)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (or (rank1) (rank2)) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (or (rank2) (rank3)) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (or (rank3) (rank4)) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (or (rank4) (rank5)) (open-b)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-b))))))
+    :effects (:and (at-mb ?r) (not (at-vb ?r)))
+  )
+
+  (:action enter-firmly-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-firmly-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-knowing-b
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vb ?r) ([?r] (open-b)))
+    :effects (:and (at-mb ?r) (not (at-vb ?r)))
+  )
+
+  (:action enter-knowing-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-knowing-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-b
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-mb ?r) (open-b) ([?r] (open-b)))
+    :effects (:and (at-nb ?r) (not (at-mb ?r)))
+  )
+
+  (:action cross-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-cross-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-reverse-b
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-mb ?r))
+    :effects (:and (at-vb ?r) (not (at-mb ?r)))
+  )
+
+  (:action reverse-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-reverse-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-deliver-b
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-nb ?r) (not (delivered ?r)))
+    :effects (:and (delivered ?r) (not (at-nb ?r)))
+  )
+
+  (:action deliver-b
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-deliver-b ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-believing-c
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vc ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (rank0) (open-c)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (rank1) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (rank2) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (rank3) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (rank4) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-c))))))
+    :effects (:and (at-mc ?r) (not (at-vc ?r)))
+  )
+
+  (:action enter-believing-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-believing-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-firmly-c
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vc ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (or (rank0) (rank1)) (open-c)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (or (rank1) (rank2)) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (or (rank2) (rank3)) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (or (rank3) (rank4)) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (or (rank4) (rank5)) (open-c)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-c))))))
+    :effects (:and (at-mc ?r) (not (at-vc ?r)))
+  )
+
+  (:action enter-firmly-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-firmly-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-knowing-c
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vc ?r) ([?r] (open-c)))
+    :effects (:and (at-mc ?r) (not (at-vc ?r)))
+  )
+
+  (:action enter-knowing-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-knowing-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-c
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-mc ?r) (open-c) ([?r] (open-c)))
+    :effects (:and (at-nc ?r) (not (at-mc ?r)))
+  )
+
+  (:action cross-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-cross-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-reverse-c
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-mc ?r))
+    :effects (:and (at-vc ?r) (not (at-mc ?r)))
+  )
+
+  (:action reverse-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-reverse-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-deliver-c
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-nc ?r) (not (delivered ?r)))
+    :effects (:and (delivered ?r) (not (at-nc ?r)))
+  )
+
+  (:action deliver-c
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-deliver-c ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-believing-d
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vd ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (rank0) (open-d)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (rank1) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (rank2) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (rank3) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (rank4) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-d))))))
+    :effects (:and (at-md ?r) (not (at-vd ?r)))
+  )
+
+  (:action enter-believing-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-believing-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-firmly-d
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vd ?r) (or (and (not ([?r] (not (rank0)))) ([?r] (imply (or (rank0) (rank1)) (open-d)))) (and ([?r] (and (not (rank0)))) (not ([?r] (not (rank1)))) ([?r] (imply (or (rank1) (rank2)) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)))) (not ([?r] (not (rank2)))) ([?r] (imply (or (rank2) (rank3)) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)))) (not ([?r] (not (rank3)))) ([?r] (imply (or (rank3) (rank4)) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)))) (not ([?r] (not (rank4)))) ([?r] (imply (or (rank4) (rank5)) (open-d)))) (and ([?r] (and (not (rank0)) (not (rank1)) (not (rank2)) (not (rank3)) (not (rank4)))) (not ([?r] (not (rank5)))) ([?r] (imply (rank5) (open-d))))))
+    :effects (:and (at-md ?r) (not (at-vd ?r)))
+  )
+
+  (:action enter-firmly-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-firmly-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-enter-knowing-d
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-vd ?r) ([?r] (open-d)))
+    :effects (:and (at-md ?r) (not (at-vd ?r)))
+  )
+
+  (:action enter-knowing-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-enter-knowing-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-cross-d
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-md ?r) (open-d) ([?r] (open-d)))
+    :effects (:and (at-nd ?r) (not (at-md ?r)))
+  )
+
+  (:action cross-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-cross-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-reverse-d
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-md ?r))
+    :effects (:and (at-vd ?r) (not (at-md ?r)))
+  )
+
+  (:action reverse-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-reverse-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+  (:event e-deliver-d
+    :parameters (?r - agent)
+    :precondition (and (mover ?r) (at-nd ?r) (not (delivered ?r)))
+    :effects (:and (delivered ?r) (not (at-nd ?r)))
+  )
+
+  (:action deliver-d
+    :parameters (?r - agent)
+    :action-type (public-ontic (e-deliver-d ?r))
+    :observability-conditions (default Fully)
+  )
+
+)

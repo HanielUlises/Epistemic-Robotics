@@ -1,0 +1,43 @@
+--- a/plansys2_executor/include/plansys2_executor/ActionExecutor.hpp
++++ b/plansys2_executor/include/plansys2_executor/ActionExecutor.hpp
+@@ -293,6 +293,11 @@
+   rclcpp::Subscription<plansys2_msgs::msg::ActionExecution>::SharedPtr action_hub_sub_;
+ 
+   rclcpp::TimerBase::SharedPtr waiting_timer_;
++  // When the behavior tree last ticked this executor. A node ticked once and
++  // then left (its branch abandoned, its group done) would otherwise keep
++  // requesting performers every second for the rest of the mission, and a
++  // performer that answers it is held from the action that is actually due.
++  rclcpp::Time last_tick_;
+ };
+ 
+ /**
+--- a/plansys2_executor/src/plansys2_executor/ActionExecutor.cpp
++++ b/plansys2_executor/src/plansys2_executor/ActionExecutor.cpp
+@@ -209,6 +209,7 @@
+ ActionExecutor::tick(const rclcpp::Time & now)
+ {
+   (void)now;
++  last_tick_ = node_->now();
+   switch (state_) {
+     case IDLE:
+       state_ = DEALING;
+@@ -320,6 +321,18 @@
+ void
+ ActionExecutor::wait_timeout()
+ {
++  // Only an executor that is still dealing, and still being ticked, asks again.
++  if (state_ != DEALING || (node_->now() - last_tick_).seconds() > 3.0) {
++    if (waiting_timer_) {
++      waiting_timer_->cancel();
++    }
++    if (state_ == DEALING) {
++      state_ = IDLE;
++      RCLCPP_WARN(
++        node_->get_logger(), "%s is no longer ticked; it stops asking for performers", action_.c_str());
++    }
++    return;
++  }
+   RCLCPP_WARN(node_->get_logger(), "No action performer for %s. retrying", action_.c_str());
+   request_for_performers();
+ }

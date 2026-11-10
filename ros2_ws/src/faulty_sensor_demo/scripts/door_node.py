@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+# Copyright 2026 Haniel Ulises
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""
+Reads the fire doors with one robot's own laser.
+
+    door_node.py --robot s [--short]
+
+While the robot stands within NEAR of its place at a passage's mouth, or of
+the mark before a door, each scan's returns are put in the world frame by the
+robot's odometry and the door decided by grid.decide, the rule
+tools/check_views.py checks on every round of the porter. A decision is
+published on /<robot>/door as "<door>:<far|near>:<open|shut>"; a scan that
+decides nothing publishes nothing, and so does a robot anywhere else.
+
+With --short the laser is short-sighted: it gets no return from beyond
+layout.FAR, as a laser with a dirty window does not. The rule counts a ray
+that returns nothing as a ray that passed, so from a mouth, more than five
+metres from the leaf, such a laser reads every door open; from the mark,
+1.2 m from it, it reads right.
+"""
+
+import argparse
+import math
+import os
+import sys
+
+import rclpy
+from nav_msgs.msg import Odometry
+from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
+from sensor_msgs.msg import LaserScan
+from std_msgs.msg import String
+
+from ament_index_python.packages import get_package_share_directory
+
+sys.path.insert(0, os.path.join(get_package_share_directory('faulty_sensor_demo'), 'tools'))
+import grid as G  # noqa: E402
+import layout as L  # noqa: E402
+
+NEAR = 0.5
+LASER_X = -0.032          # the Burger's laser sits this far behind its base
+
+
+class Doors(Node):
+
+    def __init__(self, robot, short):
+        super().__init__(f'doors_{robot}', parameter_overrides=[
+            rclpy.parameter.Parameter('use_sim_time', value=True)])
+        self.robot, self.short = robot, short
+        self.pose = None
+        self.speed = 0.0
+        self.pub = self.create_publisher(String, f'/{robot}/door', 10)
+        self.create_subscription(Odometry, f'/{robot}/odom', self.on_odom, 10)
+        self.create_subscription(LaserScan, f'/{robot}/scan', self.on_scan, qos_profile_sensor_data)
+        self.stands = [(d, view, G.stand(robot, d, view)) for d in L.DOORS for view in ('far', 'near')]
+        if short:
+            self.get_logger().info(f'{robot}: this laser is short-sighted, nothing returns from beyond {L.FAR} m')
+
+    def on_odom(self, m):
+        q = m.pose.pose.orientation
+        self.pose = (m.pose.pose.position.x, m.pose.pose.position.y,
+                     math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)))
+        self.speed = math.hypot(m.twist.twist.linear.x, m.twist.twist.angular.z)
+
+    def on_scan(self, m):
+        if self.pose is None or self.speed > 0.05:
+            return
+        x, y, yaw = self.pose
+        near = [(d, view) for d, view, p in self.stands if math.dist((x, y), p) <= NEAR]
+        if not near:
+            return
+        lx, ly = x + LASER_X * math.cos(yaw), y + LASER_X * math.sin(yaw)
+        far = min(m.range_max, L.FAR) if self.short else m.range_max
+        pts = []
+        for i, r in enumerate(m.ranges):
+            if not math.isfinite(r) or r < m.range_min or r > far:
+                continue
+            a = yaw + m.angle_min + i * m.angle_increment
+            pts.append((lx + r * math.cos(a), ly + r * math.sin(a)))
+        for d, view in near:
+            v = G.decide(d, pts)
+            if v:
+                self.pub.publish(String(data=f'{d}:{view}:{v}'))
+
+
+def main():
+    argv = rclpy.utilities.remove_ros_args(sys.argv)[1:]
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--robot', required=True)
+    ap.add_argument('--short', action='store_true')
+    a = ap.parse_args(argv)
+    rclpy.init()
+    node = Doors(a.robot, a.short)
+    try:
+        rclpy.spin(node)
+    except (KeyboardInterrupt, rclpy.executors.ExternalShutdownException):
+        pass
+
+
+if __name__ == '__main__':
+    main()
