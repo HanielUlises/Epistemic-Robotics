@@ -193,7 +193,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -690,8 +690,7 @@ sup.cite a:hover{text-decoration:underline}
 <span class="k">Successfully finished</span></pre>
 
     <p>
-      The two rooms answer differently, which is the point: the branch is
-      exercised and not merely implied. Nothing in the stack decided those answers
+      The two rooms answer differently, so the branch is exercised and not only implied. Nothing in the stack decided those answers
       both came from the occupancy grid the robot built with its own
       laser.
     </p>
@@ -717,13 +716,13 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The domain</p>
-    <h3>Four propositions, and two means of resolving them</h3>
+    <h3>The propositions and how they are resolved</h3>
 
     <p>
       Rooms 3 and 6 lie east of the cross corridor; the robot starts in room 1
       at the west end. Whether either east room is obstructed is not stated in
       the initial condition, so the model designates <strong>four worlds</strong>
-      and not one. A building nobody has surveyed is genuinely undetermined,
+      and not one. A building nobody has surveyed is undetermined,
       and that is what makes the solution branch.
     </p>
 
@@ -755,7 +754,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The policy</p>
-    <h3>Four leaves, six branches, depth four</h3>
+    <h3>The policy</h3>
 
     <p>
       Aletheia picks its heuristic and strategy from the task's own features,
@@ -785,11 +784,11 @@ goto-door3_r1
 <section>
   <div class="container">
     <p class="sec-label">The semantics</p>
-    <h3>Four worlds, two independent questions, four leaves</h3>
+    <h3>The model</h3>
 
     <p>
       That the model designates four worlds and that the policy has four leaves
-      are the same fact, and it is worth writing it out. Abbreviate the two
+      are the same fact, written out below. Abbreviate the two
       undetermined propositions as \(B_3\) for
       <span class="mono-inline">blocked-r3</span> and \(B_6\) for
       <span class="mono-inline">blocked-r6</span>. An epistemic state is a
@@ -1009,8 +1008,7 @@ goto-door3_r1
 
     <p>
       The grid is built by <span class="mono-inline">slam_toolbox</span> from
-      the robot's own laser while it drives, and this is what makes the
-      demonstration honest: a room the robot has not
+      the robot's own laser while it drives, so that a room the robot has not
       entered is unobserved in the grid and undetermined in the Kripke model at
       the same time. Those are two views of one fact. No prepared map is
       published anywhere in the system.
@@ -1022,7 +1020,7 @@ goto-door3_r1
 <section>
   <div class="container">
     <p class="sec-label">What building it found</p>
-    <h3>Five defects, and a modelling question</h3>
+    <h3>Implementation defects and a modelling question</h3>
 
     <p>
       Getting this to run end to end turned up five faults in the stack, each of
@@ -1205,7 +1203,7 @@ goto-door3_r1
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

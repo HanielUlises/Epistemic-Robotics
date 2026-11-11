@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/gossip_coverage.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The film as a robot that has found a task calls a teammate at its particle: the plan view with every robot, its particle and who knows of the task, and Gazebo.">
+<meta property="og:image:alt" content="Link card: Gossip out of contact, over the Gazebo view of two robots at a task.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/gossip_coverage.jpg">
 <meta name="twitter:title" content="Gossip out of contact">
 <meta name="twitter:description" content="Bramblett and Bezzo's coverage and task allocation out of radio contact, recreated: their simulation study in a kinematic simulator, the decision at a task found as an EPDDL planning task that Aletheia plans and ePlanSys executes, and their laboratory experiments in Gazebo, with a formal analysis of the model.">
@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -477,7 +477,7 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
-  <meta name="twitter:image:alt" content="The film as a robot that has found a task calls a teammate at its particle: the plan view with every robot, its particle and who knows of the task, and Gazebo.">
+  <meta name="twitter:image:alt" content="Link card: Gossip out of contact, over the Gazebo view of two robots at a task.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/gossip_coverage.html">
 
 <style>
@@ -1124,7 +1124,7 @@ table.gc-text th,table.gc-text td{text-align:left}
 <section id="gc-study-sec">
   <div class="container">
     <p class="sec-label">The simulation study</p>
-    <h3>Fifteen areas, four team sizes, three cases</h3>
+    <h3>The simulation study</h3>
     <p>
       The kinematic simulator runs the paper's setting: fifteen areas with 10 to
       20 unknown obstacles of 1&#8202;m, the same for every team, case and
@@ -1181,7 +1181,7 @@ table.gc-text th,table.gc-text td{text-align:left}
 <section id="gc-gazebo-sec">
   <div class="container">
     <p class="sec-label">The laboratory experiments</p>
-    <h3>Three Burgers, ePlanSys in the loop</h3>
+    <h3>The laboratory experiments in Gazebo</h3>
     <p>
       The arena is the paper's laboratory at twice its size: 8 by 11&#8202;m, with
       five crates of 0.5&#8202;m that the robots do not know of, standing a metre or
@@ -1248,7 +1248,7 @@ table.gc-text th,table.gc-text td{text-align:left}
 <section id="gc-defects-sec">
   <div class="container">
     <p class="sec-label">Implementation defects</p>
-    <h3>Defects found on the way</h3>
+    <h3>Implementation defects</h3>
     <ul>
       <li><b>Arrivals out of order.</b> In an executor vocabulary in which an arrival read and wrote only its own robot, ePlanSys's scheduler moved the arrival that does the task above the others, which nothing said it depended on, and its group waited forever. With the task reading every count below its need, the arrivals before it could still change places: in one Gazebo run the second arrival was dispatched before the first, and ePlanSys's epistemic state refused it, since its event requires the count the first sets. Each arrival now reads the count of the one before it.</li>
       <li><b>A robot on its way home taken for busy.</b> A robot heads home when it has nothing left to do: in Case I once it knows of the task, and in either case once the area has been covered. A robot that had turned for home was not counted as free, so a call that reached it came back absent, an outcome the finder's instance did not allow. A robot heading home, or at home, is free.</li>
@@ -1432,7 +1432,7 @@ python3 tools/analyse.py gazebo BATCH                <span class="c"># runs.csv 
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

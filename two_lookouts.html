@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/two_lookouts.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The film at the screen, held: Gazebo with the robot before the screen at lookout 1, RViz with the map, and the panel with the observation and what the robot knows.">
+<meta property="og:image:alt" content="Link card: Where to look from, over the Gazebo view of the screen before a lookout.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/two_lookouts.jpg">
 <meta name="twitter:title" content="Where to look from">
 <meta name="twitter:description" content="A robot must know whether a zone is blocked, from either of two lookouts, with a screen in front of at most one. The policy checks the view, and goes to the second lookout only when a screen forces it: backed by the map in 30 of 30 runs, where committing to one lookout reports success unseen behind a screen.">
@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -477,7 +477,7 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
-  <meta name="twitter:image:alt" content="The film at the screen, held: Gazebo with the robot before the screen at lookout 1, RViz with the map, and the panel with the observation and what the robot knows.">
+  <meta name="twitter:image:alt" content="Link card: Where to look from, over the Gazebo view of the screen before a lookout.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/two_lookouts.html">
 
 <style>
@@ -716,7 +716,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       in front of lookout 1, in front of lookout 2, or in front of neither, but
       never in front of both. The robot does not know which. A look through a
       screen tells it nothing about the zone, and a look that ends without
-      deciding is not noise to be averaged away: it is a fact about the world
+      deciding is a fact about the world
       that the robot can observe, by checking the view.
     </p>
     <p class="hero-p">
@@ -755,7 +755,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section>
   <div class="container">
     <p class="sec-label">The runs</p>
-    <h3>One screen, three ways of looking</h3>
+    <h3>Recorded runs</h3>
 
     <figure class="demo-figure">
       <video controls preload="metadata" playsinline width="100%"
@@ -816,7 +816,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <div class="pt-findings">
   <div class="pt-findings-inner">
     <p class="sec-label">What the runs show</p>
-    <h3 class="pt-findings-title">Three findings about choosing where to look</h3>
+    <h3 class="pt-findings-title">Principal findings</h3>
     <div class="pt-cards">
       <a class="pt-card" href="#tl-domain-sec">
         <span class="pt-card-img"><img src="media/thumbs/two_lookouts_card_screen.jpg" alt="Gazebo at lookout 1: the robot before the screen that hides the zone from it" loading="lazy"></span>
@@ -856,7 +856,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="tl-hall-sec">
   <div class="container">
     <p class="sec-label">The hall</p>
-    <h3>A zone, two lookouts, and two places a screen may stand</h3>
+    <h3>Environment</h3>
     <p>
       The hall is 7 by 6&#8202;m. The zone is a 0.8&#8202;m square at the origin,
       closed to the south and east by two back walls; a laser certifies a cell
@@ -927,7 +927,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="tl-model-sec">
   <div class="container">
     <p class="sec-label">The model</p>
-    <h3>Six worlds, and what each observation leaves</h3>
+    <h3>The model</h3>
     <p>
       The initial model has six worlds, all designated: the zone blocked or
       clear, by a screen at lookout 1, at lookout 2 or at neither. The seeds run
@@ -960,7 +960,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="tl-policy-sec">
   <div class="container">
     <p class="sec-label">The policy</p>
-    <h3>Five nodes, and no sequence that does as well</h3>
+    <h3>The policy and the absence of a conformant plan</h3>
 <pre class="code">goto-m1(r1)
 vista-1(r1)
   e-vista1-tapada     &#8594; goto-m2(r1)
@@ -1001,7 +1001,7 @@ vista-1(r1)
 <section id="tl-batch-sec">
   <div class="container">
     <p class="sec-label">Thirty seeds</p>
-    <h3>Backed in every run, and the second lookout only when forced</h3>
+    <h3>Evaluation</h3>
     <p>
       Thirty seeds per formulation, the same seed giving the same world, start
       pose and laser noise to all three, so the comparison is paired. Laser
@@ -1081,7 +1081,7 @@ vista-1(r1)
 <section>
   <div class="container">
     <p class="sec-label">Limits</p>
-    <h3>What this does not show</h3>
+    <h3>Limitations</h3>
     <ul style="margin:0 0 0 1.2rem">
       <li>A stronger classical agent. A classical planner inside a loop that
       monitors execution and replans when a look does not decide would also
@@ -1248,7 +1248,7 @@ ESCENARIO=miradores ./run.sh 1 30 0.01 6                        <span class="c">
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

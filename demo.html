@@ -193,7 +193,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -641,7 +641,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The run</p>
-    <h3>Nine queries, in order</h3>
+    <h3>The nine queries</h3>
 
     <p>
       Gazebo on the left, RViz on the right. The map RViz draws is the one the
@@ -689,7 +689,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">What the planner said</p>
-    <h3>The same query, three answers</h3>
+    <h3>Three answers to the same query</h3>
 
     <p>
       Every query in the run is logged with the sets the fixed point was taken
@@ -784,9 +784,9 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
 
     <p>
       Nothing is unreachable in the building; the set the iteration would have
-      grown from does not exist yet. This is the whole content of
+      grown from does not exist yet. This is the content of
       <span class="mono-inline">goal=0 &#8230; path=0</span> in a building whose
-      corridors are open, and it is why the honest answer to the first query is
+      corridors are open, and it is why the answer to the first query is
       that no route is <em>known</em> to exist. Treating unobserved cells as
       free would replace \(\mathit{Free}\) with \(C \setminus
       \mathit{Occupied}\) and return a route across floor nobody has measured.
@@ -865,7 +865,7 @@ zone='target' epistemic=1:  goal=356  known=<span class="k">356</span>  disputed
   </g>
 
   <line x1="30" y1="266" x2="968" y2="266" stroke="#D6D6D6"/>
-  <text x="30" y="286" font-size="11" fill="#5A5A5A">The first two differ in what the robot has measured; the third differs in how many worlds it still holds possible. Only the third is answered by looking rather than by driving.</text>
+  <text x="30" y="286" font-size="11" fill="#5A5A5A">The first two differ in what the robot has measured; the third differs in how many worlds it still holds possible. Only the third is answered by looking and not by driving.</text>
 </svg>
       </div>
       <div class="fig-cap">
@@ -1064,7 +1064,7 @@ REHEARSE=1 ./demo/run_demo.sh   <span class="c"># the same, without recording</s
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

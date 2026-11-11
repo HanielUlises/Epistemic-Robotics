@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -761,8 +761,7 @@ sup.cite a:hover{text-decoration:underline}
       <span class="mono-inline">Timeout at depth 7</span>, and under a
       nine-hundred-second budget it reports
       <span class="mono-inline">Timeout at depth 8</span> after 901&#8202;s and
-      returns nothing. Both are the budget running out rather than the space
-      being refuted, so no claim is made here that four sites is unsolvable.
+      returns nothing. In both the budget ran out and the space was not refuted, so no claim is made here that four sites is unsolvable.
       What is measured is the price of one more site: sixty times the budget
       bought one further depth iteration. A version of this that wants four
       sites needs a better heuristic, not a longer wait.
@@ -873,7 +872,7 @@ sup.cite a:hover{text-decoration:underline}
       another must stand on floor, clear of the racks, and clear of every lane
       the fleet may drive. And the two readings must fall unambiguously either
       side of the threshold, or the branch is decided by where the fleet
-      happened to stop rather than by what is in the aisle.
+      happened to stop and not by what is in the aisle.
     </p>
 
     <p>
@@ -1062,7 +1061,7 @@ applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
       and the parser reports <span class="mono-inline">Frame: S5</span>. Both
       statements are about the initial model. What the relations satisfy after
       six product updates is a different question, and the answer was measured
-      off the recorded models rather than assumed.
+      off the recorded models and not assumed.
     </p>
 
     <table class="data">
@@ -1082,8 +1081,7 @@ applied relay-clean_relay_scout_a06: 8 worlds, 1 designated</pre>
       transitive and euclidean, and it is not reflexive; and the worlds where
       reflexivity fails are exactly the designated ones. That is not a bug. It
       is what modelling an agent as oblivious to an event that occurs means:
-      the excluded agent does not merely fail to learn the content, it comes to
-      believe no announcement took place.
+      the excluded agent does not only fail to learn the content; it comes to believe no announcement took place.
     </p>
 
     <p>
@@ -1149,7 +1147,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
 <section>
   <div class="container">
     <p class="sec-label">What broke</p>
-    <h3>Eight defects, and the interface each was found at</h3>
+    <h3>Implementation defects</h3>
 
     <p>
       None is an error inside any component. Each is a property of the
@@ -1279,7 +1277,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
 
     <p>
       The charger move is why the fleet launch now reads spawn poses from the
-      graph rather than holding them as constants: a pose copied from an older
+      graph instead of holding them as constants: a pose copied from an older
       graph puts a robot somewhere RMF does not think it is, and the first
       command is then issued from a place the robot is not. And the single-site
       demonstration's own site does not survive the correction (on the corrected
@@ -1299,8 +1297,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
       <span class="mono-inline">Failed to start plansys2!</span>. The planner
       then hands back a perfectly good eight-node policy, and the mission dies
       forty log lines and several seconds later on an unrelated-looking error.
-      The fix is to wait for every managed node to be <i>active</i> rather than
-      merely to answer.
+      The fix is to wait for every managed node to be <i>active</i> and not only to answer.
     </p>
 
     <p class="pull">
@@ -1356,8 +1353,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
 
     <p>
       Given the wrong formulas, the post-run check reported them
-      <span class="mono-inline">UNCHECKED</span> and failed the run rather than
-      reporting that nothing holds. That distinction is the one the previous
+      <span class="mono-inline">UNCHECKED</span> and failed the run instead of reporting that nothing holds. That distinction is the one the previous
       page argued for (a transcript that fails to arrive is not an agent that
       heard nothing), and here it is the difference between
       &#8220;your formulas are wrong&#8221; and &#8220;your mission
@@ -1464,7 +1460,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
     <p>
       <b>That the floor is now right.</b> What is established is that it was
       wrong, and in what direction. The correction reads the poses Gazebo
-      applies rather than the ones the models declare, and the numbers above
+      applies and not the ones the models declare, and the numbers above
       are what follows from that; whether anything else in this world is
       described in a way its own loader disagrees with has not been
       established, and one stall on the old floor is still unexplained.
@@ -1582,7 +1578,7 @@ the mission came out as specified: 9 formulas against the state the fleet left b
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

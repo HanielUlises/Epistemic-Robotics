@@ -193,7 +193,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -221,7 +221,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
 section{padding:3.4rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
 /* Folders for the domain tiers. The catalogue is read by tier, so each opens
-   on request and the page stays a page rather than a table. */
+   on request and the page stays a page instead of a table. */
 .dfolder{border:1px solid var(--border);border-radius:3px;margin:.6rem 0;
   background:#FFFFFF}
 .dfolder>summary{list-style:none;cursor:pointer;user-select:none;
@@ -750,7 +750,7 @@ var RM = window.matchMedia &&
 /* The figure loads finished. A diagram whose result appears only after a
    button is pressed reads as a broken diagram, and the prose beneath it
    refers to worlds that are not on the page yet; Play replays how the
-   product is built rather than being the only way to see it. */
+   product is built instead of being the only way to see it. */
 var STAGES = 3, agent = D.agents[0], stage = STAGES, timer = null;
 
 function el(tag, at){
@@ -2244,7 +2244,7 @@ function agentMarker(g, id, label, cx, cy){
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

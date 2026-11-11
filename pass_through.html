@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -757,7 +757,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section>
   <div class="container">
     <p class="sec-label">The run</p>
-    <h3>Two surveys, two exchanges, one crossing</h3>
+    <h3>Recorded run</h3>
 
     <figure class="demo-figure">
       <video controls preload="metadata" playsinline width="100%"
@@ -798,7 +798,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <div class="pt-findings">
   <div class="pt-findings-inner">
     <p class="sec-label">What the run shows</p>
-    <h3 class="pt-findings-title">Three findings, each drawn from the robots' own grids</h3>
+    <h3 class="pt-findings-title">Principal findings</h3>
     <div class="pt-cards">
       <a class="pt-card" href="#pt-model-sec">
         <span class="pt-card-img"><img src="media/thumbs/pass_through_card_model.jpg" alt="The carrier's knowledge map after both exchanges, coloured by the robot that observed each cell" loading="lazy"></span>
@@ -840,7 +840,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="pt-problem-sec">
   <div class="container">
     <p class="sec-label">The problem</p>
-    <h3>Three worlds, and a precondition on knowledge</h3>
+    <h3>The model and the knowledge precondition</h3>
 
     <p>
       Agents <span class="mono-inline">west</span>,
@@ -919,7 +919,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="pt-events-sec">
   <div class="container">
     <p class="sec-label">The epistemic actions</p>
-    <h3>Four event models, and what each does to a model</h3>
+    <h3>The four event models</h3>
 
     <p>
       Every action of the domain is an event model: a set of events, each with
@@ -969,7 +969,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="pt-model-sec">
   <div class="container">
     <p class="sec-label">The model, action by action</p>
-    <h3>Three worlds, and who can tell them apart</h3>
+    <h3>The initial model</h3>
 
     <p>
       The figure steps through the model after every action of the branch the
@@ -1214,7 +1214,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="pt-drift-sec" class="pt-wide">
   <div class="container">
     <p class="sec-label">The carrier's own map</p>
-    <h3>A metre of drift, and a corridor cut in two</h3>
+    <h3>The effect of drift on the corridor</h3>
 
     <p>
       The carrier also maps as it drives, and its own map enters its knowledge
@@ -1257,7 +1257,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="pt-worlds-sec">
   <div class="container">
     <p class="sec-label">Three worlds</p>
-    <h3>One policy, three leaves, each run to the goal</h3>
+    <h3>The policy and its three leaves</h3>
 
     <p>
       The worlds differ by which two bays hold a load and by nothing else.
@@ -1287,7 +1287,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="pt-floor-sec">
   <div class="container">
     <p class="sec-label">The floor</p>
-    <h3>A floor generated from one definition, and checked against its meshes</h3>
+    <h3>The generated floor</h3>
 
     <figure class="demo-figure">
       <img src="media/pass-through-floor.png" style="max-width:520px;margin:0 auto;display:block"
@@ -1447,7 +1447,7 @@ python3 tools/make_video.py --raw /tmp/raw.mkv --log /tmp/run.log \
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

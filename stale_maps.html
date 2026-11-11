@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/stale_maps.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The epistemic run in the film: RViz with every robot&#8217;s map of the three bays and r6 sending its map of t3 to r2, Gazebo beside it, and the eight maps under both.">
+<meta property="og:image:alt" content="Link card: Maps that go stale, over the Gazebo view of the warehouse racks.">
 <meta name="twitter:image" content="https://hanielulises.github.io/Epistemic-Robotics/media/og/stale_maps.jpg">
 <meta name="twitter:title" content="Maps that go stale">
 <meta name="twitter:description" content="Each robot sees at most one of two changes, and its map goes stale without its knowing. A map sent is an update, sent only where the sender believes the receiver&#8217;s is stale: three maps, where sharing everything sends 168.">
@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -477,7 +477,7 @@ sup.cite{font-size:.7em;line-height:0;margin-left:.1em;white-space:nowrap}
 sup.cite a{color:var(--red);text-decoration:none;padding:0 .05em}
 sup.cite a:hover{text-decoration:underline}
 </style>
-  <meta name="twitter:image:alt" content="The epistemic run in the film: RViz with every robot&#8217;s map of the three bays and r6 sending its map of t3 to r2, Gazebo beside it, and the eight maps under both.">
+  <meta name="twitter:image:alt" content="Link card: Maps that go stale, over the Gazebo view of the warehouse racks.">
   <link rel="canonical" href="https://hanielulises.github.io/Epistemic-Robotics/stale_maps.html">
 
 <style>
@@ -760,7 +760,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section>
   <div class="container">
     <p class="sec-label">The runs</p>
-    <h3>One forklift, four ways of sharing maps</h3>
+    <h3>Recorded runs</h3>
 
     <figure class="demo-figure">
       <video controls preload="metadata" playsinline width="100%"
@@ -824,7 +824,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <div class="pt-findings">
   <div class="pt-findings-inner">
     <p class="sec-label">What the runs show</p>
-    <h3 class="pt-findings-title">Three findings about maps that stopped being the floor</h3>
+    <h3 class="pt-findings-title">Principal findings</h3>
     <div class="pt-cards">
       <a class="pt-card" href="#sm-model-sec">
         <span class="pt-card-img"><img src="media/thumbs/stale_maps_card_stale.jpg" alt="Gazebo down bay t1 as the forklift&#8217;s load stands in it, seen by three robots and by no other" loading="lazy"></span>
@@ -866,7 +866,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="sm-floor-sec">
   <div class="container">
     <p class="sec-label">The floor</p>
-    <h3>Eight stations, and who sees each change</h3>
+    <h3>The floor and who sees each change</h3>
     <figure class="demo-figure">
       <img src="media/stale-maps-floor.png" alt="The pass-through floor with eight robots, the three bays, and the sight lines from r1, r2 and r3 to t1 and from r6 and r7 to t3" style="max-width:420px;width:100%;height:auto;display:block;margin:0 auto">
       <figcaption>
@@ -942,7 +942,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="sm-model-sec">
   <div class="container">
     <p class="sec-label">After the forklift</p>
-    <h3>Four worlds, and no robot in the actual one</h3>
+    <h3>The initial model</h3>
     <figure class="demo-figure">
       <img src="media/stale-maps-model.svg" alt="Four worlds after the forklift: nothing moved, believed by r4, r5 and r8; t3 cleared only, believed by r6 and r7; t1 staged only, believed by r1, r2 and r3; both, the actual world, believed by no robot" style="width:100%;height:auto">
       <figcaption>
@@ -976,7 +976,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="sm-update-sec">
   <div class="container">
     <p class="sec-label">A map sent</p>
-    <h3>Taken as fact it leaves no world; taken as news it is an update</h3>
+    <h3>A received map as fact and as news</h3>
     <h4>Proposition 2 (a received map taken as fact)</h4>
     <p>
       If \(j\) believes \(\mathit{blocked}(t)\) and is privately told
@@ -1029,7 +1029,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="sm-planning-sec">
   <div class="container">
     <p class="sec-label">Planning</p>
-    <h3>Three messages, only to haulers; or eleven, one per stale entry</h3>
+    <h3>The number of messages</h3>
     <p>
       The four floors grounded by plank and solved by Aletheia, consistent
       beliefs required, and every policy replayed by
@@ -1069,7 +1069,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="sm-scale-sec">
   <div class="container">
     <p class="sec-label">Many robots</p>
-    <h3>The counts scale to any fleet; the search, to thirty-two</h3>
+    <h3>Scaling</h3>
     <p>
       <span class="mono-inline">tools/scaling.py</span> draws random fleets,
       each robot seeing each changed bay with probability 0.3 and a third of them
@@ -1104,7 +1104,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="sm-fleets-sec">
   <div class="container">
     <p class="sec-label">On the floor</p>
-    <h3>Living maps, a merge rule, and what each fleet did</h3>
+    <h3>On the floor</h3>
     <p>
       Each robot runs a living map: the shift map, every cell observed at time
       zero, into which each scan of the robot's own laser is cast from its pose
@@ -1147,7 +1147,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="sm-defects-sec">
   <div class="container">
     <p class="sec-label">Defects</p>
-    <h3>Found on the way</h3>
+    <h3>Implementation defects</h3>
     <ul style="margin:0 0 0 1.2rem">
       <li><b>An else-if that grounds as never.</b> The forklift's observability
       was first one condition, Fully if the robot sees the bay, else-if the floor
@@ -1193,7 +1193,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section>
   <div class="container">
     <p class="sec-label">Limits</p>
-    <h3>What this does not show</h3>
+    <h3>Limitations</h3>
     <ul style="margin:0 0 0 1.2rem">
       <li>Localisation. Every robot's odometry is the world frame; the living map
       is mapping with known poses over a prior. A robot that did not know where
@@ -1357,7 +1357,7 @@ bash tools/record_demo.sh epistemic /tmp/raw.mkv /tmp/run.log</pre>
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

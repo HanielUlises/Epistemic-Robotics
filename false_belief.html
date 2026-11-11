@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -762,7 +762,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section>
   <div class="container">
     <p class="sec-label">The runs</p>
-    <h3>Untold, the picker went to t1; told, to t3; doubting, it looked</h3>
+    <h3>Recorded runs</h3>
 
     <figure class="demo-figure">
       <video controls preload="metadata" playsinline width="100%"
@@ -833,7 +833,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <div class="pt-findings">
   <div class="pt-findings-inner">
     <p class="sec-label">What the runs show</p>
-    <h3 class="pt-findings-title">Three findings, each a statement about the model the executor kept</h3>
+    <h3 class="pt-findings-title">Principal findings</h3>
     <div class="pt-cards">
       <a class="pt-card" href="#fb-false-sec">
         <span class="pt-card-img"><img src="media/thumbs/false_belief_card_false.jpg" alt="RViz on the floor without a radio: the crate in t3, the picker's belief of it in t1 marked false" loading="lazy"></span>
@@ -876,7 +876,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="fb-problem-sec">
   <div class="container">
     <p class="sec-label">The problem</p>
-    <h3>One world, a shift, and three floors</h3>
+    <h3>The world, the shift and the three floors</h3>
     <p>
       Agents \(\mathit{picker}\) and \(\mathit{mover}\), bays \(t_1\) and
       \(t_3\). Initially the model has one world, the crate is in \(t_1\), and
@@ -1072,7 +1072,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="fb-floor-sec">
   <div class="container">
     <p class="sec-label">The floor</p>
-    <h3>The pass-through floor, read for a third question</h3>
+    <h3>The pass-through floor</h3>
     <p>
       The racking block crosses the hall with three tunnel bays. The picker
       works the storage floor and reaches a bay from its south mouth; the mover
@@ -1100,7 +1100,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="fb-defects-sec">
   <div class="container">
     <p class="sec-label">Defects</p>
-    <h3>Found on the way</h3>
+    <h3>Implementation defects</h3>
     <p>
       <b>A policy on every floor.</b> The first solve returned the same policy
       for all three floors: look into <span class="mono-inline">t1</span>, then
@@ -1132,7 +1132,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section>
   <div class="container">
     <p class="sec-label">Limits</p>
-    <h3>What this does not show</h3>
+    <h3>Limitations</h3>
     <ul style="margin:0 0 0 1.2rem">
       <li>Belief revision. An observation that contradicts a belief has no
         consistent outcome in this logic; plausibility models<sup class="cite"><a href="#ref-bs">[1]</a></sup>
@@ -1289,7 +1289,7 @@ bash tools/record_demo.sh doubt  /tmp/raw_doubt.mkv  /tmp/run_doubt.log</pre>
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -674,7 +674,7 @@ sup.cite a:hover{text-decoration:underline}
       here keeps the grid and the knowledge model as two views of one fact.
       This one cuts the radio between the two robots and takes that
       coincidence away, which is the only condition under which the difference
-      between them can be measured rather than asserted.
+      between them can be measured and not asserted.
     </p>
     <p class="hero-p" style="margin-top:1rem">
       The cut has no appearance in the simulator: nothing about a warehouse
@@ -756,7 +756,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">Epistemic SLAM</p>
-    <h3>Two views of one fact, and the moment they come apart</h3>
+    <h3>Two views of one fact</h3>
 
     <p>
       The demonstrations on this site rest on a coincidence that is easy to
@@ -764,8 +764,7 @@ sup.cite a:hover{text-decoration:underline}
       <span class="mono-inline">slam_toolbox</span> writes what it saw into a
       grid, and the epistemic layer writes the same event into a Kripke model.
       A bay the robot has not entered is unobserved in the grid and undecided
-      in the model at once. Those are two views of one fact, and keeping them
-      that way is what makes a run honest: no prepared map is published
+      in the model at once. Those are two views of one fact, and they are kept that way: no prepared map is published
       anywhere, so the robot cannot know a thing it did not look at.
     </p>
 
@@ -774,7 +773,7 @@ sup.cite a:hover{text-decoration:underline}
       What this run does is take it away.
     </p>
 
-    <h4>Three things SLAM does not store</h4>
+    <h4>What SLAM does not store</h4>
 
     <p>
       An occupancy grid records a probability per cell. It does not record
@@ -806,7 +805,7 @@ sup.cite a:hover{text-decoration:underline}
       floor neither robot saw.
     </p>
 
-    <h4>Where knowledge ends and belief begins, in metres</h4>
+    <h4>The boundary between knowledge and belief</h4>
 
     <p>
       While the link is up, what one robot holds about its partner is a
@@ -828,11 +827,11 @@ sup.cite a:hover{text-decoration:underline}
       the partner is has no business being treated as something the robot
       knows. The engine says so; what it cannot do is act on it, because
       marking that proposition uncertain means editing a model, and there is
-      one model for the whole fleet rather than one per robot.
+      one model for the whole fleet and not one per robot.
     </p>
 
     <p class="note">
-      That last clause is the honest edge of this run. The two grids diverge
+      That last clause is a limit of this run. The two grids diverge
       because two robots observed different things while incommunicado, and
       reconciling them is the operation this layer performs. The two
       <em>models</em> never diverge, because there is only one, and an
@@ -849,15 +848,13 @@ sup.cite a:hover{text-decoration:underline}
       wrong one. The alignment is arithmetic: both maps came from the same
       simulator at the same resolution, and putting them on a common extent is
       a translation by whole cells, with no interpolation and no rotation. Maps
-      at different resolutions are refused rather than approximated, because a
+      at different resolutions are refused and not approximated, because a
       wrong registration produces a merged map that is confidently wrong, which
       is worse than one that is obviously missing.
     </p>
 
     <p>
-      What is not arithmetic is the question underneath: after the merge, what
-      does each robot know? The answer is not the union of the grids. It is a
-      per-robot fact, and this run reports it as one: the believing robot
+      What each robot knows after the merge is a separate matter. It is a per-robot fact, not the union of the grids, and this run reports it as one: the believing robot
       learned 5&#8239;246 cells it had never observed, the patrolling one
       4&#8239;870, and neither now confuses them with cells it measured. That
       accounting is what the layer exists for, and it is the part an occupancy
@@ -870,7 +867,7 @@ sup.cite a:hover{text-decoration:underline}
 <section>
   <div class="container">
     <p class="sec-label">The measurement</p>
-    <h3>The bound is met, and that is weaker than it sounds</h3>
+    <h3>The bound and what it guarantees</h3>
 
     <p>
       The requirement admits an error of
@@ -1070,7 +1067,7 @@ ros2 launch epistemic_comm link_outage_launch.py t_disc:=70 t_recon:=130</pre>
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

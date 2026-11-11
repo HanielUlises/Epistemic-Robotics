@@ -193,7 +193,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -631,7 +631,7 @@ pre:has(> code){margin:1.3rem 0}
 <section>
   <div class="container">
     <p class="sec-label">The mismatch</p>
-    <h3>Three things a classical executor assumes</h3>
+    <h3>What a classical executor assumes</h3>
 
     <p>
       PlanSys2 executes a plan by rendering it as a behavior tree: one subtree per
@@ -645,7 +645,7 @@ pre:has(> code){margin:1.3rem 0}
       is a flat list of timed items, so item \(i\) is followed by item \(i+1\). A
       policy for a partially observable domain is a tree: after a sensing action,
       which action comes next depends on what was seen. Flattening it keeps one
-      contingency and silently assumes it happens.
+      contingency and assumes it happens.
     </p>
 
     <p>
@@ -677,7 +677,7 @@ pre:has(> code){margin:1.3rem 0}
 <section>
   <div class="container">
     <p class="sec-label">The policy on the wire</p>
-    <h3>One message type, extended and not replaced</h3>
+    <h3>The message type, extended</h3>
 
     <p>
       Two interfaces stand between the planner and the executor and both take a flat
@@ -953,7 +953,7 @@ pre:has(> code){margin:1.3rem 0}
     <p>
       Which outcome occurred is a question about the world, not about the model. When
       the state designates a single world it already answers it. When it designates
-      several it genuinely does not know, and the observation has to come from
+      several it does not know, and the observation has to come from
       whoever did the sensing.
     </p>
 
@@ -1156,9 +1156,8 @@ epistemic_state:
     </p>
 
     <p>
-      Three of these are worth naming. Every rendered tree is handed to the real
-      BehaviorTree.CPP parser, because a tree that will not parse is worthless
-      however good it looks. The formula written by the planner is parsed back by
+      Three of these are described here. Every rendered tree is handed to the real
+      BehaviorTree.CPP parser, because a tree that will not parse cannot be run. The formula written by the planner is parsed back by
       the state and compared as a <em class="term">formula</em>, not as a string. The two are separate processes with separate interning, and nothing but that
       agreement connects them. And the two Aletheia plugins, the linked library
       and the external process, are held to the same policy on the fleet tasks.
@@ -1389,7 +1388,7 @@ epistemic_state:
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;

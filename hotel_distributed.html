@@ -198,7 +198,7 @@ body.drawer-open .nav-scrim{opacity:1;pointer-events:auto}
   .nav-panel h6{padding:.5rem .6rem .2rem}
 
   /* Each row eases in behind the panel, which reads as the drawer filling
-     rather than appearing all at once. */
+     instead of appearing all at once. */
   body.drawer-open .nav-panel>*{animation:rowIn .34s ease-out both}
   body.drawer-open .nav-panel>*:nth-child(2){animation-delay:.04s}
   body.drawer-open .nav-panel>*:nth-child(3){animation-delay:.07s}
@@ -453,7 +453,7 @@ pre:has(> code){margin:1.3rem 0}
 .demo-figure figcaption{margin-top:.75rem;font-size:.92rem;opacity:.72;
   line-height:1.5}
 /* The node graph is wider than the prose column and scrolls inside itself
-   rather than making the page scroll sideways. */
+   instead of making the page scroll sideways. */
 .graph-wrap{margin:1.8rem 0 2.2rem;overflow-x:auto;border:1px solid var(--border);
   border-radius:2px;background:#fff;padding:.6rem}
 .graph{display:block;min-width:820px}
@@ -764,7 +764,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-runs-sec">
   <div class="container">
     <p class="sec-label">The runs</p>
-    <h3>Four fleets in the same hotel, with the leak in L3 room 1</h3>
+    <h3>Recorded runs</h3>
 
     <figure class="demo-figure">
       <video controls preload="metadata" playsinline width="100%"
@@ -812,7 +812,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
       evaluation of every model at the actual world. The guest's column is what
       the goal's third conjunct is about.
     </p>
-    <h4>The siloed fleet: three rooms opened, and nobody told</h4>
+    <h4>The siloed fleet</h4>
 <table class="data pt-run ca-left">
   <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
   <tbody>
@@ -831,7 +831,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <tr><td>end</td><td>the siloed fleet does not meet the whole goal, as the planner and the trace say it does</td><td></td></tr>
   </tbody>
 </table>
-    <h4>The broadcast fleet: the guest hears the column and the floor</h4>
+    <h4>The broadcast fleet</h4>
 <table class="data pt-run ca-left">
   <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
   <tbody>
@@ -848,7 +848,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <tr><td>end</td><td>the broadcast fleet does not meet the whole goal, as the planner and the trace say it does</td><td></td></tr>
   </tbody>
 </table>
-    <h4>The content filter: the all-clear tells the guest the room</h4>
+    <h4>The content filter</h4>
 <table class="data pt-run ca-left">
   <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
   <tbody>
@@ -866,7 +866,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
     <tr><td>end</td><td>the filter fleet does not meet the whole goal, as the planner and the trace say it does</td><td></td></tr>
   </tbody>
 </table>
-    <h4>The epistemic fleet: the whole goal</h4>
+    <h4>The epistemic fleet</h4>
 <table class="data pt-run ca-left">
   <thead><tr><th>action</th><th>what the run reported</th><th>model after, at the actual world: what each agent cannot rule out</th></tr></thead>
   <tbody>
@@ -892,7 +892,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <div class="pt-findings">
   <div class="pt-findings-inner">
     <p class="sec-label">What the runs show</p>
-    <h3 class="pt-findings-title">Three findings about a room no robot knew</h3>
+    <h3 class="pt-findings-title">Principal findings</h3>
     <div class="pt-cards">
       <a class="pt-card" href="#hd-pool-sec">
         <span class="pt-card-img"><img src="media/thumbs/hotel_distributed_card_pool.jpg" alt="The board during the tellings in the restaurant: the porter goes from four rooms to one" loading="lazy"></span>
@@ -938,7 +938,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-new-sec">
   <div class="container">
     <p class="sec-label">What is new</p>
-    <h3>Three fleets, one room between two of them, and an outsider who reasons</h3>
+    <h3>The fleets, the room and the guest</h3>
     <p>
       The <a href="hotel_run.html">hotel incident</a> ran in the same building.
       There two robots looked for a leak in one of two suites, the guest ruled
@@ -987,7 +987,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-model-sec">
   <div class="container">
     <p class="sec-label">The model</p>
-    <h3>Four worlds, two partitions, and two agents who know nothing</h3>
+    <h3>The initial model</h3>
     <p>
       <span class="mono-inline">tools/hotel_domain.py</span> writes the domain
       for \(F\) floors and \(K\) columns; the hotel has \(F = \{L2, L3\}\) and
@@ -1159,7 +1159,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-goal-sec">
   <div class="container">
     <p class="sec-label">The goal, and four fleets</p>
-    <h3>Contained, a stand-down every responder can count on, and a guest who cannot rule out any room</h3>
+    <h3>The goal</h3>
     <div class="math-block">
       \[ \gamma \;=\; \mathit{safe} \;\wedge\; E_R E_R\,\mathit{safe} \;\wedge\;
          \bigwedge_{z \in Z} \langle g \rangle\,\mathit{source}_z . \]
@@ -1194,7 +1194,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-pool-sec">
   <div class="container">
     <p class="sec-label">Pooling what two robots know</p>
-    <h3>Two tellings, or up to three rooms opened</h3>
+    <h3>A robot acting alone</h3>
     <h4>Proposition 1 (no robot can act alone)</h4>
     <p>
       Along every branch of every policy, before the containment, either the
@@ -1242,7 +1242,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-allclear-sec">
   <div class="container">
     <p class="sec-label">The all-clear</p>
-    <h3>A message that names no room, and tells it</h3>
+    <h3>An all-clear that names no room</h3>
     <p>
       After the porter has shut the valve, the cleaner and the concierge do not
       know it happened (Lemma 4: they were elsewhere). The public address would
@@ -1309,7 +1309,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-siloed-sec">
   <div class="container">
     <p class="sec-label">The siloed fleet</p>
-    <h3>The leak contained, and nobody stands down</h3>
+    <h3>Without a channel</h3>
     <h4>Proposition 3 (without a channel, no stand-down)</h4>
     <p>
       With no telling and no page, \(K_c\,\mathit{safe}\) holds at no reachable
@@ -1339,7 +1339,7 @@ table.pt-run td:nth-child(2),table.pt-run th:nth-child(2){text-align:left}
 <section id="hd-policy-sec">
   <div class="container">
     <p class="sec-label">The epistemic policy</p>
-    <h3>Meet where the guest is not, ride up, ride down, say it there</h3>
+    <h3>The epistemic policy</h3>
 <pre class="code"><span class="c">; AO* at one thread: depth 7, four leaves, 387 003 expansions</span>
 go(concierge, lobby, restaurant)
 tell-column(cleaner, restaurant)          <span class="c">e-col-room1   | e-col-room15</span>
@@ -1403,7 +1403,7 @@ tell-column(cleaner, restaurant)          <span class="c">e-col-room1   | e-col-
 <section id="hd-cost-sec">
   <div class="container">
     <p class="sec-label">Planning</p>
-    <h3>Four fleets, one planner: what each policy costs and what it gets</h3>
+    <h3>The cost and outcome of each policy</h3>
     <p>
       Each fleet's problem grounded by plank and solved by Aletheia with AO* at
       one thread, on the hotel's four rooms. Every policy was replayed by
@@ -1481,7 +1481,7 @@ tell-column(cleaner, restaurant)          <span class="c">e-col-room1   | e-col-
 <section id="hd-floor-sec">
   <div class="container">
     <p class="sec-label">The building</p>
-    <h3>The stock hotel, its three fleets and two lifts, unchanged</h3>
+    <h3>The stock hotel</h3>
     <p>
       The world is the <span class="mono-inline">rmf_demos</span> hotel, launched
       through <span class="mono-inline">hotel_rmf_demo</span>'s copy, whose only
@@ -1523,7 +1523,7 @@ tell-column(cleaner, restaurant)          <span class="c">e-col-room1   | e-col-
 <section id="hd-defects-sec">
   <div class="container">
     <p class="sec-label">Defects</p>
-    <h3>Found on the way</h3>
+    <h3>Implementation defects</h3>
     <p>
       <b>A telling the executor would not dispatch.</b> The first run stopped at its
       second action: <span class="mono-inline">knowledge requirement does not hold:
@@ -1593,7 +1593,7 @@ tell-column(cleaner, restaurant)          <span class="c">e-col-room1   | e-col-
 <section>
   <div class="container">
     <p class="sec-label">Limits</p>
-    <h3>What this does not show</h3>
+    <h3>Limitations</h3>
     <ul>
       <li><b>Robots perceiving anything.</b> What the cleaner says of the column,
         what the concierge says of the floor, and what an opened room shows are
@@ -1766,7 +1766,7 @@ bash tools/record_demo.sh epistemic L3_room1 /tmp/hd_epistemic.mkv /tmp/hd_epist
 
   /* Opening the drawer shows the top level only: Pages, Domains,
      Demonstrations, Execution, Reports. Every folder, at every depth, starts
-     shut, so the panel reads as a short list of destinations rather than
+     shut, so the panel reads as a short list of destinations instead of
      the whole site poured out at once -- each one is a tap away. */
   function levelOne(){
     if(!phone.matches) return;
